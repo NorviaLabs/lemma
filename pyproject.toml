@@ -4,7 +4,10 @@ version = "1.0.0"
 description = "Turn a research paper into a short, hands-on lesson with live models, predictions and checks"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["pypdf>=4"]
+dependencies = [
+    "anthropic>=1.13.0",
+    "pypdf>=4",
+]
 
 [project.scripts]
 lemma = "lemma.__main__:main"

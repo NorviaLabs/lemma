@@ -8,6 +8,7 @@ and replies with text.
 
 * **OpenCode Go**, at ``https://opencode.ai/zen/go/v1``, with an OpenCode Go key.
 * **OpenAI**, at ``https://api.openai.com/v1``, with an OpenAI API key.
+* **Claude**, through the Anthropic API with a Claude API key (see ``claude.py``).
 * **ChatGPT**, with the learner's ChatGPT subscription instead of a key (see ``chatgpt.py``).
 """
 
@@ -49,6 +50,7 @@ PROVIDERS = {
     for p in (
         ProviderInfo("opencode-go", "OpenCode Go", "https://opencode.ai/zen/go/v1", "gpt-5.6-luna", "https://opencode.ai/auth"),
         ProviderInfo("openai", "OpenAI", "https://api.openai.com/v1", "gpt-6.1-sol", "https://platform.openai.com/api-keys"),
+        ProviderInfo("claude", "Claude", "https://api.anthropic.com", "claude-opus-5-5", "https://platform.claude.com/settings/keys"),
         # Signs in with a ChatGPT subscription instead of a key; see chatgpt.py. Only for Lemma on the learner's own computer.
         ProviderInfo("chatgpt", "ChatGPT", "https://chatgpt.com/backend-api/codex", "gpt-6.1-sol", ""),
     )
@@ -182,6 +184,10 @@ def make_provider(provider_id: str | None, key: str = "", model: str = "") -> Pr
     info = PROVIDERS.get(provider_id or DEFAULT_PROVIDER)
     if info is None:
         raise ProviderError("Unknown AI provider.")
+    if info.id == "claude":
+        from .claude import ClaudeProvider
+
+        return ClaudeProvider(key, model)
     if info.id == "chatgpt":
         from .chatgpt import ChatGPTProvider
 

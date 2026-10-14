@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TMP_HOME = tempfile.mkdtemp(prefix="lemma-test-")
 os.environ["LEMMA_HOME"] = TMP_HOME
 
-from lemma import chatgpt, dev, expr, export, generate, ingest, kernels, lesson as L, llm, search, server, store  # noqa: E402
+from lemma import chatgpt, claude, dev, expr, export, generate, ingest, kernels, lesson as L, llm, search, server, store  # noqa: E402
 from lemma.llm import Provider, Reply  # noqa: E402
 
 EXAMPLE = json.loads((ROOT / "lemma/examples/galton-1886.json").read_text())
@@ -659,6 +659,123 @@ class ChatGPTTests(unittest.TestCase):
             conv.send("LIMIT")
 
 
+def caps(adaptive=True, effort=True):
+    return {"thinking": {"supported": True, "types": {"adaptive": {"supported": adaptive}, "enabled": {"supported": not adaptive}}},
+            "effort": {"supported": effort, "high": {"supported": effort}}}
+
+
+class FakeAnthropic(BaseHTTPRequestHandler):
+    """A stand-in for the Anthropic Messages and Models APIs. Records each call."""
+
+    calls: list = []
+    MODELS = {"claude-opus-5-5": caps(), "claude-haiku-4-5": caps(adaptive=False, effort=False), "claude-sonnet-4-6": caps(effort=False)}
+
+    def log_message(self, *args):
+        pass
+
+    def _send(self, status, raw, ctype="application/json"):
+        self.send_response(status)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(len(raw)))
+        self.end_headers()
+        self.wfile.write(raw)
+
+    def _model(self, mid):
+        return {"type": "model", "id": mid, "display_name": mid.upper(), "created_at": "2026-01-01T00:00:00Z",
+                "max_input_tokens": 1000000, "max_tokens": 128000, "capabilities": self.MODELS[mid]}
+
+    def do_GET(self):
+        if self.headers.get("x-api-key") != "good-key":
+            return self._send(401, json.dumps({"type": "error", "error": {"type": "authentication_error", "message": "invalid x-api-key"}}).encode())
+        path = urllib.parse.urlsplit(self.path).path
+        if path == "/v1/models":
+            data = [self._model(m) for m in self.MODELS]
+            return self._send(200, json.dumps({"data": data, "has_more": False, "first_id": data[0]["id"], "last_id": data[-1]["id"]}).encode())
+        self._send(200, json.dumps(self._model(path.rsplit("/", 1)[1])).encode())
+
+    def do_POST(self):
+        body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+        FakeAnthropic.calls.append({"headers": {k.lower(): v for k, v in self.headers.items()}, "body": body})
+        last = body["messages"][-1]["content"]
+        if "LIMIT" in last:
+            return self._send(429, json.dumps({"type": "error", "error": {"type": "rate_limit_error", "message": "slow down"}}).encode())
+        turn = sum(m["role"] == "assistant" for m in body["messages"]) + 1
+        text = json.dumps({"turn": turn, "model": body["model"]})
+        stop = "refusal" if "REFUSE" in last else "max_tokens" if "CUT" in last else "end_turn"
+        msg = {"id": "msg_1", "type": "message", "role": "assistant", "model": body["model"], "content": [], "stop_reason": None,
+               "stop_sequence": None, "usage": {"input_tokens": 10, "output_tokens": 1}}
+        events = [("message_start", {"type": "message_start", "message": msg}),
+                  ("content_block_start", {"type": "content_block_start", "index": 0, "content_block": {"type": "thinking", "thinking": "", "signature": ""}}),
+                  ("content_block_delta", {"type": "content_block_delta", "index": 0, "delta": {"type": "signature_delta", "signature": "sig"}}),
+                  ("content_block_stop", {"type": "content_block_stop", "index": 0}),
+                  ("content_block_start", {"type": "content_block_start", "index": 1, "content_block": {"type": "text", "text": ""}}),
+                  ("content_block_delta", {"type": "content_block_delta", "index": 1, "delta": {"type": "text_delta", "text": text}}),
+                  ("content_block_stop", {"type": "content_block_stop", "index": 1}),
+                  ("message_delta", {"type": "message_delta", "delta": {"stop_reason": stop, "stop_sequence": None}, "usage": {"output_tokens": 5}}),
+                  ("message_stop", {"type": "message_stop"})]
+        self._send(200, "".join(f"event: {k}\ndata: {json.dumps(v)}\n\n" for k, v in events).encode(), "text/event-stream")
+
+
+class ClaudeTests(unittest.TestCase):
+    """The Claude provider, through the real SDK against FakeAnthropic."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.httpd = ThreadingHTTPServer(("127.0.0.1", 0), FakeAnthropic)
+        threading.Thread(target=cls.httpd.serve_forever, daemon=True).start()
+        claude.BASE_URL = f"http://127.0.0.1:{cls.httpd.server_address[1]}"
+
+    @classmethod
+    def tearDownClass(cls):
+        claude.BASE_URL = None
+        cls.httpd.shutdown()
+        cls.httpd.server_close()
+
+    def setUp(self):
+        FakeAnthropic.calls.clear()
+
+    def test_conversation_streams_caches_and_keeps_thinking(self):
+        p = llm.make_provider("claude", "good-key")
+        self.assertEqual(p.model, "claude-opus-5-5")
+        conv = p.conversation("SYSTEM", "<paper>text</paper>")
+        self.assertEqual(json.loads(conv.send("task").text), {"turn": 1, "model": "claude-opus-5-5"})
+        self.assertEqual(json.loads(conv.send("repair").text)["turn"], 2)
+        first, second = (c["body"] for c in FakeAnthropic.calls)
+        self.assertEqual((first["system"], first["stream"], first["thinking"]), ("SYSTEM", True, {"type": "adaptive"}))
+        self.assertEqual(first["cache_control"], {"type": "ephemeral"})
+        self.assertEqual(first["output_config"], {"effort": "high"})
+        self.assertEqual(first["fallbacks"], "default")
+        self.assertIn(claude.FALLBACK_BETA, FakeAnthropic.calls[0]["headers"]["anthropic-beta"])
+        self.assertEqual([m["role"] for m in second["messages"]], ["user", "user", "assistant", "user"])
+        self.assertEqual([b["type"] for b in second["messages"][2]["content"]], ["thinking", "text"])  # sent back as Claude sent it
+        self.assertEqual(second["messages"][2]["content"][0]["signature"], "sig")
+        self.assertEqual(conv.send("CUT").stop_reason, "max_tokens")
+
+    def test_other_models_skip_what_they_dont_take(self):
+        conv = llm.make_provider("claude", "good-key", "claude-sonnet-4-6").conversation("S", "<paper>x</paper>")
+        conv.send("task")
+        call = FakeAnthropic.calls[0]
+        self.assertNotIn("output_config", call["body"])
+        self.assertNotIn("fallbacks", call["body"])
+        self.assertNotIn("anthropic-beta", call["headers"])
+
+    def test_models_and_errors(self):
+        p = llm.make_provider("claude", "good-key")
+        self.assertEqual([m["id"] for m in p.models()], ["claude-opus-5-5", "claude-sonnet-4-6"])  # no adaptive thinking: left out
+        conv = p.conversation("S", "<paper>x</paper>")
+        with self.assertRaisesRegex(llm.ProviderError, "declined"):
+            conv.send("REFUSE")
+        with self.assertRaisesRegex(llm.ProviderError, "rate or usage limit"):
+            conv.send("LIMIT")
+        with self.assertRaisesRegex(llm.ProviderError, "rejected the key"):
+            llm.make_provider("claude", "bad-key").models()
+        self.assertFalse(llm.make_provider("claude").available()[0])
+        cancelled = threading.Event()
+        cancelled.set()
+        with self.assertRaisesRegex(llm.ProviderError, "Cancelled"):
+            conv.send("task", cancelled)
+
+
 class ServerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -701,7 +818,7 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(s, 200)
         st = json.loads(raw)
         self.assertIn("library_count", st)
-        self.assertEqual({p["id"]: p["sign_in"] for p in st["providers"]}, {"opencode-go": False, "openai": False, "chatgpt": True})
+        self.assertEqual({p["id"]: p["sign_in"] for p in st["providers"]}, {"opencode-go": False, "openai": False, "claude": False, "chatgpt": True})
         self.assertFalse(st["provider"]["ok"])  # no key sent
         st = json.loads(self.req("GET", "/api/status", headers={"X-Lemma-Provider": "openai", "X-Lemma-Key": "sk-secret-123", "X-Lemma-Model": "m"})[1])
         self.assertEqual((st["provider"]["id"], st["provider"]["model"], st["provider"]["ok"]), ("openai", "m", True))

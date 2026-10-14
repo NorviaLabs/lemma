@@ -124,6 +124,7 @@
   const TAGLINES = {
     "opencode-go": "Many models through an OpenCode Go plan. Fits long papers (about 1M tokens).",
     openai: "OpenAI's models, billed to your OpenAI API account.",
+    claude: "Anthropic's Claude models, billed to your Claude API account. Fits long papers (about 1M tokens).",
     chatgpt: "Your ChatGPT Plus or Pro plan, no key needed. For Lemma on your own computer.",
   };
 

@@ -18,6 +18,7 @@ To make lessons from your own papers, Lemma needs your own key for an AI provide
 |---|---|---|
 | **OpenCode Go** | [opencode.ai/auth](https://opencode.ai/auth) (needs an OpenCode Go plan) | Long papers (about 1M tokens) |
 | **OpenAI** | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) | Depends on the model |
+| **Claude** | [platform.claude.com/settings/keys](https://platform.claude.com/settings/keys) | Long papers (about 1M tokens) |
 | **ChatGPT** | No key: sign in with your ChatGPT Plus or Pro account. Only when Lemma runs on your own computer | Depends on the model |
 
 Then paste a link or upload a PDF. Building a lesson usually takes 1–3 minutes, and you can start the first concept sooner.
@@ -29,6 +30,12 @@ Then paste a link or upload a PDF. Building a lesson usually takes 1–3 minutes
 ### How Lemma uses your key
 
 Both providers are called over their OpenAI-compatible chat completions APIs (`https://opencode.ai/zen/go/v1` and `https://api.openai.com/v1`), with no tools, so the model can only read what Lemma sends and reply with text. Your browser keeps your provider, model and key, and sends them with each request in `X-Lemma-*` headers. The server uses the key for that request, or for the build it starts, and never writes it to disk or sends it back. The APIs keep no conversation, so a repair re-sends the paper, the earlier draft and the list of problems.
+
+### How Lemma uses Claude
+
+Claude is called through Anthropic's Python SDK with your key, streaming each reply, with adaptive thinking and high effort where the model offers it. The model list shows the models that support adaptive thinking; the default is `claude-opus-5-5`. A repair re-sends the paper, so the request is marked for prompt caching to make that repeat cheap, and Claude's earlier replies go back exactly as it sent them. On models that support it, a request Claude's safety checks decline is retried on the model Anthropic recommends for that case (`fallbacks: "default"`); if it is still declined, that concept is left out and the lesson says so.
+
+A Claude Pro or Max subscription can't be used: Anthropic doesn't allow subscriptions in third-party apps.
 
 ### How Lemma uses your ChatGPT subscription
 
