@@ -1,4 +1,4 @@
-"""The learner's private library and settings, kept on their own computer."""
+"""The lesson library."""
 
 from __future__ import annotations
 
@@ -28,20 +28,6 @@ def _write(path: Path, data: str, private: bool = False):
     except BaseException:
         Path(tmp).unlink(missing_ok=True)
         raise
-
-
-# ---------------------------------------------------------------- settings
-
-
-def load_settings() -> dict:
-    try:
-        return json.loads((home() / "settings.json").read_text())
-    except (OSError, ValueError):
-        return {}
-
-
-def save_settings(settings: dict):
-    _write(home() / "settings.json", json.dumps(settings, indent=2), private=True)
 
 
 # ---------------------------------------------------------------- library

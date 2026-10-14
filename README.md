@@ -12,33 +12,22 @@ uv run lemma                 # installs what's needed on first run, then opens h
 
 The built-in example lesson (Galton, 1886) works straight away, with no setup.
 
-To make lessons from your own papers, Lemma needs an AI tool you install and sign in to yourself. The home page walks you through it, and notices when you've finished:
+To make lessons from your own papers, Lemma needs your own key for an AI provider. The home page asks for one:
 
-| | Install | Sign in | Fits |
-|---|---|---|---|
-| **OpenCode Go** | `curl -fsSL https://opencode.ai/install \| bash` | `opencode providers login`, then choose OpenCode Go (needs an OpenCode Go plan) | Long papers (about 1M tokens) |
-| **Codex** | `npm install -g @openai/codex` | `codex login` (signs in with ChatGPT) | Papers up to about 270k tokens |
+| | Get a key | Fits |
+|---|---|---|
+| **OpenCode Go** | [opencode.ai/auth](https://opencode.ai/auth) (needs an OpenCode Go plan) | Long papers (about 1M tokens) |
+| **OpenAI** | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) | Depends on the model |
 
 Then paste a link or upload a PDF. Building a lesson usually takes 1–3 minutes, and you can start the first concept sooner.
 
 ## Run it
 
-`uv run lemma --port 9000 --no-browser` changes the port or skips opening a browser. In Settings, pick the provider and its model. Each list is read live from your installation; the defaults are `gpt-5.6-luna` for OpenCode Go and `gpt-6.1-sol` for Codex. If a program isn't on your `PATH`, set its location in Settings, or in `LEMMA_OPENCODE` or `LEMMA_CODEX`.
+`uv run lemma --port 9000 --no-browser` changes the port or skips opening a browser. In Settings, pick the provider, paste its key and choose a model. The model list is read live with your key; the defaults are `gpt-5.6-luna` for OpenCode Go and `gpt-6.1-sol` for OpenAI.
 
-### How Lemma uses OpenCode Go
+### How Lemma uses your key
 
-Lemma starts its own `opencode serve --pure` process. It listens on 127.0.0.1 only, on a random port, behind a one-time password, and runs in an empty working directory (`~/.lemma/opencode-workdir`). Its inline config defines a `lemma` agent that has no tools and denies every permission, so the model can only read what Lemma sends and reply with text. OpenCode uses its own stored OpenCode Go credentials. Lemma never uses or stores a key; it only checks OpenCode's `auth.json` for an OpenCode Go entry. Each concept gets its own OpenCode session, so a repair can refer back to the first draft, and the session is deleted afterwards so papers don't stay in your OpenCode history. OpenCode stops when Lemma stops.
-
-### How Lemma uses Codex
-
-Each request is a one-off `codex exec`:
-- **Nothing is saved:** `--ephemeral`, so Codex keeps no session on disk.
-- **Your setup is left out:** `--ignore-user-config` and `--ignore-rules`, so your MCP servers, plugins and instructions aren't loaded. Codex still uses its own sign-in.
-- **Sandboxed:** a read-only sandbox in an empty working directory (`~/.lemma/codex-workdir`), with approvals set to never.
-- **Tools off:** the shell, code execution, multi-agent, web search, browser, computer use, apps, plugins, memories, image generation and image viewing are disabled, and Codex refuses any blocked tool call rather than running it.
-- **Lemma's instructions:** passed as developer instructions. The paper goes in on standard input.
-
-Because Codex keeps no session, a repair re-sends the paper, the earlier draft and the list of problems. Codex models have a smaller context (272k tokens) than the OpenCode Go ones, so Lemma refuses a paper that won't fit and says why, rather than cutting it short.
+Both providers are called over their OpenAI-compatible chat completions APIs (`https://opencode.ai/zen/go/v1` and `https://api.openai.com/v1`), with no tools, so the model can only read what Lemma sends and reply with text. Your browser keeps your provider, model and key, and sends them with each request in `X-Lemma-*` headers. The server uses the key for that request, or for the build it starts, and never writes it to disk or sends it back. The APIs keep no conversation, so a repair re-sends the paper, the earlier draft and the list of problems.
 
 ## How it works
 
@@ -73,7 +62,7 @@ Visual types: curves, bars, tables, agent simulations, networks, causal diagrams
 
 ## Privacy
 
-The server listens on 127.0.0.1 only and rejects other Host headers and cross-origin requests. It writes no request logs. Paper text goes only to the provider and model named before you build, by way of your local OpenCode or Codex. When you search a topic, only the search words go to OpenAlex, arXiv and Wikipedia (no accounts or keys); nothing is searched unless you ask.
+The server listens on 127.0.0.1 only and rejects other Host headers and cross-origin requests. It writes no request logs. Paper text goes only to the provider and model named before you build, using your key. When you search a topic, only the search words go to OpenAlex, arXiv and Wikipedia (no accounts or keys); nothing is searched unless you ask.
 
 ## Tests
 
@@ -81,4 +70,4 @@ The server listens on 127.0.0.1 only and rejects other Host headers and cross-or
 uv run python -m unittest discover tests
 ```
 
-The tests cover the expression language, Python/JavaScript parity (needs `node`), every quality check, the generation pipeline (with a fake provider, including a repair and a concept that is left out), both providers against stand-in programs (`tests/fake_opencode.py`: private server, password, sessions, cleanup, errors; `tests/fake_codex.py`: the lockdown flags, history re-sent on repair, context limits, errors), the HTTP API and the export.
+The tests cover the expression language, Python/JavaScript parity (needs `node`), every quality check, the generation pipeline (with a fake provider, including a repair and a concept that is left out), the HTTP provider against a stand-in API (history re-sent on repair, model filtering, bad keys, limits and context errors), the HTTP API and the export.

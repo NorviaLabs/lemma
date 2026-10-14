@@ -24,10 +24,29 @@
     return n;
   }
 
-  async function api(path, body, method) {
+  // The learner's provider, models and keys stay in this browser and go to the server with each request.
+  const CRED_KEY = "lemma.ai";
+  function loadCred() {
+    try { return Object.assign({ provider: "", models: {}, keys: {} }, JSON.parse(localStorage.getItem(CRED_KEY) || "{}")); }
+    catch (e) { return { provider: "", models: {}, keys: {} }; }
+  }
+  let cred = loadCred();
+  function saveCred(next) {
+    cred = next;
+    try { localStorage.setItem(CRED_KEY, JSON.stringify(next)); } catch (e) { /* kept for this visit only */ }
+  }
+  function credHeaders(c = cred) {
+    const out = {};
+    if (c.provider) out["X-Lemma-Provider"] = c.provider;
+    if (c.provider && c.keys[c.provider]) out["X-Lemma-Key"] = c.keys[c.provider];
+    if (c.provider && c.models[c.provider]) out["X-Lemma-Model"] = c.models[c.provider];
+    return out;
+  }
+
+  async function api(path, body, method, headers) {
     const res = await fetch(path, {
       method: method || (body === undefined ? "GET" : "POST"),
-      headers: body === undefined ? {} : { "Content-Type": "application/json" },
+      headers: Object.assign(body === undefined ? {} : { "Content-Type": "application/json" }, headers || credHeaders()),
       body: body === undefined ? undefined : JSON.stringify(body),
     });
     let data = null;
@@ -101,104 +120,62 @@
   }
   const slug = (s) => (s || "lesson").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "lesson";
 
-  /* ------------------------------------------------------------ AI tool setup */
-  function commandBlock(cmd) {
-    const code = h("code", {}, cmd);
-    const btn = h("button", { type: "button", class: "copy-btn", "aria-label": `Copy ${cmd}` }, icon("copy"), "Copy");
-    btn.addEventListener("click", async () => {
-      try { await navigator.clipboard.writeText(cmd); }
-      catch (e) { const r = document.createRange(); r.selectNodeContents(code); getSelection().removeAllRanges(); getSelection().addRange(r); return; }
-      btn.replaceChildren(icon("check"), "Copied");
-      btn.classList.add("done");
-      setTimeout(() => { btn.replaceChildren(icon("copy"), "Copy"); btn.classList.remove("done"); }, 1600);
-    });
-    return h("div", { class: "command" }, h("span", { class: "prompt", "aria-hidden": "true" }, "$"), code, btn);
-  }
-
-  // What a stranger needs to get each tool working. Commands are each tool's documented ones.
-  const SETUP = {
-    "opencode-go": {
-      tagline: "Many models through an OpenCode Go plan. Fits long papers (about 1M tokens).",
-      install: "curl -fsSL https://opencode.ai/install | bash",
-      installMore: ["Other ways to install", "https://opencode.ai/docs"],
-      signIn: "opencode providers login",
-      signInNote: "Choose OpenCode Go when asked. It needs an OpenCode Go plan.",
-    },
-    codex: {
-      tagline: "OpenAI's Codex, signed in with your ChatGPT account. Fits papers up to about 270k tokens.",
-      install: "npm install -g @openai/codex",
-      installMore: ["Other ways to install", "https://github.com/openai/codex"],
-      signIn: "codex login",
-      signInNote: "This opens your browser to sign in with ChatGPT.",
-    },
+  /* ------------------------------------------------------------ AI provider */
+  const TAGLINES = {
+    "opencode-go": "Many models through an OpenCode Go plan. Fits long papers (about 1M tokens).",
+    openai: "OpenAI's models, billed to your OpenAI API account.",
   };
-  const providerState = (p) => (p.ok ? "Ready" : p.installed ? "Installed, not signed in" : "Not installed");
 
-  function providerSteps(p) {
-    const info = SETUP[p.id];
-    const step = (n, done, title, body, active) => h("li", { class: "setup-step" + (done ? " done" : active ? " active" : " later") },
-      h("span", { class: "plate", "aria-hidden": "true" }, done ? icon("check") : String(n)),
-      h("div", { class: "step-body" }, h("p", { class: "step-title" }, title, h("span", { class: "sr-only" }, done ? " (done)" : " (to do)")), ...body));
-    return h("ol", { class: "setup-steps" },
-      step(1, p.installed, `Install ${p.id === "codex" ? "Codex" : "OpenCode"}`,
-        p.installed ? [h("p", { class: "step-detail" }, "Found at ", h("code", {}, p.path), ".")]
-          : [h("p", { class: "step-detail" }, "Run this in a terminal:"), commandBlock(info.install),
-            h("p", { class: "step-detail" }, h("a", { href: info.installMore[1], target: "_blank", rel: "noopener noreferrer" }, info.installMore[0]))], !p.installed),
-      step(2, p.ok, "Sign in",
-        p.ok ? [h("p", { class: "step-detail" }, "Signed in.")] : [commandBlock(info.signIn), h("p", { class: "step-detail" }, info.signInNote)], p.installed && !p.ok),
-      step(3, p.ok, "Ready to build lessons", p.ok ? [h("p", { class: "step-detail" }, `Lessons will use ${p.model}. You can change the model in Settings.`)] : [], false));
-  }
-
-  async function refreshStatus() { status = await api("/api/status/refresh", {}); return status; }
-
-  /* Pick a tool, follow its steps; Lemma notices when it's ready. */
-  function setupPanel(onReady) {
-    const providers = () => status.providers || [];
-    let selected = (providers().find((p) => p.ok) || providers().find((p) => p.installed) || providers()[0] || {}).id;
+  /* Pick a provider and paste a key; Lemma checks the key by listing the provider's models. */
+  function keyForm(onSaved) {
+    const providers = status.providers || [];
+    let selected = cred.provider || (providers[0] || {}).id;
     const body = h("div");
-    const live = h("p", { class: "setup-live muted small", "aria-live": "polite" });
-    let checking = false;
-    async function check(manual) {
-      if (checking) return;
-      checking = true;
-      if (manual) live.textContent = "Checking…";
-      try {
-        const before = JSON.stringify(providers().map((p) => [p.installed, p.ok]));
-        await refreshStatus();
-        const after = JSON.stringify(providers().map((p) => [p.installed, p.ok]));
-        if (manual || before !== after) draw();
-        live.textContent = manual ? (before === after ? "No change yet. Finish the step above, then check again." : "") : "";
-      } catch (e) { live.textContent = "Couldn't check: " + e.message; }
-      checking = false;
-    }
+    const msg = h("div", { role: "status" });
     function draw() {
-      if (!providers().length) {
-        body.replaceChildren(errorBox("Lemma couldn't check which AI tools are installed."), h("div", { class: "actions" }, h("button", { class: "ghost", onclick: () => check(true) }, icon("refresh"), "Try again")), live);
-        return;
-      }
-      if (!providers().some((x) => x.id === selected)) selected = providers()[0].id;
-      const p = providers().find((x) => x.id === selected);
-      const choice = h("div", { class: "provider-choice", role: "radiogroup", "aria-label": "AI tool" }, providers().map((x) =>
+      const p = providers.find((x) => x.id === selected) || {};
+      const key = h("input", { id: "ai-key", type: "password", autocomplete: "off", spellcheck: "false", placeholder: `Paste your ${p.name} key` });
+      key.value = cred.keys[p.id] || "";
+      const model = h("select", { id: "model", disabled: true }, h("option", { value: cred.models[p.id] || p.default_model }, cred.models[p.id] || p.default_model));
+      const note = h("p", { class: "muted small" }, "Save a key to choose from the models it can use.");
+      const choice = h("div", { class: "provider-choice", role: "radiogroup", "aria-label": "AI provider" }, providers.map((x) =>
         h("label", { class: "provider-option" },
-          h("input", { type: "radio", name: "setup-provider", value: x.id, checked: x.id === selected, onchange: () => { selected = x.id; draw(); } }),
+          h("input", { type: "radio", name: "provider", value: x.id, checked: x.id === selected, onchange: () => { selected = x.id; msg.replaceChildren(); draw(); } }),
           h("span", { class: "po-body" },
             h("span", { class: "po-name" }, x.name),
-            h("span", { class: "po-tagline" }, SETUP[x.id].tagline),
-            h("span", { class: "po-status " + (x.ok ? "ok" : "") }, x.ok ? icon("check") : null, providerState(x))))));
-      const actions = p.ok
-        ? h("div", { class: "actions" }, h("button", { class: "primary", onclick: async () => {
-            await api("/api/settings", { provider: p.id }).then((st) => (status = Object.assign(status, st)));
-            onReady();
-          } }, `Use ${p.name}`))
-        : h("div", { class: "actions" }, h("button", { class: "ghost", onclick: () => check(true) }, icon("refresh"), "Check again"),
-            h("span", { class: "muted small" }, "Lemma also checks when you come back to this window."));
-      body.replaceChildren(choice, providerSteps(p), actions, live);
+            h("span", { class: "po-tagline" }, TAGLINES[x.id] || ""),
+            h("span", { class: "po-status " + (cred.keys[x.id] ? "ok" : "") }, cred.keys[x.id] ? icon("check") : null, cred.keys[x.id] ? "Key saved" : "No key yet")))));
+      async function loadModels(c) {
+        const r = await api("/api/models", undefined, undefined, credHeaders(c));
+        model.replaceChildren(...r.models.map((m) => h("option", { value: m.id, selected: m.id === r.current }, `${m.name}${m.context ? ` · ${Math.round(m.context / 1000)}k context` : ""}`)));
+        if (!r.models.some((m) => m.id === r.current)) model.prepend(h("option", { value: r.current, selected: true }, `${r.current} (not offered right now)`));
+        model.disabled = false;
+        note.textContent = `${r.models.length} models offered by ${p.name}.`;
+      }
+      if (cred.keys[p.id]) loadModels(Object.assign({}, cred, { provider: p.id })).catch((err) => note.replaceChildren(errorBox(err.message)));
+      const save = h("button", { class: "primary", onclick: async () => {
+        const next = { provider: p.id, keys: Object.assign({}, cred.keys, { [p.id]: key.value.trim() }), models: Object.assign({}, cred.models) };
+        if (!model.disabled && model.value) next.models[p.id] = model.value;
+        if (!next.keys[p.id]) return msg.replaceChildren(errorBox(`Paste your ${p.name} key first.`));
+        save.disabled = true;
+        msg.replaceChildren(h("p", { class: "muted" }, "Checking the key…"));
+        try {
+          await loadModels(next);  // a key that can't list models won't build lessons either
+          if (!model.disabled && model.value) next.models[p.id] = model.value;
+          saveCred(next);
+          status = await api("/api/status");
+          msg.replaceChildren(h("p", { class: "ok" }, icon("check"), ` Saved. Lessons will be built with ${status.provider.label}.`));
+          if (onSaved) onSaved();
+        } catch (err) { msg.replaceChildren(errorBox(err.message)); }
+        save.disabled = false;
+      } }, "Save");
+      body.replaceChildren(choice,
+        h("label", { for: "ai-key" }, `${p.name} key`), key,
+        h("p", { class: "muted small" }, h("a", { href: p.key_url, target: "_blank", rel: "noopener noreferrer" }, `Get a ${p.name} key`),
+          ". It stays in this browser. Lemma's server uses it only while building your lesson and never stores it."),
+        h("label", { for: "model" }, `${p.name} model`), model, note, msg,
+        h("div", { class: "actions" }, save));
     }
-    const onFocus = () => check(false);
-    const onVisible = () => { if (document.visibilityState === "visible") check(false); };
-    window.addEventListener("focus", onFocus);
-    document.addEventListener("visibilitychange", onVisible);
-    cleanups.push(() => { window.removeEventListener("focus", onFocus); document.removeEventListener("visibilitychange", onVisible); });
     draw();
     return body;
   }
@@ -212,31 +189,264 @@
 
   const AUDIENCES = ["A curious learner with no special background", "An undergraduate student", "An educator preparing a class", "A researcher from a neighbouring field"];
 
-  function tryPanel(primary) {
-    return h("aside", { class: "try-panel", "aria-labelledby": "try-title" },
-      h("h2", { id: "try-title" }, "Walk through an example"),
-      h("ol", { class: "steps3" },
-        h("li", {}, h("b", {}, "The paper in brief"), "What Galton asked in 1886, what he measured and what he found."),
-        h("li", {}, h("b", {}, "How it works"), "Watch each idea play out on a live model, then read it in Galton's words."),
-        h("li", {}, h("b", {}, "Try it yourself"), "Make it happen on the model, then use it on a new case.")),
-      h("p", { class: "meta" }, "About 10 minutes. Works right away, with no setup."),
-      h("button", { class: primary ? "primary" : "ghost", onclick: openExample }, icon("play"), "Try the example lesson"));
+  /* The doorway exhibit: one live model from the example lesson, playable the moment the page opens.
+     The label rail's three verbs light up as the visitor plays; until then the model sweeps by itself. */
+  const MEAN = 68.25, SHARE = 2 / 3;
+  let exhibitStep = 0;
+  let exampleP = null;
+  const exampleLesson = () => (exampleP = exampleP || api("/api/example").catch((e) => { exampleP = null; throw e; }));
+  function homeExhibit() {
+    const M = window.LemmaModel;
+    const stage = h("div", { class: "he-stage", "aria-busy": "true" }, h("p", { class: "muted" }, "Setting up the exhibit…"));
+    const verbEls = [];
+    const verb = (n, title, ...body) => {
+      const li = h("li", { class: "verb" },
+        h("div", { class: "verb-head" }, h("span", { class: "verb-mark", "aria-hidden": "true" }, String(n)), title, h("span", { class: "sr-only verb-state" })),
+        h("div", { class: "verb-body" }, ...body));
+      verbEls.push(li);
+      return li;
+    };
+    const noticeLine = h("p", { class: "he-live" });
+    const noticeMore = h("p");
+    const tryText = h("p", {}, "This exhibit comes from Galton's 1886 paper on heredity. Drag the parents' height away from the middle and watch where their children land.");
+    const whyBtn = h("button", { type: "button", class: "he-skip", onclick: () => setStep(2, true) }, "Tell me why");
+    const verbs = h("ol", { class: "verbs", "aria-live": "polite" },
+      verb(1, "Try this", tryText),
+      verb(2, "Notice", noticeLine, noticeMore, whyBtn),
+      verb(3, "What's going on",
+        h("figure", { class: "he-quote" },
+          h("blockquote", {}, "the height-deviate of the offspring is, on the average, two-thirds of the height-deviate of its mid-parentage."),
+          h("figcaption", {}, "Galton, 1886, page 252")),
+        h("p", {}, "Galton called it regression towards mediocrity. Today it's called regression to the mean, and it shows up wherever two measurements are related but not perfectly."),
+        h("div", { class: "he-cta" },
+          h("button", { class: "primary", onclick: openExample }, icon("play"), "Walk the whole lesson"),
+          h("span", { class: "small" }, "About 10 minutes, with no setup."))));
+    function setStep(n, focus) {
+      exhibitStep = Math.max(exhibitStep, n);
+      verbEls.forEach((li, i) => {
+        li.className = "verb " + (i < exhibitStep ? "done" : i === exhibitStep ? "active" : "later");
+        li.querySelector(".verb-mark").replaceChildren(i < exhibitStep ? icon("check") : String(i + 1));
+        li.querySelector(".verb-state").textContent = i < exhibitStep ? " (done)" : i === exhibitStep ? " (now)" : "";
+        li.querySelector(".verb-body").hidden = i > exhibitStep;
+      });
+      whyBtn.hidden = exhibitStep !== 1;
+      if (focus && exhibitStep === 2) verbEls[2].querySelector("button").focus({ preventScroll: true });
+    }
+    setStep(exhibitStep);
+
+    const el = h("section", { class: "home-exhibit", "aria-labelledby": "home-title" },
+      h("div", { class: "he-intro" },
+        h("h1", { id: "home-title" }, "Learn a paper by playing with it"),
+        h("p", { class: "lead" }, "Search any topic or bring a paper, and Lemma turns it into a hall of hands-on exhibits. You don't need to have read anything: it tells you the paper's story, walks you through a live model of each idea, then lets you try it yourself.")),
+      stage,
+      h("div", { class: "he-verbs" }, verbs));
+
+    exampleLesson().then((lesson) => {
+      const c = lesson.concepts.find((x) => x.id === "regression_line");
+      if (!c || !el.isConnected) return;
+      const model = Object.assign({}, c.model, { controls: c.model.controls.filter((k) => k.id === "mp") });
+      const k = model.controls[0];
+      let values = { mp: 72, ratio: SHARE };
+      const seen = { above: false, below: false };
+      const vizBox = h("div", { class: "viz-box" });
+      const view = new M.ModelView(vizBox, model);
+      view.trailsOn = true;  // the home exhibit always leaves a trail; the learner's saved choice is untouched
+      const outs = h("dl", { class: "outputs" });
+      const valueEl = h("output", { for: "he-mp", class: "ctl-value" });
+      const input = h("input", { type: "range", id: "he-mp", min: k.min, max: k.max, step: k.step, value: values.mp });
+      const playBtn = h("button", { type: "button", class: "play", "aria-label": `Play ${k.label} through its range`, onclick: () => { stopDemo(); sweep(); } }, icon("play"), "Play");
+      const demoNote = h("p", { class: "caption he-demo" }, h("span", {}, "It's moving on its own. Grab the slider to take over."),
+        h("button", { type: "button", class: "small", onclick: () => { stopDemo(); input.focus(); } }, "Stop"));
+      function render(user) {
+        const env = view.update(values) || {};
+        input.value = values.mp;
+        input.style.setProperty("--fill", `${((values.mp - k.min) / (k.max - k.min)) * 100}%`);
+        valueEl.textContent = M.fmt(values.mp, 2, 1, k.unit);
+        outs.replaceChildren(...model.outputs.map((o, i) => h("div", { class: "out" + (exhibitStep >= 1 && o.id === "child" ? " hl" : ""), style: `--k:var(--model-${(o.color ?? i) % 8})` },
+          h("dt", {}, h("span", { class: "key", "aria-hidden": "true" }), o.label), h("dd", {}, M.fmt(env[o.id], o.decimals ?? 2, 1, o.unit || "")))));
+        if (!user) return;
+        const lead = values.mp - MEAN;
+        if (lead >= 2) seen.above = true;
+        if (lead <= -2) seen.below = true;
+        if (Math.abs(lead) >= 2) setStep(1);
+        if (exhibitStep >= 1) {
+          const side = lead >= 0 ? "above" : "below";
+          noticeLine.replaceChildren(h("b", {}, `Parents ${M.fmt(Math.abs(lead), 1, 1, " in")} ${side} average.`), " ",
+            h("b", {}, `Their children: ${M.fmt(Math.abs(env.child_dev), 1, 1, " in")} ${side}.`));
+          noticeMore.textContent = seen.above && seen.below
+            ? "Either way, children land closer to the average than their parents. Short parents' children are pulled up towards the middle too."
+            : lead >= 0 ? "Tall parents have tall children, but less tall. Now try short parents." : "Short parents have short children, but less short. Now try tall parents.";
+          if (seen.above && seen.below) setStep(2);
+        }
+      }
+      // Attract mode: a slow sweep until someone touches the exhibit. Off under reduced motion.
+      let demo = null, onscreen = true;
+      if (typeof IntersectionObserver !== "undefined") {
+        const io = new IntersectionObserver(([e]) => { onscreen = e.isIntersecting; });
+        io.observe(stage);
+        cleanups.push(() => io.disconnect());
+      }
+      function stopDemo() {
+        if (demo) cancelAnimationFrame(demo);
+        demo = null;
+        demoNote.hidden = true;
+        playBtn.disabled = false;
+      }
+      function startDemo() {
+        if (M.reduceMotion()) { demoNote.hidden = true; return; }
+        const t0 = performance.now();
+        const tick = (t) => {
+          if (!el.isConnected) return stopDemo();
+          if (!document.hidden && onscreen) {
+            values = Object.assign({}, values, { mp: MEAN + 4.75 * Math.cos(((t - t0) / 9000) * 2 * Math.PI) });
+            render(false);
+          }
+          demo = requestAnimationFrame(tick);
+        };
+        demo = requestAnimationFrame(tick);
+      }
+      function sweep() {
+        playBtn.disabled = true;
+        const from = values.mp, legs = [[from, k.max], [k.max, k.min], [k.min, MEAN + 4]];
+        let leg = 0, t0 = performance.now();
+        if (M.reduceMotion()) { values = Object.assign({}, values, { mp: k.min }); render(true); values = Object.assign({}, values, { mp: k.max }); render(true); playBtn.disabled = false; return; }
+        const tick = (t) => {
+          if (!el.isConnected || !playBtn.disabled) return;
+          const [a, b] = legs[leg], dur = Math.abs(b - a) * 220, f = dur ? Math.min(1, (t - t0) / dur) : 1;
+          const e = f < 0.5 ? 4 * f * f * f : 1 - Math.pow(-2 * f + 2, 3) / 2;
+          values = Object.assign({}, values, { mp: a + (b - a) * e });
+          render(true);
+          if (f >= 1) { leg++; t0 = t; }
+          if (leg < legs.length) requestAnimationFrame(tick); else playBtn.disabled = false;
+        };
+        requestAnimationFrame(tick);
+      }
+      const take = () => { if (demo) stopDemo(); };
+      input.addEventListener("pointerdown", take);
+      input.addEventListener("keydown", take);
+      input.addEventListener("input", () => { take(); playBtn.disabled = false; values = Object.assign({}, values, { mp: +input.value }); render(true); });
+      const deck = h("div", { class: "controls", role: "group", "aria-label": "Controls" },
+        h("div", { class: "ctl", style: `--k:var(--model-${(k.color ?? 0) % 8})` },
+          h("label", { for: "he-mp" }, h("span", { class: "key", "aria-hidden": "true" }), "Parents' average height"), valueEl, input, playBtn));
+      stage.replaceChildren(
+        h("div", { class: "model-head" },
+          h("p", { class: "he-from" }, h("span", { class: "plate", "aria-hidden": "true" }, "2"), h("span", {}, "Exhibit 2 of the example lesson", h("br"), h("em", {}, lesson.source.title))),
+          h("span", { class: "tag", title: model.note }, "Teaching model")),
+        h("div", { class: "he-viz" }, vizBox, demoNote), outs, deck,
+        h("p", { class: "model-note" }, model.note));
+      stage.removeAttribute("aria-busy");
+      render(exhibitStep > 0);
+      if (exhibitStep === 0) startDemo(); else demoNote.hidden = true;
+      cleanups.push(() => { stopDemo(); view.destroy(); });
+    }).catch(() => {
+      stage.replaceChildren(h("p", { class: "muted" }, "The example exhibit couldn't load. You can still make a lesson below."));
+      stage.removeAttribute("aria-busy");
+    });
+    return el;
+  }
+
+
+  /* From paper to hall: one scroll-scrubbed sequence. The page of the paper is marked up, each marked
+     idea grows out of it into a numbered exhibit, then the page steps back and the hall stands.
+     Without JavaScript, or with reduced motion, it is a static figure beside the four steps. */
+  const HALL_STEPS = [
+    ["Bring a paper", "A topic to search, a link, a PDF or a saved web page. You say who the lesson is for."],
+    ["Lemma finds the ideas", "It reads the paper and drafts an outline of its main ideas. You can review and edit it before anything is built."],
+    ["Each idea becomes an exhibit", "A live model you can play with, checked before you see it, with the paper's own words quoted and verified."],
+    ["Walk the hall", "Start while later exhibits are still building. Save the lesson to your library, or download one file that works offline."],
+  ];
+  const MINI = {
+    bars: '<rect x="8" y="30" width="14" height="26"/><rect x="29" y="18" width="14" height="38" class="m1"/><rect x="50" y="24" width="14" height="32" class="m2"/>',
+    curves: '<path d="M6 58L74 6" class="dash"/><path d="M6 46L74 18" class="m0"/><circle cx="52" cy="27" r="5" class="dot"/>',
+    sampling: [[12,48],[18,40],[24,44],[28,34],[33,38],[38,30],[42,33],[47,26],[52,28],[56,21],[61,24],[66,16],[20,50],[45,36],[58,30],[30,42],[64,20],[36,26]]
+      .map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="2.6" class="${i % 5 === 0 ? "m1" : "m0"}"/>`).join(""),
+  };
+  function hallSection() {
+    const M = window.LemmaModel;
+    const stepEls = HALL_STEPS.map(([t, d], i) => h("li", { class: "hs-step" },
+      h("span", { class: "plate", "aria-hidden": "true" }, String(i + 1)),
+      h("div", {}, h("h3", {}, t), h("p", {}, d))));
+    const lines = Array.from({ length: 15 }, (_, i) => h("span", { class: "hp-line" + ([2, 7, 11].includes(i) ? " idea" : ""), style: `--w:${[96, 88, 92, 100, 74, 94, 90, 84, 98, 70, 93, 89, 97, 80, 60][i]}%` }));
+    const ideas = lines.filter((l) => l.classList.contains("idea"));
+    const fallback = [["bars", "One number for two parents"], ["curves", "Children are two-thirds as unusual"], ["sampling", "Where the regression comes from"]];
+    const cards = fallback.map(([type, title], i) => {
+      const art = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      art.setAttribute("viewBox", "0 0 80 62");
+      art.setAttribute("class", "hx-art");
+      art.innerHTML = MINI[type] || MINI.curves;
+      return h("div", { class: "hx-card" },
+        h("div", { class: "hx-top" }, h("span", { class: "plate" }, String(i + 1)), h("span", { class: "hx-title" }, title)),
+        art, h("div", { class: "hx-deck" }, h("span", { class: "hx-thumb", style: `--at:${[38, 72, 55][i]}%` })));
+    });
+    const paper = h("div", { class: "hp-paper" },
+      h("p", { class: "hp-title" }, "Regression towards Mediocrity in Hereditary Stature"),
+      h("p", { class: "hp-by" }, "Francis Galton, 1886"), h("div", { class: "hp-lines" }, lines));
+    const art = h("div", { class: "hall-art", "aria-hidden": "true" }, paper, h("div", { class: "hall-cards" }, cards));
+    const sec = h("section", { class: "paper-hall", "aria-labelledby": "hall-title" },
+      h("div", { class: "hall-pin" },
+        h("div", { class: "hall-copy" },
+          h("h2", { id: "hall-title" }, "From a paper to a hall of exhibits"),
+          h("ol", { class: "hall-steps" }, stepEls)),
+        art));
+    exampleLesson().then((lesson) => {
+      lesson.concepts.slice(0, 3).forEach((c, i) => { cards[i].querySelector(".hx-title").textContent = c.title; });
+      paper.querySelector(".hp-title").textContent = lesson.source.title;
+      paper.querySelector(".hp-by").textContent = `${lesson.source.authors}, ${lesson.source.year}`;
+    }).catch(() => {});
+    if (M.reduceMotion() || typeof requestAnimationFrame === "undefined") return sec;
+
+    sec.classList.add("is-live");
+    const clamp = (x) => Math.max(0, Math.min(1, x));
+    const ease = (x) => 1 - Math.pow(1 - x, 3);
+    // Where each card starts: centred on its marked line, measured untransformed (offsets ignore transforms).
+    const offsetIn = (node, ancestor) => { let x = 0, y = 0; for (let n = node; n && n !== ancestor; n = n.offsetParent) { x += n.offsetLeft; y += n.offsetTop; } return [x, y]; };
+    function measure() {
+      cards.forEach((card, i) => {
+        const [lx, ly] = offsetIn(ideas[i], art), [cx, cy] = offsetIn(card, art);
+        card.style.setProperty("--dx", `${lx + ideas[i].offsetWidth / 2 - (cx + card.offsetWidth / 2)}px`);
+        card.style.setProperty("--dy", `${ly + ideas[i].offsetHeight / 2 - (cy + card.offsetHeight / 2)}px`);
+      });
+    }
+    let raf = 0, lastStep = -1;
+    function frame() {
+      raf = 0;
+      const r = sec.getBoundingClientRect(), run = sec.offsetHeight - innerHeight;
+      if (run <= 0) return;
+      const p = clamp(-r.top / run);
+      art.style.setProperty("--hl", ease(clamp((p - 0.16) / 0.2)).toFixed(3));
+      art.style.setProperty("--back", ease(clamp((p - 0.8) / 0.14)).toFixed(3));
+      cards.forEach((card, i) => card.style.setProperty("--t", ease(clamp((p - 0.42 - i * 0.07) / 0.2)).toFixed(3)));
+      const step = p < 0.14 ? 0 : p < 0.4 ? 1 : p < 0.78 ? 2 : 3;
+      if (step !== lastStep) {
+        lastStep = step;
+        stepEls.forEach((li, i) => li.className = "hs-step" + (i < step ? " done" : i === step ? " now" : ""));
+        art.dataset.step = step;
+      }
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(frame); };
+    const onResize = () => { measure(); onScroll(); };
+    // Attach after view() has mounted the page: it runs the previous screen's cleanups first.
+    requestAnimationFrame(() => {
+      if (!sec.isConnected) return;
+      addEventListener("scroll", onScroll, { passive: true });
+      addEventListener("resize", onResize);
+      cleanups.push(() => { removeEventListener("scroll", onScroll); removeEventListener("resize", onResize); cancelAnimationFrame(raf); });
+      measure();
+      frame();
+    });
+    if (document.fonts) document.fonts.ready.then(() => sec.isConnected && onResize());
+    return sec;
   }
 
   function showHome(msg) {
     setHash("");
     const p = status.provider || {};
-    const hero = (primaryTry) => h("section", { class: "home-hero" },
-      h("div", {},
-        h("h1", {}, "Learn a paper by playing with it"),
-        h("p", { class: "lead" }, "Search any topic or bring a paper, and Lemma turns it into a hall of hands-on exhibits. You don't need to have read anything: it tells you the paper's story, walks you through a live model of each idea, then lets you try it yourself.")),
-      tryPanel(primaryTry));
     if (!p.ok) {
-      view(hero(true), msg ? errorBox(msg) : null,
+      view(msg ? errorBox(msg) : null, homeExhibit(), hallSection(),
         h("section", { class: "panel setup", "aria-labelledby": "setup-title" },
           h("h2", { id: "setup-title" }, "Make lessons from your own papers"),
-          h("p", {}, "Lemma doesn't come with an AI model. It uses one you install and sign in to yourself, so your papers go only where you choose. Pick one; you can switch later in Settings."),
-          setupPanel(() => showHome())));
+          h("p", {}, "Lemma doesn't come with an AI model. It uses your own key, so your papers go only where you choose. Pick a provider; you can switch later in Settings."),
+          keyForm(() => showHome())));
       return;
     }
     let mode = session.mode || "search";
@@ -363,7 +573,7 @@
     const recent = h("section", { class: "recent", hidden: true, "aria-labelledby": "recent-title" });
     setMode(mode);
     if (session.search) { qIn.value = session.search.query; drawResults(); }
-    view(hero(false), msg ? errorBox(msg) : null, form, results, recent);
+    view(msg ? errorBox(msg) : null, homeExhibit(), hallSection(), h("div", { class: "home-make" }, h("div", { class: "hm-main" }, form, results), recent));
     if (status.library_count) {
       api("/api/lessons").then((items) => {
         if (!items.length) return;
@@ -372,7 +582,7 @@
           h("ul", { class: "recent-list" }, items.slice(0, 3).map((it) => h("li", {},
             h("button", { class: "recent-item", onclick: async () => openLesson(await api(`/api/lessons/${it.id}`), { saved: true }) },
               h("span", { class: "ri-title" }, it.title), h("span", { class: "ri-meta" }, `${it.concepts} exhibit${it.concepts === 1 ? "" : "s"} · ${it.source}`))))),
-          items.length > 3 ? h("a", { href: "#/library" }, `All ${items.length} lessons`) : null);
+          ...(items.length > 3 ? [h("a", { href: "#/library" }, `All ${items.length} lessons`)] : []));
       }).catch(() => {});
     }
   }
@@ -628,59 +838,11 @@
 
   /* ------------------------------------------------------------ settings */
   function showSettings() {
-    let providers = status.providers || [];
-    let selected = (status.provider || {}).id || (providers[0] || {}).id;
-    const msg = h("div", { role: "status" });
-    const detail = h("div");
-    let model, path;
-    const choice = () => h("div", { class: "provider-choice", role: "radiogroup", "aria-label": "AI tool" }, providers.map((p) =>
-      h("label", { class: "provider-option" },
-        h("input", { type: "radio", name: "provider", value: p.id, checked: p.id === selected, onchange: () => { selected = p.id; drawDetail(); } }),
-        h("span", { class: "po-body" },
-          h("span", { class: "po-name" }, p.name),
-          h("span", { class: "po-status " + (p.ok ? "ok" : "") }, p.ok ? icon("check") : null, p.ok ? `Ready · ${p.model}` : providerState(p))))));
-    function drawDetail() {
-      const p = providers.find((x) => x.id === selected) || {};
-      model = h("select", { id: "model", disabled: true }, h("option", { value: p.model }, p.ok ? `${p.model} (loading the list…)` : `Connect ${p.name} to choose a model`));
-      const note = h("p", { class: "muted small" }, `Models come from ${p.name} through your local installation.`);
-      path = h("input", { id: "tool-path", type: "text", autocomplete: "off", placeholder: p.path || (p.id === "codex" ? "~/.local/bin/codex" : "/opt/homebrew/bin/opencode") });
-      path.value = p.configured_path || "";
-      const how = p.id === "codex"
-        ? "Lemma runs each request as a one-off `codex exec` that saves nothing to disk, ignores your Codex config and rules, and runs in a read-only sandbox in an empty folder. Approvals are set to never, and the shell, code execution, web search, browser, computer use, apps, plugins, MCP servers, memories and image tools are turned off, so the model can only read what Lemma sends and reply with text."
-        : "Lemma runs its own private copy of `opencode serve`, reachable only from this computer and protected by a one-time password. Its agent has no tools, so the model can only read what Lemma sends and reply with text. Lemma deletes each OpenCode session when it finishes, so papers don't stay in your OpenCode history.";
-      detail.replaceChildren(...[
-        p.ok ? null : h("div", { class: "settings-setup" }, providerSteps(p),
-          h("div", { class: "actions" }, h("button", { class: "ghost", onclick: async () => { await refreshStatus(); providers = status.providers || []; showSettings(); } }, icon("refresh"), "Check again"))),
-        h("label", { for: "model" }, `${p.name} model`), model, note,
-        h("label", { for: "tool-path" }, `${p.name} program`), path,
-        h("p", { class: "muted small" }, p.path ? `Found at ${p.path}. Leave this blank to keep finding it automatically.` : `Not found automatically. Enter the full path to the ${p.id === "codex" ? "codex" : "opencode"} program.`),
-        h("p", { class: "muted small", style: "max-width:70ch" }, how)].filter(Boolean));
-      if (p.ok) {
-        const want = selected;
-        api(`/api/models/${p.id}`).then((r) => {
-          if (want !== selected) return;
-          model.replaceChildren(...r.models.map((m) => h("option", { value: m.id, selected: m.id === r.current }, `${m.name}${m.context ? ` · ${Math.round(m.context / 1000)}k context` : ""}`)));
-          if (!r.models.some((m) => m.id === r.current)) model.prepend(h("option", { value: r.current, selected: true }, `${r.current} (not offered right now)`));
-          model.disabled = false;
-          note.textContent = `${r.models.length} models offered by ${p.name}${r.version ? ` · ${r.version}` : ""}.`;
-        }).catch((err) => note.replaceChildren(errorBox(err.message)));
-      }
-    }
     view(h("section", { class: "panel", style: "max-width:900px" },
       h("h1", {}, "Settings"),
-      h("p", { style: "max-width:66ch" }, "Lemma builds lessons with an AI tool already installed and signed in on this computer. It sends a paper's text only when you build a lesson, and only to the tool and model chosen here."),
-      h("h3", {}, "AI tool"), choice(), detail, msg,
-      h("div", { class: "actions" },
-        h("button", { class: "primary", onclick: async () => {
-          const body = { provider: selected, path: path.value.trim() };
-          if (!model.disabled && model.value) body.model = model.value;
-          try {
-            status = await api("/api/settings", body);
-            msg.replaceChildren(h("p", { class: "ok" }, icon("check"), status.provider.ok ? ` Saved. Lessons will be built with ${status.provider.label}.` : " Saved. " + status.provider.message));
-          } catch (err) { msg.replaceChildren(errorBox(err.message)); }
-        } }, "Save"),
-        h("a", { class: "btn ghost", href: "#/" }, "Back"))));
-    drawDetail();
+      h("p", { style: "max-width:66ch" }, "Lemma builds lessons with your own AI provider key. It sends a paper's text only when you build a lesson, and only to the provider and model chosen here. The model gets no tools: it can only read what Lemma sends and reply with text."),
+      h("h3", {}, "AI provider"), keyForm(),
+      h("div", { class: "actions" }, h("a", { class: "btn ghost", href: "#/" }, "Back"))));
   }
 
   /* ------------------------------------------------------------ routing */

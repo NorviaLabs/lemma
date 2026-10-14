@@ -17,7 +17,7 @@ from urllib.parse import urlsplit
 
 from . import __version__, export, generate, ingest, search, store
 from . import lesson as L
-from .llm import PROVIDERS, ProviderError, forget_cached_logins, make_provider, opencode_version
+from .llm import DEFAULT_PROVIDER, PROVIDERS, ProviderError, make_provider
 
 MAX_BODY = 64 * 1024 * 1024
 STATIC = resources.files("lemma").joinpath("static")
@@ -28,6 +28,7 @@ DEV = False  # set by `lemma --dev`: live-reload script and /api/dev/events
 PAPERS: dict[str, dict] = {}  # paper_id -> {text, title, url, kind, pages}
 SOURCES: dict[str, str] = {}  # lesson id -> paper text, for lessons built in this session
 _lock = threading.Lock()
+REQUEST = threading.local()  # the current request's headers; one thread per request
 
 
 class ApiError(Exception):
@@ -39,22 +40,20 @@ class ApiError(Exception):
 # ---------------------------------------------------------------- helpers
 
 
-def provider_status() -> dict:
-    settings = store.load_settings()
-    current = make_provider(settings)
-    ok, msg = current.available()
-    providers = []
-    for pid, name in PROVIDERS.items():
-        p = make_provider(settings, pid)
-        p_ok, p_msg = p.available()
-        configured = (settings.get("paths") or {}).get(pid) or (settings.get("opencode_path", "") if pid == "opencode-go" else "")
-        providers.append({"id": pid, "name": name, "model": p.model, "ok": p_ok, "message": p_msg, "path": p.binary or "", "configured_path": configured, **p.setup_state()})
-    return {
-        "version": __version__,
-        "provider": {"id": current.id, "name": current.name, "model": current.model, "label": current.label, "ok": ok, "message": msg},
-        "providers": providers,
-        "library_count": len(store.list_lessons()),
-    }
+def _credential():
+    """The learner's provider, model and key. The browser keeps them and sends them with each request."""
+    headers = getattr(REQUEST, "headers", None) or {}
+    return (headers.get("X-Lemma-Provider") or DEFAULT_PROVIDER, headers.get("X-Lemma-Key") or "", headers.get("X-Lemma-Model") or "")
+
+
+def provider_from_request(pid: str | None = None):
+    req_pid, key, model = _credential()
+    if pid and pid != req_pid:
+        raise ApiError(400, "Save this provider in Settings first.")
+    try:
+        return make_provider(req_pid, key, model)
+    except ProviderError as e:
+        raise ApiError(400, str(e)) from None
 
 
 def load_example() -> tuple[dict, str]:
@@ -82,64 +81,24 @@ def require_valid(lesson, source_text: str | None):
 
 
 def api_status(_body):
-    return provider_status()
+    p = provider_from_request()
+    ok, msg = p.available()
+    return {
+        "version": __version__,
+        "provider": {"id": p.id, "name": p.name, "model": p.model, "label": p.label, "ok": ok, "message": msg},
+        "providers": [{"id": i.id, "name": i.name, "default_model": i.default_model, "key_url": i.key_url} for i in PROVIDERS.values()],
+        "library_count": len(store.list_lessons()),
+    }
 
 
-def api_status_refresh(_body):
-    """Re-detect installs and sign-ins right now, e.g. after the learner ran a command in a terminal."""
-    forget_cached_logins()
-    return provider_status()
-
-
-def api_settings(body):
-    """Body: {provider?, model?, path?}. `model` and `path` apply to `provider` (or the current one)."""
-    settings = store.load_settings()
-    models = settings.setdefault("models", {})
-    paths = settings.setdefault("paths", {})
-    # Older settings files kept the OpenCode model and path at the top level.
-    if isinstance(settings.get("model"), str):
-        models.setdefault("opencode-go", settings.pop("model"))
-    if "opencode_path" in settings:
-        paths.setdefault("opencode-go", settings.pop("opencode_path"))
-    pid = str(body.get("provider") or settings.get("provider") or "opencode-go")
-    if pid not in PROVIDERS:
-        raise ApiError(400, "Unknown AI provider.")
-    if "model" in body:
-        model = str(body["model"]).strip()
-        if not model or len(model) > 100 or "/" in model or " " in model:
-            raise ApiError(400, f"Choose a {PROVIDERS[pid]} model.")
-        models[pid] = model
-    if "path" in body:
-        path = os.path.expanduser(str(body["path"]).strip())
-        if path and not (os.path.isfile(path) and os.access(path, os.X_OK)):
-            raise ApiError(400, f"No {PROVIDERS[pid]} program was found at {path}.")
-        if path:
-            paths[pid] = path
-        else:
-            paths.pop(pid, None)
-    settings.pop("api_key", None)
-    settings["provider"] = pid
-    store.save_settings(settings)
-    return provider_status()
-
-
-def _models_for(pid: str | None):
-    p = make_provider(store.load_settings(), pid)
+def api_models(_body):
+    """Models offered by the provider in the request headers, read live with the learner's key. Also checks the key."""
+    p = provider_from_request()
     try:
         models = p.models()
     except ProviderError as e:
         raise ApiError(502, str(e)) from None
-    # Both tools print their version on one line for `--version`.
-    return {"provider": p.id, "models": models, "current": p.model, "version": opencode_version(p.binary) if p.binary else ""}
-
-
-def api_models(_body):
-    """Models offered by the current provider, read live from its local installation."""
-    return _models_for(None)
-
-
-def api_models_for(pid):
-    return _models_for(pid)
+    return {"provider": p.id, "models": models, "current": p.model}
 
 
 def api_papers(body):
@@ -203,7 +162,7 @@ def _paper(body) -> dict:
 
 
 def _provider():
-    p = make_provider(store.load_settings())
+    p = provider_from_request()
     ok, msg = p.available()
     if not ok:
         raise ApiError(400, msg)
@@ -303,10 +262,7 @@ def api_export(body):
 
 ROUTES = [
     ("GET", r"/api/status", api_status, False),
-    ("POST", r"/api/status/refresh", api_status_refresh, False),
-    ("POST", r"/api/settings", api_settings, False),
     ("GET", r"/api/models", api_models, False),
-    ("GET", r"/api/models/(opencode-go|codex)", api_models_for, True),
     ("POST", r"/api/papers", api_papers, False),
     ("POST", r"/api/search", api_search, False),
     ("POST", r"/api/outline", api_outline, False),
@@ -364,6 +320,7 @@ class Handler(BaseHTTPRequestHandler):
     def _dispatch(self, method: str):
         if not self._allowed_host():
             return self._send(403, b"Forbidden", "text/plain")
+        REQUEST.headers = self.headers
         path = urlsplit(self.path).path
         if DEV and method == "GET" and path == "/api/dev/events":
             return self._dev_events()

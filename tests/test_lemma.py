@@ -12,6 +12,7 @@ import tempfile
 import threading
 import time
 import unittest
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -427,134 +428,99 @@ class SearchTests(unittest.TestCase):
             ingest.from_url = orig
 
 
-class OpenCodeProviderTests(unittest.TestCase):
-    """Runs the real provider against tests/fake_opencode.py instead of the opencode program."""
+class FakeAPI(BaseHTTPRequestHandler):
+    """A stand-in for an OpenAI-compatible API. Records each call."""
+
+    calls: list = []
+
+    def log_message(self, *args):
+        pass
+
+    def _reply(self, status, obj):
+        raw = json.dumps(obj).encode()
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(raw)))
+        self.end_headers()
+        self.wfile.write(raw)
+
+    def _authorized(self):
+        if self.headers.get("Authorization") != "Bearer good-key":
+            self._reply(401, {"error": {"message": "Incorrect API key provided"}})
+            return False
+        return True
+
+    def do_GET(self):
+        if self._authorized():
+            self._reply(200, {"data": [{"id": "gpt-6.1-sol"}, {"id": "text-embedding-3"}, {"id": "glm-5.3", "context_length": 200000}]})
+
+    def do_POST(self):
+        body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+        FakeAPI.calls.append({"path": self.path, "body": body})
+        if not self._authorized():
+            return
+        last = body["messages"][-1]["content"]
+        if "FAIL" in last:
+            return self._reply(429, {"error": {"message": "quota exceeded"}})
+        if "LONG" in last:
+            return self._reply(400, {"error": {"message": "too many tokens", "code": "context_length_exceeded"}})
+        turn = sum(m["role"] == "assistant" for m in body["messages"]) + 1
+        finish = "length" if "CUT" in last else "stop"
+        self._reply(200, {"choices": [{"message": {"role": "assistant", "content": json.dumps({"turn": turn, "model": body["model"]})}, "finish_reason": finish}]})
+
+
+class HTTPProviderTests(unittest.TestCase):
+    """Runs the real provider against FakeAPI."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.httpd = ThreadingHTTPServer(("127.0.0.1", 0), FakeAPI)
+        threading.Thread(target=cls.httpd.serve_forever, daemon=True).start()
+        cls.info = llm.ProviderInfo("openai", "OpenAI", f"http://127.0.0.1:{cls.httpd.server_address[1]}/v1", "gpt-6.1-sol", "")
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.httpd.shutdown()
+        cls.httpd.server_close()
 
     def setUp(self):
-        self.log = Path(TMP_HOME) / "fake_oc.log"
-        self.log.write_text("")
-        os.environ["FAKE_OC_LOG"] = str(self.log)
-        self.auth = Path(TMP_HOME) / "xdg"
-        (self.auth / "opencode").mkdir(parents=True, exist_ok=True)
-        (self.auth / "opencode/auth.json").write_text(json.dumps({"opencode-go": {"type": "api", "key": "secret"}}))
-        os.environ["XDG_DATA_HOME"] = str(self.auth)
-        self.p = llm.OpenCodeGoProvider(model="glm-5.3", opencode_path=str(ROOT / "tests/fake_opencode.py"))
+        FakeAPI.calls.clear()
+        self.p = llm.HTTPProvider(self.info, "good-key")
 
-    def tearDown(self):
-        llm.shutdown()
-        os.environ.pop("XDG_DATA_HOME", None)
-
-    def events(self):
-        return [json.loads(l) for l in self.log.read_text().splitlines()]
-
-    def test_conversation_runs_through_a_private_server_and_cleans_up(self):
+    def test_conversation_resends_the_history(self):
         self.assertEqual(self.p.available(), (True, ""))
         conv = self.p.conversation("SYSTEM", "<paper>text</paper>")
         r1 = conv.send("task")
         r2 = conv.send("repair")
-        conv.close()
-        self.assertEqual(json.loads(r1.text), {"turn": 1, "model": "glm-5.3"})
-        self.assertEqual(json.loads(r2.text)["turn"], 2)  # same session: the repair sees the history
-        ev = self.events()
-        self.assertEqual([e["event"] for e in ev], ["message", "message", "delete"])
-        self.assertEqual(ev[0]["nparts"], 2)  # the paper goes only with the first message
-        self.assertEqual(ev[1]["nparts"], 1)
-        self.assertTrue(all(e["agent"] == "lemma" and e["model"]["providerID"] == "opencode-go" for e in ev[:2]))
-        srv = llm._server
-        with self.assertRaises(llm.ProviderError):  # the server refuses anyone without the password
-            srv.password, real = "wrong", srv.password
-            try:
-                srv.request("GET", "/agent")
-            finally:
-                srv.password = real
+        self.assertEqual(json.loads(r1.text), {"turn": 1, "model": "gpt-6.1-sol"})
+        self.assertEqual(json.loads(r2.text)["turn"], 2)
+        self.assertEqual(r1.stop_reason, "end_turn")
+        first, second = (c["body"]["messages"] for c in FakeAPI.calls)
+        self.assertEqual([m["role"] for m in first], ["system", "user", "user"])
+        self.assertEqual(first[1]["content"], "<paper>text</paper>")
+        self.assertEqual([m["role"] for m in second], ["system", "user", "user", "assistant", "user"])
+        self.assertEqual(second[-1]["content"], "repair")
+        self.assertNotIn("tools", FakeAPI.calls[0]["body"])
+        self.assertEqual(conv.send("CUT").stop_reason, "max_tokens")
 
     def test_models_and_errors(self):
-        self.assertEqual([m["id"] for m in self.p.models()], ["glm-5.3", "gpt-5.6-luna"])  # deprecated hidden
+        self.assertEqual([m["id"] for m in self.p.models()], ["glm-5.3", "gpt-6.1-sol"])  # embeddings left out
         conv = self.p.conversation("S", "<paper>x</paper>")
         with self.assertRaisesRegex(llm.ProviderError, "quota exceeded"):
             conv.send("FAIL please")
-        conv.close()
+        with self.assertRaisesRegex(llm.ProviderError, "too long for gpt-6.1-sol"):
+            conv.send("LONG")
+        with self.assertRaisesRegex(llm.ProviderError, "rejected the key"):
+            llm.HTTPProvider(self.info, "bad-key").models()
 
-    def test_missing_install_or_login_is_reported(self):
-        self.assertEqual(llm.find_opencode(str(ROOT / "tests/fake_opencode.py")), str(ROOT / "tests/fake_opencode.py"))
-        self.assertNotEqual(llm.find_opencode("/nope/opencode"), "/nope/opencode")
-        orig = llm.find_opencode
-        llm.find_opencode = lambda path=None: None
-        try:
-            ok, msg = llm.OpenCodeGoProvider().available()
-        finally:
-            llm.find_opencode = orig
+    def test_missing_key_or_unknown_provider(self):
+        ok, msg = llm.make_provider("openai").available()
         self.assertFalse(ok)
-        self.assertIn("isn't installed", msg)
-        (self.auth / "opencode/auth.json").write_text("{}")
-        ok, msg = self.p.available()
-        self.assertFalse(ok)
-        self.assertIn("opencode providers login", msg)
-
-
-class CodexProviderTests(unittest.TestCase):
-    """Runs the real Codex provider against tests/fake_codex.py instead of the codex program."""
-
-    def setUp(self):
-        self.log = Path(TMP_HOME) / "fake_codex.log"
-        self.log.write_text("")
-        os.environ["FAKE_CODEX_LOG"] = str(self.log)
-        os.environ["FAKE_CODEX_LOGGED_IN"] = "1"
-        llm._codex_login.clear()
-        self.p = llm.CodexProvider(model="gpt-6.1-sol", codex_path=str(ROOT / "tests/fake_codex.py"))
-
-    def calls(self):
-        return [json.loads(l) for l in self.log.read_text().splitlines()]
-
-    def test_locked_down_one_off_runs_with_history_resent(self):
-        self.assertEqual(self.p.available(), (True, ""))
-        conv = self.p.conversation("SYSTEM PROMPT", "<paper>the paper</paper>")
-        self.assertEqual(json.loads(conv.send("task").text), {"turn": 1, "model": "gpt-6.1-sol"})
-        self.assertEqual(json.loads(conv.send("fix these").text)["turn"], 2)
-        first, second = self.calls()
-        args = first["args"]
-        for flag in ("--ephemeral", "--ignore-user-config", "--ignore-rules", "--json"):
-            self.assertIn(flag, args)
-        self.assertEqual(args[args.index("--sandbox") + 1], "read-only")
-        disabled = {args[i + 1] for i, a in enumerate(args) if a == "--disable"}
-        self.assertTrue({"shell_tool", "unified_exec", "code_mode_host", "multi_agent", "apps", "plugins", "computer_use", "browser_use", "memories"} <= disabled)
-        configs = [args[i + 1] for i, a in enumerate(args) if a == "-c"]
-        self.assertIn('web_search="disabled"', configs)
-        self.assertIn('approval_policy="never"', configs)
-        self.assertIn('developer_instructions="SYSTEM PROMPT"', configs)
-        self.assertTrue(first["prompt"].startswith("<paper>the paper</paper>"))
-        # Nothing is kept by Codex, so the repair re-sends the paper, the task and the first reply.
-        self.assertIn("task", second["prompt"])
-        self.assertIn('{"turn": 1, "model": "gpt-6.1-sol"}', second["prompt"])
-        self.assertTrue(second["prompt"].rstrip().endswith("fix these"))
-
-    def test_errors_models_and_limits(self):
-        self.assertEqual([m["id"] for m in self.p.models()], ["gpt-6.1-sol", "tiny"])  # hidden ones left out
-        with self.assertRaisesRegex(llm.ProviderError, "usage limit reached"):
-            self.p.conversation("S", "<paper>x</paper>").send("FAIL")
-        tiny = llm.CodexProvider(model="tiny", codex_path=str(ROOT / "tests/fake_codex.py"))
-        with self.assertRaisesRegex(llm.ProviderError, "too long for tiny"):
-            tiny.conversation("S", "<paper>" + "word " * 2000 + "</paper>").send("task")
-        os.environ["FAKE_CODEX_LOGGED_IN"] = "0"
-        llm._codex_login.clear()
-        ok, msg = self.p.available()
-        self.assertFalse(ok)
-        self.assertIn("codex login", msg)
-
-    def test_settings_switch_provider_and_migrate_old_keys(self):
-        from lemma import store
-
-        store.save_settings({"model": "glm-5.3", "opencode_path": "", "provider": "opencode-go"})
-        st = server.api_settings({"provider": "codex", "model": "gpt-6-luna", "path": str(ROOT / "tests/fake_codex.py")})
-        self.assertEqual(st["provider"]["id"], "codex")
-        self.assertEqual(st["provider"]["model"], "gpt-6-luna")
-        saved = store.load_settings()
-        self.assertEqual(saved["models"], {"opencode-go": "glm-5.3", "codex": "gpt-6-luna"})
-        self.assertNotIn("model", saved)
-        self.assertEqual(llm.make_provider(saved, "opencode-go").model, "glm-5.3")
-        with self.assertRaises(server.ApiError):
-            server.api_settings({"provider": "codex", "path": "/nope/codex"})
-        store.save_settings({})
+        self.assertIn("Add your OpenAI key", msg)
+        self.assertEqual(llm.make_provider("opencode-go", "k", "glm-5.3").model, "glm-5.3")
+        self.assertEqual(llm.make_provider(None, "k").id, "opencode-go")
+        with self.assertRaises(llm.ProviderError):
+            llm.make_provider("codex", "k")
 
 
 class ServerTests(unittest.TestCase):
@@ -594,17 +560,17 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(raw[:4], b"wOF2")
         self.assertEqual(self.req("GET", "/static/fonts/../styles.css")[0], 404)
 
-    def test_status_reports_setup_steps_and_library(self):
-        s, raw = self.req("POST", "/api/status/refresh", {})
+    def test_status_follows_the_credential_headers(self):
+        s, raw = self.req("GET", "/api/status")
         self.assertEqual(s, 200)
         st = json.loads(raw)
         self.assertIn("library_count", st)
-        for p in st["providers"]:
-            self.assertIn(p["id"], ("opencode-go", "codex"))
-            self.assertIsInstance(p["installed"], bool)
-            self.assertIsInstance(p["signed_in"], bool)
-            if p["ok"]:
-                self.assertTrue(p["installed"] and p["signed_in"])
+        self.assertEqual({p["id"] for p in st["providers"]}, {"opencode-go", "openai"})
+        self.assertFalse(st["provider"]["ok"])  # no key sent
+        st = json.loads(self.req("GET", "/api/status", headers={"X-Lemma-Provider": "openai", "X-Lemma-Key": "sk-secret-123", "X-Lemma-Model": "m"})[1])
+        self.assertEqual((st["provider"]["id"], st["provider"]["model"], st["provider"]["ok"]), ("openai", "m", True))
+        self.assertNotIn("sk-secret-123", json.dumps(st))  # the key never comes back
+        self.assertEqual(self.req("GET", "/api/status", headers={"X-Lemma-Provider": "nope"})[0], 400)
 
     def test_rejects_foreign_host_and_origin(self):
         self.assertEqual(self.req("GET", "/api/status", headers={"Host": "evil.example"})[0], 403)

@@ -8,7 +8,6 @@ import threading
 import webbrowser
 
 from . import __version__, dev, server
-from .llm import shutdown
 from .server import make_server
 
 
@@ -23,7 +22,7 @@ def main(argv=None):
         return dev.supervise(args.port, open_browser=not args.no_browser)
     server.DEV = args.dev
     httpd = make_server(args.port, exact=args.dev)
-    # Treat `kill` like Ctrl+C so the private OpenCode server is stopped too.
+    # Treat `kill` like Ctrl+C.
     signal.signal(signal.SIGTERM, lambda *_: (_ for _ in ()).throw(KeyboardInterrupt()))
     url = f"http://localhost:{httpd.server_address[1]}/"
     if not args.dev:  # in dev mode the supervisor prints the address
@@ -37,7 +36,6 @@ def main(argv=None):
             print("\nStopped.")
     finally:
         httpd.server_close()
-        shutdown()
 
 
 if __name__ == "__main__":
