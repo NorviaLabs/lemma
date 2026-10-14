@@ -30,6 +30,11 @@ def _write(path: Path, data: str, private: bool = False):
         raise
 
 
+def write_private(path: Path, data: str):
+    """Writes a file only this user can read."""
+    _write(path, data, private=True)
+
+
 # ---------------------------------------------------------------- library
 
 

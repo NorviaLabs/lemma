@@ -15,7 +15,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib import resources
 from urllib.parse import urlsplit
 
-from . import __version__, export, generate, ingest, search, store
+from . import __version__, chatgpt, export, generate, ingest, search, store
 from . import lesson as L
 from .llm import DEFAULT_PROVIDER, PROVIDERS, ProviderError, make_provider
 
@@ -86,7 +86,7 @@ def api_status(_body):
     return {
         "version": __version__,
         "provider": {"id": p.id, "name": p.name, "model": p.model, "label": p.label, "ok": ok, "message": msg},
-        "providers": [{"id": i.id, "name": i.name, "default_model": i.default_model, "key_url": i.key_url} for i in PROVIDERS.values()],
+        "providers": [{"id": i.id, "name": i.name, "default_model": i.default_model, "key_url": i.key_url, "sign_in": not i.key_url} for i in PROVIDERS.values()],
         "library_count": len(store.list_lessons()),
     }
 
@@ -99,6 +99,23 @@ def api_models(_body):
     except ProviderError as e:
         raise ApiError(502, str(e)) from None
     return {"provider": p.id, "models": models, "current": p.model}
+
+
+def api_chatgpt(_body):
+    return chatgpt.status()
+
+
+def api_chatgpt_login(_body):
+    """Starts a ChatGPT sign-in; the browser opens the returned page."""
+    try:
+        return {"url": chatgpt.start_sign_in()}
+    except ProviderError as e:
+        raise ApiError(409, str(e)) from None
+
+
+def api_chatgpt_logout(_body):
+    chatgpt.sign_out()
+    return chatgpt.status()
 
 
 def api_papers(body):
@@ -263,6 +280,9 @@ def api_export(body):
 ROUTES = [
     ("GET", r"/api/status", api_status, False),
     ("GET", r"/api/models", api_models, False),
+    ("GET", r"/api/chatgpt", api_chatgpt, False),
+    ("POST", r"/api/chatgpt/login", api_chatgpt_login, False),
+    ("POST", r"/api/chatgpt/logout", api_chatgpt_logout, False),
     ("POST", r"/api/papers", api_papers, False),
     ("POST", r"/api/search", api_search, False),
     ("POST", r"/api/outline", api_outline, False),

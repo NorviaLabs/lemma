@@ -18,6 +18,7 @@ To make lessons from your own papers, Lemma needs your own key for an AI provide
 |---|---|---|
 | **OpenCode Go** | [opencode.ai/auth](https://opencode.ai/auth) (needs an OpenCode Go plan) | Long papers (about 1M tokens) |
 | **OpenAI** | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) | Depends on the model |
+| **ChatGPT** | No key: sign in with your ChatGPT Plus or Pro account. Only when Lemma runs on your own computer | Depends on the model |
 
 Then paste a link or upload a PDF. Building a lesson usually takes 1–3 minutes, and you can start the first concept sooner.
 
@@ -28,6 +29,10 @@ Then paste a link or upload a PDF. Building a lesson usually takes 1–3 minutes
 ### How Lemma uses your key
 
 Both providers are called over their OpenAI-compatible chat completions APIs (`https://opencode.ai/zen/go/v1` and `https://api.openai.com/v1`), with no tools, so the model can only read what Lemma sends and reply with text. Your browser keeps your provider, model and key, and sends them with each request in `X-Lemma-*` headers. The server uses the key for that request, or for the build it starts, and never writes it to disk or sends it back. The APIs keep no conversation, so a repair re-sends the paper, the earlier draft and the list of problems.
+
+### How Lemma uses your ChatGPT subscription
+
+This signs in the same way the Codex CLI does. **Sign in with ChatGPT** in Settings opens OpenAI's sign-in page, which sends you back to `http://localhost:1455/auth/callback`; Lemma listens there only while you sign in. Your tokens are kept in `~/.lemma/chatgpt-auth.json`, readable only by you, and refreshed when they expire. **Sign out** deletes them. Lessons are built through the ChatGPT backend that Codex uses, with no tools, and count against your plan's usage. It is for your own use on your own computer: a hosted Lemma serving other people must not offer it.
 
 ## How it works
 

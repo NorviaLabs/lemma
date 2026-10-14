@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import base64
 import copy
+import hashlib
 import http.client
 import json
 import os
@@ -12,6 +14,7 @@ import tempfile
 import threading
 import time
 import unittest
+import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -19,7 +22,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TMP_HOME = tempfile.mkdtemp(prefix="lemma-test-")
 os.environ["LEMMA_HOME"] = TMP_HOME
 
-from lemma import dev, expr, export, generate, ingest, kernels, lesson as L, llm, search, server  # noqa: E402
+from lemma import chatgpt, dev, expr, export, generate, ingest, kernels, lesson as L, llm, search, server, store  # noqa: E402
 from lemma.llm import Provider, Reply  # noqa: E402
 
 EXAMPLE = json.loads((ROOT / "lemma/examples/galton-1886.json").read_text())
@@ -523,6 +526,139 @@ class HTTPProviderTests(unittest.TestCase):
             llm.make_provider("codex", "k")
 
 
+def fake_jwt(claims):
+    enc = lambda d: base64.urlsafe_b64encode(json.dumps(d).encode()).rstrip(b"=").decode()
+    return f"{enc({'alg': 'none'})}.{enc(claims)}.sig"
+
+
+class FakeChatGPT(BaseHTTPRequestHandler):
+    """A stand-in for the ChatGPT Codex backend. Records each call."""
+
+    calls: list = []
+
+    def log_message(self, *args):
+        pass
+
+    def _send(self, status, raw, ctype="application/json"):
+        self.send_response(status)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(len(raw)))
+        self.end_headers()
+        self.wfile.write(raw)
+
+    def do_GET(self):
+        self._send(200, json.dumps({"models": [{"slug": "gpt-6.1-sol", "display_name": "GPT-6.1-Sol", "visibility": "list", "context_window": 272000},
+                                               {"slug": "hidden", "visibility": "hide"}]}).encode())
+
+    def do_POST(self):
+        body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+        FakeChatGPT.calls.append({"headers": {k.lower(): v for k, v in self.headers.items()}, "body": body})
+        last = body["input"][-1]["content"][0]["text"]
+        if "LIMIT" in last:
+            return self._send(429, json.dumps({"detail": "usage limit reached"}).encode())
+        if "FAIL" in last:
+            events = [{"type": "response.failed", "response": {"error": {"message": "model overloaded"}}}]
+        else:
+            turn = sum(m["role"] == "assistant" for m in body["input"]) + 1
+            out = [{"type": "reasoning", "summary": []},
+                   {"type": "message", "content": [{"type": "output_text", "text": json.dumps({"turn": turn, "model": body["model"]})}]}]
+            events = [{"type": "response.created"}, {"type": "response.output_text.delta", "delta": "{"},
+                      {"type": "response.completed", "response": {"output": out}}]
+        self._send(200, "".join(f"event: {e['type']}\ndata: {json.dumps(e)}\n\n" for e in events).encode(), "text/event-stream")
+
+
+class ChatGPTTests(unittest.TestCase):
+    """The subscription provider, against FakeChatGPT and a stubbed token endpoint."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.httpd = ThreadingHTTPServer(("127.0.0.1", 0), FakeChatGPT)
+        threading.Thread(target=cls.httpd.serve_forever, daemon=True).start()
+        cls.backend = chatgpt.BACKEND
+        chatgpt.BACKEND = f"http://127.0.0.1:{cls.httpd.server_address[1]}"
+
+    @classmethod
+    def tearDownClass(cls):
+        chatgpt.BACKEND = cls.backend
+        cls.httpd.shutdown()
+        cls.httpd.server_close()
+
+    def setUp(self):
+        FakeChatGPT.calls.clear()
+        self.token_calls = []
+        self.orig_token = chatgpt._token_request
+
+        def fake_token(fields):
+            self.token_calls.append(fields)
+            n = len(self.token_calls)
+            return {"access_token": fake_jwt({"https://api.openai.com/auth": {"chatgpt_account_id": "acct-1"}, "n": n}),
+                    "refresh_token": f"refresh-{n}", "expires_in": 3600, "id_token": fake_jwt({"email": "me@example.com"})}
+
+        chatgpt._token_request = fake_token
+
+    def tearDown(self):
+        chatgpt._token_request = self.orig_token
+        chatgpt._stop_listening()
+        chatgpt.sign_out()
+
+    def sign_in(self):
+        url = chatgpt.start_sign_in()
+        q = dict(urllib.parse.parse_qsl(urllib.parse.urlsplit(url).query))
+        return q
+
+    def callback(self, query):
+        c = http.client.HTTPConnection("127.0.0.1", chatgpt.CALLBACK_PORT, timeout=10)
+        c.request("GET", "/auth/callback?" + urllib.parse.urlencode(query))
+        r = c.getresponse()
+        r.read()
+        c.close()
+        return r.status
+
+    def test_sign_in_with_pkce_then_refresh(self):
+        self.assertFalse(chatgpt.status()["signed_in"])
+        q = self.sign_in()
+        self.assertEqual((q["client_id"], q["redirect_uri"], q["code_challenge_method"]), (chatgpt.CLIENT_ID, chatgpt.REDIRECT_URI, "S256"))
+        self.assertTrue(chatgpt.status()["waiting"])
+        self.assertEqual(self.callback({"code": "c", "state": "wrong"}), 400)  # someone else's redirect is ignored
+        self.assertEqual(self.callback({"code": "the-code", "state": q["state"]}), 200)
+        verifier = self.token_calls[0]["code_verifier"]
+        challenge = base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest()).rstrip(b"=").decode()
+        self.assertEqual(challenge, q["code_challenge"])
+        self.assertEqual(self.token_calls[0]["code"], "the-code")
+        st = chatgpt.status()
+        self.assertEqual((st["signed_in"], st["email"]), (True, "me@example.com"))
+        self.assertEqual(oct(os.stat(chatgpt._auth_file()).st_mode & 0o777), "0o600")
+        token, account = chatgpt.access_token()
+        self.assertEqual((account, len(self.token_calls)), ("acct-1", 1))  # still fresh: no refresh
+        auth = chatgpt.load()
+        auth["expires"] = time.time()
+        store.write_private(chatgpt._auth_file(), json.dumps(auth))
+        chatgpt.access_token()
+        self.assertEqual(self.token_calls[1], {"grant_type": "refresh_token", "refresh_token": "refresh-1", "client_id": chatgpt.CLIENT_ID})
+
+    def test_conversation_models_and_errors(self):
+        p = llm.make_provider("chatgpt")
+        self.assertFalse(p.available()[0])
+        with self.assertRaisesRegex(llm.ProviderError, "Sign in"):
+            p.conversation("S", "<paper>x</paper>").send("task")
+        q = self.sign_in()
+        self.callback({"code": "c", "state": q["state"]})
+        self.assertEqual(p.available(), (True, ""))
+        self.assertEqual([m["id"] for m in p.models()], ["gpt-6.1-sol"])
+        conv = p.conversation("SYSTEM", "<paper>text</paper>")
+        self.assertEqual(json.loads(conv.send("task").text), {"turn": 1, "model": "gpt-6.1-sol"})
+        self.assertEqual(json.loads(conv.send("repair").text)["turn"], 2)
+        first, second = FakeChatGPT.calls
+        self.assertEqual(first["body"]["instructions"], "SYSTEM")
+        self.assertEqual((first["body"]["store"], first["body"]["stream"]), (False, True))
+        self.assertEqual(first["headers"]["chatgpt-account-id"], "acct-1")
+        self.assertEqual([m["role"] for m in second["body"]["input"]], ["user", "user", "assistant", "user"])
+        with self.assertRaisesRegex(llm.ProviderError, "model overloaded"):
+            conv.send("FAIL")
+        with self.assertRaisesRegex(llm.ProviderError, "usage limit"):
+            conv.send("LIMIT")
+
+
 class ServerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -565,7 +701,7 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(s, 200)
         st = json.loads(raw)
         self.assertIn("library_count", st)
-        self.assertEqual({p["id"] for p in st["providers"]}, {"opencode-go", "openai"})
+        self.assertEqual({p["id"]: p["sign_in"] for p in st["providers"]}, {"opencode-go": False, "openai": False, "chatgpt": True})
         self.assertFalse(st["provider"]["ok"])  # no key sent
         st = json.loads(self.req("GET", "/api/status", headers={"X-Lemma-Provider": "openai", "X-Lemma-Key": "sk-secret-123", "X-Lemma-Model": "m"})[1])
         self.assertEqual((st["provider"]["id"], st["provider"]["model"], st["provider"]["ok"]), ("openai", "m", True))

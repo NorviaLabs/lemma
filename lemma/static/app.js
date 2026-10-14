@@ -124,41 +124,49 @@
   const TAGLINES = {
     "opencode-go": "Many models through an OpenCode Go plan. Fits long papers (about 1M tokens).",
     openai: "OpenAI's models, billed to your OpenAI API account.",
+    chatgpt: "Your ChatGPT Plus or Pro plan, no key needed. For Lemma on your own computer.",
   };
 
-  /* Pick a provider and paste a key; Lemma checks the key by listing the provider's models. */
+  /* Pick a provider, then paste a key or sign in; Lemma checks either by listing the provider's models. */
   function keyForm(onSaved) {
     const providers = status.providers || [];
     let selected = cred.provider || (providers[0] || {}).id;
+    let chatgpt = { signed_in: false };
+    let poll = null;
     const body = h("div");
     const msg = h("div", { role: "status" });
+    const stopPoll = () => { clearTimeout(poll); poll = null; };
+    cleanups.push(stopPoll);
+    const ready = (x) => (x.sign_in ? chatgpt.signed_in : !!cred.keys[x.id]);
     function draw() {
       const p = providers.find((x) => x.id === selected) || {};
       const key = h("input", { id: "ai-key", type: "password", autocomplete: "off", spellcheck: "false", placeholder: `Paste your ${p.name} key` });
       key.value = cred.keys[p.id] || "";
       const model = h("select", { id: "model", disabled: true }, h("option", { value: cred.models[p.id] || p.default_model }, cred.models[p.id] || p.default_model));
-      const note = h("p", { class: "muted small" }, "Save a key to choose from the models it can use.");
+      const note = h("p", { class: "muted small" }, p.sign_in ? "Sign in to choose from your plan's models." : "Save a key to choose from the models it can use.");
       const choice = h("div", { class: "provider-choice", role: "radiogroup", "aria-label": "AI provider" }, providers.map((x) =>
         h("label", { class: "provider-option" },
           h("input", { type: "radio", name: "provider", value: x.id, checked: x.id === selected, onchange: () => { selected = x.id; msg.replaceChildren(); draw(); } }),
           h("span", { class: "po-body" },
             h("span", { class: "po-name" }, x.name),
             h("span", { class: "po-tagline" }, TAGLINES[x.id] || ""),
-            h("span", { class: "po-status " + (cred.keys[x.id] ? "ok" : "") }, cred.keys[x.id] ? icon("check") : null, cred.keys[x.id] ? "Key saved" : "No key yet")))));
+            h("span", { class: "po-status " + (ready(x) ? "ok" : "") }, ready(x) ? icon("check") : null,
+              ready(x) ? (x.sign_in ? "Signed in" : "Key saved") : (x.sign_in ? "Not signed in" : "No key yet"))))));
       async function loadModels(c) {
         const r = await api("/api/models", undefined, undefined, credHeaders(c));
         model.replaceChildren(...r.models.map((m) => h("option", { value: m.id, selected: m.id === r.current }, `${m.name}${m.context ? ` · ${Math.round(m.context / 1000)}k context` : ""}`)));
         if (!r.models.some((m) => m.id === r.current)) model.prepend(h("option", { value: r.current, selected: true }, `${r.current} (not offered right now)`));
         model.disabled = false;
-        note.textContent = `${r.models.length} models offered by ${p.name}.`;
+        note.textContent = `${r.models.length} model${r.models.length === 1 ? "" : "s"} offered by ${p.name}.`;
       }
-      if (cred.keys[p.id]) loadModels(Object.assign({}, cred, { provider: p.id })).catch((err) => note.replaceChildren(errorBox(err.message)));
-      const save = h("button", { class: "primary", onclick: async () => {
-        const next = { provider: p.id, keys: Object.assign({}, cred.keys, { [p.id]: key.value.trim() }), models: Object.assign({}, cred.models) };
+      if (ready(p)) loadModels(Object.assign({}, cred, { provider: p.id })).catch((err) => note.replaceChildren(errorBox(err.message)));
+      const save = h("button", { class: "primary", disabled: p.sign_in && !chatgpt.signed_in, onclick: async () => {
+        const next = { provider: p.id, keys: Object.assign({}, cred.keys), models: Object.assign({}, cred.models) };
+        if (!p.sign_in) next.keys[p.id] = key.value.trim();
         if (!model.disabled && model.value) next.models[p.id] = model.value;
-        if (!next.keys[p.id]) return msg.replaceChildren(errorBox(`Paste your ${p.name} key first.`));
+        if (!p.sign_in && !next.keys[p.id]) return msg.replaceChildren(errorBox(`Paste your ${p.name} key first.`));
         save.disabled = true;
-        msg.replaceChildren(h("p", { class: "muted" }, "Checking the key…"));
+        msg.replaceChildren(h("p", { class: "muted" }, p.sign_in ? "Checking your sign-in…" : "Checking the key…"));
         try {
           await loadModels(next);  // a key that can't list models won't build lessons either
           if (!model.disabled && model.value) next.models[p.id] = model.value;
@@ -169,14 +177,41 @@
         } catch (err) { msg.replaceChildren(errorBox(err.message)); }
         save.disabled = false;
       } }, "Save");
-      body.replaceChildren(choice,
+      body.replaceChildren(choice, ...(p.sign_in ? signInPart(p) : [
         h("label", { for: "ai-key" }, `${p.name} key`), key,
         h("p", { class: "muted small" }, h("a", { href: p.key_url, target: "_blank", rel: "noopener noreferrer" }, `Get a ${p.name} key`),
-          ". It stays in this browser. Lemma's server uses it only while building your lesson and never stores it."),
+          ". It stays in this browser. Lemma's server uses it only while building your lesson and never stores it.")]),
         h("label", { for: "model" }, `${p.name} model`), model, note, msg,
         h("div", { class: "actions" }, save));
     }
+    function signInPart(p) {
+      if (chatgpt.signed_in) {
+        return [h("p", {}, icon("check"), ` Signed in${chatgpt.email ? ` as ${chatgpt.email}` : ""}. `,
+          h("button", { class: "ghost small", onclick: async () => { chatgpt = await api("/api/chatgpt/logout", {}); draw(); } }, "Sign out"))];
+      }
+      const start = h("button", { class: "primary", onclick: async () => {
+        const tab = window.open("", "_blank");  // opened now, while the click still counts, so it isn't blocked
+        try {
+          const r = await api("/api/chatgpt/login", {});
+          if (tab) tab.location = r.url; else location.assign(r.url);
+          msg.replaceChildren(h("p", { class: "muted" }, "Finish signing in in the new tab. Lemma will notice when you're done."));
+          waitForSignIn();
+        } catch (err) { if (tab) tab.close(); msg.replaceChildren(errorBox(err.message)); }
+      } }, `Sign in with ${p.name}`);
+      return [start, h("p", { class: "muted small" }, "Lessons count against your plan's usage. Lemma keeps your sign-in on this computer only, in ~/.lemma, and you can sign out at any time.")];
+    }
+    function waitForSignIn() {
+      stopPoll();
+      poll = setTimeout(async () => {
+        if (!body.isConnected) return;  // the learner left Settings
+        try { chatgpt = await api("/api/chatgpt"); } catch (e) { return waitForSignIn(); }
+        if (chatgpt.signed_in) { msg.replaceChildren(); return draw(); }
+        if (chatgpt.error) return msg.replaceChildren(errorBox(chatgpt.error));
+        if (chatgpt.waiting) waitForSignIn();
+      }, 1500);
+    }
     draw();
+    api("/api/chatgpt").then((r) => { chatgpt = r; draw(); }).catch(() => {});
     return body;
   }
 
