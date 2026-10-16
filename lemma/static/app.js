@@ -129,8 +129,9 @@
     chatgpt: "Your ChatGPT Plus or Pro plan, no key needed. For Lemma on your own computer.",
   };
 
-  /* Pick a provider, then paste a key or sign in; Lemma checks either by listing the provider's models. */
-  function keyForm(onSaved) {
+  /* Pick a provider, then paste a key or sign in; Lemma checks either by listing the provider's models.
+     `compact` (the connect step) picks the provider's default model and keeps the model list folded away. */
+  function keyForm(onSaved, { compact = false } = {}) {
     const providers = status.providers || [];
     let selected = cred.provider || (providers[0] || {}).id;
     let chatgpt = { signed_in: false };
@@ -145,21 +146,22 @@
       const key = h("input", { id: "ai-key", type: "password", autocomplete: "off", spellcheck: "false", placeholder: `Paste your ${p.name} key` });
       key.value = cred.keys[p.id] || "";
       const model = h("select", { id: "model", disabled: true }, h("option", { value: cred.models[p.id] || p.default_model }, cred.models[p.id] || p.default_model));
-      const note = h("p", { class: "muted small" }, p.sign_in ? "Sign in to choose from your plan's models." : "Save a key to choose from the models it can use.");
+      const note = h("p", { class: "muted small" }, p.sign_in ? "Sign in to choose from your plan's models." : "Add a key to choose from the models it can use.");
+      const modelName = h("span", {}, cred.models[p.id] || p.default_model);
       const choice = h("div", { class: "provider-choice", role: "radiogroup", "aria-label": "AI provider" }, providers.map((x) =>
         h("label", { class: "provider-option" },
           h("input", { type: "radio", name: "provider", value: x.id, checked: x.id === selected, onchange: () => { selected = x.id; msg.replaceChildren(); draw(); } }),
           h("span", { class: "po-body" },
             h("span", { class: "po-name" }, x.name),
-            h("span", { class: "po-tagline" }, TAGLINES[x.id] || ""),
-            h("span", { class: "po-status " + (ready(x) ? "ok" : "") }, ready(x) ? icon("check") : null,
-              ready(x) ? (x.sign_in ? "Signed in" : "Key saved") : (x.sign_in ? "Not signed in" : "No key yet"))))));
+            h("span", { class: "po-tagline" }, TAGLINES[x.id] || "")),
+          ready(x) ? h("span", { class: "po-status ok" }, icon("check"), x.sign_in ? "Signed in" : "Key saved") : null)));
       async function loadModels(c) {
         const r = await api("/api/models", undefined, undefined, credHeaders(c));
         model.replaceChildren(...r.models.map((m) => h("option", { value: m.id, selected: m.id === r.current }, `${m.name}${m.context ? ` · ${Math.round(m.context / 1000)}k context` : ""}`)));
         if (!r.models.some((m) => m.id === r.current)) model.prepend(h("option", { value: r.current, selected: true }, `${r.current} (not offered right now)`));
         model.disabled = false;
         note.textContent = `${r.models.length} model${r.models.length === 1 ? "" : "s"} offered by ${p.name}.`;
+        modelName.textContent = model.selectedOptions[0] ? model.value : r.current;
       }
       if (ready(p)) loadModels(Object.assign({}, cred, { provider: p.id })).catch((err) => note.replaceChildren(errorBox(err.message)));
       const save = h("button", { class: "primary", disabled: p.sign_in && !chatgpt.signed_in, onclick: async () => {
@@ -178,12 +180,17 @@
           if (onSaved) onSaved();
         } catch (err) { msg.replaceChildren(errorBox(err.message)); }
         save.disabled = false;
-      } }, "Save");
+      } }, compact ? "Connect and continue" : "Save");
+      model.addEventListener("change", () => { modelName.textContent = model.value; });
+      const modelPart = compact
+        ? h("details", { class: "model-pick" }, h("summary", {}, "Model: ", modelName, h("span", { class: "mp-change" }, "Change")),
+            h("label", { for: "model", class: "sr-only" }, `${p.name} model`), model, note)
+        : h("div", {}, h("label", { for: "model" }, `${p.name} model`), model, note);
       body.replaceChildren(choice, ...(p.sign_in ? signInPart(p) : [
         h("label", { for: "ai-key" }, `${p.name} key`), key,
         h("p", { class: "muted small" }, h("a", { href: p.key_url, target: "_blank", rel: "noopener noreferrer" }, `Get a ${p.name} key`),
           ". It stays in this browser. Lemma's server uses it only while building your lesson and never stores it.")]),
-        h("label", { for: "model" }, `${p.name} model`), model, note, msg,
+        modelPart, msg,
         h("div", { class: "actions" }, save));
     }
     function signInPart(p) {
@@ -438,12 +445,14 @@
       paper.querySelector(".hp-title").textContent = lesson.source.title;
       paper.querySelector(".hp-by").textContent = `${lesson.source.authors}, ${lesson.source.year}`;
     }).catch(() => {});
-    if (M.reduceMotion() || typeof requestAnimationFrame === "undefined") return sec;
+    if (M.reduceMotion() || typeof requestAnimationFrame === "undefined" || typeof IntersectionObserver === "undefined") return sec;
 
+    // It plays by itself, once, when it comes into view, and never touches the page's scroll.
     sec.classList.add("is-live");
+    const DURATION = 5600;
     const clamp = (x) => Math.max(0, Math.min(1, x));
     const ease = (x) => 1 - Math.pow(1 - x, 3);
-    // Where each card starts: centred on its marked line, measured untransformed (offsets ignore transforms).
+    // Where each concept starts: centred on its marked line, measured untransformed (offsets ignore transforms).
     const offsetIn = (node, ancestor) => { let x = 0, y = 0; for (let n = node; n && n !== ancestor; n = n.offsetParent) { x += n.offsetLeft; y += n.offsetTop; } return [x, y]; };
     function measure() {
       cards.forEach((card, i) => {
@@ -452,48 +461,52 @@
         card.style.setProperty("--dy", `${ly + ideas[i].offsetHeight / 2 - (cy + card.offsetHeight / 2)}px`);
       });
     }
-    let raf = 0, lastStep = -1;
-    function frame() {
-      raf = 0;
-      const r = sec.getBoundingClientRect(), run = sec.offsetHeight - innerHeight;
-      if (run <= 0) return;
-      const p = clamp(-r.top / run);
-      art.style.setProperty("--hl", ease(clamp((p - 0.16) / 0.2)).toFixed(3));
-      art.style.setProperty("--back", ease(clamp((p - 0.8) / 0.14)).toFixed(3));
-      cards.forEach((card, i) => card.style.setProperty("--t", ease(clamp((p - 0.42 - i * 0.07) / 0.2)).toFixed(3)));
-      const step = p < 0.14 ? 0 : p < 0.4 ? 1 : p < 0.78 ? 2 : 3;
+    let lastStep = -1;
+    function show(p) {
+      art.style.setProperty("--hl", ease(clamp((p - 0.12) / 0.18)).toFixed(3));
+      art.style.setProperty("--back", ease(clamp((p - 0.84) / 0.14)).toFixed(3));
+      cards.forEach((card, i) => card.style.setProperty("--t", ease(clamp((p - 0.36 - i * 0.08) / 0.22)).toFixed(3)));
+      const step = p < 0.1 ? 0 : p < 0.34 ? 1 : p < 0.8 ? 2 : 3;
       if (step !== lastStep) {
         lastStep = step;
         stepEls.forEach((li, i) => li.className = "hs-step" + (i < step ? " done" : i === step ? " now" : ""));
         art.dataset.step = step;
       }
     }
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(frame); };
-    const onResize = () => { measure(); onScroll(); };
+    let raf = 0;
+    const replay = h("button", { type: "button", class: "ghost small hall-replay", hidden: true, onclick: () => play() }, icon("refresh"), "Replay");
+    sec.querySelector(".hall-copy").append(replay);
+    function play() {
+      cancelAnimationFrame(raf);
+      replay.hidden = true;
+      measure();
+      const t0 = performance.now();
+      const tick = (t) => {
+        if (!sec.isConnected) return;
+        const p = clamp((t - t0) / DURATION);
+        show(p);
+        if (p < 1) raf = requestAnimationFrame(tick); else replay.hidden = false;
+      };
+      raf = requestAnimationFrame(tick);
+    }
+    show(0);
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); play(); } }, { threshold: 0.45 });
+    const onResize = () => { if (replay.hidden && raf) measure(); };
     // Attach after view() has mounted the page: it runs the previous screen's cleanups first.
     requestAnimationFrame(() => {
       if (!sec.isConnected) return;
-      addEventListener("scroll", onScroll, { passive: true });
+      io.observe(art);
       addEventListener("resize", onResize);
-      cleanups.push(() => { removeEventListener("scroll", onScroll); removeEventListener("resize", onResize); cancelAnimationFrame(raf); });
+      cleanups.push(() => { io.disconnect(); removeEventListener("resize", onResize); cancelAnimationFrame(raf); });
       measure();
-      frame();
     });
-    if (document.fonts) document.fonts.ready.then(() => sec.isConnected && onResize());
+    if (document.fonts) document.fonts.ready.then(() => sec.isConnected && measure());
     return sec;
   }
 
   function showHome(msg) {
     setHash("");
     const p = status.provider || {};
-    if (!p.ok) {
-      view(msg ? errorBox(msg) : null, homeExhibit(), hallSection(),
-        h("section", { class: "panel setup", "aria-labelledby": "setup-title" },
-          h("h2", { id: "setup-title" }, "Make lessons from your own papers"),
-          h("p", {}, "Lemma doesn't come with an AI model. It uses your own key, so your papers go only where you choose. Pick a provider; you can switch later in Settings."),
-          keyForm(() => showHome())));
-      return;
-    }
     let mode = session.mode || "search";
     const qIn = h("input", { type: "search", id: "topic-q", placeholder: "For example: herd immunity, Simpson's paradox, loss aversion", autocomplete: "off", maxlength: 200 });
     const results = h("section", { class: "results", "aria-live": "polite", "aria-labelledby": "results-title" });
@@ -577,10 +590,13 @@
       }
       results.hidden = m !== "search";
       submit.textContent = m === "search" ? "Search" : "Read the paper";
-      privacy.replaceChildren(...(m === "search"
-        ? ["Your search words go to OpenAlex, arXiv and Wikipedia to find resources. When you pick one, Lemma downloads it and sends its text to ", h("strong", {}, p.label || "your AI tool"), " to build the lesson. Nothing else leaves your computer, and Lemma keeps no usage logs. "]
-        : ["When you continue, Lemma sends the paper's text to ", h("strong", {}, p.label || "your AI tool"), " to build the lesson. Nothing else leaves your computer, and Lemma keeps no usage logs. "]),
-        h("a", { href: "#/settings" }, "Change the AI tool or model"));
+      const to = p.ok ? [h("strong", {}, p.label)] : ["the AI model you connect next"];
+      privacy.replaceChildren(...[...(m === "search"
+        ? ["Your search words go to OpenAlex, arXiv and Wikipedia to find resources. When you pick one, Lemma downloads it and sends its text to ", ...to, " to build the lesson. "]
+        : ["When you continue, Lemma sends the paper's text to ", ...to, " to build the lesson. "]),
+        p.ok ? "" : "It uses your own key. ",
+        "Nothing else is shared, and Lemma keeps no usage logs. ",
+        p.ok ? h("a", { href: "#/settings" }, "Change model") : null].filter(Boolean));
     }
     const form = h("form", { class: "panel bring", "aria-labelledby": "bring-title", onsubmit: async (e) => {
       e.preventDefault();
@@ -642,7 +658,19 @@
   }
 
   /* ------------------------------------------------------------ outline */
+  /* Connect a model: shown the first time an AI step is needed, then the flow carries on. */
+  function showConnect(then) {
+    const p = session.paper || {};
+    view(h("section", { class: "panel connect", "aria-labelledby": "connect-title" },
+      h("h1", { id: "connect-title" }, "Connect an AI model"),
+      h("p", { class: "lead" }, "Lemma reads ", p.title ? h("cite", { class: "words" }, p.title) : "your paper",
+        " with an AI model you choose, using your own key. Pick one, paste its key, and the outline starts straight away."),
+      keyForm(then, { compact: true }),
+      h("div", { class: "actions" }, h("button", { class: "ghost", onclick: () => showHome() }, "Back"))));
+  }
+
   async function startOutline() {
+    if (!(status.provider || {}).ok) return showConnect(() => startOutline());
     const p = session.paper;
     const box = h("div");
     const cancel = h("button", { class: "ghost" }, "Cancel");
