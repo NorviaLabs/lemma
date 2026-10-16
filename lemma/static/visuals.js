@@ -152,6 +152,7 @@
       const y = ys(evalNum(h.y, env));
       el("line", { x1: box.x, x2: box.x + box.w, y1: y, y2: y, class: "refline" }, plot);
       if (h.label) el("text", { x: box.x + box.w - 6, y: y - 6, "text-anchor": "end", class: "ref-label", text: h.label }, plot);
+      if (h.id) ctx.anchor(h.id, box.x + 16, y);
     }
     series.forEach((s, i) => {
       const pts = sample(s, x0, x1);
@@ -163,6 +164,11 @@
         pen = true;
       }
       el("path", { d, class: "series" + (s.dashed ? " dashed" : ""), style: `stroke:${col(s.color ?? i)}`, "data-series": i }, plot);
+      if (s.id) {
+        // On the line, about four-fifths of the way across, kept inside the plot.
+        const at = pts[Math.round(pts.length * 0.82)] || [];
+        if (Number.isFinite(at[1])) ctx.anchor(s.id, xs(at[0]), Math.max(box.y + 12, Math.min(box.y + box.h - 12, ys(at[1]))));
+      }
     });
     (vis.markers || []).forEach((m, i) => {
       const x = xs(evalNum(m.x, env));
@@ -170,12 +176,14 @@
       // Stagger labels so markers that sit close together stay readable; flip to the left near the right edge.
       const right = x > box.x + box.w * 0.7;
       if (m.label) el("text", { x: right ? x - 5 : x + 5, y: box.y + 14 + (i % 3) * 15, "text-anchor": right ? "end" : "start", class: "marker-label", style: `fill:${col(m.color ?? 3)}`, text: m.label }, plot);
+      if (m.id) ctx.anchor(m.id, x, box.y + box.h - 14);
     });
     for (const p of vis.points || []) {
       const x = xs(evalNum(p.x, env)), y = ys(evalNum(p.y, env));
       if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
       el("circle", { cx: x, cy: y, r: 9, class: "point", style: `fill:${col(p.color ?? 0)}` }, plot);
       if (p.label) el("text", { x: x + 9, y: y - 9, class: "point-label", text: p.label }, plot);
+      if (p.id) ctx.anchor(p.id, x - 15, y - 15);
     }
     ctx.legend(series.map((s, i) => ({ label: s.label, color: s.color ?? i, dashed: s.dashed })).concat((vis.fills || []).filter((f) => f.label).map((f) => ({ label: f.label, color: f.color ?? series[f.series]?.color, area: true }))));
   };
@@ -197,6 +205,8 @@
       el("rect", { x: cx - bw / 2, y: Math.min(vy, base), width: bw, height: Math.abs(base - vy), class: "bar", style: `fill:${col(b.color ?? i)}` }, svg);
       el("text", { x: cx, y: Math.min(vy, base) - 8, "text-anchor": "middle", class: "bar-value", text: fmt(v, vis.decimals ?? 1, 1, vis.unit || "") }, svg);
       el("text", { x: cx, y: box.y + box.h + 22, "text-anchor": "middle", class: "bar-label", text: b.label }, svg);
+      // On the bar's right edge, just below its top, so the value label above the bar stays clear.
+      if (b.id) ctx.anchor(b.id, cx + bw / 2, Math.min(vy, base) + Math.min(18, Math.abs(base - vy) / 2));
     });
   };
 
@@ -345,6 +355,7 @@
       el("rect", { x: x - 60, y: y - 24, width: 120, height: 48, rx: 10, class: "cnode" }, svg);
       el("text", { x, y: n.value !== undefined ? y - 3 : y + 5, "text-anchor": "middle", class: "cnode-label", text: n.label }, svg);
       if (n.value !== undefined) el("text", { x, y: y + 15, "text-anchor": "middle", class: "cnode-value", text: fmt(evalNum(n.value, env), 2) }, svg);
+      if (n.id) ctx.anchor(n.id, x + 60, y - 24);
     }
     ctx.legend([{ label: "Positive effect", swatch: "--model-0", shape: "line" }, { label: "Negative effect (dashed)", swatch: "--model-1", shape: "dash" }]);
   };
@@ -501,6 +512,7 @@
       if (key !== null) this.simKey = key;
       const legendItems = [];
       const self = this;
+      this.anchors = {};
       if (opts.resized) this.ghosts = [];
       else this.snapTrail(vis, values);
       this.lastValues = values;
@@ -509,6 +521,7 @@
         vis, env: res.env, sim, container: this.vizEl, transient: !!opts.transient, W: this.W,
         svgIn: (w, h) => svgRoot(this.vizEl, w, h, this.model.title),
         legend: (items) => legendItems.push(...items),
+        anchor: (id, x, y) => { if (Number.isFinite(x) && Number.isFinite(y)) this.anchors[id] = [x, y]; },
         status: (s) => { this.statusEl.textContent = s; },
         frames(total, draw) {
           clearInterval(self.frameTimer);
@@ -533,8 +546,25 @@
       else r(ctx);
       if (!vis.kernel && !opts.transient && !opts.resized && this.onSettle) this.onSettle();
       this.drawTrail();
+      this.drawPins();
       this.renderLegend(legendItems);
       return res.env;
+    }
+
+    // Numbered pins on the parts of the picture a note names: { id: { pin, said } }. The current note's
+    // pin is green; notes already said keep theirs in ink, so the picture keeps its numbered key.
+    drawPins(marks) {
+      if (marks) this.pins = marks;
+      const svg = this.vizEl.querySelector("svg.viz");
+      if (!svg) return;
+      svg.querySelectorAll("g.mark-pin").forEach((g) => g.remove());
+      for (const [id, m] of Object.entries(this.pins || {})) {
+        const at = this.anchors && this.anchors[id];
+        if (!m || !m.pin || !at) continue;
+        const g = el("g", { class: "mark-pin" + (m.said ? " said" : ""), transform: `translate(${at[0].toFixed(1)},${at[1].toFixed(1)})`, "aria-hidden": "true" }, svg);
+        el("circle", { r: 11 }, g);
+        el("text", { "text-anchor": "middle", dy: "0.35em", text: String(m.pin) }, g);
+      }
     }
 
     get trails() { return TRAIL_TYPES.has((this.model.visual || {}).type); }

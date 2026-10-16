@@ -89,6 +89,18 @@ class CheckTests(unittest.TestCase):
         c["animation"]["steps"][0]["focus"] = "nonsense"
         self.assertTrue(any("focus 'nonsense'" in p for p in L.check_concept(c, NORM)))
 
+    def test_narration_can_point_at_marked_parts_of_the_picture(self):
+        c = concept(0)  # the example's first concept names its three bars at once
+        self.assertEqual(c["animation"]["steps"][0]["focus"], ["father_bar", "mother_bar", "mid_bar"])
+        self.assertEqual(list(L.check_concept(c, NORM)), [])
+        c["animation"]["steps"][0]["focus"] = ["father_bar", "unmarked_bar"]
+        self.assertTrue(any("focus 'unmarked_bar'" in p for p in L.check_concept(c, NORM)))
+        c["animation"]["steps"][0]["focus"] = ["father_bar"] * 5
+        self.assertTrue(any("list 1–4 parts" in p for p in L.check_concept(c, NORM)))
+        del c["model"]["visual"]["bars"][0]["id"]
+        c["animation"]["steps"][0]["focus"] = "father_bar"
+        self.assertTrue(any("focus 'father_bar'" in p for p in L.check_concept(c, NORM)))
+
     def test_checks_are_only_for_hard_concepts(self):
         c = concept(1)
         self.assertNotIn("check", c)
@@ -842,7 +854,7 @@ class ServerTests(unittest.TestCase):
         self.assertIn(b"Lemma", raw)
         self.assertEqual(self.req("GET", "/static/player.js")[0], 200)
         self.assertEqual(self.req("GET", "/static/../server.py")[0], 404)
-        s, raw = self.req("GET", "/static/fonts/barlow-latin-400-normal.woff2")
+        s, raw = self.req("GET", "/static/fonts/atkinson-hyperlegible-next-latin-normal.woff2")
         self.assertEqual(s, 200)
         self.assertEqual(raw[:4], b"wOF2")
         self.assertEqual(self.req("GET", "/static/fonts/../styles.css")[0], 404)
@@ -1053,7 +1065,7 @@ class ExportTests(unittest.TestCase):
         html = export.lesson_html(EXAMPLE)
         style = html.split("<style>")[1].split("</style>")[0]
         self.assertIn("font-src data:", html)
-        self.assertEqual(style.count("data:font/woff2;base64,"), 7)  # every face embedded
+        self.assertEqual(style.count("data:font/woff2;base64,"), 3)  # every face embedded
         self.assertNotIn('url("fonts/', style)
 
     def test_embedded_json_cannot_break_out(self):

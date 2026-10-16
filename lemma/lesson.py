@@ -481,7 +481,7 @@ def _check_terms(c: dict, where: str, P: Problems):
 
 
 def check_primer(primer, source_norm: str | None, where: str = "lesson.primer") -> Problems:
-    """The paper in brief: 3–6 short pages read before the first exhibit, at least two quoting the paper."""
+    """The paper in brief: 3–6 short pages read before the first concept, at least two quoting the paper."""
     P = Problems()
     if not isinstance(primer, list) or not 3 <= len(primer) <= 6:
         P.add(where, "needs 3–6 pages, each with 'heading' and 'body' (the question, what was done, what was found, why it matters)")
@@ -524,6 +524,16 @@ def check_builds_on(c: dict, base: dict, where: str = "concept") -> Problems:
     return P
 
 
+MARKABLE = ("series", "points", "markers", "hlines", "bars", "nodes")
+
+
+def _mark_ids(vis) -> set:
+    """Parts of the picture a narration step can point at: any series, point, marker, line, bar or node with an id."""
+    if not isinstance(vis, dict):
+        return set()
+    return {m["id"] for key in MARKABLE for m in vis.get(key) or [] if isinstance(m, dict) and isinstance(m.get("id"), str) and m["id"]}
+
+
 def _check_narration(block, where, model, focusable, P: Problems, purpose: str):
     """A narrated animation: 2–8 steps, each saying one thing and optionally moving controls and pointing at a part."""
     steps = block.get("steps") if isinstance(block, dict) else None
@@ -542,8 +552,14 @@ def _check_narration(block, where, model, focusable, P: Problems, purpose: str):
             if not cc or not _finite(v) or not cc["min"] <= v <= cc["max"]:
                 P.add(sw, f"sets {cid}={v}, which is not a control value in range")
         f = st.get("focus")
-        if f is not None and f not in focusable:
-            P.add(sw, f"focus {f!r} is not a control or output of the model")
+        if f is None:
+            continue
+        fs = f if isinstance(f, list) else [f]
+        if not 1 <= len(fs) <= 4 or not all(isinstance(x, str) for x in fs):
+            P.add(sw, "focus must name one part, or list 1–4 parts")
+        for x in fs:
+            if isinstance(x, str) and x not in focusable:
+                P.add(sw, f"focus {x!r} is not a control, output or marked part of the picture")
 
 
 def _text(obj, key, where, P: Problems, max_len=None, required=True):
@@ -608,7 +624,7 @@ def check_concept(c: dict, source_norm: str | None, where: str = "concept") -> P
         if isinstance(g.get("solution"), dict):
             goal_states.append((f"goal {i + 1}'s solution", g["solution"]))
 
-    focusable = set(ctrl_ids) | {o.get("id") for o in (model or {}).get("outputs", []) if isinstance(o, dict)}
+    focusable = set(ctrl_ids) | {o.get("id") for o in (model or {}).get("outputs", []) if isinstance(o, dict)} | _mark_ids((model or {}).get("visual"))
     if model_ok:
         _check_narration(c.get("animation"), f"{where}.animation", model, focusable, P, "a narrated tour that introduces the model before anything is asked")
 
@@ -777,7 +793,8 @@ then the check (hard concepts only), then the equation.
   },
   "animation": {                                 // REQUIRED tour, 3–6 steps, played first.
     "steps": [                                   // The learner knows nothing yet: introduce the picture first
-      {"say": "This curve shows ...", "focus": "overlap", "ms": 2200},          // focus points at one control or output
+      {"say": "This curve shows ...", "focus": "treated", "ms": 2200},          // focus points at a control, an output, or a part
+                                                                               // of the picture with an "id"; or a list of up to 4
       {"say": "This slider sets d, the gap between the groups. Watch what it does.", "set": {"d": 0.8}, "focus": "d", "ms": 2400}
     ]
   },
@@ -827,13 +844,13 @@ VISUAL TYPES (every numeric field may be a number or an expression):
 
 curves — how one quantity changes with another
   {"type": "curves", "x": {"label": "...", "min": -4, "max": 6}, "y": {"label": "...", "min": 0, "max": 0.45},
-   "series": [{"label": "Control", "expr": "normpdf(x, 0, 1)", "color": 0, "dashed": false}],
+   "series": [{"id": "treated", "label": "Treated", "expr": "normpdf(x, d, 1)", "color": 0, "dashed": false}],   // "id" optional: lets a step point at it
    "fills": [{"series": 1, "from": "cutoff", "to": 6, "label": "Power", "color": 1}],   // shade under a series
    "markers": [{"x": "cutoff", "label": "Cut-off", "color": 3}],                         // vertical lines
-   "hlines": [{"y": 0.5, "label": "..."}], "points": [{"x": "a", "y": "b", "label": "..."}]}
+   "hlines": [{"y": 0.5, "label": "..."}], "points": [{"x": "a", "y": "b", "label": "..."}]}   // markers, hlines and points take an "id" too
 
 bars — quantities side by side
-  {"type": "bars", "bars": [{"label": "Treated", "value": "mu1", "color": 1}], "min": 0, "max": 100, "unit": "%", "decimals": 0}
+  {"type": "bars", "bars": [{"id": "treated_bar", "label": "Treated", "value": "mu1", "color": 1}], "min": 0, "max": 100, "unit": "%", "decimals": 0}
 
 table — a grid that recolours as inputs change
   {"type": "table", "columns": ["Cooperate", "Defect"],

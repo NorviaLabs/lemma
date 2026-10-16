@@ -1,5 +1,5 @@
-/* Lemma app shell, Exhibit Floor edition:
-   bring a paper → review the exhibits → watch them build → walk the hall → keep and share. */
+/* Lemma app shell, Field Guide edition:
+   bring a paper → review the outline → watch it build → learn each concept → keep and share. */
 (function () {
   "use strict";
   const $ = (s, r = document) => r.querySelector(s);
@@ -226,7 +226,7 @@
 
   const AUDIENCES = ["A curious learner with no special background", "An undergraduate student", "An educator preparing a class", "A researcher from a neighbouring field"];
 
-  /* The doorway exhibit: one live model from the example lesson, playable the moment the page opens.
+  /* The doorway concept: one live model from the example lesson, playable the moment the page opens.
      The label rail's three verbs light up as the visitor plays; until then the model sweeps by itself. */
   const MEAN = 68.25, SHARE = 2 / 3;
   let exhibitStep = 0;
@@ -234,7 +234,7 @@
   const exampleLesson = () => (exampleP = exampleP || api("/api/example").catch((e) => { exampleP = null; throw e; }));
   function homeExhibit() {
     const M = window.LemmaModel;
-    const stage = h("div", { class: "he-stage", "aria-busy": "true" }, h("p", { class: "muted" }, "Setting up the exhibit…"));
+    const stage = h("div", { class: "he-stage", "aria-busy": "true" }, h("p", { class: "muted" }, "Setting up the concept…"));
     const verbEls = [];
     const verb = (n, title, ...body) => {
       const li = h("li", { class: "verb" },
@@ -245,7 +245,7 @@
     };
     const noticeLine = h("p", { class: "he-live" });
     const noticeMore = h("p");
-    const tryText = h("p", {}, "This exhibit comes from Galton's 1886 paper on heredity. Drag the parents' height away from the middle and watch where their children land.");
+    const tryText = h("p", {}, "This model comes from Galton's 1886 paper on heredity. Drag the parents' height away from the middle and watch where their children land.");
     const whyBtn = h("button", { type: "button", class: "he-skip", onclick: () => setStep(2, true) }, "Tell me why");
     const verbs = h("ol", { class: "verbs", "aria-live": "polite" },
       verb(1, "Try this", tryText),
@@ -274,7 +274,7 @@
     const el = h("section", { class: "home-exhibit", "aria-labelledby": "home-title" },
       h("div", { class: "he-intro" },
         h("h1", { id: "home-title" }, "Learn a paper by playing with it"),
-        h("p", { class: "lead" }, "Search any topic or bring a paper, and Lemma turns it into a hall of hands-on exhibits. You don't need to have read anything: it tells you the paper's story, walks you through a live model of each idea, then lets you try it yourself.")),
+        h("p", { class: "lead" }, "Search any topic or bring a paper, and Lemma turns it into a short lesson with a live model for each idea. You don't need to have read anything: it tells you the paper's story, walks you through a live model of each idea, then lets you try it yourself.")),
       stage,
       h("div", { class: "he-verbs" }, verbs));
 
@@ -287,7 +287,7 @@
       const seen = { above: false, below: false };
       const vizBox = h("div", { class: "viz-box" });
       const view = new M.ModelView(vizBox, model);
-      view.trailsOn = true;  // the home exhibit always leaves a trail; the learner's saved choice is untouched
+      view.trailsOn = true;  // the home concept always leaves a trail; the learner's saved choice is untouched
       const outs = h("dl", { class: "outputs" });
       const valueEl = h("output", { for: "he-mp", class: "ctl-value" });
       const input = h("input", { type: "range", id: "he-mp", min: k.min, max: k.max, step: k.step, value: values.mp });
@@ -299,7 +299,9 @@
         input.value = values.mp;
         input.style.setProperty("--fill", `${((values.mp - k.min) / (k.max - k.min)) * 100}%`);
         valueEl.textContent = M.fmt(values.mp, 2, 1, k.unit);
-        outs.replaceChildren(...model.outputs.map((o, i) => h("div", { class: "out" + (exhibitStep >= 1 && o.id === "child" ? " hl" : ""), style: `--k:var(--model-${(o.color ?? i) % 8})` },
+        pin(deck.firstChild, "1", exhibitStep === 0);
+        outs.replaceChildren(...model.outputs.map((o, i) => h("div", { class: "out" + (exhibitStep === 1 && o.id === "child" ? " hl" : ""), style: `--k:var(--model-${(o.color ?? i) % 8})`,
+          "data-pin": exhibitStep >= 1 && o.id === "child" ? "2" : null, "data-pin-state": exhibitStep > 1 && o.id === "child" ? "said" : null },
           h("dt", {}, h("span", { class: "key", "aria-hidden": "true" }), o.label), h("dd", {}, M.fmt(env[o.id], o.decimals ?? 2, 1, o.unit || "")))));
         if (!user) return;
         const lead = values.mp - MEAN;
@@ -316,7 +318,7 @@
           if (seen.above && seen.below) setStep(2);
         }
       }
-      // Attract mode: a slow sweep until someone touches the exhibit. Off under reduced motion.
+      // Attract mode: a slow sweep until someone touches the concept. Off under reduced motion.
       let demo = null, onscreen = true;
       if (typeof IntersectionObserver !== "undefined") {
         const io = new IntersectionObserver(([e]) => { onscreen = e.isIntersecting; });
@@ -362,12 +364,13 @@
       input.addEventListener("pointerdown", take);
       input.addEventListener("keydown", take);
       input.addEventListener("input", () => { take(); playBtn.disabled = false; values = Object.assign({}, values, { mp: +input.value }); render(true); });
+      const pin = (n, num, now) => { n.dataset.pin = num; if (now) delete n.dataset.pinState; else n.dataset.pinState = "said"; };
       const deck = h("div", { class: "controls", role: "group", "aria-label": "Controls" },
         h("div", { class: "ctl", style: `--k:var(--model-${(k.color ?? 0) % 8})` },
           h("label", { for: "he-mp" }, h("span", { class: "key", "aria-hidden": "true" }), "Parents' average height"), valueEl, input, playBtn));
       stage.replaceChildren(
         h("div", { class: "model-head" },
-          h("p", { class: "he-from" }, h("span", { class: "plate", "aria-hidden": "true" }, "2"), h("span", {}, "Exhibit 2 of the example lesson", h("br"), h("em", {}, lesson.source.title))),
+          h("p", { class: "he-from" }, lesson.source.title),
           h("span", { class: "tag", title: model.note }, "Teaching model")),
         h("div", { class: "he-viz" }, vizBox, demoNote), outs, deck,
         h("p", { class: "model-note" }, model.note));
@@ -376,21 +379,21 @@
       if (exhibitStep === 0) startDemo(); else demoNote.hidden = true;
       cleanups.push(() => { stopDemo(); view.destroy(); });
     }).catch(() => {
-      stage.replaceChildren(h("p", { class: "muted" }, "The example exhibit couldn't load. You can still make a lesson below."));
+      stage.replaceChildren(h("p", { class: "muted" }, "The example model couldn't load. You can still make a lesson below."));
       stage.removeAttribute("aria-busy");
     });
     return el;
   }
 
 
-  /* From paper to hall: one scroll-scrubbed sequence. The page of the paper is marked up, each marked
-     idea grows out of it into a numbered exhibit, then the page steps back and the hall stands.
+  /* From paper to lesson: one scroll-scrubbed sequence. The page of the paper is marked up, each marked
+     idea grows out of it into a numbered concept, then the page steps back and the concepts stand.
      Without JavaScript, or with reduced motion, it is a static figure beside the four steps. */
   const HALL_STEPS = [
     ["Bring a paper", "A topic to search, a link, a PDF or a saved web page. You say who the lesson is for."],
     ["Lemma finds the ideas", "It reads the paper and drafts an outline of its main ideas. You can review and edit it before anything is built."],
-    ["Each idea becomes an exhibit", "A live model you can play with, checked before you see it, with the paper's own words quoted and verified."],
-    ["Walk the hall", "Start while later exhibits are still building. Save the lesson to your library, or download one file that works offline."],
+    ["Each idea gets a live model", "A live model you can play with, checked before you see it, with the paper's own words quoted and verified."],
+    ["Learn it, then keep it", "Start while later concepts are still building. Save the lesson to your library, or download one file that works offline."],
   ];
   const MINI = {
     bars: '<rect x="8" y="30" width="14" height="26"/><rect x="29" y="18" width="14" height="38" class="m1"/><rect x="50" y="24" width="14" height="32" class="m2"/>',
@@ -403,7 +406,7 @@
     const stepEls = HALL_STEPS.map(([t, d], i) => h("li", { class: "hs-step" },
       h("span", { class: "plate", "aria-hidden": "true" }, String(i + 1)),
       h("div", {}, h("h3", {}, t), h("p", {}, d))));
-    const lines = Array.from({ length: 15 }, (_, i) => h("span", { class: "hp-line" + ([2, 7, 11].includes(i) ? " idea" : ""), style: `--w:${[96, 88, 92, 100, 74, 94, 90, 84, 98, 70, 93, 89, 97, 80, 60][i]}%` }));
+    const lines = Array.from({ length: 6 }, (_, i) => h("span", { class: "hp-line" + ([1, 3, 5].includes(i) ? " idea" : "") }));
     const ideas = lines.filter((l) => l.classList.contains("idea"));
     const fallback = [["bars", "One number for two parents"], ["curves", "Children are two-thirds as unusual"], ["sampling", "Where the regression comes from"]];
     const cards = fallback.map(([type, title], i) => {
@@ -422,11 +425,16 @@
     const sec = h("section", { class: "paper-hall", "aria-labelledby": "hall-title" },
       h("div", { class: "hall-pin" },
         h("div", { class: "hall-copy" },
-          h("h2", { id: "hall-title" }, "From a paper to a hall of exhibits"),
+          h("h2", { id: "hall-title" }, "From a paper to a lesson"),
           h("ol", { class: "hall-steps" }, stepEls)),
         art));
     exampleLesson().then((lesson) => {
       lesson.concepts.slice(0, 3).forEach((c, i) => { cards[i].querySelector(".hx-title").textContent = c.title; });
+      // Real lines from the paper: a primer quote before each concept's own quote, which is the marked idea.
+      const clip = (q) => { const w = String(q || "").split(/\s+/); return w.length > 16 ? w.slice(0, 16).join(" ") + " …" : w.join(" "); };
+      const context = (lesson.primer || []).map((pg) => pg.quote).filter(Boolean);
+      lines.forEach((l, i) => { l.textContent = clip(i % 2 ? (lesson.concepts[(i - 1) / 2] || {}).understand?.quote : context[i / 2] || context[0]); });
+      measure?.();
       paper.querySelector(".hp-title").textContent = lesson.source.title;
       paper.querySelector(".hp-by").textContent = `${lesson.source.authors}, ${lesson.source.year}`;
     }).catch(() => {});
@@ -606,7 +614,7 @@
       h("label", { for: "aud-select" }, "Who is it for?"), audSel, audOther,
       privacy,
       errSlot,
-      h("div", { class: "actions" }, submit, h("span", { class: "muted small" }, "Building usually takes 1–3 minutes. You can start the first exhibit sooner.")));
+      h("div", { class: "actions" }, submit, h("span", { class: "muted small" }, "Building usually takes 1–3 minutes. You can start the first concept sooner.")));
     const recent = h("section", { class: "recent", hidden: true, "aria-labelledby": "recent-title" });
     setMode(mode);
     if (session.search) { qIn.value = session.search.query; drawResults(); }
@@ -618,7 +626,7 @@
         recent.replaceChildren(h("h2", { id: "recent-title" }, "Your recent lessons"),
           h("ul", { class: "recent-list" }, items.slice(0, 3).map((it) => h("li", {},
             h("button", { class: "recent-item", onclick: async () => openLesson(await api(`/api/lessons/${it.id}`), { saved: true }) },
-              h("span", { class: "ri-title" }, it.title), h("span", { class: "ri-meta" }, `${it.concepts} exhibit${it.concepts === 1 ? "" : "s"} · ${it.source}`))))),
+              h("span", { class: "ri-title" }, it.title), h("span", { class: "ri-meta" }, `${it.concepts} concept${it.concepts === 1 ? "" : "s"} · ${it.source}`))))),
           ...(items.length > 3 ? [h("a", { href: "#/library" }, `All ${items.length} lessons`)] : []));
       }).catch(() => {});
     }
@@ -683,7 +691,7 @@
           h("button", { class: "small danger", "aria-label": `Remove “${c.title}”`, onclick: () => { session.removed.push(cs.splice(i, 1)[0]); draw(); } }, "Remove")))));
       removedBox.replaceChildren(session.removed.length ? h("div", { class: "removed" }, h("h3", {}, "Removed"), h("ul", {}, session.removed.map((c, i) => h("li", {}, c.title, " ", h("button", { class: "small", onclick: () => { o.concepts.push(session.removed.splice(i, 1)[0]); draw(); } }, "Restore"))))) : "");
       const n = cs.filter((c) => !c.known).length;
-      buildBtn.textContent = `Build ${n} exhibit${n === 1 ? "" : "s"}`;
+      buildBtn.textContent = `Build ${n} concept${n === 1 ? "" : "s"}`;
       buildBtn.disabled = n === 0;
       if (focusSel) { const b = list.querySelector(focusSel); if (b && !b.disabled) b.focus(); }
     }
@@ -693,9 +701,9 @@
       h("p", { class: "muted" }, [o.source?.title, o.source?.authors, o.source?.year ? `(${o.source.year})` : ""].filter(Boolean).join(" · ")),
       h("p", { style: "font-size:19px;max-width:66ch" }, o.summary),
       (o.primer || []).length ? h("details", { class: "advanced" },
-        h("summary", {}, `The paper in brief: ${o.primer.length} pages read before the first exhibit`),
+        h("summary", {}, `The paper in brief: ${o.primer.length} pages read before the first concept`),
         ...o.primer.map((pg) => h("div", {}, h("h3", {}, pg.heading), h("p", { style: "max-width:66ch;white-space:pre-line" }, pg.body)))) : null,
-      h("p", { class: "note" }, "Here's the proposed hall of exhibits, from background to the paper's main result. Reorder them, remove any, or mark the ones you already know."),
+      h("p", { class: "note" }, "Here's the proposed outline, from background to the paper's main result. Reorder them, remove any, or mark the ones you already know."),
       list, removedBox,
       h("div", { class: "actions" }, buildBtn, h("button", { class: "ghost", onclick: () => showHome() }, "Start over"))));
   }
@@ -711,13 +719,13 @@
   function showBuilding(jobId) {
     setHash("#/building");
     const stepsBox = h("div"), errSlot = h("div");
-    const startBtn = h("button", { class: "primary", disabled: true, onclick: () => openBuilding(jobId) }, "Start the first exhibit");
+    const startBtn = h("button", { class: "primary", disabled: true, onclick: () => openBuilding(jobId) }, "Start the first concept");
     const cancel = h("button", { class: "ghost", onclick: async () => { await api(`/api/jobs/${jobId}/cancel`, {}).catch(() => {}); showHome(); } }, "Cancel");
     view(h("section", { class: "panel" },
-      h("h1", {}, "Building your exhibits"),
-      h("p", { style: "max-width:66ch" }, "Each exhibit is drafted, then checked: its quote must appear in the paper, its model must work, and every goal must be reachable. Exhibits that fail are fixed or left out, never shown broken."),
+      h("h1", {}, "Building your lesson"),
+      h("p", { style: "max-width:66ch" }, "Each concept is drafted, then checked: its quote must appear in the paper, its model must work, and every goal must be reachable. Concepts that fail are fixed or left out, never shown broken."),
       stepsBox, errSlot,
-      h("p", { class: "muted small" }, "You can start the first exhibit as soon as it's ready. The rest keep building in the background."),
+      h("p", { class: "muted small" }, "You can start the first concept as soon as it's ready. The rest keep building in the background."),
       h("div", { class: "actions" }, startBtn, cancel)));
     const poll = async () => {
       let s;
@@ -802,7 +810,7 @@
         showLibrary();
       } }, "Delete");
       return h("li", { class: "lib-item" },
-        h("div", {}, h("h3", {}, it.title), h("p", { class: "muted small", style: "margin:0" }, `${it.source} · ${it.concepts} exhibit${it.concepts === 1 ? "" : "s"} · saved ${new Date(it.saved * 1000).toLocaleDateString()}`)),
+        h("div", {}, h("h3", {}, it.title), h("p", { class: "muted small", style: "margin:0" }, `${it.source} · ${it.concepts} concept${it.concepts === 1 ? "" : "s"} · saved ${new Date(it.saved * 1000).toLocaleDateString()}`)),
         h("div", { class: "actions" },
           h("button", { class: "small primary", onclick: async () => openLesson(await api(`/api/lessons/${it.id}`), { saved: true }) }, "Open"),
           h("button", { class: "small", onclick: async () => downloadLesson(await api(`/api/lessons/${it.id}`)) }, "Download"),
@@ -865,7 +873,7 @@
       Array.isArray(lesson.primer) ? h("fieldset", {}, h("legend", {}, "The paper in brief"),
         ...lesson.primer.flatMap((pg, i) => [field(`Page ${i + 1} heading`, pg, "heading"), field(`Page ${i + 1} text`, pg, "body", true),
           field(`Page ${i + 1} quote (optional; must match the paper word for word)`, pg, "quote", true)])) : null,
-      ...lesson.concepts.map((c, i) => h("fieldset", {}, h("legend", {}, `Exhibit ${i + 1}: ${c.title}`),
+      ...lesson.concepts.map((c, i) => h("fieldset", {}, h("legend", {}, `Concept ${i + 1}: ${c.title}`),
         EDIT_FIELDS.filter(([p]) => !p.startsWith("check.") || c.check).map(([p, label]) => field(label, c, p, /explanation|feedback|quote$|caption|misconception|note|idea|question|prompt/.test(p))))),
       advanced, errSlot,
       h("div", { class: "actions sticky-actions" }, save,

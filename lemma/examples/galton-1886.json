@@ -132,16 +132,19 @@
           "type": "bars",
           "bars": [
             {
+              "id": "father_bar",
               "label": "Father",
               "value": "father",
               "color": 0
             },
             {
+              "id": "mother_bar",
               "label": "Mother × 1.08",
               "value": "mother_m",
               "color": 2
             },
             {
+              "id": "mid_bar",
               "label": "Parents' average",
               "value": "mid",
               "color": 1
@@ -157,7 +160,11 @@
         "steps": [
           {
             "say": "Three bars: a father, a mother, and one number that stands for the pair, their average.",
-            "focus": "mid",
+            "focus": [
+              "father_bar",
+              "mother_bar",
+              "mid_bar"
+            ],
             "ms": 2800
           },
           {
@@ -381,12 +388,14 @@
           },
           "series": [
             {
+              "id": "same_line",
               "label": "Child = mid-parent",
               "expr": "x",
               "color": 7,
               "dashed": true
             },
             {
+              "id": "expected_line",
               "label": "Expected child",
               "expr": "68.25 + ratio * (x - 68.25)",
               "color": 0
@@ -394,12 +403,14 @@
           ],
           "hlines": [
             {
+              "id": "average_line",
               "y": 68.25,
               "label": "Average (68¼ in)"
             }
           ],
           "markers": [
             {
+              "id": "mid_marker",
               "x": "mp",
               "label": "Mid-parent",
               "color": 2
@@ -407,6 +418,7 @@
           ],
           "points": [
             {
+              "id": "expected_pt",
               "x": "mp",
               "y": "child",
               "label": "Expected child",
@@ -424,14 +436,18 @@
           },
           {
             "say": "The dashed diagonal means 'like parent, like child': children exactly as tall as their mid-parents.",
-            "ms": 2800
+            "ms": 2800,
+            "focus": "same_line"
           },
           {
             "say": "This slider picks a mid-parent. The point slides along the line.",
             "set": {
               "mp": 66
             },
-            "focus": "mp",
+            "focus": [
+              "mp",
+              "expected_pt"
+            ],
             "ms": 2600
           },
           {
@@ -439,7 +455,10 @@
             "set": {
               "ratio": 0
             },
-            "focus": "ratio",
+            "focus": [
+              "ratio",
+              "expected_line"
+            ],
             "ms": 3200
           }
         ]
