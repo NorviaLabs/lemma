@@ -38,35 +38,46 @@ def write_private(path: Path, data: str):
 # ---------------------------------------------------------------- library
 
 
-def _paths(lesson_id: str) -> tuple[Path, Path]:
+def library(owner: str | None = None) -> Path:
+    """A local Lemma has one library; a hosted one keeps one per account (see auth.py)."""
+    if owner is None:
+        return home() / "library"
+    if not ID_RE.match(owner):
+        raise KeyError(owner)
+    lib = home() / "users" / owner / "library"
+    lib.mkdir(parents=True, exist_ok=True)
+    return lib
+
+
+def _paths(lesson_id: str, owner: str | None = None) -> tuple[Path, Path]:
     if not ID_RE.match(lesson_id or ""):
         raise KeyError(lesson_id)
-    lib = home() / "library"
+    lib = library(owner)
     return lib / f"{lesson_id}.json", lib / f"{lesson_id}.source.txt"
 
 
-def save_lesson(lesson: dict, source_text: str | None):
-    jp, sp = _paths(lesson["id"])
+def save_lesson(lesson: dict, source_text: str | None, owner: str | None = None):
+    jp, sp = _paths(lesson["id"], owner)
     _write(jp, json.dumps(lesson, ensure_ascii=False, indent=1))
     if source_text is not None:
         _write(sp, source_text)
 
 
-def load_lesson(lesson_id: str) -> tuple[dict, str | None]:
-    jp, sp = _paths(lesson_id)
+def load_lesson(lesson_id: str, owner: str | None = None) -> tuple[dict, str | None]:
+    jp, sp = _paths(lesson_id, owner)
     lesson = json.loads(jp.read_text(encoding="utf-8"))
     src = sp.read_text(encoding="utf-8") if sp.exists() else None
     return lesson, src
 
 
-def delete_lesson(lesson_id: str):
-    for p in _paths(lesson_id):
+def delete_lesson(lesson_id: str, owner: str | None = None):
+    for p in _paths(lesson_id, owner):
         p.unlink(missing_ok=True)
 
 
-def list_lessons() -> list[dict]:
+def list_lessons(owner: str | None = None) -> list[dict]:
     out = []
-    for p in sorted((home() / "library").glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True):
+    for p in sorted(library(owner).glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True):
         try:
             l = json.loads(p.read_text(encoding="utf-8"))
         except (OSError, ValueError):

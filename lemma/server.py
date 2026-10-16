@@ -1,4 +1,4 @@
-"""Lemma's local web server. It listens only on this computer and keeps no logs."""
+"""Lemma's web server. Locally it listens only on this computer; hosted, it serves signed-in accounts. It keeps no logs."""
 
 from __future__ import annotations
 
@@ -7,15 +7,17 @@ import json
 import mimetypes
 import os
 import re
+import secrets
 import socket
 import threading
 import uuid
 from http import HTTPStatus
+from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib import resources
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, quote, urlsplit
 
-from . import __version__, chatgpt, export, generate, ingest, search, store
+from . import __version__, auth, chatgpt, export, generate, ingest, search, store
 from . import lesson as L
 from .llm import DEFAULT_PROVIDER, PROVIDERS, ProviderError, make_provider
 
@@ -24,9 +26,16 @@ STATIC = resources.files("lemma").joinpath("static")
 EXAMPLES = resources.files("lemma").joinpath("examples")
 
 DEV = False  # set by `lemma --dev`: live-reload script and /api/dev/events
+# Set by `make_server` when Lemma listens beyond this computer. A hosted Lemma serves other people,
+# so it doesn't offer ChatGPT sign-in, which keeps one person's tokens on the server's disk.
+HOSTED = False
+LOCAL_HOSTS = ("localhost", "127.0.0.1", "[::1]")
+ALLOWED_HOSTS: tuple[str, ...] = LOCAL_HOSTS  # Host header names Lemma answers; `--allowed-hosts` adds more
 
-PAPERS: dict[str, dict] = {}  # paper_id -> {text, title, url, kind, pages}
-SOURCES: dict[str, str] = {}  # lesson id -> paper text, for lessons built in this session
+PAPERS: dict[str, dict] = {}  # paper_id -> {text, title, url, kind, pages, owner}
+SOURCES: dict[tuple, str] = {}  # (owner, lesson id) -> paper text, for lessons built in this session
+KEEP_PAPERS, KEEP_SOURCES = 5, 200  # papers kept per person, and paper texts kept in all
+MAX_RUNNING_EACH, MAX_RUNNING = 2, 8  # outlines and builds running at once, per account and in all, when hosted
 _lock = threading.Lock()
 REQUEST = threading.local()  # the current request's headers; one thread per request
 
@@ -46,14 +55,31 @@ def _credential():
     return (headers.get("X-Lemma-Provider") or DEFAULT_PROVIDER, headers.get("X-Lemma-Key") or "", headers.get("X-Lemma-Model") or "")
 
 
+def _owner() -> str | None:
+    """Whose papers, builds and library this request uses: nobody's locally, the signed-in account's when hosted."""
+    if not HOSTED:
+        return None
+    user = getattr(REQUEST, "user", None)
+    if not user:
+        raise ApiError(401, "Sign in to find papers, build lessons and keep a library.")
+    return user["id"]
+
+
 def provider_from_request(pid: str | None = None):
     req_pid, key, model = _credential()
     if pid and pid != req_pid:
         raise ApiError(400, "Save this provider in Settings first.")
+    if HOSTED and (req_pid or DEFAULT_PROVIDER) not in providers():
+        raise ApiError(400, "This provider is only available when Lemma runs on your own computer.")
     try:
         return make_provider(req_pid, key, model)
     except ProviderError as e:
         raise ApiError(400, str(e)) from None
+
+
+def providers() -> dict:
+    """The providers this server offers: all of them locally, only keyed ones when hosted."""
+    return {i: p for i, p in PROVIDERS.items() if p.key_url or not HOSTED}
 
 
 def load_example() -> tuple[dict, str]:
@@ -62,11 +88,11 @@ def load_example() -> tuple[dict, str]:
     return lesson, source
 
 
-def source_for(lesson_id: str) -> str | None:
-    if lesson_id in SOURCES:
-        return SOURCES[lesson_id]
+def source_for(lesson_id: str, owner: str | None = None) -> str | None:
+    if (owner, lesson_id) in SOURCES:
+        return SOURCES[(owner, lesson_id)]
     try:
-        return store.load_lesson(lesson_id)[1]
+        return store.load_lesson(lesson_id, owner)[1]
     except (KeyError, OSError, ValueError):
         return None
 
@@ -86,8 +112,11 @@ def api_status(_body):
     return {
         "version": __version__,
         "provider": {"id": p.id, "name": p.name, "model": p.model, "label": p.label, "ok": ok, "message": msg},
-        "providers": [{"id": i.id, "name": i.name, "default_model": i.default_model, "key_url": i.key_url, "sign_in": not i.key_url} for i in PROVIDERS.values()],
-        "library_count": len(store.list_lessons()),
+        "providers": [{"id": i.id, "name": i.name, "default_model": i.default_model, "key_url": i.key_url, "sign_in": not i.key_url} for i in providers().values()],
+        "library_count": len(store.list_lessons(_owner())) if not HOSTED or getattr(REQUEST, "user", None) else 0,
+        "hosted": HOSTED,
+        "user": getattr(REQUEST, "user", None),
+        "sign_in": auth.providers() if HOSTED else [],
     }
 
 
@@ -101,12 +130,19 @@ def api_models(_body):
     return {"provider": p.id, "models": models, "current": p.model}
 
 
+def _local_only():
+    if HOSTED:
+        raise ApiError(404, "Not found.")
+
+
 def api_chatgpt(_body):
+    _local_only()
     return chatgpt.status()
 
 
 def api_chatgpt_login(_body):
     """Starts a ChatGPT sign-in; the browser opens the returned page."""
+    _local_only()
     try:
         return {"url": chatgpt.start_sign_in()}
     except ProviderError as e:
@@ -114,11 +150,13 @@ def api_chatgpt_login(_body):
 
 
 def api_chatgpt_logout(_body):
+    _local_only()
     chatgpt.sign_out()
     return chatgpt.status()
 
 
 def api_papers(body):
+    owner = _owner()
     try:
         if isinstance(body.get("urls"), list) and body["urls"]:
             paper = _first_readable([str(u) for u in body["urls"][:5]])
@@ -138,9 +176,10 @@ def api_papers(body):
         raise ApiError(422, str(e)) from None
     pid = uuid.uuid4().hex[:12]
     with _lock:
-        PAPERS[pid] = {"text": paper.text, "title": paper.title, "url": paper.url, "kind": paper.kind, "pages": paper.pages}
-        while len(PAPERS) > 20:
-            PAPERS.pop(next(iter(PAPERS)))
+        PAPERS[pid] = {"text": paper.text, "title": paper.title, "url": paper.url, "kind": paper.kind, "pages": paper.pages, "owner": owner}
+        mine = [k for k, v in PAPERS.items() if v["owner"] == owner]
+        for k in mine[:-KEEP_PAPERS]:
+            PAPERS.pop(k)
     return {"paper_id": pid, "title": paper.title, "kind": paper.kind, "pages": paper.pages, "chars": len(paper.text), "url": paper.url}
 
 
@@ -165,6 +204,7 @@ def _first_readable(urls: list[str]):
 
 
 def api_search(body):
+    _owner()
     try:
         return search.search(str(body.get("query", "")))
     except search.SearchError as e:
@@ -173,7 +213,7 @@ def api_search(body):
 
 def _paper(body) -> dict:
     p = PAPERS.get(str(body.get("paper_id", "")))
-    if not p:
+    if not p or p["owner"] != _owner():
         raise ApiError(404, "Lemma no longer has that paper in memory. Please bring it again.")
     return p
 
@@ -186,9 +226,27 @@ def _provider():
     return p
 
 
+def _new_job(kind: str) -> generate.Job:
+    owner = _owner()
+    if HOSTED:
+        running = [j for j in list(generate.JOBS.values()) if j.status == "running"]
+        if sum(j.owner == owner for j in running) >= MAX_RUNNING_EACH:
+            raise ApiError(429, "You already have lessons building. Wait for one to finish, or cancel it.")
+        if len(running) >= MAX_RUNNING:
+            raise ApiError(503, "Lemma is busy building other people's lessons. Please try again in a few minutes.")
+    job = generate.Job(kind)
+    job.owner = owner
+    return job
+
+
+def _job(job_id: str) -> generate.Job | None:
+    job = generate.JOBS.get(job_id)
+    return job if job and job.owner == _owner() else None
+
+
 def api_outline(body):
     paper = _paper(body)
-    job = generate.Job("outline")
+    job = _new_job("outline")
     generate.start(job, generate.make_outline, _provider(), paper["text"], str(body.get("audience", ""))[:300])
     return {"id": job.id}
 
@@ -200,22 +258,25 @@ def api_build(body):
     if problems:
         raise ApiError(400, "The outline isn't valid: " + "; ".join(problems[:3]))
     provider = _provider()
-    job = generate.Job("build")
+    job = _new_job("build")
     lesson_id = uuid.uuid4().hex[:12]
-    SOURCES[lesson_id] = paper["text"]
+    with _lock:
+        SOURCES[(job.owner, lesson_id)] = paper["text"]
+        while len(SOURCES) > KEEP_SOURCES:
+            SOURCES.pop(next(iter(SOURCES)))
     generate.start(job, generate.build_lesson, provider, paper, outline, str(body.get("audience", ""))[:300], lesson_id)
     return {"id": job.id, "lesson_id": lesson_id}
 
 
 def api_job(job_id):
-    job = generate.JOBS.get(job_id)
+    job = _job(job_id)
     if not job:
         raise ApiError(404, "That job has finished or expired.")
     return job.snapshot()
 
 
 def api_job_cancel(job_id):
-    job = generate.JOBS.get(job_id)
+    job = _job(job_id)
     if job:
         job.cancelled.set()
     return {"ok": True}
@@ -236,29 +297,30 @@ def api_save(body):
     lid = str(lesson.get("id") or "")
     if not store.ID_RE.match(lid):
         raise ApiError(400, "This lesson has no valid id.")
-    source = source_for(lid) or None
+    owner = _owner()
+    source = source_for(lid, owner) or None
     if source is None:
         raise ApiError(409, "Lemma no longer has this lesson's paper text, so it can't confirm the quotes. Bring the paper again to rebuild it.")
     lesson = {k: v for k, v in lesson.items() if k != "plan"}
     require_valid(lesson, source)
-    store.save_lesson(lesson, source)
+    store.save_lesson(lesson, source, owner)
     return {"ok": True, "id": lid}
 
 
 def api_lessons(_body):
-    return store.list_lessons()
+    return store.list_lessons(_owner())
 
 
 def api_lesson(lesson_id):
     try:
-        return store.load_lesson(lesson_id)[0]
+        return store.load_lesson(lesson_id, _owner())[0]
     except (KeyError, OSError, ValueError):
         raise ApiError(404, "That lesson isn't in your library.") from None
 
 
 def api_lesson_delete(lesson_id):
     try:
-        store.delete_lesson(lesson_id)
+        store.delete_lesson(lesson_id, _owner())
     except KeyError:
         raise ApiError(404, "That lesson isn't in your library.") from None
     return {"ok": True}
@@ -271,7 +333,7 @@ def api_export(body):
     if lesson.get("example"):
         source = load_example()[1]
     else:
-        source = source_for(str(lesson.get("id", ""))) or None
+        source = source_for(str(lesson.get("id", "")), _owner()) or None
     lesson = {k: v for k, v in lesson.items() if k != "plan"}
     require_valid(lesson, source)
     return export.lesson_html(lesson)
@@ -311,7 +373,7 @@ class Handler(BaseHTTPRequestHandler):
     def _allowed_host(self) -> bool:
         host = (self.headers.get("Host") or "").lower()
         name = host.rsplit(":", 1)[0] if not host.startswith("[") else host.split("]")[0] + "]"
-        return name in ("localhost", "127.0.0.1", "[::1]")
+        return name in ALLOWED_HOSTS
 
     def _same_origin(self) -> bool:
         origin = self.headers.get("Origin")
@@ -341,13 +403,28 @@ class Handler(BaseHTTPRequestHandler):
         if not self._allowed_host():
             return self._send(403, b"Forbidden", "text/plain")
         REQUEST.headers = self.headers
-        path = urlsplit(self.path).path
+        REQUEST.token = self._cookie(auth.SESSION_COOKIE) if HOSTED else None
+        REQUEST.user = auth.user_for(REQUEST.token) if REQUEST.token else None
+        url = urlsplit(self.path)
+        path = url.path
+        base = urlsplit(auth.public_url()).path  # e.g. /lemma, when Lemma is served under a path
+        if base and path == base:
+            self.send_response(301)
+            self.send_header("Location", base + "/")
+            self.send_header("Content-Length", "0")
+            return self.end_headers()
+        if base and path.startswith(base + "/"):
+            path = path[len(base):]
+        if HOSTED and method == "GET" and path.startswith("/auth/"):
+            return self._sign_in(path, parse_qs(url.query))
         if DEV and method == "GET" and path == "/api/dev/events":
             return self._dev_events()
         if method == "GET" and not path.startswith("/api/"):
             return self._static(path)
         if method != "GET" and not self._same_origin():
             return self._json(403, {"error": "Cross-origin requests are not allowed."})
+        if HOSTED and method == "POST" and path == "/api/logout":
+            return self._sign_out()  # not in ROUTES: it clears the session cookie
         for m, pattern, fn, has_arg in ROUTES:
             if m != method:
                 continue
@@ -367,6 +444,62 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(200, result.encode("utf-8"), "text/html; charset=utf-8", {"Content-Disposition": "attachment; filename=lesson.html"})
             return self._json(200, result)
         return self._json(404, {"error": "Not found."})
+
+    # ---------------------------------------------------------- accounts (hosted only; see auth.py)
+
+    def _cookie(self, name: str) -> str | None:
+        jar = SimpleCookie()
+        try:
+            jar.load(self.headers.get("Cookie") or "")
+        except Exception:
+            return None
+        return jar[name].value if name in jar else None
+
+    def _set_cookie(self, name: str, value: str, max_age: int) -> str:
+        secure = "; Secure" if auth.public_url().startswith("https://") else ""
+        return f"{name}={value}; Path={auth.cookie_path()}; Max-Age={max_age}; HttpOnly; SameSite=Lax{secure}"
+
+    def _redirect(self, where: str, cookies: list[str]):
+        self.send_response(302)
+        self.send_header("Location", auth.public_url() + where)
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Content-Length", "0")
+        for c in cookies:
+            self.send_header("Set-Cookie", c)
+        self.end_headers()
+
+    def _sign_in(self, path: str, query: dict):
+        """/auth/<provider>/start sends the browser to the provider; /auth/<provider>/callback signs it in."""
+        m = re.fullmatch(r"/auth/(google|github)/(start|callback)", path)
+        if not m:
+            return self._send(404, b"Not found", "text/plain")
+        pid, step = m.groups()
+        clear_state = self._set_cookie(auth.STATE_COOKIE, "", 0)
+        try:
+            if step == "start":
+                state = secrets.token_urlsafe(24)
+                url = auth.sign_in_url(pid, state)
+                self.send_response(302)
+                self.send_header("Location", url)
+                self.send_header("Cache-Control", "no-store")
+                self.send_header("Content-Length", "0")
+                self.send_header("Set-Cookie", self._set_cookie(auth.STATE_COOKIE, state, 600))
+                return self.end_headers()
+            if query.get("error"):
+                return self._redirect("/#/signin", [clear_state])  # the person cancelled at the provider
+            state, expected = (query.get("state") or [""])[0], self._cookie(auth.STATE_COOKIE) or ""
+            if not expected or not secrets.compare_digest(state, expected):
+                raise auth.AuthError("That sign-in link had expired. Please try again.")
+            user = auth.finish_sign_in(pid, (query.get("code") or [""])[0])
+            token = auth.new_session(user["id"])
+            return self._redirect("/#/", [clear_state, self._set_cookie(auth.SESSION_COOKIE, token, auth.SESSION_DAYS * 86400)])
+        except auth.AuthError as e:
+            return self._redirect("/#/signin?error=" + quote(str(e)), [clear_state])
+
+    def _sign_out(self):
+        auth.end_session(REQUEST.token)
+        body = b'{"ok": true}'
+        self._send(200, body, "application/json; charset=utf-8", {"Set-Cookie": self._set_cookie(auth.SESSION_COOKIE, "", 0)})
 
     def _dev_events(self):
         """Server-Sent Events for live reload: `hello` with this server's boot id, then `change` lists."""
@@ -402,6 +535,8 @@ class Handler(BaseHTTPRequestHandler):
     def _static(self, path: str):
         if path in ("/", "/index.html"):
             name = "index.html"
+        elif path == "/privacy":
+            name = "privacy.html"
         elif path.startswith("/static/"):
             name = path[len("/static/"):]
         else:
@@ -414,13 +549,14 @@ class Handler(BaseHTTPRequestHandler):
         ctype = "font/woff2" if name.endswith(".woff2") else mimetypes.guess_type(name)[0] or "application/octet-stream"
         if ctype.startswith("text/") or ctype in ("application/javascript", "text/javascript"):
             ctype += "; charset=utf-8"
-        csp = "default-src 'self'; img-src 'self' data:; font-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'"
-        extra = {"Content-Security-Policy": csp} if name == "index.html" else {}
+        avatars = " https://lh3.googleusercontent.com https://avatars.githubusercontent.com" if HOSTED else ""  # account pictures
+        csp = f"default-src 'self'; img-src 'self' data:{avatars}; font-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'"
+        extra = {"Content-Security-Policy": csp} if name.endswith(".html") else {}
         if name.startswith("fonts/"):
             extra["Cache-Control"] = "public, max-age=31536000, immutable"
         body = f.read_bytes()
         if DEV and name == "index.html":
-            body = body.replace(b"</body>", b'<script src="/static/dev-reload.js"></script>\n</body>')
+            body = body.replace(b"</body>", b'<script src="static/dev-reload.js"></script>\n</body>')
         self._send(200, body, ctype, extra)
 
     def do_GET(self):
@@ -436,21 +572,30 @@ class Handler(BaseHTTPRequestHandler):
         self._dispatch("DELETE")
 
 
-def _free_port(preferred: int) -> int:
+def _free_port(preferred: int, host: str = "127.0.0.1") -> int:
     for port in [preferred] + list(range(preferred + 1, preferred + 20)):
         with socket.socket() as s:
             try:
-                s.bind(("127.0.0.1", port))
+                s.bind((host, port))
                 return port
             except OSError:
                 continue
     with socket.socket() as s:
-        s.bind(("127.0.0.1", 0))
+        s.bind((host, 0))
         return s.getsockname()[1]
 
 
-def make_server(port: int = 8765, exact: bool = False) -> ThreadingHTTPServer:
-    """`exact` binds the given port or fails; otherwise the next free port is used."""
-    httpd = ThreadingHTTPServer(("127.0.0.1", port if exact else _free_port(port)), Handler)
+def make_server(port: int = 8765, exact: bool = False, host: str = "127.0.0.1", allowed_hosts: tuple[str, ...] = ()) -> ThreadingHTTPServer:
+    """`exact` binds the given port or fails; otherwise the next free port is used.
+
+    Listening on any address but loopback makes this a hosted Lemma: it answers only the
+    `allowed_hosts` (the public domain names it is reached by), binds exactly `port` and drops ChatGPT sign-in.
+    """
+    global HOSTED, ALLOWED_HOSTS
+    HOSTED = host not in ("127.0.0.1", "localhost", "::1")
+    if HOSTED and not allowed_hosts:
+        raise ValueError("A hosted Lemma needs --allowed-hosts: the domain names it is reached by.")
+    ALLOWED_HOSTS = LOCAL_HOSTS + tuple(h.strip().lower() for h in allowed_hosts if h.strip())
+    httpd = ThreadingHTTPServer((host, port if exact or HOSTED else _free_port(port, host)), Handler)  # a host expects its own port
     httpd.daemon_threads = True
     return httpd

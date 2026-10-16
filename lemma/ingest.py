@@ -3,8 +3,12 @@
 from __future__ import annotations
 
 import html
+import http.client
 import io
+import ipaddress
 import re
+import socket
+import ssl
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -154,31 +158,76 @@ def _normalise_url(url: str) -> str:
     return url
 
 
-def _check_host(url: str):
-    import ipaddress
-    import socket
-
-    host = urllib.parse.urlsplit(url).hostname or ""
+def _public_addresses(host: str, port: int) -> list[tuple]:
+    """The addresses `host` resolves to, or IngestError if any of them is private, loopback or reserved."""
     try:
-        infos = socket.getaddrinfo(host, None)
+        infos = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
     except socket.gaierror:
         raise IngestError(f"Couldn't find the site {host!r}. Check the link and your connection.") from None
     for info in infos:
-        ip = ipaddress.ip_address(info[4][0])
-        if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved:
+        ip = ipaddress.ip_address(info[4][0].split("%")[0])
+        if not ip.is_global or ip.is_multicast:
             raise IngestError("Lemma only fetches public web addresses. Upload the file instead.")
+    return infos
+
+
+def _connect_public(address, timeout=socket._GLOBAL_DEFAULT_TIMEOUT, source_address=None):
+    """Like socket.create_connection, but checks the addresses as it connects and uses only those it checked,
+    so neither a redirect nor a second DNS answer can point a fetch at this server's own network."""
+    host, port = address
+    err = None
+    for family, kind, proto, _, sockaddr in _public_addresses(host, port):
+        sock = socket.socket(family, kind, proto)
+        try:
+            if timeout is not socket._GLOBAL_DEFAULT_TIMEOUT:
+                sock.settimeout(timeout)
+            sock.connect(sockaddr)
+            return sock
+        except OSError as e:
+            sock.close()
+            err = e
+    raise err or OSError(f"Couldn't connect to {host}")
+
+
+class _PublicHTTP(http.client.HTTPConnection):
+    def __init__(self, *a, **kw):
+        super().__init__(*a, **kw)
+        self._create_connection = _connect_public
+
+
+class _PublicHTTPS(http.client.HTTPSConnection):
+    def __init__(self, *a, **kw):
+        super().__init__(*a, **kw)
+        self._create_connection = _connect_public  # TLS still checks the certificate against the host name
+
+
+class _PublicHandler(urllib.request.HTTPHandler, urllib.request.HTTPSHandler):
+    def http_open(self, req):
+        return self.do_open(_PublicHTTP, req)
+
+    def https_open(self, req):
+        return self.do_open(_PublicHTTPS, req, context=ssl.create_default_context())
+
+
+class _Redirects(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        if urllib.parse.urlsplit(newurl).scheme not in ("http", "https"):
+            raise IngestError("That link redirects somewhere Lemma can't follow.")
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+# No proxies from the environment, so every connection goes through _connect_public.
+_OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}), _PublicHandler, _Redirects)
 
 
 def from_url(url: str, timeout: float = 30) -> Paper:
     url = _normalise_url(url)
     if urllib.parse.urlsplit(url).scheme not in ("http", "https"):
         raise IngestError("Only http and https links are supported.")
-    _check_host(url)
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "application/pdf,text/html;q=0.9,*/*;q=0.5"})
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
+        with _OPENER.open(req, timeout=timeout) as resp:
             final = resp.geturl()
-            _check_host(final)
             ctype = resp.headers.get_content_type()
             data = resp.read(MAX_BYTES + 1)
     except urllib.error.HTTPError as e:

@@ -41,6 +41,12 @@ A Claude Pro or Max subscription can't be used: Anthropic doesn't allow subscrip
 
 This signs in the same way the Codex CLI does. **Sign in with ChatGPT** in Settings opens OpenAI's sign-in page, which sends you back to `http://localhost:1455/auth/callback`; Lemma listens there only while you sign in. Your tokens are kept in `~/.lemma/chatgpt-auth.json`, readable only by you, and refreshed when they expire. **Sign out** deletes them. Lessons are built through the ChatGPT backend that Codex uses, with no tools, and count against your plan's usage. It is for your own use on your own computer: a hosted Lemma serving other people must not offer it.
 
+### Host it for other people
+
+`lemma --host 0.0.0.0 --allowed-hosts tools.example.com` (or `LEMMA_HOST` and `LEMMA_ALLOWED_HOSTS`) serves Lemma beyond this computer. A hosted Lemma answers only the domain names it is given, binds exactly `--port`, and doesn't offer ChatGPT sign-in. People sign in with Google or GitHub (`lemma/auth.py`), and each account has its own profile, library, papers and builds, with at most two builds running per account. Set `LEMMA_PUBLIC_URL` to where people reach it, such as `https://tools.example.com/lemma`: Lemma serves under that path and sends sign-ins back to `<public url>/auth/<google|github>/callback`. Each provider is offered once both its `LEMMA_<GOOGLE|GITHUB>_CLIENT_ID` and `_CLIENT_SECRET` are set. Accounts are kept in `$LEMMA_HOME/accounts.db`, and libraries in `$LEMMA_HOME/users/`. Serve it over HTTPS only, since learners' keys travel in request headers.
+
+[`deploy/`](deploy/README.md) runs it at tools.mohitranka.com/lemma on a free Oracle Cloud VM behind a Cloudflare Tunnel.
+
 ## How it works
 
 1. **Find something to learn.** Search a topic (or press **Surprise me**): Lemma lists an overview article from Wikipedia, the most-cited open-access papers from OpenAlex and recent preprints from arXiv, and you pick one. Or paste a link (arXiv links are turned into PDF links), or upload a PDF, HTML or text file. Then say who the lesson is for. For a search result, Lemma tries each open copy of it until it finds full text it can read.

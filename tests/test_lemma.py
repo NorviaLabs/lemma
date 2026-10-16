@@ -9,6 +9,7 @@ import http.client
 import json
 import os
 import shutil
+import socket
 import subprocess
 import tempfile
 import threading
@@ -22,7 +23,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TMP_HOME = tempfile.mkdtemp(prefix="lemma-test-")
 os.environ["LEMMA_HOME"] = TMP_HOME
 
-from lemma import chatgpt, claude, dev, expr, export, generate, ingest, kernels, lesson as L, llm, search, server, store  # noqa: E402
+from lemma import auth, chatgpt, claude, dev, expr, export, generate, ingest, kernels, lesson as L, llm, search, server, store  # noqa: E402
 from lemma.llm import Provider, Reply  # noqa: E402
 
 EXAMPLE = json.loads((ROOT / "lemma/examples/galton-1886.json").read_text())
@@ -430,6 +431,39 @@ class SearchTests(unittest.TestCase):
         finally:
             ingest.from_url = orig
 
+    def test_only_public_addresses_are_fetched_even_after_a_redirect(self):
+        with self.assertRaisesRegex(ingest.IngestError, "public web addresses"):
+            ingest.from_url("http://127.0.0.1:9/paper.pdf")
+        with self.assertRaisesRegex(ingest.IngestError, "public web addresses"):
+            ingest.from_url("http://169.254.169.254/latest/meta-data/")
+
+        class Redirect(BaseHTTPRequestHandler):
+            def log_message(self, *a):
+                pass
+
+            def do_GET(self):
+                self.send_response(302)
+                self.send_header("Location", "http://127.0.0.1:9/secret")
+                self.end_headers()
+
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), Redirect)
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+        orig = ingest._public_addresses
+
+        def pretend_public(host, port):  # "pub.test" stands for a public site that redirects inward
+            if host == "pub.test":
+                return socket.getaddrinfo("127.0.0.1", port, type=socket.SOCK_STREAM)
+            return orig(host, port)
+
+        ingest._public_addresses = pretend_public
+        try:
+            with self.assertRaisesRegex(ingest.IngestError, "public web addresses"):
+                ingest.from_url(f"http://pub.test:{httpd.server_address[1]}/paper")
+        finally:
+            ingest._public_addresses = orig
+            httpd.shutdown()
+            httpd.server_close()
+
 
 class FakeAPI(BaseHTTPRequestHandler):
     """A stand-in for an OpenAI-compatible API. Records each call."""
@@ -812,6 +846,9 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(s, 200)
         self.assertEqual(raw[:4], b"wOF2")
         self.assertEqual(self.req("GET", "/static/fonts/../styles.css")[0], 404)
+        s, raw = self.req("GET", "/privacy")
+        self.assertEqual(s, 200)
+        self.assertIn(b"never writes it to disk", raw)
 
     def test_status_follows_the_credential_headers(self):
         s, raw = self.req("GET", "/api/status")
@@ -840,7 +877,7 @@ class ServerTests(unittest.TestCase):
         # Saving needs the paper text so quotes can be re-checked.
         built = dict(ex, id="abc123", example=False)
         self.assertEqual(self.req("POST", "/api/lessons", {"lesson": built})[0], 409)
-        server.SOURCES["abc123"] = SOURCE
+        server.SOURCES[(None, "abc123")] = SOURCE
         self.assertEqual(self.req("POST", "/api/lessons", {"lesson": built})[0], 200)
         listing = json.loads(self.req("GET", "/api/lessons")[1])
         self.assertIn("abc123", [x["id"] for x in listing])
@@ -858,6 +895,115 @@ class ServerTests(unittest.TestCase):
         s, raw = self.req("POST", "/api/papers", {"filename": "galton.txt", "content_type": "text/plain", "data": base64.b64encode(SOURCE.encode()).decode()})
         self.assertEqual(s, 200, raw)
         self.assertGreater(json.loads(raw)["chars"], 40000)
+
+
+class HostedServerTests(unittest.TestCase):
+    def tearDown(self):
+        server.HOSTED, server.ALLOWED_HOSTS = False, server.LOCAL_HOSTS
+
+    def test_needs_its_domain_names(self):
+        with self.assertRaises(ValueError):
+            server.make_server(0, host="0.0.0.0")
+
+    def test_answers_its_domain_and_drops_chatgpt_sign_in(self):
+        httpd = server.make_server(0, host="0.0.0.0", allowed_hosts=("tools.example.com",))
+        port = httpd.server_address[1]
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+
+        def req(method, path, headers):
+            c = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
+            c.request(method, path, b"{}" if method == "POST" else None, headers)
+            r = c.getresponse()
+            raw = r.read()
+            c.close()
+            return r.status, raw
+
+        site = {"Host": "tools.example.com"}
+        try:
+            s, raw = req("GET", "/api/status", site)
+            self.assertEqual(s, 200)
+            self.assertNotIn("chatgpt", [p["id"] for p in json.loads(raw)["providers"]])
+            self.assertEqual(req("GET", "/api/status", {"Host": "evil.example"})[0], 403)
+            self.assertEqual(req("GET", "/api/chatgpt", site)[0], 404)
+            self.assertEqual(req("POST", "/api/chatgpt/login", dict(site, Origin="https://tools.example.com"))[0], 404)
+            self.assertEqual(req("GET", "/api/models", dict(site, **{"X-Lemma-Provider": "chatgpt"}))[0], 400)
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+
+    def test_accounts_keep_their_own_library_and_builds(self):
+        env = {"LEMMA_PUBLIC_URL": "https://tools.example.com/lemma", "LEMMA_GOOGLE_CLIENT_ID": "gid", "LEMMA_GOOGLE_CLIENT_SECRET": "gsecret"}
+        old = {k: os.environ.get(k) for k in env}
+        os.environ.update(env)
+        httpd = server.make_server(0, host="0.0.0.0", allowed_hosts=("tools.example.com",))
+        port = httpd.server_address[1]
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+
+        def req(method, path, body=None, token=None):
+            c = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
+            h = {"Host": "tools.example.com", "Origin": "https://tools.example.com"}
+            if token:
+                h["Cookie"] = f"{auth.SESSION_COOKIE}={token}"
+            c.request(method, path, json.dumps(body).encode() if body is not None else None, h)
+            r = c.getresponse()
+            raw = r.read()
+            c.close()
+            return r.status, raw, r
+
+        try:
+            # Lemma serves under the public URL's path too, as it does behind Cloudflare Tunnel.
+            self.assertEqual(req("GET", "/lemma/api/example")[0], 200)
+            s, _, r = req("GET", "/lemma")
+            self.assertEqual((s, r.getheader("Location")), (301, "/lemma/"))
+            # Signed out: the example works, nothing else does.
+            self.assertEqual(req("GET", "/api/example")[0], 200)
+            for method, path, body in [("GET", "/api/lessons", None), ("POST", "/api/search", {"query": "x"}), ("POST", "/api/papers", {"url": "https://example.com"})]:
+                self.assertEqual(req(method, path, body)[0], 401, path)
+            st = json.loads(req("GET", "/api/status")[1])
+            self.assertEqual((st["hosted"], st["user"], st["sign_in"]), (True, None, [{"id": "google", "name": "Google"}]))
+
+            # Signing in starts at Google with a state cookie scoped to /lemma/; a wrong state is refused.
+            s, _, r = req("GET", "/auth/google/start")
+            self.assertEqual(s, 302)
+            q = urllib.parse.parse_qs(urllib.parse.urlsplit(r.getheader("Location")).query)
+            self.assertEqual(q["redirect_uri"], ["https://tools.example.com/lemma/auth/google/callback"])
+            self.assertIn("Path=/lemma/; Max-Age=600; HttpOnly; SameSite=Lax; Secure", r.getheader("Set-Cookie"))
+            s, _, r = req("GET", "/auth/google/callback?code=c&state=forged")
+            self.assertEqual(s, 302)
+            self.assertTrue(r.getheader("Location").startswith("https://tools.example.com/lemma/#/signin?error="))
+            self.assertEqual(req("GET", "/auth/twitter/start")[0], 404)
+
+            ada = auth.upsert_user("google", "1", "Ada", "ada@example.com", "")
+            bob = auth.upsert_user("github", "2", "Bob", "bob@example.com", "")
+            ta, tb = auth.new_session(ada["id"]), auth.new_session(bob["id"])
+            self.assertEqual(json.loads(req("GET", "/api/status", token=ta)[1])["user"]["name"], "Ada")
+
+            lesson = dict(json.loads(req("GET", "/api/example")[1]), id="adas01", example=False)
+            server.SOURCES[(ada["id"], "adas01")] = SOURCE
+            self.assertEqual(req("POST", "/api/lessons", {"lesson": lesson}, tb)[0], 409)  # Bob can't save Ada's build
+            self.assertEqual(req("POST", "/api/lessons", {"lesson": lesson}, ta)[0], 200)
+            self.assertEqual([x["id"] for x in json.loads(req("GET", "/api/lessons", token=ta)[1])], ["adas01"])
+            self.assertEqual(json.loads(req("GET", "/api/lessons", token=tb)[1]), [])
+            self.assertEqual(req("GET", "/api/lessons/adas01", token=tb)[0], 404)
+            req("DELETE", "/api/lessons/adas01", token=tb)
+            self.assertEqual(req("GET", "/api/lessons/adas01", token=ta)[0], 200)  # Bob's delete didn't touch it
+
+            job = generate.Job("build")
+            job.owner = ada["id"]
+            generate.JOBS[job.id] = job
+            self.assertEqual(req("GET", f"/api/jobs/{job.id}", token=ta)[0], 200)
+            self.assertEqual(req("GET", f"/api/jobs/{job.id}", token=tb)[0], 404)
+
+            s, _, r = req("POST", "/api/logout", {}, ta)
+            self.assertEqual(s, 200)
+            self.assertIn(f"{auth.SESSION_COOKIE}=; Path=/lemma/; Max-Age=0", r.getheader("Set-Cookie"))
+            self.assertIsNone(json.loads(req("GET", "/api/status", token=ta)[1])["user"])
+        finally:
+            generate.JOBS.clear()
+            for k, v in old.items():
+                os.environ.pop(k, None) if v is None else os.environ.__setitem__(k, v)
+            httpd.shutdown()
+            httpd.server_close()
 
 
 class DevModeTests(unittest.TestCase):
@@ -889,7 +1035,7 @@ class DevModeTests(unittest.TestCase):
             self.assertNotIn(b"dev-reload.js", get("/")[1])
             self.assertEqual(get("/api/dev/events")[0], 404)
             server.DEV = True
-            self.assertIn(b'<script src="/static/dev-reload.js"></script>', get("/")[1])
+            self.assertIn(b'<script src="static/dev-reload.js"></script>', get("/")[1])
             status, first = get("/api/dev/events", read=3)  # three lines: retry, event, data
             self.assertEqual(status, 200)
             self.assertIn(f"event: hello\ndata: {dev.BOOT_ID}".encode(), first)
