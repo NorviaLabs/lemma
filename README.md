@@ -21,7 +21,13 @@ To make lessons from your own papers, Lemma needs your own key for an AI provide
 | **Claude** | [platform.claude.com/settings/keys](https://platform.claude.com/settings/keys) | Long papers (about 1M tokens) |
 | **ChatGPT** | No key: sign in with your ChatGPT Plus or Pro account. Only when Lemma runs on your own computer | Depends on the model |
 
-Then paste a link or upload a PDF. Building a lesson usually takes 1–3 minutes, and you can start the first concept sooner.
+Search a topic and choose multiple sources, paste a link, or upload a PDF. Search results suggest an overview and up to two relevant papers only after downloading and checking readable full text; blocked copies are skipped in favor of readable alternatives. Checks are cached for five minutes, so availability can still change. You can change every selection. Lemma creates one combined lesson, attributes its evidence to individual sources, and asks the model to explain meaningful disagreements.
+
+Creation runs in the background. Review the proposed outline, then watch concept-by-concept progress and an approximate time range once enough work has completed. You can start checked concepts early, leave the page, and return through the build's link or My library. Completed lessons save automatically. Unreadable sources are listed as warnings; creation fails if none can be read.
+
+Requests, source text, and progress are stored privately under `LEMMA_HOME` (by default `~/.lemma`). Credentials are never written into build records. Server restarts mark active builds interrupted rather than resuming them automatically; retry uses your current provider credentials. You can cancel running builds, retry stopped builds with the same selections, and delete stopped builds or saved lessons from the library.
+
+Source text has no application-level word or character cap and is never silently truncated. The 40 MB file limit and the selected AI model's context limit still apply; if the model rejects the input as too long, choose a model with a larger context in Settings.
 
 ## Run it
 

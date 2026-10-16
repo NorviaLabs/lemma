@@ -40,7 +40,9 @@ Lemma is independent and not affiliated with Brilliant.org or 3Blue1Brown. Its l
 - Runs locally as a Python web app (`uv run lemma`, or `uv run lemma --dev` with hot reload), served only to 127.0.0.1 and opened in the browser.
 - The learner brings a paper as a link (arXiv links become PDFs), a PDF, a saved web page or a text file, and says who the explanation is for.
 - Lessons are built by an AI tool the learner already has installed and signed in: OpenCode Go through the local OpenCode, or Codex through the local Codex CLI, chosen in Settings. Lemma locks either down so the model can only read what Lemma sends and reply with text.
-- The journey: search a topic and pick a resource, or bring a paper → review and edit the outline → watch the honest build progress → start learning while later concepts are still building → finish summary → save to the library or download one offline HTML file.
+- The journey: search a topic and select complementary sources, or bring a paper → asynchronously read sources and propose an outline → review and edit the outline → watch resumable build progress with an estimated time range → start learning while later concepts are still building → automatically save the completed lesson or download one offline HTML file. Source selections remain editable before starting; recommendations are a starting point, not a completeness guarantee.
+- Multi-source lessons weave core ideas and prerequisites into one standard-depth lesson. Quotes are checked against their identified source; explanations identify supporting sources. Meaningful disagreements and uncertainty are explained rather than flattened into consensus. Deeper topics are suggested for follow-up.
+- Build requests and progress persist privately. Leaving the page does not cancel work. Server restarts mark running builds interrupted for explicit retry; credentials are never persisted in requests. Unreadable sources produce warnings, and no readable sources is a failure. Cancel, retry and delete are available from the build/library flow.
 - Educators and researchers can edit a lesson; every save re-runs the quality checks.
 
 ## Capabilities and Constraints

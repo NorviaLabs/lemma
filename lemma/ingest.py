@@ -16,8 +16,8 @@ from dataclasses import dataclass
 from html.parser import HTMLParser
 
 MAX_BYTES = 40 * 1024 * 1024
-MAX_CHARS = 1_500_000  # roughly 400k tokens; longer documents are refused, never truncated
 USER_AGENT = "Lemma/1.0 (local paper reader)"
+FULL_TEXT = 4000  # Shorter pages are usually abstracts, not usable full text.
 
 
 class IngestError(Exception):
@@ -31,6 +31,23 @@ class Paper:
     kind: str  # "pdf" | "html" | "text"
     url: str = ""
     pages: int = 0
+
+
+def first_readable(urls: list[str], timeout: float | None = None) -> Paper:
+    """Use the same full-text check for recommendations and lesson ingestion."""
+    first, short = None, False
+    for url in urls:
+        try:
+            paper = from_url(url, timeout=timeout) if timeout is not None else from_url(url)
+        except IngestError as e:
+            first = first or e
+            continue
+        if len(paper.text) >= FULL_TEXT:
+            return paper
+        short = True
+    if short or not first:
+        raise IngestError("Lemma could only find a short summary of this one, not the full text. Try another result, or download it and upload the PDF.")
+    raise first
 
 
 def _clean(text: str) -> str:
@@ -251,6 +268,4 @@ def from_bytes(data: bytes, filename: str = "", content_type: str = "", url: str
         paper = from_text(data, url)
     else:
         raise IngestError("Lemma reads PDFs, web pages and plain text files.")
-    if len(paper.text) > MAX_CHARS:
-        raise IngestError(f"This document is very long ({len(paper.text):,} characters). Lemma works with a single paper; try uploading just the paper rather than a book or a collection.")
     return paper

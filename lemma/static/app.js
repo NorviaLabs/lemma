@@ -517,7 +517,7 @@
       errSlot.replaceChildren();
       submit.disabled = true;
       submit.textContent = "Searching…";
-      results.replaceChildren(h("p", { class: "muted" }, `Searching for “${q}”…`));
+      results.replaceChildren(h("p", { class: "muted" }, `Searching for “${q}” and checking readable source links…`));
       try { session.search = await api("/api/search", { query: q }); drawResults(); }
       catch (err) { results.replaceChildren(); errSlot.append(errorBox(err.message)); }
       submit.disabled = false;
@@ -529,20 +529,25 @@
     function drawResults() {
       const r = session.search;
       if (!r) return results.replaceChildren();
-      const cards = r.results.map((x) => {
-        const err = h("div");
-        const learn = h("button", { class: "primary small", onclick: async () => {
-          err.replaceChildren();
-          session.audience = audSel.value === "other" ? audOther.value.trim() || AUDIENCES[0] : audSel.value;
-          results.querySelectorAll(".result button").forEach((b) => (b.disabled = true));
-          learn.textContent = "Reading…";
-          try { session.paper = await api("/api/papers", { urls: x.urls || [x.url] }); startOutline(); }
-          catch (e) {
-            err.append(errorBox(e.message));
-            results.querySelectorAll(".result button").forEach((b) => (b.disabled = false));
-            learn.textContent = "Learn from this";
-          }
-        } }, "Learn from this");
+      const selected = new Set(r.results.filter((x) => x.recommended));
+      const make = h("button", { class: "primary", disabled: !selected.size, onclick: async () => {
+        session.audience = audSel.value === "other" ? audOther.value.trim() || AUDIENCES[0] : audSel.value;
+        const begin = async () => {
+          make.disabled = true;
+          try { const job = await api("/api/requests", { sources: [...selected], topic: r.query, audience: session.audience }); showRequest(job.id); }
+          catch (e) { errSlot.replaceChildren(errorBox(e.message)); make.disabled = false; }
+        };
+        if (!(status.provider || {}).ok) return showConnect(begin);
+        await begin();
+      } }, "Create combined lesson");
+      const cards = r.results.map((x, i) => {
+        const check = h("input", { type: "checkbox", id: `source-${i}`, checked: selected.has(x), onchange: () => {
+          if (check.checked) selected.add(x); else selected.delete(x);
+          make.disabled = !selected.size;
+          make.textContent = `Create lesson from ${selected.size} source${selected.size === 1 ? "" : "s"}`;
+        } });
+        const learn = h("label", { class: "source-choice", for: `source-${i}` }, check, "Include this source",
+          x.recommended ? h("span", { class: "tag" }, `Recommended · ${x.recommendation}`) : null);
         const badge = x.kind === "overview" ? "Overview" : x.source === "arXiv" ? "Preprint" : "Paper";
         const meta = [x.authors, x.year, x.venue].filter(Boolean).join(" · ");
         return h("li", { class: "result" },
@@ -552,16 +557,17 @@
           h("h3", { class: "r-title" }, x.title),
           meta ? h("p", { class: "r-meta" }, meta) : null,
           x.summary ? h("p", { class: "r-sum" }, x.summary) : null,
+          h("p", { class: "muted small" }, x.available ? "Full text checked. Availability can change." : `Could not verify readable full text: ${x.availability_error || "Try another source."}`),
           h("div", { class: "r-actions" }, learn,
             h("a", { href: x.url, target: "_blank", rel: "noopener noreferrer", class: "r-open" }, "Open it", icon("out"), h("span", { class: "sr-only" }, " (opens in a new tab)"))),
-          err);
+          null);
       });
       results.replaceChildren(...[
         h("h2", { id: "results-title" }, r.results.length ? `Top resources for “${r.query}”` : `Nothing readable found for “${r.query}”`),
-        r.results.length ? h("p", { class: "muted" }, "Pick one to learn from. An overview is the gentlest start; widely cited papers go deeper. Lemma reads the one you pick and builds the lesson from it.")
+        r.results.length ? h("p", { class: "muted" }, "Choose sources for one combined lesson. We suggest an overview and relevant papers as a starting point—not a guarantee of complete coverage. Change any selection before starting.")
           : h("p", { class: "muted" }, "Try other words, or paste a link to a paper you already have."),
         r.unavailable.length ? h("p", { class: "muted small" }, `${r.unavailable.join(" and ")} didn't answer, so ${r.unavailable.length > 1 ? "their" : "its"} results are missing. Search again in a moment to include them.`) : null,
-        h("ol", { class: "result-list" }, cards)].filter(Boolean));
+        h("ol", { class: "result-list" }, cards), r.results.length ? make : null].filter(Boolean));
     }
     const urlIn = h("input", { type: "url", id: "paper-url", placeholder: "https://arxiv.org/abs/… or any link to a paper", autocomplete: "off" });
     const fileIn = h("input", { type: "file", id: "paper-file", accept: ".pdf,.html,.htm,.txt,application/pdf,text/html,text/plain" });
@@ -592,10 +598,10 @@
       submit.textContent = m === "search" ? "Search" : "Read the paper";
       const to = p.ok ? [h("strong", {}, p.label)] : ["the AI model you connect next"];
       privacy.replaceChildren(...[...(m === "search"
-        ? ["Your search words go to OpenAlex, arXiv and Wikipedia to find resources. When you pick one, Lemma downloads it and sends its text to ", ...to, " to build the lesson. "]
+        ? ["Your search words go to OpenAlex, arXiv and Wikipedia. Lemma contacts source sites to check readable full text before recommending sources. Selected text goes to ", ...to, " to build one lesson. "]
         : ["When you continue, Lemma sends the paper's text to ", ...to, " to build the lesson. "]),
         p.ok ? "" : "It uses your own key. ",
-        "Nothing else is shared, and Lemma keeps no usage logs. ",
+        "Build requests, source text and progress are saved so you can return later. Lemma keeps no usage logs. ",
         p.ok ? h("a", { href: "#/settings" }, "Change model") : null].filter(Boolean));
     }
     const form = h("form", { class: "panel bring", "aria-labelledby": "bring-title", onsubmit: async (e) => {
@@ -606,7 +612,14 @@
       let body;
       if (mode === "link") {
         if (!urlIn.value.trim()) return urlIn.focus();
-        body = { url: urlIn.value.trim() };
+        if (submit.disabled) return;
+        submit.disabled = true;
+        const begin = async () => {
+          try { const job = await api("/api/requests", { sources: [{ url: urlIn.value.trim(), title: urlIn.value.trim() }], audience: session.audience }); showRequest(job.id); }
+          catch (e) { errSlot.replaceChildren(errorBox(e.message)); submit.disabled = false; }
+        };
+        if (!(status.provider || {}).ok) return showConnect(begin);
+        return begin();
       } else {
         const f = fileIn.files[0];
         if (!f) return fileIn.focus();
@@ -671,34 +684,14 @@
 
   async function startOutline() {
     if (!(status.provider || {}).ok) return showConnect(() => startOutline());
-    const p = session.paper;
-    const box = h("div");
-    const cancel = h("button", { class: "ghost" }, "Cancel");
-    view(h("section", { class: "panel" },
-      h("h1", {}, "Reading the paper"),
-      h("p", {}, h("strong", {}, p.title), h("span", { class: "muted" }, ` · ${p.pages ? p.pages + " pages · " : ""}${Math.round(p.chars / 1000)}k characters`)),
-      h("p", { class: "muted" }, `Sending the text to ${status.provider.label}. This usually takes under a minute.`),
-      box, h("div", { class: "actions" }, cancel)));
-    let job;
-    try { job = await api("/api/outline", { paper_id: p.paper_id, audience: session.audience }); } catch (err) { return showHome(err.message); }
-    cancel.onclick = () => { api(`/api/jobs/${job.id}/cancel`, {}); showHome(); };
-    const poll = async () => {
-      let s;
-      try { s = await api(`/api/jobs/${job.id}`); } catch (err) { box.replaceChildren(errorBox(err.message)); return; }
-      box.replaceChildren(stepList(s.steps));
-      if (s.status === "running") { pollTimer = setTimeout(poll, 1000); return; }
-      if (s.status === "done") {
-        session.outline = s.result;
-        session.outline.concepts.forEach((c) => (c.known = false));
-        session.removed = [];
-        showOutline();
-      } else if (s.status === "error") { box.append(errorBox(s.error)); cancel.textContent = "Back"; }
-    };
-    poll();
+    try {
+      const job = await api("/api/requests", { paper_id: session.paper.paper_id, audience: session.audience });
+      showRequest(job.id);
+    } catch (err) { showHome(err.message); }
   }
 
   function showOutline() {
-    setHash("#/outline");
+    setHash(session.requestId ? `#/request/${session.requestId}` : "#/outline");
     const o = session.outline;
     const list = h("ol", { class: "outline-list" });
     const removedBox = h("div");
@@ -726,6 +719,7 @@
     draw();
     view(h("section", {},
       h("h1", {}, o.title),
+      ...(session.requestWarnings || []).map((w) => h("p", { class: "note" }, w)),
       h("p", { class: "muted" }, [o.source?.title, o.source?.authors, o.source?.year ? `(${o.source.year})` : ""].filter(Boolean).join(" · ")),
       h("p", { style: "font-size:19px;max-width:66ch" }, o.summary),
       (o.primer || []).length ? h("details", { class: "advanced" },
@@ -733,15 +727,68 @@
         ...o.primer.map((pg) => h("div", {}, h("h3", {}, pg.heading), h("p", { style: "max-width:66ch;white-space:pre-line" }, pg.body)))) : null,
       h("p", { class: "note" }, "Here's the proposed outline, from background to the paper's main result. Reorder them, remove any, or mark the ones you already know."),
       list, removedBox,
-      h("div", { class: "actions" }, buildBtn, h("button", { class: "ghost", onclick: () => showHome() }, "Start over"))));
+      h("div", { class: "actions" }, buildBtn,
+        session.requestId ? h("button", { class: "ghost", onclick: async () => { await api(`/api/requests/${session.requestId}/cancel`, {}); showRequest(session.requestId); } }, "Cancel build") : null,
+        h("a", { class: "btn ghost", href: "#/library" }, "Return later"), h("button", { class: "ghost", onclick: () => showHome() }, "Start over"))));
   }
 
   /* ------------------------------------------------------------ build */
   async function startBuild() {
+    if (session.requestId) {
+      try { await api(`/api/requests/${session.requestId}/outline`, { outline: session.outline }); showRequest(session.requestId); }
+      catch (err) { alertInline(err.message); }
+      return;
+    }
     let job;
     try { job = await api("/api/build", { paper_id: session.paper.paper_id, audience: session.audience, outline: session.outline }); } catch (err) { return showHome(err.message); }
     session.buildJob = job.id;
     showBuilding(job.id);
+  }
+
+  function showRequest(id) {
+    session.requestId = id;
+    setHash(`#/request/${id}`);
+    const title = h("h1", {}, "Preparing your lesson"), steps = h("div"), warnings = h("div"), errors = h("div");
+    const eta = h("p", { class: "muted", role: "status" }, "Estimating time remaining…");
+    const open = h("button", { class: "primary", disabled: true }, "Start the first concept");
+    const cancel = h("button", { class: "ghost", onclick: async () => {
+      try { await api(`/api/requests/${id}/cancel`, {}); showRequest(id); } catch (e) { errors.replaceChildren(errorBox(e.message)); }
+    } }, "Cancel build");
+    const retry = h("button", { class: "primary", hidden: true, onclick: async () => {
+      const begin = async () => {
+        try { await api(`/api/requests/${id}/retry`, {}); showRequest(id); } catch (e) { errors.replaceChildren(errorBox(e.message)); }
+      };
+      if (!(status.provider || {}).ok) return showConnect(begin);
+      await begin();
+    } }, "Retry build");
+    view(h("section", { class: "panel" }, title,
+      h("p", { class: "muted" }, "You can leave this page and return using this link or My library. Completed lessons are saved automatically."),
+      eta, steps, warnings, errors, h("div", { class: "actions" }, open, cancel, retry, h("a", { href: "#/library", class: "btn ghost" }, "My library"))));
+    const poll = async () => {
+      if (location.hash !== `#/request/${id}`) return;
+      try {
+        const s = await api(`/api/requests/${id}`);
+        if (location.hash !== `#/request/${id}`) return;
+        if (s.status === "awaiting_outline") {
+          session.outline = s.outline || s.result; session.requestWarnings = s.warnings || []; session.removed = []; return showOutline();
+        }
+        title.textContent = s.status === "running" ? "Building your lesson" : s.status === "done" ? "Your lesson is ready" : `Build ${s.status}`;
+        steps.replaceChildren(stepList(s.steps || []));
+        warnings.replaceChildren(...(s.warnings || []).map((w) => h("p", { class: "note" }, typeof w === "string" ? w : JSON.stringify(w))));
+        errors.replaceChildren(s.error ? errorBox(s.error) : "");
+        eta.textContent = s.status !== "running" ? (s.status === "done" ? "Checked and saved to your library." : "You can retry with the same source selections.")
+          : s.eta_seconds ? `Approximately ${Math.max(1, Math.ceil(s.eta_seconds[0] / 60))}–${Math.max(1, Math.ceil(s.eta_seconds[1] / 60))} minutes left. Repairs or slow providers may take longer.` : "Estimating time remaining…";
+        open.disabled = !s.lesson?.concepts?.length && s.status !== "done";
+        open.textContent = s.status === "done" ? "Open lesson" : "Start the first concept";
+        open.onclick = () => openLesson(s.status === "done" ? s.result : s.lesson, s.status === "done" ? { saved: true } : { live: id, request: true });
+        cancel.hidden = s.status !== "running";
+        retry.hidden = !["error", "cancelled", "interrupted"].includes(s.status);
+        if (s.status === "running") pollTimer = setTimeout(poll, 1500);
+      } catch (e) {
+        errors.replaceChildren(errorBox(e.message), h("button", { class: "small", onclick: poll }, "Reconnect"));
+      }
+    };
+    poll();
   }
 
   function showBuilding(jobId) {
@@ -776,7 +823,7 @@
   /* ------------------------------------------------------------ learn */
   function openLesson(lesson, opts = {}) {
     view();
-    setHash(lesson.example ? "#/example" : opts.saved ? `#/lesson/${lesson.id}` : "#/learn");
+    setHash(opts.request ? `#/request/${opts.live}/learn` : lesson.example ? "#/example" : opts.saved ? `#/lesson/${lesson.id}` : "#/learn");
     const host = h("div", { class: "player-host" });
     main.replaceChildren(host);
     player = LemmaPlayer.mount(host, lesson, {
@@ -788,13 +835,17 @@
     });
     if (opts.live) {
       const jobId = opts.live;
+      const activePlayer = player;
       const poll = async () => {
         let s;
-        try { s = await api(`/api/jobs/${jobId}`); } catch (e) { return; }
-        if (!player) return;
+        try { s = await api(`/api/${opts.request ? "requests" : "jobs"}/${jobId}`); } catch (e) { return; }
+        if (player !== activePlayer) return;
         if (s.status === "running") { player.update(s.lesson); pollTimer = setTimeout(poll, 1500); }
         else if (s.status === "done") { session.lesson = s.result; player.update(s.result); }
-        else if (s.status === "error" && s.lesson) { const l = Object.assign({}, s.lesson); delete l.plan; player.update(l); }
+        else if (["error", "cancelled", "interrupted"].includes(s.status)) {
+          if (s.lesson) { const l = Object.assign({}, s.lesson); delete l.plan; player.update(l); }
+          alertInline(`Build ${s.status}. Return to My library to retry. ${s.error || ""}`);
+        }
       };
       pollTimer = setTimeout(poll, 1500);
     }
@@ -829,8 +880,8 @@
 
   /* ------------------------------------------------------------ library */
   async function showLibrary() {
-    let items = [];
-    try { items = await api("/api/lessons"); } catch (err) { return showHome(err.message); }
+    let items = [], requests = [];
+    try { [items, requests] = await Promise.all([api("/api/lessons"), api("/api/requests")]); } catch (err) { return showHome(err.message); }
     const list = h("ul", { class: "library" }, items.map((it) => {
       const del = h("button", { class: "small danger", onclick: async () => {
         if (del.dataset.armed !== "1") { del.dataset.armed = "1"; del.textContent = "Confirm delete"; return; }
@@ -847,6 +898,13 @@
     }));
     view(h("section", {},
       h("h1", {}, "My library"),
+      requests.some((r) => r.status !== "done") ? h("section", {}, h("h2", {}, "Lesson builds"), h("ul", { class: "library" }, requests.filter((r) => r.status !== "done").map((r) =>
+        h("li", { class: "lib-item" }, h("div", {}, h("h3", {}, r.title || r.topic || "Lesson in progress"), h("p", { class: "muted small" }, r.status.replaceAll("_", " "))),
+          h("div", { class: "actions" }, h("a", { class: "btn small", href: `#/request/${r.id}` }, "View build"), r.status !== "running" ? h("button", { class: "small danger", onclick: async (e) => {
+            const button = e.currentTarget;
+            if (!button.dataset.armed) { button.dataset.armed = "1"; button.textContent = "Confirm delete"; return; }
+            try { await api(`/api/requests/${r.id}`, undefined, "DELETE"); showLibrary(); } catch (err) { alertInline(err.message); }
+          } }, "Delete") : null))))) : null,
       h("p", { class: "muted", style: "max-width:66ch" }, `Lessons saved ${where()}. Download one to get a single file that works offline and sends nothing anywhere.`),
       items.length ? list : h("div", { class: "panel empty" },
         h("h2", {}, "No saved lessons yet"),
@@ -985,6 +1043,10 @@
   /* ------------------------------------------------------------ routing */
   async function route() {
     const hash = location.hash;
+    if (hash.startsWith("#/request/")) {
+      if (player && hash.endsWith("/learn")) return;
+      return showRequest(hash.split("/")[2]);
+    }
     if (hash === "#/library") return showLibrary();
     if (hash === "#/settings") return showSettings();
     if (hash.startsWith("#/signin")) return showSignIn(new URLSearchParams(hash.split("?")[1] || "").get("error"));

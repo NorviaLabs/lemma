@@ -183,24 +183,7 @@ def api_papers(body):
     return {"paper_id": pid, "title": paper.title, "kind": paper.kind, "pages": paper.pages, "chars": len(paper.text), "url": paper.url}
 
 
-FULL_TEXT = 4000  # characters; a shorter page is usually just an abstract
-
-
-def _first_readable(urls: list[str]):
-    """Several copies of one search result: the first full text Lemma can read, else the first copy's reason."""
-    first, short = None, False
-    for u in urls:
-        try:
-            paper = ingest.from_url(u)
-        except ingest.IngestError as e:
-            first = first or e
-            continue
-        if len(paper.text) >= FULL_TEXT:
-            return paper
-        short = True
-    if short or not first:
-        raise ingest.IngestError("Lemma could only find a short summary of this one, not the full text. Try another result, or download it and upload the PDF.")
-    raise first
+_first_readable = ingest.first_readable
 
 
 def api_search(body):
@@ -282,6 +265,188 @@ def api_job_cancel(job_id):
     return {"ok": True}
 
 
+# Durable requests reuse the local thread runner; disk is the recovery boundary, not a queue.
+_requests_lock = threading.RLock()
+
+
+def _request_record(rid, owner):
+    try:
+        record = store.load_request(rid, owner)
+    except (KeyError, OSError, ValueError):
+        raise ApiError(404, "That lesson build wasn't found.") from None
+    job = generate.JOBS.get(rid)
+    if record["status"] == "running" and not (job and job.owner == owner):
+        record.update(status="interrupted", error="The server stopped during this build. Retry to start a new attempt.")
+        store.save_request(record, owner)
+    return record
+
+
+def _public_request(record):
+    return {k: v for k, v in record.items() if k not in ("paper", "request")}
+
+
+def _launch_request(record, provider, owner, build=False):
+    credential = _credential()[1]
+    job = _new_job("request")
+    job.id = record["id"]
+    record.update(status="running", error="", result=None, lesson=None, steps=[])
+    def persist(j):
+        with _requests_lock:
+            if generate.JOBS.get(j.id) is not j:
+                return
+            record.update(j.snapshot())
+            # Provider errors can echo an invalid key. Never persist echoed credentials.
+            serialized = json.dumps(record, ensure_ascii=False)
+            if credential:
+                serialized = serialized.replace(credential, "[redacted]")
+                serialized = serialized.replace(json.dumps(credential, ensure_ascii=False)[1:-1], "[redacted]")
+            store.save_request(json.loads(serialized), owner)
+    job.on_change = persist
+    generate.JOBS[job.id] = job
+    persist(job)  # Persist before any external work begins.
+
+    def run(j):
+        paper = record.get("paper")
+        if not paper:
+            sources = []
+            record["warnings"] = []
+            for i, source in enumerate(record["request"]["sources"], 1):
+                if j.cancelled.is_set():
+                    raise generate.GenerationError("Cancelled.")
+                sid = f"s{i}"
+                j.step(sid, f"Reading source {i}: {source['title']}", "active")
+                try:
+                    fetched = _first_readable(source["urls"])
+                except ingest.IngestError as e:
+                    record["warnings"].append(f"Excluded {source['title']}: {e}")
+                    j.update(sid, "failed", str(e))
+                    continue
+                sources.append({"id": sid, "title": fetched.title or source["title"], "url": fetched.url,
+                                "authors": source.get("authors", ""), "year": source.get("year"), "text": fetched.text})
+                j.update(sid, "done", "Full text ready")
+            if not sources:
+                raise generate.GenerationError("None of the selected sources could be read. Choose other sources.")
+            paper = {"text": json.dumps({"lemma_sources": sources}, ensure_ascii=False),
+                     "title": record["title"], "url": ""}
+            record["paper"] = paper
+        if not build:
+            outline = generate.make_outline(j, provider, paper["text"], record["request"]["audience"])
+            with j.lock:
+                if not j.cancelled.is_set():
+                    record["outline"] = outline
+                    j.status = "awaiting_outline"
+            return outline
+        result = generate.build_lesson(j, provider, paper, record["outline"], record["request"]["audience"], j.id)
+        j.step("save", "Saving your lesson", "active")
+        with _requests_lock:
+            if j.cancelled.is_set():
+                raise generate.GenerationError("Cancelled.")
+            require_valid(result, paper["text"])
+            store.save_lesson(result, paper["text"], owner)
+            j.result = result
+            with j.lock:
+                j.status = "done"
+            j.update("save", "done", "Saved to your library")
+        return result
+    generate.start(job, run)
+    return {"id": job.id}
+
+
+def api_request_create(body):
+    with _requests_lock:
+        owner, provider = _owner(), _provider()
+        request = {"audience": str(body.get("audience", ""))[:300]}
+        paper = None
+        if body.get("paper_id"):
+            paper = dict(_paper(body))
+            paper.pop("owner", None)
+        else:
+            sources = body.get("sources")
+            if not isinstance(sources, list) or not 1 <= len(sources) <= 10:
+                raise ApiError(400, "Select between 1 and 10 sources.")
+            request["sources"] = []
+            for s in sources:
+                if not isinstance(s, dict):
+                    raise ApiError(400, "Invalid source.")
+                urls = s.get("urls") or [s.get("url")]
+                if not isinstance(urls, list) or not 1 <= len(urls) <= 5 or any(not isinstance(u, str) or len(u) > 2048 or urlsplit(u).scheme not in ("http", "https") or not urlsplit(u).hostname for u in urls):
+                    raise ApiError(400, "Each source needs valid HTTP or HTTPS links.")
+                request["sources"].append({"urls": urls, "title": str(s.get("title") or urls[0])[:300],
+                                           "authors": str(s.get("authors", ""))[:300], "year": s.get("year") if isinstance(s.get("year"), int) else None})
+        record = {"id": uuid.uuid4().hex[:12], "title": str(body.get("topic") or (paper or {}).get("title") or "Combined lesson")[:200],
+                  "request": request, "paper": paper, "warnings": []}
+        return _launch_request(record, provider, owner)
+
+
+def api_requests(_body):
+    owner = _owner()
+    with _requests_lock:
+        return [{k: r.get(k) for k in ("id", "title", "status", "created")} for saved in store.list_requests(owner)
+                for r in [_request_record(saved["id"], owner)]]
+
+
+def api_request(rid):
+    with _requests_lock:
+        return _public_request(_request_record(rid, _owner()))
+
+
+def api_request_cancel(rid):
+    with _requests_lock:
+        owner = _owner()
+        record = _request_record(rid, owner)
+        job = generate.JOBS.get(rid)
+        if record["status"] == "running" and job:
+            job.cancelled.set()
+            with job.lock:
+                if job.status == "awaiting_outline":
+                    job.status = "cancelled"
+        elif record["status"] == "awaiting_outline":
+            if job and job.owner == owner:
+                with job.lock:
+                    job.status = "cancelled"
+                job.cancelled.set()
+            record["status"] = "cancelled"
+            store.save_request(record, owner)
+        return {"ok": True}
+
+
+def api_request_retry(rid):
+    with _requests_lock:
+        owner = _owner()
+        record = _request_record(rid, owner)
+        if record["status"] not in ("error", "cancelled", "interrupted"):
+            raise ApiError(409, "Only a stopped build can be retried.")
+        record.pop("outline", None)
+        return _launch_request(record, _provider(), owner)
+
+
+def api_request_outline(rid):
+    # The HTTP dispatcher supplies bodies only to non-capture handlers.
+    body = getattr(REQUEST, "body", {})
+    with _requests_lock:
+        owner = _owner()
+        record = _request_record(rid, owner)
+        if record["status"] != "awaiting_outline":
+            raise ApiError(409, "This build is not waiting for outline review.")
+        outline = body.get("outline")
+        problems = generate.check_outline(outline, record["paper"]["text"])
+        if problems:
+            raise ApiError(400, "The outline isn't valid: " + "; ".join(problems[:3]))
+        record["outline"] = outline
+        return _launch_request(record, _provider(), owner, build=True)
+
+
+def api_request_delete(rid):
+    with _requests_lock:
+        owner = _owner()
+        record = _request_record(rid, owner)
+        if record["status"] == "running":
+            raise ApiError(409, "Cancel the build before deleting it.")
+        store.request_path(rid, owner).unlink(missing_ok=True)
+        generate.JOBS.pop(rid, None)
+        return {"ok": True}
+
+
 def api_example(_body):
     lesson, source = load_example()
     require_valid(lesson, source)  # never show a lesson that fails its checks, even ours
@@ -320,7 +485,10 @@ def api_lesson(lesson_id):
 
 def api_lesson_delete(lesson_id):
     try:
-        store.delete_lesson(lesson_id, _owner())
+        with _requests_lock:
+            store.delete_lesson(lesson_id, _owner())
+            generate.JOBS.pop(lesson_id, None)
+            store.request_path(lesson_id, _owner()).unlink(missing_ok=True)
     except KeyError:
         raise ApiError(404, "That lesson isn't in your library.") from None
     return {"ok": True}
@@ -340,6 +508,13 @@ def api_export(body):
 
 
 ROUTES = [
+    ("POST", r"/api/requests", api_request_create, False),
+    ("GET", r"/api/requests", api_requests, False),
+    ("GET", r"/api/requests/([a-f0-9]{12})", api_request, True),
+    ("POST", r"/api/requests/([a-f0-9]{12})/cancel", api_request_cancel, True),
+    ("POST", r"/api/requests/([a-f0-9]{12})/retry", api_request_retry, True),
+    ("POST", r"/api/requests/([a-f0-9]{12})/outline", api_request_outline, True),
+    ("DELETE", r"/api/requests/([a-f0-9]{12})", api_request_delete, True),
     ("GET", r"/api/status", api_status, False),
     ("GET", r"/api/models", api_models, False),
     ("GET", r"/api/chatgpt", api_chatgpt, False),
@@ -433,6 +608,7 @@ class Handler(BaseHTTPRequestHandler):
                 continue
             try:
                 if has_arg:
+                    REQUEST.body = self._body() if method == "POST" else {}
                     result = fn(match.group(1))
                 else:
                     result = fn(self._body() if method == "POST" else {})

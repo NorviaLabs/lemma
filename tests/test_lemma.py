@@ -374,6 +374,10 @@ WIKI = {"query": {"search": [{"title": "Regression toward the mean", "snippet": 
 
 class SearchTests(unittest.TestCase):
     def setUp(self):
+        from unittest.mock import patch
+        self.readable = patch.object(ingest, "first_readable", side_effect=lambda urls, **kw: ingest.Paper(text="word " * 1000, title="T", url=urls[0], kind="html"))
+        self.readable.start()
+        self.addCleanup(self.readable.stop)
         search._cache.clear()
         self.urls = []
         self.orig = search._get

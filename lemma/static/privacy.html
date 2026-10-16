@@ -19,20 +19,19 @@
 <ul>
   <li><strong>Your account.</strong> When you sign in with Google or GitHub, Lemma keeps your name, email address and profile picture link, which provider you used, and when you joined and last signed in. It asks those providers for nothing else.</li>
   <li><strong>A session.</strong> A cookie keeps you signed in for up to 30 days. The server stores only a fingerprint (hash) of it.</li>
-  <li><strong>Lessons you save,</strong> with the text of the paper each was built from, so its quotes can be checked. Only your account can open them.</li>
+  <li><strong>Lessons and builds.</strong> Lesson requests, selected source text and progress are saved so you can leave and return. Completed lessons are saved automatically. Interrupted builds can be retried. Only your account can open them; delete stopped builds and lessons from your library to remove them.</li>
 </ul>
 
 <h2>What Lemma doesn't keep</h2>
 <ul>
   <li><strong>Your AI provider key.</strong> It stays in your browser and is sent with each request that needs it. The server uses it for that request or build, and never writes it to disk.</li>
   <li><strong>Usage logs.</strong> The server writes no request logs, and the site has no analytics or advertising.</li>
-  <li>Papers you bring are held in memory while you build a lesson, and are only kept if you save that lesson.</li>
 </ul>
 
 <h2>Who else sees your data</h2>
 <ul>
   <li><strong>Your AI provider</strong> (OpenCode, OpenAI or Anthropic, as you choose) receives the paper's text when you build a lesson, under your own key and their terms.</li>
-  <li><strong>OpenAlex, arXiv and Wikipedia</strong> receive the words you search for. A link you paste is fetched from its own site.</li>
+  <li><strong>OpenAlex, arXiv and Wikipedia</strong> receive the words you search for. Lemma contacts result sites to check readable full text before recommending sources. A link you paste is fetched from its own site.</li>
   <li><strong>Cloudflare</strong> carries traffic to the site. <strong>Google or GitHub</strong> handle signing in.</li>
 </ul>
 <p>Nothing is sold or shared for advertising.</p>

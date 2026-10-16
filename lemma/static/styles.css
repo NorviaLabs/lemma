@@ -137,6 +137,9 @@ input[type=file]::file-selector-button:hover { border-color: var(--ink); }
 textarea { resize: vertical; }
 textarea.mono { font: 400 14px/1.5 var(--mono); }
 input[type=checkbox], input[type=radio] { accent-color: var(--green); }
+.source-choice { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; min-height: 44px; cursor: pointer; }
+.source-choice input { width: 20px; height: 20px; flex-shrink: 0; }
+.result:has(.source-choice input:checked) { border-color: var(--green); }
 .check-row { display: flex; align-items: center; gap: 10px; font: 400 16px var(--sans); }
 .segmented { display: inline-flex; gap: 2px; padding: 3px; background: var(--plate); border-radius: calc(var(--r) + 3px); }
 .seg { min-height: 38px; border: 0; border-radius: var(--r); background: transparent; padding: 0 16px; font-size: 15px; color: var(--body); }

@@ -90,3 +90,33 @@ def list_lessons(owner: str | None = None) -> list[dict]:
             "saved": p.stat().st_mtime,
         })
     return out
+
+
+def requests(owner: str | None = None) -> Path:
+    path = library(owner).parent / "requests"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def request_path(rid: str, owner: str | None = None) -> Path:
+    if not ID_RE.fullmatch(rid or ""):
+        raise KeyError(rid)
+    return requests(owner) / f"{rid}.json"
+
+
+def save_request(record: dict, owner: str | None = None):
+    write_private(request_path(record["id"], owner), json.dumps(record, ensure_ascii=False))
+
+
+def load_request(rid: str, owner: str | None = None) -> dict:
+    return json.loads(request_path(rid, owner).read_text(encoding="utf-8"))
+
+
+def list_requests(owner: str | None = None) -> list[dict]:
+    records = []
+    for path in requests(owner).glob("*.json"):
+        try:
+            records.append(json.loads(path.read_text(encoding="utf-8")))
+        except (OSError, ValueError):
+            continue
+    return sorted(records, key=lambda r: r.get("created", 0), reverse=True)

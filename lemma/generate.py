@@ -15,6 +15,15 @@ from .llm import Provider, ProviderError
 MAX_REPAIRS = 2
 WORKERS = 3
 
+MULTI_SOURCE_TASK = """
+The document contains labelled sources. Teach one cohesive, standard-depth lesson, not one section per source.
+Cover the central ideas and essential prerequisites within the existing concept limit. Identify gaps and
+suggest deeper follow-up topics in the summary. Explain meaningful disagreements and uncertainty explicitly;
+never invent consensus or claim exhaustive coverage. Every primer page and every concept's understand object
+must include source_ids (a nonempty list of supporting SOURCE IDs). Every quote must also have source_id,
+identifying the single source containing that exact passage. Do not stitch quotes across sources.
+"""
+
 PRINCIPLES = """\
 You are Lemma. You turn a research paper into a short, hands-on lesson in the spirit of Brilliant.org and \
 3Blue1Brown, for papers from any discipline. The learner understands each idea by playing with a live model \
@@ -161,20 +170,40 @@ class Job:
         self.owner: str | None = None  # the account it runs for, on a hosted Lemma
         self.lock = threading.Lock()
         self.created = time.time()
+        self.updated = self.created
+        self.on_change = None
+
+    def changed(self):
+        self.updated = time.time()
+        if self.on_change:
+            self.on_change(self)
 
     def step(self, sid: str, label: str, state: str = "waiting", detail: str = ""):
         with self.lock:
             for s in self.steps:
                 if s["id"] == sid:
                     s.update(label=label or s["label"], state=state, detail=detail)
-                    return
-            self.steps.append({"id": sid, "label": label, "state": state, "detail": detail})
+                    if state == "active":
+                        s.setdefault("started", time.time())
+                    if state in ("done", "failed"):
+                        s["finished"] = time.time()
+                    break
+            else:
+                self.steps.append({"id": sid, "label": label, "state": state, "detail": detail})
+                if state == "active":
+                    self.steps[-1]["started"] = time.time()
+        self.changed()
 
     def update(self, sid: str, state: str, detail: str = ""):
         self.step(sid, "", state, detail)
 
     def snapshot(self) -> dict:
         with self.lock:
+            concepts = [s for s in self.steps if s["label"].startswith("Concept ")]
+            durations = [s["finished"] - s["started"] for s in concepts if s.get("finished") and s.get("started")]
+            remaining = sum(s["state"] in ("waiting", "active") for s in concepts)
+            # No invented initial ETA. The range spans parallel work through serial dependencies.
+            estimate = sum(durations) / len(durations) * remaining if durations and remaining else None
             return {
                 "id": self.id,
                 "kind": self.kind,
@@ -182,6 +211,9 @@ class Job:
                 "steps": [dict(s) for s in self.steps],
                 "result": self.result,
                 "error": self.error,
+                "created": self.created,
+                "updated": self.updated,
+                "eta_seconds": [round(estimate / WORKERS * .7), round(estimate * 1.8)] if estimate else None,
                 "lesson": json.loads(json.dumps(self.lesson)) if self.lesson else None,
             }
 
@@ -198,13 +230,16 @@ def start(job: Job, fn, *args):
         try:
             job.result = fn(job, *args)
             with job.lock:
-                job.status = "cancelled" if job.cancelled.is_set() else "done"
+                if job.status == "running":
+                    job.status = "cancelled" if job.cancelled.is_set() else "done"
         except (GenerationError, ProviderError) as e:
             with job.lock:
-                job.status, job.error = "error", str(e)
+                job.status, job.error = ("cancelled" if job.cancelled.is_set() else "error"), str(e)
         except Exception as e:  # keep the server alive and tell the learner honestly
             with job.lock:
                 job.status, job.error = "error", f"Unexpected error: {e.__class__.__name__}: {e}"
+        finally:
+            job.changed()
 
     threading.Thread(target=run, daemon=True).start()
     return job
@@ -218,8 +253,13 @@ def check_outline(o, source_text: str | None = None) -> list[str]:
     problems = []
     if not isinstance(o, dict):
         return ["the reply must be a JSON object"]
-    norm = L.normalize_for_match(source_text) if source_text is not None else None
+    sources = L.source_map(source_text)
+    norm = L.normalize_for_match(L.source_document(source_text)) if source_text is not None else None
     problems += [p.removeprefix("lesson.") for p in L.check_primer(o.get("primer"), norm, "primer")]
+    if sources and isinstance(o.get("primer"), list):
+        for i, page in enumerate(o["primer"]):
+            if isinstance(page, dict):
+                problems += L.check_attribution(page, sources, f"primer[{i}]")
     for key in ("title", "summary"):
         if not isinstance(o.get(key), str) or not o[key].strip():
             problems.append(f"needs '{key}'")
@@ -288,7 +328,9 @@ def _ask_json(job: Job, provider: Provider, document: str, task: str, check, sid
 def make_outline(job: Job, provider: Provider, paper_text: str, audience: str) -> dict:
     job.step("outline", "Reading the paper, summarising it and proposing a path of concepts", "active")
     task = OUTLINE_TASK.format(audience=audience or "a curious learner with no special background", n_hint="three to seven")
-    obj, problems = _ask_json(job, provider, paper_document(paper_text), task, lambda o: check_outline(o, paper_text), "outline")
+    if L.source_map(paper_text):
+        task += MULTI_SOURCE_TASK
+    obj, problems = _ask_json(job, provider, paper_document(L.source_document(paper_text)), task, lambda o: check_outline(o, paper_text), "outline")
     if problems:
         job.update("outline", "failed", "; ".join(problems[:3]))
         raise GenerationError("Couldn't produce a usable outline for this paper: " + "; ".join(problems[:3]))
@@ -340,9 +382,12 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audie
         "concepts": [],
         "omitted": [],
     }
+    sources = L.source_map(paper["text"])
+    if sources:
+        lesson["sources"] = [{k: v for k, v in s.items() if k != "text"} for s in sources.values()]
     job.lesson = lesson
-    norm = L.normalize_for_match(paper["text"])
-    document = paper_document(paper["text"])
+    norm = L.normalize_for_match(L.source_document(paper["text"]))
+    document = paper_document(L.source_document(paper["text"]))
     ready: dict[str, dict] = {}
 
     def publish():
@@ -402,6 +447,8 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audie
                         "this concept is not marked hard: do not include a \"check\" key"),
             extra=extra,
         )
+        if sources:
+            task += MULTI_SOURCE_TASK
 
         def check(obj):
             if isinstance(obj, dict):
@@ -412,6 +459,8 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audie
                 if base:
                     obj["builds_on"] = base["id"]
             problems = list(L.check_concept(obj, norm, "concept"))
+            if sources and isinstance(obj, dict) and isinstance(obj.get("understand"), dict):
+                problems += L.check_attribution(obj["understand"], sources, "concept.understand")
             if base and isinstance(obj, dict) and not problems:
                 problems = list(L.check_builds_on(obj, base, "concept"))
             return problems

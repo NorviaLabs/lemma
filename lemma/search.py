@@ -1,9 +1,9 @@
 """Finding something to learn from: search a topic across open scholarly indexes.
 
-Only the search words leave the computer, and only when the learner asks. They go to OpenAlex
-(open-access papers, ranked by relevance and citations), arXiv (preprints) and Wikipedia (one
-overview article). None of them needs an account or a key. Every result links to text Lemma can
-read, so choosing one continues exactly like pasting a link.
+Search words go to OpenAlex, arXiv and Wikipedia; source sites are then contacted to verify
+readable full text. OpenAlex returns open-access papers ranked by relevance and citations,
+arXiv returns preprints, and Wikipedia returns one overview article. None needs an account
+or key. Only verified readable sources are recommended.
 """
 
 from __future__ import annotations
@@ -20,10 +20,13 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor
 
+from . import ingest
 from .ingest import USER_AGENT
 
 TIMEOUT = 12
 MAX_QUERY = 200
+CHECK_TIMEOUT = 8
+CACHE_TTL = 300
 SOURCES = ("OpenAlex", "arXiv", "Wikipedia")
 
 
@@ -155,7 +158,7 @@ def search(query: str) -> dict:
         raise SearchError(f"Keep the search under {MAX_QUERY} characters.")
     key = query.lower()
     with _cache_lock:
-        if key in _cache:
+        if key in _cache and time.time() - _cache[key]["checked_at"] < CACHE_TTL:
             return json.loads(json.dumps(_cache[key]))
     result = _search(query)
     if not result["unavailable"]:
@@ -186,4 +189,26 @@ def _search(query: str) -> dict:
             results.append(r)
     if not results and len(unavailable) == len(calls):
         raise SearchError("Couldn't reach any of the search services. Check your connection and try again.")
-    return {"query": query, "results": results, "unavailable": unavailable}
+    def check(result):
+        urls = result.get("urls") or [result["url"]]
+        try:
+            paper = ingest.first_readable(urls, timeout=CHECK_TIMEOUT)
+        except ingest.IngestError as e:
+            result.update(available=False, availability_error=str(e))
+        else:
+            # Open the verified copy, not a publisher link that may have returned 403.
+            result.update(available=True, url=paper.url, urls=list(dict.fromkeys([paper.url] + urls)))
+
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        list(pool.map(check, results))
+    # A small, complementary starting set from sources that passed actual ingestion.
+    papers = 0
+    overview = False
+    for result in results:
+        recommended = result["available"] and ((result["kind"] == "overview" and not overview) or (result["kind"] == "paper" and papers < 2))
+        result["recommended"] = recommended
+        if recommended:
+            overview |= result["kind"] == "overview"
+            papers += result["kind"] == "paper"
+            result["recommendation"] = "Accessible overview" if result["kind"] == "overview" else "Relevant paper for deeper evidence"
+    return {"query": query, "results": results, "unavailable": unavailable, "checked_at": time.time()}

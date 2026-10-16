@@ -159,6 +159,7 @@
         h("article", {},
           h("h1", {}, lesson.title),
           h("p", { class: "source" }, "From ", h("cite", {}, src.url ? h("a", { href: src.url, target: "_blank", rel: "noopener noreferrer" }, src.title) : src.title), citation(src) ? `, ${citation(src)}` : "", src.venue ? `. ${src.venue}` : ""),
+          lesson.sources ? h("details", { class: "advanced" }, h("summary", {}, `${lesson.sources.length} lesson sources`), h("ul", {}, lesson.sources.map((s) => h("li", {}, s.url ? h("a", { href: s.url, target: "_blank", rel: "noopener noreferrer" }, s.title) : s.title)))) : null,
           lesson.example ? h("p", { class: "note" }, "This is Lemma's built-in example, made from Francis Galton's 1886 paper. It works without any setup, so you can see how a lesson feels before making one from your own paper.") : null,
           h("p", { class: "summary" }, intro.summary || ""),
           (intro.background || []).length ? h("section", {}, h("h3", {}, "Good to know first"), h("ul", {}, intro.background.map((b) => h("li", {}, b)))) : null,
@@ -181,7 +182,7 @@
     function showPrimer(i) {
       S.view = "primer";
       S.primerPage = i;
-      const pages = primer(), pg = pages[i], src = lesson.source || {}, last = i === pages.length - 1;
+      const pages = primer(), pg = pages[i], src = (lesson.sources || []).find((s) => s.id === pg.source_id) || lesson.source || {}, last = i === pages.length - 1;
       const paras = String(pg.body || "").split(/\n\s*\n/).filter((x) => x.trim());
       const onward = () => {
         if (!last) return showPrimer(i + 1);
@@ -195,9 +196,10 @@
             h("button", { onclick: () => showPrimer(j), disabled: j > i && !S.primerDone, "aria-label": `Page ${j + 1}: ${p.heading}` }, h("span", { class: "brief-bar" }), h("span", { class: "brief-label" }, p.heading))))),
           h("h1", {}, pg.heading),
           ...paras.map((x) => h("p", { class: "brief-body" }, x)),
+          pg.source_ids ? h("p", { class: "muted small" }, "Sources: ", (lesson.sources || []).filter((s) => pg.source_ids.includes(s.id)).map((s) => s.title).join(" · ")) : null,
           pg.quote ? h("figure", { class: "quote" },
             h("blockquote", {}, pg.quote.trim()),
-            h("figcaption", {}, "From the paper", citation(src) ? ` · ${citation(src)}` : "", pg.quote_where ? ` · ${pg.quote_where}` : "")) : null,
+            h("figcaption", {}, "From the paper", citation(src) ? ` · ${citation(src)}` : "", src.title ? ` · ${src.title}` : "", pg.quote_where ? ` · ${pg.quote_where}` : "")) : null,
           h("div", { class: "actions" },
             h("button", { class: "primary", onclick: onward }, last ? (concepts().length ? "Start the first concept" : "On to the concepts") : "Next"),
             h("button", { class: "ghost", onclick: () => (i ? showPrimer(i - 1) : showIntro()) }, i ? "Back" : "Back to the overview")))));
@@ -795,17 +797,18 @@
       }
 
       screen_explain() {
-        const u = this.c.understand, src = lesson.source || {};
+        const u = this.c.understand, src = (lesson.sources || []).find((s) => s.id === u.source_id) || lesson.source || {};
         this.setBar({ body: "Next, you make it happen on the model yourself.", buttons: [this.continueBtn("Try it yourself")] });
         return {
           rail: [h("p", {}, "In plain words, then in the paper's own.")],
           stage: [
             h("p", { class: "explanation" }, u.explanation),
+            u.source_ids ? h("p", { class: "muted small" }, "Sources: ", (lesson.sources || []).filter((s) => u.source_ids.includes(s.id)).map((s) => s.title).join(" · ")) : null,
             (this.c.terms || []).length ? h("dl", { class: "terms" }, h("p", { class: "terms-head" }, (this.c.terms.length > 1 ? "New words" : "New word")),
               ...this.c.terms.map((t) => h("div", { class: "term-def" }, h("dt", {}, t.term), h("dd", {}, t.means)))) : null,
             h("figure", { class: "quote" },
               h("blockquote", {}, u.quote.trim()),
-              h("figcaption", {}, "From the paper", citation(src) ? ` · ${citation(src)}` : "", u.quote_where ? ` · ${u.quote_where}` : "")),
+              h("figcaption", {}, "From the paper", citation(src) ? ` · ${citation(src)}` : "", src.title ? ` · ${src.title}` : "", u.quote_where ? ` · ${u.quote_where}` : "")),
           ],
         };
       }

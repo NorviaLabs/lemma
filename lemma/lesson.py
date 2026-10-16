@@ -14,6 +14,7 @@ problems; an empty list means the lesson may be shown. The checks cover:
 
 from __future__ import annotations
 
+import json
 import math
 import re
 import unicodedata
@@ -715,6 +716,38 @@ def check_concept(c: dict, source_norm: str | None, where: str = "concept") -> P
     return P
 
 
+def source_map(source_text: str | None) -> dict:
+    """Decode a persisted source bundle; plain-text legacy sources remain supported."""
+    if not source_text or not source_text.lstrip().startswith('{"lemma_sources":'):
+        return {}
+    try:
+        sources = json.loads(source_text)["lemma_sources"]
+        return {s["id"]: s for s in sources}
+    except (ValueError, KeyError, TypeError):
+        return {}
+
+
+def source_document(source_text: str) -> str:
+    sources = source_map(source_text)
+    return "\n\n".join(f"SOURCE {sid}: {s['title']}\n{s['text']}" for sid, s in sources.items()) if sources else source_text
+
+
+def check_attribution(block: dict, sources: dict, where: str) -> list[str]:
+    problems = []
+    refs = block.get("source_ids")
+    if not isinstance(refs, list) or not refs or any(not isinstance(r, str) or r not in sources for r in refs):
+        problems.append(f"{where}: source_ids must identify the supporting sources")
+    if isinstance(block.get("quote"), str) and block["quote"]:
+        sid = block.get("source_id")
+        if not isinstance(sid, str) or sid not in sources:
+            problems.append(f"{where}: quote needs a valid source_id")
+        elif not quote_in_source(block["quote"], normalize_for_match(sources[sid]["text"])):
+            problems.append(f"{where}: quote does not appear in its identified source")
+        elif isinstance(refs, list) and sid not in refs:
+            problems.append(f"{where}: quote source must be included in source_ids")
+    return problems
+
+
 def check_lesson(lesson: dict, source_text: str | None) -> Problems:
     """All quality checks. ``source_text=None`` skips grounding (e.g. for an offline copy)."""
     P = Problems()
@@ -729,9 +762,18 @@ def check_lesson(lesson: dict, source_text: str | None) -> Problems:
     bg = intro.get("background", [])
     if not isinstance(bg, list) or not all(isinstance(b, str) for b in bg):
         P.add("lesson.intro", "background must be a list of strings")
-    norm = normalize_for_match(source_text) if source_text is not None else None
+    sources = source_map(source_text)
+    norm = normalize_for_match(source_document(source_text)) if source_text is not None else None
+    if sources:
+        expected = [{k: v for k, v in s.items() if k != "text"} for s in sources.values()]
+        if lesson.get("sources") != expected:
+            P.add("lesson.sources", "must match the original source metadata")
     if lesson.get("primer") is not None:
         P.extend(check_primer(lesson["primer"], norm))
+        if sources:
+            for i, page in enumerate(lesson["primer"]):
+                if isinstance(page, dict):
+                    P.extend(check_attribution(page, sources, f"primer[{i}]"))
     concepts = lesson.get("concepts")
     if not isinstance(concepts, list) or not 1 <= len(concepts) <= 8:
         P.add("lesson", "needs 1–8 concepts")
@@ -745,6 +787,8 @@ def check_lesson(lesson: dict, source_text: str | None) -> Problems:
     seen: dict = {}
     for i, c in enumerate(concepts):
         P.extend(check_concept(c, norm, f"concepts[{i}]"))
+        if sources and isinstance(c, dict) and isinstance(c.get("understand"), dict):
+            P.extend(check_attribution(c["understand"], sources, f"concepts[{i}].understand"))
         cid = c.get("id") if isinstance(c, dict) else None
         if cid in seen:
             P.add(f"concepts[{i}]", f"duplicate concept id {cid!r}")
