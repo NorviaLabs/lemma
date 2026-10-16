@@ -14,7 +14,7 @@ SCRIPTS = ("expr.js", "kernels.js", "visuals.js", "player.js")
 CSP = "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'"
 
 # Every face the lesson uses is embedded, so the offline file looks the same without a network.
-EMBEDDED_FONTS = ("barlow-latin-400-normal.woff2", "barlow-latin-400-italic.woff2", "barlow-latin-500-normal.woff2", "barlow-latin-600-normal.woff2", "barlow-latin-700-normal.woff2", "barlow-condensed-latin-600-normal.woff2", "barlow-condensed-latin-800-normal.woff2")
+EMBEDDED_FONTS = ("atkinson-hyperlegible-next-latin-normal.woff2", "atkinson-hyperlegible-next-latin-italic.woff2", "literata-latin-italic.woff2")
 
 BOOT = """
 LemmaPlayer.mount(document.getElementById("main"), JSON.parse(document.getElementById("lesson-data").textContent), {});
@@ -64,7 +64,7 @@ def lesson_html(lesson: dict) -> str:
 </head>
 <body>
 <header class="site-head">
-  <span class="wordmark"><span class="sq" aria-hidden="true">L</span>Lemma</span>
+  <span class="wordmark"><span class="sq" aria-hidden="true"></span>Lemma</span>
 </header>
 <main id="main" tabindex="-1"></main>
 <footer class="site-foot">
