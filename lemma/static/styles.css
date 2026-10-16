@@ -84,6 +84,15 @@ h1[tabindex="-1"]:focus, h2[tabindex="-1"]:focus { outline: none; }
 .site-nav { margin-left: auto; display: flex; gap: 6px; }
 .site-nav a { font: 800 17px/1 var(--display); text-transform: uppercase; letter-spacing: .05em; text-decoration: none; color: var(--ink); padding: 10px 12px; border: 3px solid transparent; }
 .site-nav a:hover { border-color: var(--ink); }
+.site-nav .account-link:not([hidden]) { display: inline-flex; align-items: center; gap: 8px; }
+.avatar { width: var(--size); height: var(--size); flex: none; object-fit: cover; border: 2px solid var(--ink); background: var(--yellow); color: var(--ink); display: inline-grid; place-items: center; font: 800 calc(var(--size) * .55)/1 var(--display); }
+.signin { max-width: 620px; }
+.signin-options { display: grid; gap: 12px; margin: 24px 0; max-width: 380px; }
+.account-head { display: flex; align-items: center; gap: 20px; margin-bottom: 24px; }
+.account-head h1 { margin: 0; }
+.account-facts { display: grid; grid-template-columns: max-content 1fr; gap: 10px 24px; margin: 0 0 24px; }
+.account-facts dt { color: var(--mute); }
+.account-facts dd { margin: 0; font-weight: 600; }
 main { max-width: 1240px; margin: 0 auto; padding: 32px max(24px, env(safe-area-inset-right)) max(64px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left)); outline: none; }
 .site-foot { max-width: 1240px; margin: 0 auto; padding: 18px 24px 40px; border-top: 4px solid var(--ink); font-size: 14px; color: var(--mute); }
 
@@ -517,6 +526,7 @@ kbd { display: inline-block; min-width: 24px; padding: 2px 7px; text-align: cent
 @media (max-width: 520px) {
   main { padding-top: 22px; }
   .site-nav a { padding: 8px; font-size: 15px; }
+  .account-name { display: none; }
   .panel { padding: 20px; }
   .lt-mark { display: none; }
   .lt-plates .plate { width: 34px; height: 34px; font-size: 19px; }

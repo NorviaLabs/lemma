@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   let boot = null;
-  const es = new EventSource("/api/dev/events");
+  const es = new EventSource("api/dev/events");
   es.addEventListener("hello", (e) => {
     // A new boot id means the server restarted after a Python change: reload to pick it up.
     if (boot && boot !== e.data) location.reload();

@@ -1,0 +1,26 @@
+# Hosted Lemma at https://tools.mohitranka.com/lemma: Lemma plus a Cloudflare Tunnel.
+# Nothing listens on a public port; Cloudflare handles HTTPS and forwards /lemma/* through the tunnel.
+services:
+  lemma:
+    build: ..
+    restart: unless-stopped
+    env_file: lemma.env
+    environment:
+      LEMMA_PUBLIC_URL: https://tools.mohitranka.com/lemma
+      LEMMA_ALLOWED_HOSTS: tools.mohitranka.com
+    volumes:
+      - lemma-data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8765/lemma/api/example', timeout=5)"]
+      interval: 1m
+
+  tunnel:
+    image: cloudflare/cloudflared:2026.9.3
+    restart: unless-stopped
+    command: tunnel --no-autoupdate --config /etc/cloudflared/config.yml run
+    volumes:
+      - ./cloudflared:/etc/cloudflared:ro  # config.yml (routes) and the tunnel's credentials file
+    depends_on: [lemma]
+
+volumes:
+  lemma-data:

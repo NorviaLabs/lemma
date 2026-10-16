@@ -157,6 +157,7 @@ class Job:
         self.error = ""
         self.lesson: dict | None = None
         self.cancelled = threading.Event()
+        self.owner: str | None = None  # the account it runs for, on a hosted Lemma
         self.lock = threading.Lock()
         self.created = time.time()
 
