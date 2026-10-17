@@ -1009,7 +1009,7 @@ class ServerTests(unittest.TestCase):
         self.assertIn(b"Lemma", raw)
         self.assertEqual(self.req("GET", "/static/player.js")[0], 200)
         self.assertEqual(self.req("GET", "/static/../server.py")[0], 404)
-        s, raw = self.req("GET", "/static/fonts/atkinson-hyperlegible-next-latin-normal.woff2")
+        s, raw = self.req("GET", "/static/fonts/archivo-latin-normal.woff2")
         self.assertEqual(s, 200)
         self.assertEqual(raw[:4], b"wOF2")
         self.assertEqual(self.req("GET", "/static/fonts/../styles.css")[0], 404)
@@ -1279,7 +1279,7 @@ class ExportTests(unittest.TestCase):
         html = export.lesson_html(EXAMPLE)
         style = html.split("<style>")[1].split("</style>")[0]
         self.assertIn("font-src data:", html)
-        self.assertEqual(style.count("data:font/woff2;base64,"), 3)  # every face embedded
+        self.assertEqual(style.count("data:font/woff2;base64,"), 2)  # every face embedded
         self.assertNotIn('url("fonts/', style)
 
     def test_embedded_json_cannot_break_out(self):

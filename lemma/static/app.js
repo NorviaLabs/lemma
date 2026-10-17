@@ -323,7 +323,7 @@
           h("figcaption", {}, "Galton, 1886, page 252")),
         h("p", {}, "Galton called it regression towards mediocrity. Today it's called regression to the mean, and it shows up wherever two measurements are related but not perfectly."),
         h("div", { class: "he-cta" },
-          h("button", { class: "primary", onclick: openExample }, icon("play"), "Walk the whole lesson"),
+          h("button", { class: "ghost", onclick: openExample }, icon("play"), "Walk the whole lesson"),
           h("span", { class: "small" }, "About 10 minutes, with no setup."))));
     function setStep(n, focus) {
       exhibitStep = Math.max(exhibitStep, n);
@@ -338,10 +338,20 @@
     }
     setStep(exhibitStep);
 
+    // A returning learner gets the build action first; a stranger gets the example first.
+    const returning = !!(status.user || status.library_count || (status.provider || {}).ok);
     const el = h("section", { class: "home-exhibit", "aria-labelledby": "home-title" },
       h("div", { class: "he-intro" },
         h("h1", { id: "home-title" }, "Learn a paper by playing with it"),
-        h("p", { class: "lead" }, "Search any topic or bring a paper, and Lemma turns it into a short lesson with a live model for each idea. You don't need to have read anything: it tells you the paper's story, walks you through a live model of each idea, then lets you try it yourself.")),
+        h("p", { class: "lead" }, "Search any topic or bring a paper, and Lemma turns it into a short lesson with a live model for each idea. You don't need to have read anything: it tells you the paper's story, walks you through a live model of each idea, then lets you try it yourself."),
+        h("div", { class: "he-cta he-start" },
+          returning
+            ? h("a", { class: "btn primary", href: "#/make" }, icon("search"), "Start a new lesson")
+            : h("button", { class: "primary", onclick: openExample }, icon("play"), "Walk the example lesson"),
+          returning
+            ? h("button", { class: "ghost", onclick: openExample }, icon("play"), "Try the example")
+            : h("a", { class: "btn ghost", href: "#/make" }, "Start a new lesson"),
+          h("span", { class: "small" }, returning ? "Search a topic or bring a paper." : "About 10 minutes, no account or key needed"))),
       stage,
       h("div", { class: "he-verbs" }, verbs));
 
@@ -654,9 +664,11 @@
     return { el, update };
   }
 
-  function showHome(msg) {
-    setHash("");
+  /* The build panel for the #/make page: search a topic, paste a link or upload a paper, then start. */
+  function findPanel() {
     const p = status.provider || {};
+    const signedOut = status.hosted && !status.user;  // a hosted Lemma: the example and gallery work, but papers need an account
+    const toSignIn = () => { location.hash = "#/signin?next=build"; };
     let mode = session.mode || "search";
     const qIn = h("input", { type: "search", id: "topic-q", placeholder: "For example: herd immunity, Simpson's paradox, loss aversion", autocomplete: "off", maxlength: 200 });
     const results = h("section", { class: "results", "aria-live": "polite", "aria-labelledby": "results-title" });
@@ -664,6 +676,7 @@
     const runSearch = async (q) => {
       q = (q ?? qIn.value).trim();
       if (!q) return qIn.focus();
+      if (signedOut) return toSignIn();
       qIn.value = q;
       errSlot.replaceChildren();
       const seq = ++searchSeq, current = () => seq === searchSeq && results.isConnected;
@@ -764,7 +777,7 @@
       }
       results.hidden = m !== "search";
       submit.textContent = m === "search" ? "Search" : "Read the paper";
-      const to = p.ok ? [h("strong", {}, p.label)] : ["the AI model you connect next"];
+      const to = p.ok ? [h("strong", {}, p.label)] : [signedOut ? "the AI model you connect after signing in" : "the AI model you connect next"];
       privacy.replaceChildren(...[...(m === "search"
         ? ["Your search words go to Wikipedia, the Stanford Encyclopedia of Philosophy, LibreTexts, OpenAlex, Europe PMC and arXiv. Lemma contacts source sites to check readable full text before recommending sources. Selected text goes to ", ...to, " to build one lesson. "]
         : ["When you continue, Lemma sends the paper's text to ", ...to, " to build the lesson. "]),
@@ -774,8 +787,9 @@
           : "Build requests, source text and progress are saved so you can return later; your AI key is not, and stays in this browser. Lemma keeps no usage logs. ",
         p.ok ? h("a", { href: "#/settings" }, "Change model") : null].filter(Boolean));
     }
-    const form = h("form", { class: "panel bring", "aria-labelledby": "bring-title", onsubmit: async (e) => {
+    const form = h("form", { class: "panel bring", "aria-label": "Find something to learn", onsubmit: async (e) => {
       e.preventDefault();
+      if (signedOut) return toSignIn();
       errSlot.replaceChildren();
       session.audience = audSel.value === "other" ? audOther.value.trim() || AUDIENCES[0] : audSel.value;
       if (mode === "search") return runSearch();
@@ -807,28 +821,49 @@
         submit.textContent = "Read the paper";
       }
     } },
-      h("h2", { id: "bring-title" }, "Find something to learn"),
       h("div", { class: "segmented", role: "tablist", "aria-label": "How to find it" }, Object.values(tabBtns)),
       searchPane, linkPane, filePane,
       h("label", { for: "aud-select" }, "Who is it for?"), audSel, audOther,
       privacy,
       errSlot,
-      h("div", { class: "actions" }, submit, h("span", { class: "muted small" }, "Building usually takes 1–3 minutes. You can start the first concept sooner.")));
+      signedOut
+        ? h("div", { class: "actions" },
+            h("button", { class: "primary", type: "button", onclick: toSignIn }, "Sign in to build"),
+            h("span", { class: "muted small" }, "Free, and your lessons are saved in your library. The example lesson needs no account."))
+        : h("div", { class: "actions" }, submit, h("span", { class: "muted small" }, "Building usually takes 1–3 minutes. You can start the first concept sooner.")));
     const recent = h("section", { class: "recent", hidden: true, "aria-labelledby": "recent-title" });
     setMode(mode);
     if (session.search) { qIn.value = session.search.query; drawResults(); }
-    view(msg ? errorBox(msg) : null, homeExhibit(), hallSection(), gallerySection(), h("div", { class: "home-make" }, h("div", { class: "hm-main" }, form, results), recent));
-    if (status.library_count) {
-      api("/api/lessons").then((items) => {
-        if (!items.length) return;
-        recent.hidden = false;
-        recent.replaceChildren(h("h2", { id: "recent-title" }, "Your recent lessons"),
-          h("ul", { class: "recent-list" }, items.slice(0, 3).map((it) => h("li", {},
-            h("button", { class: "recent-item", onclick: async () => openLesson(await api(`/api/lessons/${it.id}`), { saved: true }) },
-              h("span", { class: "ri-title" }, it.title), h("span", { class: "ri-meta" }, `${it.concepts} concept${it.concepts === 1 ? "" : "s"} · ${it.source}`))))),
-          ...(items.length > 3 ? [h("a", { href: "#/library" }, `All ${items.length} lessons`)] : []));
-      }).catch(() => {});
-    }
+    return { form, results, recent };
+  }
+
+  function loadRecent(recent) {
+    if (!status.library_count) return;
+    api("/api/lessons").then((items) => {
+      if (!items.length) return;
+      recent.hidden = false;
+      recent.replaceChildren(h("h2", { id: "recent-title" }, "Your recent lessons"),
+        h("ul", { class: "recent-list" }, items.slice(0, 3).map((it) => h("li", {},
+          h("button", { class: "recent-item", onclick: async () => openLesson(await api(`/api/lessons/${it.id}`), { saved: true }) },
+            h("span", { class: "ri-title" }, it.title), h("span", { class: "ri-meta" }, `${it.concepts} concept${it.concepts === 1 ? "" : "s"} · ${it.source}`))))),
+        ...(items.length > 3 ? [h("a", { href: "#/library" }, `All ${items.length} lessons`)] : []));
+    }).catch(() => {});
+  }
+
+  function showHome(msg) {
+    setHash("");
+    view(msg ? errorBox(msg) : null, homeExhibit(), hallSection(), gallerySection());
+  }
+
+  /* A returning learner's fast path: the build panel alone, no intro to scroll past. */
+  function showMake() {
+    setHash("#/make");
+    const { form, results, recent } = findPanel();
+    view(h("section", {},
+      h("h1", {}, "Find something to learn"),
+      h("p", { class: "lead" }, "Search a topic, paste a link, or upload a paper. Lemma turns it into a short lesson, with a live model for each idea."),
+      form, results, recent));
+    loadRecent(recent);
   }
 
   function fileToBase64(file) {
@@ -913,6 +948,8 @@
 
   /* ------------------------------------------------------------ build */
   async function startBuild() {
+    // The outline may have been made in another browser or before the key was removed; the reviewed outline stays in session.
+    if (!(status.provider || {}).ok) return showConnect(() => startBuild());
     if (session.requestId) {
       try { await api(`/api/requests/${session.requestId}/outline`, { outline: session.outline }); showRequest(session.requestId); }
       catch (err) { alertInline(err.message); }
@@ -1186,12 +1223,14 @@
     $(".site-foot p").replaceChildren("Lessons are generated by AI and can contain errors, so check them against the source. ", h("a", { href: "privacy" }, "Privacy"));
   }
 
-  function showSignIn(error) {
+  function showSignIn(error, next) {
     if (status.user) { location.hash = "#/account"; return; }
     const options = status.sign_in || [];
     view(h("section", { class: "panel signin" },
       h("h1", {}, "Sign in to Lemma"),
-      h("p", { class: "lead" }, "Sign in to turn papers into lessons and keep them in your own library."),
+      h("p", { class: "lead" }, next === "build"
+        ? "Sign in to search for papers and build lessons. It's free, and your lessons are saved to your own library."
+        : "Sign in to turn papers into lessons and keep them in your own library."),
       error ? errorBox(error) : null,
       options.length
         ? h("div", { class: "signin-options" }, options.map((p) =>
@@ -1229,8 +1268,12 @@
       return showRequest(hash.split("/")[2]);
     }
     if (hash === "#/library") return showLibrary();
+    if (hash === "#/make") return showMake();
     if (hash === "#/settings") return showSettings();
-    if (hash.startsWith("#/signin")) return showSignIn(new URLSearchParams(hash.split("?")[1] || "").get("error"));
+    if (hash.startsWith("#/signin")) {
+      const params = new URLSearchParams(hash.split("?")[1] || "");
+      return showSignIn(params.get("error"), params.get("next"));
+    }
     if (hash === "#/account") return showAccount();
     if (hash === "#/example") return player ? null : openExample();
     if (hash === "#/gallery") return showGallery();
@@ -1246,7 +1289,7 @@
   }
 
   window.addEventListener("hashchange", () => {
-    if (["#/library", "#/gallery", "#/settings", "#/account", "#/signin", "#/", ""].includes(location.hash) && player) { player.destroy(); player = null; }
+    if (["#/library", "#/gallery", "#/make", "#/settings", "#/account", "#/signin", "#/", ""].includes(location.hash) && player) { player.destroy(); player = null; }
     route();
   });
 
