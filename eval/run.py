@@ -28,6 +28,7 @@ import re
 import statistics
 import subprocess
 import sys
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 from itertools import combinations
@@ -103,17 +104,56 @@ def record_run(run: str, **fields):
     save(path, info)
 
 
-# Failures that aren't the lesson's fault. Work that stops on one of these isn't saved as finished, so the next run retries it.
-TRANSIENT = ("rate or usage limit", "took too long", "Couldn't reach", "rejected the key", "returned an error (5", "Cancelled")
+# A provider error counts against the lesson only when it is about the paper: too long for the model, or declined.
+# Anything else (limits, billing, keys, outages) is the run's problem, so that work is retried on the next run.
+LESSON_FAULTS = ("too long for", "declined")
+# These mean the account can't be used at all, so the run stops rather than meeting the same error on every paper.
+ACCOUNT_FAULTS = ("credit balance", "rejected the key", "can't use", "doesn't offer", "Sign in", "sign-in")
+STOP = threading.Event()
 
 
-def transient(message: str) -> bool:
-    return any(t in message for t in TRANSIENT)
+def lesson_fault(message: str) -> bool:
+    return any(f in message for f in LESSON_FAULTS)
+
+
+def note_account_fault(message: str):
+    if any(f in message for f in ACCOUNT_FAULTS) and not STOP.is_set():
+        STOP.set()
+        print(f"\nStopping: the provider account can't be used ({message[:200]}). Fix it and run the same command again.\n", flush=True)
+
+
+class Watched:
+    """A provider that notes every error it raises, including the ones a build turns into a left-out concept."""
+
+    def __init__(self, provider):
+        self.provider, self.errors = provider, []
+
+    def __getattr__(self, name):
+        return getattr(self.provider, name)
+
+    def conversation(self, system, document):
+        conv = self.provider.conversation(system, document)
+        send = conv.send
+
+        def watched(*args, **kwargs):
+            try:
+                return send(*args, **kwargs)
+            except ProviderError as e:
+                self.errors.append(str(e))
+                note_account_fault(str(e))
+                raise
+
+        conv.send = watched
+        return conv
 
 
 def each(papers, fn, parallel: int):
+    def unless_stopped(paper):
+        if not STOP.is_set():
+            fn(paper)
+
     with ThreadPoolExecutor(max_workers=max(1, parallel)) as pool:
-        list(pool.map(fn, papers))
+        list(pool.map(unless_stopped, papers))
 
 
 # ---------------------------------------------------------------- build
@@ -129,6 +169,7 @@ def build(args):
         if done and done["status"] in ("done", "failed") and not args.redo:
             return say(paper, f"already built ({done['status']})")
         started = time.time()
+        watched = Watched(provider)
         record = {"paper_id": paper["id"], "status": "failed", "stage": "read", "error": "", "builder": {"provider": provider.id, "model": provider.model}}
         job = generate.Job("eval")
         try:
@@ -139,19 +180,19 @@ def build(args):
             text = source.read_text()
             record["stage"] = "outline"
             say(paper, "outlining")
-            outline = generate.make_outline(job, provider, text, AUDIENCE)
+            outline = generate.make_outline(job, watched, text, AUDIENCE)
             save(d / "outline.json", outline)
             record["stage"] = "concepts"
             say(paper, f"building {len(outline['concepts'])} concepts")
-            built = generate.build_lesson(job, provider, {"text": text, "title": paper["title"], "url": paper["urls"][0]}, outline, AUDIENCE, f"eval-{paper['id']:02d}")
+            built = generate.build_lesson(job, watched, {"text": text, "title": paper["title"], "url": paper["urls"][0]}, outline, AUDIENCE, f"eval-{paper['id']:02d}")
             save(d / "lesson.json", built)
             record.update(status="done", stage="done")
         except (ingest.IngestError, generate.GenerationError, ProviderError) as e:
             record["error"] = str(e)
         lesson = job.lesson or {}
-        # A concept whose provider call failed is left out like one that failed the checks; that isn't the lesson's fault either.
-        if transient(record["error"]) or any(transient(o.get("reason", "")) for o in lesson.get("omitted", [])):
+        if any(not lesson_fault(e) for e in watched.errors):
             record["status"] = "interrupted"
+            record["provider_errors"] = watched.errors
         repairs = getattr(job, "repairs", {})
         record.update(
             seconds=round(time.time() - started),
@@ -219,6 +260,8 @@ def judge(args):
             out = d / f"judge-{name}.json"
             if out.exists() and not args.redo:
                 continue
+            if STOP.is_set():
+                return
             say(paper, f"{name} judging with {provider.model}")
             started = time.time()
             result = {"judge": name, "provider": provider.id, "model": provider.model}
@@ -236,10 +279,13 @@ def judge(args):
                 conv.close()
                 obj["judge"], obj["paper_id"] = name, paper["id"]
                 result.update(status="done", judgement=obj, raw=raw)
-            except (ProviderError, ValueError) as e:
+            except ProviderError as e:
+                note_account_fault(str(e))
+                result.update(status="failed" if lesson_fault(str(e)) else "interrupted", error=str(e))
+            except ValueError as e:  # the judge's reply couldn't be used
                 result.update(status="failed", error=str(e))
             result["seconds"] = round(time.time() - started)
-            if not transient(result.get("error", "")):
+            if result["status"] != "interrupted":  # interrupted judgements are tried again on the next run
                 save(out, result)
             say(paper, f"{name} {result['status']}" + (f": {result['error'][:100]}" if result.get("error") else f", verdict {result['judgement'].get('verdict')}"))
 
