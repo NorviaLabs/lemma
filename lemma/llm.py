@@ -18,6 +18,7 @@ import json
 import socket
 import threading
 import urllib.error
+import uuid
 import urllib.request
 from dataclasses import dataclass
 
@@ -43,12 +44,15 @@ class ProviderInfo:
     base: str
     default_model: str
     key_url: str  # where a learner gets a key; empty for a provider they sign in to
+    # A header carrying one stable id per conversation, for providers that ask for it to route and cache prompts.
+    session_header: str = ""
 
 
 PROVIDERS = {
     p.id: p
     for p in (
-        ProviderInfo("opencode-go", "OpenCode Go", "https://opencode.ai/zen/go/v1", "gpt-5.6-luna", "https://opencode.ai/auth"),
+        # https://opencode.ai/docs/go/ asks for a stable session id per conversation in x-opencode-session.
+        ProviderInfo("opencode-go", "OpenCode Go", "https://opencode.ai/zen/go/v1", "gpt-5.6-luna", "https://opencode.ai/auth", "x-opencode-session"),
         ProviderInfo("openai", "OpenAI", "https://api.openai.com/v1", "gpt-6.1-sol", "https://platform.openai.com/api-keys"),
         ProviderInfo("claude", "Claude", "https://api.anthropic.com", "claude-opus-5-5", "https://platform.claude.com/settings/keys"),
         # Signs in with a ChatGPT subscription instead of a key; see chatgpt.py. Only for Lemma on the learner's own computer.
@@ -102,7 +106,7 @@ class HTTPProvider(Provider):
             return False, f"Add your {self.name} key in Settings to build lessons."
         return True, ""
 
-    def request(self, method: str, path: str, body=None, timeout: float = 60, on_line=None):
+    def request(self, method: str, path: str, body=None, timeout: float = 60, on_line=None, headers: dict | None = None):
         """The parsed JSON reply; or, for an event stream when ``on_line`` is given, None after passing it each line."""
         ok, msg = self.available()
         if not ok:
@@ -110,7 +114,7 @@ class HTTPProvider(Provider):
         data = json.dumps(body).encode() if body is not None else None
         req = urllib.request.Request(self.info.base + path, data=data, method=method,
                                      headers={"Content-Type": "application/json", "Authorization": "Bearer " + self.key,
-                                              "User-Agent": f"Lemma/{__version__}"})
+                                              "User-Agent": f"Lemma/{__version__}", **(headers or {})})
         try:
             with urllib.request.urlopen(req, timeout=timeout) as resp:
                 if on_line and resp.headers.get_content_type() == "text/event-stream":
@@ -162,6 +166,8 @@ class HTTPConversation(Conversation):
     def __init__(self, provider: HTTPProvider, system: str, document: str):
         self.p = provider
         self.messages = [{"role": "system", "content": system}, {"role": "user", "content": document}]
+        # One id for the whole conversation (a draft and its repairs), so the provider can reuse the cached paper.
+        self.headers = {provider.info.session_header: uuid.uuid4().hex} if provider.info.session_header else {}
 
     def send(self, text, cancelled=None, on_progress=None):
         messages = self.messages + [{"role": "user", "content": text}]
@@ -194,7 +200,7 @@ class HTTPConversation(Conversation):
         def call():
             try:
                 result["res"] = self.p.request("POST", "/chat/completions", {"model": self.p.model, "messages": messages, "stream": True},
-                                               timeout=REQUEST_TIMEOUT, on_line=line)
+                                               timeout=REQUEST_TIMEOUT, on_line=line, headers=self.headers)
             except ProviderError as e:
                 result["err"] = e
 
