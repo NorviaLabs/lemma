@@ -126,7 +126,10 @@ concept below ▶, which the learner hasn't met yet;
 - the goals come after the teaching: they let the learner practise the idea by reproducing it on the model;
 - the predict question comes last: it applies the idea to a new case or variation, so it is not answered by repeating the explanation;
 - "predict.why" has one line per option saying why someone would pick it and what the idea says instead, so a wrong answer still teaches;
-- each goal has 2–3 "hints" that get more specific: a nudge, then a pointer, then a partial answer;
+- a goal needs the idea: the learner has to reason about what the model will do, not just push one slider to an end or \
+copy a setting from the walkthrough. Its text says what to achieve, never which values to set (no "set the range to 0.12 or less");
+- each goal has 2–3 "hints" that get more specific: a nudge, then a pointer, then one that narrows it down. No goal text \
+or hint states the value its solution sets: finding it is the practice, and Show me gives the answer;
 - show it before naming it: the tour and the model's labels use plain words only; list each technical term in "terms" and name it \
 first in the walkthrough, once the learner has seen what it means;
 - the tour is short and lively (about 15–25 seconds in all); the walkthrough takes its time (5–8 steps) and builds to a moment worth seeing;
@@ -134,7 +137,12 @@ first in the walkthrough, once the learner has seen what it means;
 - every goal and model check is false at the controls' defaults and true at its `solution`, and each solution value \
 lies on its slider's step grid (min + k × step);
 - every expression gives a finite number over the whole range of every control;
-- the quote is copied word for word from the paper and supports the explanation;
+- the quote is copied word for word from the paper and is the paper's own statement of what the explanation claims: \
+a finding, a mechanism or an argument. Not just the definition of a term, and not an intuition the paper goes on to qualify;
+- the model follows the paper exactly for the case it shows: where the paper gives different rules or rates for \
+different variants (say, two kinds of layer or two update rules), use the one for the variant the lesson names, and \
+say which it is. If a simulation kernel only approximates the paper's model, the note says how, and the tour and \
+walkthrough describe only behaviour the kernel actually shows;
 - the equation is the paper's own where it has one (otherwise the model's rule, and the caption says so), with \
 at least one part linked to a control or output;
 - the model's note says how it is simplified and whether its numbers are illustrative."""

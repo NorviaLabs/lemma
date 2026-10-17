@@ -76,12 +76,16 @@ KERNELS: dict[str, dict] = {
     },
     "opinion": {
         "visual": "agents",
-        "about": "Bounded-confidence opinion dynamics: two random agents compromise only if their opinions (0–1) differ by less than `confidence`.",
+        "about": "Bounded-confidence opinion dynamics, opinions 0–1. `rule` 0 (Deffuant–Weisbuch): two random agents at a time "
+                 "compromise by `convergence` if their opinions differ by less than `confidence`. `rule` 1 (Hegselmann–Krause): "
+                 "each round everyone at once moves to the average of all opinions within `confidence` of their own; "
+                 "`convergence` is unused. Use the rule the paper studies.",
         "params": {
             "agents": (100, 10, 300, True),
             "confidence": (0.2, 0.01, 1.0, False),
             "convergence": (0.5, 0.05, 0.5, False),
             "rounds": (40, 1, 200, True),
+            "rule": (0, 0, 1, True),
             "seed": (1, 0, 1e9, True),
         },
         "metrics": {
@@ -294,10 +298,33 @@ def _opinion_clusters(xs):
     return clusters, s[-1] - s[0]
 
 
+def _everyone_averages(x, eps):
+    """One Hegselmann–Krause round: each agent moves to the mean of all opinions within `eps` of its own."""
+    order = sorted(range(len(x)), key=lambda i: (x[i], i))
+    s = [x[i] for i in order]
+    pre = [0.0]
+    for v in s:
+        pre.append(pre[-1] + v)
+    out = x[:]
+    lo = hi = 0
+    for k, v in enumerate(s):
+        while s[lo] < v - eps:
+            lo += 1
+        while hi + 1 < len(s) and s[hi + 1] <= v + eps:
+            hi += 1
+        out[order[k]] = (pre[hi + 1] - pre[lo]) / (hi - lo + 1)
+    return out
+
+
 def _opinion(p):
     rng = Rng(p["seed"])
     n = p["agents"]
     x = [rng() for _ in range(n)]
+    if p["rule"] == 1:
+        for _ in range(p["rounds"]):
+            x = _everyone_averages(x, p["confidence"])
+        clusters, spread = _opinion_clusters(x)
+        return {"clusters": float(clusters), "spread": spread}
     for _ in range(p["rounds"] * n):
         i = rng.int(n)
         j = rng.int(n)

@@ -61,7 +61,7 @@ class ExprTests(unittest.TestCase):
 class BrowserParityTests(unittest.TestCase):
     def test_kernels_and_expressions_match_javascript(self):
         cases = {
-            "kernels": [["schelling", {"tolerance": 0.5}], ["sir", {"vaccinated": 0.3}], ["opinion", {}], ["network", {"rule": 1}],
+            "kernels": [["schelling", {"tolerance": 0.5}], ["sir", {"vaccinated": 0.3}], ["opinion", {}], ["opinion", {"rule": 1, "confidence": 0.15, "agents": 300, "rounds": 200}], ["network", {"rule": 1}],
                         ["mean", {"n": 5}], ["two_group", {"mu2": 0.4}], ["regression", {"r": 0.6, "seed": 54, "people": 1000}]],
             "exprs": [["normcdf(x, 1, 2) + norminv(0.3) * binom(7, 3)", {"x": 0.4}], ["round(2.345, 2) - 7 % 3", {}], ["a == 0.3", {"a": 0.1 + 0.2}]],
         }
@@ -85,6 +85,18 @@ class CheckTests(unittest.TestCase):
         c = concept()
         del c["understand"]["walkthrough"]
         self.assertTrue(any("walkthrough" in p for p in L.check_concept(c, NORM)))
+
+    def test_goals_leave_the_answer_for_the_learner(self):
+        c = concept()  # the share passed on: its goal's solution is ratio = 0.65
+        self.assertEqual(list(L.check_concept(c, NORM)), [])
+        c["explore"]["goals"][0]["hints"][-1] = "Try a share of 0.65."
+        self.assertTrue(any("hint 3 gives away the solution ratio = 0.65" in p for p in L.check_concept(c, NORM)))
+        c = concept()
+        c["explore"]["goals"][0]["text"] = "Set the share passed on to 0.65"
+        self.assertTrue(any("its text gives away" in p for p in L.check_concept(c, NORM)))
+        c = concept()
+        c["explore"]["goals"][0]["hints"][-1] = "Keep the mid-parent at 72 and watch the child box."  # 72 is the default, not the answer
+        self.assertEqual(list(L.check_concept(c, NORM)), [])
 
     def test_narration_focus_must_name_a_part_of_the_model(self):
         c = concept()

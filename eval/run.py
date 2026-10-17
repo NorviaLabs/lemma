@@ -147,6 +147,21 @@ class Watched:
         return conv
 
 
+class RecordingJob(generate.Job):
+    """A build job that keeps every problem the checks found, so a run shows why drafts needed fixing."""
+
+    def __init__(self, kind: str):
+        super().__init__(kind)
+        self.problem_log: dict[str, list[list[str]]] = {}
+
+    def update(self, sid, state, detail="", quiet=False, **extra):
+        found = extra.get("problems")
+        log = self.problem_log.setdefault(sid, [])
+        if found and not quiet and (not log or log[-1] != found):
+            log.append(list(found))
+        super().update(sid, state, detail, quiet, **extra)
+
+
 def each(papers, fn, parallel: int):
     def unless_stopped(paper):
         if not STOP.is_set():
@@ -171,7 +186,7 @@ def build(args):
         started = time.time()
         watched = Watched(provider)
         record = {"paper_id": paper["id"], "status": "failed", "stage": "read", "error": "", "builder": {"provider": provider.id, "model": provider.model}}
-        job = generate.Job("eval")
+        job = RecordingJob("eval")
         try:
             say(paper, "reading")
             source = d / "source.txt"
@@ -200,6 +215,7 @@ def build(args):
             concepts=[{"id": c["id"], "title": c["title"], "repairs": repairs.get(c["id"])} for c in lesson.get("concepts", [])],
             omitted=lesson.get("omitted", []),
             passed_without_edits=record["status"] == "done" and not lesson.get("omitted"),
+            problems_fixed={sid: rounds for sid, rounds in job.problem_log.items() if rounds},  # each round's problems, in order
             steps=[{k: s.get(k) for k in ("id", "label", "state", "detail")} for s in job.steps],
         )
         save(d / "build.json", record)
@@ -380,9 +396,24 @@ def summary(args):
             for n, j in js.items():
                 for e in j.get("critical_errors") or []:
                     reported.setdefault((e.get("type"), where(e.get("path", ""))), []).append({"judge": n, **e})
-            confirmed = [{"type": t, "where": w, "judges": [e["judge"] for e in es], "reports": es} for (t, w), es in reported.items() if len({e["judge"] for e in es}) >= 2]
-            reviews += [{"paper": paper["id"], "what": f"critical error ({t}) at {w}, reported only by {es[0]['judge']}", "report": es[0]}
-                        for (t, w), es in reported.items() if len({e["judge"] for e in es}) < 2]
+            def doubted_by(w, reporters):
+                """Other judges who rated the concept at `w` less than yes on a faithfulness or fairness item."""
+                m = re.fullmatch(r"concepts\[(\d+)\]", w)
+                if not m or int(m.group(1)) >= len(concept_ids):
+                    return []
+                cid = concept_ids[int(m.group(1))]
+                return [n for n, j in js.items() if n not in reporters and any(
+                    (c.get(i) or {}).get("answer") in ("partly", "no")
+                    for c in j.get("concepts", []) if isinstance(c, dict) and c.get("id") == cid for i in ("A1", "A2", "A3", "A6"))]
+
+            confirmed = []
+            for (t, w), es in reported.items():
+                reporters = sorted({e["judge"] for e in es})
+                backing = doubted_by(w, reporters) if len(reporters) < 2 else []
+                if len(reporters) >= 2 or backing:
+                    confirmed.append({"type": t, "where": w, "judges": reporters, "backed_by": backing, "reports": es})
+                else:
+                    reviews.append({"paper": paper["id"], "what": f"critical error ({t}) at {w}, reported only by {reporters[0]}", "report": es[0]})
             row.update(items=items, scales=scales, critical_errors=confirmed, verdict=median_verdict([j.get("verdict") for j in js.values()]),
                        verdicts={n: j.get("verdict") for n, j in js.items()},
                        teach_back_right=js.get("newcomer", {}).get("lens", {}).get("teach_back_was_right"))

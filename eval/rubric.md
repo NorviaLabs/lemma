@@ -40,7 +40,15 @@ Each item takes a one- or two-sentence `reason` with its evidence.
 
 ## Part B: the whole lesson
 
-Score each on 1 to 5, using the anchors. Scores in between the anchors are allowed.
+Score each on 1 to 5 by the problems you find, not by an overall impression. First list every problem you found for that dimension in `reason`, each with its path. Then score:
+
+- **5**: you found no problem worth fixing.
+- **4**: one minor problem a learner would barely notice.
+- **3**: two or more minor problems, or one a learner would notice.
+- **2**: a problem that would leave the learner with a wrong idea, or several that together make the dimension weak.
+- **1**: the dimension fails as a whole.
+
+A 4 is not a safe default: it means you found exactly one minor problem. The anchors below describe what 5, 3 and 1 look like for each dimension.
 
 **B1. The paper in brief is faithful.** Do `primer` and `intro` state the paper's question, what was done, what was found and why it matters, as the paper does?
 - 5: Accurate on all four, with the paper's own hedges. A researcher in the field would sign off on it.
@@ -76,8 +84,10 @@ Score each on 1 to 5, using the anchors. Scores in between the anchors are allow
 
 List every instance of these. Any one of them means the lesson shouldn't be shown to learners as it is.
 
-- **wrong_claim**: the lesson says the paper found or argued something it didn't.
-- **reversed_model**: a model's main effect goes the opposite way from the paper's mechanism.
+An error is critical when it would leave the learner believing something false, wherever it appears: in the explanation, the model, the narration, a hint or the note. It doesn't need to be about the main idea. Don't soften it into a `partly` on Part A because the rest of the concept is right: list it here, and answer the Part A item it falls under `no`.
+
+- **wrong_claim**: the lesson says the paper found or argued something it didn't, or teaches something the paper contradicts.
+- **reversed_model**: a model, or any part of it the learner is shown, behaves differently from what the paper says: the wrong direction, the wrong growth rate or the wrong rule.
 - **fabricated_finding**: an invented number or result presented as the paper's.
 - **misleading_quote**: a quote that, in context, says something different from what the lesson uses it for.
 - **wrong_answer**: a question or goal whose marked answer is wrong.
@@ -136,8 +146,8 @@ Reply with one JSON object and nothing else.
 
 - **Part A:** a concept item takes the majority answer. When all three disagree, it counts as `partly` and goes to human review.
 - **Part B:** each score takes the median.
-- **Part C:** a critical error reported by two or more judges counts. One reported by a single judge goes to human review, because a single judge can be wrong.
-- **Verdict:** the most cautious verdict that at least two judges give.
+- **Part C:** a critical error counts when two or more judges report it, or when one judge reports it and another answers `partly` or `no` on the same concept's A1, A2, A3 or A6, since that usually means the second judge saw the same problem and rated it more gently. Any other critical error reported by a single judge goes to human review, because a single judge can be wrong.
+- **Verdict:** the median verdict (with two judges, the more cautious one). A lesson with a critical error that counts is `dont_ship`.
 - **Agreement:** report the share of Part A items where all three agree, and Krippendorff's alpha for Part B. Low agreement on an item means the rubric wording needs work before its numbers can be trusted.
 
 These map to the targets in `PRODUCT.md`:
