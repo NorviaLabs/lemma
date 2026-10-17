@@ -913,6 +913,8 @@
 
   /* ------------------------------------------------------------ build */
   async function startBuild() {
+    // The outline may have been made in another browser or before the key was removed; the reviewed outline stays in session.
+    if (!(status.provider || {}).ok) return showConnect(() => startBuild());
     if (session.requestId) {
       try { await api(`/api/requests/${session.requestId}/outline`, { outline: session.outline }); showRequest(session.requestId); }
       catch (err) { alertInline(err.message); }
