@@ -196,8 +196,8 @@ class ChatGPTProvider(Provider):
             return False, "Sign in with your ChatGPT account in Settings to build lessons."
         return True, ""
 
-    def request(self, method: str, path: str, body=None, timeout: float = 60):
-        """Returns the raw response body."""
+    def request(self, method: str, path: str, body=None, timeout: float = 60, on_line=None):
+        """Returns the raw response body, passing each line to ``on_line`` as it arrives when given."""
         token, account = access_token()
         headers = {"Authorization": "Bearer " + token, "chatgpt-account-id": account, "OpenAI-Beta": "responses=experimental",
                    "originator": "codex_cli_rs", "User-Agent": f"Lemma/{__version__}", "Content-Type": "application/json"}
@@ -206,7 +206,13 @@ class ChatGPTProvider(Provider):
         req = urllib.request.Request(BACKEND + path, data=json.dumps(body).encode() if body is not None else None, method=method, headers=headers)
         try:
             with urllib.request.urlopen(req, timeout=timeout) as resp:
-                return resp.read().decode("utf-8", "replace")
+                if not on_line:
+                    return resp.read().decode("utf-8", "replace")
+                lines = []
+                for raw in resp:
+                    lines.append(raw.decode("utf-8", "replace").rstrip("\r\n"))
+                    on_line(lines[-1])
+                return "\n".join(lines)
         except urllib.error.HTTPError as e:
             raise ProviderError(self._explain(e.code, e.read().decode("utf-8", "replace"))) from None
         except urllib.error.URLError as e:
@@ -248,14 +254,29 @@ class ChatGPTConversation(Conversation):
         self.system = system
         self.input = [{"role": "user", "content": [{"type": "input_text", "text": document}]}]
 
-    def send(self, text, cancelled=None):
+    def send(self, text, cancelled=None, on_progress=None):
         turn = self.input + [{"role": "user", "content": [{"type": "input_text", "text": text}]}]
         body = {"model": self.p.model, "instructions": self.system, "input": turn, "store": False, "stream": True}
         result: dict = {}
+        written = [0]
+
+        def line(raw):  # report progress as the stream arrives; the whole stream is parsed at the end
+            if not on_progress or not raw.startswith("data:"):
+                return
+            try:
+                event = json.loads(raw[5:])
+            except ValueError:
+                return
+            kind = event.get("type") or ""
+            if kind == "response.output_text.delta":
+                written[0] += len(event.get("delta") or "")
+                on_progress("writing", written[0])
+            elif kind.startswith("response.reasoning") and kind.endswith(".delta"):
+                on_progress("thinking", written[0])
 
         def call():
             try:
-                result["res"] = self.p.request("POST", "/responses", body, timeout=REQUEST_TIMEOUT)
+                result["res"] = self.p.request("POST", "/responses", body, timeout=REQUEST_TIMEOUT, on_line=line)
             except ProviderError as e:
                 result["err"] = e
 

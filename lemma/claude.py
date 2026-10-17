@@ -79,7 +79,7 @@ class ClaudeConversation(Conversation):
         self.system = system
         self.messages: list = [{"role": "user", "content": document}]
 
-    def send(self, text, cancelled=None):
+    def send(self, text, cancelled=None, on_progress=None):
         messages = self.messages + [{"role": "user", "content": text}]
         params = dict(model=self.p.model, max_tokens=MAX_TOKENS, system=self.system, messages=messages,
                       thinking={"type": "adaptive"}, cache_control={"type": "ephemeral"})
@@ -90,10 +90,17 @@ class ClaudeConversation(Conversation):
         client = self.p.client()
         with errors(self.p):
             stream_fn = client.beta.messages.stream if "betas" in params else client.messages.stream
+            written = 0
             with stream_fn(**params) as stream:
-                for _ in stream:
+                for event in stream:
                     if cancelled is not None and cancelled.is_set():
                         raise ProviderError("Cancelled.")  # leaving the block closes the stream
+                    if on_progress and event.type == "content_block_delta":
+                        if event.delta.type == "text_delta":
+                            written += len(event.delta.text)
+                            on_progress("writing", written)
+                        elif event.delta.type == "thinking_delta":
+                            on_progress("thinking", written)
                 final = stream.get_final_message()
         if final.stop_reason == "refusal":
             raise ProviderError("Claude declined to write this part of the lesson. Try another model in Settings.")

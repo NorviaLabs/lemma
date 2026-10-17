@@ -117,14 +117,31 @@
     const building = () => !!lesson.plan && lesson.plan.some((p) => p.state === "waiting" || p.state === "building");
     const pcOf = (c) => (S.pc[c.id] ||= { screen: 0, prediction: null, goals: {}, hints: {}, watched: false, checkDone: false, checkFirstTry: null, attempts: 0, checkReset: false, values: M.defaults(c.model) });
 
+    let keepPlace = false;  // set while a screen is redrawn for a build update, not because the learner moved
     function frame(...kids) {
       if (cv) { cv.destroy(); cv = null; }
       document.body.classList.remove("lesson-mode");
+      const y = window.scrollY || 0;
       rootEl.replaceChildren(h("div", { class: "player" }, ...kids));
       const h1 = rootEl.querySelector("h1");
-      if (h1) { h1.setAttribute("tabindex", "-1"); h1.focus({ preventScroll: true }); }
+      if (h1) h1.setAttribute("tabindex", "-1");
+      if (keepPlace) { window.scrollTo?.(0, y); return; }
+      h1?.focus({ preventScroll: true });
       window.scrollTo?.(0, 0);
     }
+
+    // Swaps one part of the screen for a fresh copy without moving the page or losing keyboard focus.
+    function swap(oldEl, newEl) {
+      if (!oldEl || !oldEl.isConnected) return newEl;
+      const focusables = (el) => [...el.querySelectorAll("button, a[href], summary, input")];
+      const at = oldEl.contains(document.activeElement) ? focusables(oldEl).indexOf(document.activeElement) : -1;
+      oldEl.replaceWith(newEl);
+      if (at >= 0) focusables(newEl)[at]?.focus({ preventScroll: true });
+      return newEl;
+    }
+    // What a build update can change on screen: which concepts exist, their states and how each is getting on.
+    const buildKey = () => JSON.stringify([plan(), concepts().map((c) => c.id)]);
+    const slots = {};
 
     function canOpen(idx) {
       if (idx <= 0) return true;
@@ -144,7 +161,7 @@
           const c = concepts().find((x) => x.id === p.id);
           const idx = c ? concepts().indexOf(c) : -1;
           const done = c && S.pc[c.id] && S.pc[c.id].finished;
-          const state = { waiting: "Waiting to be built", building: "Being built…", omitted: "Left out: it didn't pass the quality checks" }[p.state] || (done ? "Done" : "");
+          const state = { waiting: "Waiting to be built", building: p.detail ? `Being built: ${p.detail}` : "Being built…", omitted: "Left out: it didn't pass the quality checks" }[p.state] || (done ? "Done" : "");
           const inner = [h("span", { class: "plate" + (done ? " done" : "") + (c ? "" : " pending") }, String(i + 1)),
             h("span", {}, h("span", { class: "h-title" }, p.title), state ? h("span", { class: "h-state" }, state) : null)];
           return h("li", { class: p.state === "omitted" ? "omitted" : "" },
@@ -167,15 +184,19 @@
           primer().length ? h("section", { class: "brief-intro" },
             h("h3", {}, "Start with the paper in brief"),
             h("p", {}, `${primer().length} short pages: ${primer().map((pg) => pg.heading).join(" · ")}. Then each concept shows its idea working on a live model.`)) : null,
-          h("div", { class: "actions" },
-            primer().length && !S.primerDone ? h("button", { class: "primary", onclick: () => showPrimer(0) }, "Read the paper in brief")
-              : concepts().length ? h("button", { class: "primary", onclick: () => openConcept(firstOpenIndex()) }, Object.keys(S.pc).length ? "Continue" : "Start the first concept") : h("p", { class: "muted" }, "The first concept is still being built…"),
-            primer().length && S.primerDone ? h("button", { class: "ghost", onclick: () => showPrimer(0) }, "Re-read the paper in brief") : null,
-            hooks.onEdit ? h("button", { class: "ghost", onclick: () => hooks.onEdit(lesson) }, "Edit lesson") : null,
-            hooks.onExit ? h("button", { class: "ghost", onclick: () => hooks.onExit() }, "Back to start") : null),
+          slots.actions = introActions(),
           h("p", { class: "muted small" }, "The models are simplified teaching models, not the paper's data. ", DISCLAIMER,
             lesson.provider && lesson.provider.name && !lesson.example ? ` Made with ${lesson.provider.name}${lesson.provider.model ? ` (${lesson.provider.model})` : ""}.` : "")),
-        hall(`${shownPlan().length} concepts`)));
+        slots.hall = hall(`${shownPlan().length} concepts`)));
+    }
+
+    function introActions() {
+      return h("div", { class: "actions" },
+        primer().length && !S.primerDone ? h("button", { class: "primary", onclick: () => showPrimer(0) }, "Read the paper in brief")
+          : concepts().length ? h("button", { class: "primary", onclick: () => openConcept(firstOpenIndex()) }, Object.keys(S.pc).length ? "Continue" : "Start the first concept") : h("p", { class: "muted" }, "The first concept is still being built…"),
+        primer().length && S.primerDone ? h("button", { class: "ghost", onclick: () => showPrimer(0) }, "Re-read the paper in brief") : null,
+        hooks.onEdit ? h("button", { class: "ghost", onclick: () => hooks.onEdit(lesson) }, "Edit lesson") : null,
+        hooks.onExit ? h("button", { class: "ghost", onclick: () => hooks.onExit() }, "Back to start") : null);
     }
 
     /* The paper in brief: its story told before any concept, one short page at a time. */
@@ -208,10 +229,16 @@
     function showWaiting() {
       S.view = "waiting";
       const pending = plan().filter((p) => p.state === "waiting" || p.state === "building");
+      slots.waitingDetail = h("p", { class: "muted small" }, waitingDetail());
       frame(h("div", { class: "waiting", "aria-live": "polite" },
         h("h1", {}, "The next concept is still being built"),
         h("p", { class: "summary" }, `It opens here as soon as it passes the quality checks. Still to come: ${pending.map((p) => p.title).join(", ")}.`),
-        h("div", { class: "spinner", "aria-hidden": "true" })));
+        h("div", { class: "spinner", "aria-hidden": "true" }),
+        h("div", { "aria-live": "off" }, slots.waitingDetail)));  // ticks every second or so: shown, not announced
+    }
+    function waitingDetail() {
+      const p = plan().find((x) => x.state === "waiting" || x.state === "building");
+      return p && p.detail ? `${p.title}: ${p.detail}` : "";
     }
 
     function showFinish() {
@@ -953,12 +980,22 @@
     showIntro();
 
     return {
+      // Called every second or two while the lesson builds. It changes only what the build changed, in place,
+      // so the learner keeps their place on the page and their keyboard focus.
       update(newLesson) {
-        const before = concepts().length;
+        const before = concepts().length, was = buildKey();
         lesson = newLesson;
-        if (S.view === "intro") showIntro();
-        else if (S.view === "waiting" && (concepts().length > before || !building())) next();
-        else if (S.view === "finish") showFinish();
+        if (buildKey() === was) return;
+        if (S.view === "intro") {
+          slots.actions = swap(slots.actions, introActions());
+          slots.hall = swap(slots.hall, hall(`${shownPlan().length} concepts`));
+        } else if (S.view === "waiting") {
+          if (concepts().length > before || !building()) next();
+          else if (slots.waitingDetail) slots.waitingDetail.textContent = waitingDetail();
+        } else if (S.view === "finish") {
+          keepPlace = true;
+          try { showFinish(); } finally { keepPlace = false; }
+        }
       },
       get lesson() { return lesson; },
       destroy() { if (cv) cv.destroy(); document.body.classList.remove("lesson-mode"); rootEl.replaceChildren(); },

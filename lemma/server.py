@@ -10,7 +10,9 @@ import re
 import secrets
 import socket
 import threading
+import time
 import uuid
+from concurrent.futures import ThreadPoolExecutor
 from http import HTTPStatus
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -35,6 +37,7 @@ ALLOWED_HOSTS: tuple[str, ...] = LOCAL_HOSTS  # Host header names Lemma answers;
 PAPERS: dict[str, dict] = {}  # paper_id -> {text, title, url, kind, pages, owner}
 SOURCES: dict[tuple, str] = {}  # (owner, lesson id) -> paper text, for lessons built in this session
 KEEP_PAPERS, KEEP_SOURCES = 5, 200  # papers kept per person, and paper texts kept in all
+SOURCE_READERS = 4  # sources of one request read at the same time
 MAX_RUNNING_EACH, MAX_RUNNING = 2, 8  # outlines and builds running at once, per account and in all, when hosted
 _lock = threading.Lock()
 REQUEST = threading.local()  # the current request's headers; one thread per request
@@ -186,12 +189,51 @@ def api_papers(body):
 _first_readable = ingest.first_readable
 
 
+# Searches run in the background so the page can show each library answering and each source being checked.
+SEARCHES: dict[str, dict] = {}
+SEARCHES_EACH = 3  # searches one account can have running at once
+
+
 def api_search(body):
-    _owner()
+    owner = _owner()
+    query = str(body.get("query", ""))
     try:
-        return search.search(str(body.get("query", "")))
+        if hit := search.cached(query):
+            return {"done": True, "result": hit}
+        query = search.clean(query)
     except search.SearchError as e:
         raise ApiError(422, str(e)) from None
+    with _lock:
+        for sid in [k for k, s in SEARCHES.items() if s["done"] and time.time() - s["created"] > 600]:
+            SEARCHES.pop(sid)
+        if sum(s["owner"] == owner and not s["done"] for s in SEARCHES.values()) >= SEARCHES_EACH:
+            raise ApiError(429, "Several searches are still running. Wait a moment and try again.")
+        sid = uuid.uuid4().hex[:12]
+        record = SEARCHES[sid] = {"owner": owner, "query": query, "done": False, "progress": None, "result": None, "error": "", "created": time.time()}
+
+    def progress(snapshot):
+        record["progress"] = snapshot
+
+    def run():
+        try:
+            record["result"] = search.search(query, progress)
+        except search.SearchError as e:
+            record["error"] = str(e)
+        except Exception as e:  # keep the server alive and tell the learner honestly
+            record["error"] = f"The search failed unexpectedly ({e.__class__.__name__})."
+        finally:
+            record["done"] = True
+
+    threading.Thread(target=run, daemon=True).start()
+    return api_search_status(sid)
+
+
+def api_search_status(sid):
+    record = SEARCHES.get(sid)
+    if not record or record["owner"] != _owner():
+        raise ApiError(404, "That search has finished or expired. Search again.")
+    return {"id": sid, "query": record["query"], "done": record["done"], "progress": record["progress"],
+            "result": record["result"], "error": record["error"]}
 
 
 def _paper(body) -> dict:
@@ -236,7 +278,7 @@ def api_outline(body):
 
 def api_build(body):
     paper = _paper(body)
-    outline = body.get("outline")
+    outline = generate.order_outline(body.get("outline"))
     problems = generate.check_outline(outline, paper["text"])
     if problems:
         raise ApiError(400, "The outline isn't valid: " + "; ".join(problems[:3]))
@@ -308,22 +350,34 @@ def _launch_request(record, provider, owner, build=False):
     def run(j):
         paper = record.get("paper")
         if not paper:
-            sources = []
-            record["warnings"] = []
-            for i, source in enumerate(record["request"]["sources"], 1):
+            requested = record["request"]["sources"]
+            for i, source in enumerate(requested, 1):
+                j.step(f"s{i}", f"Reading source {i}: {source['title']}", "waiting")
+
+            def read(i, source):  # the sources are read at the same time
                 if j.cancelled.is_set():
-                    raise generate.GenerationError("Cancelled.")
-                sid = f"s{i}"
-                j.step(sid, f"Reading source {i}: {source['title']}", "active")
+                    return None
+                j.update(f"s{i}", "active")
                 try:
                     fetched = _first_readable(source["urls"])
                 except ingest.IngestError as e:
-                    record["warnings"].append(f"Excluded {source['title']}: {e}")
-                    j.update(sid, "failed", str(e))
+                    j.update(f"s{i}", "failed", str(e))
+                    return e
+                j.update(f"s{i}", "done", "Full text ready")
+                return fetched
+
+            with ThreadPoolExecutor(max_workers=SOURCE_READERS) as pool:
+                read_all = list(pool.map(read, range(1, len(requested) + 1), requested))
+            if j.cancelled.is_set():
+                raise generate.GenerationError("Cancelled.")
+            sources = []
+            record["warnings"] = []
+            for i, (source, fetched) in enumerate(zip(requested, read_all), 1):
+                if isinstance(fetched, ingest.IngestError):
+                    record["warnings"].append(f"Excluded {source['title']}: {fetched}")
                     continue
-                sources.append({"id": sid, "title": fetched.title or source["title"], "url": fetched.url,
+                sources.append({"id": f"s{i}", "title": fetched.title or source["title"], "url": ingest.reader_link(fetched.url),
                                 "authors": source.get("authors", ""), "year": source.get("year"), "text": fetched.text})
-                j.update(sid, "done", "Full text ready")
             if not sources:
                 raise generate.GenerationError("None of the selected sources could be read. Choose other sources.")
             paper = {"text": json.dumps({"lemma_sources": sources}, ensure_ascii=False),
@@ -387,7 +441,14 @@ def api_requests(_body):
 
 def api_request(rid):
     with _requests_lock:
-        return _public_request(_request_record(rid, _owner()))
+        owner = _owner()
+        record = _request_record(rid, owner)
+        job = generate.JOBS.get(rid)
+        if record["status"] == "running" and job and job.owner == owner:
+            # Progress ticks while a reply streams live only in memory; they aren't worth a disk write each.
+            snap = job.snapshot()
+            record = {**record, **{k: snap[k] for k in ("steps", "lesson", "eta_seconds")}}
+        return {**_public_request(record), "now": time.time()}
 
 
 def api_request_cancel(rid):
@@ -428,7 +489,7 @@ def api_request_outline(rid):
         record = _request_record(rid, owner)
         if record["status"] != "awaiting_outline":
             raise ApiError(409, "This build is not waiting for outline review.")
-        outline = body.get("outline")
+        outline = generate.order_outline(body.get("outline"))
         problems = generate.check_outline(outline, record["paper"]["text"])
         if problems:
             raise ApiError(400, "The outline isn't valid: " + "; ".join(problems[:3]))
@@ -522,6 +583,7 @@ ROUTES = [
     ("POST", r"/api/chatgpt/logout", api_chatgpt_logout, False),
     ("POST", r"/api/papers", api_papers, False),
     ("POST", r"/api/search", api_search, False),
+    ("GET", r"/api/search/([a-f0-9]{12})", api_search_status, True),
     ("POST", r"/api/outline", api_outline, False),
     ("POST", r"/api/build", api_build, False),
     ("GET", r"/api/jobs/([a-f0-9]{12})", api_job, True),

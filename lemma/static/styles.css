@@ -330,6 +330,21 @@ button.hall-replay:hover:not(:disabled) { background: transparent; color: var(--
 .bs-label { font: 600 17px/1.3 var(--sans); color: var(--ink); align-self: center; }
 .build-step.waiting .bs-label { color: var(--mute); font-weight: 400; }
 .bs-detail { grid-column: 2; color: var(--mute); font-size: 15px; }
+.bs-line { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; min-width: 0; align-self: center; }
+.bs-time { flex: none; color: var(--mute); font: 500 14px var(--sans); font-variant-numeric: tabular-nums; }
+.build-step.active .bs-time { color: var(--green); }
+.bs-found { grid-column: 2; margin-top: 4px; font-size: 15px; color: var(--mute); }
+.bs-found summary { cursor: pointer; color: var(--ink); }
+.bs-found ul { margin: 6px 0 0; padding-left: 20px; }
+.bs-found li { margin: 2px 0; overflow-wrap: anywhere; }
+.build-progress { margin: 20px 0; max-width: 720px; }
+.bp-summary { display: grid; gap: 8px; margin-bottom: 4px; }
+.bp-count { margin: 0; font: 600 17px/1.3 var(--sans); }
+.bp-bar { display: block; width: 100%; height: 6px; appearance: none; border: 0; border-radius: 9999px; background: var(--plate-2); color: var(--green); overflow: hidden; }
+.bp-bar::-webkit-progress-bar { background: var(--plate-2); }
+.bp-bar::-webkit-progress-value { background: var(--green); transition: width .3s ease; }
+.bp-bar::-moz-progress-bar { background: var(--green); }
+.build-progress .build-steps { margin-top: 12px; }
 @keyframes pulse { 50% { box-shadow: inset 0 0 0 2px var(--green), 0 0 0 5px color-mix(in srgb, var(--green) 18%, transparent); } }
 .library { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--rule); }
 .lib-item { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--rule); }
@@ -759,6 +774,23 @@ kbd { display: inline-block; min-width: 22px; padding: 1px 6px; text-align: cent
 .chip.surprise:hover:not(:disabled) { border-color: var(--ochre); }
 .results { max-width: 760px; margin-bottom: 32px; }
 .results h2 { font-size: 24px; margin-top: 8px; }
+.search-progress { margin-top: 8px; padding: 18px 20px; border: 1px solid var(--rule); border-radius: var(--r); }
+.search-progress .sp-head { display: flex; align-items: center; gap: 12px; margin: 0 0 12px; font-weight: 600; }
+.search-progress .sp-spin { width: 18px; height: 18px; border-width: 2px; flex: none; }
+.search-services { list-style: none; padding: 0; margin: 0 0 14px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px 18px; font-size: 15px; }
+.search-services li { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.search-services li > span:nth-child(2) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.search-services li > .muted { white-space: nowrap; flex: none; }
+.search-services .sp-done .icon { color: var(--green); }
+.search-services .sp-failed .icon { color: var(--faint); }
+.search-services .sp-dot { width: 8px; height: 8px; margin: 0 4px; border-radius: 50%; background: var(--rule-strong); flex: none; animation: sp-pulse 1.2s ease-in-out infinite; }
+@keyframes sp-pulse { 50% { opacity: .3; } }
+.search-bar { display: block; width: 100%; height: 6px; margin: 0 0 8px; appearance: none; border: 0; border-radius: 9999px; background: var(--plate-2); color: var(--green); overflow: hidden; }
+.search-bar::-webkit-progress-bar { background: var(--plate-2); }
+.search-bar::-webkit-progress-value { background: var(--green); transition: width .3s ease; }
+.search-bar::-moz-progress-bar { background: var(--green); }
+.search-progress > p.muted { margin: 0; }
+@media (prefers-reduced-motion: reduce) { .search-services .sp-dot { animation: none; } .search-bar::-webkit-progress-value { transition: none; } }
 .result-list { list-style: none; padding: 0; margin: 18px 0 0; border-top: 1px solid var(--rule); }
 .result { padding: 20px 0; border-bottom: 1px solid var(--rule); }
 .r-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 14px; color: var(--mute); }

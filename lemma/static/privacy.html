@@ -24,14 +24,14 @@
 
 <h2>What Lemma doesn't keep</h2>
 <ul>
-  <li><strong>Your AI provider key.</strong> It stays in your browser and is sent with each request that needs it. The server uses it for that request or build, and never writes it to disk.</li>
+  <li><strong>Your AI provider key.</strong> It is never saved in Lemma's storage: not with your account, your lessons or your builds. It stays in your browser, which sends it with each request that needs it. The server holds it in memory only while that request or build runs, and never writes it to disk. If a provider's error message repeats the key, Lemma removes it before saving the build. To retry a build, your browser sends the key again.</li>
   <li><strong>Usage logs.</strong> The server writes no request logs, and the site has no analytics or advertising.</li>
 </ul>
 
 <h2>Who else sees your data</h2>
 <ul>
   <li><strong>Your AI provider</strong> (OpenCode, OpenAI or Anthropic, as you choose) receives the paper's text when you build a lesson, under your own key and their terms.</li>
-  <li><strong>OpenAlex, arXiv and Wikipedia</strong> receive the words you search for. Lemma contacts result sites to check readable full text before recommending sources. A link you paste is fetched from its own site.</li>
+  <li><strong>Wikipedia, the Stanford Encyclopedia of Philosophy, LibreTexts, OpenAlex, Europe PMC and arXiv</strong> receive the words you search for. Lemma contacts result sites to check readable full text before recommending sources. A link you paste is fetched from its own site.</li>
   <li><strong>Cloudflare</strong> carries traffic to the site. <strong>Google or GitHub</strong> handle signing in.</li>
 </ul>
 <p>Nothing is sold or shared for advertising.</p>

@@ -9,9 +9,11 @@ import ipaddress
 import re
 import socket
 import ssl
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
+import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from html.parser import HTMLParser
 
@@ -24,19 +26,43 @@ class IngestError(Exception):
     pass
 
 
+EUROPE_PMC = "https://www.ebi.ac.uk/europepmc/webservices/rest/"
+
+
+def europe_pmc_full_text(pmcid: str) -> str:
+    """Europe PMC's open-access full text: the readable copy of a PMC article, which PMC's own pages hide
+    behind a challenge for anything that isn't a browser."""
+    return f"{EUROPE_PMC}{pmcid}/fullTextXML"
+
+
+def reader_link(url: str) -> str:
+    """The page a person opens for a link Lemma reads: Europe PMC's article page rather than its raw XML."""
+    m = re.fullmatch(re.escape(EUROPE_PMC) + r"(PMC\d+)/fullTextXML", url or "")
+    return f"https://europepmc.org/article/PMC/{m.group(1)}" if m else url
+
+
 @dataclass
 class Paper:
     text: str
     title: str
-    kind: str  # "pdf" | "html" | "text"
+    kind: str  # "pdf" | "html" | "text" | "xml"
     url: str = ""
     pages: int = 0
 
 
-def first_readable(urls: list[str], timeout: float | None = None) -> Paper:
-    """Use the same full-text check for recommendations and lesson ingestion."""
-    first, short = None, False
+def first_readable(urls: list[str], timeout: float | None = None, budget: float | None = None) -> Paper:
+    """Use the same full-text check for recommendations and lesson ingestion.
+
+    ``budget`` caps the seconds spent on all the links together, so a few slow hosts can't hold up a search."""
+    first, short, slow = None, False, False
+    deadline = time.monotonic() + budget if budget else None
     for url in urls:
+        if deadline is not None:
+            left = deadline - time.monotonic()
+            if left < 1:
+                slow = True
+                break
+            timeout = min(timeout or left, left)
         try:
             paper = from_url(url, timeout=timeout) if timeout is not None else from_url(url)
         except IngestError as e:
@@ -45,6 +71,8 @@ def first_readable(urls: list[str], timeout: float | None = None) -> Paper:
         if len(paper.text) >= FULL_TEXT:
             return paper
         short = True
+    if slow and not short:
+        raise IngestError("The sites hosting this one were too slow to answer. Try again later, or download it and upload the PDF.")
     if short or not first:
         raise IngestError("Lemma could only find a short summary of this one, not the full text. Try another result, or download it and upload the PDF.")
     raise first
@@ -145,6 +173,38 @@ def from_html(data: bytes | str, url: str = "") -> Paper:
     return Paper(text=text, title=re.sub(r"\s+", " ", title), kind="html", url=url)
 
 
+def _local(tag) -> str:
+    return tag.rsplit("}", 1)[-1] if isinstance(tag, str) else ""
+
+
+def from_jats(data: bytes | str, url: str = "") -> Paper:
+    """A journal article in JATS XML, the format of Europe PMC's open-access full texts: the title, the
+    abstract and the body's headings and paragraphs, without the reference list."""
+    try:
+        root = ET.fromstring(data)
+    except ET.ParseError:
+        raise IngestError("Couldn't read this article's XML.") from None
+    found = {}  # the first of each: the article's own title comes before the titles it cites
+    for e in root.iter():
+        if _local(e.tag) in ("article-title", "abstract", "body"):
+            found.setdefault(_local(e.tag), e)
+    flat = lambda e: re.sub(r"\s+", " ", "".join(e.itertext())).strip()
+    title = flat(found["article-title"]) if "article-title" in found else ""
+    parts = [title] if title else []
+    for part, heading in (("abstract", "Abstract"), ("body", "")):
+        if part not in found:
+            continue
+        if heading:
+            parts.append(heading)
+        for e in found[part].iter():
+            if _local(e.tag) in ("title", "p", "caption") and flat(e):
+                parts.append(flat(e))
+    text = _clean("\n\n".join(parts))
+    if len(text) < 500:
+        raise IngestError("This article's XML has almost no text.")
+    return Paper(text=text, title=title or _guess_title(text), kind="xml", url=url)
+
+
 def from_text(data: bytes | str, url: str = "") -> Paper:
     if isinstance(data, bytes):
         data = data.decode("utf-8", errors="replace")
@@ -241,14 +301,14 @@ def from_url(url: str, timeout: float = 30) -> Paper:
     url = _normalise_url(url)
     if urllib.parse.urlsplit(url).scheme not in ("http", "https"):
         raise IngestError("Only http and https links are supported.")
-    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "application/pdf,text/html;q=0.9,*/*;q=0.5"})
+    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "application/pdf,text/html;q=0.9,application/xml;q=0.8,*/*;q=0.5"})
     try:
         with _OPENER.open(req, timeout=timeout) as resp:
             final = resp.geturl()
             ctype = resp.headers.get_content_type()
             data = resp.read(MAX_BYTES + 1)
     except urllib.error.HTTPError as e:
-        raise IngestError(f"The site answered {e.code} {e.reason}. If the paper needs a login, download it and upload the PDF.") from None
+        raise IngestError(f"The site answered {e.code} {e.reason}: it blocks automatic downloads or needs a login. Open it in your browser, download the PDF and upload it.") from None
     except urllib.error.URLError as e:
         raise IngestError(f"Couldn't reach that link ({e.reason}).") from None
     except TimeoutError:
@@ -262,6 +322,8 @@ def from_bytes(data: bytes, filename: str = "", content_type: str = "", url: str
     name = filename.lower()
     if data[:5] == b"%PDF-" or content_type == "application/pdf" or name.endswith(".pdf"):
         paper = from_pdf(data, url)
+    elif content_type in ("application/xml", "text/xml") and b"<article" in data[:4096]:
+        paper = from_jats(data, url)
     elif content_type in ("text/html", "application/xhtml+xml") or name.endswith((".html", ".htm", ".xhtml")) or b"<html" in data[:2048].lower():
         paper = from_html(data, url)
     elif content_type.startswith("text/") or name.endswith((".txt", ".md")):
