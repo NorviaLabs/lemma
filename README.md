@@ -96,4 +96,6 @@ Lemma handles at most 32 requests and 2 uploads at once, reads at most 2 PDFs at
 uv run python -m unittest discover tests
 ```
 
+`eval/` holds an evaluation set of 50 papers from 23 fields, a rubric and three judge personas, and `eval/run.py`, which builds a lesson from each paper with real models, has the judges score them and summarises the results against the targets in `PRODUCT.md`. It calls the providers, so it isn't part of the tests.
+
 The tests cover the expression language, Python/JavaScript parity (needs `node`), every quality check, the generation pipeline (with a fake provider, including a repair and a concept that is left out), the HTTP provider against a stand-in API (history re-sent on repair, model filtering, bad keys, limits and context errors), the HTTP API and the export.
