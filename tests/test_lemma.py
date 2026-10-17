@@ -610,7 +610,7 @@ class FakeAPI(BaseHTTPRequestHandler):
 
     def do_POST(self):
         body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
-        FakeAPI.calls.append({"path": self.path, "body": body})
+        FakeAPI.calls.append({"path": self.path, "body": body, "headers": {k.lower(): v for k, v in self.headers.items()}})
         if not self._authorized():
             return
         last = body["messages"][-1]["content"]
@@ -667,6 +667,21 @@ class HTTPProviderTests(unittest.TestCase):
         self.assertEqual(second[-1]["content"], "repair")
         self.assertNotIn("tools", FakeAPI.calls[0]["body"])
         self.assertEqual(conv.send("CUT").stop_reason, "max_tokens")
+
+    def test_opencode_gets_one_session_id_per_conversation(self):
+        oc = llm.HTTPProvider(llm.ProviderInfo("opencode-go", "OpenCode Go", self.info.base, "glm-5.3", "", "x-opencode-session"), "good-key")
+        first, second = oc.conversation("S", "<paper>x</paper>"), oc.conversation("S", "<paper>x</paper>")
+        first.send("draft")
+        first.send("repair")
+        second.send("draft")
+        ids = [c["headers"].get("x-opencode-session") for c in FakeAPI.calls]
+        self.assertTrue(ids[0] and ids[0] == ids[1], ids)  # a draft and its repair share one session…
+        self.assertNotEqual(ids[1], ids[2])  # …and the next conversation gets its own
+        self.assertTrue(all(c["headers"]["user-agent"].startswith("Lemma/") for c in FakeAPI.calls))  # identifies itself
+        FakeAPI.calls.clear()
+        self.p.conversation("S", "<paper>x</paper>").send("draft")  # OpenAI doesn't ask for it, so it isn't sent
+        self.assertNotIn("x-opencode-session", FakeAPI.calls[0]["headers"])
+        self.assertEqual(llm.PROVIDERS["opencode-go"].session_header, "x-opencode-session")
 
     def test_a_streamed_reply_reports_its_progress(self):
         conv = self.p.conversation("S", "<paper>x</paper>")

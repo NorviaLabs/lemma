@@ -35,7 +35,7 @@ Source text has no application-level word or character cap and is never silently
 
 ### How Lemma uses your key
 
-Both providers are called over their OpenAI-compatible chat completions APIs (`https://opencode.ai/zen/go/v1` and `https://api.openai.com/v1`), with no tools, so the model can only read what Lemma sends and reply with text. Your browser keeps your provider, model and key, and sends them with each request in `X-Lemma-*` headers. The server uses the key for that request, or for the build it starts, and never writes it to disk or sends it back. The APIs keep no conversation, so a repair re-sends the paper, the earlier draft and the list of problems.
+Both providers are called over their OpenAI-compatible chat completions APIs (`https://opencode.ai/zen/go/v1` and `https://api.openai.com/v1`), with no tools, so the model can only read what Lemma sends and reply with text. Your browser keeps your provider, model and key, and sends them with each request in `X-Lemma-*` headers. The server uses the key for that request, or for the build it starts, and never writes it to disk or sends it back. The APIs keep no conversation, so a repair re-sends the paper, the earlier draft and the list of problems. OpenCode Go requests also carry a random `x-opencode-session` id, the same for a draft and its repairs, which OpenCode uses to route them together and cache the paper.
 
 ### How Lemma uses Claude
 
