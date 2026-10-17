@@ -374,6 +374,9 @@ The paper's words in Literata italic at 23px, with curly quotes, and a muted 14p
 ### Action Bar
 Fixed at the bottom on paper with a hairline above. Left: the message or hint; right: Show me and the green Continue. It turns good-bg or bad-bg with a matching head colour and icon when an answer is checked, and lifts 3px briefly.
 
+### Gallery
+Finished lessons anyone can open, on the home page between "From a paper to a lesson" and "Find something to learn", and on their own page (`#/gallery`). Each item is led by one of its lesson's own models, drawn live at its defaults (or chosen cover values) on a square plate, with the legend and status hidden. Below it: one 3px bar per concept in the lesson's tab inks (violet, green, ochre, blue), the lesson title (title small, ink) as a link stretched over the whole item, the paper's title in Literata italic with authors and year in mute, and the field and concept count (label, mute) at the foot. No frame or shadow: hover deepens the plate to plate-2 and underlines the title; keyboard focus draws the 2px green outline around the whole item. Three columns, two at 1100px, one at 640px. Models draw as each item nears the viewport. A cover is chosen to read at thumbnail size: a model that settles early or a wide diagram makes a poor one.
+
 ## Do's and Don'ts
 
 ### Do:

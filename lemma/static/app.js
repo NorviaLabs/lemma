@@ -564,6 +564,72 @@
     return sec;
   }
 
+  /* The gallery: finished lessons anyone can open, each led by one of its own models, drawn live at rest. */
+  const TAB_INKS = ["violet", "green", "ochre", "blue"];  // the lesson's concept tabs, in the same order
+  let galleryP = null;
+  const galleryItems = () => (galleryP = galleryP || api("/api/gallery").catch((e) => { galleryP = null; throw e; }));
+  const shortAuthors = (a) => {
+    const names = String(a || "").split(/,\s*/).filter((n) => n && n !== "et al.");
+    return names.length > 2 || /et al/.test(a || "") ? `${names[0]} et al.` : names.join(" and ");
+  };
+  function galleryList(level) {
+    const M = window.LemmaModel;
+    const list = h("ul", { class: "gallery", "aria-busy": "true" }, h("li", { class: "muted" }, "Opening the gallery…"));
+    galleryItems().then((items) => {
+      const views = [];
+      list.replaceChildren(...items.map((it) => {
+        const plate = h("div", { class: "gal-plate", "aria-hidden": "true" });
+        plate.dataset.slug = it.slug;
+        views.push([plate, it.cover]);
+        return h("li", { class: "gal-item" },
+          plate,
+          h("ol", { class: "gal-bars", "aria-hidden": "true" }, it.concepts.map((_, i) => h("li", { style: `--tab:var(--${TAB_INKS[i % 4]})` }))),
+          h(level, { class: "gal-title" }, h("a", { href: `#/gallery/${it.slug}` }, it.title)),
+          h("p", { class: "gal-paper" }, h("cite", {}, it.source.title), h("span", {}, [shortAuthors(it.source.authors), it.source.year].filter(Boolean).join(", "))),
+          h("p", { class: "gal-meta" }, `${it.field} · ${it.concepts.length} concepts`));
+      }));
+      list.removeAttribute("aria-busy");
+      // Draw each model as it comes into view; drawing all six at once would hold up the page.
+      const draw = (plate, cover) => {
+        if (plate.dataset.drawn) return;
+        plate.dataset.drawn = "1";
+        const box = h("div", { class: "viz-box" });
+        plate.append(box);
+        const view = new M.ModelView(box, cover.model);
+        view.trailsOn = false;
+        view.update(Object.assign(M.defaults(cover.model), cover.values || {}));
+        cleanups.push(() => view.destroy());
+      };
+      if (typeof IntersectionObserver === "undefined") return views.forEach(([pl, c]) => draw(pl, c));
+      const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        const v = views.find(([pl]) => pl === e.target);
+        if (v) draw(...v);
+      }), { rootMargin: "200px 0px" });
+      views.forEach(([pl]) => io.observe(pl));
+      cleanups.push(() => io.disconnect());
+    }).catch(() => {
+      list.removeAttribute("aria-busy");
+      list.replaceChildren(h("li", { class: "muted" }, "The gallery couldn't load. Reload the page to try again."));
+    });
+    return list;
+  }
+  const GALLERY_LEAD = "Six finished lessons, one from each of six fields. Open any of them and play it through: you don't need an account or a key.";
+  const galleryFoot = () => h("p", { class: "muted small gal-foot" },
+    "Five were built with Claude Opus 5.5 and then reviewed and edited; Galton's was written by hand. Lessons made with AI can contain errors, so check them against the paper.");
+  function gallerySection() {
+    return h("section", { class: "gallery-sec", "aria-labelledby": "gallery-title" },
+      h("div", { class: "gal-head" }, h("h2", { id: "gallery-title" }, "Lessons made from real papers"), h("p", { class: "lead" }, GALLERY_LEAD)),
+      galleryList("h3"), galleryFoot());
+  }
+  function showGallery() {
+    view(h("section", { class: "gallery-sec gallery-page", "aria-labelledby": "gallery-title" },
+      h("div", { class: "gal-head" }, h("h1", { id: "gallery-title" }, "Gallery"), h("p", { class: "lead" }, GALLERY_LEAD)),
+      galleryList("h2"), galleryFoot()));
+  }
+  async function openGallery(slug) { try { openLesson(await api(`/api/gallery/${slug}`)); } catch (err) { showHome(err.message); } }
+
   // What a search is doing while it runs: each library answering, then each source being checked.
   const SERVICE_NAMES = { "Stanford Encyclopedia of Philosophy": "Stanford Encyclopedia" };
   function searchProgress(q) {
@@ -756,7 +822,7 @@
     const recent = h("section", { class: "recent", hidden: true, "aria-labelledby": "recent-title" });
     setMode(mode);
     if (session.search) { qIn.value = session.search.query; drawResults(); }
-    view(msg ? errorBox(msg) : null, homeExhibit(), hallSection(), h("div", { class: "home-make" }, h("div", { class: "hm-main" }, form, results), recent));
+    view(msg ? errorBox(msg) : null, homeExhibit(), hallSection(), gallerySection(), h("div", { class: "home-make" }, h("div", { class: "hm-main" }, form, results), recent));
     if (status.library_count) {
       api("/api/lessons").then((items) => {
         if (!items.length) return;
@@ -943,7 +1009,7 @@
   /* ------------------------------------------------------------ learn */
   function openLesson(lesson, opts = {}) {
     view();
-    setHash(opts.request ? `#/request/${opts.live}/learn` : lesson.example ? "#/example" : opts.saved ? `#/lesson/${lesson.id}` : "#/learn");
+    setHash(opts.request ? `#/request/${opts.live}/learn` : lesson.gallery ? `#/gallery/${lesson.gallery.slug}` : lesson.example ? "#/example" : opts.saved ? `#/lesson/${lesson.id}` : "#/learn");
     const host = h("div", { class: "player-host" });
     main.replaceChildren(host);
     player = LemmaPlayer.mount(host, lesson, {
@@ -1172,6 +1238,8 @@
     if (hash.startsWith("#/signin")) return showSignIn(new URLSearchParams(hash.split("?")[1] || "").get("error"));
     if (hash === "#/account") return showAccount();
     if (hash === "#/example") return player ? null : openExample();
+    if (hash === "#/gallery") return showGallery();
+    if (hash.startsWith("#/gallery/")) return player ? null : openGallery(hash.slice(10));
     if (hash.startsWith("#/lesson/")) {
       if (player) return;
       try { return openLesson(await api(`/api/lessons/${hash.slice(9)}`), { saved: true }); } catch (e) { return showHome(e.message); }
@@ -1183,7 +1251,7 @@
   }
 
   window.addEventListener("hashchange", () => {
-    if (["#/library", "#/settings", "#/account", "#/signin", "#/", ""].includes(location.hash) && player) { player.destroy(); player = null; }
+    if (["#/library", "#/gallery", "#/settings", "#/account", "#/signin", "#/", ""].includes(location.hash) && player) { player.destroy(); player = null; }
     route();
   });
 

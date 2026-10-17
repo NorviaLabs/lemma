@@ -1,0 +1,1858 @@
+{
+ "version": 1,
+ "id": "gallery-ioannidis-2005",
+ "title": "When \"Significant\" Isn't True: The Hidden Math Behind Research Headlines",
+ "audience": "A curious adult with no background in this field",
+ "source": {
+  "title": "Why Most Published Research Findings Are False",
+  "authors": "Ioannidis JPA",
+  "year": 2005,
+  "venue": "PLoS Medicine",
+  "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1182327/fullTextXML"
+ },
+ "intro": {
+  "summary": "The paper asks a simple question: when a study reports a 'statistically significant' finding, how likely is it that the finding is actually true? Ioannidis builds a counting model of a research field. It combines how many of the tested ideas are true to begin with, how powerful the studies are, how much bias creeps in, and how many teams test the same question. Plugging in plausible values, he finds that for most study designs and fields, a claimed finding is more likely false than true. The main limitation is that this is a mathematical argument, not a measurement: its conclusions depend on values for pre-study odds and bias that are hard to know and that the author admits are 'considerably subjective'.",
+  "background": [
+   "Scientists often call a result 'statistically significant' when its p-value is below 0.05, meaning data that extreme would be fairly rare if there were no real effect.",
+   "A study's 'power' is its chance of detecting an effect that really exists; small studies and small effects mean low power.",
+   "Doctors meet the same logic with screening tests: a positive test for a rare disease can still be more likely a false alarm than a real case.",
+   "Many findings that excited researchers later failed when other teams tried to repeat them, which is what prompted this essay."
+  ],
+  "known": [],
+  "aha": "A 'statistically significant' result from an honest study can still be far more likely false than true, and the more teams chase the same question, the less any single team's positive result is worth."
+ },
+ "primer": [
+  {
+   "heading": "The question",
+   "body": "Published findings are often overturned by later studies, from clinical trials to genetics. Many people treat a result with p below 0.05 as close to proof. Ioannidis asks what fraction of these 'significant' claims are actually true, and he argues the answer should not surprise us.",
+   "quote": "It can be proven that most claimed research findings are false.",
+   "quote_where": "Introduction"
+  },
+  {
+   "heading": "What he did",
+   "body": "He imagined a whole research field as a big 2 × 2 table: relationships that are truly real or not, against studies that claim a finding or don't. Three ingredients fill the table. The first is the ratio R of true to false ideas being tested. The second is the study's power. The third is the false-alarm rate α, usually 0.05. He then added two real-world distortions: bias (analyses nudged into 'findings') and many teams testing the same question."
+  },
+  {
+   "heading": "What he found",
+   "body": "The chance that a claimed finding is true, which he calls the PPV, depends heavily on how likely the idea was before the study. When a field tests many long-shot ideas, most 'significant' hits are false alarms even with honest, decent studies. Bias and crowds of competing teams push the chance lower still. Only well-powered studies of plausible ideas, like large randomised trials, reach high reliability.",
+   "quote": "Simulations show that for most study designs and settings, it is more likely for a research claim to be false than true.",
+   "quote_where": "Abstract"
+  },
+  {
+   "heading": "The good case and the bad case",
+   "body": "A big, careful trial of a treatment that had an even chance of working does well. A genome scan of 100,000 gene variants looking for about ten real ones does terribly. In that scan, a barely significant hit is true only about 12 times in 10,000. If ten teams run the scan and one finds a hit, the figure falls to about 1.5 in 10,000, barely above where it started before any research.",
+   "quote": "A finding from a well-conducted, adequately powered randomized controlled trial starting with a 50% pre-study chance that the intervention is effective is eventually true about 85% of the time.",
+   "quote_where": "Most Research Findings Are False for Most Research Designs and for Most Fields"
+  },
+  {
+   "heading": "Why it matters, and its limits",
+   "body": "The paper shifts attention from single p-values to the whole context: how plausible the idea was, how big the study was, how flexible the analysis was, and how many others tried. It argues for larger studies, pre-registration and judging the totality of evidence. It is a model, though, not a survey of real error rates. Its numbers rest on assumed values for R and bias, and the factors can interact in ways the simple formulas ignore."
+  }
+ ],
+ "provider": {
+  "name": "Claude",
+  "model": "claude-opus-5-5"
+ },
+ "concepts": [
+  {
+   "id": "false_alarms_and_power",
+   "title": "Significance tests raise false alarms and miss real effects",
+   "idea": "With a 0.05 cut-off, about 5% of studies of effects that don't exist still come out 'significant', while studies of real effects come out significant only as often as their power allows.",
+   "role": "prerequisite",
+   "predict": {
+    "question": "A lab tests 100 different pills. Unknown to anyone, none of them does anything. Each pill gets a large, carefully run study judged at the usual 0.05 cut-off. About how many pills will come out 'significant' anyway?",
+    "options": [
+     "None, because large, careful studies don't make that mistake",
+     "About 5",
+     "About 50",
+     "It depends mostly on how many people are in each study"
+    ],
+    "answer": 1,
+    "why": [
+     "It feels as if size and care should remove luck. But when there is no real effect, the false-alarm rate is set by the cut-off, not by the sample size. About 5% still pass.",
+     "Correct. With no real effect, each study has a 5% chance of passing a 0.05 cut-off. Across 100 pills that is about 5 false alarms, even with perfect studies.",
+     "This mixes up 'no effect' with a coin flip. The cut-off is chosen so that only about 1 in 20 null studies pass, not half of them.",
+     "Sample size matters a lot for catching real effects (power). With no real effect, raising the sample size left the pass rate stuck near 5% in the model."
+    ]
+   },
+   "terms": [
+    {
+     "term": "p-value",
+     "means": "How surprising a study's result would be if there were no real effect. Smaller means more surprising."
+    },
+    {
+     "term": "statistically significant",
+     "means": "A result whose p-value falls below the chosen cut-off (usually 0.05). The study then claims an effect."
+    },
+    {
+     "term": "false positive",
+     "means": "A significant result when there is really no effect: a false alarm (the paper's Type I error, rate α)."
+    },
+    {
+     "term": "power",
+     "means": "The chance that a study catches an effect that really exists, written 1 − β in the paper."
+    }
+   ],
+   "model": {
+    "title": "200 pretend studies, each comparing two groups",
+    "note": "Teaching model: each study draws two groups from bell curves with spread 1 and compares their averages with a simple z-test. There is no bias, no flexible analysis and no repeat testing. The 0.05 cut-off is the paper's usual value; all other numbers are illustrative, not the paper's data.",
+    "controls": [
+     {
+      "id": "d",
+      "label": "Real difference between the groups",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.3,
+      "unit": " spreads",
+      "color": 0
+     },
+     {
+      "id": "n",
+      "label": "People in each group",
+      "kind": "slider",
+      "min": 10,
+      "max": 200,
+      "step": 10,
+      "default": 20,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "alpha",
+      "label": "Cut-off for passing the test",
+      "kind": "slider",
+      "min": 0.01,
+      "max": 0.1,
+      "step": 0.01,
+      "default": 0.05,
+      "unit": "",
+      "color": 3
+     }
+    ],
+    "outputs": [
+     {
+      "id": "z_cut",
+      "label": "Gap needed to pass (in standard errors)",
+      "expr": "norminv(1 - alpha / 2, 0, 1)",
+      "decimals": 2,
+      "color": 3
+     },
+     {
+      "id": "power",
+      "label": "Share of studies passing (expected)",
+      "expr": "normcdf(d * sqrt(n / 2) - z_cut, 0, 1) + normcdf(-d * sqrt(n / 2) - z_cut, 0, 1)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "simulated",
+      "label": "Share passing in these 200 studies",
+      "expr": "sim_share_significant",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 4
+     }
+    ],
+    "visual": {
+     "type": "sampling",
+     "kernel": "two_group",
+     "params": {
+      "mu1": 0,
+      "mu2": "d",
+      "sd": 1,
+      "n": "n",
+      "alpha": "alpha",
+      "samples": 200,
+      "seed": 7
+     }
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Each dot is one pretend study. It compares two groups of people, and 200 studies run at once.",
+      "focus": "simulated",
+      "ms": 3000
+     },
+     {
+      "say": "A dot's position is the study's surprise score. Dots past the cut-off line pass the test and get reported as a finding.",
+      "focus": "alpha",
+      "ms": 3500
+     },
+     {
+      "say": "This slider sets how big the real difference between the groups is. Zero means no real effect at all.",
+      "set": {
+       "d": 0.6
+      },
+      "focus": "d",
+      "ms": 3000
+     },
+     {
+      "say": "This one sets how many people each study recruits per group.",
+      "set": {
+       "n": 60
+      },
+      "focus": "n",
+      "ms": 3000
+     },
+     {
+      "say": "These boxes count the share of studies that passed: what theory expects, and what this batch actually did.",
+      "focus": [
+       "power",
+       "simulated"
+      ],
+      "ms": 3200
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play the role of nature. Decide whether an effect is real and how big it is, then see how often studies notice it.",
+    "goals": [
+     {
+      "text": "Remove the real effect completely and see how many studies still pass the test.",
+      "when": "d < 0.01",
+      "solution": {
+       "d": 0
+      },
+      "hints": [
+       "Which slider controls whether there is anything real to find?",
+       "Slide 'Real difference between the groups' all the way to the left.",
+       "Once it is all the way left, about 5% of dots still pass: those are false positives."
+      ]
+     },
+     {
+      "text": "Keep the real difference small (0.3) and the cut-off at 0.05, but get at least 80% of studies to catch it.",
+      "when": "d > 0.25 && d < 0.35 && alpha > 0.045 && alpha < 0.055 && power >= 0.8",
+      "solution": {
+       "n": 180
+      },
+      "hints": [
+       "The effect and the cut-off are fixed. What else can a study change?",
+       "Bigger studies make a small real gap easier to tell apart from luck. Move 'People in each group' up.",
+       "Keep raising it, 10 people at a time, until the expected share passes 80%."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Right. When nothing is real, the cut-off alone decides how often studies pass. At 0.05 that is about 5 in 100, however large or careful the studies are.",
+     "incorrect": "You may have assumed that big, careful studies cannot raise false alarms. In the model, with no real effect, raising the sample size left the pass rate near 5%. That 5% is built into the 0.05 cut-off."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with no real difference: both groups come from the same population. Any gap a study sees is pure luck.",
+       "set": {
+        "d": 0,
+        "n": 20,
+        "alpha": 0.05
+       },
+       "focus": "d",
+       "ms": 3200
+      },
+      {
+       "say": "Each dot's surprise score has a name: its p-value. It says how unusual the gap would be if there were no real effect.",
+       "focus": "simulated",
+       "ms": 3600
+      },
+      {
+       "say": "A p-value below the cut-off is called statistically significant. Here about 5% of studies get there, roughly 1 in 20. Every one is a false positive: a false alarm about an effect that isn't there.",
+       "focus": [
+        "power",
+        "simulated"
+       ],
+       "ms": 4200
+      },
+      {
+       "say": "More people per study does not cure this. At 200 per group, with no real effect, the pass rate stays near 5%.",
+       "set": {
+        "n": 200
+       },
+       "focus": "power",
+       "ms": 3600
+      },
+      {
+       "say": "Now make the effect real but small, 0.3, and go back to 20 people. Only about 16% of studies catch it.",
+       "set": {
+        "d": 0.3,
+        "n": 20
+       },
+       "focus": "power",
+       "ms": 3800
+      },
+      {
+       "say": "That share is the study's power: how often it catches an effect that truly exists. Here, most studies of a real effect miss it.",
+       "focus": "power",
+       "ms": 3600
+      },
+      {
+       "say": "Give each study 180 people per group and power climbs past 80%. Big studies catch small real effects.",
+       "set": {
+        "n": 180
+       },
+       "focus": [
+        "n",
+        "power"
+       ],
+       "ms": 3800
+      },
+      {
+       "say": "Last, tighten the cut-off to 0.01. False alarms would drop to 1%, but power falls to about 61%. Every cut-off trades one kind of mistake for the other.",
+       "set": {
+        "alpha": 0.01
+       },
+       "focus": [
+        "alpha",
+        "power"
+       ],
+       "ms": 4400
+      }
+     ]
+    },
+    "explanation": "A significance test cannot tell real effects from lucky flukes for certain. If there is no effect, a 0.05 cut-off still lets about 5% of studies through: these are false positives, at rate α. If there is a real effect, a study flags it only as often as its power allows. Power is low when studies are small or the effect is small, which is why the paper says smaller studies and smaller effects make findings less trustworthy. The paper does not run studies like these. It takes these two rates, α and power (1 − β), as the building blocks of its argument. The 5% figure assumes a perfectly run test; bias and flexible analysis, covered later, push the real rate higher.",
+    "quote": "The probability of a study finding a true relationship reflects the power 1 - β (one minus the Type II error rate). The probability of claiming a relationship when none truly exists reflects the Type I error rate, α.",
+    "quote_where": "Modeling the Framework for False Positive Findings"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "P(significant | no real effect) = "
+     },
+     {
+      "text": "α",
+      "link": "alpha"
+     },
+     {
+      "text": "     P(significant | real effect) = "
+     },
+     {
+      "text": "1 − β",
+      "link": "power"
+     }
+    ],
+    "caption": "These are the paper's definitions. α (the cut-off slider) is the false-alarm rate when nothing is real. 1 − β is the power: the expected share of studies passing when the effect is real. In the model, power grows with the real difference and with the people in each group."
+   },
+   "recap": "With no real effect, about 1 in 20 studies still come out 'significant' at 0.05. A real effect gets caught only as often as power allows, so small studies of small effects often miss."
+  },
+  {
+   "id": "counting_the_field",
+   "title": "Count a whole field: true hits versus false alarms",
+   "idea": "When a field tests many ideas, the pile of 'significant' results mixes true hits (power × true ideas) with false alarms (α × false ideas), and the ratio of true to false ideas, R, sets the mix.",
+   "role": "core",
+   "predict": {
+    "question": "The paper's Box 1 imagines a gene study. It tests 100,000 gene variants, of which about 10 are truly linked to schizophrenia. Its power is 60% and α = 0.05. Roughly what does its pile of 'significant' variants look like?",
+    "options": [
+     "Mostly true hits: about 6 real links and only a handful of false alarms",
+     "About as many true hits as false alarms",
+     "About 6 true hits buried among roughly 5,000 false alarms",
+     "Almost nothing comes out significant, because true links are so rare"
+    ],
+    "answer": 2,
+    "why": [
+     "Tempting if you trust a 5% cut-off to keep false alarms rare. But 5% of nearly 100,000 false variants is about 5,000, so false alarms swamp the 6 hits.",
+     "This happens only when power × true ideas roughly equals α × false ideas. Here false ideas outnumber true ones 10,000 to 1, so the two cells are nowhere near equal.",
+     "Correct. True hits = 0.6 × 10 = 6. False alarms = 0.05 × 99,990 ≈ 5,000. With R = 1:10,000, the false-alarm cell dwarfs the true-hit cell.",
+     "Rare true links do mean few true hits. But the false-alarm cell does not shrink: 5% of the huge number of false variants still crosses the cut-off."
+    ]
+   },
+   "terms": [
+    {
+     "term": "2 × 2 table",
+     "means": "A grid that crosses the truth (idea really true or false) with the study's result (significant or not), giving four cells to count"
+    },
+    {
+     "term": "R (pre-study odds)",
+     "means": "The number of true ideas a field tests for every false one; 1:10 means one true idea per ten false ones"
+    },
+    {
+     "term": "pre-study probability",
+     "means": "The chance a tested idea is true before any study is run: R/(R + 1)"
+    }
+   ],
+   "model": {
+    "title": "1,000 ideas a field tests, sorted by truth and by study result",
+    "note": "Teaching model: the field tests exactly 1,000 ideas, every true idea is studied with the same power, and the cells show expected counts (a real field would scatter around them). There is no bias and only one study per idea. Numbers are illustrative, not the paper's data. The layout follows the paper's Table 1.",
+    "controls": [
+     {
+      "id": "k",
+      "label": "False ideas for every true one",
+      "kind": "slider",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "default": 4,
+      "unit": "",
+      "color": 2
+     },
+     {
+      "id": "power",
+      "label": "Power (chance a study catches a real effect)",
+      "kind": "slider",
+      "min": 0.05,
+      "max": 0.95,
+      "step": 0.05,
+      "default": 0.8,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "alpha",
+      "label": "Cut-off α (false-alarm rate on false ideas)",
+      "kind": "slider",
+      "min": 0.01,
+      "max": 0.1,
+      "step": 0.01,
+      "default": 0.05,
+      "unit": "",
+      "color": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "true_ideas",
+      "label": "True ideas among the 1,000",
+      "expr": "1000 / (k + 1)",
+      "unit": "",
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "hits",
+      "label": "True hits (significant and real)",
+      "expr": "true_ideas * power",
+      "unit": "",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "alarms",
+      "label": "False alarms (significant but false)",
+      "expr": "(1000 - true_ideas) * alpha",
+      "unit": "",
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "real_share",
+      "label": "Share of the significant pile that is real",
+      "expr": "hits / (hits + alarms)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 3
+     }
+    ],
+    "visual": {
+     "type": "table",
+     "columns": [
+      "Idea really true",
+      "Idea really false",
+      "Total"
+     ],
+     "rows": [
+      {
+       "label": "Came out significant",
+       "cells": [
+        {
+         "value": "hits",
+         "highlight": "hits > alarms"
+        },
+        {
+         "value": "alarms",
+         "highlight": "alarms > hits"
+        },
+        "hits + alarms"
+       ]
+      },
+      {
+       "label": "Came out not significant",
+       "cells": [
+        "true_ideas - hits",
+        "(1000 - true_ideas) - alarms",
+        "1000 - hits - alarms"
+       ]
+      },
+      {
+       "label": "Total",
+       "cells": [
+        "true_ideas",
+        "1000 - true_ideas",
+        "1000"
+       ]
+      }
+     ],
+     "decimals": 0,
+     "scale": "none"
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This grid sorts 1,000 ideas one field might test. The columns say whether each idea is really true or really false.",
+      "focus": "true_ideas",
+      "ms": 3800
+     },
+     {
+      "say": "The rows say what a study found: significant or not. The top row is the pile that gets announced as findings.",
+      "focus": [
+       "hits",
+       "alarms"
+      ],
+      "ms": 3800
+     },
+     {
+      "say": "This slider sets how many false ideas the field tests for every true one. Watch the column totals shift.",
+      "set": {
+       "k": 10
+      },
+      "focus": "k",
+      "ms": 3400
+     },
+     {
+      "say": "This one is power: how often a study of a true idea comes out significant.",
+      "focus": "power",
+      "ms": 2800
+     },
+     {
+      "say": "And this is the cut-off α: how often a false idea slips through as significant anyway.",
+      "set": {
+       "k": 4
+      },
+      "focus": "alpha",
+      "ms": 3000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play the field's planner. Make true ideas rarer and watch which cell of the significant row takes over. Then find out what it takes to win the mix back.",
+    "goals": [
+     {
+      "text": "Make the false alarms outnumber the true hits in the significant row",
+      "when": "alarms > hits",
+      "solution": {
+       "k": 20
+      },
+      "hints": [
+       "False alarms come from false ideas. What makes false ideas more common?",
+       "Slide 'False ideas for every true one' to the right and watch the two top-row cells.",
+       "False alarms beat true hits once α × false ideas is bigger than power × 1. At power 0.8 and α 0.05, work out that ratio."
+      ]
+     },
+     {
+      "text": "Keep at least 50 false ideas for every true one, but get the real share of the significant pile back above 50%",
+      "when": "k >= 50 && real_share > 0.5",
+      "solution": {
+       "k": 60,
+       "alpha": 0.01
+      },
+      "hints": [
+       "With true ideas this rare, more power adds only a few hits. Which cell could you shrink instead?",
+       "False alarms = α × false ideas. Try tightening the cut-off α.",
+       "Keep the ratio at 50 or more and drop α as far as it goes."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Right. The significant pile is just true hits plus false alarms. With 10 true variants and almost 100,000 false ones, 60% of 10 is 6, while 5% of about 100,000 is about 5,000. A field where true ideas are rare fills its significant pile with false alarms.",
+     "incorrect": "You may have read α = 0.05 as 'only 5% of findings are false'. But α is a rate per false idea, not per finding. Multiply it by the huge number of false variants and you get about 5,000 false alarms against about 6 true hits. The ratio of true to false ideas, R, sets that mix."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with a generous field: one false idea for every true one. That gives 500 true ideas and 500 false ones, with power 0.8 and α 0.05.",
+       "set": {
+        "k": 1,
+        "power": 0.8,
+        "alpha": 0.05
+       },
+       "focus": "true_ideas",
+       "ms": 3600
+      },
+      {
+       "say": "Power catches 0.8 × 500 = 400 true hits. The cut-off lets 0.05 × 500 = 25 false ideas through as false alarms. The significant row is 94% real.",
+       "focus": [
+        "hits",
+        "alarms",
+        "real_share"
+       ],
+       "ms": 4200
+      },
+      {
+       "say": "This grid is a 2 × 2 table: truth across the top, result down the side. The ratio of true to false ideas is R (pre-study odds). Here R = 1:1, so the pre-study probability an idea is true, R/(R + 1), is 50%.",
+       "focus": "k",
+       "ms": 4800
+      },
+      {
+       "say": "Now make true ideas rarer: R = 1:10. Only about 91 ideas are true, giving about 73 hits. The roughly 909 false ideas give about 45 alarms. The real share drops to about 62%.",
+       "set": {
+        "k": 10
+       },
+       "focus": [
+        "hits",
+        "alarms"
+       ],
+       "ms": 4400
+      },
+      {
+       "say": "Push to R = 1:50. Hits fall to about 16, but false alarms sit near 49. False alarms now outnumber true hits about three to one.",
+       "set": {
+        "k": 50
+       },
+       "focus": [
+        "hits",
+        "alarms",
+        "real_share"
+       ],
+       "ms": 4200
+      },
+      {
+       "say": "Here is why. False alarms = α × false ideas, and almost all 1,000 ideas are now false, so that cell is stuck near 50. True hits = power × true ideas, so that cell shrinks as R shrinks.",
+       "set": {
+        "k": 100
+       },
+       "focus": "alarms",
+       "ms": 4600
+      },
+      {
+       "say": "Try to rescue it with power 0.95. Hits barely rise, from about 8 to 9, because there are so few true ideas to catch. Only about one significant result in six is real. R, not power, sets the mix.",
+       "set": {
+        "power": 0.95
+       },
+       "focus": "real_share",
+       "ms": 4800
+      }
+     ]
+    },
+    "explanation": "Picture every idea a field tests, sorted two ways: is it really true, and did the study come out significant? The significant row always holds two kinds of result. True hits are power × the number of true ideas. False alarms are α × the number of false ideas. When R (pre-study odds) is small, false ideas are so numerous that even a 5% slip-through rate fills the significant pile with false alarms, and extra power cannot add many hits. The paper builds exactly this 2 × 2 table of expected counts (its Table 1) for c relationships probed in a field. It is a model of expected values, not a measurement of any real field, and it assumes every true idea is studied with similar power.",
+    "quote": "Let R be the ratio of the number of “true relationships” to “no relationships” among those tested in the field. R is characteristic of the field and can vary a lot depending on whether the field targets highly likely relationships or searches for only one or a few true relationships among thousands and millions of hypotheses that may be postulated.",
+    "quote_where": "Section: Modeling the Framework for False Positive Findings"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "true hits = c × "
+     },
+     {
+      "text": "(1 − β)",
+      "link": "power"
+     },
+     {
+      "text": " × R/(R + 1)     false alarms = c × "
+     },
+     {
+      "text": "α",
+      "link": "alpha"
+     },
+     {
+      "text": " × 1/(R + 1)"
+     }
+    ],
+    "caption": "These are two cells of the paper's Table 1, for c ideas probed in a field. In the model, c = 1,000 and R = 1/(false ideas for every true one), so R/(R + 1) is the share of ideas that are true. The part (1 − β) is the paper's notation for power, the chance of catching a real effect, and is linked to the power slider. α is the cut-off's false-alarm rate, linked to the α slider. Together the two cells make the significant row."
+   },
+   "recap": "A field's significant results are true hits (power × true ideas) plus false alarms (α × false ideas). When true ideas are rare, the false alarms win the count."
+  },
+  {
+   "id": "ppv_and_prior_odds",
+   "title": "Why a significant result can still be probably false",
+   "idea": "The chance a claimed finding is true, PPV = (1−β)R/(R−βR+α), is above 50% only when power × R beats α, so long-shot fields and small studies yield mostly false claims.",
+   "role": "core",
+   "predict": {
+    "question": "In a field where about 1 idea in 50 is true (R = 0.02), studies have power 0.2 and use the usual 0.05 cut-off. Suppose every study were made big enough to reach power 0.8. What happens to the chance that a 'significant' claim is true?",
+    "options": [
+     "It jumps well above 50%: big studies make claims trustworthy",
+     "It improves, but claims stay mostly false (roughly 1 in 4 true)",
+     "It stays exactly the same, because power doesn't matter",
+     "It gets worse, because big studies find more false alarms"
+    ],
+    "answer": 1,
+    "why": [
+     "Tempting, because bigger studies are better. But true hits per false alarm is 0.8 × 0.02 ÷ 0.05 = 0.32, still below 1. Even perfect power gives 0.02, which is below α = 0.05.",
+     "Correct. The chance rises from about 7% to about 24%, because power × R grows from 0.004 to 0.016. That is still below α = 0.05, so false alarms still outnumber true hits.",
+     "Power multiplies R on the top of the formula, so raising it does raise the chance. It just can't push power × R past α in a field this long-shot.",
+     "The false-alarm rate is set by the cut-off α, not by study size. Bigger studies add true hits and leave the false alarms where they were."
+    ]
+   },
+   "terms": [
+    {
+     "term": "positive predictive value (PPV)",
+     "means": "The chance that a result claimed as 'significant' reflects a real effect"
+    },
+    {
+     "term": "pre-study probability",
+     "means": "The chance an idea is true before anyone tests it, R/(R + 1)"
+    }
+   ],
+   "model": {
+    "title": "How trustworthy is a 'significant' result? It depends on the field's odds",
+    "note": "Teaching model: uses the paper's formula for one study with no bias. Every true idea is detected with the same power, and the field's odds R are set on a power-of-ten scale. Numbers are illustrative, except the gene-scan example (R = 10⁻⁴, power 0.6, cut-off 0.05), which comes from the paper's Box 1.",
+    "controls": [
+     {
+      "id": "p",
+      "label": "Study power (chance a real effect is detected)",
+      "kind": "slider",
+      "min": 0.05,
+      "max": 0.95,
+      "step": 0.05,
+      "default": 0.8,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "lr",
+      "label": "Field's odds R, as a power of ten (−4 = 1 true per 10,000 false)",
+      "kind": "slider",
+      "min": -4,
+      "max": 1,
+      "step": 0.25,
+      "default": 0,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "a",
+      "label": "Significance cut-off α (false-alarm rate)",
+      "kind": "slider",
+      "min": 0.005,
+      "max": 0.1,
+      "step": 0.005,
+      "default": 0.05,
+      "unit": "",
+      "color": 3
+     }
+    ],
+    "outputs": [
+     {
+      "id": "prior",
+      "label": "Chance an idea is true before the study",
+      "expr": "pow(10, lr) / (pow(10, lr) + 1)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 2,
+      "color": 4
+     },
+     {
+      "id": "post",
+      "label": "Chance a 'significant' result is true",
+      "expr": "p * pow(10, lr) / (p * pow(10, lr) + a)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 2,
+      "color": 2
+     },
+     {
+      "id": "tip",
+      "label": "True hits per false alarm (power × R ÷ α)",
+      "expr": "p * pow(10, lr) / a",
+      "unit": "",
+      "decimals": 3,
+      "color": 5
+     },
+     {
+      "id": "boost",
+      "label": "Times more likely true after the result",
+      "expr": "post / prior",
+      "unit": "×",
+      "decimals": 1,
+      "color": 6
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Field's odds R, as a power of ten (−4 = 1 in 10,000; 0 = 1 to 1)",
+      "min": -4,
+      "max": 1
+     },
+     "y": {
+      "label": "Chance a 'significant' result is true",
+      "min": 0,
+      "max": 1
+     },
+     "series": [
+      {
+       "id": "ppv_curve",
+       "label": "Your study",
+       "expr": "p * pow(10, x) / (p * pow(10, x) + a)",
+       "color": 2,
+       "dashed": false
+      },
+      {
+       "id": "ref_curve",
+       "label": "Same field, power 0.8",
+       "expr": "0.8 * pow(10, x) / (0.8 * pow(10, x) + a)",
+       "color": 7,
+       "dashed": true
+      }
+     ],
+     "markers": [
+      {
+       "id": "field_marker",
+       "x": "lr",
+       "label": "Your field",
+       "color": 1
+      },
+      {
+       "id": "tip_marker",
+       "x": "log10(a / p)",
+       "label": "Tipping point",
+       "color": 5
+      }
+     ],
+     "hlines": [
+      {
+       "id": "half",
+       "y": 0.5,
+       "label": "Coin flip (50%)"
+      }
+     ],
+     "points": [
+      {
+       "id": "field_point",
+       "x": "lr",
+       "y": "post",
+       "label": "Your result"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This curve answers one question. When a study comes out 'significant', how likely is it that the effect is real?",
+      "focus": "ppv_curve",
+      "ms": 3200
+     },
+     {
+      "say": "Left to right, the field's ideas get less far-fetched. The orange line is your field. Here only 1 idea in 100 is true.",
+      "set": {
+       "lr": -2
+      },
+      "focus": [
+       "field_marker",
+       "lr"
+      ],
+      "ms": 3400
+     },
+     {
+      "say": "This slider sets the study's power: how often it catches a real effect. Watch the curve sag as power drops.",
+      "set": {
+       "p": 0.4
+      },
+      "focus": "p",
+      "ms": 3200
+     },
+     {
+      "say": "This one sets the cut-off for 'significant', which is also the false-alarm rate. The usual value is 0.05.",
+      "focus": "a",
+      "ms": 3000
+     },
+     {
+      "say": "The flat line is a coin flip. Above it, a claimed finding is more likely true than false. Below it, it's more likely false.",
+      "focus": "half",
+      "ms": 3200
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with the field's odds and the study's power. Find where 'significant' stops meaning 'probably true'.",
+    "goals": [
+     {
+      "text": "Keep a well-powered study (power 0.8 or more), but move to a long-shot field until a significant result is more likely false than true",
+      "when": "post < 0.5 && p > 0.75",
+      "solution": {
+       "lr": -2
+      },
+      "hints": [
+       "Power isn't the only thing that matters. What kind of ideas is the field testing?",
+       "Slide the field's odds to the left, past the tipping-point marker.",
+       "Try setting the odds to about −2 (1 true idea per 100 false). Watch the result drop below the coin-flip line."
+      ]
+     },
+     {
+      "text": "Set the field to 1 true idea per 10 false (odds −1). Then make a significant result more likely false than true by shrinking the study alone.",
+      "when": "abs(lr + 1) < 0.01 && post < 0.5",
+      "solution": {
+       "lr": -1,
+       "p": 0.3
+      },
+      "hints": [
+       "First put the odds slider at −1. Which other slider stands for a smaller study?",
+       "Small studies have low power. You need power × 0.1 to fall below the cut-off of 0.05.",
+       "Power 0.5 lands exactly on the coin flip. Go a few steps lower."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Right. Bigger studies raise power × R. But in a field this long-shot, even perfect power (1 × 0.02) can't beat α = 0.05. Claims improve, yet most stay false.",
+     "incorrect": "You may have assumed that study size alone decides trust. The tipping-point rule says power × R must beat α. Power can't go above 1, so in a field with R = 0.02 the false alarms still win at the 0.05 cut-off."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with a well-run study (power 0.8) in a field where half the tested ideas are true (R = 1). A significant result here is real about 94% of the time.",
+       "set": {
+        "p": 0.8,
+        "lr": 0,
+        "a": 0.05
+       },
+       "focus": [
+        "field_point",
+        "post"
+       ],
+       "ms": 3600
+      },
+      {
+       "say": "That number is the positive predictive value (PPV): the chance a claimed finding is true. Compare it with the pre-study probability, the chance the idea was true before testing. Here that is 50%.",
+       "focus": [
+        "post",
+        "prior"
+       ],
+       "ms": 4200
+      },
+      {
+       "say": "Now move to a field where only 1 idea per 10 is true (R = 0.1). The pre-study probability falls to 9%, and PPV falls to about 62%.",
+       "set": {
+        "lr": -1
+       },
+       "focus": [
+        "field_marker",
+        "post"
+       ],
+       "ms": 4000
+      },
+      {
+       "say": "Why? Count as in the last lesson. True hits come in at power × R = 0.08, and false alarms at α = 0.05. That's 1.6 true hits per false alarm, still more true than false.",
+       "focus": "tip",
+       "ms": 4200
+      },
+      {
+       "say": "Go further, to 1 idea per 100 (R = 0.01). Now power × R is 0.008 against 0.05 false alarms, and PPV is about 14%. Most claims are false, even from a strong study.",
+       "set": {
+        "lr": -2
+       },
+       "focus": [
+        "field_point",
+        "post"
+       ],
+       "ms": 4400
+      },
+      {
+       "say": "The tipping point sits where power × R equals α. Back at 1 in 10, shrink the study to power 0.2. The tipping point slides right, past your field, and PPV drops to about 29%. The dashed curve shows the same field with power 0.8.",
+       "set": {
+        "lr": -1,
+        "p": 0.2
+       },
+       "focus": [
+        "tip_marker",
+        "ref_curve"
+       ],
+       "ms": 4800
+      },
+      {
+       "say": "Now the paper's gene-scan example: 1 true variant in 10,000, with power 0.6. A significant hit makes the idea about 12 times more likely than before, yet still only about 0.12%.",
+       "set": {
+        "lr": -4,
+        "p": 0.6,
+        "a": 0.05
+       },
+       "focus": [
+        "boost",
+        "post"
+       ],
+       "ms": 4800
+      }
+     ]
+    },
+    "explanation": "A 'significant' result is a mix of true hits and false alarms. Its positive predictive value (PPV) is the chance it is true, and that depends on how many of each the field produces. True hits arrive at power × R and false alarms at α, so a claim is more likely true than false only when power × R beats α. That's why long-shot fields (low R) and small studies or small effects (low power) give mostly false claims, as the paper's corollaries 1–3 argue. Ioannidis derives this from the 2 × 2 table of the last lesson and applies it to a whole-genome scan. There, a significant hit is still only about 12 in 10,000 likely to be true. This model leaves out bias and assumes equal power for every true idea, and in practice R is never known exactly and must be estimated.",
+    "quote": "According to the 2 × 2 table, one gets PPV = (1 - β)R/(R - βR + α). A research finding is thus more likely true than false if (1 - β)R > α.",
+    "quote_where": "Modeling the Framework for False Positive Findings"
+   },
+   "check": {
+    "kind": "model",
+    "task": "Put the field at 1 true idea per 100 false or worse (odds −2 or lower). Then make a significant result more likely true than false anyway.",
+    "when": "lr < -1.9 && post > 0.5",
+    "solution": {
+     "lr": -2,
+     "a": 0.005
+    },
+    "hint": "At the 0.05 cut-off, even perfect power gives 1 × 0.01 = 0.01, which is below 0.05. Which other part of the rule 'power × R must beat α' can you change?",
+    "misconception": "Believing that a bigger study alone can rescue a long-shot field. Power can't go above 1, so once R is below α, false alarms outnumber true hits whatever the power. Only a stricter cut-off (smaller α) or better-chosen ideas (higher R) can tip it."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "PPV",
+      "link": "post"
+     },
+     {
+      "text": " = "
+     },
+     {
+      "text": "(1 − β)",
+      "link": "p"
+     },
+     {
+      "text": "R",
+      "link": "lr"
+     },
+     {
+      "text": " / ("
+     },
+     {
+      "text": "R",
+      "link": "lr"
+     },
+     {
+      "text": " − β"
+     },
+     {
+      "text": "R",
+      "link": "lr"
+     },
+     {
+      "text": " + "
+     },
+     {
+      "text": "α",
+      "link": "a"
+     },
+     {
+      "text": ")"
+     }
+    ],
+    "caption": "This is the paper's own formula. (1 − β) is the power slider. R is the field's odds of true to false ideas, set as 10 to the power of the odds slider. α is the cut-off slider, and PPV is the 'chance a significant result is true' output. The bottom equals (1 − β)R + α, which is true hits plus false alarms. So PPV passes 50% exactly when (1 − β)R > α."
+   },
+   "recap": "A significant result is probably true only if power × R beats α. In long-shot fields or with weak studies, most claimed findings are false alarms."
+  },
+  {
+   "id": "bias_u",
+   "title": "Bias turns non-findings into findings",
+   "idea": "If a share u of analyses that should have come out negative get reported as findings anyway, PPV falls further, because bias mostly adds false claims.",
+   "role": "core",
+   "predict": {
+    "question": "Imagine a field whose studies are so weak that power equals the false-alarm rate (both 0.05). A lab there starts nudging results, with u = 0.3. What happens to the chance that its 'significant' results are true?",
+    "options": [
+     "It falls sharply, as it does everywhere else",
+     "It doesn't change: it stays at the chance an idea was true before the study",
+     "It rises, because nudging also pushes more true ideas through",
+     "It drops to zero"
+    ],
+    "answer": 1,
+    "why": [
+     "Tempting, because extra bias has lowered PPV in every case so far. Here, though, the study treats true and false ideas exactly alike, and nudging does too. Nothing can tilt the mix further, so PPV doesn't move.",
+     "Right. With power = α, true and false ideas reach 'significant' at the same rate, and bias lifts both rates equally. The claims are a random draw, so PPV equals the pre-study probability. The paper names this exception: 1 − β ≤ α.",
+     "Bias does push some missed true ideas through. But here it pushes false ideas through at exactly the same rate, so the share of true claims can't rise.",
+     "PPV only reaches zero if no true idea is ever claimed. Here true ideas still get claimed in proportion to how common they are, so PPV sits at the pre-study probability."
+    ]
+   },
+   "terms": [
+    {
+     "term": "bias (u)",
+     "means": "The share of analyses that should have come out negative but get presented as findings anyway, through flexible designs, definitions, analyses or reporting"
+    },
+    {
+     "term": "selective reporting",
+     "means": "Writing up only the analyses or outcomes that 'worked' and leaving out the rest"
+    }
+   ],
+   "model": {
+    "title": "How nudged results drag down a 'significant' result's trustworthiness",
+    "note": "Teaching model: uses the paper's formula for one study with a nudging share u (its Table 2 and Figure 1). It assumes u is the same whether an idea is true or false, that every true idea is detected with the same power, and it ignores real results lost the other way. Numbers are illustrative, except two cases from the paper: the gene scan (R = 10⁻⁴, power 0.6, u = 0.10 gives about 4.4 × 10⁻⁴, Box 1) and the well-run trial (R = 1, power 0.8, u = 0.10 gives about 85%, Table 4).",
+    "controls": [
+     {
+      "id": "p",
+      "label": "Study power (chance a real effect is detected)",
+      "kind": "slider",
+      "min": 0.05,
+      "max": 0.95,
+      "step": 0.05,
+      "default": 0.8,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "lr",
+      "label": "Field's odds R, as a power of ten (−4 = 1 true per 10,000 false)",
+      "kind": "slider",
+      "min": -4,
+      "max": 1,
+      "step": 0.25,
+      "default": 0,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "a",
+      "label": "Significance cut-off α (false-alarm rate)",
+      "kind": "slider",
+      "min": 0.005,
+      "max": 0.1,
+      "step": 0.005,
+      "default": 0.05,
+      "unit": "",
+      "color": 3
+     },
+     {
+      "id": "u",
+      "label": "Share of negative analyses reported as findings anyway (u)",
+      "kind": "slider",
+      "min": 0,
+      "max": 0.8,
+      "step": 0.05,
+      "default": 0,
+      "unit": "",
+      "color": 6
+     }
+    ],
+    "outputs": [
+     {
+      "id": "prior",
+      "label": "Chance an idea is true before the study",
+      "expr": "pow(10, lr) / (pow(10, lr) + 1)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 3,
+      "color": 4
+     },
+     {
+      "id": "post0",
+      "label": "Chance a 'significant' result is true, if nothing were nudged",
+      "expr": "p * pow(10, lr) / (p * pow(10, lr) + a)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 3,
+      "color": 7
+     },
+     {
+      "id": "hit_true",
+      "label": "Share of true ideas reported as findings",
+      "expr": "p + u * (1 - p)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 1,
+      "color": 0
+     },
+     {
+      "id": "hit_false",
+      "label": "Share of false ideas reported as findings",
+      "expr": "a + u * (1 - a)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 1,
+      "color": 3
+     },
+     {
+      "id": "post",
+      "label": "Chance a 'significant' result is true",
+      "expr": "pow(10, lr) * hit_true / (pow(10, lr) * hit_true + hit_false)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 3,
+      "color": 2
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Field's odds R, as a power of ten (−4 = 1 in 10,000; 0 = 1 to 1)",
+      "min": -4,
+      "max": 1
+     },
+     "y": {
+      "label": "Chance a 'significant' result is true",
+      "min": 0,
+      "max": 1
+     },
+     "series": [
+      {
+       "id": "ppv_curve",
+       "label": "Your study, with nudged results",
+       "expr": "pow(10, x) * (p + u * (1 - p)) / (pow(10, x) * (p + u * (1 - p)) + a + u * (1 - a))",
+       "color": 2,
+       "dashed": false
+      },
+      {
+       "id": "clean_curve",
+       "label": "Same study, nothing nudged",
+       "expr": "p * pow(10, x) / (p * pow(10, x) + a)",
+       "color": 7,
+       "dashed": true
+      }
+     ],
+     "markers": [
+      {
+       "id": "field_marker",
+       "x": "lr",
+       "label": "Your field",
+       "color": 1
+      },
+      {
+       "id": "tip_marker",
+       "x": "log10((a + u * (1 - a)) / (p + u * (1 - p)))",
+       "label": "Tipping point",
+       "color": 5
+      }
+     ],
+     "hlines": [
+      {
+       "id": "half",
+       "y": 0.5,
+       "label": "Coin flip (50%)"
+      }
+     ],
+     "points": [
+      {
+       "id": "field_point",
+       "x": "lr",
+       "y": "post",
+       "label": "Your result"
+      },
+      {
+       "id": "clean_point",
+       "x": "lr",
+       "y": "post0",
+       "label": "Without nudging"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Same picture as last time. The solid curve is the chance a 'significant' result is true, plotted against how long a shot the field's ideas are. Power, odds and cut-off work just as before.",
+      "set": {
+       "u": 0,
+       "lr": 0,
+       "p": 0.8,
+       "a": 0.05
+      },
+      "focus": "ppv_curve",
+      "ms": 5000
+     },
+     {
+      "say": "One new slider, u: the share of analyses that should have come out negative but get written up as findings anyway. Watch the solid curve sag below the dashed 'nothing nudged' curve.",
+      "set": {
+       "u": 0.3
+      },
+      "focus": "u",
+      "ms": 6000
+     },
+     {
+      "say": "These two boxes count what gets reported: the share of true ideas and the share of false ideas that end up as 'findings'.",
+      "focus": [
+       "hit_true",
+       "hit_false"
+      ],
+      "ms": 4500
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with bias. Push u up and down in different fields and watch which pile of claims grows faster.",
+    "goals": [
+     {
+      "text": "In an even-odds field with strong studies, add enough bias that a 'significant' result is true less than 70% of the time",
+      "when": "post < 0.7",
+      "solution": {
+       "u": 0.4
+      },
+      "hints": [
+       "Leave power, odds and cut-off where they are. Only the new slider is needed.",
+       "Slide u up and watch the 'Chance a significant result is true' box fall.",
+       "Raise u a step at a time and stop as soon as the box reads under 70%."
+      ]
+     },
+     {
+      "text": "Rebuild the paper's gene scan (odds 1 in 10,000, power 0.6), then add bias until the chance a hit is true falls below half its clean value",
+      "when": "abs(lr + 4) < 0.01 && abs(p - 0.6) < 0.01 && post < post0 / 2",
+      "solution": {
+       "lr": -4,
+       "p": 0.6,
+       "u": 0.1
+      },
+      "hints": [
+       "First set up the field, then add bias.",
+       "Move the odds slider all the way to −4 and set power to 0.6.",
+       "Now raise u a little at a time, comparing the two 'chance true' boxes until the biased one is under half."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. Bias lowers PPV only because it treats true and false ideas the same while the study treats them differently. Once the study can't tell them apart (power = α), there is no tilt left for bias to erode, and PPV stays at the pre-study probability.",
+     "incorrect": "You probably reasoned that more bias always means lower PPV. Bias hurts because the study already catches most true ideas, so it has little room to add there, while it inflates the false pile. When power equals α, both piles start at the same rate and grow at the same rate, so the mix, and PPV, stays at the pre-study probability."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start clean: an even-odds field, power 0.8, cut-off 0.05, nothing nudged. A 'significant' result is true about 94% of the time.",
+       "set": {
+        "u": 0,
+        "lr": 0,
+        "p": 0.8,
+        "a": 0.05
+       },
+       "focus": "post",
+       "ms": 4000
+      },
+      {
+       "say": "Now let 1 in 10 analyses that should have been negative be reported as findings anyway. The paper calls this share bias (u). The chance drops to about 85%, the paper's own figure for a well-run trial.",
+       "set": {
+        "u": 0.1
+       },
+       "focus": "ppv_curve",
+       "ms": 6000
+      },
+      {
+       "say": "Why the drop? True ideas reported: 80% becomes 82%, because bias can only rescue the 20% the study missed. False ideas: 5% becomes 14.5%, nearly triple, because bias acts on all of them.",
+       "focus": [
+        "hit_true",
+        "hit_false"
+       ],
+       "ms": 7000
+      },
+      {
+       "say": "Where does u come from? Post hoc subgroups, changed definitions, extra analyses, and selective reporting: writing up only the analyses that 'worked'.",
+       "focus": "u",
+       "ms": 5000
+      },
+      {
+       "say": "Now a long-shot field, 1 true idea per 100. With nothing nudged, a hit is true about 14% of the time. With the same bias, only about 5%.",
+       "set": {
+        "lr": -2
+       },
+       "focus": [
+        "field_point",
+        "clean_point"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "This is the paper's gene scan: odds 1 in 10,000, power 0.6. With nothing nudged, a hit is true about 0.12% of the time. With u = 0.10, only about 0.044%, the 4.4 × 10⁻⁴ reported in Box 1.",
+       "set": {
+        "lr": -4,
+        "p": 0.6
+       },
+       "focus": [
+        "post",
+        "post0"
+       ],
+       "ms": 7000
+      },
+      {
+       "say": "Last, a field with 1 true idea per 10 and strong studies. Clean, a hit is true about 62% of the time. Raise bias to 0.3 and it falls to about 20%. The tipping point slides right, past your field: most claims are now false.",
+       "set": {
+        "lr": -1,
+        "p": 0.8,
+        "u": 0.3
+       },
+       "focus": [
+        "tip_marker",
+        "field_point"
+       ],
+       "ms": 8000
+      }
+     ]
+    },
+    "explanation": "Ioannidis models bias (u) as one number: the share of analyses that should have been negative but get reported as findings through flexible designs, definitions, analyses or selective reporting. He assumes u hits true and false ideas alike, since nobody knows in advance which are which. A decent study already catches most true ideas, so bias has little left to add on that side, but it turns many false ideas into claims, and the false pile grows much faster. His Figure 1 plots PPV against the field's odds for power 0.2, 0.5 and 0.8 at several levels of u. His Box 1 shows u = 0.10 cutting a gene scan's PPV from about 12 to 4.4 in 10,000. This is a model, not a measurement: the real size of u in any field is unknown, and bias can also run the other way and bury true findings, though the paper argues that is less common.",
+    "quote": "Let u be the proportion of probed analyses that would not have been “research findings,” but nevertheless end up presented and reported as such, because of bias. Bias should not be confused with chance variability that causes some findings to be false by chance even though the study design, data, analysis, and presentation are perfect.",
+    "quote_where": "Modeling the Framework for False Positive Findings: Bias"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "PPV",
+      "link": "post"
+     },
+     {
+      "text": " = ("
+     },
+     {
+      "text": "[1 − β]",
+      "link": "p"
+     },
+     {
+      "text": "R",
+      "link": "lr"
+     },
+     {
+      "text": " + "
+     },
+     {
+      "text": "u",
+      "link": "u"
+     },
+     {
+      "text": "βR) / (R + "
+     },
+     {
+      "text": "α",
+      "link": "a"
+     },
+     {
+      "text": " − βR + "
+     },
+     {
+      "text": "u",
+      "link": "u"
+     },
+     {
+      "text": " − "
+     },
+     {
+      "text": "u",
+      "link": "u"
+     },
+     {
+      "text": "α + "
+     },
+     {
+      "text": "u",
+      "link": "u"
+     },
+     {
+      "text": "βR)"
+     }
+    ],
+    "caption": "This is the paper's formula with bias (Table 2). [1 − β] is power, R is the field's odds (set on the slider as a power of ten), α is the cut-off, and every u is the new bias slider. β = 1 − power is the miss rate, so uβR counts the true ideas the study missed that bias still pushes through, while u − uα counts the false ideas bias turns into claims. Set u = 0 and it collapses back to the last concept's PPV = (1 − β)R/(R − βR + α)."
+   },
+   "recap": "Bias acts on every false idea but can only rescue the true ideas a study missed, so it mostly adds false claims and drags PPV down, hardest in long-shot fields.",
+   "builds_on": "ppv_and_prior_odds"
+  },
+  {
+   "id": "many_teams",
+   "title": "The hotter the field, the weaker each lone finding",
+   "idea": "When n independent teams test the same question and attention goes to whichever one finds significance, false alarms pile up faster than true hits, so a lone positive result becomes less trustworthy as n grows.",
+   "role": "contribution",
+   "predict": {
+    "question": "Two busy fields each have ten independent teams testing the same even-odds question (R = 1, cut-off 0.05). In field A each study has power 0.3. In field B each study has power 0.9. One team in each field reports a 'significant' result. How do the two lone results compare?",
+    "options": [
+     "Field B's result is far more trustworthy",
+     "They are about equally trustworthy",
+     "Field A's result is more trustworthy"
+    ],
+    "answer": 1,
+    "why": [
+     "This holds for a single team: about 86% versus 95% true. But with ten teams, even weak studies give at least one true hit about 97% of the time, so stronger studies have little room left to add.",
+     "Correct. True hits hit a ceiling near 100% in both fields, about 97% for A and almost 100% for B. False alarms are the same in both, about 40%, because both use the same cut-off. So each lone result is about 71% likely true.",
+     "Weaker studies never make a result more trustworthy in this model. Field A is just a hair lower, because its true hits are slightly below the ceiling."
+    ]
+   },
+   "terms": [
+    {
+     "term": "hot field",
+     "means": "A research question that many independent teams are chasing at the same time"
+    },
+    {
+     "term": "lone finding",
+     "means": "The one 'significant' result that gets the attention, while the other teams' non-results go unseen"
+    }
+   ],
+   "model": {
+    "title": "How trustworthy is a 'significant' result when many teams chase the same question?",
+    "note": "Teaching model: uses the paper's formula for n independent teams of equal power with no bias. It treats the result as 'at least one team found significance' and ignores what the other teams found. The field's odds R are set on a power-of-ten scale. Numbers are illustrative, except the gene-scan example (R = 10⁻⁴, power 0.6, cut-off 0.05, ten teams), which comes from the paper's Box 1. The paper reports about 1.5 × 10⁻⁴ for ten teams. Putting the same numbers into the paper's multi-team formula as printed gives about 2.5 × 10⁻⁴, which is what this model shows. Either way, it is barely above the starting 1 × 10⁻⁴.",
+    "controls": [
+     {
+      "id": "p",
+      "label": "Study power (chance a real effect is detected)",
+      "kind": "slider",
+      "min": 0.05,
+      "max": 0.95,
+      "step": 0.05,
+      "default": 0.8,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "lr",
+      "label": "Field's odds R, as a power of ten (−4 = 1 true per 10,000 false)",
+      "kind": "slider",
+      "min": -4,
+      "max": 1,
+      "step": 0.25,
+      "default": 0,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "a",
+      "label": "Significance cut-off α (false-alarm rate)",
+      "kind": "slider",
+      "min": 0.005,
+      "max": 0.1,
+      "step": 0.005,
+      "default": 0.05,
+      "unit": "",
+      "color": 3
+     },
+     {
+      "id": "n",
+      "label": "Number of teams testing the same question",
+      "kind": "slider",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 1,
+      "unit": "",
+      "color": 6
+     }
+    ],
+    "outputs": [
+     {
+      "id": "prior",
+      "label": "Chance an idea is true before any study",
+      "expr": "pow(10, lr) / (pow(10, lr) + 1)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 3,
+      "color": 4
+     },
+     {
+      "id": "hits",
+      "label": "If the idea is real: chance at least one team detects it",
+      "expr": "1 - pow(1 - p, n)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 1,
+      "color": 0
+     },
+     {
+      "id": "alarms",
+      "label": "If the idea is false: chance at least one team raises a false alarm",
+      "expr": "1 - pow(1 - a, n)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 1,
+      "color": 3
+     },
+     {
+      "id": "post",
+      "label": "Chance the 'significant' result is true, with all these teams",
+      "expr": "pow(10, lr) * hits / (pow(10, lr) * hits + alarms)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 3,
+      "color": 2
+     },
+     {
+      "id": "one",
+      "label": "Chance it would be true if only one team had looked",
+      "expr": "p * pow(10, lr) / (p * pow(10, lr) + a)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 3,
+      "color": 7
+     },
+     {
+      "id": "boost",
+      "label": "Times more likely true than before any study",
+      "expr": "post / prior",
+      "unit": "×",
+      "decimals": 1,
+      "color": 4
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Field's odds R, as a power of ten (−4 = 1 in 10,000; 0 = 1 to 1)",
+      "min": -4,
+      "max": 1
+     },
+     "y": {
+      "label": "Chance a 'significant' result is true",
+      "min": 0,
+      "max": 1
+     },
+     "series": [
+      {
+       "id": "ppv_curve",
+       "label": "With all these teams",
+       "expr": "pow(10, x) * (1 - pow(1 - p, n)) / (pow(10, x) * (1 - pow(1 - p, n)) + 1 - pow(1 - a, n))",
+       "color": 2,
+       "dashed": false
+      },
+      {
+       "id": "ref_curve",
+       "label": "Only one team looked",
+       "expr": "p * pow(10, x) / (p * pow(10, x) + a)",
+       "color": 7,
+       "dashed": true
+      }
+     ],
+     "markers": [
+      {
+       "id": "field_marker",
+       "x": "lr",
+       "label": "Your field",
+       "color": 1
+      },
+      {
+       "id": "tip_marker",
+       "x": "log10((1 - pow(1 - a, n)) / (1 - pow(1 - p, n)))",
+       "label": "Tipping point",
+       "color": 5
+      }
+     ],
+     "hlines": [
+      {
+       "id": "half",
+       "y": 0.5,
+       "label": "Coin flip (50%)"
+      }
+     ],
+     "points": [
+      {
+       "id": "field_point",
+       "x": "lr",
+       "y": "post",
+       "label": "Your result"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Same picture as before. The solid curve is the chance a 'significant' result is true. The marker is your field, and the flat line is a coin flip. Power, odds and cut-off work as they did.",
+      "set": {
+       "n": 1
+      },
+      "focus": [
+       "ppv_curve",
+       "field_marker",
+       "half"
+      ],
+      "ms": 6000
+     },
+     {
+      "say": "New: this slider sets how many teams test the same question. Only a team that gets 'significant' is heard from. The dashed curve keeps the one-team answer for comparison.",
+      "set": {
+       "n": 8
+      },
+      "focus": [
+       "n",
+       "ref_curve"
+      ],
+      "ms": 6500
+     },
+     {
+      "say": "Two new readouts. One is the chance that some team catches a real effect. The other is the chance that some team raises a false alarm about a fake one.",
+      "focus": [
+       "hits",
+       "alarms"
+      ],
+      "ms": 5500
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Pile teams onto a question and watch the solid curve sag below the dashed one. Then rebuild the paper's gene scan and see how little a lone positive result is worth.",
+    "goals": [
+     {
+      "text": "Keep the field at even odds (0 on the odds slider) and add teams until the 'significant' result is true less than 70% of the time.",
+      "when": "post < 0.7 && abs(lr) < 0.01",
+      "solution": {
+       "n": 14
+      },
+      "hints": [
+       "Leave power, odds and cut-off where they are. Only one slider is new.",
+       "Raise the number of teams and watch the false-alarm readout climb while the curve drops.",
+       "Add teams one at a time. Each one is another chance of a false alarm, so the box keeps falling."
+      ]
+     },
+     {
+      "text": "Rebuild the paper's gene scan (odds −4, power 0.6, cut-off 0.05). Then make the lone positive result less than 3 times more likely true than it was before any study.",
+      "when": "lr <= -3.99 && abs(p - 0.6) < 0.01 && abs(a - 0.05) < 0.001 && boost < 3",
+      "solution": {
+       "lr": -4,
+       "p": 0.6,
+       "n": 10
+      },
+      "hints": [
+       "First set the field: odds all the way down, power at 0.6. With one team, the boost is about 12×.",
+       "Now add teams and watch the 'Times more likely' readout shrink.",
+       "Ten teams, as in the paper's example, brings it to about 2.5×."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Right. With many teams, even weak studies almost always produce at least one true hit, so true hits sit near their ceiling. The false alarms set by the shared cut-off decide the outcome, and they are the same in both fields.",
+     "incorrect": "You probably carried over the one-team rule that more power means a more trustworthy result. With ten teams, the chance that someone catches a real effect is already about 97% even at power 0.3. Power has little left to add, while false alarms (about 40%, the same in both fields) set the result."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with one team, power 0.8, an even-odds field and a cut-off of 0.05. A 'significant' result is true about 94% of the time. The two curves sit on top of each other.",
+       "set": {
+        "n": 1,
+        "p": 0.8,
+        "lr": 0,
+        "a": 0.05
+       },
+       "focus": "post",
+       "ms": 4500
+      },
+      {
+       "say": "Now five teams test the same idea, and we only hear from one that got 'significant'. If the idea is false, the chance that somebody raises a false alarm jumps from 5% to about 23%.",
+       "set": {
+        "n": 5
+       },
+       "focus": "alarms",
+       "ms": 5000
+      },
+      {
+       "say": "True hits can't grow like that. They were already 80% and can only creep toward 100%. False alarms keep piling up while true hits hit a ceiling, so the result drops to about 81% true.",
+       "focus": [
+        "hits",
+        "post"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "A question many teams chase at once is a hot field. Push it to 20 teams. False alarms reach about 64%, and the lone finding, the one positive that gets the attention, is now only about 61% true.",
+       "set": {
+        "n": 20
+       },
+       "focus": [
+        "ppv_curve",
+        "ref_curve",
+        "field_point"
+       ],
+       "ms": 6000
+      },
+      {
+       "say": "Now the paper's gene scan: 1 true link per 10,000 tested, power 0.6, one honest team with no bias. A 'significant' result makes the link about 12 times more likely. That still leaves it only about 0.12% likely true.",
+       "set": {
+        "n": 1,
+        "lr": -4,
+        "p": 0.6,
+        "a": 0.05
+       },
+       "focus": [
+        "boost",
+        "post"
+       ],
+       "ms": 6500
+      },
+      {
+       "say": "Let ten teams around the world run the same scan, and one of them reports a hit. The boost collapses to about 2.5×. The paper's own figure is even lower, about 1.5 in 10,000.",
+       "set": {
+        "n": 10
+       },
+       "focus": [
+        "boost",
+        "post"
+       ],
+       "ms": 6000
+      },
+      {
+       "say": "That's the punchline. An honest, 'statistically significant' result can still be far more likely false than true. The more teams chase the same question, the less any single team's positive result is worth.",
+       "focus": [
+        "post",
+        "prior"
+       ],
+       "ms": 6000
+      }
+     ]
+    },
+    "explanation": "When many teams test the same question, we often hear only from the one that got a 'significant' result. If the idea is real, extra teams add little, because the chance someone detects it is capped at 100%. If the idea is false, every extra team is another roll of the false-alarm dice, and those chances keep adding up. So a lone positive result from a hot field is less trustworthy than the same result from a team working alone. The paper showed this with a formula for n independent teams and with its gene-scan example. Ten honest teams there leave the winner's result barely more likely true than before any research was done. The model assumes equal power, no bias and fully independent teams, and real fields are messier.",
+    "quote": "Furthermore, even in the absence of any bias, when ten independent research teams perform similar experiments around the world, if one of them finds a formally statistically significant association, the probability that the research finding is true is only 1.5 × 10−4, hardly any higher than the probability we had before any of this extensive research was undertaken!",
+    "quote_where": "Box 1"
+   },
+   "check": {
+    "kind": "model",
+    "task": "Twenty teams are chasing an even-odds question. Keep the odds at 0 and the number of teams at 20, and get the lone 'significant' result back to at least 90% likely true.",
+    "when": "n >= 20 && abs(lr) < 0.01 && post >= 0.9",
+    "solution": {
+     "n": 20,
+     "a": 0.005
+    },
+    "hint": "Look at the two readouts. Real effects are already caught almost every time. Which slider controls how often false alarms happen?",
+    "misconception": "That more power fixes a hot field. With twenty teams, true hits are already near 100%, so the extra positives are false alarms. Only cutting the false-alarm rate (a stricter cut-off) brings trust back."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "PPV",
+      "link": "post"
+     },
+     {
+      "text": " = "
+     },
+     {
+      "text": "R",
+      "link": "lr"
+     },
+     {
+      "text": "(1 − "
+     },
+     {
+      "text": "β",
+      "link": "p"
+     },
+     {
+      "text": "^{n}",
+      "link": "n"
+     },
+     {
+      "text": ") / ("
+     },
+     {
+      "text": "R",
+      "link": "lr"
+     },
+     {
+      "text": " + 1 − [1 − "
+     },
+     {
+      "text": "α",
+      "link": "a"
+     },
+     {
+      "text": "]"
+     },
+     {
+      "text": "^{n}",
+      "link": "n"
+     },
+     {
+      "text": " − "
+     },
+     {
+      "text": "R",
+      "link": "lr"
+     },
+     {
+      "text": "β",
+      "link": "p"
+     },
+     {
+      "text": "^{n}",
+      "link": "n"
+     },
+     {
+      "text": ")"
+     }
+    ],
+    "caption": "The paper's formula for n independent studies with no bias (its Table 3). R is the field's odds (the odds slider shows its power of ten). β is the miss rate, 1 − power, so 1 − βⁿ is the 'some team catches a real effect' readout. α is the cut-off, so 1 − (1 − α)ⁿ is the 'some team raises a false alarm' readout. n is the number of teams, and PPV is the chance the 'significant' result is true."
+   },
+   "recap": "Every extra team chasing the same question adds new chances for a false alarm but can't add much to true hits, so a lone 'significant' result from a hot field is worth less.",
+   "builds_on": "ppv_and_prior_odds"
+  }
+ ],
+ "omitted": []
+}

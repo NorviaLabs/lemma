@@ -1,0 +1,2294 @@
+{
+ "version": 1,
+ "id": "gallery-gettier-1963",
+ "title": "Right for the Wrong Reasons: When True, Justified Belief Still Isn't Knowledge",
+ "audience": "A curious adult with no background in this field",
+ "source": {
+  "title": "Is Justified True Belief Knowledge?",
+  "authors": "Edmund L. Gettier",
+  "year": 1963,
+  "venue": "Analysis",
+  "url": "https://fitelson.org/proseminar/gettier.pdf"
+ },
+ "intro": {
+  "summary": "Philosophers had long defined knowledge as a belief that is true and that you have good reason to hold: 'justified true belief'. In a three-page paper, Gettier asks whether those three conditions are enough. He builds two imagined cases in which a man, Smith, reasons carefully from strong evidence to a belief that turns out true, but true only by luck, for reasons unrelated to his evidence. Most readers agree Smith does not know, so the classic definition is not enough. The limits: the argument rests on thought experiments and on readers sharing the intuition that Smith lacks knowledge. It also assumes two principles about justification. And it shows only that the definition fails. It does not say what should replace it.",
+  "background": [
+   "In philosophy, a 'proposition' is just a claim that can be true or false, such as 'Jones owns a Ford'.",
+   "A definition gives 'necessary and sufficient conditions': a list of requirements that every case of the thing meets, and that together guarantee you have the thing.",
+   "To 'deduce' Q from P means to reason so that if P is true, Q must be true too. From 'Jones owns a Ford' you can deduce 'Jones owns a Ford or Brown is in Boston'.",
+   "An 'either…or' claim, called a disjunction, counts as true if at least one of its two parts is true."
+  ],
+  "known": [],
+  "aha": "You can believe something true, for excellent reasons, through flawless reasoning, and still not know it, because what makes it true has nothing to do with your reasons."
+ },
+ "primer": [
+  {
+   "heading": "The question",
+   "body": "What is the difference between knowing something and merely believing it? Since Plato, a popular answer has been that knowledge is a belief that is true and that you are justified in holding, meaning you have good evidence for it. Philosophers in the 1950s, such as Chisholm and Ayer, stated versions of this definition. Gettier asks a simple question: are these three conditions really enough?",
+   "quote": "(a) S knows that P IFF (i) P is true, (ii) S believes that P, and (iii) S is justified in believing that P.",
+   "quote_where": "Opening paragraph"
+  },
+  {
+   "heading": "What he did",
+   "body": "Gettier ran no experiment. He built two short imagined stories. First he noted two plausible points about justification. You can be justified in believing something false, because good evidence can mislead. And if you correctly deduce a claim from something you are justified in believing, you are justified in believing that claim too. He then used these points to build cases where all three conditions hold.",
+   "quote": "it is possible for a person to be justified in believing a proposition that is in fact false.",
+   "quote_where": "Page 121"
+  },
+  {
+   "heading": "What he found",
+   "body": "In Case I, Smith has strong evidence that Jones will get a job and that Jones has ten coins in his pocket. He concludes that 'the man who will get the job has ten coins in his pocket'. In fact Smith himself gets the job, and Smith also happens to have ten coins. The belief is true, believed and justified, yet it is true only by luck. In Case II, Smith deduces 'Either Jones owns a Ford, or Brown is in Barcelona' from good evidence about Jones. Jones does not own a Ford, but Brown happens, by coincidence, to be in Barcelona.",
+   "quote": "Smith does not know that (h) is true, even though (i) (h) is true, (ii) Smith does believe that (h) is true, and (iii) Smith is justified in believing that (h) is true.",
+   "quote_where": "Page 123, Case II"
+  },
+  {
+   "heading": "Why it matters, and its limits",
+   "body": "In two pages, Gettier showed that the standard definition of knowledge has a gap. A belief can tick every box and still be correct only by accident, because the thing that makes it true is not the thing that supports it. This launched decades of attempts to find a 'fourth condition'. The argument does depend on readers sharing the intuition that Smith does not know, and later philosophers have tested and debated that intuition. Gettier also offers no fix of his own."
+  }
+ ],
+ "provider": {
+  "name": "Claude",
+  "model": "claude-opus-5-5"
+ },
+ "concepts": [
+  {
+   "id": "three_conditions",
+   "title": "The three-box test for knowledge",
+   "idea": "The classic definition counts a belief as knowledge exactly when three separate conditions all hold: it is true, it is believed, and it is justified.",
+   "role": "prerequisite",
+   "predict": {
+    "question": "Maya picks lottery numbers on a hunch. She is completely convinced they will win, and they do. Under the three-box test, did Maya know her numbers would win?",
+    "options": [
+     "Yes: the claim was true and she believed it",
+     "No: she had no good reasons, so one box is empty",
+     "No: lottery results can never be true or false in advance",
+     "Yes, as long as she was confident enough"
+    ],
+    "answer": 1,
+    "why": [
+     "Tempting, because two boxes are ticked. But the test needs all three, and truth plus belief is just a lucky guess.",
+     "Right. A hunch is not a good reason. The 'good reasons' box stays empty, so the verdict is no knowledge, however the draw turns out.",
+     "Someone might pick this to dodge the puzzle. But 'my numbers will win' did turn out true. The problem is the missing reasons, not the truth.",
+     "Confidence only strengthens the 'believes it' box. Feeling sure is not the same as having good reasons, so the third box is still empty."
+    ]
+   },
+   "terms": [
+    {
+     "term": "justified true belief",
+     "means": "A belief that is true, that the person actually holds, and that is backed by good reasons"
+    },
+    {
+     "term": "necessary condition",
+     "means": "Something that must hold: if it is missing, there is no knowledge"
+    },
+    {
+     "term": "sufficient condition",
+     "means": "Something that is enough: if it holds, knowledge follows and nothing more is needed"
+    }
+   ],
+   "model": {
+    "title": "Three checks, one verdict",
+    "note": "Teaching model: each condition is a simple yes/no switch, though in real life reasons come in degrees. The verdict multiplies the three switches, so it is 1 only when all are 1. The 1s and 0s show the definition's logic. They are not data, and the paper reports none.",
+    "controls": [
+     {
+      "id": "truth",
+      "label": "The claim is actually true",
+      "kind": "toggle",
+      "default": 1,
+      "color": 0,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "believed",
+      "label": "The person believes it",
+      "kind": "toggle",
+      "default": 1,
+      "color": 1,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "justified",
+      "label": "The person has good reasons for it",
+      "kind": "toggle",
+      "default": 0,
+      "color": 2,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "met",
+      "label": "Boxes ticked (out of 3)",
+      "expr": "truth + believed + justified",
+      "decimals": 0,
+      "unit": "",
+      "color": 4
+     },
+     {
+      "id": "knows",
+      "label": "Counts as knowledge (1 = yes)",
+      "expr": "truth * believed * justified",
+      "decimals": 0,
+      "unit": "",
+      "color": 3
+     }
+    ],
+    "visual": {
+     "type": "table",
+     "columns": [
+      "Ticked? (1 = yes)",
+      "Missing? (1 = yes)"
+     ],
+     "rows": [
+      {
+       "label": "It is true",
+       "cells": [
+        "truth",
+        {
+         "value": "1 - truth",
+         "highlight": "truth < 0.5"
+        }
+       ]
+      },
+      {
+       "label": "It is believed",
+       "cells": [
+        "believed",
+        {
+         "value": "1 - believed",
+         "highlight": "believed < 0.5"
+        }
+       ]
+      },
+      {
+       "label": "It has good reasons",
+       "cells": [
+        "justified",
+        {
+         "value": "1 - justified",
+         "highlight": "justified < 0.5"
+        }
+       ]
+      },
+      {
+       "label": "Verdict: knowledge?",
+       "cells": [
+        {
+         "value": "knows",
+         "highlight": "knows > 0.5"
+        },
+        "1 - knows"
+       ]
+      }
+     ],
+     "decimals": 0,
+     "scale": "sequential",
+     "scale_min": 0,
+     "scale_max": 1
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This grid is a test: does a person really know something? Each of the top three rows is one separate check, and the bottom row is the verdict.",
+      "focus": "met",
+      "ms": 3600
+     },
+     {
+      "say": "This switch decides whether the claim is actually true out in the world.",
+      "set": {
+       "truth": 1
+      },
+      "focus": "truth",
+      "ms": 3000
+     },
+     {
+      "say": "This one decides whether the person believes the claim.",
+      "set": {
+       "believed": 1
+      },
+      "focus": "believed",
+      "ms": 2800
+     },
+     {
+      "say": "And this one decides whether they have good reasons for it. Watch its row light up.",
+      "set": {
+       "justified": 1
+      },
+      "focus": "justified",
+      "ms": 3200
+     },
+     {
+      "say": "These two numbers give the verdict: how many boxes are ticked, and whether it counts as knowledge.",
+      "focus": [
+       "met",
+       "knows"
+      ],
+      "ms": 4000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Flip the switches and watch the verdict row. Can you find every way to get 'no', and the single way to get 'yes'?",
+    "goals": [
+     {
+      "text": "Turn this lucky-guess situation into knowledge",
+      "when": "knows > 0.5",
+      "solution": {
+       "justified": 1
+      },
+      "hints": [
+       "Two boxes are already ticked. Which row is still lit as missing?",
+       "The empty box is the one about good reasons.",
+       "Switch on 'The person has good reasons for it' and watch the verdict flip to 1."
+      ]
+     },
+     {
+      "text": "Build a belief that is firmly held and well-reasoned, yet false. Check the verdict.",
+      "when": "truth < 0.5 && believed > 0.5 && justified > 0.5",
+      "solution": {
+       "truth": 0,
+       "justified": 1
+      },
+      "hints": [
+       "You want two boxes ticked and one empty. Which one should be empty?",
+       "Keep belief and good reasons on, and turn off the switch about the world.",
+       "Set 'The person has good reasons for it' on and 'The claim is actually true' off."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. A hunch gives belief and, here, truth, but no good reasons. With one box empty the test says no knowledge, even though Maya was right.",
+     "incorrect": "It is easy to treat 'true and believed' as enough, or to let confidence stand in for reasons. The test is all-or-nothing: knowledge needs truth, belief and good reasons together, and a hunch supplies no reasons."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start from nothing: a false claim that nobody believes, with no reasons behind it. Zero boxes ticked, no knowledge.",
+       "set": {
+        "truth": 0,
+        "believed": 0,
+        "justified": 0
+       },
+       "focus": "met",
+       "ms": 3600
+      },
+      {
+       "say": "Make the claim true. Still no knowledge. Some fact about a distant star may be true, but you can't know a fact you've never thought about.",
+       "set": {
+        "truth": 1
+       },
+       "focus": "knows",
+       "ms": 4200
+      },
+      {
+       "say": "Now the person believes it. True and believed, but suppose they got there by calling a coin toss. Two boxes, and the verdict is still 0: a lucky guess isn't knowledge.",
+       "set": {
+        "believed": 1
+       },
+       "focus": [
+        "met",
+        "knows"
+       ],
+       "ms": 4800
+      },
+      {
+       "say": "Give them good reasons. Say they saw it with their own eyes. All three ticked, and the verdict flips to 1. This combination has a name: justified true belief.",
+       "set": {
+        "justified": 1
+       },
+       "focus": "knows",
+       "ms": 4800
+      },
+      {
+       "say": "Untick just one box, the truth. The belief is firm and well-reasoned, but false, so it is not knowledge. Each box is a necessary condition: lose any one and the verdict drops to 0.",
+       "set": {
+        "truth": 0
+       },
+       "focus": [
+        "truth",
+        "knows"
+       ],
+       "ms": 5200
+      },
+      {
+       "say": "Notice the boxes are separate switches. Good reasons stayed on even when the truth went off. One does not set the other.",
+       "focus": [
+        "justified",
+        "truth"
+       ],
+       "ms": 4200
+      },
+      {
+       "say": "Tick the truth back on. The classic definition also says that all three together are a sufficient condition: tick them all and nothing more is needed. That bold claim is the one this paper puts on trial.",
+       "set": {
+        "truth": 1
+       },
+       "focus": [
+        "met",
+        "knows"
+       ],
+       "ms": 5200
+      }
+     ]
+    },
+    "explanation": "The classic definition treats knowledge as a three-box test: the claim must be true, the person must believe it, and they must have good reasons (be justified). Each box is necessary, so a false belief, an unheld truth or a lucky guess all fail. The definition also claims the three together are sufficient: tick all three and you have knowledge. Gettier opens the paper by writing the definition in exactly this form. He notes that Chisholm ('adequate evidence') and Ayer ('the right to be sure') gave close variants, and that Plato hinted at it. In real life reasons come in degrees, not a clean yes or no. The paper is a philosophical argument built on imagined cases, not a study with data.",
+    "quote": "(a) S knows that P IFF (i) P is true, (ii) S believes that P, and (iii) S is justified in believing that P.",
+    "quote_where": "Opening of the paper, definition (a)"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "S knows that P",
+      "link": "knows"
+     },
+     {
+      "text": " IFF (i) "
+     },
+     {
+      "text": "P is true",
+      "link": "truth"
+     },
+     {
+      "text": ", (ii) "
+     },
+     {
+      "text": "S believes that P",
+      "link": "believed"
+     },
+     {
+      "text": ", and (iii) "
+     },
+     {
+      "text": "S is justified in believing that P",
+      "link": "justified"
+     }
+    ],
+    "caption": "This is the paper's definition (a). S is the person and P is the claim. 'IFF' means 'if and only if', so both directions hold: each condition is needed, and together they are enough. In the model, each coloured condition is a switch, and the verdict follows the model's rule: knowledge = truth × belief × reasons."
+   },
+   "recap": "On the classic view, knowledge is a belief that is true, actually held and backed by good reasons: all three boxes, or no knowledge."
+  },
+  {
+   "id": "justified_but_false",
+   "title": "Good evidence can still point the wrong way",
+   "idea": "How strong your evidence is and whether the claim is true are set by different things, so a belief can be fully justified and still false.",
+   "role": "prerequisite",
+   "predict": {
+    "question": "A forecaster with an excellent record says there is a 95% chance of no rain. You believe it will stay dry and leave your umbrella at home. It pours. Looking back, what was your belief?",
+    "options": [
+     "Justified, but false",
+     "Never justified, because it turned out false",
+     "Justified only until the rain started",
+     "True, because the forecast was a good one"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. Your evidence was strong, so the belief was justified. The weather alone decided that the claim was false. Those two things are set separately.",
+     "Tempting, because the outcome feels like it proves you were careless. But justification depends on the evidence you had at the time, and that evidence was strong. The rain changed the truth, not the evidence.",
+     "This mixes the two paths. Rain later on does not travel back and weaken the evidence you had in the morning. The belief was justified the whole time. It was simply false.",
+     "A good forecast makes the belief justified, not true. Truth is set by the world, and the world brought rain."
+    ]
+   },
+   "terms": [
+    {
+     "term": "proposition",
+     "means": "A claim that is either true or false, such as 'Jones will get the job'"
+    },
+    {
+     "term": "fallible justification",
+     "means": "Justification that can be strong and still lead to a false belief"
+    }
+   ],
+   "model": {
+    "title": "Two separate paths: Smith's evidence and the company's real decision",
+    "note": "Teaching model: real evidence comes in many forms. Here it is one 0–100% dial, and 'justified' simply means the dial reads 70% or more. The world is a single yes/no switch. The 70% cut-off and all other numbers are illustrative, not from the paper. The paper gives no numbers and makes its argument purely in words.",
+    "controls": [
+     {
+      "id": "ev_strength",
+      "label": "How strong Smith's evidence is",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.8,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "world",
+      "label": "Company really picks Jones",
+      "kind": "toggle",
+      "default": 1,
+      "color": 2,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "evidence",
+      "label": "Evidence strength",
+      "expr": "ev_strength",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "justified",
+      "label": "Justified? (1 = yes)",
+      "expr": "ev_strength > 0.65 ? 1 : 0",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "truth",
+      "label": "Claim true? (1 = yes)",
+      "expr": "world > 0.5 ? 1 : 0",
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "jbf",
+      "label": "Justified but false? (1 = yes)",
+      "expr": "justified * (1 - truth)",
+      "decimals": 0,
+      "color": 4
+     }
+    ],
+    "visual": {
+     "type": "causal",
+     "nodes": [
+      {
+       "id": "n_source",
+       "label": "What the president told Smith",
+       "x": 25,
+       "y": 15,
+       "value": "ev_strength"
+      },
+      {
+       "id": "n_evidence",
+       "label": "Strength of Smith's evidence",
+       "x": 25,
+       "y": 50,
+       "value": "ev_strength"
+      },
+      {
+       "id": "n_belief",
+       "label": "Smith believes: 'Jones gets the job'",
+       "x": 25,
+       "y": 85,
+       "value": "ev_strength"
+      },
+      {
+       "id": "n_world",
+       "label": "Company's real decision",
+       "x": 75,
+       "y": 15,
+       "value": "world"
+      },
+      {
+       "id": "n_truth",
+       "label": "Is 'Jones gets the job' true?",
+       "x": 75,
+       "y": 85,
+       "value": "world"
+      }
+     ],
+     "edges": [
+      {
+       "from": "n_source",
+       "to": "n_evidence",
+       "strength": "ev_strength",
+       "label": "assurance"
+      },
+      {
+       "from": "n_evidence",
+       "to": "n_belief",
+       "strength": "ev_strength",
+       "label": "supports"
+      },
+      {
+       "from": "n_world",
+       "to": "n_truth",
+       "strength": "world > 0.5 ? 1 : -1",
+       "label": "decides"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Smith has applied for a job. He wonders whether his rival, Jones, will get it. This picture has two columns.",
+      "focus": [
+       "n_belief",
+       "n_truth"
+      ],
+      "ms": 3000
+     },
+     {
+      "say": "On the left is Smith's side. The company president told him Jones will be picked, and that feeds into Smith's belief.",
+      "focus": [
+       "n_source",
+       "n_evidence",
+       "n_belief"
+      ],
+      "ms": 3600
+     },
+     {
+      "say": "This slider sets how strong Smith's evidence is. Watch the left column fade as I lower it.",
+      "set": {
+       "ev_strength": 0.3
+      },
+      "focus": "ev_strength",
+      "ms": 3200
+     },
+     {
+      "say": "On the right is the world: what the company really decides. That alone settles whether the claim is true.",
+      "set": {
+       "ev_strength": 0.8
+      },
+      "focus": [
+       "n_world",
+       "n_truth"
+      ],
+      "ms": 3400
+     },
+     {
+      "say": "This switch flips the company's real decision. Notice that the two columns are not wired to each other.",
+      "focus": "world",
+      "ms": 3200
+     },
+     {
+      "say": "The boxes below read off both sides: is the belief justified, is the claim true, and is it justified but false?",
+      "focus": [
+       "justified",
+       "truth",
+       "jbf"
+      ],
+      "ms": 3200
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Pull the two columns apart yourself. Find a belief that is well supported but wrong, then one that is right but poorly supported.",
+    "goals": [
+     {
+      "text": "Make Smith's belief justified but false",
+      "when": "justified == 1 && truth == 0",
+      "solution": {
+       "world": 0
+      },
+      "hints": [
+       "Smith's evidence is already strong. Which side decides whether the claim is true?",
+       "Leave the evidence slider alone and use the switch for the company's real decision.",
+       "Turn off 'Company really picks Jones' while the evidence stays at 80%."
+      ]
+     },
+     {
+      "text": "Now make the claim true while Smith's belief is not justified",
+      "when": "justified == 0 && truth == 1",
+      "solution": {
+       "ev_strength": 0.3
+      },
+      "hints": [
+       "This is the reverse case: the world agrees with Smith, but his reasons are thin.",
+       "Keep the company picking Jones, and weaken the evidence on the left.",
+       "Drag the evidence slider below 70%, for example to 30%."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. The forecast made your belief justified, and the rain made it false. Two different things set those two facts, so having one does not guarantee the other.",
+     "incorrect": "You may be judging the belief by how it turned out. Justification comes from the evidence you had. Truth comes from the world. Strong evidence can still point the wrong way."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with the ordinary case. The president's word gives Smith strong evidence, and the company really does pick Jones. Smith's belief is justified and true.",
+       "set": {
+        "ev_strength": 0.8,
+        "world": 1
+       },
+       "focus": [
+        "justified",
+        "truth"
+       ],
+       "ms": 3800
+      },
+      {
+       "say": "The claim 'Jones will get the job' is either true or false. Philosophers call a claim like that a proposition.",
+       "focus": "n_truth",
+       "ms": 3400
+      },
+      {
+       "say": "Now change only the world. Unknown to Smith, the company will not pick Jones. Look at the left column: nothing moved.",
+       "set": {
+        "world": 0
+       },
+       "focus": [
+        "n_evidence",
+        "n_belief"
+       ],
+       "ms": 3800
+      },
+      {
+       "say": "The 'Justified?' box still reads 1, because Smith's evidence is just as strong as before. The 'Claim true?' box has dropped to 0.",
+       "focus": [
+        "justified",
+        "truth"
+       ],
+       "ms": 3600
+      },
+      {
+       "say": "Turn the evidence all the way up to 100%. The claim stays false. Nothing on the left can reach across and change the right.",
+       "set": {
+        "ev_strength": 1
+       },
+       "focus": "jbf",
+       "ms": 3800
+      },
+      {
+       "say": "This is fallible justification: evidence can be as good as it gets and still lead you to a false belief.",
+       "focus": [
+        "n_evidence",
+        "n_truth"
+       ],
+       "ms": 3600
+      },
+      {
+       "say": "The gap runs both ways. With weak evidence and the company picking Jones, the claim is true but not justified. It is just a lucky guess.",
+       "set": {
+        "ev_strength": 0.2,
+        "world": 1
+       },
+       "focus": [
+        "justified",
+        "truth"
+       ],
+       "ms": 4000
+      },
+      {
+       "say": "Keep this picture in mind: strong evidence on the left, a false claim on the right. Gettier treats this split as a starting point for everything that follows.",
+       "set": {
+        "ev_strength": 1,
+        "world": 0
+       },
+       "focus": "jbf",
+       "ms": 4200
+      }
+     ]
+    },
+    "explanation": "Whether a belief is justified depends on the evidence the person has. Whether it is true depends on how the world actually is. These are two separate paths, so one can change without the other: Smith can have excellent grounds for 'Jones will get the job' while the company quietly picks someone else. Gettier does not prove this point with an experiment. He states it as the first of two points he takes for granted, about the sense of 'justified' that the classic definition of knowledge uses. Most philosophers accept it, though some reply that real knowledge needs evidence that cannot be wrong.",
+    "quote": "in that sense of 'justified' in which S's being justified in believing P is a necessary condition of S's knowing that P, it is possible for a person to be justified in believing a proposition that is in fact false.",
+    "quote_where": "Opening section, first of the two points Gettier notes before the cases"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "Justified = [ "
+     },
+     {
+      "text": "evidence",
+      "link": "ev_strength"
+     },
+     {
+      "text": " ≥ 70% ]    True = [ "
+     },
+     {
+      "text": "world",
+      "link": "world"
+     },
+     {
+      "text": " ]    Justified but false = "
+     },
+     {
+      "text": "J × (1 − T)",
+      "link": "jbf"
+     }
+    ],
+    "caption": "This is the model's rule, not an equation from the paper, which argues in words. The blue part, evidence, is the only thing that sets 'Justified'. The green part, the world switch, is the only thing that sets 'True'. Because no term appears in both, the orange combination 'justified but false' can come out to 1."
+   },
+   "recap": "Evidence sets whether a belief is justified, and the world sets whether it is true, so even the best evidence can back a false belief."
+  },
+  {
+   "id": "justification_flows",
+   "title": "Justification travels along valid reasoning",
+   "idea": "If you are justified in believing P and you correctly deduce Q from it, you become justified in believing Q, even if P is actually false.",
+   "role": "core",
+   "predict": {
+    "question": "Ann reads the official timetable, which says her train leaves at 9:00. She has every reason to trust it. In fact it is misprinted, and the train leaves at 9:30. From '9:00' she correctly reasons: 'My train leaves before 9:15.' Is Ann justified in believing this new claim?",
+    "options": [
+     "Yes: she reasoned correctly from a belief she was justified in holding",
+     "No: her starting belief was false, so nothing built on it can be justified",
+     "No: the new claim is false, and a false belief can't be justified",
+     "Only if she checks the new claim separately"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. Her trust in the timetable justifies '9:00', and the step to 'before 9:15' is valid. So the justification passes down, whatever the real departure time is.",
+     "Tempting, but the truth of the starting belief was never on the path. Justification comes from her evidence and her reasoning, just as Smith's support for (e) survived when (d) was false.",
+     "This mixes up 'justified' and 'true'. You saw in the last concept that a belief can be fully justified and still false. That holds for a deduced belief too.",
+     "A separate check could add more evidence, but she doesn't need one. A correct reasoning step from a justified belief already carries the justification over."
+    ]
+   },
+   "terms": [
+    {
+     "term": "entails",
+     "means": "P entails Q when Q has to be true whenever P is true"
+    },
+    {
+     "term": "deduction",
+     "means": "Reasoning that follows an entailment, moving from P to a claim Q that P guarantees"
+    },
+    {
+     "term": "closure principle",
+     "means": "A later philosophers' name for Gettier's second point: justification carries over from P to anything you correctly deduce from P"
+    }
+   ],
+   "model": {
+    "title": "Smith's reasons carried one step further, from (d) to (e)",
+    "note": "Teaching model: evidence is one 0–100% dial, and 'justified' simply means the dial reads 70% or more. We assume Smith's coin count is right, so (d) is true exactly when the company picks Jones. The new switch is an all-or-nothing reasoning step that passes justification on in full. Real reasoning chains can be messier, and philosophers debate whether support weakens over many steps. All numbers are illustrative. The paper gives none and argues purely in words.",
+    "controls": [
+     {
+      "id": "ev_strength",
+      "label": "How strong Smith's evidence is",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.8,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "world",
+      "label": "Company really picks Jones",
+      "kind": "toggle",
+      "default": 1,
+      "color": 2,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "deduce",
+      "label": "Smith reasons correctly from (d) to (e)",
+      "kind": "toggle",
+      "default": 0,
+      "color": 5,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "evidence",
+      "label": "Evidence strength",
+      "expr": "ev_strength",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "justified_d",
+      "label": "Justified in believing (d)? (1 = yes)",
+      "expr": "ev_strength > 0.65 ? 1 : 0",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "truth_d",
+      "label": "Is (d) true? (1 = yes)",
+      "expr": "world > 0.5 ? 1 : 0",
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "justified_e",
+      "label": "Justified in believing (e)? (1 = yes)",
+      "expr": "justified_d * (deduce > 0.5 ? 1 : 0)",
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "jbf",
+      "label": "Justified in (e) though (d) is false? (1 = yes)",
+      "expr": "justified_e * (1 - truth_d)",
+      "decimals": 0,
+      "color": 4
+     }
+    ],
+    "visual": {
+     "type": "causal",
+     "nodes": [
+      {
+       "id": "n_source",
+       "label": "What the president told Smith, plus his coin count",
+       "x": 25,
+       "y": 10,
+       "value": "ev_strength"
+      },
+      {
+       "id": "n_evidence",
+       "label": "Strength of Smith's evidence",
+       "x": 25,
+       "y": 35,
+       "value": "ev_strength"
+      },
+      {
+       "id": "n_belief",
+       "label": "Smith believes (d): 'Jones gets the job and has ten coins'",
+       "x": 25,
+       "y": 60,
+       "value": "ev_strength"
+      },
+      {
+       "id": "n_e",
+       "label": "Smith believes (e): 'The man who gets the job has ten coins'",
+       "x": 25,
+       "y": 90,
+       "value": "deduce > 0.5 ? ev_strength : 0"
+      },
+      {
+       "id": "n_world",
+       "label": "Company's real decision",
+       "x": 75,
+       "y": 10,
+       "value": "world"
+      },
+      {
+       "id": "n_truth",
+       "label": "Is (d) true?",
+       "x": 75,
+       "y": 60,
+       "value": "world"
+      }
+     ],
+     "edges": [
+      {
+       "from": "n_source",
+       "to": "n_evidence",
+       "strength": "ev_strength",
+       "label": "assurance + count"
+      },
+      {
+       "from": "n_evidence",
+       "to": "n_belief",
+       "strength": "ev_strength",
+       "label": "supports"
+      },
+      {
+       "from": "n_belief",
+       "to": "n_e",
+       "strength": "deduce > 0.5 ? ev_strength : 0",
+       "label": "reasoning step"
+      },
+      {
+       "from": "n_world",
+       "to": "n_truth",
+       "strength": "world > 0.5 ? 1 : -1",
+       "label": "decides"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Same two paths as before: Smith's evidence on the left, the company's real decision on the right. Now Smith's belief is the full claim (d): Jones gets the job, and Jones has ten coins in his pocket.",
+      "focus": "n_belief",
+      "ms": 6500
+     },
+     {
+      "say": "New at the bottom: claim (e), 'the man who gets the job has ten coins'. This new switch decides whether Smith reasons correctly from (d) to (e).",
+      "focus": [
+       "n_e",
+       "deduce"
+      ],
+      "ms": 6500
+     },
+     {
+      "say": "Flip it on and watch an arrow appear, carrying something down from (d) to (e).",
+      "set": {
+       "deduce": 1
+      },
+      "focus": "n_e",
+      "ms": 5500
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with the three controls. Find out what (e)'s support depends on, and what it ignores.",
+    "goals": [
+     {
+      "text": "Make Smith justified in believing (e)",
+      "when": "justified_e > 0.5",
+      "solution": {
+       "deduce": 1
+      },
+      "hints": [
+       "Smith already has strong evidence for (d). What stops it from reaching (e)?",
+       "Look at the arrow between (d) and (e). Which control creates it?",
+       "Switch on 'Smith reasons correctly from (d) to (e)'."
+      ]
+     },
+     {
+      "text": "Make Smith justified in believing (e) even though (d) is false",
+      "when": "jbf > 0.5",
+      "solution": {
+       "deduce": 1,
+       "world": 0
+      },
+      "hints": [
+       "You need two things at once: support reaching (e), and a world where (d) fails.",
+       "Turn the reasoning step on, then change what the company really does.",
+       "Reasoning switch on, 'Company really picks Jones' off, evidence left at 80%."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. Justification travels with the evidence and the reasoning, not with the facts. Ann trusted a reliable-looking timetable and reasoned validly from it, so her new belief is justified, even though both beliefs are false.",
+     "incorrect": "You probably assumed that a false starting point spoils everything built on it. But justification is about the reasons you have. If P is justified for you and you correctly deduce Q, Q is justified too. Whether P is actually true sits on the other path, out of your view."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with no reasoning step. Smith's evidence is at 80%, so he is justified in believing (d). But nothing reaches (e) yet: its box reads 0.",
+       "set": {
+        "ev_strength": 0.8,
+        "world": 1,
+        "deduce": 0
+       },
+       "focus": "justified_e",
+       "ms": 5000
+      },
+      {
+       "say": "Look at what (d) says. If Jones gets the job and Jones has ten coins, then the man who gets the job must have ten coins. When one claim guarantees another like this, we say (d) entails (e).",
+       "focus": "n_belief",
+       "ms": 6500
+      },
+      {
+       "say": "Smith notices this and accepts (e) because of (d). This step is a deduction. Turn it on: the support that held up (d) now flows down to (e).",
+       "set": {
+        "deduce": 1
+       },
+       "focus": [
+        "n_e",
+        "justified_e"
+       ],
+       "ms": 6000
+      },
+      {
+       "say": "Now weaken the evidence for (d) below the line. (e) loses its support too. A deduced belief is only as justified as the belief it came from.",
+       "set": {
+        "ev_strength": 0.5
+       },
+       "focus": "justified_e",
+       "ms": 5500
+      },
+      {
+       "say": "Bring the evidence back to 80%. Both (d) and (e) are justified again.",
+       "set": {
+        "ev_strength": 0.8
+       },
+       "focus": "evidence",
+       "ms": 4000
+      },
+      {
+       "say": "Here's the key move. Flip the world: the company does not pick Jones, so (d) is false. Watch (e)'s box.",
+       "set": {
+        "world": 0
+       },
+       "focus": [
+        "truth_d",
+        "justified_e"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "Still justified. Nothing on the right-hand path feeds into Smith's reasoning. Justification travels only down the left: evidence, then (d), then the deduction. Philosophers later called this the closure principle.",
+       "focus": "n_e",
+       "ms": 7000
+      },
+      {
+       "say": "So here Smith is justified in believing (e), even though the claim he deduced it from is false. Gettier needs exactly this setup for his first case.",
+       "focus": "jbf",
+       "ms": 5500
+      }
+     ]
+    },
+    "explanation": "Before his examples, Gettier states two starting points. First, you can be justified in believing something false, which you met in the last concept. Second, justification carries over a correct deduction: if you are justified in believing P, P entails Q, and you accept Q because you deduced it from P, then you are justified in believing Q. Nothing in this rule asks whether P is actually true, so a false but justified P passes its justification on to Q. Gettier uses this to give Smith justification for (e) through his deduction from (d). He simply asserts the principle and does not argue for it. Later philosophers have debated its exact limits, but most accept it in this simple one-step form.",
+    "quote": "Secondly, for any proposition P, if S is justified in believing P, and P entails Q, and S deduces Q from P and accepts Q as a result of this deduction, then S is justified in believing Q.",
+    "quote_where": "Opening section, the second of the two points stated before Case I"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "S is justified in believing P",
+      "link": "justified_d"
+     },
+     {
+      "text": "  and  "
+     },
+     {
+      "text": "P entails Q, and S deduces Q from P and accepts it",
+      "link": "deduce"
+     },
+     {
+      "text": "  ⇒  "
+     },
+     {
+      "text": "S is justified in believing Q",
+      "link": "justified_e"
+     }
+    ],
+    "caption": "Gettier's second point, written as a rule. Here P is Smith's claim (d) and Q is claim (e). The blue part is the 'Justified in believing (d)' box, set by the evidence dial. The middle part is the new reasoning switch. The result is the 'Justified in believing (e)' box. In the model, justified_e = justified_d × reasoning switch. Notice what is missing from the rule: 'P is true' appears nowhere, which is why the company-decision switch cannot touch (e)'s justification."
+   },
+   "recap": "Correct reasoning passes justification from P to Q, and it passes it on even when P is false, because truth never enters the reasoning path.",
+   "builds_on": "justified_but_false"
+  },
+  {
+   "id": "truth_from_elsewhere",
+   "title": "Case I: the coins that made it true",
+   "idea": "A belief can be made true by a fact (Smith's own coins and job) that sits on a completely different path from the reasons supporting it (Jones's coins and the president's word).",
+   "role": "core",
+   "predict": {
+    "question": "A new case. Mary glances at a hall clock that reads 3:00 and believes it is 3:00. The clock has always been reliable, so she is justified. Unknown to her, it stopped exactly twelve hours ago, and by chance it really is 3:00 now. Where does the fact that makes her belief true sit?",
+    "options": [
+     "On the same path as her reasons: the clock's hands",
+     "On a separate path: the actual time of day, which the stopped clock no longer tracks",
+     "Nowhere: her belief is false because the clock is broken"
+    ],
+    "answer": 1,
+    "why": [
+     "Tempting, because the hands are what she looked at. But stopped hands read 3:00 at any hour, so they cannot be what makes it 3:00. They feed her reasons, not the truth.",
+     "Right. Her reasons run through the stopped clock. What makes the belief true is the real time, which runs on its own path. This is like Smith's reasons running through Jones while the truth runs through Smith's own pocket.",
+     "A broken source does not make the claim false. It really is 3:00, so the belief is true. It is just made true by something her reasons never touched, as with (e) in Case I."
+    ]
+   },
+   "terms": [
+    {
+     "term": "truth-maker",
+     "means": "The fact in the world that makes a claim true, as opposed to the reasons someone has for believing it"
+    }
+   ],
+   "model": {
+    "title": "Two routes into one claim: Smith's reasons and the facts",
+    "note": "Teaching model: evidence is one 0–100% dial, and 'justified' simply means the dial reads 70% or more. Only two people applied, so if the company does not pick Jones it picks Smith. We assume Smith's count of Jones's coins is right. Smith's own pocket is a yes/no switch: ten coins or not. The reasoning step is all-or-nothing, as before. All numbers are illustrative. The paper gives none and argues purely in words.",
+    "controls": [
+     {
+      "id": "ev_strength",
+      "label": "How strong Smith's evidence is",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.8,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "world",
+      "label": "Company really picks Jones",
+      "kind": "toggle",
+      "default": 1,
+      "color": 2,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "deduce",
+      "label": "Smith reasons correctly from (d) to (e)",
+      "kind": "toggle",
+      "default": 0,
+      "color": 5,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "smith_coins",
+      "label": "Smith himself has ten coins in his pocket",
+      "kind": "toggle",
+      "default": 0,
+      "color": 3,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "evidence",
+      "label": "Evidence strength",
+      "expr": "ev_strength",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "justified_d",
+      "label": "Justified in believing (d)? (1 = yes)",
+      "expr": "ev_strength > 0.65 ? 1 : 0",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "truth_d",
+      "label": "Is (d) true? (1 = yes)",
+      "expr": "world > 0.5 ? 1 : 0",
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "justified_e",
+      "label": "Justified in believing (e)? (1 = yes)",
+      "expr": "justified_d * (deduce > 0.5 ? 1 : 0)",
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "truth_e",
+      "label": "Is (e) true? (1 = yes)",
+      "expr": "world > 0.5 ? 1 : (smith_coins > 0.5 ? 1 : 0)",
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "split",
+      "label": "Justified and true, but true because of Smith's own coins? (1 = yes)",
+      "expr": "justified_e * truth_e * (1 - truth_d)",
+      "decimals": 0,
+      "color": 4
+     }
+    ],
+    "visual": {
+     "type": "causal",
+     "nodes": [
+      {
+       "id": "n_source",
+       "label": "What the president told Smith, plus his coin count",
+       "x": 25,
+       "y": 10,
+       "value": "ev_strength"
+      },
+      {
+       "id": "n_evidence",
+       "label": "Strength of Smith's evidence",
+       "x": 25,
+       "y": 35,
+       "value": "ev_strength"
+      },
+      {
+       "id": "n_belief",
+       "label": "Smith believes (d): 'Jones gets the job and has ten coins'",
+       "x": 25,
+       "y": 60,
+       "value": "ev_strength"
+      },
+      {
+       "id": "n_e",
+       "label": "Smith believes (e): 'The man who gets the job has ten coins'",
+       "x": 25,
+       "y": 90,
+       "value": "deduce > 0.5 ? ev_strength : 0"
+      },
+      {
+       "id": "n_world",
+       "label": "Company's real decision",
+       "x": 75,
+       "y": 10,
+       "value": "world"
+      },
+      {
+       "id": "n_truth",
+       "label": "Is (d) true?",
+       "x": 70,
+       "y": 60,
+       "value": "world"
+      },
+      {
+       "id": "n_smith_coins",
+       "label": "Coins in Smith's own pocket",
+       "x": 92,
+       "y": 35,
+       "value": "smith_coins"
+      },
+      {
+       "id": "n_truth_e",
+       "label": "Is (e) true?",
+       "x": 75,
+       "y": 90,
+       "value": "world > 0.5 ? 1 : (smith_coins > 0.5 ? 1 : 0)"
+      }
+     ],
+     "edges": [
+      {
+       "from": "n_source",
+       "to": "n_evidence",
+       "strength": "ev_strength",
+       "label": "assurance + count"
+      },
+      {
+       "from": "n_evidence",
+       "to": "n_belief",
+       "strength": "ev_strength",
+       "label": "supports"
+      },
+      {
+       "from": "n_belief",
+       "to": "n_e",
+       "strength": "deduce > 0.5 ? ev_strength : 0",
+       "label": "reasoning step"
+      },
+      {
+       "from": "n_world",
+       "to": "n_truth",
+       "strength": "world > 0.5 ? 1 : -1",
+       "label": "decides"
+      },
+      {
+       "from": "n_truth",
+       "to": "n_truth_e",
+       "strength": "world > 0.5 ? 1 : 0",
+       "label": "Jones's coins"
+      },
+      {
+       "from": "n_smith_coins",
+       "to": "n_truth_e",
+       "strength": "world > 0.5 ? 0 : (smith_coins > 0.5 ? 1 : -1)",
+       "label": "Smith's own coins"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Same picture as last time. On the left, Smith's reasons flow down from the president's word to his beliefs. On the right is what the company really decides.",
+      "focus": [
+       "n_belief",
+       "n_world"
+      ],
+      "ms": 6500
+     },
+     {
+      "say": "New switch: does Smith himself have ten coins in his pocket? It feeds a new box at the bottom right, which asks whether (e) is actually true.",
+      "focus": [
+       "smith_coins",
+       "n_truth_e"
+      ],
+      "ms": 6500
+     },
+     {
+      "say": "The last number asks one thing: is Smith justified in believing (e), is (e) true, and is it true only because of Smith's own coins?",
+      "focus": "split",
+      "ms": 5500
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Rebuild Gettier's Case I yourself, then break it. Watch which side of the picture each switch touches.",
+    "goals": [
+     {
+      "text": "Recreate Case I: Smith is justified in believing (e), (e) is true, but (d) is false",
+      "when": "split > 0.5",
+      "solution": {
+       "deduce": 1,
+       "world": 0,
+       "smith_coins": 1
+      },
+      "hints": [
+       "Smith needs to believe (e) first, and in the real world Jones must not get the job.",
+       "Turn on the reasoning step and switch off 'Company really picks Jones'. Now what would make (e) true?",
+       "With Smith getting the job, (e) is true only if Smith has ten coins. Turn that switch on."
+      ]
+     },
+     {
+      "text": "Keep Smith justified in believing (e), but make (e) false",
+      "when": "justified_e > 0.5 && truth_e < 0.5",
+      "solution": {
+       "deduce": 1,
+       "world": 0
+      },
+      "hints": [
+       "Justification lives on the left. Truth lives on the right. Leave the left alone.",
+       "Turn on the reasoning step, then change who actually gets the job.",
+       "With the reasoning step on and Jones not picked, leave Smith's coins switch off."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. Mary's reasons run through a stopped clock. The fact that makes her belief true, the real time, runs on a separate path that her reasons never touch. That is the same split as in Case I.",
+     "incorrect": "It is natural to assume that whatever we looked at is what makes our belief true. In Case I, Smith looked at Jones's coins, yet (e) was made true by Smith's own coins. Mary's clock works the same way: it gives her reasons, but the real time is what makes the belief true."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start where everything lines up. The company picks Jones, and Smith reasons from (d) to (e). The claim (e) is true because Jones gets the job and has ten coins.",
+       "set": {
+        "ev_strength": 0.8,
+        "world": 1,
+        "deduce": 1,
+        "smith_coins": 0
+       },
+       "focus": "truth_e",
+       "ms": 5500
+      },
+      {
+       "say": "Here the reasons and the facts run through the same person, Jones. What Smith counted is exactly what makes (e) true.",
+       "focus": [
+        "n_truth",
+        "n_truth_e"
+       ],
+       "ms": 4500
+      },
+      {
+       "say": "Now flip the world. Smith gets the job, not Jones. So (d) is false. Smith is still justified in (e), as we saw last time. But (e) is now false too: Smith's own pocket doesn't hold ten coins.",
+       "set": {
+        "world": 0
+       },
+       "focus": [
+        "justified_e",
+        "truth_e"
+       ],
+       "ms": 6500
+      },
+      {
+       "say": "Give Smith ten coins of his own. Suddenly (e) is true again, because the man who gets the job, Smith, has ten coins.",
+       "set": {
+        "smith_coins": 1
+       },
+       "focus": "n_smith_coins",
+       "ms": 5000
+      },
+      {
+       "say": "Look at the left column. Nothing there changed. Smith's reasons still run through the president's word and Jones's coins.",
+       "focus": [
+        "n_belief",
+        "n_e"
+       ],
+       "ms": 4500
+      },
+      {
+       "say": "The fact that makes a claim true is called its truth-maker. Here the truth-maker of (e) is Smith's own job and coins. It sits on a route that Smith's reasons never visit.",
+       "focus": [
+        "n_smith_coins",
+        "n_truth_e"
+       ],
+       "ms": 6000
+      },
+      {
+       "say": "Weaken Smith's evidence. His justification for (e) drops away, but whether (e) is true doesn't move. The two routes really are separate.",
+       "set": {
+        "ev_strength": 0.3
+       },
+       "focus": [
+        "justified_e",
+        "truth_e"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "Restore the evidence. This is Case I: Smith is justified in (e) and (e) is true, but his reasons and its truth-maker meet only at the claim itself.",
+       "set": {
+        "ev_strength": 0.8
+       },
+       "focus": "split",
+       "ms": 6000
+      }
+     ]
+    },
+    "explanation": "In Case I, Smith's belief in (e) is supported by one set of facts: the president's word and the coins he counted in Jones's pocket. But (e) is made true by a different set of facts: Smith himself gets the job, and he happens to have ten coins. The two routes meet only at the sentence 'the man who gets the job has ten coins'. Change Smith's evidence and the truth stays put. Change Smith's pocket and his reasons stay put. Gettier did not run an experiment. He built this imagined case to show that a belief can be justified and true while its reasons and its truth-maker are entirely disconnected.",
+    "quote": "for (e) is true in virtue of the number of coins in Smith's pocket, while Smith does not know how many coins are in Smith's pocket, and bases his belief in (e) on a count of the coins in Jones's pocket, whom he falsely believes to be the man who will get the job.",
+    "quote_where": "Case I"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "(e) is true",
+      "link": "truth_e"
+     },
+     {
+      "text": " = ("
+     },
+     {
+      "text": "Jones picked",
+      "link": "world"
+     },
+     {
+      "text": " ∧ Jones has ten coins) ∨ (Smith picked ∧ "
+     },
+     {
+      "text": "Smith has ten coins",
+      "link": "smith_coins"
+     },
+     {
+      "text": ")"
+     }
+    ],
+    "caption": "The paper has no equation. This is the model's rule for when (e) is true. The orange output is the truth of (e). 'Jones picked' is the company switch, and 'Smith has ten coins' is the new switch. Smith's evidence slider appears nowhere in this rule: his reasons never enter what makes (e) true."
+   },
+   "recap": "Smith's reasons ran through Jones, but what made (e) true ran through Smith himself. A belief's support and its truth-maker can travel by completely separate routes.",
+   "builds_on": "justification_flows"
+  },
+  {
+   "id": "disjunction_luck",
+   "title": "Case II: an 'or' claim rescued by coincidence",
+   "idea": "An 'either…or' claim is true if either part is true, so a false part you had evidence for can be quietly replaced by a random guess that happens to be right.",
+   "role": "core",
+   "predict": {
+    "question": "Maya has strong evidence that her train leaves at 9. She reasons: 'So, either my train leaves at 9, or it is raining in Lisbon.' In fact the train leaves at 10, and by chance it is raining in Lisbon. What is true of her 'or' claim?",
+    "options": [
+     "It is false, because the train part is false",
+     "It is true, and the part her evidence supported is what makes it true",
+     "It is true, but only the part she had no evidence for makes it true",
+     "It can't be judged, because she never checked the weather in Lisbon"
+    ],
+    "answer": 2,
+    "why": [
+     "Tempting if you treat 'or' like 'and'. An 'or' claim needs only one true part, and the Lisbon part is true.",
+     "Tempting because her evidence was good. But the train part is false, so it can't be what makes the claim true.",
+     "Right. This is Smith's row in Case II: the supported part fails, and the throw-away part happens to hold, so the claim stays true by coincidence.",
+     "Tempting because she has no evidence about Lisbon. But whether a claim is true doesn't depend on her checking. It is raining there, so the claim is true."
+    ]
+   },
+   "terms": [
+    {
+     "term": "disjunction",
+     "means": "An 'either…or' claim. It is true when at least one of its parts is true."
+    },
+    {
+     "term": "truth table",
+     "means": "A grid listing every combination of true and false parts, and whether the whole claim comes out true in each"
+    }
+   ],
+   "model": {
+    "title": "Which row of the table is Smith really in?",
+    "note": "Teaching model: Case II is reduced to two yes/no facts (Does Jones own a Ford? Is Brown in the named city?) and the three cities Gettier names. 1 means yes or true, 0 means no or false. These are not measurements. The paper is a thought experiment with no data.",
+    "controls": [
+     {
+      "id": "ford",
+      "label": "Jones really owns a Ford",
+      "kind": "toggle",
+      "default": 1,
+      "color": 0,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "brown",
+      "label": "Where Brown really is (0 Boston, 1 Barcelona, 2 Brest-Litovsk, 3 elsewhere)",
+      "kind": "slider",
+      "min": 0,
+      "max": 3,
+      "step": 1,
+      "default": 3,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "named",
+      "label": "City Smith wrote in his claim (0 Boston, 1 Barcelona, 2 Brest-Litovsk)",
+      "kind": "slider",
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "default": 1,
+      "unit": "",
+      "color": 2
+     }
+    ],
+    "outputs": [
+     {
+      "id": "ford_part",
+      "label": "Jones part true (1 = yes)",
+      "expr": "ford >= 0.5 ? 1 : 0",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "brown_part",
+      "label": "Brown part true (1 = yes)",
+      "expr": "abs(brown - named) < 0.5 ? 1 : 0",
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "claim_true",
+      "label": "Whole 'or' claim true",
+      "expr": "max(ford_part, brown_part)",
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "reason_holds",
+      "label": "Smith's reason (Jones's Ford) holds",
+      "expr": "ford_part",
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "lucky",
+      "label": "True only by coincidence",
+      "expr": "(claim_true == 1 && reason_holds == 0) ? 1 : 0",
+      "decimals": 0,
+      "color": 5
+     }
+    ],
+    "visual": {
+     "type": "table",
+     "columns": [
+      "Jones part",
+      "Brown part",
+      "Whole 'or' claim",
+      "Smith's reasons cover this row",
+      "Real world"
+     ],
+     "rows": [
+      {
+       "label": "Ford: yes · Brown there: yes",
+       "cells": [
+        1,
+        1,
+        {
+         "value": 1,
+         "highlight": "ford_part == 1 && brown_part == 1"
+        },
+        1,
+        {
+         "value": "(ford_part == 1 && brown_part == 1) ? 1 : 0",
+         "highlight": "ford_part == 1 && brown_part == 1"
+        }
+       ]
+      },
+      {
+       "label": "Ford: yes · Brown there: no",
+       "cells": [
+        1,
+        0,
+        {
+         "value": 1,
+         "highlight": "ford_part == 1 && brown_part == 0"
+        },
+        1,
+        {
+         "value": "(ford_part == 1 && brown_part == 0) ? 1 : 0",
+         "highlight": "ford_part == 1 && brown_part == 0"
+        }
+       ]
+      },
+      {
+       "label": "Ford: no · Brown there: yes",
+       "cells": [
+        0,
+        1,
+        {
+         "value": 1,
+         "highlight": "ford_part == 0 && brown_part == 1"
+        },
+        0,
+        {
+         "value": "(ford_part == 0 && brown_part == 1) ? 1 : 0",
+         "highlight": "ford_part == 0 && brown_part == 1"
+        }
+       ]
+      },
+      {
+       "label": "Ford: no · Brown there: no",
+       "cells": [
+        0,
+        0,
+        {
+         "value": 0,
+         "highlight": "ford_part == 0 && brown_part == 0"
+        },
+        0,
+        {
+         "value": "(ford_part == 0 && brown_part == 0) ? 1 : 0",
+         "highlight": "ford_part == 0 && brown_part == 0"
+        }
+       ]
+      }
+     ],
+     "decimals": 0,
+     "scale": "sequential",
+     "scale_min": 0,
+     "scale_max": 1
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Smith's claim reads: 'Either Jones owns a Ford, or Brown is in the named city.' This table lists the four ways the world could be for that claim.",
+      "focus": "claim_true",
+      "ms": 4200
+     },
+     {
+      "say": "This switch sets whether Jones really owns a Ford.",
+      "focus": "ford",
+      "ms": 3200
+     },
+     {
+      "say": "This slider moves Brown around: Boston, Barcelona, Brest-Litovsk, or somewhere else.",
+      "set": {
+       "brown": 1
+      },
+      "focus": "brown",
+      "ms": 3600
+     },
+     {
+      "say": "This slider picks which city Smith wrote into his claim. Gettier's Smith wrote three claims, one per city.",
+      "focus": "named",
+      "ms": 3800
+     },
+     {
+      "say": "These boxes report which parts are true, whether the whole claim is true, and whether it is true only by coincidence.",
+      "set": {
+       "brown": 3
+      },
+      "focus": [
+       "ford_part",
+       "brown_part",
+       "claim_true",
+       "lucky"
+      ],
+      "ms": 4200
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Recreate Gettier's twist yourself. Then show that it isn't special to Barcelona.",
+    "goals": [
+     {
+      "text": "Make Smith's claim true even though his reason, Jones's Ford, is false",
+      "when": "lucky == 1",
+      "solution": {
+       "ford": 0,
+       "brown": 1
+      },
+      "hints": [
+       "Two things must change: one takes away Smith's reason, the other supplies a different way for the claim to be true.",
+       "Turn off 'Jones really owns a Ford'. Then the Brown part has to carry the claim.",
+       "With the Ford switched off and Barcelona as the named city, move Brown to 1 (Barcelona)."
+      ]
+     },
+     {
+      "text": "Now rescue the Brest-Litovsk claim (i) by coincidence instead",
+      "when": "lucky == 1 && abs(named - 2) < 0.5",
+      "solution": {
+       "ford": 0,
+       "brown": 2,
+       "named": 2
+      },
+      "hints": [
+       "Smith wrote three claims. Pick a different one, then repeat the trick.",
+       "Set the named city to 2 (Brest-Litovsk) and keep the Ford switched off.",
+       "Brown must be in the named city, so set Brown's slider to 2 as well."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. An 'or' claim needs only one true part. Maya's evidence backed the train part, which failed. The Lisbon part, which she had no evidence for, happened to hold. Her claim is true, but not because of anything her evidence was about.",
+     "incorrect": "The key is how 'or' works: the whole claim is true as soon as either part is true, and whether a part is true doesn't depend on anyone's evidence. Here the supported part (the 9 o'clock train) is false, and the unsupported part (rain in Lisbon) is true. So the claim is true, carried entirely by the part she guessed at."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start where Smith thinks he is. Jones owns a Ford, and Brown is somewhere Smith never named. The Jones part is true, so the whole claim is true.",
+       "set": {
+        "ford": 1,
+        "brown": 3,
+        "named": 1
+       },
+       "focus": "claim_true",
+       "ms": 4200
+      },
+      {
+       "say": "Move Brown to Boston, then Brest-Litovsk. The claim stays true. Once the Jones part is true, Brown's whereabouts don't matter at all.",
+       "set": {
+        "brown": 0
+       },
+       "focus": "claim_true",
+       "ms": 3800
+      },
+      {
+       "say": "An 'either…or' claim like this is called a disjunction. It is true when at least one part is true. That is why Smith could pick cities at random and still be justified: all his justification flows from the Ford evidence.",
+       "set": {
+        "brown": 2
+       },
+       "focus": "reason_holds",
+       "ms": 5200
+      },
+      {
+       "say": "Gettier's first twist: Jones doesn't own a Ford. He is driving a rented car. With Brown elsewhere, the claim is now false. Reason gone, claim gone. No puzzle yet.",
+       "set": {
+        "ford": 0,
+        "brown": 3
+       },
+       "focus": "claim_true",
+       "ms": 4600
+      },
+      {
+       "say": "Second twist: by sheer chance, Brown is in Barcelona, the very city in claim (h). The claim snaps back to true, this time through the Brown part.",
+       "set": {
+        "brown": 1
+       },
+       "focus": "brown_part",
+       "ms": 4600
+      },
+      {
+       "say": "Look at the grid. It is a truth table: every combination of the two parts. Smith's reasons only cover the top two rows, but the real world sits in row three, which his reasons never touched.",
+       "focus": "lucky",
+       "ms": 5200
+      },
+      {
+       "say": "Switch Smith's claim to Boston, claim (g), and it is false. Only (h) was rescued, because only its city happened to match. Back to Barcelona: true, justified, and true only by coincidence.",
+       "set": {
+        "named": 0
+       },
+       "focus": "claim_true",
+       "ms": 4800
+      },
+      {
+       "say": "This is the state Gettier describes. The claim is true and Smith is justified, but the fact making it true has nothing to do with his evidence.",
+       "set": {
+        "named": 1
+       },
+       "focus": [
+        "claim_true",
+        "reason_holds",
+        "lucky"
+       ],
+       "ms": 4600
+      }
+     ]
+    },
+    "explanation": "In Case II, Smith has strong evidence that Jones owns a Ford. He deduces three 'or' claims by tacking on three cities picked at random. Because an 'or' claim needs only one true part, his justification for each claim comes entirely from the Ford evidence. Gettier then imagines two further facts: Jones has no Ford, only a rented car, and Brown happens to be in Barcelona. Claim (h) is still true, but its truth now comes from the part Smith guessed, not the part his evidence supported. This is an invented case, not an observation. Its force rests on readers agreeing about what the story describes.",
+    "quote": "First, Jones does not own a Ford, but is at present driving a rented car. And secondly, by the sheerest coincidence, and entirely unknown to Smith, the place mentioned in proposition (h) happens really to be the place where Brown is.",
+    "quote_where": "Case II"
+   },
+   "check": {
+    "kind": "model",
+    "task": "Smith's Boston claim (g) can be rescued too. Put the model in a state where the claim is true only by coincidence and Brown is in Boston.",
+    "when": "lucky == 1 && brown < 0.5",
+    "solution": {
+     "ford": 0,
+     "brown": 0,
+     "named": 0
+    },
+    "hint": "Three things must line up: Smith's reason must fail, his claim must name Boston, and Brown must really be in Boston.",
+    "misconception": "That the coincidence is tied to Barcelona, or that a true 'or' claim must be true because of the part you had evidence for. Any of Smith's three claims could be rescued by whichever city Brown happens to be in."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "claim (h) true = max("
+     },
+     {
+      "text": "F",
+      "link": "ford_part"
+     },
+     {
+      "text": ", "
+     },
+     {
+      "text": "B",
+      "link": "brown_part"
+     },
+     {
+      "text": ")  →  "
+     },
+     {
+      "text": "true",
+      "link": "claim_true"
+     }
+    ],
+    "caption": "The paper gives no equation. This is the model's rule for an 'or' claim. F is 1 if Jones owns a Ford (blue switch), B is 1 if Brown is in the named city (Brown and city sliders). The claim is true if either is 1. Smith's evidence only ever supported F."
+   },
+   "recap": "An 'or' claim survives if either part is true, so when the part you had evidence for fails, a lucky guess in the other part can keep the claim true."
+  },
+  {
+   "id": "gettier_gap",
+   "title": "All three boxes ticked, yet no knowledge",
+   "idea": "When the reasons that justify a belief and the fact that makes it true are disconnected, all three classic conditions can hold while the belief is right only by luck, so the three conditions are not sufficient for knowledge.",
+   "role": "contribution",
+   "predict": {
+    "question": "A new case. Ann glances at the station clock, which has kept perfect time for years. It reads 3:00, so she believes it is 3:00, and it is 3:00. But the clock actually stopped exactly twelve hours ago. What should we say?",
+    "options": [
+     "All three boxes are ticked, but Ann doesn't know it's 3:00",
+     "Ann knows it's 3:00, because all three boxes are ticked",
+     "Ann doesn't know, because her belief isn't justified: the clock is broken",
+     "Ann doesn't know, because her belief is false"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. Her belief is true, she holds it, and a clock with years of perfect timekeeping is strong evidence. But what makes it 3:00 is the real time of day, not the clock's working. Her reasons and the truth-maker never meet, so it's luck, not knowledge.",
+     "This is exactly what the old test says. But Ann's clock would have read 3:00 whatever the time was. Her belief is right only because she happened to look at the one moment the stopped hands were correct. The paths don't meet.",
+     "Tempting, but justification depends on the evidence Ann has, not on hidden facts. A clock that has always been reliable is excellent evidence, just as the president's word was for Smith. Good evidence can still point the wrong way, so box (iii) is ticked.",
+     "Look again: it really is 3:00, so the belief is true and box (i) is ticked. The puzzle is that a true belief can still fall short of knowledge."
+    ]
+   },
+   "terms": [
+    {
+     "term": "Gettier case",
+     "means": "A situation where a belief is true, believed and justified, yet true only by luck, so it is not knowledge"
+    },
+    {
+     "term": "sufficient conditions",
+     "means": "Conditions that are always enough: whenever they all hold, the thing they define is guaranteed"
+    }
+   ],
+   "model": {
+    "title": "Two routes into one claim: Smith's reasons and the facts",
+    "note": "Teaching model: same set-up as Case I. Evidence is one 0–100% dial and counts as good enough at 70% or more. Only two people applied, so if the company does not pick Jones it picks Smith. We assume Smith's count of Jones's coins is right, and the reasoning step is all-or-nothing. In this model Smith believes (e) exactly when he makes the reasoning step. New: the 'Knowledge?' box follows a rough rule we added for teaching. It needs the three old boxes plus 'the facts Smith's reasons are about are the ones that make (e) true'. Gettier offers no such rule. He only argues that the three old boxes alone are not enough. All numbers are illustrative. The paper gives none and argues purely in words.",
+    "controls": [
+     {
+      "id": "ev_strength",
+      "label": "How strong Smith's evidence is",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.8,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "world",
+      "label": "Company really picks Jones",
+      "kind": "toggle",
+      "default": 1,
+      "color": 2,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "deduce",
+      "label": "Smith reasons correctly from (d) to (e)",
+      "kind": "toggle",
+      "default": 0,
+      "color": 5,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "smith_coins",
+      "label": "Smith himself has ten coins in his pocket",
+      "kind": "toggle",
+      "default": 0,
+      "color": 3,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "truth_e",
+      "label": "Box (i): is (e) true? (1 = yes)",
+      "expr": "world > 0.5 ? 1 : (smith_coins > 0.5 ? 1 : 0)",
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "believed_e",
+      "label": "Box (ii): does Smith believe (e)? (1 = yes)",
+      "expr": "deduce > 0.5 ? 1 : 0",
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "justified_e",
+      "label": "Box (iii): is Smith justified in believing (e)? (1 = yes)",
+      "expr": "(ev_strength > 0.65 ? 1 : 0) * believed_e",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "three_boxes",
+      "label": "Old test's verdict: all three boxes ticked? (1 = yes)",
+      "expr": "truth_e * believed_e * justified_e",
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "connected",
+      "label": "Do Smith's reasons and the truth-maker meet? (1 = yes)",
+      "expr": "world > 0.5 ? 1 : 0",
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "knows",
+      "label": "Knowledge? (1 = yes)",
+      "expr": "three_boxes * connected",
+      "decimals": 0,
+      "color": 6
+     }
+    ],
+    "visual": {
+     "type": "causal",
+     "nodes": [
+      {
+       "id": "n_source",
+       "label": "What the president told Smith, plus his coin count",
+       "x": 25,
+       "y": 10,
+       "value": "ev_strength"
+      },
+      {
+       "id": "n_evidence",
+       "label": "Strength of Smith's evidence",
+       "x": 25,
+       "y": 35,
+       "value": "ev_strength"
+      },
+      {
+       "id": "n_belief",
+       "label": "Smith believes (d): 'Jones gets the job and has ten coins'",
+       "x": 25,
+       "y": 60,
+       "value": "ev_strength"
+      },
+      {
+       "id": "n_e",
+       "label": "Smith believes (e): 'The man who gets the job has ten coins'",
+       "x": 25,
+       "y": 90,
+       "value": "deduce > 0.5 ? ev_strength : 0"
+      },
+      {
+       "id": "n_world",
+       "label": "Company's real decision",
+       "x": 75,
+       "y": 10,
+       "value": "world"
+      },
+      {
+       "id": "n_truth",
+       "label": "Is (d) true?",
+       "x": 70,
+       "y": 60,
+       "value": "world"
+      },
+      {
+       "id": "n_smith_coins",
+       "label": "Coins in Smith's own pocket",
+       "x": 92,
+       "y": 35,
+       "value": "smith_coins"
+      },
+      {
+       "id": "n_truth_e",
+       "label": "Is (e) true?",
+       "x": 75,
+       "y": 90,
+       "value": "world > 0.5 ? 1 : (smith_coins > 0.5 ? 1 : 0)"
+      },
+      {
+       "id": "n_test",
+       "label": "Old test: all three boxes?",
+       "x": 50,
+       "y": 76,
+       "value": "(ev_strength > 0.65 ? 1 : 0) * (deduce > 0.5 ? 1 : 0) * (world > 0.5 ? 1 : (smith_coins > 0.5 ? 1 : 0))"
+      },
+      {
+       "id": "n_know",
+       "label": "Knowledge?",
+       "x": 50,
+       "y": 45,
+       "value": "(ev_strength > 0.65 ? 1 : 0) * (deduce > 0.5 ? 1 : 0) * (world > 0.5 ? 1 : 0)"
+      }
+     ],
+     "edges": [
+      {
+       "from": "n_source",
+       "to": "n_evidence",
+       "strength": "ev_strength",
+       "label": "assurance + count"
+      },
+      {
+       "from": "n_evidence",
+       "to": "n_belief",
+       "strength": "ev_strength",
+       "label": "supports"
+      },
+      {
+       "from": "n_belief",
+       "to": "n_e",
+       "strength": "deduce > 0.5 ? ev_strength : 0",
+       "label": "reasoning step"
+      },
+      {
+       "from": "n_world",
+       "to": "n_truth",
+       "strength": "world > 0.5 ? 1 : -1",
+       "label": "decides"
+      },
+      {
+       "from": "n_truth",
+       "to": "n_truth_e",
+       "strength": "world > 0.5 ? 1 : 0",
+       "label": "Jones's coins"
+      },
+      {
+       "from": "n_smith_coins",
+       "to": "n_truth_e",
+       "strength": "world > 0.5 ? 0 : (smith_coins > 0.5 ? 1 : -1)",
+       "label": "Smith's own coins"
+      },
+      {
+       "from": "n_e",
+       "to": "n_test",
+       "strength": "(ev_strength > 0.65 ? 1 : 0) * (deduce > 0.5 ? 1 : 0)",
+       "label": "believed + justified"
+      },
+      {
+       "from": "n_truth_e",
+       "to": "n_test",
+       "strength": "world > 0.5 ? 1 : (smith_coins > 0.5 ? 1 : 0)",
+       "label": "true"
+      },
+      {
+       "from": "n_test",
+       "to": "n_know",
+       "strength": "(ev_strength > 0.65 ? 1 : 0) * (deduce > 0.5 ? 1 : 0) * (world > 0.5 ? 1 : 0)",
+       "label": "passes on only if paths meet"
+      },
+      {
+       "from": "n_truth",
+       "to": "n_know",
+       "strength": "world > 0.5 ? 1 : 0",
+       "label": "paths meet"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Same picture as Case I. Smith's reasons run down the left. The real facts run down the right. Both routes end at claim (e).",
+      "focus": [
+       "n_e",
+       "n_truth_e"
+      ],
+      "ms": 5500
+     },
+     {
+      "say": "New in the middle: one box runs the old three-box test on (e). Above it, a Knowledge box lights up only if the test passes and Smith's reasons connect to the facts that make (e) true.",
+      "focus": [
+       "n_test",
+       "n_know"
+      ],
+      "ms": 6500
+     },
+     {
+      "say": "The readouts track each box: true, believed, justified, the old test's verdict, whether the two routes meet, and knowledge.",
+      "focus": [
+       "three_boxes",
+       "connected",
+       "knows"
+      ],
+      "ms": 5000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with the four switches and watch two readouts side by side: the old test's verdict and Knowledge. Can you make them agree, then make them come apart?",
+    "goals": [
+     {
+      "text": "Get all three boxes ticked in a way that also counts as knowledge",
+      "when": "three_boxes > 0.5 && knows > 0.5",
+      "solution": {
+       "deduce": 1
+      },
+      "hints": [
+       "At the start one box is empty. Which one?",
+       "Smith has strong evidence and the company really picks Jones, but he hasn't yet drawn (e) from (d).",
+       "Turn on 'Smith reasons correctly from (d) to (e)' and leave the company picking Jones."
+      ]
+     },
+     {
+      "text": "Keep all three boxes ticked, but make the Knowledge readout drop to 0",
+      "when": "three_boxes > 0.5 && knows < 0.5",
+      "solution": {
+       "deduce": 1,
+       "world": 0,
+       "smith_coins": 1
+      },
+      "hints": [
+       "Knowledge needs the routes to meet. What happens if the facts Smith's reasons are about turn out false?",
+       "Make the company pick Smith instead. Then (e) goes false unless something else makes it true.",
+       "Reasoning on, 'Company really picks Jones' off, and 'Smith himself has ten coins' on."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. Ann's belief passes all three old tests, but what makes it true (the actual time) has no link to her reason (a clock that had stopped). The routes don't meet, so she is right by luck. It's the same shape as Smith's coins.",
+     "incorrect": "The trap is to treat the three boxes as the whole story, or to deny one of them to save the old test. Ann's belief really is true, believed and well supported. What's missing is a connection between her reason and the fact that makes it true, and the old test never checks for that."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start here: strong evidence, correct reasoning, and the company really picks Jones. All three boxes are ticked. (e) is true because of Jones's coins, the very coins Smith counted. The routes meet: knowledge.",
+       "set": {
+        "ev_strength": 0.8,
+        "world": 1,
+        "deduce": 1,
+        "smith_coins": 0
+       },
+       "focus": [
+        "three_boxes",
+        "knows"
+       ],
+       "ms": 6500
+      },
+      {
+       "say": "Now switch the world: the company actually picks Smith. Smith's reasons haven't changed at all, but (e) is now false, so the truth box empties and the old test says no. This is a justified but false belief, as you have seen before.",
+       "set": {
+        "world": 0
+       },
+       "focus": [
+        "n_truth_e",
+        "three_boxes"
+       ],
+       "ms": 6500
+      },
+      {
+       "say": "Now give Smith ten coins of his own. (e) is true again, but look where the truth comes from: down the far-right route, through Smith's pocket. That's a pocket Smith never looked in.",
+       "set": {
+        "smith_coins": 1
+       },
+       "focus": [
+        "n_smith_coins",
+        "n_truth_e"
+       ],
+       "ms": 6500
+      },
+      {
+       "say": "Check the old test. True, believed, justified: all three ticked. Its verdict is identical to the first step, where Smith clearly knew.",
+       "focus": [
+        "n_test",
+        "three_boxes"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "But the routes no longer meet. Smith's reasons are all about Jones, while the truth-maker is Smith's own pocket. Knowledge reads 0. A belief like this, all boxes ticked but true by luck, is called a Gettier case.",
+       "focus": [
+        "connected",
+        "knows",
+        "n_know"
+       ],
+       "ms": 7000
+      },
+      {
+       "say": "Flip the company back to Jones: the old test says yes and Knowledge says yes. Flip it to Smith: the old test still says yes, but Knowledge drops. The old test can't tell the two worlds apart.",
+       "set": {
+        "world": 1
+       },
+       "focus": [
+        "three_boxes",
+        "knows"
+       ],
+       "ms": 6500
+      },
+      {
+       "say": "So the three boxes are not sufficient conditions for knowledge: ticking all of them doesn't guarantee it.",
+       "set": {
+        "world": 0
+       },
+       "focus": [
+        "three_boxes",
+        "knows"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "Here is the heart of it. You can believe something true, for excellent reasons, through flawless reasoning, and still not know it, because what makes it true has nothing to do with your reasons.",
+       "focus": [
+        "n_e",
+        "n_smith_coins",
+        "n_know"
+       ],
+       "ms": 7500
+      }
+     ]
+    },
+    "explanation": "The old definition says knowledge just is true, believed and justified belief. Gettier builds cases where all three hold, yet the belief is true for reasons that have nothing to do with the believer's evidence. In Case I, Smith's justification runs through Jones, but (e) is made true by Smith's own job and coins. In Case II, a guess about Brown happens to rescue an 'or' claim whose Ford half is false. So the three conditions can all be met by luck, which means they are not sufficient conditions for knowledge, and the same goes for Chisholm's and Ayer's versions. Two caveats. The argument rests on our shared judgement that Smith doesn't know, and Gettier only shows that something is missing. Our 'routes meet' rule is a teaching stand-in, not his proposal.",
+    "quote": "But it is equally clear that Smith does not know that (e) is true; for (e) is true in virtue of the number of coins in Smith's pocket, while Smith does not know how many coins are in Smith's pocket, and bases his belief in (e) on a count of the coins in Jones's pocket, whom he falsely believes to be the man who will get the job.",
+    "quote_where": "Case I (p. 122)"
+   },
+   "check": {
+    "kind": "model",
+    "task": "Gettier's point is not about shaky evidence. Build a case where all three boxes are ticked and Smith does not know (e), with Smith's evidence turned all the way up to 100%.",
+    "when": "three_boxes > 0.5 && knows < 0.5 && ev_strength > 0.95",
+    "solution": {
+     "ev_strength": 1,
+     "deduce": 1,
+     "world": 0,
+     "smith_coins": 1
+    },
+    "hint": "Push the evidence slider to the top. Then repeat the luck recipe: reasoning on, company picks Smith, Smith has ten coins.",
+    "misconception": "That a Gettier case only arises because the evidence was a bit weak, so that stronger evidence would turn the lucky belief into knowledge. Evidence strength sits on the reasons route. It can't reconnect the reasons to a truth-maker on a different route."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "S knows that P  IFF  "
+     },
+     {
+      "text": "(i) P is true",
+      "link": "truth_e"
+     },
+     {
+      "text": ", "
+     },
+     {
+      "text": "(ii) S believes that P",
+      "link": "believed_e"
+     },
+     {
+      "text": ", and "
+     },
+     {
+      "text": "(iii) S is justified in believing that P",
+      "link": "justified_e"
+     }
+    ],
+    "caption": "This is the paper's definition (a), with P = (e) and S = Smith. Each coloured condition is one box readout in the model. Gettier attacks only the 'if' direction: in his cases the right-hand side holds while 'S knows that P' fails. The model's extra 'routes meet' check is our teaching addition, not part of the paper."
+   },
+   "recap": "True, believed and justified can all line up by luck. When your reasons and the truth-maker never meet, you have a lucky hit, not knowledge, so the three-box test is not enough.",
+   "builds_on": "truth_from_elsewhere"
+  }
+ ],
+ "omitted": []
+}

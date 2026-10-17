@@ -1,0 +1,2104 @@
+{
+ "version": 1,
+ "id": "gallery-attention-2017",
+ "title": "Every Word Looks at Every Word: How Attention Replaced Step-by-Step Reading",
+ "audience": "A curious adult with no background in this field",
+ "source": {
+  "title": "Attention Is All You Need",
+  "authors": "Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Łukasz Kaiser, Illia Polosukhin",
+  "year": 2017,
+  "venue": "31st Conference on Neural Information Processing Systems (NIPS 2017)",
+  "url": "https://arxiv.org/abs/1706.03762"
+ },
+ "intro": {
+  "summary": "In 2017 the best machine-translation systems read a sentence one word at a time, which made them slow to train and made it hard to link words far apart. This paper asks whether you can drop that step-by-step reading entirely and rely only on 'attention': a way for each word to look directly at every other word and pull in what it needs. The authors built such a model, the Transformer, and tested it on standard English-to-German and English-to-French translation benchmarks and on a grammar-parsing task. It matched or beat the best earlier systems and needed far less training compute. The main limitations are that it was tested on a few text tasks scored by an automatic metric, and that its cost grows with the square of the sentence length, which the authors note could be a problem for very long inputs.",
+  "background": [
+   "Neural networks handle words as lists of numbers (vectors), so that words with similar meanings get similar lists.",
+   "Before this paper, the leading translation systems were 'recurrent' networks that read a sentence one word after another, carrying a running memory forward.",
+   "Translation quality is often scored with BLEU, an automatic measure of how much a machine translation overlaps with human reference translations; higher is better.",
+   "Training these networks means running huge numbers of calculations on graphics chips (GPUs), which are fast only when many calculations can be done at the same time."
+  ],
+  "known": [],
+  "aha": "Throwing away word-by-word reading entirely, and letting every word look directly at every other word in one step, produced better translations than the best existing systems while training in a fraction of the time."
+ },
+ "primer": [
+  {
+   "heading": "The question",
+   "body": "Translation systems of the time read a sentence word by word, like a person reading aloud. Each step had to wait for the one before it, so computers could not split the work up. Words far apart in a sentence were also hard to connect, because information had to pass through every word in between. The authors asked whether a model could skip step-by-step reading altogether.",
+   "quote": "This inherently sequential nature precludes parallelization within training examples, which becomes critical at longer sequence lengths, as memory constraints limit batching across examples.",
+   "quote_where": "Introduction"
+  },
+  {
+   "heading": "What they did",
+   "body": "They built the Transformer, a model that uses only 'attention'. In attention, each word asks a question (a query), compares it with a label on every other word (a key), and takes a weighted average of what those words offer (their values). Several of these attention 'heads' run side by side, each free to track something different. Because attention by itself ignores word order, they add a pattern of waves to each word that marks its position.",
+   "quote": "We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely.",
+   "quote_where": "Abstract"
+  },
+  {
+   "heading": "What they found",
+   "body": "On a standard English-to-German test, the large Transformer scored 28.4 BLEU, more than 2 points above the best earlier results, including groups of models combined. On English-to-French it set a new best for a single model. The abstract reports 41.8 BLEU for this; one sentence in the results section says 41.0. Training took far less computation than rival systems: the smaller version trained in about 12 hours on 8 GPUs. It also did well on a quite different task, parsing sentence grammar.",
+   "quote": "Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles, by over 2 BLEU.",
+   "quote_where": "Abstract"
+  },
+  {
+   "heading": "Why it matters and its limits",
+   "body": "Because every word can reach every other word in a single step, and all words are processed at once, the model learns long-range links more easily and makes good use of parallel hardware. This design later became the basis of most large language models. But the evidence here comes from a few text benchmarks and an automatic score. Many design comparisons were single runs on one development set. And comparing every word with every other word gets expensive as texts grow very long.",
+   "quote": "The Transformer allows for significantly more parallelization and can reach a new state of the art in translation quality after being trained for as little as twelve hours on eight P100 GPUs.",
+   "quote_where": "Introduction"
+  }
+ ],
+ "provider": {
+  "name": "Claude",
+  "model": "claude-opus-5-5"
+ },
+ "concepts": [
+  {
+   "id": "attention_weighted_average",
+   "title": "Attention: a word takes a weighted average of the others",
+   "idea": "A word scores how well its query matches each other word's key, turns the scores into weights that add up to 1, and outputs the weighted average of those words' values.",
+   "role": "prerequisite",
+   "predict": {
+    "question": "Start from animal = 3, street = 0, tired = 1. Now add 2 to every match score, so animal = 5, street = 2, tired = 3. What happens to the attention weights?",
+    "options": [
+     "They stay exactly the same",
+     "'animal' gets an even bigger share",
+     "They all move closer to equal",
+     "They all grow, so together they pass 100%"
+    ],
+    "answer": 0,
+    "why": [
+     "Correct: softmax only cares how far apart the scores are. Adding 2 to all of them multiplies every top and the bottom of each fraction by the same amount, so every weight is unchanged.",
+     "Tempting, because animal's score got bigger. But the others rose by just as much, and the gap is what sets the shares. That gap did not change.",
+     "This would happen if the gaps shrank. Here every gap stays exactly the same, so the spread of the weights stays the same.",
+     "Softmax always divides by the total, so the weights add up to 100% whatever the scores are. Bigger scores can never push the sum past 100%."
+    ]
+   },
+   "terms": [
+    {
+     "term": "query",
+     "means": "What a word is looking for, written as a list of numbers"
+    },
+    {
+     "term": "key",
+     "means": "What a word offers to be matched against, also a list of numbers"
+    },
+    {
+     "term": "value",
+     "means": "The information a word hands over when another word pays attention to it"
+    },
+    {
+     "term": "softmax",
+     "means": "A rule that turns any set of scores into positive weights adding up to 100%, giving bigger shares to bigger scores"
+    }
+   ],
+   "model": {
+    "title": "Where does 'it' look? 'The animal didn't cross the street because it was tired.'",
+    "note": "Teaching model: in the real Transformer each word's query, key and value are lists of 64 learned numbers, and every match score is computed from them. Here you set three match scores by hand, and each word's information is boiled down to one made-up 'living thing' number (animal 90, street 5, tired 50). Numbers are illustrative, not the paper's data.",
+    "controls": [
+     {
+      "id": "s_animal",
+      "label": "Match: 'it' ↔ 'animal'",
+      "kind": "slider",
+      "min": -4,
+      "max": 4,
+      "step": 0.5,
+      "default": 0,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "s_street",
+      "label": "Match: 'it' ↔ 'street'",
+      "kind": "slider",
+      "min": -4,
+      "max": 4,
+      "step": 0.5,
+      "default": 0,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "s_tired",
+      "label": "Match: 'it' ↔ 'tired'",
+      "kind": "slider",
+      "min": -4,
+      "max": 4,
+      "step": 0.5,
+      "default": 0,
+      "unit": "",
+      "color": 2
+     }
+    ],
+    "outputs": [
+     {
+      "id": "w_animal",
+      "label": "Share on 'animal'",
+      "expr": "exp(s_animal) / (exp(s_animal) + exp(s_street) + exp(s_tired))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "w_street",
+      "label": "Share on 'street'",
+      "expr": "exp(s_street) / (exp(s_animal) + exp(s_street) + exp(s_tired))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "w_tired",
+      "label": "Share on 'tired'",
+      "expr": "exp(s_tired) / (exp(s_animal) + exp(s_street) + exp(s_tired))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "total",
+      "label": "All shares added up",
+      "expr": "w_animal + w_street + w_tired",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "blend",
+      "label": "Living-thing signal in 'it' (0–100)",
+      "expr": "w_animal * 90 + w_street * 5 + w_tired * 50",
+      "unit": "",
+      "decimals": 0,
+      "color": 3
+     }
+    ],
+    "visual": {
+     "type": "bars",
+     "bars": [
+      {
+       "id": "bar_animal",
+       "label": "Attention on 'animal'",
+       "value": "w_animal * 100",
+       "color": 0
+      },
+      {
+       "id": "bar_street",
+       "label": "Attention on 'street'",
+       "value": "w_street * 100",
+       "color": 1
+      },
+      {
+       "id": "bar_tired",
+       "label": "Attention on 'tired'",
+       "value": "w_tired * 100",
+       "color": 2
+      },
+      {
+       "id": "bar_blend",
+       "label": "Living-thing signal in 'it'",
+       "value": "blend",
+       "color": 3
+      }
+     ],
+     "min": 0,
+     "max": 100,
+     "unit": "%",
+     "decimals": 0
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Read the sentence: 'The animal didn't cross the street because it was tired.' The model must work out what 'it' means. The first three bars show how much attention 'it' pays to each of three other words.",
+      "focus": [
+       "bar_animal",
+       "bar_street",
+       "bar_tired"
+      ],
+      "ms": 4500
+     },
+     {
+      "say": "Each slider sets how well 'it' matches one word. Watch the bars as the match with 'animal' goes up.",
+      "set": {
+       "s_animal": 2
+      },
+      "focus": "s_animal",
+      "ms": 4500
+     },
+     {
+      "say": "The other two sliders do the same for 'street' and 'tired'.",
+      "focus": [
+       "s_street",
+       "s_tired"
+      ],
+      "ms": 3500
+     },
+     {
+      "say": "The last bar shows how much 'living thing' meaning 'it' ends up carrying, taken from the words it looked at.",
+      "focus": "bar_blend",
+      "ms": 4500
+     },
+     {
+      "say": "And this box adds the three attention bars together. Keep an eye on it.",
+      "focus": "total",
+      "ms": 3000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Now you steer the attention. Move the match sliders and watch the shares, and the meaning 'it' picks up, follow.",
+    "goals": [
+     {
+      "text": "Make 'it' give more than 80% of its attention to 'animal'",
+      "when": "w_animal > 0.8",
+      "solution": {
+       "s_animal": 2.5
+      },
+      "hints": [
+       "Which slider decides how well 'it' matches 'animal'?",
+       "What counts is how far the animal match sits above the other two, not its size on its own.",
+       "Leave the other two at 0 and raise the animal match a step at a time until its weight passes 80%."
+      ]
+     },
+     {
+      "text": "Drain the living-thing signal in 'it' below 20",
+      "when": "blend < 20",
+      "solution": {
+       "s_street": 3
+      },
+      "hints": [
+       "Which of the three words carries almost no living-thing meaning?",
+       "'it' only gets what the words it attends to hand over. Make it attend mostly to 'street'.",
+       "Leave animal and tired at 0 and raise the street match until 'it' hardly attends to anything else."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Right. Softmax responds only to the gaps between scores. Shift every score by the same amount and every weight stays put, so the output stays put too.",
+     "incorrect": "It is natural to think a bigger score means a bigger share. But softmax divides each score's contribution by the total, so only the differences between scores matter. Adding the same amount to every score leaves every gap, and so every weight, unchanged."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with all three matches equal at 0. The attention splits evenly, a third each, and the total is 100%.",
+       "set": {
+        "s_animal": 0,
+        "s_street": 0,
+        "s_tired": 0
+       },
+       "focus": "total",
+       "ms": 3500
+      },
+      {
+       "say": "Where do match scores come from? 'it' carries a list of numbers saying what it is looking for: its query. Every other word carries a list saying what it offers: its key. The score measures how well they line up.",
+       "focus": [
+        "s_animal",
+        "s_street",
+        "s_tired"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "Raise the animal match by just 1. Its share jumps to about 58%, and the others fall to about 21% each. A rule called softmax makes each weight positive and divides by the total, so the shares always add to 100%.",
+       "set": {
+        "s_animal": 1
+       },
+       "focus": [
+        "bar_animal",
+        "total"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "Push the animal match to 3, three points ahead. Now 'animal' takes about 91%. Softmax magnifies gaps, so a modest lead in score becomes a dominant share.",
+       "set": {
+        "s_animal": 3
+       },
+       "focus": "w_animal",
+       "ms": 4500
+      },
+      {
+       "say": "Each word also carries a value, the information it hands over. Here it is one 'living thing' number: animal 90, street 5, tired 50. 'it' gets their average weighted by the shares, so its signal climbs to about 84.",
+       "focus": "bar_blend",
+       "ms": 6000
+      },
+      {
+       "say": "Now let 'street' match just as well as 'animal'. The attention splits almost in half between them, and the result becomes a muddy blend of about 48, neither clearly alive nor not.",
+       "set": {
+        "s_street": 3
+       },
+       "focus": [
+        "bar_animal",
+        "bar_street",
+        "bar_blend"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "Drop 'street' back to 0 and give 'tired' a small match of 1. 'it' leans hard on 'animal', takes a little from 'tired', and ends up carrying a strong living-thing signal of about 82. That is attention: score, weigh, then average.",
+       "set": {
+        "s_street": 0,
+        "s_tired": 1
+       },
+       "focus": [
+        "bar_animal",
+        "bar_tired",
+        "bar_blend"
+       ],
+       "ms": 5500
+      }
+     ]
+    },
+    "explanation": "Attention lets one word gather information from the others. It scores how well its query matches each other word's key. Softmax turns those scores into weights that are positive and add up to 100%. The word's new meaning is then the weighted average of the other words' values. In the Transformer, the score is a dot product: multiply the query and key number by number and add the results. Every word does this at the same time, and the queries, keys and values are learned during training rather than set by hand as in this model. The paper builds its whole architecture from this one operation. Its appendix shows examples where heads seem to link words like 'its' to 'Law', though those pictures are a few hand-picked sentences, not a systematic test.",
+    "quote": "We compute the dot products of the query with all keys, divide each by √dk, and apply a softmax function to obtain the weights on the values.",
+    "quote_where": "Section 3.2.1"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "Attention(Q, K, V) = "
+     },
+     {
+      "text": "softmax(",
+      "link": "w_animal"
+     },
+     {
+      "text": "QK^{T}",
+      "link": "s_animal"
+     },
+     {
+      "text": " / √d_{k}"
+     },
+     {
+      "text": ")"
+     },
+     {
+      "text": "V",
+      "link": "blend"
+     }
+    ],
+    "caption": "This is the paper's Equation 1. QK^{T} is every query's dot product with every key: the match scores your sliders set. softmax(…) turns each word's row of scores into weights that add to 100%, the coloured attention bars. Multiplying by V takes the weighted average of the values, the living-thing bar. The division by √d_{k} is a scaling step covered in the next concept. Here, treat it as part of the score."
+   },
+   "recap": "Attention scores how well a word's query matches each key, softmaxes the scores into weights that add to 100%, and hands the word a weighted average of the values."
+  },
+  {
+   "id": "scaled_softmax",
+   "title": "Why the scores are divided by √d_k",
+   "idea": "Match scores grow larger as the vectors get longer, which makes attention lock onto a single word; dividing by the square root of the vector length keeps the weights spread out and trainable.",
+   "role": "core",
+   "predict": {
+    "question": "With 64 numbers per query and key, someone divides the raw scores by 64 instead of by √64 = 8. In this teaching model, with the 'animal' match set to 1, what happens to the attention weights?",
+    "options": [
+     "They come out just right, the same as with √64",
+     "They flatten toward an even split, so even a real match barely stands out",
+     "They lock onto 'animal' even harder",
+     "Nothing changes, because softmax only cares which score is biggest"
+    ],
+    "answer": 1,
+    "why": [
+     "Tempting if any shrinking counts as 'the fix'. But √64 exactly cancels the stretch, and dividing by 64 shrinks the scores 8 times further than that.",
+     "Correct. Dividing by 64 shrinks the 'animal' score from 8 down to 0.125. The scores become nearly equal, so softmax spreads the weights almost evenly and the real preference for 'animal' nearly vanishes.",
+     "Locking on comes from scores that are too big. Dividing by more than needed makes them smaller, which pushes the weights the other way.",
+     "Softmax cares about how far apart the scores are, not just their order. You saw this when only the length changed and the 'No fix' row swung from 51% to 98%."
+    ]
+   },
+   "terms": [
+    {
+     "term": "d_k",
+     "means": "How many numbers each query and key holds. The Transformer uses 64."
+    },
+    {
+     "term": "gradient",
+     "means": "The learning signal: how much a small change to a score would move the output. A tiny gradient means training can barely adjust it."
+    },
+    {
+     "term": "scaling factor",
+     "means": "The 1/√d_k that every raw match score is multiplied by (the same as dividing by √d_k), which cancels the stretch that long vectors cause"
+    }
+   ],
+   "model": {
+    "title": "Same sentence, longer vectors: where does 'it' look now?",
+    "note": "Teaching model: each match slider now sets how well two words match, in units of a typical score. A real score adds up one product per number in the query and key, so its typical size grows with the square root of how many numbers there are. Here the raw score is simply the slider times √(length). 'Room to learn' is 4·w·(1−w) for the top word, a simple stand-in for how strongly training can still move the weights. Real models learn their queries and keys. Numbers are illustrative, not the paper's data.",
+    "controls": [
+     {
+      "id": "s_animal",
+      "label": "Match: 'it' ↔ 'animal'",
+      "kind": "slider",
+      "min": -4,
+      "max": 4,
+      "step": 0.5,
+      "default": 0,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "s_street",
+      "label": "Match: 'it' ↔ 'street'",
+      "kind": "slider",
+      "min": -4,
+      "max": 4,
+      "step": 0.5,
+      "default": 0,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "s_tired",
+      "label": "Match: 'it' ↔ 'tired'",
+      "kind": "slider",
+      "min": -4,
+      "max": 4,
+      "step": 0.5,
+      "default": 0,
+      "unit": "",
+      "color": 2
+     },
+     {
+      "id": "dk",
+      "label": "Numbers in each query and key",
+      "kind": "slider",
+      "min": 1,
+      "max": 256,
+      "step": 1,
+      "default": 1,
+      "unit": "",
+      "color": 5
+     }
+    ],
+    "outputs": [
+     {
+      "id": "stretch",
+      "label": "Raw scores stretched by",
+      "expr": "sqrt(dk)",
+      "unit": "×",
+      "decimals": 1,
+      "color": 5
+     },
+     {
+      "id": "u_animal",
+      "label": "'animal' share, no fix",
+      "expr": "exp(s_animal * stretch) / (exp(s_animal * stretch) + exp(s_street * stretch) + exp(s_tired * stretch))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "w_animal",
+      "label": "'animal' share, with fix",
+      "expr": "exp(s_animal) / (exp(s_animal) + exp(s_street) + exp(s_tired))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "learn_raw",
+      "label": "Room to learn, no fix",
+      "expr": "4 * (max(exp(s_animal * stretch), max(exp(s_street * stretch), exp(s_tired * stretch))) / (exp(s_animal * stretch) + exp(s_street * stretch) + exp(s_tired * stretch))) * (1 - max(exp(s_animal * stretch), max(exp(s_street * stretch), exp(s_tired * stretch))) / (exp(s_animal * stretch) + exp(s_street * stretch) + exp(s_tired * stretch)))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 6
+     },
+     {
+      "id": "learn_fix",
+      "label": "Room to learn, with fix",
+      "expr": "4 * (max(exp(s_animal), max(exp(s_street), exp(s_tired))) / (exp(s_animal) + exp(s_street) + exp(s_tired))) * (1 - max(exp(s_animal), max(exp(s_street), exp(s_tired))) / (exp(s_animal) + exp(s_street) + exp(s_tired)))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 7
+     }
+    ],
+    "visual": {
+     "type": "bars",
+     "bars": [
+      {
+       "id": "bar_raw_animal",
+       "label": "No fix: 'animal'",
+       "value": "100 * exp(s_animal * stretch) / (exp(s_animal * stretch) + exp(s_street * stretch) + exp(s_tired * stretch))",
+       "color": 0
+      },
+      {
+       "id": "bar_raw_street",
+       "label": "No fix: 'street'",
+       "value": "100 * exp(s_street * stretch) / (exp(s_animal * stretch) + exp(s_street * stretch) + exp(s_tired * stretch))",
+       "color": 1
+      },
+      {
+       "id": "bar_raw_tired",
+       "label": "No fix: 'tired'",
+       "value": "100 * exp(s_tired * stretch) / (exp(s_animal * stretch) + exp(s_street * stretch) + exp(s_tired * stretch))",
+       "color": 2
+      },
+      {
+       "id": "bar_fix_animal",
+       "label": "With fix: 'animal'",
+       "value": "100 * exp(s_animal) / (exp(s_animal) + exp(s_street) + exp(s_tired))",
+       "color": 0
+      },
+      {
+       "id": "bar_fix_street",
+       "label": "With fix: 'street'",
+       "value": "100 * exp(s_street) / (exp(s_animal) + exp(s_street) + exp(s_tired))",
+       "color": 1
+      },
+      {
+       "id": "bar_fix_tired",
+       "label": "With fix: 'tired'",
+       "value": "100 * exp(s_tired) / (exp(s_animal) + exp(s_street) + exp(s_tired))",
+       "color": 2
+      }
+     ],
+     "min": 0,
+     "max": 100,
+     "unit": "%",
+     "decimals": 0
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Same sentence, same three match sliders as last time. The bottom three bars, 'With fix', work exactly like last lesson's attention bars.",
+      "focus": [
+       "bar_fix_animal",
+       "bar_fix_street",
+       "bar_fix_tired"
+      ],
+      "ms": 5000
+     },
+     {
+      "say": "The top three bars, 'No fix', use the very same matches but skip one small step. Give 'animal' a modest match: right now both rows agree.",
+      "set": {
+       "s_animal": 1
+      },
+      "focus": [
+       "bar_raw_animal",
+       "bar_raw_street",
+       "bar_raw_tired"
+      ],
+      "ms": 5000
+     },
+     {
+      "say": "New: this slider sets how many numbers each query and key holds. Watch the top row as it grows.",
+      "set": {
+       "dk": 64
+      },
+      "focus": "dk",
+      "ms": 6000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Make the two rows disagree using length alone, then find where the 'No fix' row stops being able to learn.",
+    "goals": [
+     {
+      "text": "Make the 'No fix' row put over 95% on 'animal' while the 'With fix' row keeps 'animal' under 60%",
+      "when": "u_animal > 0.95 && w_animal < 0.6",
+      "solution": {
+       "s_animal": 1,
+       "dk": 64
+      },
+      "hints": [
+       "A big match would push both rows up. Keep the match modest and change something else.",
+       "The new slider sets how many numbers each query and key holds. It only stretches the 'No fix' row.",
+       "Give 'animal' only a small match, then keep lengthening the vectors until the 'No fix' row tips over 95%."
+      ]
+     },
+     {
+      "text": "Find a setting where the 'No fix' row has under 5% room to learn but the 'With fix' row still has over 80%",
+      "when": "learn_raw < 0.05 && learn_fix > 0.8",
+      "solution": {
+       "s_animal": 1,
+       "dk": 100
+      },
+      "hints": [
+       "Room to learn runs out when one bar has taken almost everything.",
+       "Give one word a small edge, then make the vectors long so the 'No fix' row locks onto it.",
+       "Keep the small match and push the length far up, well past where the 'No fix' row first locked on."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Right. Dividing by √d_k cancels the stretch exactly. Dividing by more than that over-corrects: the scores shrink toward zero, they all look alike, and softmax spreads the weights almost evenly.",
+     "incorrect": "The fix is not 'make the scores smaller'. It is 'undo the stretch that length caused'. Raw scores grow like √d_k, so dividing by √d_k restores them. Dividing by d_k shrinks them far too much, and softmax then can't tell the words apart."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start small: one number per query and key, with 'animal' matching a bit better than 'tired' and 'street'. Both rows agree, at about 51% / 19% / 31%.",
+       "set": {
+        "s_animal": 1,
+        "s_street": 0,
+        "s_tired": 0.5,
+        "dk": 1
+       },
+       "focus": [
+        "bar_raw_animal",
+        "bar_fix_animal"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "Now give each query and key 16 numbers. Call this length d_k. A match score adds up one product per number, so with more numbers the scores spread out wider, by about √16 = 4 times. The 'No fix' row jumps to about 87% on 'animal'.",
+       "set": {
+        "dk": 16
+       },
+       "focus": "stretch",
+       "ms": 6500
+      },
+      {
+       "say": "The paper's d_k is 64. The scores are now stretched 8 times, and 'No fix' puts about 98% on 'animal'. The words and the match did not change. Only the length did.",
+       "set": {
+        "dk": 64
+       },
+       "focus": "u_animal",
+       "ms": 6000
+      },
+      {
+       "say": "Here is the real problem. When one weight is near 100%, nudging any score barely moves it. That nudge-response is the gradient, training's learning signal. 'Room to learn' has fallen to about 7%.",
+       "focus": "learn_raw",
+       "ms": 6500
+      },
+      {
+       "say": "The 'With fix' row multiplies every raw score by 1/√d_k, here dividing by 8, before softmax. This scaling factor exactly cancels the stretch. The bars stay at 51 / 19 / 31 and room to learn stays near 100%.",
+       "focus": [
+        "bar_fix_animal",
+        "bar_fix_street",
+        "bar_fix_tired",
+        "learn_fix"
+       ],
+       "ms": 6500
+      },
+      {
+       "say": "The fix does not flatten everything. Make 'animal' a truly strong match (4) and the 'With fix' row picks it too, at about 95%. Real preferences survive. Only the stretch from length is removed.",
+       "set": {
+        "s_animal": 4
+       },
+       "focus": "w_animal",
+       "ms": 6000
+      },
+      {
+       "say": "Last picture: a modest match again, and 256 numbers. 'No fix' is frozen on 'animal' with almost no room to learn. 'With fix' still shares 51 / 19 / 31 and can keep learning.",
+       "set": {
+        "s_animal": 1,
+        "dk": 256
+       },
+       "focus": [
+        "learn_raw",
+        "learn_fix"
+       ],
+       "ms": 6500
+      }
+     ]
+    },
+    "explanation": "A match score is a sum with one term for each number in the query and key. The longer those lists (d_k), the bigger the scores tend to get: if the numbers were random, the typical size would grow like √d_k. Softmax turns big gaps between scores into near all-or-nothing weights. There the learning signal (gradient) almost disappears, so training can barely adjust where a word looks. The Transformer multiplies every score by the scaling factor 1/√d_k, which cancels the stretch and keeps the weights spread and trainable. The paper offers this as a suspicion, backed by a simple random-numbers argument in a footnote and by an earlier study finding that unscaled dot-product attention fell behind another method for large d_k. It does not report a separate experiment that switches the scaling off.",
+    "quote": "We suspect that for large values of dk, the dot products grow large in magnitude, pushing the softmax function into regions where it has extremely small gradients",
+    "quote_where": "Section 3.2.1"
+   },
+   "check": {
+    "kind": "model",
+    "task": "Leave 'street' and 'tired' at 0 and set the 'animal' match to just 0.5, a tiny edge. Now make the 'No fix' row put over 99% on 'animal'.",
+    "when": "s_animal > 0 && s_animal <= 0.5 && abs(s_street) < 0.01 && abs(s_tired) < 0.01 && u_animal > 0.99",
+    "solution": {
+     "s_animal": 0.5,
+     "dk": 121
+    },
+    "hint": "You can't make the match bigger, but something else stretches the raw scores. How far do you need to stretch a 0.5 edge?",
+    "misconception": "Believing attention only locks onto one word when that word matches far better than the rest. Without the fix, long vectors alone can turn a tiny edge into almost 100% of the attention."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "Attention(Q, K, V) = softmax("
+     },
+     {
+      "text": "QK^{T}",
+      "link": "s_animal"
+     },
+     {
+      "text": " / √"
+     },
+     {
+      "text": "d_{k}",
+      "link": "dk"
+     },
+     {
+      "text": ") V"
+     }
+    ],
+    "caption": "This is the paper's Equation 1. QKᵀ holds every query-to-key match score; the 'animal' match slider plays one of these. d_k is the 'Numbers in each query and key' slider, and √d_k is the 'stretched by' number. Dividing by √d_k, the scaling factor, gives the 'With fix' row. Leaving it out gives the 'No fix' row. Multiplying by V then blends the words' values, as in the last lesson."
+   },
+   "recap": "Longer query and key vectors inflate match scores and freeze attention on one word. Dividing by √d_k undoes exactly that inflation, so the weights stay spread and trainable.",
+   "builds_on": "attention_weighted_average"
+  },
+  {
+   "id": "multi_head",
+   "title": "Many heads look for different things",
+   "idea": "Running several smaller attention heads in parallel lets each one focus on a different relationship, instead of one head blurring them all into a single average.",
+   "role": "core",
+   "predict": {
+    "question": "The paper kept the total vector size fixed at 512 and split it into 1, 4, 8, 16 or 32 heads, then measured English-to-German translation quality (BLEU). Which pattern would you expect?",
+    "options": [
+     "More heads is always better, so 32 heads wins",
+     "One head does best, because it gets the longest vectors",
+     "A middle number does best: one head blurs, and very many heads each get tiny vectors",
+     "The number of heads makes no difference, because the total size is fixed"
+    ],
+    "answer": 2,
+    "why": [
+     "Tempting after watching three readers beat one. But the slices shrink as heads multiply, and Table 3 rows (A) show 32 heads (length 16 each) scored 25.4, below 8 or 16 heads (25.8).",
+     "Longer vectors sound more powerful. But one head must average everything into a single blend, and in Table 3 the single head scored 24.9, the worst of the group.",
+     "Correct. In Table 3 rows (A), 1 head scored 24.9, 4 heads 25.5, 8 and 16 heads 25.8, and 32 heads 25.4. Splitting helps until each head's slice gets too small.",
+     "The total work is indeed about the same. But how it is split decides whether different links can be kept apart, and Table 3 shows quality changing by almost a full BLEU point."
+    ]
+   },
+   "terms": [
+    {
+     "term": "attention head",
+     "means": "One separate attention calculation with its own learned ways of making queries, keys and values, producing its own weighted average"
+    },
+    {
+     "term": "multi-head attention",
+     "means": "Running several attention heads side by side on the same words, then joining their outputs"
+    }
+   ],
+   "model": {
+    "title": "Where the word 'its' looks, reader by reader",
+    "note": "Teaching model: one word ('its') looking at a 6-word slice of a sentence from the paper's Figure 4. Match scores are set by hand (the focus strength for a reader's target words, 0 for the rest) instead of being learned, and the links each reader handles are chosen for illustration. The total vector length of 96 is a scaled-down stand-in for the paper's 512. Numbers are illustrative, not the paper's data.",
+    "controls": [
+     {
+      "id": "h",
+      "label": "Number of readers",
+      "kind": "slider",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "s",
+      "label": "Focus strength",
+      "kind": "slider",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "default": 2,
+      "unit": "",
+      "color": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "law_weight",
+      "label": "Reader 1's weight on 'Law'",
+      "expr": "h == 1 ? exp(s) / (3 * exp(s) + 3) : exp(s) / (exp(s) + 5)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "weakest",
+      "label": "Weakest focus among the three links",
+      "expr": "h == 3 ? exp(s) / (exp(s) + 5) : (h == 2 ? exp(s) / (2 * exp(s) + 4) : exp(s) / (3 * exp(s) + 3))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "per_head",
+      "label": "Vector length per reader (total 96)",
+      "expr": "96 / h",
+      "unit": "",
+      "decimals": 0,
+      "color": 4
+     }
+    ],
+    "visual": {
+     "type": "table",
+     "columns": [
+      "The",
+      "Law",
+      "never",
+      "but",
+      "its",
+      "application"
+     ],
+     "rows": [
+      {
+       "label": "Reader 1",
+       "cells": [
+        "h == 1 ? 1 / (3 * exp(s) + 3) : 1 / (exp(s) + 5)",
+        {
+         "value": "h == 1 ? exp(s) / (3 * exp(s) + 3) : exp(s) / (exp(s) + 5)",
+         "highlight": "h >= 2 && exp(s) / (exp(s) + 5) > 0.5"
+        },
+        "h == 1 ? 1 / (3 * exp(s) + 3) : 1 / (exp(s) + 5)",
+        "h == 1 ? exp(s) / (3 * exp(s) + 3) : 1 / (exp(s) + 5)",
+        "h == 1 ? 1 / (3 * exp(s) + 3) : 1 / (exp(s) + 5)",
+        "h == 1 ? exp(s) / (3 * exp(s) + 3) : 1 / (exp(s) + 5)"
+       ]
+      },
+      {
+       "label": "Reader 2",
+       "cells": [
+        "h == 1 ? 0 : (h == 2 ? 1 / (2 * exp(s) + 4) : 1 / (exp(s) + 5))",
+        "h == 1 ? 0 : (h == 2 ? 1 / (2 * exp(s) + 4) : 1 / (exp(s) + 5))",
+        "h == 1 ? 0 : (h == 2 ? 1 / (2 * exp(s) + 4) : 1 / (exp(s) + 5))",
+        "h == 1 ? 0 : (h == 2 ? exp(s) / (2 * exp(s) + 4) : 1 / (exp(s) + 5))",
+        "h == 1 ? 0 : (h == 2 ? 1 / (2 * exp(s) + 4) : 1 / (exp(s) + 5))",
+        {
+         "value": "h == 1 ? 0 : (h == 2 ? exp(s) / (2 * exp(s) + 4) : exp(s) / (exp(s) + 5))",
+         "highlight": "h == 3 && exp(s) / (exp(s) + 5) > 0.5"
+        }
+       ]
+      },
+      {
+       "label": "Reader 3",
+       "cells": [
+        "h == 3 ? 1 / (exp(s) + 5) : 0",
+        "h == 3 ? 1 / (exp(s) + 5) : 0",
+        "h == 3 ? 1 / (exp(s) + 5) : 0",
+        {
+         "value": "h == 3 ? exp(s) / (exp(s) + 5) : 0",
+         "highlight": "h == 3 && exp(s) / (exp(s) + 5) > 0.5"
+        },
+        "h == 3 ? 1 / (exp(s) + 5) : 0",
+        "h == 3 ? 1 / (exp(s) + 5) : 0"
+       ]
+      }
+     ],
+     "decimals": 2,
+     "scale": "sequential",
+     "scale_min": 0,
+     "scale_max": 1
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This grid shows where the word 'its' looks in 'The Law will never be perfect, but its application…'. Each column is a word. Darker cells mean more weight.",
+      "ms": 4200
+     },
+     {
+      "say": "Each row is a reader. A reader does the matching and weighted averaging you just learned. A row of zeros is a reader that isn't switched on yet.",
+      "ms": 4000
+     },
+     {
+      "say": "This slider sets how many readers work side by side. Watch a second row light up.",
+      "set": {
+       "h": 2
+      },
+      "focus": "h",
+      "ms": 3600
+     },
+     {
+      "say": "This one sets how strongly each reader's matching words stand out from the rest.",
+      "set": {
+       "s": 3.5
+      },
+      "focus": "s",
+      "ms": 3600
+     },
+     {
+      "say": "These boxes track how much weight lands on the words that matter, and how long each reader's vectors are.",
+      "focus": [
+       "law_weight",
+       "weakest",
+       "per_head"
+      ],
+      "ms": 3800
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with the readers. First give 'Law' a reader of its own. Then try to keep all three links sharp at the same time.",
+    "goals": [
+     {
+      "text": "Make a reader put more than 80% of its weight on 'Law'",
+      "when": "law_weight > 0.8",
+      "solution": {
+       "h": 2,
+       "s": 3.5
+      },
+      "hints": [
+       "Can one reader ever give 'Law' most of its weight while it is also chasing two other words?",
+       "Add a reader so that Reader 1 only looks for 'Law', then raise the focus strength.",
+       "One extra reader is enough. Then raise the focus strength until the 'Law' weight passes 80%."
+      ]
+     },
+     {
+      "text": "Make every link clear at once: the weakest focus must be above 80%",
+      "when": "weakest > 0.8",
+      "solution": {
+       "h": 3,
+       "s": 3.5
+      },
+      "hints": [
+       "Which link is weakest right now, and which reader is handling it?",
+       "A reader covering two links can never give either one more than half. Each link needs a reader of its own.",
+       "Give each of the three links a reader of its own, then raise the focus strength."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Right. Splitting into heads lets different links stay apart, but the total size is fixed, so each extra head gets a smaller slice. The paper found a sweet spot in the middle: 8 or 16 heads.",
+     "incorrect": "You may have treated 'more heads' as pure gain, or 'fixed total' as 'no change'. One head blurs links together. Very many heads each get only a tiny vector to match with. So quality peaks somewhere in between."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with one reader. 'its' has three links to track: 'Law' (what it refers to), 'application' (what it belongs to) and 'but' (the word just before). One reader scores all three highly, so its weight splits: about 29% each.",
+       "set": {
+        "h": 1,
+        "s": 2
+       },
+       "focus": "law_weight",
+       "ms": 5200
+      },
+      {
+       "say": "Turn the focus all the way up. It barely helps. The weight on 'Law' stalls at 33%, because the three targets share the top spot. This reader's output is still a blend of three words' values.",
+       "set": {
+        "s": 5
+       },
+       "focus": "law_weight",
+       "ms": 5200
+      },
+      {
+       "say": "Add a second reader. Reader 1 now looks only for 'Law' and gives it 97%. Reader 2 still juggles 'application' and 'but', so its weight splits about 49% each.",
+       "set": {
+        "h": 2
+       },
+       "focus": "weakest",
+       "ms": 5200
+      },
+      {
+       "say": "Add a third reader. Every link now has its own reader, and each target gets 97%. Three sharp answers instead of one blur.",
+       "set": {
+        "h": 3
+       },
+       "focus": "weakest",
+       "ms": 4600
+      },
+      {
+       "say": "Each reader is what the paper calls an attention head. Running several side by side is multi-head attention. Each head has its own learned way of making queries, keys and values, so each can learn to look for something different.",
+       "focus": "h",
+       "ms": 5800
+      },
+      {
+       "say": "Here is the catch. The heads don't add work on top. The vector is split between them: 96 becomes 3 slices of 32 here, and the paper used 8 heads of 64 instead of one of 512. Total work stays about the same.",
+       "focus": "per_head",
+       "ms": 5800
+      },
+      {
+       "say": "Now ease the focus to 2.5. Each head still gives its own target 71%. A single head at this strength gave only 31%. Splitting the work, not shouting louder, is what keeps the links apart.",
+       "set": {
+        "s": 2.5
+       },
+       "focus": [
+        "weakest",
+        "law_weight"
+       ],
+       "ms": 5600
+      }
+     ]
+    },
+    "explanation": "One attention head turns its scores into weights that add up to 1 and gives back one weighted average. If a word needs several different things at once, a single head has to split its weight among them, and its output blurs their values together. Sharper scores cannot fix that. Multi-head attention runs several smaller heads in parallel, each with its own learned projections, so each can specialise. Their outputs are then joined and mixed by one more learned projection. The paper used 8 heads of length 64 in place of one head of length 512, keeping the cost similar. Its attention pictures (Figures 3–5) show heads that seem to track different things, such as what 'its' refers to. These are hand-picked examples, though, not proof of what every head does.",
+    "quote": "Multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions. With a single attention head, averaging inhibits this.",
+    "quote_where": "Section 3.2.2"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "MultiHead(Q, K, V) = Concat(head_{1}, …, head_{"
+     },
+     {
+      "text": "h",
+      "link": "h"
+     },
+     {
+      "text": "})W^{O},  where head_{i} = Attention(QW_{i}^{Q}, KW_{i}^{K}, VW_{i}^{V}),  with "
+     },
+     {
+      "text": "d_{k} = d_{model}/h",
+      "link": "per_head"
+     }
+    ],
+    "caption": "This is the paper's equation from Section 3.2.2. h (blue, the readers slider) is the number of heads. Each head_{i} runs ordinary attention after its own learned projections W_{i}^{Q}, W_{i}^{K} and W_{i}^{V}. Concat joins the heads' outputs and W^{O} mixes them. d_{k} = d_{model}/h (the per-reader length box) shows how the paper splits 512 into 8 heads of 64; the model splits 96 instead."
+   },
+   "recap": "One head can only average, so it blurs different links together. Several smaller heads, each with its own projections, can each lock onto a different link at about the same total cost."
+  },
+  {
+   "id": "positional_encoding",
+   "title": "Waves that tell the model where a word sits",
+   "idea": "Attention on its own ignores word order, so each position gets a unique fingerprint made from sine and cosine waves of different frequencies, which is added to the word.",
+   "role": "core",
+   "predict": {
+    "question": "A designer builds the fingerprint from four waves, but makes all four exactly as fast as the fastest wave here. Over a 50-word sentence, what happens?",
+    "options": [
+     "Some far-apart positions, such as 3 and 47, get almost the same fingerprint",
+     "Every position still gets a unique fingerprint, because there are still four waves",
+     "Fingerprints become even more distinct, because fast waves change quickly",
+     "Nothing changes: the speed of the waves does not matter"
+    ],
+    "answer": 0,
+    "why": [
+     "Right: four copies of the same wave all come back round together about every 6.3 positions. Positions 3 and 47 read almost the same on every wave, so nothing tells them apart.",
+     "Counting waves feels like it should help, but identical waves carry identical information. Uniqueness comes from the different speeds, not from how many waves there are.",
+     "Fast waves do separate close neighbours well. But they also repeat soon, so far-apart positions collide. You need slow waves to tell distant places apart.",
+     "Speed is the whole trick. You saw it with the fastest wave alone: its gap fell to about 0.02 at a distance of 44. Only the slower waves rescued the fingerprint."
+    ]
+   },
+   "terms": [
+    {
+     "term": "positional encoding",
+     "means": "The list of wave heights at a position: a fingerprint added to each word's numbers so the model knows where the word sits"
+    },
+    {
+     "term": "wavelength",
+     "means": "How many positions a wave covers before it starts repeating its heights"
+    },
+    {
+     "term": "relative position",
+     "means": "How far apart two words are, regardless of where they sit in the sentence"
+    }
+   ],
+   "model": {
+    "title": "Four waves read off at two positions in a sentence",
+    "note": "Teaching model: draws only the sine half of the first four wave pairs of a 16-number fingerprint. The paper uses 512 numbers. The cosine partners are counted in the gap boxes but not drawn. The gap is a simple distance between two fingerprints, made up for this lesson. Waves are drawn as smooth lines, though only whole positions exist. Numbers are illustrative, not the paper's data.",
+    "controls": [
+     {
+      "id": "pos",
+      "label": "Position A",
+      "kind": "slider",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 3,
+      "unit": "",
+      "color": 3
+     },
+     {
+      "id": "pos2",
+      "label": "Position B",
+      "kind": "slider",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 10,
+      "unit": "",
+      "color": 4
+     }
+    ],
+    "outputs": [
+     {
+      "id": "apart",
+      "label": "Positions apart",
+      "expr": "abs(pos - pos2)",
+      "decimals": 0,
+      "unit": "",
+      "color": 6
+     },
+     {
+      "id": "gap_fast",
+      "label": "Gap, fastest wave pair only",
+      "expr": "sqrt(max(0, 2 - 2 * cos(pos - pos2)))",
+      "decimals": 2,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "gap",
+      "label": "Gap, all four wave pairs",
+      "expr": "sqrt(max(0, (2 - 2 * cos(pos - pos2)) + (2 - 2 * cos((pos - pos2) * pow(10000, -2/16))) + (2 - 2 * cos((pos - pos2) * pow(10000, -4/16))) + (2 - 2 * cos((pos - pos2) * pow(10000, -6/16)))))",
+      "decimals": 2,
+      "unit": "",
+      "color": 7
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Position in the sentence",
+      "min": 0,
+      "max": 50
+     },
+     "y": {
+      "label": "Wave height",
+      "min": -1.2,
+      "max": 1.2
+     },
+     "series": [
+      {
+       "id": "wave_fast",
+       "label": "Fastest wave",
+       "expr": "sin(x)",
+       "color": 0
+      },
+      {
+       "id": "wave_2",
+       "label": "Second wave",
+       "expr": "sin(x * pow(10000, -2/16))",
+       "color": 1
+      },
+      {
+       "id": "wave_3",
+       "label": "Third wave",
+       "expr": "sin(x * pow(10000, -4/16))",
+       "color": 2
+      },
+      {
+       "id": "wave_slow",
+       "label": "Slowest wave",
+       "expr": "sin(x * pow(10000, -6/16))",
+       "color": 5
+      }
+     ],
+     "markers": [
+      {
+       "id": "marker_a",
+       "x": "pos",
+       "label": "A",
+       "color": 3
+      },
+      {
+       "id": "marker_b",
+       "x": "pos2",
+       "label": "B",
+       "color": 4
+      }
+     ],
+     "points": [
+      {
+       "id": "pa1",
+       "x": "pos",
+       "y": "sin(pos)",
+       "label": "A",
+       "color": 0
+      },
+      {
+       "id": "pa2",
+       "x": "pos",
+       "y": "sin(pos * pow(10000, -2/16))",
+       "color": 1
+      },
+      {
+       "id": "pa3",
+       "x": "pos",
+       "y": "sin(pos * pow(10000, -4/16))",
+       "color": 2
+      },
+      {
+       "id": "pa4",
+       "x": "pos",
+       "y": "sin(pos * pow(10000, -6/16))",
+       "color": 5
+      },
+      {
+       "id": "pb1",
+       "x": "pos2",
+       "y": "sin(pos2)",
+       "label": "B",
+       "color": 0
+      },
+      {
+       "id": "pb2",
+       "x": "pos2",
+       "y": "sin(pos2 * pow(10000, -2/16))",
+       "color": 1
+      },
+      {
+       "id": "pb3",
+       "x": "pos2",
+       "y": "sin(pos2 * pow(10000, -4/16))",
+       "color": 2
+      },
+      {
+       "id": "pb4",
+       "x": "pos2",
+       "y": "sin(pos2 * pow(10000, -6/16))",
+       "color": 5
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Read this picture left to right along a sentence, from word 0 to word 50. Each coloured wave rises and falls as you go.",
+      "focus": "wave_fast",
+      "ms": 3200
+     },
+     {
+      "say": "The waves move at different speeds. This one wiggles fast. The slowest one barely bends.",
+      "focus": [
+       "wave_fast",
+       "wave_slow"
+      ],
+      "ms": 3200
+     },
+     {
+      "say": "Slider A picks a position in the sentence. The dots show how high each wave sits there.",
+      "set": {
+       "pos": 12
+      },
+      "focus": "pos",
+      "ms": 3500
+     },
+     {
+      "say": "Slider B picks a second position to compare with A.",
+      "set": {
+       "pos2": 20
+      },
+      "focus": "pos2",
+      "ms": 3000
+     },
+     {
+      "say": "These boxes say how different the two positions look. One uses the fastest wave alone, the other uses all the waves.",
+      "focus": [
+       "gap_fast",
+       "gap"
+      ],
+      "ms": 3800
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Hunt for places where one wave gets fooled, then see whether all the waves together still tell the positions apart.",
+    "goals": [
+     {
+      "text": "Find a position B at least 10 away from A where the fastest wave pair alone almost can't tell them apart (gap below 0.2)",
+      "when": "gap_fast < 0.2 && abs(pos - pos2) >= 10",
+      "solution": {
+       "pos2": 28
+      },
+      "hints": [
+       "The fastest wave keeps repeating. You want B where it has come almost exactly full circle.",
+       "It repeats about every 6.3 positions. Try distances close to a multiple of 6.28, such as 19, 25 or 44.",
+       "Keep A where it is and try B about four full turns of the fast wave away: 4 × 6.28 is about 25 positions. Then compare the two gap boxes."
+      ]
+     },
+     {
+      "text": "Make A and B next-door neighbours somewhere past position 30, and check that the fingerprints still differ",
+      "when": "abs(abs(pos - pos2) - 1) < 0.5 && min(pos, pos2) >= 30",
+      "solution": {
+       "pos": 35,
+       "pos2": 36
+      },
+      "hints": [
+       "Both sliders need to move into the right half of the sentence.",
+       "Set A to some position above 30, then set B one step away from it.",
+       "Any pair of neighbours above 30 works. The full gap should read about 1.01, just as it does for neighbours near the start."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. A fingerprint is unique only because its waves move at different speeds. If every wave is equally fast, they all repeat together and far-apart positions collide.",
+     "incorrect": "It is tempting to think more waves always means more uniqueness. But identical waves repeat at the same moments. The paper's waves have wavelengths spread from 2π all the way to 10000·2π for exactly this reason."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Recall attention: a word compares its query with every other word's key. Nothing in that says where a word sits. Shuffle the sentence and each word gets the same weights, so position must be supplied separately.",
+       "set": {
+        "pos": 3,
+        "pos2": 10
+       },
+       "focus": "marker_a",
+       "ms": 5000
+      },
+      {
+       "say": "The fix: read off the height of every wave at a position. That list of heights is the position's fingerprint, and it is added to the word's own numbers. The paper calls it a positional encoding.",
+       "focus": [
+        "pa1",
+        "pa2",
+        "pa3",
+        "pa4"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "Why use several waves? Watch the fastest pair on its own. Move B to 47. Its gap drops to about 0.02, so positions 3 and 47 look almost identical to it.",
+       "set": {
+        "pos2": 47
+       },
+       "focus": "gap_fast",
+       "ms": 5000
+      },
+      {
+       "say": "The fastest wave's wavelength, the distance before it repeats, is only about 6.3 positions. Position 47 is 44 steps away, almost exactly 7 full turns, so the fast wave reads the same heights again.",
+       "focus": "wave_fast",
+       "ms": 5000
+      },
+      {
+       "say": "The slower waves have not come round yet. Counting all four pairs, the gap is about 2.4: clearly two different places. Slow waves separate distant positions.",
+       "focus": [
+        "gap",
+        "wave_slow"
+       ],
+       "ms": 4500
+      },
+      {
+       "say": "Now put B right next door, at 4. The slow waves hardly move, but the fast one does, so the gap is still about 1. Fast waves separate close neighbours.",
+       "set": {
+        "pos2": 4
+       },
+       "focus": "gap",
+       "ms": 4500
+      },
+      {
+       "say": "Slide both along to 30 and 31. The gap is still about 1.01. It depends only on how far apart two words are, their relative position, and not on where they sit.",
+       "set": {
+        "pos": 30,
+        "pos2": 31
+       },
+       "focus": [
+        "gap",
+        "apart"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "So every position gets its own pattern, and the patterns shift in a steady way. The authors hoped this would make rules like 'look one word back' easy for attention to learn.",
+       "set": {
+        "pos": 3,
+        "pos2": 47
+       },
+       "focus": [
+        "marker_a",
+        "marker_b"
+       ],
+       "ms": 4500
+      }
+     ]
+    },
+    "explanation": "Attention treats a sentence like a bag of words, so on its own it cannot tell 'dog bites man' from 'man bites dog'. The Transformer fixes this by adding a positional encoding to each word: a list of sine and cosine wave heights read off at that word's position. Fast waves separate neighbours but repeat quickly. Slow waves separate distant places. Together they give every position its own pattern. The authors also hypothesised that, because a fixed shift in position changes the pattern in a regular way, attention could easily learn to look at words by relative position. They tested learned position embeddings as an alternative and got nearly identical results (Table 3, row E: 25.7 vs 25.8 BLEU on the development set). They kept the waves because they might handle sentences longer than any seen in training. That benefit was suggested, not shown.",
+    "quote": "Since our model contains no recurrence and no convolution, in order for the model to make use of the order of the sequence, we must inject some information about the relative or absolute position of the tokens in the sequence. To this end, we add \"positional encodings\" to the input embeddings at the bottoms of the encoder and decoder stacks.",
+    "quote_where": "Section 3.5"
+   },
+   "check": {
+    "kind": "model",
+    "task": "At the start, A = 3 and B = 10 give a full fingerprint gap of about 2.05. Pick a different position A (not 3), then set B so the full gap is about 2.05 again.",
+    "when": "abs(gap - 2.05) < 0.02 && abs(pos - 3) >= 1",
+    "solution": {
+     "pos": 20,
+     "pos2": 27
+    },
+    "hint": "What did the starting pair have that you can copy anywhere in the sentence? Look at the 'Positions apart' box.",
+    "misconception": "That how different two fingerprints look depends on where the words sit in the sentence. With these waves, it depends only on how far apart the two positions are."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "PE_{(pos, 2i)} = sin("
+     },
+     {
+      "text": "pos",
+      "link": "pos"
+     },
+     {
+      "text": " / 10000^{2i/d_{model}}),   PE_{(pos, 2i+1)} = cos("
+     },
+     {
+      "text": "pos",
+      "link": "pos"
+     },
+     {
+      "text": " / 10000^{2i/d_{model}})"
+     }
+    ],
+    "caption": "This is the paper's own formula. 'pos' is the position you set with slider A or B. Each i is one wave pair: i = 0 is the fastest wave, and larger i gives slower waves, because the divisor 10000^{2i/d_{model}} grows. The model uses d_{model} = 16 and draws only the sine half of pairs i = 0 to 3. The paper uses d_{model} = 512, and its wavelengths run from 2π to 10000·2π. The gap boxes are this lesson's own distance between two fingerprints, not a quantity from the paper."
+   },
+   "recap": "Attention can't see order, so each word gets a wave-based fingerprint added to it: fast waves tell neighbours apart, slow waves tell distant places apart, and together every position is unique."
+  },
+  {
+   "id": "cost_tradeoff",
+   "title": "The price: comparing every pair of words",
+   "idea": "A self-attention layer's work grows with length squared times vector size (n²·d), a recurrent layer's with length times vector size squared (n·d²), so attention is cheaper only while inputs are shorter than vectors are long.",
+   "role": "core",
+   "predict": {
+    "question": "Keep the sentence at 100 words, but double the vector size from 512 to 1024 numbers per word. What happens to each layer's work?",
+    "options": [
+     "Both layers do twice the work",
+     "Attention doubles; the recurrent layer quadruples",
+     "Attention quadruples; the recurrent layer doubles",
+     "Neither changes, because the sentence is the same length"
+    ],
+    "answer": 1,
+    "why": [
+     "It seems fair that both scale the same way. But the recurrent layer pushes each vector through a d × d grid of weights, so its work grows with d², not d.",
+     "Right. Attention's work is n²·d, so doubling d doubles it. The recurrent layer's is n·d², so doubling d multiplies it by four.",
+     "This swaps the two rules. Squaring belongs to sentence length for attention (n²) and to vector size for the recurrent layer (d²).",
+     "Length is fixed, but every match score and every weight-grid step works on vectors. Longer vectors mean more arithmetic in both layers."
+    ]
+   },
+   "terms": [
+    {
+     "term": "recurrent layer",
+     "means": "The older design that reads words one at a time and updates a running summary at each step"
+    },
+    {
+     "term": "quadratic growth",
+     "means": "Growth with the square of a quantity: double it and the work goes up four times"
+    },
+    {
+     "term": "per-layer complexity",
+     "means": "How a layer's amount of arithmetic grows as the input length n and vector size d grow"
+    }
+   ],
+   "model": {
+    "title": "How much arithmetic one layer needs as the input gets longer",
+    "note": "Teaching model: it counts only the main term of each layer's arithmetic (n²·d and n·d², constants dropped) and ignores hardware and how much work can run at once. Numbers are illustrative, not measurements from the paper. The default vector size of 512 is the paper's base-model size.",
+    "controls": [
+     {
+      "id": "n",
+      "label": "Input length (words)",
+      "kind": "slider",
+      "min": 10,
+      "max": 2000,
+      "step": 10,
+      "default": 100,
+      "unit": " words",
+      "color": 1
+     },
+     {
+      "id": "d",
+      "label": "Vector size (numbers per word)",
+      "kind": "slider",
+      "min": 64,
+      "max": 1024,
+      "step": 64,
+      "default": 512,
+      "unit": "",
+      "color": 0
+     }
+    ],
+    "outputs": [
+     {
+      "id": "att",
+      "label": "Attention layer work",
+      "expr": "n * n * d / 1000000",
+      "unit": " M",
+      "decimals": 1,
+      "color": 2
+     },
+     {
+      "id": "rec",
+      "label": "Step-by-step reader work",
+      "expr": "n * d * d / 1000000",
+      "unit": " M",
+      "decimals": 1,
+      "color": 3
+     },
+     {
+      "id": "ratio",
+      "label": "Attention ÷ step-by-step",
+      "expr": "att / rec",
+      "unit": "×",
+      "decimals": 2,
+      "color": 4
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Input length (words)",
+      "min": 0,
+      "max": 2000
+     },
+     "y": {
+      "label": "Work per layer (millions of multiply-adds)",
+      "min": 0,
+      "max": "max(300, 1.15 * max(n * n * d, n * d * d) / 1000000)"
+     },
+     "series": [
+      {
+       "id": "att_curve",
+       "label": "Attention layer",
+       "expr": "x * x * d / 1000000",
+       "color": 2,
+       "dashed": false
+      },
+      {
+       "id": "rec_curve",
+       "label": "Step-by-step reader",
+       "expr": "x * d * d / 1000000",
+       "color": 3,
+       "dashed": false
+      }
+     ],
+     "markers": [
+      {
+       "id": "cross",
+       "x": "d",
+       "label": "Curves cross",
+       "color": 0
+      },
+      {
+       "id": "len_marker",
+       "x": "n",
+       "label": "Your input",
+       "color": 1
+      }
+     ],
+     "points": [
+      {
+       "id": "att_pt",
+       "x": "n",
+       "y": "att",
+       "label": "Attention",
+       "color": 2
+      },
+      {
+       "id": "rec_pt",
+       "x": "n",
+       "y": "rec",
+       "label": "Step-by-step",
+       "color": 3
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Left to right is input length in words. Height is how much arithmetic one layer needs to process it.",
+      "focus": "len_marker",
+      "ms": 3000
+     },
+     {
+      "say": "This curve is an attention layer. Every word compares itself with every other word.",
+      "focus": "att_curve",
+      "ms": 3000
+     },
+     {
+      "say": "This curve is an older step-by-step reader. It goes through the words one at a time.",
+      "focus": "rec_curve",
+      "ms": 3000
+     },
+     {
+      "say": "This slider sets the input length. The two dots show each layer's work at that length.",
+      "set": {
+       "n": 300
+      },
+      "focus": [
+       "n",
+       "att_pt",
+       "rec_pt"
+      ],
+      "ms": 3200
+     },
+     {
+      "say": "This slider sets vector size: how many numbers describe each word. Watch where the curves cross.",
+      "set": {
+       "d": 768
+      },
+      "focus": [
+       "d",
+       "cross"
+      ],
+      "ms": 3400
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with length and vector size. Find where attention stops being the bargain, then win it back.",
+    "goals": [
+     {
+      "text": "Make attention the more expensive of the two layers",
+      "when": "ratio > 1",
+      "solution": {
+       "n": 800
+      },
+      "hints": [
+       "Which kind of input makes 'every word compares with every word' costly?",
+       "Push the input length slider to the right, past the 'Curves cross' line.",
+       "Keep vector size at 512. Attention costs more once the length passes the vector size, so go past that."
+      ]
+     },
+     {
+      "text": "With an input of at least 1,000 words, make attention the cheaper layer again",
+      "when": "n >= 1000 && ratio < 1",
+      "solution": {
+       "n": 1000,
+       "d": 1024
+      },
+      "hints": [
+       "Attention wins while the input is shorter than something. What else could you change?",
+       "The curves cross where length equals vector size. Move that crossing to the right of your input.",
+       "Leave the length where it is and push the vector size as high as it goes."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. Vector size enters attention once (n²·d) but enters the recurrent layer squared (n·d²). Doubling d doubles one and quadruples the other.",
+     "incorrect": "The squares sit in different places. Attention squares the length, because it compares every pair of words. The recurrent layer squares the vector size, because it multiplies each vector by a d × d grid of weights. So doubling d doubles attention's work and quadruples the recurrent layer's."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with a 50-word sentence and 512 numbers per word, the size the paper used. Attention's dot sits well below the step-by-step reader's.",
+       "set": {
+        "n": 50,
+        "d": 512
+       },
+       "focus": [
+        "att_pt",
+        "rec_pt"
+       ],
+       "ms": 3200
+      },
+      {
+       "say": "Why? Attention scores every word against every word: 50 × 50 pairs, and each score uses 512 numbers. That is n² · d, its per-layer complexity: how its work grows with length and vector size.",
+       "focus": "att",
+       "ms": 4200
+      },
+      {
+       "say": "The step-by-step reader is called a recurrent layer. It takes one word per step, but each step pushes a 512-number vector through a 512 × 512 grid of weights. That is n · d².",
+       "focus": "rec",
+       "ms": 3800
+      },
+      {
+       "say": "Stretch the input to about 512 words. The two dots meet, because the curves cross exactly where length equals vector size.",
+       "set": {
+        "n": 520
+       },
+       "focus": "cross",
+       "ms": 3400
+      },
+      {
+       "say": "Go further. Attention shows quadratic growth: triple the words and you get nine times the pairs. Its curve bends up and away.",
+       "set": {
+        "n": 1500
+       },
+       "focus": "att_curve",
+       "ms": 3600
+      },
+      {
+       "say": "Now give each word 1024 numbers. The crossing moves right, because the recurrent layer pays for vector size squared.",
+       "set": {
+        "d": 1024
+       },
+       "focus": [
+        "d",
+        "cross"
+       ],
+       "ms": 3400
+      },
+      {
+       "say": "Back to 512 numbers per word and a 2,000-word document. Attention now does about four times the work. Short sentences are cheap. Whole documents are not.",
+       "set": {
+        "d": 512,
+        "n": 2000
+       },
+       "focus": "ratio",
+       "ms": 4000
+      }
+     ]
+    },
+    "explanation": "An attention layer compares every word with every other word, so its work grows with the square of the length times the vector size (n²·d). A recurrent layer reads one word at a time, but each step multiplies a vector by a square grid of weights, so its work grows with length times vector size squared (n·d²). The ratio of the two is simply n/d, so attention is cheaper exactly when the input has fewer words than each word has numbers. The paper compares the per-layer complexity of each layer type in Table 1. It argues that translation sentences, split into word pieces, are usually shorter than the 512-number vectors, so attention comes out ahead there. For very long inputs the paper does not claim a win: it suggests, as future work, letting each word attend only to a nearby window. These are counts of leading terms, not measured running times.",
+    "quote": "length n is smaller than the representation dimensionality d, which is most often the case with sentence representations used by state-of-the-art models in machine translations, such as word-piece [38] and byte-pair [31] representations. To improve computational performance for tasks involving very long sequences, self-attention could be restricted to considering only a neighborhood of size r in the input sequence centered around the respective output position.",
+    "quote_where": "Section 4 (Why Self-Attention)"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "Self-attention: O("
+     },
+     {
+      "text": "n",
+      "link": "n"
+     },
+     {
+      "text": "² · "
+     },
+     {
+      "text": "d",
+      "link": "d"
+     },
+     {
+      "text": ")    Recurrent: O("
+     },
+     {
+      "text": "n",
+      "link": "n"
+     },
+     {
+      "text": " · "
+     },
+     {
+      "text": "d",
+      "link": "d"
+     },
+     {
+      "text": "²)"
+     }
+    ],
+    "caption": "From the paper's Table 1 (complexity per layer). n is the input length, set by the input length slider. d is the representation dimension, set by the vector size slider. O(…) means 'grows like', with constant factors dropped, just as the model drops them. Dividing the two gives n/d, the ratio shown in the model."
+   },
+   "recap": "Attention pays for every pair of words (n²·d) and recurrence pays for big weight grids (n·d²), so attention is cheaper only while inputs are shorter than the vectors are long."
+  },
+  {
+   "id": "one_step_paths",
+   "title": "One step from any word to any word",
+   "idea": "A recurrent model relays information through every word in between, one step at a time; self-attention links any two words in one step and handles all words at once, so the Transformer trains faster and links distant words better.",
+   "role": "contribution",
+   "predict": {
+    "question": "To save work, suppose each word may only attend to words within 10 positions of itself, not the whole sentence. In a 100-word sentence, roughly how many back-to-back steps does a message need to get from the first word to the last?",
+    "options": [
+     "1 step, as with full attention",
+     "About 10 steps",
+     "About 100 steps",
+     "About 2 steps"
+    ],
+    "answer": 1,
+    "why": [
+     "It is still attention, so one step sounds right. But the single step comes from every word seeing every other word. With a 10-word reach, the last word cannot see the first one directly.",
+     "Correct. Each step can jump about 10 positions, so crossing 100 words takes about 100 ÷ 10 = 10 hops. The paper says this restricted version raises the path to O(n/r).",
+     "This is the word-by-word model's count. A 10-word reach still lets each hop skip many words, so it beats one hop per word.",
+     "Two steps is what spaced-out windows would give, because their reach multiplies each layer: 10 × 10 = 100. A fixed 10-word reach doesn't multiply. It adds about 10 words a step, so the count grows in step with length: about 100 ÷ 10."
+    ]
+   },
+   "terms": [
+    {
+     "term": "path length",
+     "means": "How many back-to-back steps a signal must pass through to get from one word to another inside the network"
+    },
+    {
+     "term": "long-range dependency",
+     "means": "A link between words far apart in a sentence, such as a pronoun and the name it refers to"
+    },
+    {
+     "term": "sequential operations",
+     "means": "Calculations that must wait for the previous one to finish, so they cannot all run at the same time"
+    }
+   ],
+   "model": {
+    "title": "Steps needed to get from the first word to the last, as sentences grow",
+    "note": "Teaching model: steps are counted as n − 1 hand-offs for the word-by-word model, 1 for attention, and the number of stacked layers (log base k of n, rounded up) for spaced-out windows. That log rate is the paper's Table 1 figure, which assumes dilated convolutions, where each layer's window spreads its words further apart. Ordinary side-by-side windows need about n ÷ k layers instead. The curves ignore constant factors, the cost of each step and real hardware, and are illustrative, not measured data.",
+    "controls": [
+     {
+      "id": "n",
+      "label": "Sentence length (words)",
+      "kind": "slider",
+      "min": 2,
+      "max": 100,
+      "step": 1,
+      "default": 10,
+      "unit": "",
+      "color": 3
+     },
+     {
+      "id": "show_conv",
+      "label": "Show the spaced-out window model",
+      "kind": "toggle",
+      "default": 0,
+      "color": 2,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "k",
+      "label": "Window width (words seen at once)",
+      "kind": "slider",
+      "min": 2,
+      "max": 9,
+      "step": 1,
+      "default": 3,
+      "unit": "",
+      "color": 2
+     }
+    ],
+    "outputs": [
+     {
+      "id": "rnn_steps",
+      "label": "Word-by-word: steps first → last",
+      "expr": "n - 1",
+      "unit": "",
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "attn_steps",
+      "label": "Attention: steps first → last",
+      "expr": "1",
+      "unit": "",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "conv_steps",
+      "label": "Spaced-out windows: steps first → last",
+      "expr": "ceil(log(n) / log(k) - 0.000001)",
+      "unit": "",
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "ratio",
+      "label": "Word-by-word steps ÷ attention steps",
+      "expr": "rnn_steps / attn_steps",
+      "unit": "×",
+      "decimals": 0,
+      "color": 1
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Sentence length (words)",
+      "min": 2,
+      "max": 100
+     },
+     "y": {
+      "label": "Back-to-back steps, first word → last word",
+      "min": 0,
+      "max": 100
+     },
+     "series": [
+      {
+       "id": "rnn_curve",
+       "label": "Word-by-word model",
+       "expr": "x - 1",
+       "color": 1,
+       "dashed": false
+      },
+      {
+       "id": "conv_curve",
+       "label": "Spaced-out (dilated) windows",
+       "expr": "show_conv ? log(x) / log(k) : -10",
+       "color": 2,
+       "dashed": false
+      },
+      {
+       "id": "attn_curve",
+       "label": "Attention",
+       "expr": "1",
+       "color": 0,
+       "dashed": false
+      }
+     ],
+     "markers": [
+      {
+       "id": "len_marker",
+       "x": "n",
+       "label": "This sentence",
+       "color": 3
+      }
+     ],
+     "points": [
+      {
+       "id": "rnn_pt",
+       "x": "n",
+       "y": "n - 1",
+       "label": "Word-by-word"
+      },
+      {
+       "id": "attn_pt",
+       "x": "n",
+       "y": "1",
+       "label": "Attention"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Picture a message that has to travel from the first word of a sentence to the last. Each curve counts how many steps that trip takes.",
+      "focus": "rnn_curve",
+      "ms": 3200
+     },
+     {
+      "say": "The rising line is a word-by-word model. It reads one word, then the next, then the next, passing the message along.",
+      "focus": "rnn_curve",
+      "ms": 3200
+     },
+     {
+      "say": "The flat line is attention, which you met earlier. Any word can look straight at any other word.",
+      "focus": "attn_curve",
+      "ms": 3000
+     },
+     {
+      "say": "This slider sets how long the sentence is. The marker and the two dots follow it.",
+      "set": {
+       "n": 40
+      },
+      "focus": [
+       "n",
+       "len_marker"
+      ],
+      "ms": 3200
+     },
+     {
+      "say": "This switch adds a third design: small windows stacked in layers, where each layer's window spreads its words further apart. The other slider sets how many words each window sees.",
+      "set": {
+       "show_conv": 1
+      },
+      "focus": [
+       "show_conv",
+       "k"
+      ],
+      "ms": 3600
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Stretch the sentence and watch the word-by-word line run away from attention. Then switch on the spaced-out windows and see how far a wider window gets you.",
+    "goals": [
+     {
+      "text": "Find a sentence long enough that the word-by-word model needs at least 50 times as many steps as attention",
+      "when": "ratio >= 50",
+      "solution": {
+       "n": 60
+      },
+      "hints": [
+       "Attention always needs one step. What makes the word-by-word count grow?",
+       "Drag the sentence-length slider to the right and watch the ratio box.",
+       "The ratio is the word-by-word count divided by 1, so you need that count to reach 50."
+      ]
+     },
+     {
+      "text": "Show the spaced-out window model, then make a sentence of 60 words or more need only 2 window steps",
+      "when": "show_conv == 1 && n >= 60 && conv_steps <= 2",
+      "solution": {
+       "show_conv": 1,
+       "n": 64,
+       "k": 8
+      },
+      "hints": [
+       "Turn on the spaced-out window model first. Which slider makes each window cover more words?",
+       "Each layer reaches k times further than the last, so two layers reach k × k words.",
+       "Find the narrowest window whose k × k is at least the sentence length."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Right. Attention's single step depends on every word seeing every other word. Limit the reach to 10 words and the message must hop about 100 ÷ 10 = 10 times. The paper notes this restricted version would raise the path to O(n/r).",
+     "incorrect": "You probably assumed any kind of attention gives one step. The one-step link exists only because each word can look at the whole sentence. With a 10-word reach, the first and last words of a 100-word sentence are out of sight of each other, so the message needs about 10 hops."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with a two-word sentence. Both models need just one step: the first word hands straight to the second.",
+       "set": {
+        "n": 2,
+        "show_conv": 0,
+        "k": 3
+       },
+       "focus": [
+        "rnn_steps",
+        "attn_steps"
+       ],
+       "ms": 3200
+      },
+      {
+       "say": "Now 20 words. The word-by-word model must relay the message through every word in between, 19 hand-offs. That count of hops is called the path length.",
+       "set": {
+        "n": 20
+       },
+       "focus": "rnn_pt",
+       "ms": 3800
+      },
+      {
+       "say": "At 100 words it is 99 hand-offs. Each one is a chance for the message to fade. Linking far-apart words, such as 'its' and the noun it refers to, is a long-range dependency, and long paths make those harder to learn.",
+       "set": {
+        "n": 100
+       },
+       "focus": "rnn_curve",
+       "ms": 4400
+      },
+      {
+       "say": "Attention stays flat at one step, however long the sentence gets. Every word looks directly at every other word.",
+       "focus": "attn_curve",
+       "ms": 3400
+      },
+      {
+       "say": "Spaced-out windows sit in between. Each layer reaches several times further than the last, so the path grows only slowly, but it still grows and never drops to one. Ordinary side-by-side windows grow faster, about n ÷ k layers.",
+       "set": {
+        "show_conv": 1,
+        "k": 3
+       },
+       "focus": "conv_curve",
+       "ms": 3800
+      },
+      {
+       "say": "The rising line counts something else too: word 5 cannot be computed until word 4 is done. Calculations that must wait like this are sequential operations. Attention handles all words at once, which suits parallel hardware.",
+       "set": {
+        "show_conv": 0
+       },
+       "focus": "rnn_curve",
+       "ms": 4600
+      },
+      {
+       "say": "This was the Transformer's bet: drop word-by-word reading entirely. Its base model trained in 12 hours on eight GPUs. It still beat every previously published English-to-German system, including ensembles (paper, Section 6.1 and Table 2).",
+       "set": {
+        "n": 100
+       },
+       "focus": [
+        "ratio",
+        "attn_curve"
+       ],
+       "ms": 5200
+      }
+     ]
+    },
+    "explanation": "A word-by-word model passes information along one word at a time. Linking words far apart takes many steps, and each word's calculation must wait for the one before. Self-attention lets every word look at every other word in one step, so the path between any two words stays short and all words can be computed at the same time. The paper compares these properties in its Table 1 and argues, citing earlier work, that shorter paths make long-range links easier to learn. That argument is a reason to expect benefits, not a proof on its own. The price is the n²·d cost you met in the previous concept, which grows quickly for very long inputs. The evidence comes from results: the big Transformer reached 28.4 BLEU on English-to-German, more than 2 points above the best earlier systems, after training for 3.5 days on eight GPUs. Those gains come from the whole design, not from path length alone.",
+    "quote": "As noted in Table 1, a self-attention layer connects all positions with a constant number of sequentially executed operations, whereas a recurrent layer requires O(n) sequential operations.",
+    "quote_where": "Section 4 (Why Self-Attention)"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "Maximum path length:  Recurrent O("
+     },
+     {
+      "text": "n",
+      "link": "n"
+     },
+     {
+      "text": ")   Convolutional O(log_{"
+     },
+     {
+      "text": "k",
+      "link": "k"
+     },
+     {
+      "text": "}(n))   Self-Attention O("
+     },
+     {
+      "text": "1",
+      "link": "attn_steps"
+     },
+     {
+      "text": ")"
+     }
+    ],
+    "caption": "From the paper's Table 1. n is sentence length (the length slider). k is the window width of a convolution (the width slider); Table 1's log rate assumes dilated, spaced-out convolutions, and the paper notes ordinary ones need O(n/k) layers. The '1' for self-attention is the flat line: a constant number of steps, whatever the length. The model draws these growth rates without the constant factors that O(·) hides."
+   },
+   "recap": "Attention links any two words in one step and handles all words at once. That short path and parallel work let the Transformer train faster and translate better than word-by-word models."
+  }
+ ],
+ "omitted": []
+}

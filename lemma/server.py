@@ -95,6 +95,28 @@ def load_example() -> tuple[dict, str]:
     return lesson, source
 
 
+GALLERY = EXAMPLES.joinpath("gallery")
+
+
+def gallery_index() -> list[dict]:
+    return json.loads(GALLERY.joinpath("index.json").read_text(encoding="utf-8"))
+
+
+def load_gallery(slug: str) -> tuple[dict, str | None]:
+    """A finished lesson anyone can open, read-only like the example. Only Galton's paper is public domain, so
+    the others ship without their papers' text: their quotes were checked against it before they were added."""
+    entry = next((e for e in gallery_index() if e["slug"] == slug), None)
+    if entry is None:
+        raise ApiError(404, "That lesson isn't in the gallery.")
+    if slug == "galton-1886":
+        lesson, source = load_example()
+    else:
+        lesson, source = json.loads(GALLERY.joinpath(f"{slug}.json").read_text(encoding="utf-8")), None
+    lesson["example"] = True  # built in: it can't be saved or edited, only played and downloaded
+    lesson["gallery"] = {k: entry[k] for k in ("slug", "field", "made")}
+    return lesson, source
+
+
 def source_for(lesson_id: str, owner: str | None = None) -> str | None:
     if (owner, lesson_id) in SOURCES:
         return SOURCES[(owner, lesson_id)]
@@ -518,6 +540,23 @@ def api_example(_body):
     return lesson
 
 
+def api_gallery(_body):
+    items = []
+    for entry in gallery_index():
+        lesson, _ = load_gallery(entry["slug"])
+        cover = next(c for c in lesson["concepts"] if c["id"] == entry["cover"])
+        items.append({**lesson["gallery"], "title": lesson["title"], "source": lesson["source"],
+                      "concepts": [c["title"] for c in lesson["concepts"]],
+                      "cover": {"title": cover["title"], "model": cover["model"], "values": entry.get("cover_values", {})}})
+    return items
+
+
+def api_gallery_lesson(slug):
+    lesson, source = load_gallery(slug)
+    require_valid(lesson, source)
+    return lesson
+
+
 def api_save(body):
     lesson = body.get("lesson")
     if not isinstance(lesson, dict):
@@ -563,7 +602,9 @@ def api_export(body):
     lesson = body.get("lesson")
     if not isinstance(lesson, dict):
         raise ApiError(400, "No lesson to export.")
-    if lesson.get("example"):
+    if isinstance(lesson.get("gallery"), dict):
+        lesson, source = load_gallery(str(lesson["gallery"].get("slug", "")))  # the lesson as shipped, not as sent
+    elif lesson.get("example"):
         source = load_example()[1]
     else:
         source = source_for(str(lesson.get("id", "")), _owner()) or None
@@ -593,6 +634,8 @@ ROUTES = [
     ("GET", r"/api/jobs/([a-f0-9]{12})", api_job, True),
     ("POST", r"/api/jobs/([a-f0-9]{12})/cancel", api_job_cancel, True),
     ("GET", r"/api/example", api_example, False),
+    ("GET", r"/api/gallery", api_gallery, False),
+    ("GET", r"/api/gallery/([a-z0-9-]{1,64})", api_gallery_lesson, True),
     ("GET", r"/api/lessons", api_lessons, False),
     ("POST", r"/api/lessons", api_save, False),
     ("GET", r"/api/lessons/([A-Za-z0-9_-]{1,64})", api_lesson, True),

@@ -408,9 +408,21 @@ def _control_map(model) -> dict:
     return {c["id"]: c for c in model.get("controls", []) if isinstance(c, dict) and "id" in c}
 
 
+def _pinned(model, when: str, sol: dict, cid: str, c: dict) -> bool:
+    """Whether the goal fixes this control at exactly its solution value, so the value is part of the
+    task (such as "set up the paper's case: power 0.6") rather than the answer to find."""
+    v, step = sol[cid], c.get("step")
+    neighbours = [v + d for d in (-step, step) if _finite(step) and step > 0 and c["min"] <= v + d <= c["max"]]
+    try:
+        return bool(neighbours) and not any(expr.evaluate(when, compute(model, {**sol, cid: n})) for n in neighbours)
+    except expr.ExprError:
+        return False
+
+
 def _check_not_given_away(model, goal, where, P: Problems):
     """A goal and its hints say what to achieve and where to look, never the slider value that achieves it:
-    finding that value is the practice, and Show me is there for a learner who is stuck."""
+    finding that value is the practice, and Show me is there for a learner who is stuck. A value the goal
+    itself fixes, such as the paper's own setting to start from, may be stated."""
     sol = goal.get("solution")
     if not isinstance(sol, dict):
         return
@@ -419,6 +431,8 @@ def _check_not_given_away(model, goal, where, P: Problems):
     for cid, v in sol.items():
         c = sliders.get(cid)
         if c is None or not isinstance(v, (int, float)) or isinstance(v, bool) or v == c.get("default"):
+            continue
+        if isinstance(goal.get("when"), str) and _pinned(model, goal["when"], sol, cid, c):
             continue
         for i, text in enumerate(told):
             if any(abs(float(n) - v) < 1e-9 for n in NUMBER_RE.findall(str(text))):

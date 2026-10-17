@@ -1063,6 +1063,33 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(s, 200, raw)
         self.assertGreater(json.loads(raw)["chars"], 40000)
 
+    def test_gallery_lessons_open_read_only(self):
+        items = json.loads(self.req("GET", "/api/gallery")[1])
+        self.assertEqual([x["slug"] for x in items], ["attention-2017", "ioannidis-2005", "wuhan-2020", "opinion-dynamics-2002", "gettier-1963", "galton-1886"])
+        for x in items:
+            self.assertTrue(x["field"] and x["made"] and x["concepts"] and x["cover"]["model"]["visual"], x["slug"])
+            s, raw = self.req("GET", f"/api/gallery/{x['slug']}")
+            self.assertEqual(s, 200, raw)
+            lesson = json.loads(raw)
+            self.assertTrue(lesson["example"])
+            self.assertEqual(lesson["gallery"]["slug"], x["slug"])
+            self.assertEqual(list(L.check_lesson(lesson, None)), [], x["slug"])
+            self.assertEqual(self.req("POST", "/api/lessons", {"lesson": lesson})[0], 400)  # can't be saved or edited
+        self.assertEqual(self.req("GET", "/api/gallery/nope")[0], 404)
+        # A download is made from the lesson as shipped, whatever the browser sends back.
+        tampered = json.loads(self.req("GET", "/api/gallery/gettier-1963")[1])
+        tampered["title"] = "Something else entirely"
+        s, html = self.req("POST", "/api/export", {"lesson": tampered})
+        self.assertEqual(s, 200)
+        self.assertNotIn(b"Something else entirely", html)
+
+    @unittest.skipUnless((ROOT / "eval/results/pilot-claude").is_dir(), "needs the pilot run's paper texts")
+    def test_gallery_quotes_match_their_papers(self):
+        for pid, slug in [(1, "attention-2017"), (21, "ioannidis-2005"), (25, "wuhan-2020"), (45, "opinion-dynamics-2002"), (50, "gettier-1963")]:
+            lesson = json.loads((ROOT / f"lemma/examples/gallery/{slug}.json").read_text())
+            source = (ROOT / f"eval/results/pilot-claude/papers/{pid:02d}/source.txt").read_text()
+            self.assertEqual(list(L.check_lesson(lesson, source)), [], slug)
+
     def test_unexpected_error_is_reported_without_its_message(self):
         import contextlib
         import io

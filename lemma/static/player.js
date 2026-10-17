@@ -177,7 +177,9 @@
           h("h1", {}, lesson.title),
           h("p", { class: "source" }, "From ", h("cite", {}, src.url ? h("a", { href: src.url, target: "_blank", rel: "noopener noreferrer" }, src.title) : src.title), citation(src) ? `, ${citation(src)}` : "", src.venue ? `. ${src.venue}` : ""),
           lesson.sources ? h("details", { class: "advanced" }, h("summary", {}, `${lesson.sources.length} lesson sources`), h("ul", {}, lesson.sources.map((s) => h("li", {}, s.url ? h("a", { href: s.url, target: "_blank", rel: "noopener noreferrer" }, s.title) : s.title)))) : null,
-          lesson.example ? h("p", { class: "note" }, "This is Lemma's built-in example, made from Francis Galton's 1886 paper. It works without any setup, so you can see how a lesson feels before making one from your own paper.") : null,
+          lesson.example ? h("p", { class: "note" }, lesson.gallery && lesson.gallery.slug !== "galton-1886"
+            ? `This lesson is from Lemma's gallery. ${lesson.gallery.made}. It works without any setup, so you can see how a lesson feels before making one from your own paper.`
+            : "This is Lemma's built-in example, made from Francis Galton's 1886 paper. It works without any setup, so you can see how a lesson feels before making one from your own paper.") : null,
           h("p", { class: "summary" }, intro.summary || ""),
           (intro.background || []).length ? h("section", {}, h("h3", {}, "Good to know first"), h("ul", {}, intro.background.map((b) => h("li", {}, b)))) : null,
           (intro.known || []).length ? h("p", { class: "muted" }, "You said you already know: " + intro.known.join("; ") + ". Those concepts are skipped.") : null,
