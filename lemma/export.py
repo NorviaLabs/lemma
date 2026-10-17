@@ -14,7 +14,7 @@ SCRIPTS = ("expr.js", "kernels.js", "visuals.js", "player.js")
 CSP = "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'"
 
 # Every face the lesson uses is embedded, so the offline file looks the same without a network.
-EMBEDDED_FONTS = ("atkinson-hyperlegible-next-latin-normal.woff2", "atkinson-hyperlegible-next-latin-italic.woff2", "literata-latin-italic.woff2")
+EMBEDDED_FONTS = ("archivo-latin-normal.woff2", "spline-sans-mono-latin-normal.woff2")
 
 BOOT = """
 LemmaPlayer.mount(document.getElementById("main"), JSON.parse(document.getElementById("lesson-data").textContent), {});
