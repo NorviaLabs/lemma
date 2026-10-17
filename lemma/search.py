@@ -373,7 +373,7 @@ def _search(query: str, on_progress=None) -> dict:
             if k in seen:
                 kept, extra = seen[k], r.get("urls") or [r["url"]]
                 mine = kept.get("urls") or [kept["url"]]
-                kept["urls"] = list(dict.fromkeys(extra + mine if r["source"] == "Europe PMC" else mine + extra))
+                kept["urls"] = list(dict.fromkeys(extra + mine if r["source"] == "Europe PMC" else mine + extra))[:5]  # a build accepts at most five links per source
                 continue
             seen[k] = r
             results.append(r)
@@ -389,7 +389,7 @@ def _search(query: str, on_progress=None) -> dict:
             result.update(available=False, availability_error=str(e))
         else:
             # Open the verified copy, not a publisher link that may have returned 403.
-            result.update(available=True, url=paper.url, urls=list(dict.fromkeys([paper.url] + urls)))
+            result.update(available=True, url=paper.url, urls=list(dict.fromkeys([paper.url] + urls))[:5])
         result["link"] = ingest.reader_link(result["url"])  # what the learner opens, which may differ from what Lemma reads
         report(checked=1, readable=int(result["available"]))
 
