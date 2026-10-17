@@ -2,25 +2,21 @@
  {
   "slug": "attention-2017",
   "field": "Machine learning",
-  "made": "Built with Claude Opus 5.5 from the paper, then reviewed and edited",
   "cover": "positional_encoding"
  },
  {
   "slug": "ioannidis-2005",
   "field": "Research methods",
-  "made": "Built with Claude Opus 5.5 from the paper, then reviewed and edited",
   "cover": "false_alarms_and_power"
  },
  {
   "slug": "wuhan-2020",
   "field": "Epidemiology",
-  "made": "Built with Claude Opus 5.5 from the paper, then reviewed and edited",
   "cover": "doubling_time"
  },
  {
   "slug": "opinion-dynamics-2002",
   "field": "Social science",
-  "made": "Built with Claude Opus 5.5 from the paper, then reviewed and edited",
   "cover": "splits_lock_in",
   "cover_values": {
    "conf": 0.22
@@ -29,13 +25,11 @@
  {
   "slug": "gettier-1963",
   "field": "Philosophy",
-  "made": "Built with Claude Opus 5.5 from the paper, then reviewed and edited",
   "cover": "three_conditions"
  },
  {
   "slug": "galton-1886",
   "field": "Statistics",
-  "made": "Written by hand from the paper",
   "cover": "why_regression"
  }
 ]

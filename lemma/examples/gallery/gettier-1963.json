@@ -45,10 +45,6 @@
    "body": "In two pages, Gettier showed that the standard definition of knowledge has a gap. A belief can tick every box and still be correct only by accident, because the thing that makes it true is not the thing that supports it. This launched decades of attempts to find a 'fourth condition'. The argument does depend on readers sharing the intuition that Smith does not know, and later philosophers have tested and debated that intuition. Gettier also offers no fix of his own."
   }
  ],
- "provider": {
-  "name": "Claude",
-  "model": "claude-opus-5-5"
- },
  "concepts": [
   {
    "id": "three_conditions",

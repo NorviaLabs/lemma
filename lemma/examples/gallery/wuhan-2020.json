@@ -49,10 +49,6 @@
    "quote_where": "Discussion"
   }
  ],
- "provider": {
-  "name": "Claude",
-  "model": "claude-opus-5-5"
- },
  "concepts": [
   {
    "id": "doubling_time",

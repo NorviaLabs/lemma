@@ -49,10 +49,6 @@
    "body": "The paper shifts attention from single p-values to the whole context: how plausible the idea was, how big the study was, how flexible the analysis was, and how many others tried. It argues for larger studies, pre-registration and judging the totality of evidence. It is a model, though, not a survey of real error rates. Its numbers rest on assumed values for R and bias, and the factors can interact in ways the simple formulas ignore."
   }
  ],
- "provider": {
-  "name": "Claude",
-  "model": "claude-opus-5-5"
- },
  "concepts": [
   {
    "id": "false_alarms_and_power",

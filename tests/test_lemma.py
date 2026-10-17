@@ -1067,7 +1067,7 @@ class ServerTests(unittest.TestCase):
         items = json.loads(self.req("GET", "/api/gallery")[1])
         self.assertEqual([x["slug"] for x in items], ["attention-2017", "ioannidis-2005", "wuhan-2020", "opinion-dynamics-2002", "gettier-1963", "galton-1886"])
         for x in items:
-            self.assertTrue(x["field"] and x["made"] and x["concepts"] and x["cover"]["model"]["visual"], x["slug"])
+            self.assertTrue(x["field"] and x["concepts"] and x["cover"]["model"]["visual"], x["slug"])
             s, raw = self.req("GET", f"/api/gallery/{x['slug']}")
             self.assertEqual(s, 200, raw)
             lesson = json.loads(raw)

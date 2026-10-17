@@ -616,17 +616,15 @@
     return list;
   }
   const GALLERY_LEAD = "Six finished lessons, one from each of six fields. Open any of them and play it through: you don't need an account or a key.";
-  const galleryFoot = () => h("p", { class: "muted small gal-foot" },
-    "Five were built with Claude Opus 5.5 and then reviewed and edited; Galton's was written by hand. Lessons made with AI can contain errors, so check them against the paper.");
   function gallerySection() {
     return h("section", { class: "gallery-sec", "aria-labelledby": "gallery-title" },
       h("div", { class: "gal-head" }, h("h2", { id: "gallery-title" }, "Lessons made from real papers"), h("p", { class: "lead" }, GALLERY_LEAD)),
-      galleryList("h3"), galleryFoot());
+      galleryList("h3"));
   }
   function showGallery() {
     view(h("section", { class: "gallery-sec gallery-page", "aria-labelledby": "gallery-title" },
       h("div", { class: "gal-head" }, h("h1", { id: "gallery-title" }, "Gallery"), h("p", { class: "lead" }, GALLERY_LEAD)),
-      galleryList("h2"), galleryFoot()));
+      galleryList("h2")));
   }
   async function openGallery(slug) { try { openLesson(await api(`/api/gallery/${slug}`)); } catch (err) { showHome(err.message); } }
 

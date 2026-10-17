@@ -113,7 +113,7 @@ def load_gallery(slug: str) -> tuple[dict, str | None]:
     else:
         lesson, source = json.loads(GALLERY.joinpath(f"{slug}.json").read_text(encoding="utf-8")), None
     lesson["example"] = True  # built in: it can't be saved or edited, only played and downloaded
-    lesson["gallery"] = {k: entry[k] for k in ("slug", "field", "made")}
+    lesson["gallery"] = {k: entry[k] for k in ("slug", "field")}
     return lesson, source
 
 

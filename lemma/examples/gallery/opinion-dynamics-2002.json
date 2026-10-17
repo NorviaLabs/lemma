@@ -53,10 +53,6 @@
    "quote_where": "Section 4.3"
   }
  ],
- "provider": {
-  "name": "Claude",
-  "model": "claude-opus-5-5"
- },
  "concepts": [
   {
    "id": "repeated_averaging",

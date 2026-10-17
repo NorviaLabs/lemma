@@ -47,10 +47,6 @@
    "quote_where": "Introduction"
   }
  ],
- "provider": {
-  "name": "Claude",
-  "model": "claude-opus-5-5"
- },
  "concepts": [
   {
    "id": "attention_weighted_average",
