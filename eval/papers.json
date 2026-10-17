@@ -1,0 +1,519 @@
+[
+  {
+    "id": 1,
+    "field": "Computer science",
+    "title": "Attention Is All You Need",
+    "year": 2017,
+    "urls": [
+      "https://arxiv.org/abs/1706.03762"
+    ],
+    "exercises": "curves; a famous ML paper with dense notation"
+  },
+  {
+    "id": 2,
+    "field": "Computer science",
+    "title": "Deep Residual Learning for Image Recognition",
+    "year": 2015,
+    "urls": [
+      "https://arxiv.org/abs/1512.03385"
+    ],
+    "exercises": "curves; results-heavy, figure-dependent"
+  },
+  {
+    "id": 3,
+    "field": "Computer science",
+    "title": "Adam: A Method for Stochastic Optimization",
+    "year": 2014,
+    "urls": [
+      "https://arxiv.org/abs/1412.6980"
+    ],
+    "exercises": "curves; an algorithm with update equations"
+  },
+  {
+    "id": 4,
+    "field": "Computer science",
+    "title": "Generative Adversarial Nets",
+    "year": 2014,
+    "urls": [
+      "https://arxiv.org/abs/1406.2661"
+    ],
+    "exercises": "curves; a two-player game"
+  },
+  {
+    "id": 5,
+    "field": "Computer science",
+    "title": "Efficient Estimation of Word Representations in Vector Space",
+    "year": 2013,
+    "urls": [
+      "https://arxiv.org/abs/1301.3781"
+    ],
+    "exercises": "geometry; word vectors"
+  },
+  {
+    "id": 6,
+    "field": "Computer science",
+    "title": "Playing Atari with Deep Reinforcement Learning",
+    "year": 2013,
+    "urls": [
+      "https://arxiv.org/abs/1312.5602"
+    ],
+    "exercises": "curves; reinforcement learning"
+  },
+  {
+    "id": 7,
+    "field": "Computer science",
+    "title": "In Search of an Understandable Consensus Algorithm (Raft)",
+    "year": 2014,
+    "urls": [
+      "https://raft.github.io/raft.pdf"
+    ],
+    "exercises": "networks or tables; a distributed protocol with no equations"
+  },
+  {
+    "id": 8,
+    "field": "Computer science",
+    "title": "Bitcoin: A Peer-to-Peer Electronic Cash System",
+    "year": 2008,
+    "urls": [
+      "https://bitcoin.org/bitcoin.pdf"
+    ],
+    "exercises": "curves; short, with one probability calculation"
+  },
+  {
+    "id": 9,
+    "field": "Computer science",
+    "title": "The Anatomy of a Large-Scale Hypertextual Web Search Engine",
+    "year": 1998,
+    "urls": [
+      "http://infolab.stanford.edu/~backrub/google.html"
+    ],
+    "exercises": "networks; PageRank inside a systems paper"
+  },
+  {
+    "id": 10,
+    "field": "Computer science",
+    "title": "Computing Machinery and Intelligence",
+    "year": 1950,
+    "urls": [
+      "https://courses.cs.umbc.edu/471/papers/turing.pdf"
+    ],
+    "exercises": "argument with no data; tests the honesty of the model"
+  },
+  {
+    "id": 11,
+    "field": "Physics",
+    "title": "Observation of Gravitational Waves from a Binary Black Hole Merger",
+    "year": 2016,
+    "urls": [
+      "https://arxiv.org/abs/1602.03837"
+    ],
+    "exercises": "curves; a chirp signal"
+  },
+  {
+    "id": 12,
+    "field": "Physics",
+    "title": "Experimental loophole-free violation of a Bell inequality using entangled electron spins separated by 1.3 km",
+    "year": 2015,
+    "urls": [
+      "https://arxiv.org/abs/1508.05949"
+    ],
+    "exercises": "sampling; a statistical test of quantum mechanics"
+  },
+  {
+    "id": 13,
+    "field": "Physics",
+    "title": "Observation of a new particle in the search for the Standard Model Higgs boson with the ATLAS detector",
+    "year": 2012,
+    "urls": [
+      "https://arxiv.org/abs/1207.7214"
+    ],
+    "exercises": "sampling or curves; signal above background"
+  },
+  {
+    "id": 14,
+    "field": "Physics",
+    "title": "Electric Field Effect in Atomically Thin Carbon Films",
+    "year": 2004,
+    "urls": [
+      "https://arxiv.org/abs/cond-mat/0410550"
+    ],
+    "exercises": "curves; an experimental materials result"
+  },
+  {
+    "id": 15,
+    "field": "Astronomy",
+    "title": "Observational Evidence from Supernovae for an Accelerating Universe and a Cosmological Constant",
+    "year": 1998,
+    "urls": [
+      "https://arxiv.org/abs/astro-ph/9805201"
+    ],
+    "exercises": "curves; distance against redshift"
+  },
+  {
+    "id": 16,
+    "field": "Astronomy",
+    "title": "Planck 2018 results. VI. Cosmological parameters",
+    "year": 2018,
+    "urls": [
+      "https://arxiv.org/abs/1807.06209"
+    ],
+    "exercises": "tables; a very long paper that tests context limits"
+  },
+  {
+    "id": 17,
+    "field": "Mathematics",
+    "title": "The entropy formula for the Ricci flow and its geometric applications",
+    "year": 2002,
+    "urls": [
+      "https://arxiv.org/abs/math/0211159"
+    ],
+    "exercises": "geometry; pure proof, very hard to model"
+  },
+  {
+    "id": 18,
+    "field": "Mathematics",
+    "title": "The primes contain arbitrarily long arithmetic progressions",
+    "year": 2004,
+    "urls": [
+      "https://arxiv.org/abs/math/0404188"
+    ],
+    "exercises": "pure proof about number patterns"
+  },
+  {
+    "id": 19,
+    "field": "Network science",
+    "title": "Emergence of Scaling in Random Networks",
+    "year": 1999,
+    "urls": [
+      "https://arxiv.org/abs/cond-mat/9910332"
+    ],
+    "exercises": "networks and curves; preferential attachment"
+  },
+  {
+    "id": 20,
+    "field": "Network science",
+    "title": "The structure and function of complex networks",
+    "year": 2003,
+    "urls": [
+      "https://arxiv.org/abs/cond-mat/0303516"
+    ],
+    "exercises": "networks; a long review article"
+  },
+  {
+    "id": 21,
+    "field": "Statistics",
+    "title": "Why Most Published Research Findings Are False",
+    "year": 2005,
+    "urls": [
+      "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1182327/fullTextXML",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC1182327/"
+    ],
+    "exercises": "sampling and curves; positive predictive value"
+  },
+  {
+    "id": 22,
+    "field": "Statistics",
+    "title": "The garden of forking paths",
+    "year": 2013,
+    "urls": [
+      "http://www.stat.columbia.edu/~gelman/research/unpublished/p_hacking.pdf"
+    ],
+    "exercises": "sampling; p-values and many analyses"
+  },
+  {
+    "id": 23,
+    "field": "Statistics",
+    "title": "An investigation of the false discovery rate and the misinterpretation of p-values",
+    "year": 2014,
+    "urls": [
+      "https://arxiv.org/abs/1407.5296"
+    ],
+    "exercises": "sampling; two-group p-values"
+  },
+  {
+    "id": 24,
+    "field": "Statistics",
+    "title": "Double/Debiased Machine Learning for Treatment and Causal Parameters",
+    "year": 2016,
+    "urls": [
+      "https://arxiv.org/abs/1608.00060"
+    ],
+    "exercises": "causal diagrams; heavy econometrics"
+  },
+  {
+    "id": 25,
+    "field": "Epidemiology",
+    "title": "Early Transmission Dynamics in Wuhan, China, of Novel Coronavirus-Infected Pneumonia",
+    "year": 2020,
+    "urls": [
+      "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7121484/fullTextXML",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC7121484/"
+    ],
+    "exercises": "SIR contagion; R0 and doubling time"
+  },
+  {
+    "id": 26,
+    "field": "Epidemiology",
+    "title": "Substantial undocumented infection facilitates the rapid dissemination of novel coronavirus (SARS-CoV-2)",
+    "year": 2020,
+    "urls": [
+      "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7164387/fullTextXML",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC7164387/"
+    ],
+    "exercises": "SIR contagion; hidden infections"
+  },
+  {
+    "id": 27,
+    "field": "Epidemiology",
+    "title": "Physical distancing, face masks, and eye protection to prevent person-to-person transmission of SARS-CoV-2 and COVID-19",
+    "year": 2020,
+    "urls": [
+      "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7263814/fullTextXML",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC7263814/"
+    ],
+    "exercises": "tables or bars; a meta-analysis"
+  },
+  {
+    "id": 28,
+    "field": "Medicine",
+    "title": "Dexamethasone in Hospitalized Patients with Covid-19 (RECOVERY)",
+    "year": 2021,
+    "urls": [
+      "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7383595/fullTextXML",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC7383595/"
+    ],
+    "exercises": "bars and sampling; a randomised trial"
+  },
+  {
+    "id": 29,
+    "field": "Medicine",
+    "title": "Safety and Efficacy of the BNT162b2 mRNA Covid-19 Vaccine",
+    "year": 2020,
+    "urls": [
+      "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7745181/fullTextXML",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC7745181/"
+    ],
+    "exercises": "bars and sampling; vaccine efficacy"
+  },
+  {
+    "id": 30,
+    "field": "Biology",
+    "title": "Highly accurate protein structure prediction with AlphaFold",
+    "year": 2021,
+    "urls": [
+      "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8371605/fullTextXML",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC8371605/"
+    ],
+    "exercises": "geometry; ML applied to biology"
+  },
+  {
+    "id": 31,
+    "field": "Biology",
+    "title": "Cas9 specifies functional viral targets during CRISPR-Cas adaptation",
+    "year": 2015,
+    "urls": [
+      "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4385744/fullTextXML",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4385744/"
+    ],
+    "exercises": "causal diagrams; a molecular mechanism"
+  },
+  {
+    "id": 32,
+    "field": "Biology",
+    "title": "Tempo and mode of genome evolution in a 50,000-generation experiment",
+    "year": 2016,
+    "urls": [
+      "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4988878/fullTextXML",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4988878/"
+    ],
+    "exercises": "curves and agents; evolution over generations"
+  },
+  {
+    "id": 33,
+    "field": "Genetics",
+    "title": "A global reference for human genetic variation (1000 Genomes)",
+    "year": 2015,
+    "urls": [
+      "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4750478/fullTextXML",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4750478/"
+    ],
+    "exercises": "sampling and bars; population genetics"
+  },
+  {
+    "id": 34,
+    "field": "Physiology",
+    "title": "Revised Estimates for the Number of Human and Bacteria Cells in the Body",
+    "year": 2016,
+    "urls": [
+      "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4991899/fullTextXML",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4991899/"
+    ],
+    "exercises": "bars; correcting a widely repeated number"
+  },
+  {
+    "id": 35,
+    "field": "Neuroscience",
+    "title": "Could a Neuroscientist Understand a Microprocessor?",
+    "year": 2017,
+    "urls": [
+      "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5230747/fullTextXML",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC5230747/"
+    ],
+    "exercises": "networks and causal diagrams; neuroscience methods tested on a chip"
+  },
+  {
+    "id": 36,
+    "field": "Earth science",
+    "title": "Planetary Boundaries: Exploring the Safe Operating Space for Humanity",
+    "year": 2009,
+    "urls": [
+      "https://www.ecologyandsociety.org/vol14/iss2/art32/ES-2009-3180.pdf"
+    ],
+    "exercises": "bars or tables; a conceptual framework"
+  },
+  {
+    "id": 37,
+    "field": "Climate science",
+    "title": "Ice melt, sea level rise and superstorms",
+    "year": 2016,
+    "urls": [
+      "https://acp.copernicus.org/articles/16/3761/2016/acp-16-3761-2016.pdf"
+    ],
+    "exercises": "curves; a long, contested climate paper"
+  },
+  {
+    "id": 38,
+    "field": "Ecology",
+    "title": "How Many Species Are There on Earth and in the Ocean?",
+    "year": 2011,
+    "urls": [
+      "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC3160336/fullTextXML",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC3160336/"
+    ],
+    "exercises": "curves; extrapolating from a taxonomy"
+  },
+  {
+    "id": 39,
+    "field": "Economics",
+    "title": "Where is the Land of Opportunity? The Geography of Intergenerational Mobility in the United States",
+    "year": 2014,
+    "urls": [
+      "https://www.nber.org/system/files/working_papers/w19843/w19843.pdf"
+    ],
+    "exercises": "curves and regression to the mean"
+  },
+  {
+    "id": 40,
+    "field": "Economics",
+    "title": "Minimum Wages and Employment: A Case Study of the Fast Food Industry in New Jersey and Pennsylvania",
+    "year": 1993,
+    "urls": [
+      "https://www.nber.org/system/files/working_papers/w4509/w4509.pdf"
+    ],
+    "exercises": "causal diagrams; difference-in-differences"
+  },
+  {
+    "id": 41,
+    "field": "Economics",
+    "title": "The Miracle of Microfinance? Evidence from a Randomized Evaluation",
+    "year": 2013,
+    "urls": [
+      "https://www.nber.org/system/files/working_papers/w18950/w18950.pdf"
+    ],
+    "exercises": "sampling; a randomised evaluation"
+  },
+  {
+    "id": 42,
+    "field": "Education",
+    "title": "Measuring actual learning versus feeling of learning in response to being actively engaged in the classroom",
+    "year": 2019,
+    "urls": [
+      "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6765278/fullTextXML",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC6765278/"
+    ],
+    "exercises": "bars and sampling; a randomised classroom experiment"
+  },
+  {
+    "id": 43,
+    "field": "Psychology",
+    "title": "Behavioral Priming: It's All in the Mind, but Whose Mind?",
+    "year": 2012,
+    "urls": [
+      "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC3261136/fullTextXML",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC3261136/"
+    ],
+    "exercises": "sampling; a failed replication"
+  },
+  {
+    "id": 44,
+    "field": "Political science",
+    "title": "Exposure to opposing views on social media can increase political polarization",
+    "year": 2018,
+    "urls": [
+      "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6140520/fullTextXML",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC6140520/"
+    ],
+    "exercises": "bounded-confidence opinions; a field experiment on Twitter"
+  },
+  {
+    "id": 45,
+    "field": "Sociology",
+    "title": "Opinion Dynamics and Bounded Confidence: Models, Analysis and Simulation",
+    "year": 2002,
+    "urls": [
+      "https://www.jasss.org/5/3/2/2.pdf"
+    ],
+    "exercises": "bounded-confidence opinions; an agent model"
+  },
+  {
+    "id": 46,
+    "field": "Sociology",
+    "title": "Statistical physics of the Schelling model of segregation",
+    "year": 2007,
+    "urls": [
+      "https://arxiv.org/abs/0707.1681"
+    ],
+    "exercises": "Schelling segregation; an agent model"
+  },
+  {
+    "id": 47,
+    "field": "Social science",
+    "title": "Statistical physics of social dynamics",
+    "year": 2009,
+    "urls": [
+      "https://arxiv.org/abs/0710.3256"
+    ],
+    "exercises": "agents and networks; a long review"
+  },
+  {
+    "id": 48,
+    "field": "Linguistics",
+    "title": "Beyond Zipf's law: Modeling the structure of human language",
+    "year": 2009,
+    "urls": [
+      "https://arxiv.org/abs/0902.0606"
+    ],
+    "exercises": "curves; power laws and a generative model"
+  },
+  {
+    "id": 49,
+    "field": "Linguistics",
+    "title": "Language Structure Is Partly Determined by Social Structure",
+    "year": 2010,
+    "urls": [
+      "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC2798932/fullTextXML",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC2798932/"
+    ],
+    "exercises": "curves or bars; a cross-linguistic correlation"
+  },
+  {
+    "id": 50,
+    "field": "Philosophy",
+    "title": "Is Justified True Belief Knowledge?",
+    "year": 1963,
+    "urls": [
+      "https://fitelson.org/proseminar/gettier.pdf"
+    ],
+    "exercises": "pure argument, three pages; tests what Lemma does with no mechanism"
+  }
+]
