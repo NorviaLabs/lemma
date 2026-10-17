@@ -77,7 +77,9 @@ class Provider:
 
 
 class Conversation:
-    def send(self, text: str, cancelled: threading.Event | None = None) -> Reply:
+    def send(self, text: str, cancelled: threading.Event | None = None, on_progress=None) -> Reply:
+        """``on_progress(phase, chars)`` is called while the reply streams in: ``phase`` is "thinking" or
+        "writing", and ``chars`` how much of the reply has been written so far."""
         raise NotImplementedError
 
     def close(self):
@@ -100,7 +102,8 @@ class HTTPProvider(Provider):
             return False, f"Add your {self.name} key in Settings to build lessons."
         return True, ""
 
-    def request(self, method: str, path: str, body=None, timeout: float = 60):
+    def request(self, method: str, path: str, body=None, timeout: float = 60, on_line=None):
+        """The parsed JSON reply; or, for an event stream when ``on_line`` is given, None after passing it each line."""
         ok, msg = self.available()
         if not ok:
             raise ProviderError(msg)
@@ -110,6 +113,10 @@ class HTTPProvider(Provider):
                                               "User-Agent": f"Lemma/{__version__}"})
         try:
             with urllib.request.urlopen(req, timeout=timeout) as resp:
+                if on_line and resp.headers.get_content_type() == "text/event-stream":
+                    for raw in resp:
+                        on_line(raw.decode("utf-8", "replace").rstrip("\r\n"))
+                    return None
                 return json.loads(resp.read() or b"null")
         except urllib.error.HTTPError as e:
             raise ProviderError(self._explain(e.code, e.read().decode("utf-8", "replace"))) from None
@@ -156,13 +163,38 @@ class HTTPConversation(Conversation):
         self.p = provider
         self.messages = [{"role": "system", "content": system}, {"role": "user", "content": document}]
 
-    def send(self, text, cancelled=None):
+    def send(self, text, cancelled=None, on_progress=None):
         messages = self.messages + [{"role": "user", "content": text}]
         result: dict = {}
+        parts: list[str] = []
+        streamed = {"finish": None, "error": "", "written": 0}
+
+        def line(raw):  # one line of the reply's event stream
+            if not raw.startswith("data:") or raw[5:].strip() == "[DONE]":
+                return
+            try:
+                event = json.loads(raw[5:])
+            except ValueError:
+                return
+            if event.get("error"):
+                err = event["error"]
+                streamed["error"] = err.get("message") if isinstance(err, dict) else str(err)
+                return
+            for choice in event.get("choices") or []:
+                delta = choice.get("delta") or {}
+                if delta.get("content"):
+                    parts.append(delta["content"])
+                    streamed["written"] += len(delta["content"])
+                    if on_progress:
+                        on_progress("writing", streamed["written"])
+                elif (delta.get("reasoning_content") or delta.get("reasoning")) and on_progress:
+                    on_progress("thinking", streamed["written"])
+                streamed["finish"] = choice.get("finish_reason") or streamed["finish"]
 
         def call():
             try:
-                result["res"] = self.p.request("POST", "/chat/completions", {"model": self.p.model, "messages": messages}, timeout=REQUEST_TIMEOUT)
+                result["res"] = self.p.request("POST", "/chat/completions", {"model": self.p.model, "messages": messages, "stream": True},
+                                               timeout=REQUEST_TIMEOUT, on_line=line)
             except ProviderError as e:
                 result["err"] = e
 
@@ -174,10 +206,15 @@ class HTTPConversation(Conversation):
                 raise ProviderError("Cancelled.")  # the request finishes in the background and is dropped
         if "err" in result:
             raise result["err"]
-        choice = ((result.get("res") or {}).get("choices") or [{}])[0]
-        reply = (choice.get("message") or {}).get("content") or ""
+        if streamed["error"]:
+            raise ProviderError(f"{self.p.name} returned an error: {streamed['error']}")
+        if result.get("res") is None:  # streamed
+            reply, finish = "".join(parts), streamed["finish"]
+        else:  # a provider that answered in one piece despite the request to stream
+            choice = (result["res"].get("choices") or [{}])[0]
+            reply, finish = (choice.get("message") or {}).get("content") or "", choice.get("finish_reason")
         self.messages = messages + [{"role": "assistant", "content": reply}]
-        return Reply(text=reply, stop_reason="max_tokens" if choice.get("finish_reason") == "length" else "end_turn")
+        return Reply(text=reply, stop_reason="max_tokens" if finish == "length" else "end_turn")
 
 
 def make_provider(provider_id: str | None, key: str = "", model: str = "") -> Provider:

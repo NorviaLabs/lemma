@@ -10,6 +10,10 @@ from unittest.mock import patch
 from types import SimpleNamespace
 
 from lemma import generate, ingest, server, store
+
+
+def _raise(e):
+    raise e
 from lemma.llm import ProviderError
 from test_lemma import SOURCE, FakeProvider
 from test_multisource import MultiSourceProvider
@@ -61,9 +65,57 @@ class RequestTests(unittest.TestCase):
         server.api_lesson_delete(rid)
         self.assertFalse(store.request_path(rid).exists())
 
+    def test_sources_are_read_at_the_same_time_and_keep_their_order(self):
+        def slow(urls):
+            time.sleep(.4 if 'a.example' in urls[0] else .1)  # the first source finishes last
+            return SimpleNamespace(title=urls[0], url=urls[0], text=SOURCE)
+        sources = [{'url': f'https://{c}.example', 'title': c} for c in 'abc']
+        start = time.monotonic()
+        with patch.object(server, '_first_readable', side_effect=slow):
+            record = self.settled(server.api_request_create({'sources': sources})['id'])
+        self.assertLess(time.monotonic() - start, .9)  # one after another would take at least 0.6s of reading alone
+        self.assertEqual(record['status'], 'awaiting_outline', record.get('error'))
+        bundle = json.loads(store.load_request(record['id'])['paper']['text'])['lemma_sources']
+        self.assertEqual([(s['id'], s['url']) for s in bundle], [('s1', 'https://a.example'), ('s2', 'https://b.example'), ('s3', 'https://c.example')])
+
+    def test_search_runs_in_the_background_and_reports_progress(self):
+        from lemma import search
+        search._cache.clear()
+        release = threading.Event()
+
+        def slow(query, on_progress=None):
+            on_progress({'services': {'Wikipedia': 'done', 'OpenAlex': 'searching'}, 'found': {'Wikipedia': 1},
+                         'to_check': 0, 'checked': 0, 'readable': 0})
+            release.wait(5)
+            return {'query': query, 'kind': 'concept', 'results': [], 'unavailable': [], 'checked_at': time.time()}
+
+        with patch.object(search, '_search', side_effect=slow):
+            started = server.api_search({'query': '  free   will '})
+            self.assertFalse(started['done'])
+            self.assertEqual(started['query'], 'free will')
+            for _ in range(100):
+                status = server.api_search_status(started['id'])
+                if status['progress']:
+                    break
+                time.sleep(.01)
+            self.assertEqual(status['progress']['services']['OpenAlex'], 'searching')  # seen while it runs
+            release.set()
+            for _ in range(300):
+                status = server.api_search_status(started['id'])
+                if status['done']:
+                    break
+                time.sleep(.01)
+            self.assertEqual((status['done'], status['error'], status['result']['query']), (True, '', 'free will'))
+            again = server.api_search({'query': 'Free will'})  # a recent search is answered at once
+            self.assertEqual((again['done'], again['result']['query']), (True, 'free will'))
+        with self.assertRaises(server.ApiError):
+            server.api_search({'query': '   '})
+        with self.assertRaises(server.ApiError):
+            server.api_search_status('0123456789ab')
+
     def test_partial_failure_restart_and_retry(self):
         server._provider.return_value.source_id = 's2'
-        with patch.object(server, '_first_readable', side_effect=[ingest.IngestError('blocked'), SimpleNamespace(title='Galton', url='', text=SOURCE)]):
+        with patch.object(server, '_first_readable', side_effect=lambda urls: _raise(ingest.IngestError('blocked')) if 'a.example' in urls[0] else SimpleNamespace(title='Galton', url='', text=SOURCE)):
             rid = server.api_request_create({'sources': [{'url': 'https://a.example', 'title': 'Blocked'}, {'url': 'https://b.example', 'title': 'Readable'}]})['id']
             record = self.settled(rid)
         self.assertEqual(record['status'], 'awaiting_outline', record.get('error'))

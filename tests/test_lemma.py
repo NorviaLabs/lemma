@@ -18,6 +18,7 @@ import unittest
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parent.parent
 TMP_HOME = tempfile.mkdtemp(prefix="lemma-test-")
@@ -222,13 +223,17 @@ class FakeConversation:
     def __init__(self, provider, document):
         self.p, self.document, self.turns = provider, document, 0
 
-    def send(self, text, cancelled=None):
+    def send(self, text, cancelled=None, on_progress=None):
         with self.p.lock:
             self.p.calls += 1
         self.turns += 1
         if self.turns == 1:
             self.task = text
-        return self.p.reply(self.task, self.turns)
+        reply = self.p.reply(self.task, self.turns)
+        if on_progress:  # streams like a real model: some thinking, then the reply written out
+            on_progress("thinking", 0)
+            on_progress("writing", len(reply.text))
+        return reply
 
     def close(self):
         with self.p.lock:
@@ -253,12 +258,15 @@ class FakeProvider(Provider):
         return FakeConversation(self, document)
 
     def reply(self, task, turn):
+        self.tasks = getattr(self, "tasks", {})
         if "propose a path" in task.lower():
+            self.tasks["outline"] = task
             return Reply(json.dumps({
                 "title": EXAMPLE["title"], "source": {"title": EXAMPLE["source"]["title"], "authors": "Francis Galton", "year": 1886, "venue": None},
                 "summary": EXAMPLE["intro"]["summary"], "background": EXAMPLE["intro"]["background"], "aha": EXAMPLE["intro"]["aha"],
                 "primer": EXAMPLE["primer"],
-                "concepts": [{"id": c["id"], "title": c["title"], "idea": c["idea"], "role": c["role"], "visual": c["model"]["visual"]["type"], "why": "fits", "hard": c.get("hard", False)} for c in EXAMPLE["concepts"]],
+                "concepts": [{"id": c["id"], "title": c["title"], "idea": c["idea"], "role": c["role"], "visual": c["model"]["visual"]["type"], "why": "fits", "hard": c.get("hard", False),
+                              "needs": [EXAMPLE["concepts"][i - 1]["id"]] if i else []} for i, c in enumerate(EXAMPLE["concepts"])],
             }), "end_turn")
         cid = task.split('Its id must be "')[1].split('"')[0]
         self.tasks = getattr(self, "tasks", {})
@@ -347,6 +355,52 @@ class GenerationTests(unittest.TestCase):
         outline["concepts"][1]["visual"] = "curves"
         self.assertTrue(any("same visual" in p for p in generate.check_outline(outline)))
 
+    def test_concepts_come_after_what_they_rely_on(self):
+        fp = FakeProvider()
+        outline = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, "")).result
+        ids = [c["id"] for c in outline["concepts"]]
+        self.assertEqual(generate.check_outline(outline, require_needs=True), [])
+        swapped = copy.deepcopy(outline)
+        swapped["concepts"].reverse()
+        self.assertTrue(any("comes later" in p for p in generate.check_outline(swapped)))
+        # A reviewed outline is tidied: each concept moves to just after what it relies on.
+        self.assertEqual([c["id"] for c in generate.order_outline(swapped)["concepts"]], ids)
+        self.assertEqual(generate.check_outline(swapped), [])
+        # Removing a concept drops references to it, and the rest keeps the learner's order.
+        removed = copy.deepcopy(outline)
+        del removed["concepts"][0]
+        self.assertEqual(generate.order_outline(removed)["concepts"][0]["needs"], [])
+        self.assertEqual(generate.check_outline(removed), [])
+        missing = copy.deepcopy(outline)
+        del missing["concepts"][1]["needs"]
+        self.assertTrue(any("'needs'" in p for p in generate.check_outline(missing, require_needs=True)))
+        self.assertEqual(generate.check_outline(missing), [])  # outlines from before "needs" still build
+        # Each concept is told what it relies on and not to lean on what comes later.
+        job = wait(generate.start(generate.Job("build"), generate.build_lesson, fp, {"text": SOURCE, "title": "", "url": ""}, outline, ""))
+        self.assertEqual([c["id"] for c in job.result["concepts"]], ids)
+        self.assertIn("relies on 2]", fp.tasks[ids[2]])
+        self.assertIn("never rely on an idea from a", fp.tasks[ids[2]])
+
+    def test_progress_while_building_is_shown_but_not_saved(self):
+        job, saved = generate.Job("build"), []
+        job.on_change = lambda j: saved.append([dict(s) for s in j.steps])
+        job.step("c1", "Concept 1: x", "active", "Drafting")
+        job.update("c1", "active", "Drafting · writing, 1.2k characters so far", quiet=True)
+        self.assertEqual(len(saved), 1)  # the tick isn't saved…
+        self.assertEqual(job.snapshot()["steps"][0]["detail"], "Drafting · writing, 1.2k characters so far")  # …but is shown
+        self.assertIn("now", job.snapshot())
+
+        fp = FakeProvider()  # its first draft of regression_line has a bad quote; the fix passes
+        outline = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, "")).result
+        job = generate.Job("build")
+        details = []
+        job.on_change = lambda j: details.extend((s["detail"], tuple(s.get("problems") or ())) for s in j.steps if s["id"] == "regression_line")
+        wait(generate.start(job, generate.build_lesson, fp, {"text": SOURCE, "title": "", "url": ""}, outline, ""))
+        fixing = [d for d in details if d[0].startswith("Fixing 1 problem")]
+        self.assertTrue(fixing and fixing[0][1] and "quote" in fixing[0][1][0], details)  # what the checks found, shown while fixing
+        final = next(s for s in job.snapshot()["steps"] if s["id"] == "regression_line")
+        self.assertEqual((final["detail"], final["problems"]), ("Ready, after 1 round of fixes", []))
+
     def test_extract_json(self):
         self.assertEqual(generate.extract_json('Here:\n```json\n{"a": 1}\n```'), {"a": 1})
         self.assertEqual(generate.extract_json('{"a": {"b": 2}} trailing'), {"a": {"b": 2}})
@@ -360,7 +414,7 @@ OPENALEX = {"results": [
      "best_oa_location": {"pdf_url": "https://pub.example/blocked.pdf", "landing_page_url": "https://doi.org/10.1/x"},
      "locations": [{"is_oa": True, "pdf_url": None, "landing_page_url": "https://archive.example/x"},
                    {"is_oa": True, "landing_page_url": "https://orcid.org/0000>"}],
-     "abstract_inverted_index": {"Children": [0], "regress": [1]}},
+     "abstract_inverted_index": {"Children": [0], "regress": [1], "to": [2], "the": [3], "mean": [4]}},
     {"display_name": "Very relevant, rarely cited", "publication_year": 2020, "cited_by_count": 0, "relevance_score": 12,
      "best_oa_location": {"pdf_url": "https://pub.example/b.pdf"}},
     {"display_name": "No open copy", "best_oa_location": None, "locations": []},
@@ -368,7 +422,9 @@ OPENALEX = {"results": [
 ARXIV = b"""<feed xmlns="http://www.w3.org/2005/Atom"><entry><id>http://arxiv.org/abs/1234.5678v1</id>
 <title>A small but famous paper</title><published>2004-01-01</published><summary>dup</summary></entry>
 <entry><id>http://arxiv.org/abs/2222.0001v2</id><title>A preprint</title><published>2021-05-01</published>
-<author><name>Z</name></author><summary>About   things.</summary></entry></feed>"""
+<author><name>Z</name></author><summary>About   regression to the mean.</summary></entry>
+<entry><id>http://arxiv.org/abs/3333.0001v1</id><title>Coresets for federated learning</title><published>2022-01-01</published>
+<summary>Nothing about the search.</summary></entry></feed>"""
 WIKI = {"query": {"search": [{"title": "Regression toward the mean", "snippet": "In <span>statistics</span> &amp; more"}]}}
 
 
@@ -388,6 +444,12 @@ class SearchTests(unittest.TestCase):
                 return json.dumps(OPENALEX).encode()
             if "arxiv" in url:
                 return ARXIV
+            if "europepmc" in url:
+                return json.dumps({"resultList": {"result": []}}).encode()
+            if "libretexts" in url:
+                return b'<feed xmlns="http://www.w3.org/2005/Atom"></feed>'
+            if "plato.stanford.edu" in url:
+                return b"<html></html>"
             return json.dumps(WIKI).encode()
 
         search._get = fake
@@ -404,10 +466,12 @@ class SearchTests(unittest.TestCase):
         self.assertEqual(wiki["summary"], "In statistics & more")
         self.assertEqual(famous["title"], "A small but famous paper")  # citations outweigh a little relevance
         self.assertEqual(famous["authors"], "A, B, C et al.")
-        self.assertEqual(famous["summary"], "Children regress")
+        self.assertEqual(famous["summary"], "Children regress to the mean")
         # Every open copy, full text before DOI landing pages, junk links dropped.
-        self.assertEqual(famous["urls"], ["https://pub.example/blocked.pdf", "https://archive.example/x", "https://doi.org/10.1/x"])
+        # The arXiv copy of the same paper adds its link instead of being listed twice.
+        self.assertEqual(famous["urls"], ["https://pub.example/blocked.pdf", "https://archive.example/x", "https://doi.org/10.1/x", "https://arxiv.org/abs/1234.5678v1"])
         self.assertEqual(pre["url"], "https://arxiv.org/abs/2222.0001v2")  # the duplicate preprint was dropped
+        # and so was the one whose title and abstract never mention the search
         self.assertEqual(r["unavailable"], [])
         self.assertTrue(all("query" not in u or "regression" in u for u in self.urls))
 
@@ -418,15 +482,52 @@ class SearchTests(unittest.TestCase):
             return self.orig_fake(url)
         self.orig_fake = search._get
         search._get = failing
-        r = search.search("x")
+        r = search.search("regression to the mean")
         self.assertEqual(r["unavailable"], ["arXiv"])
         self.assertEqual(len(r["results"]), 3)
+
+    def test_closeness_to_the_search(self):
+        q = "free will"
+        self.assertEqual(search.match(q, "Is Belief in Free Will a Cultural Universal?"), 3)  # the phrase
+        self.assertEqual(search.match(q, "Will we ever be free?"), 2)  # every word in the title
+        self.assertEqual(search.match(q, "Determinism", "Whether the will is free"), 1)  # with the abstract
+        self.assertEqual(search.match(q, "Model-free control", "Controllers without a model"), 0)
+        self.assertEqual(search.match("counterfactual causation", "Counterfactual Theories of Causal Explanation"), 2)  # by stem
+        q = "Vaswani et al attention is all you need 2017"  # the author counts, the year and "et al" don't
+        self.assertEqual(search.match(q, "Attention Is All You Need", "Ashish Vaswani, Noam Shazeer"), 1)
+        self.assertEqual(search.match(q, "Patches Are All You Need?", "Trockman, Kolter"), 0)
+
+    def test_a_paper_search_looks_up_identifiers_and_drops_years(self):
+        self.assertEqual(search.search_words("Vaswani et al. attention is all you need 2017"), "Vaswani attention is all you need")
+        search.search("doi 10.1093/ije/dyh299")
+        self.assertTrue(any(u.startswith("https://api.openalex.org/works/doi:10.1093/ije/dyh299") for u in self.urls), self.urls)
+        self.urls.clear()
+        search.search("arXiv 1706.03762v7")
+        self.assertTrue(any("id_list=1706.03762v7" in u for u in self.urls), self.urls)
+        self.urls.clear()
+        search.search("Galton 1886 regression towards mediocrity")
+        sent = [urllib.parse.unquote_plus(u) for u in self.urls if "openalex" in u or "arxiv" in u]
+        self.assertTrue(sent and not any("1886" in u for u in sent), sent)
 
     def test_bad_queries(self):
         with self.assertRaises(search.SearchError):
             search.search("   ")
         with self.assertRaises(search.SearchError):
             search.search("x" * 201)
+
+    def test_a_result_gets_a_time_budget_for_all_its_links(self):
+        tried = []
+
+        def slow(u, timeout):
+            tried.append((u, timeout))
+            time.sleep(.6)
+            raise ingest.IngestError("The site took too long to respond.")
+
+        with patch.object(ingest, "from_url", side_effect=slow):
+            with self.assertRaisesRegex(ingest.IngestError, "too slow"):
+                server._first_readable(["https://a/x", "https://b/y", "https://c/z"], timeout=5, budget=1.5)
+        self.assertEqual([u for u, _ in tried], ["https://a/x"])  # under a second left, so b and c were skipped
+        self.assertLessEqual(tried[0][1], 1.5)
 
     def test_first_readable_copy_wins_and_short_pages_are_skipped(self):
         orig = ingest.from_url
@@ -519,7 +620,18 @@ class FakeAPI(BaseHTTPRequestHandler):
             return self._reply(400, {"error": {"message": "too many tokens", "code": "context_length_exceeded"}})
         turn = sum(m["role"] == "assistant" for m in body["messages"]) + 1
         finish = "length" if "CUT" in last else "stop"
-        self._reply(200, {"choices": [{"message": {"role": "assistant", "content": json.dumps({"turn": turn, "model": body["model"]})}, "finish_reason": finish}]})
+        text = json.dumps({"turn": turn, "model": body["model"]})
+        if body.get("stream") and "STREAM" in last:  # the reply in pieces, as an OpenAI-compatible API streams it
+            chunks = [{"choices": [{"delta": {"reasoning_content": "hmm"}}]}] + \
+                     [{"choices": [{"delta": {"content": text[i:i + 5]}}]} for i in range(0, len(text), 5)] + \
+                     [{"choices": [{"delta": {}, "finish_reason": finish}]}]
+            raw = ("".join(f"data: {json.dumps(c)}\n\n" for c in chunks) + "data: [DONE]\n\n").encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "text/event-stream")
+            self.send_header("Content-Length", str(len(raw)))
+            self.end_headers()
+            return self.wfile.write(raw)
+        self._reply(200, {"choices": [{"message": {"role": "assistant", "content": text}, "finish_reason": finish}]})
 
 
 class HTTPProviderTests(unittest.TestCase):
@@ -555,6 +667,17 @@ class HTTPProviderTests(unittest.TestCase):
         self.assertEqual(second[-1]["content"], "repair")
         self.assertNotIn("tools", FakeAPI.calls[0]["body"])
         self.assertEqual(conv.send("CUT").stop_reason, "max_tokens")
+
+    def test_a_streamed_reply_reports_its_progress(self):
+        conv = self.p.conversation("S", "<paper>x</paper>")
+        seen = []
+        r = conv.send("STREAM please", on_progress=lambda phase, chars: seen.append((phase, chars)))
+        self.assertEqual(json.loads(r.text), {"turn": 1, "model": "gpt-6.1-sol"})  # reassembled from its pieces
+        self.assertTrue(FakeAPI.calls[-1]["body"]["stream"])
+        self.assertEqual(seen[0], ("thinking", 0))
+        self.assertEqual(seen[-1], ("writing", len(r.text)))
+        self.assertEqual(conv.send("STREAM CUT").stop_reason, "max_tokens")
+        self.assertEqual(json.loads(conv.send("plain").text)["turn"], 3)  # a provider that won't stream still works
 
     def test_models_and_errors(self):
         self.assertEqual([m["id"] for m in self.p.models()], ["glm-5.3", "gpt-6.1-sol"])  # embeddings left out

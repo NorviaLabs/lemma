@@ -17,6 +17,8 @@ WORKERS = 3
 
 MULTI_SOURCE_TASK = """
 The document contains labelled sources. Teach one cohesive, standard-depth lesson, not one section per source.
+Order the concepts by what each relies on, never by source: an idea from a later source that an earlier concept
+needs comes first, and "needs" may name concepts drawn from any source.
 Cover the central ideas and essential prerequisites within the existing concept limit. Identify gaps and
 suggest deeper follow-up topics in the summary. Explain meaningful disagreements and uncertainty explicitly;
 never invent consensus or claim exhaustive coverage. Every primer page and every concept's understand object
@@ -86,7 +88,7 @@ Reply with this JSON:
     {{"id": "lower_snake_case", "title": "Short title", "idea": "The one mechanism, in one sentence",
       "role": "prerequisite | core | contribution", "visual": "curves | bars | table | agents | network | causal | sampling | geometry",
       "why": "Why this visual shows the mechanism",
-      "builds_on": null, "hard": false}}
+      "needs": [], "builds_on": null, "hard": false}}
   ]
 }}
 The primer is "the paper in brief", read before the first concept by someone who has never heard of the paper: \
@@ -94,6 +96,9 @@ The primer is "the paper in brief", read before the first concept by someone who
 matters and its limits). Explain any idea it needs in plain words; don't save the result for later. At least two pages \
 quote the paper word for word (copy one contiguous passage exactly).
 Use null for unknown year or venue. Order concepts so each builds on the last; the final concept should deliver the aha.
+The learner meets the concepts in this order and can only use what came before. "needs" lists the ids of the earlier \
+concepts this one relies on: the ideas, terms or results a learner must already have to follow it ([] if none). \
+Everything in "needs" and "builds_on" must come earlier in the list, so prerequisites come before the ideas that use them.
 Small steps: if an idea needs more than one mechanism, split it into 2–3 smaller concepts in a row, each adding one piece.
 Reuse pictures: when a concept can be shown by an earlier concept's model plus at most one new control, set "builds_on" to \
 that earlier concept's id and give it the same visual. Otherwise "builds_on" is null.
@@ -114,6 +119,9 @@ Make sure that:
 to point at a curve, bar, point, marker or line, give it an "id" and focus on that id); \
 the "understand.walkthrough" then teaches the idea on the model step by step, ending in a state worth looking at; the \
 explanation says it again in plain words and tells what the paper did to show it. Nothing is asked before all three;
+- follow the outline's order: the learner has just done the concepts above ▶ and knows their ideas and terms, so \
+build on them (especially the ones it relies on) without teaching them again, and never rely on an idea from a \
+concept below ▶, which the learner hasn't met yet;
 - the goals come after the teaching: they let the learner practise the idea by reproducing it on the model;
 - the predict question comes last: it applies the idea to a new case or variation, so it is not answered by repeating the explanation;
 - "predict.why" has one line per option saying why someone would pick it and what the idea says instead, so a wrong answer still teaches;
@@ -178,24 +186,29 @@ class Job:
         if self.on_change:
             self.on_change(self)
 
-    def step(self, sid: str, label: str, state: str = "waiting", detail: str = ""):
+    def step(self, sid: str, label: str, state: str = "waiting", detail: str = "", quiet: bool = False, **extra):
+        """``quiet`` changes only what a live view sees, without saving: for progress ticks while a reply streams.
+        ``extra`` adds fields to the step, such as "problems", the checks' findings while a concept is fixed."""
         with self.lock:
             for s in self.steps:
                 if s["id"] == sid:
-                    s.update(label=label or s["label"], state=state, detail=detail)
+                    s.update(label=label or s["label"], state=state, detail=detail, **extra)
                     if state == "active":
                         s.setdefault("started", time.time())
                     if state in ("done", "failed"):
                         s["finished"] = time.time()
                     break
             else:
-                self.steps.append({"id": sid, "label": label, "state": state, "detail": detail})
+                self.steps.append({"id": sid, "label": label, "state": state, "detail": detail, **extra})
                 if state == "active":
                     self.steps[-1]["started"] = time.time()
-        self.changed()
+        if quiet:
+            self.updated = time.time()
+        else:
+            self.changed()
 
-    def update(self, sid: str, state: str, detail: str = ""):
-        self.step(sid, "", state, detail)
+    def update(self, sid: str, state: str, detail: str = "", quiet: bool = False, **extra):
+        self.step(sid, "", state, detail, quiet, **extra)
 
     def snapshot(self) -> dict:
         with self.lock:
@@ -204,17 +217,22 @@ class Job:
             remaining = sum(s["state"] in ("waiting", "active") for s in concepts)
             # No invented initial ETA. The range spans parallel work through serial dependencies.
             estimate = sum(durations) / len(durations) * remaining if durations and remaining else None
+            lesson = json.loads(json.dumps(self.lesson)) if self.lesson else None
+            details = {s["id"]: s["detail"] for s in self.steps}
+            for p in (lesson or {}).get("plan") or []:  # so the lesson can say how a concept still building is getting on
+                p["detail"] = details.get(p["id"], "")
             return {
                 "id": self.id,
                 "kind": self.kind,
                 "status": self.status,
+                "now": time.time(),  # for elapsed times on the learner's clock, whatever the server's says
                 "steps": [dict(s) for s in self.steps],
                 "result": self.result,
                 "error": self.error,
                 "created": self.created,
                 "updated": self.updated,
                 "eta_seconds": [round(estimate / WORKERS * .7), round(estimate * 1.8)] if estimate else None,
-                "lesson": json.loads(json.dumps(self.lesson)) if self.lesson else None,
+                "lesson": lesson,
             }
 
 
@@ -248,8 +266,43 @@ def start(job: Job, fn, *args):
 # ---------------------------------------------------------------- outline
 
 
-def check_outline(o, source_text: str | None = None) -> list[str]:
-    """``source_text`` checks the primer's quotes against the paper; None skips that."""
+def _relies_on(c: dict) -> list:
+    """The concepts a concept relies on: the ones it needs and the one whose model it reuses."""
+    deps = [n for n in c["needs"] if isinstance(n, str)] if isinstance(c.get("needs"), list) else []
+    return deps + [c["builds_on"]] if isinstance(c.get("builds_on"), str) else deps
+
+
+def order_outline(o):
+    """Tidies a reviewed outline so every concept comes after the concepts it relies on.
+
+    The learner may reorder, remove and restore concepts while reviewing. References to removed concepts are
+    dropped, and a concept that ended up above something it relies on moves to just after it. Otherwise the
+    learner's order is kept. A cycle is left in place for check_outline to report."""
+    cs = o.get("concepts") if isinstance(o, dict) else None
+    if not isinstance(cs, list) or not all(isinstance(c, dict) for c in cs):
+        return o
+    ids = {c.get("id") for c in cs}
+    for c in cs:
+        if isinstance(c.get("needs"), list):
+            c["needs"] = [n for n in c["needs"] if n in ids and n != c.get("id")]
+        if c.get("builds_on") is not None and c["builds_on"] not in ids:
+            c["builds_on"] = None
+    placed, rest = [], list(cs)
+    while rest:
+        done = {c.get("id") for c in placed}
+        nxt = next((c for c in rest if all(d in done for d in _relies_on(c))), None)
+        if nxt is None:
+            placed += rest
+            break
+        placed.append(nxt)
+        rest.remove(nxt)
+    o["concepts"] = placed
+    return o
+
+
+def check_outline(o, source_text: str | None = None, require_needs: bool = False) -> list[str]:
+    """``source_text`` checks the primer's quotes against the paper; None skips that. ``require_needs`` asks
+    for every concept's "needs" (a fresh outline); outlines made before it existed may leave it out."""
     problems = []
     if not isinstance(o, dict):
         return ["the reply must be a JSON object"]
@@ -272,6 +325,7 @@ def check_outline(o, source_text: str | None = None) -> list[str]:
         problems.append("needs 2–8 concepts")
         return problems
     ids = set()
+    all_ids = {c.get("id") for c in cs if isinstance(c, dict)}
     for i, c in enumerate(cs):
         if not isinstance(c, dict):
             problems.append(f"concepts[{i}] must be an object")
@@ -291,9 +345,31 @@ def check_outline(o, source_text: str | None = None) -> list[str]:
                 problems.append(f"concepts[{i}].builds_on must be the id of an earlier concept, or null")
             elif base.get("visual") != c.get("visual"):
                 problems.append(f"concepts[{i}] builds on '{b}', so it must use the same visual ('{base.get('visual')}')")
+        needs = c.get("needs")
+        if needs is None:
+            if require_needs:
+                problems.append(f"concepts[{i}] needs 'needs': the ids of earlier concepts it relies on ([] if none)")
+        elif not isinstance(needs, list) or not all(isinstance(n, str) for n in needs):
+            problems.append(f"concepts[{i}].needs must be a list of concept ids")
+        else:
+            earlier = {x.get("id") for x in cs[:i] if isinstance(x, dict)}
+            for n in needs:
+                if n in earlier:
+                    continue
+                if n in all_ids:
+                    problems.append(f"concepts[{i}] relies on '{n}', which comes later; order the concepts so each comes after everything it relies on")
+                else:
+                    problems.append(f"concepts[{i}].needs names '{n}', which is not a concept in this outline")
     if isinstance(cs, list) and sum(1 for c in cs if isinstance(c, dict) and c.get("hard") is True) > 2:
         problems.append("mark at most two concepts as hard")
     return problems
+
+
+PROGRESS_EVERY = 1.0  # seconds between progress ticks shown while a reply streams
+
+
+def _written(chars: int) -> str:
+    return f"{chars / 1000:.1f}k characters" if chars >= 1000 else f"{chars} characters"
 
 
 def _ask_json(job: Job, provider: Provider, document: str, task: str, check, sid: str):
@@ -306,18 +382,32 @@ def _ask_json(job: Job, provider: Provider, document: str, task: str, check, sid
         for attempt in range(MAX_REPAIRS + 1):
             if job.cancelled.is_set():
                 raise GenerationError("Cancelled.")
-            job.update(sid, "active", "Drafting" if attempt == 0 else f"Fixing {len(problems)} problem{'s' * (len(problems) != 1)} (attempt {attempt + 1} of {MAX_REPAIRS + 1})")
-            reply = conv.send(message, cancelled=job.cancelled)
+            n = len(problems)
+            doing = "Drafting" if attempt == 0 else f"Fixing {n} problem{'s' * (n != 1)} (attempt {attempt + 1} of {MAX_REPAIRS + 1})"
+            # What the checks found stays on the step while it's fixed, so the learner can see why it's taking longer.
+            found = [p.removeprefix("concept.") for p in problems[:5]]
+            job.update(sid, "active", doing + " · waiting for the model", problems=found)
+            last = [0.0]
+
+            def progress(phase, chars, doing=doing, found=found):
+                if time.monotonic() - last[0] >= PROGRESS_EVERY:
+                    last[0] = time.monotonic()
+                    job.update(sid, "active", f"{doing} · " + ("thinking" if phase == "thinking" and not chars else f"writing, {_written(chars)} so far"),
+                               quiet=True, problems=found)
+
+            reply = conv.send(message, cancelled=job.cancelled, on_progress=progress)
             if reply.stop_reason == "max_tokens":
                 problems = ["the reply was cut off; make it more concise"]
             else:
-                job.update(sid, "active", "Checking")
+                job.update(sid, "active", "Checking the quote, the model and every goal", problems=found)
                 try:
                     obj = extract_json(reply.text)
                     problems = check(obj)
                 except ValueError as e:
                     obj, problems = None, [f"the reply was not valid JSON ({e})"]
             if not problems:
+                job.repairs = getattr(job, "repairs", {})
+                job.repairs[sid] = attempt
                 return obj, []
             message = REPAIR_TASK.format(problems="\n".join(f"- {p}" for p in problems[:25]))
         return obj, problems
@@ -330,7 +420,7 @@ def make_outline(job: Job, provider: Provider, paper_text: str, audience: str) -
     task = OUTLINE_TASK.format(audience=audience or "a curious learner with no special background", n_hint="three to seven")
     if L.source_map(paper_text):
         task += MULTI_SOURCE_TASK
-    obj, problems = _ask_json(job, provider, paper_document(L.source_document(paper_text)), task, lambda o: check_outline(o, paper_text), "outline")
+    obj, problems = _ask_json(job, provider, paper_document(L.source_document(paper_text)), task, lambda o: check_outline(o, paper_text, require_needs=True), "outline")
     if problems:
         job.update("outline", "failed", "; ".join(problems[:3]))
         raise GenerationError("Couldn't produce a usable outline for this paper: " + "; ".join(problems[:3]))
@@ -346,7 +436,9 @@ def _outline_text(concepts: list[dict], current: str) -> str:
     for i, c in enumerate(concepts, 1):
         mark = "▶" if c["id"] == current else " "
         known = " (the learner already knows this; it is not in the lesson)" if c.get("known") else ""
-        lines.append(f"{mark} {i}. {c['title']} [{c.get('role', 'core')}, {c.get('visual', '')}]: {c['idea']}{known}")
+        deps = [str(n) for n, x in enumerate(concepts, 1) if x["id"] in _relies_on(c)]
+        after = f"; relies on {', '.join(deps)}" if deps else ""
+        lines.append(f"{mark} {i}. {c['title']} [{c.get('role', 'core')}, {c.get('visual', '')}{after}]: {c['idea']}{known}")
     return "\n".join(lines)
 
 
@@ -478,7 +570,8 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audie
         ready[c["id"]] = obj
         set_plan(c["id"], "ready")
         publish()
-        job.update(c["id"], "done", "Ready")
+        fixes = getattr(job, "repairs", {}).get(c["id"], 0)
+        job.update(c["id"], "done", "Ready" + (f", after {fixes} round{'s' * (fixes != 1)} of fixes" if fixes else ""), problems=[])
 
     with ThreadPoolExecutor(max_workers=WORKERS) as pool:
         list(pool.map(build_one, todo))
