@@ -8,6 +8,7 @@ import hashlib
 import http.client
 import json
 import os
+import re
 import shutil
 import socket
 import subprocess
@@ -60,7 +61,7 @@ class ExprTests(unittest.TestCase):
 class BrowserParityTests(unittest.TestCase):
     def test_kernels_and_expressions_match_javascript(self):
         cases = {
-            "kernels": [["schelling", {"tolerance": 0.5}], ["sir", {"vaccinated": 0.3}], ["opinion", {}], ["network", {"rule": 1}],
+            "kernels": [["schelling", {"tolerance": 0.5}], ["sir", {"vaccinated": 0.3}], ["opinion", {}], ["opinion", {"rule": 1, "confidence": 0.15, "agents": 300, "rounds": 200}], ["network", {"rule": 1}],
                         ["mean", {"n": 5}], ["two_group", {"mu2": 0.4}], ["regression", {"r": 0.6, "seed": 54, "people": 1000}]],
             "exprs": [["normcdf(x, 1, 2) + norminv(0.3) * binom(7, 3)", {"x": 0.4}], ["round(2.345, 2) - 7 % 3", {}], ["a == 0.3", {"a": 0.1 + 0.2}]],
         }
@@ -84,6 +85,18 @@ class CheckTests(unittest.TestCase):
         c = concept()
         del c["understand"]["walkthrough"]
         self.assertTrue(any("walkthrough" in p for p in L.check_concept(c, NORM)))
+
+    def test_goals_leave_the_answer_for_the_learner(self):
+        c = concept()  # the share passed on: its goal's solution is ratio = 0.65
+        self.assertEqual(list(L.check_concept(c, NORM)), [])
+        c["explore"]["goals"][0]["hints"][-1] = "Try a share of 0.65."
+        self.assertTrue(any("hint 3 gives away the solution ratio = 0.65" in p for p in L.check_concept(c, NORM)))
+        c = concept()
+        c["explore"]["goals"][0]["text"] = "Set the share passed on to 0.65"
+        self.assertTrue(any("its text gives away" in p for p in L.check_concept(c, NORM)))
+        c = concept()
+        c["explore"]["goals"][0]["hints"][-1] = "Keep the mid-parent at 72 and watch the child box."  # 72 is the default, not the answer
+        self.assertEqual(list(L.check_concept(c, NORM)), [])
 
     def test_narration_focus_must_name_a_part_of_the_model(self):
         c = concept()
@@ -1049,6 +1062,65 @@ class ServerTests(unittest.TestCase):
         s, raw = self.req("POST", "/api/papers", {"filename": "galton.txt", "content_type": "text/plain", "data": base64.b64encode(SOURCE.encode()).decode()})
         self.assertEqual(s, 200, raw)
         self.assertGreater(json.loads(raw)["chars"], 40000)
+
+    def test_gallery_lessons_open_read_only(self):
+        items = json.loads(self.req("GET", "/api/gallery")[1])
+        self.assertEqual([x["slug"] for x in items], ["attention-2017", "ioannidis-2005", "wuhan-2020", "opinion-dynamics-2002", "gettier-1963", "galton-1886"])
+        for x in items:
+            self.assertTrue(x["field"] and x["concepts"] and x["cover"]["model"]["visual"], x["slug"])
+            s, raw = self.req("GET", f"/api/gallery/{x['slug']}")
+            self.assertEqual(s, 200, raw)
+            lesson = json.loads(raw)
+            self.assertTrue(lesson["example"])
+            self.assertEqual(lesson["gallery"]["slug"], x["slug"])
+            self.assertEqual(list(L.check_lesson(lesson, None)), [], x["slug"])
+            self.assertEqual(self.req("POST", "/api/lessons", {"lesson": lesson})[0], 400)  # can't be saved or edited
+        self.assertEqual(self.req("GET", "/api/gallery/nope")[0], 404)
+        # A download is made from the lesson as shipped, whatever the browser sends back.
+        tampered = json.loads(self.req("GET", "/api/gallery/gettier-1963")[1])
+        tampered["title"] = "Something else entirely"
+        s, html = self.req("POST", "/api/export", {"lesson": tampered})
+        self.assertEqual(s, 200)
+        self.assertNotIn(b"Something else entirely", html)
+
+    @unittest.skipUnless((ROOT / "eval/results/pilot-claude").is_dir(), "needs the pilot run's paper texts")
+    def test_gallery_quotes_match_their_papers(self):
+        for pid, slug in [(1, "attention-2017"), (21, "ioannidis-2005"), (25, "wuhan-2020"), (45, "opinion-dynamics-2002"), (50, "gettier-1963")]:
+            lesson = json.loads((ROOT / f"lemma/examples/gallery/{slug}.json").read_text())
+            source = (ROOT / f"eval/results/pilot-claude/papers/{pid:02d}/source.txt").read_text()
+            self.assertEqual(list(L.check_lesson(lesson, source)), [], slug)
+
+    def test_unexpected_error_is_reported_without_its_message(self):
+        import contextlib
+        import io
+
+        err = io.StringIO()
+        with patch.object(server.store, "list_lessons", side_effect=RuntimeError("paper text sk-secret-123")), contextlib.redirect_stderr(err):
+            s, raw = self.req("GET", "/api/lessons")
+        self.assertEqual(s, 500)
+        eid = re.search(r"error ([0-9a-f]{8})", json.loads(raw)["error"]).group(1)
+        self.assertNotIn(b"sk-secret-123", raw)
+        self.assertIn(f"error {eid} in GET /api/lessons: RuntimeError", err.getvalue())
+        self.assertIn("server.py", err.getvalue())  # where it broke
+        self.assertNotIn("sk-secret-123", err.getvalue())
+
+    def test_connections_beyond_the_limit_wait_their_turn(self):
+        with patch.object(server, "MAX_CONNECTIONS", 1):
+            httpd = server.make_server(0, exact=True)
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+        try:
+            port = httpd.server_address[1]
+            idle = socket.create_connection(("127.0.0.1", port))  # takes the only slot and sends nothing
+            c = http.client.HTTPConnection("127.0.0.1", port, timeout=0.5)
+            c.request("GET", "/api/status", headers={"Host": f"localhost:{port}"})
+            with self.assertRaises(TimeoutError):
+                c.getresponse()
+            idle.close()  # its slot frees up, so the waiting request is answered
+            c.sock.settimeout(10)
+            self.assertEqual(c.getresponse().status, 200)
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
 
 
 class HostedServerTests(unittest.TestCase):

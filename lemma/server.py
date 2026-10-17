@@ -13,13 +13,14 @@ import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import nullcontext
 from http import HTTPStatus
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib import resources
 from urllib.parse import parse_qs, quote, urlsplit
 
-from . import __version__, auth, chatgpt, export, generate, ingest, search, store
+from . import __version__, auth, chatgpt, export, generate, ingest, logs, search, store
 from . import lesson as L
 from .llm import DEFAULT_PROVIDER, PROVIDERS, ProviderError, make_provider
 
@@ -39,6 +40,9 @@ SOURCES: dict[tuple, str] = {}  # (owner, lesson id) -> paper text, for lessons 
 KEEP_PAPERS, KEEP_SOURCES = 5, 200  # papers kept per person, and paper texts kept in all
 SOURCE_READERS = 4  # sources of one request read at the same time
 MAX_RUNNING_EACH, MAX_RUNNING = 2, 8  # outlines and builds running at once, per account and in all, when hosted
+MAX_CONNECTIONS = 32  # requests handled at once; more wait to be accepted
+LARGE_BODY = 1024 * 1024  # a request body this big is an upload, held in memory while it is read
+_uploads = threading.BoundedSemaphore(2)  # uploads handled at once, so a burst of them can't exhaust memory
 _lock = threading.Lock()
 REQUEST = threading.local()  # the current request's headers; one thread per request
 
@@ -88,6 +92,28 @@ def providers() -> dict:
 def load_example() -> tuple[dict, str]:
     lesson = json.loads(EXAMPLES.joinpath("galton-1886.json").read_text(encoding="utf-8"))
     source = EXAMPLES.joinpath("galton-1886.txt").read_text(encoding="utf-8")
+    return lesson, source
+
+
+GALLERY = EXAMPLES.joinpath("gallery")
+
+
+def gallery_index() -> list[dict]:
+    return json.loads(GALLERY.joinpath("index.json").read_text(encoding="utf-8"))
+
+
+def load_gallery(slug: str) -> tuple[dict, str | None]:
+    """A finished lesson anyone can open, read-only like the example. Only Galton's paper is public domain, so
+    the others ship without their papers' text: their quotes were checked against it before they were added."""
+    entry = next((e for e in gallery_index() if e["slug"] == slug), None)
+    if entry is None:
+        raise ApiError(404, "That lesson isn't in the gallery.")
+    if slug == "galton-1886":
+        lesson, source = load_example()
+    else:
+        lesson, source = json.loads(GALLERY.joinpath(f"{slug}.json").read_text(encoding="utf-8")), None
+    lesson["example"] = True  # built in: it can't be saved or edited, only played and downloaded
+    lesson["gallery"] = {k: entry[k] for k in ("slug", "field")}
     return lesson, source
 
 
@@ -220,7 +246,7 @@ def api_search(body):
         except search.SearchError as e:
             record["error"] = str(e)
         except Exception as e:  # keep the server alive and tell the learner honestly
-            record["error"] = f"The search failed unexpectedly ({e.__class__.__name__})."
+            record["error"] = f"The search failed unexpectedly ({e.__class__.__name__}, error {logs.report('search', e)})."
         finally:
             record["done"] = True
 
@@ -514,6 +540,23 @@ def api_example(_body):
     return lesson
 
 
+def api_gallery(_body):
+    items = []
+    for entry in gallery_index():
+        lesson, _ = load_gallery(entry["slug"])
+        cover = next(c for c in lesson["concepts"] if c["id"] == entry["cover"])
+        items.append({**lesson["gallery"], "title": lesson["title"], "source": lesson["source"],
+                      "concepts": [c["title"] for c in lesson["concepts"]],
+                      "cover": {"title": cover["title"], "model": cover["model"], "values": entry.get("cover_values", {})}})
+    return items
+
+
+def api_gallery_lesson(slug):
+    lesson, source = load_gallery(slug)
+    require_valid(lesson, source)
+    return lesson
+
+
 def api_save(body):
     lesson = body.get("lesson")
     if not isinstance(lesson, dict):
@@ -559,7 +602,9 @@ def api_export(body):
     lesson = body.get("lesson")
     if not isinstance(lesson, dict):
         raise ApiError(400, "No lesson to export.")
-    if lesson.get("example"):
+    if isinstance(lesson.get("gallery"), dict):
+        lesson, source = load_gallery(str(lesson["gallery"].get("slug", "")))  # the lesson as shipped, not as sent
+    elif lesson.get("example"):
         source = load_example()[1]
     else:
         source = source_for(str(lesson.get("id", "")), _owner()) or None
@@ -589,6 +634,8 @@ ROUTES = [
     ("GET", r"/api/jobs/([a-f0-9]{12})", api_job, True),
     ("POST", r"/api/jobs/([a-f0-9]{12})/cancel", api_job_cancel, True),
     ("GET", r"/api/example", api_example, False),
+    ("GET", r"/api/gallery", api_gallery, False),
+    ("GET", r"/api/gallery/([a-z0-9-]{1,64})", api_gallery_lesson, True),
     ("GET", r"/api/lessons", api_lessons, False),
     ("POST", r"/api/lessons", api_save, False),
     ("GET", r"/api/lessons/([A-Za-z0-9_-]{1,64})", api_lesson, True),
@@ -603,6 +650,7 @@ ROUTES = [
 class Handler(BaseHTTPRequestHandler):
     server_version = "Lemma"
     sys_version = ""
+    timeout = 60  # seconds a connection may sit silent before it is closed
 
     def log_message(self, format, *args):  # Lemma keeps no usage logs
         pass
@@ -662,6 +710,10 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(403, {"error": "Cross-origin requests are not allowed."})
         if HOSTED and method == "POST" and path == "/api/logout":
             return self._sign_out()  # not in ROUTES: it clears the session cookie
+        with _uploads if int(self.headers.get("Content-Length") or 0) > LARGE_BODY else nullcontext():
+            return self._route(method, path)
+
+    def _route(self, method: str, path: str):
         for m, pattern, fn, has_arg in ROUTES:
             if m != method:
                 continue
@@ -677,7 +729,7 @@ class Handler(BaseHTTPRequestHandler):
             except ApiError as e:
                 return self._json(e.status, {"error": e.message, "problems": e.problems})
             except Exception as e:
-                return self._json(500, {"error": f"Something went wrong inside Lemma ({e.__class__.__name__}: {e})."})
+                return self._json(500, {"error": f"Something went wrong inside Lemma (error {logs.report(f'{method} {pattern}', e)})."})
             if isinstance(result, str):
                 return self._send(200, result.encode("utf-8"), "text/html; charset=utf-8", {"Content-Disposition": "attachment; filename=lesson.html"})
             return self._json(200, result)
@@ -823,7 +875,31 @@ def _free_port(preferred: int, host: str = "127.0.0.1") -> int:
         return s.getsockname()[1]
 
 
-def make_server(port: int = 8765, exact: bool = False, host: str = "127.0.0.1", allowed_hosts: tuple[str, ...] = ()) -> ThreadingHTTPServer:
+class Server(ThreadingHTTPServer):
+    """One thread per request, but at most MAX_CONNECTIONS at once: the rest wait in the listen queue."""
+
+    daemon_threads = True
+
+    def __init__(self, *args, **kwargs):
+        self._slots = threading.BoundedSemaphore(MAX_CONNECTIONS)
+        super().__init__(*args, **kwargs)
+
+    def process_request(self, request, client_address):
+        self._slots.acquire()
+        try:
+            super().process_request(request, client_address)
+        except BaseException:
+            self._slots.release()
+            raise
+
+    def process_request_thread(self, request, client_address):
+        try:
+            super().process_request_thread(request, client_address)
+        finally:
+            self._slots.release()
+
+
+def make_server(port: int = 8765, exact: bool = False, host: str = "127.0.0.1", allowed_hosts: tuple[str, ...] = ()) -> Server:
     """`exact` binds the given port or fails; otherwise the next free port is used.
 
     Listening on any address but loopback makes this a hosted Lemma: it answers only the
@@ -834,6 +910,4 @@ def make_server(port: int = 8765, exact: bool = False, host: str = "127.0.0.1", 
     if HOSTED and not allowed_hosts:
         raise ValueError("A hosted Lemma needs --allowed-hosts: the domain names it is reached by.")
     ALLOWED_HOSTS = LOCAL_HOSTS + tuple(h.strip().lower() for h in allowed_hosts if h.strip())
-    httpd = ThreadingHTTPServer((host, port if exact or HOSTED else _free_port(port, host)), Handler)  # a host expects its own port
-    httpd.daemon_threads = True
-    return httpd
+    return Server((host, port if exact or HOSTED else _free_port(port, host)), Handler)  # a host expects its own port

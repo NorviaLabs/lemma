@@ -239,6 +239,36 @@ input[type=checkbox], input[type=radio] { accent-color: var(--green); }
 button.hall-replay { margin-top: 14px; padding-left: 0; padding-right: 4px; color: var(--mute); }
 button.hall-replay:hover:not(:disabled) { background: transparent; color: var(--ink); }
 .paper-hall.is-live .hall-art:not([data-step="3"]) .hx-card .plate { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--rule-strong); }
+
+/* ---------- gallery: finished lessons, each led by one of its own models on the plate ground */
+.gallery-sec { margin: 0 0 80px; }
+.gallery-page { margin-top: 8px; }
+.gal-head { max-width: 760px; margin-bottom: 30px; }
+.gal-head h2 { font-size: clamp(28px, 2.8vw, 38px); margin-bottom: 12px; }
+.gal-head .lead { margin: 0; font-size: 18px; line-height: 1.5; color: var(--body); }
+.gallery { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px clamp(24px, 3vw, 40px); }
+.gal-item { position: relative; display: flex; flex-direction: column; min-width: 0; }
+.gal-plate { --viz-max-h: none; display: flex; align-items: center; justify-content: center; aspect-ratio: 1; padding: 10px; margin-bottom: 14px; background: var(--plate); border-radius: var(--r-lg); overflow: hidden; transition: background-color var(--ui); }
+.gal-plate .viz-box, .gal-plate .viz-wrap { width: 100%; height: 100%; padding: 0; }
+.gal-plate .viz { height: 100%; }
+.gal-plate .legend, .gal-plate .viz-status { display: none; }
+.gal-plate .viz-canvas { max-width: var(--viz-max-h); }
+.gal-bars { display: flex; gap: 4px; list-style: none; padding: 0; margin: 0 0 14px; }
+.gal-bars li { flex: 1; height: 3px; border-radius: 9999px; background: var(--tab); }
+.gal-title { margin: 0 0 8px; font-size: 19px; line-height: 1.25; letter-spacing: -.01em; text-wrap: balance; }
+.gal-title a { color: var(--ink); text-decoration: none; }
+.gal-title a::after { content: ""; position: absolute; inset: -6px; border-radius: calc(var(--r-lg) + 4px); }
+.gal-title a:focus-visible { outline: none; }
+.gal-title a:focus-visible::after { outline: 2px solid var(--green); outline-offset: 2px; }
+.gal-item:hover .gal-plate { background: var(--plate-2); }
+.gal-item:hover .gal-title a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.gal-paper { margin: 0 0 8px; font-size: 15px; line-height: 1.4; color: var(--mute); }
+.gal-paper cite { display: block; margin-bottom: 2px; font: italic 400 16px/1.35 var(--words); color: var(--body); }
+.gal-meta { margin: auto 0 0; font: 600 14px/1.3 var(--sans); color: var(--mute); }
+.gallery > li.muted { grid-column: 1 / -1; }
+@media (max-width: 1100px) { .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .gallery { grid-template-columns: minmax(0, 1fr); gap: 40px; } }
+@media (prefers-reduced-motion: reduce) { .gal-plate { transition: none; } }
 .home-make { display: grid; grid-template-columns: minmax(0, 760px) minmax(260px, 1fr); gap: 56px; align-items: start; padding-top: 40px; border-top: 1px solid var(--rule); }
 .home-make .recent { margin-top: 0; position: sticky; top: 24px; }
 .home-make .recent h2 { font-size: 22px; }

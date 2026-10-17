@@ -25,7 +25,7 @@
   const SPECS = {
     schelling: { visual: "agents", params: { size: P(20, 8, 40, 1), density: P(0.9, 0.3, 0.98), share_a: P(0.5, 0.05, 0.95), tolerance: P(0.3, 0, 1), steps: P(40, 1, 200, 1), seed: P(1, 0, 1e9, 1) } },
     sir: { visual: "agents", params: { size: P(30, 10, 60, 1), transmission: P(0.3, 0, 1), recovery: P(0.2, 0.01, 1), vaccinated: P(0, 0, 0.95), initial: P(3, 1, 50, 1), steps: P(100, 1, 400, 1), seed: P(1, 0, 1e9, 1) } },
-    opinion: { visual: "agents", params: { agents: P(100, 10, 300, 1), confidence: P(0.2, 0.01, 1), convergence: P(0.5, 0.05, 0.5), rounds: P(40, 1, 200, 1), seed: P(1, 0, 1e9, 1) } },
+    opinion: { visual: "agents", params: { agents: P(100, 10, 300, 1), confidence: P(0.2, 0.01, 1), convergence: P(0.5, 0.05, 0.5), rounds: P(40, 1, 200, 1), rule: P(0, 0, 1, 1), seed: P(1, 0, 1e9, 1) } },
     network: { visual: "network", params: { nodes: P(60, 10, 200, 1), degree: P(4, 2, 12, 1), rewire: P(0.1, 0, 1), rule: P(0, 0, 1, 1), threshold: P(0.3, 0, 1), transmission: P(0.3, 0, 1), seeds: P(3, 1, 50, 1), steps: P(30, 1, 200, 1), seed: P(1, 0, 1e9, 1) } },
     mean: { visual: "sampling", params: { mu: P(0, -1e6, 1e6), sd: P(1, 1e-9, 1e6), n: P(10, 1, 500, 1), samples: P(200, 10, 1000, 1), seed: P(1, 0, 1e9, 1) } },
     two_group: { visual: "sampling", params: { mu1: P(0, -1e6, 1e6), mu2: P(0.5, -1e6, 1e6), sd: P(1, 1e-9, 1e6), n: P(20, 2, 500, 1), alpha: P(0.05, 0.001, 0.5), samples: P(200, 10, 1000, 1), seed: P(1, 0, 1e9, 1) } },
@@ -139,11 +139,36 @@
     return [c, s[s.length - 1] - s[0]];
   }
 
+  // One Hegselmann–Krause round: each agent moves to the mean of all opinions within eps of its own.
+  function everyoneAverages(x, eps) {
+    const order = x.map((_, i) => i).sort((a, b) => x[a] - x[b] || a - b);
+    const s = order.map((i) => x[i]);
+    const pre = [0];
+    for (const v of s) pre.push(pre[pre.length - 1] + v);
+    const out = x.slice();
+    let lo = 0, hi = 0;
+    for (let k = 0; k < s.length; k++) {
+      const v = s[k];
+      while (s[lo] < v - eps) lo++;
+      while (hi + 1 < s.length && s[hi + 1] <= v + eps) hi++;
+      out[order[k]] = (pre[hi + 1] - pre[lo]) / (hi - lo + 1);
+    }
+    return out;
+  }
+
   function opinion(p) {
     const rng = Rng(p.seed), n = p.agents;
-    const x = [];
+    let x = [];
     for (let i = 0; i < n; i++) x.push(rng());
     const frames = [x.slice()];
+    if (p.rule === 1) {
+      for (let round = 0; round < p.rounds; round++) {
+        x = everyoneAverages(x, p.confidence);
+        frames.push(x.slice());
+      }
+      const [c, spread] = clusters(x);
+      return { metrics: { clusters: c, spread }, frames };
+    }
     for (let round = 0; round < p.rounds; round++) {
       for (let t = 0; t < n; t++) {
         const i = rng.int(n), j = rng.int(n);

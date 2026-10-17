@@ -1,0 +1,35 @@
+[
+ {
+  "slug": "attention-2017",
+  "field": "Machine learning",
+  "cover": "positional_encoding"
+ },
+ {
+  "slug": "ioannidis-2005",
+  "field": "Research methods",
+  "cover": "false_alarms_and_power"
+ },
+ {
+  "slug": "wuhan-2020",
+  "field": "Epidemiology",
+  "cover": "doubling_time"
+ },
+ {
+  "slug": "opinion-dynamics-2002",
+  "field": "Social science",
+  "cover": "splits_lock_in",
+  "cover_values": {
+   "conf": 0.22
+  }
+ },
+ {
+  "slug": "gettier-1963",
+  "field": "Philosophy",
+  "cover": "three_conditions"
+ },
+ {
+  "slug": "galton-1886",
+  "field": "Statistics",
+  "cover": "why_regression"
+ }
+]

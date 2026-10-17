@@ -15,7 +15,7 @@ Secondary users, all served but never at the primary user's expense:
 - **Educators** preparing an interactive handout for a class, editing it, and sharing it before a seminar.
 - **Researchers** explaining their own work to a wider audience, alongside the paper.
 
-**Distribution:** open source. Other people install and run Lemma on their own computers: developers, and curious learners willing to run a local app. A stranger's first run therefore matters, including install, connecting an AI provider, and getting to a first lesson.
+**Distribution:** open source (MIT), in two forms. A hosted Lemma at tools.mohitranka.com/lemma, where learners sign in with Google or GitHub and bring their own AI provider key; and a local Lemma that developers and curious learners run on their own computers. A stranger's first visit or first run therefore matters, including signing in or installing, connecting an AI provider, and getting to a first lesson.
 
 ## Product Purpose
 
@@ -31,15 +31,15 @@ Success means a learner who finishes a lesson has seen each mechanism change und
 - **Live, checked models.** The models respond to input. Lemma proves every goal is reachable before a learner sees it, using one model engine implemented identically in the browser and on the server.
 - **Grounded.** Every concept quotes the paper word for word, and Lemma verifies the quote appears in the source.
 - **Any discipline.** Agent simulations, networks, causal diagrams and sampling exist for the softer sciences, not only curves for maths and computer science.
-- **Private and local.** Lemma runs on the learner's own computer, uses AI tools they already have installed, and works offline once a lesson is saved.
+- **Private, and the learner's own key.** Lessons are built with the learner's own AI provider key, which Lemma never stores. Lemma can run on the learner's own computer, and a saved lesson works offline.
 
 Lemma is independent and not affiliated with Brilliant.org or 3Blue1Brown. Its lesson flow borrows Brilliant's interaction pattern; its look does not borrow either brand.
 
 ## Operating Context
 
-- Runs locally as a Python web app (`uv run lemma`, or `uv run lemma --dev` with hot reload), served only to 127.0.0.1 and opened in the browser.
+- A Python web app. Hosted, it runs in Docker behind a Cloudflare Tunnel, with an account, profile and library per person, and at most two builds running per account (see `deploy/README.md`). Locally, `uv run lemma` (or `uv run lemma --dev` with hot reload) serves it only to 127.0.0.1 and opens the browser.
 - The learner brings a paper as a link (arXiv links become PDFs), a PDF, a saved web page or a text file, and says who the explanation is for.
-- Lessons are built by an AI tool the learner already has installed and signed in: OpenCode Go through the local OpenCode, or Codex through the local Codex CLI, chosen in Settings. Lemma locks either down so the model can only read what Lemma sends and reply with text.
+- Lessons are built with the learner's own key for OpenCode Go, OpenAI or Claude, chosen in Settings; locally, a ChatGPT Plus or Pro sign-in also works. The browser keeps the key and sends it with each request. Models are called with no tools, so they can only read what Lemma sends and reply with text.
 - The journey: search a topic and select complementary sources, or bring a paper → asynchronously read sources and propose an outline → review and edit the outline → watch resumable build progress with an estimated time range → start learning while later concepts are still building → automatically save the completed lesson or download one offline HTML file. Source selections remain editable before starting; recommendations are a starting point, not a completeness guarantee.
 - Multi-source lessons weave core ideas and prerequisites into one standard-depth lesson. Quotes are checked against their identified source; explanations identify supporting sources. Meaningful disagreements and uncertainty are explained rather than flattened into consensus. Deeper topics are suggested for follow-up.
 - Build requests and progress persist privately. Leaving the page does not cancel work. Server restarts mark running builds interrupted for explicit retry; credentials are never persisted in requests. Unreadable sources produce warnings, and no readable sources is a failure. Cancel, retry and delete are available from the build/library flow.
@@ -50,10 +50,10 @@ Lemma is independent and not affiliated with Brilliant.org or 3Blue1Brown. Its l
 - **Quality checks are a gate:** structure, word-for-word grounding, models that evaluate to finite numbers across their ranges, and goals that are false at the start and true at a reachable solution. A lesson that fails is never shown; a concept that can't be fixed is left out, and the lesson says so.
 - **Visual types:** curves, tables, bars, agent simulations, networks, causal diagrams, sampling and geometry. Check formats: put the model into a state, multiple choice, true/false, select all that apply, numeric, and ordering.
 - **Honesty:** models are labelled as simplified teaching models, and invented numbers are never presented as findings. Every lesson reminds the learner that generated lessons can contain errors.
-- **Privacy:** no accounts, no usage logs, no telemetry. Paper text goes only to the provider named before building. A topic search sends only the search words, to Wikipedia, the Stanford Encyclopedia of Philosophy, LibreTexts, OpenAlex, Europe PMC and arXiv. Downloaded lessons make no network requests, including for fonts, and send nothing anywhere.
-- **Non-goals:** public hosting or social features, guaranteeing scientific accuracy, reproducing a paper's data or figures, and replacing the paper.
-- **Limits:** Codex models take a 272k-token context, so long papers need OpenCode Go. Papers must have extractable text; scanned PDFs are refused.
-- **Undecided** (open questions in `docs/product-spec.md`): custom models when no visual type fits, explaining a selected passage, spaced review of earlier concepts, lessons in other languages, and the evaluation set and reviewers.
+- **Privacy:** no usage logs, no analytics, no telemetry. A hosted Lemma keeps only the account details needed to sign in (`lemma/static/privacy.html`). Error reports name where Lemma broke, never the request, the paper or a key. Paper text goes only to the provider named before building. A topic search sends only the search words, to Wikipedia, the Stanford Encyclopedia of Philosophy, LibreTexts, OpenAlex, Europe PMC and arXiv. Downloaded lessons make no network requests, including for fonts, and send nothing anywhere.
+- **Non-goals:** social features, guaranteeing scientific accuracy, reproducing a paper's data or figures, and replacing the paper.
+- **Limits:** a paper must fit the chosen model's context; OpenCode Go and Claude take about 1M tokens. Papers must have extractable text; scanned PDFs are refused. Files are limited to 40 MB.
+- **Undecided:** custom models when no visual type fits, explaining a selected passage, spaced review of earlier concepts, lessons in other languages, and the evaluation set and reviewers.
 
 ## Brand Commitments
 
@@ -65,7 +65,6 @@ Lemma is independent and not affiliated with Brilliant.org or 3Blue1Brown. Its l
 
 - The built-in example lesson, from Galton's 1886 "Regression towards Mediocrity in Hereditary Stature" (public domain), with its source text: `lemma/examples/galton-1886.json` and `galton-1886.txt`.
 - Real generation runs on that paper through both OpenCode Go and Codex, each passing the quality checks on the first draft.
-- The full product spec: `docs/product-spec.md`.
 - There are no users, testimonials, measured learning outcomes, benchmark results, adoption numbers or press yet. Don't fabricate any; the success measures above are targets, not results.
 
 ## Product Principles
@@ -73,8 +72,8 @@ Lemma is independent and not affiliated with Brilliant.org or 3Blue1Brown. Its l
 1. **Teach first, then practise.** Explanation on a live model comes before goals and questions, on every concept.
 2. **Never show what hasn't been checked.** Honesty about the paper, the model's simplifications and the build's progress outranks polish or speed.
 3. **One idea at a time.** Each concept and each screen carries a single mechanism or action.
-4. **The learner's computer, the learner's data.** Local, private, offline-capable, with no hidden network traffic.
-5. **A stranger can get there.** As an open-source tool, the path from install to a first lesson must work for someone who has never seen Lemma.
+4. **The learner's key, the learner's data.** Private, offline-capable once saved, with no hidden network traffic, whether hosted or on the learner's own computer.
+5. **A stranger can get there.** The path from first visit or install to a first lesson must work for someone who has never seen Lemma.
 
 ## Accessibility & Inclusion
 

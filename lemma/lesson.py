@@ -26,6 +26,7 @@ VISUAL_TYPES = ("curves", "bars", "table", "agents", "network", "causal", "sampl
 KERNEL_VISUAL = {name: spec["visual"] for name, spec in kernels.KERNELS.items()}
 CHECK_KINDS = ("model", "choice", "truefalse", "numeric", "order")
 ID_RE = re.compile(r"^[a-z][a-z0-9_]{0,31}$")
+NUMBER_RE = re.compile(r"(?<![\w.])-?\d+(?:\.\d+)?")
 RESERVED = set(expr.FUNCTIONS) | set(expr.CONSTANTS) | {"x", "and", "or", "not"}
 PALETTE_SIZE = 8
 
@@ -407,6 +408,39 @@ def _control_map(model) -> dict:
     return {c["id"]: c for c in model.get("controls", []) if isinstance(c, dict) and "id" in c}
 
 
+def _pinned(model, when: str, sol: dict, cid: str, c: dict) -> bool:
+    """Whether the goal fixes this control at exactly its solution value, so the value is part of the
+    task (such as "set up the paper's case: power 0.6") rather than the answer to find."""
+    v, step = sol[cid], c.get("step")
+    neighbours = [v + d for d in (-step, step) if _finite(step) and step > 0 and c["min"] <= v + d <= c["max"]]
+    try:
+        return bool(neighbours) and not any(expr.evaluate(when, compute(model, {**sol, cid: n})) for n in neighbours)
+    except expr.ExprError:
+        return False
+
+
+def _check_not_given_away(model, goal, where, P: Problems):
+    """A goal and its hints say what to achieve and where to look, never the slider value that achieves it:
+    finding that value is the practice, and Show me is there for a learner who is stuck. A value the goal
+    itself fixes, such as the paper's own setting to start from, may be stated."""
+    sol = goal.get("solution")
+    if not isinstance(sol, dict):
+        return
+    sliders = {c["id"]: c for c in model.get("controls", []) if isinstance(c, dict) and c.get("kind", "slider") == "slider" and "id" in c}
+    told = [goal.get("text") or ""] + [h for h in goal.get("hints") or [] if isinstance(h, str)]
+    for cid, v in sol.items():
+        c = sliders.get(cid)
+        if c is None or not isinstance(v, (int, float)) or isinstance(v, bool) or v == c.get("default"):
+            continue
+        if isinstance(goal.get("when"), str) and _pinned(model, goal["when"], sol, cid, c):
+            continue
+        for i, text in enumerate(told):
+            if any(abs(float(n) - v) < 1e-9 for n in NUMBER_RE.findall(str(text))):
+                said = "its text" if i == 0 else f"hint {i}"
+                P.add(where, f"{said} gives away the solution {cid} = {v:g}: say what to look for and leave the value for the learner to find")
+                break
+
+
 def _check_state_target(model, item, known, where, P: Problems, must_be_false_at=()):
     """A goal or model-check: `when` must be false at defaults and true at `solution`."""
     when = item.get("when")
@@ -622,6 +656,7 @@ def check_concept(c: dict, source_norm: str | None, where: str = "concept") -> P
             P.add(gw, "each hint must be at most 240 characters")
         if model_ok:
             _check_state_target(model, g, known, gw, P)
+            _check_not_given_away(model, g, gw, P)
         if isinstance(g.get("solution"), dict):
             goal_states.append((f"goal {i + 1}'s solution", g["solution"]))
 
@@ -849,8 +884,8 @@ then the check (hard concepts only), then the equation.
        "when": "overlap < 0.5",                  // expression over controls, outputs and sim_ metrics
        "solution": {"d": 1.4},                   // control values that satisfy it (others keep defaults)
        "hints": ["Which slider moves the groups apart?",              // 2–3 hints, each more specific than the last,
-                 "Try pushing d well past 1.",                         // offered one at a time before Show me;
-                 "Set d to about 1.4 and watch the overlap box."]}      // the last may be a partial answer
+                 "Push d past 1 and watch the overlap box.",           // offered one at a time before Show me;
+                 "The overlap crosses 50% somewhere between 1 and 2."]} // the last narrows it down but never states the solution's value
     ]
   },
   "understand": {

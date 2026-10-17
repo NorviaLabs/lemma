@@ -1,6 +1,6 @@
 # Lemma
 
-Lemma turns a research paper into a short, hands-on lesson. It starts with the paper in brief. Then, for each idea, a live model shows how it works, the explanation follows with an exact quote from the paper, and then you try it yourself. It works for papers from any field. The full product spec is in [`docs/product-spec.md`](docs/product-spec.md), and the visual design system is in [`DESIGN.md`](DESIGN.md).
+Lemma turns a research paper into a short, hands-on lesson. It starts with the paper in brief. Then, for each idea, a live model shows how it works, the explanation follows with an exact quote from the paper, and then you try it yourself. It works for papers from any field. Who it is for and what it promises are in [`PRODUCT.md`](PRODUCT.md), and the visual design system is in [`DESIGN.md`](DESIGN.md). Lemma is open source under the [MIT License](LICENSE).
 
 ## Quick start
 
@@ -51,7 +51,7 @@ This signs in the same way the Codex CLI does. **Sign in with ChatGPT** in Setti
 
 `lemma --host 0.0.0.0 --allowed-hosts tools.example.com` (or `LEMMA_HOST` and `LEMMA_ALLOWED_HOSTS`) serves Lemma beyond this computer. A hosted Lemma answers only the domain names it is given, binds exactly `--port`, and doesn't offer ChatGPT sign-in. People sign in with Google or GitHub (`lemma/auth.py`), and each account has its own profile, library, papers and builds, with at most two builds running per account. Set `LEMMA_PUBLIC_URL` to where people reach it, such as `https://tools.example.com/lemma`: Lemma serves under that path and sends sign-ins back to `<public url>/auth/<google|github>/callback`. Each provider is offered once both its `LEMMA_<GOOGLE|GITHUB>_CLIENT_ID` and `_CLIENT_SECRET` are set. Accounts are kept in `$LEMMA_HOME/accounts.db`, and libraries in `$LEMMA_HOME/users/`. Serve it over HTTPS only, since learners' keys travel in request headers.
 
-[`deploy/`](deploy/README.md) runs it at tools.mohitranka.com/lemma on a free Oracle Cloud VM behind a Cloudflare Tunnel.
+[`deploy/`](deploy/README.md) runs it at tools.mohitranka.com/lemma on a free Google Cloud VM behind a Cloudflare Tunnel.
 
 ## How it works
 
@@ -86,12 +86,16 @@ Visual types: curves, bars, tables, agent simulations, networks, causal diagrams
 
 ## Privacy
 
-The server listens on 127.0.0.1 only and rejects other Host headers and cross-origin requests. It writes no request logs. Paper text goes only to the provider and model named before you build, using your key. When you search a topic, only the search words go to Wikipedia, the Stanford Encyclopedia of Philosophy, LibreTexts, OpenAlex, Europe PMC and arXiv (no accounts or keys); nothing is searched unless you ask.
+On your own computer the server listens on 127.0.0.1 only; hosted, it answers only the domain names it is given. Either way it rejects other Host headers and cross-origin requests, and it writes no request logs. When something breaks, it writes an error report to stderr: an id, the time, the exception's type and the lines of Lemma's code it passed through, never the exception's message, the request, the paper or a key. The learner sees the same id, so they can quote it.
+
+Lemma handles at most 32 requests and 2 uploads at once, reads at most 2 PDFs at once, and closes a connection that sits silent for a minute, so on a small hosted VM a burst of large papers waits its turn instead of running out of memory. Paper text goes only to the provider and model named before you build, using your key. When you search a topic, only the search words go to Wikipedia, the Stanford Encyclopedia of Philosophy, LibreTexts, OpenAlex, Europe PMC and arXiv (no accounts or keys); nothing is searched unless you ask.
 
 ## Tests
 
 ```sh
 uv run python -m unittest discover tests
 ```
+
+`eval/` holds an evaluation set of 50 papers from 23 fields, a rubric and three judge personas, and `eval/run.py`, which builds a lesson from each paper with real models, has the judges score them and summarises the results against the targets in `PRODUCT.md`. It calls the providers, so it isn't part of the tests.
 
 The tests cover the expression language, Python/JavaScript parity (needs `node`), every quality check, the generation pipeline (with a fake provider, including a repair and a concept that is left out), the HTTP provider against a stand-in API (history re-sent on repair, model filtering, bad keys, limits and context errors), the HTTP API and the export.

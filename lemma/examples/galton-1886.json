@@ -202,7 +202,7 @@
             "hints": [
               "Only the mother's slider changes her bar.",
               "Her bar is her height times 1.08. You need that to reach the father's 70.",
-              "70 ÷ 1.08 is about 64.8, so try a mother of about 65 inches."
+              "Divide the father's 70 by 1.08: that is the mother you need."
             ]
           },
           {
@@ -215,7 +215,7 @@
             "hints": [
               "Pull the parents far apart first, then fix the average.",
               "Make the father tall and the mother short, then nudge one until the average box reads about 68¼.",
-              "A father of about 73 with a mother of about 59 works."
+              "The father plus the mother on the men's scale must add up to 136½, with the father well above her."
             ]
           }
         ]
@@ -475,7 +475,7 @@
             "hints": [
               "Leave the mid-parent at 72 and move only the share passed on.",
               "At 1 the children match the parents; at 0 they're average. You want somewhere in between.",
-              "A share of about 0.65 gets close to 70¾."
+              "The parents lead by 3¾ inches and the children by 2½. What share of 3¾ is 2½?"
             ]
           },
           {
@@ -667,7 +667,7 @@
             "hints": [
               "Only the link changes how much is kept.",
               "A tight link keeps almost everything; no link keeps nothing. Aim for the middle.",
-              "A link of about 0.65 keeps about two-thirds."
+              "Move the link slowly through the middle of its range and stop when the kept box reads about 67%."
             ]
           },
           {
@@ -679,7 +679,7 @@
             "hints": [
               "What happens as the link gets weaker?",
               "Push the link all the way down.",
-              "Set the link to 0."
+              "With no link at all, the second measurement carries nothing from the first."
             ]
           }
         ]

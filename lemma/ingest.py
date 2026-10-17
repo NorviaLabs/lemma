@@ -6,9 +6,11 @@ import html
 import http.client
 import io
 import ipaddress
+import logging
 import re
 import socket
 import ssl
+import threading
 import time
 import urllib.error
 import urllib.parse
@@ -20,6 +22,9 @@ from html.parser import HTMLParser
 MAX_BYTES = 40 * 1024 * 1024
 USER_AGENT = "Lemma/1.0 (local paper reader)"
 FULL_TEXT = 4000  # Shorter pages are usually abstracts, not usable full text.
+# Reading a large PDF can take hundreds of MB, so only a couple are read at once; the rest wait their turn.
+_PDF_READERS = threading.BoundedSemaphore(2)
+logging.getLogger("pypdf").setLevel(logging.ERROR)  # its font warnings would fill the server's error log
 
 
 class IngestError(Exception):
@@ -86,6 +91,11 @@ def _clean(text: str) -> str:
 
 
 def from_pdf(data: bytes, url: str = "") -> Paper:
+    with _PDF_READERS:
+        return _read_pdf(data, url)
+
+
+def _read_pdf(data: bytes, url: str) -> Paper:
     try:
         from pypdf import PdfReader
     except ImportError as e:  # pragma: no cover - dependency is declared
