@@ -359,8 +359,6 @@
       const valueEl = h("output", { for: "he-mp", class: "ctl-value" });
       const input = h("input", { type: "range", id: "he-mp", min: k.min, max: k.max, step: k.step, value: values.mp });
       const playBtn = h("button", { type: "button", class: "play", "aria-label": `Play ${k.label} through its range`, onclick: () => { stopDemo(); sweep(); } }, icon("play"), "Play");
-      const demoNote = h("p", { class: "caption he-demo" }, h("span", {}, "It's moving on its own. Grab the slider to take over."),
-        h("button", { type: "button", class: "small", onclick: () => { stopDemo(); input.focus(); } }, "Stop"));
       function render(user) {
         const env = view.update(values) || {};
         input.value = values.mp;
@@ -395,11 +393,10 @@
       function stopDemo() {
         if (demo) cancelAnimationFrame(demo);
         demo = null;
-        demoNote.hidden = true;
         playBtn.disabled = false;
       }
       function startDemo() {
-        if (M.reduceMotion()) { demoNote.hidden = true; return; }
+        if (M.reduceMotion()) return;
         const t0 = performance.now();
         const tick = (t) => {
           if (!el.isConnected) return stopDemo();
@@ -439,11 +436,11 @@
         h("div", { class: "model-head" },
           h("p", { class: "he-from" }, lesson.source.title),
           h("span", { class: "tag", title: model.note }, "Teaching model")),
-        h("div", { class: "he-viz" }, vizBox, demoNote), outs, deck,
+        h("div", { class: "he-viz" }, vizBox), outs, deck,
         h("p", { class: "model-note" }, model.note));
       stage.removeAttribute("aria-busy");
       render(exhibitStep > 0);
-      if (exhibitStep === 0) startDemo(); else demoNote.hidden = true;
+      if (exhibitStep === 0) startDemo();
       cleanups.push(() => { stopDemo(); view.destroy(); });
     }).catch(() => {
       stage.replaceChildren(h("p", { class: "muted" }, "The example model couldn't load. You can still make a lesson below."));

@@ -308,7 +308,7 @@ Responsive: at 1100px overview and home grids collapse to one column; at 900px t
 
 ## Elevation & Depth
 
-Depth is tonal, not cast: paper sits on paper, the model sits on the plate ground, and white cards (statement, equation, paper excerpt) sit on the plate. Shadows are few and functional: a 1px lift under the green button, a soft lift under a slider thumb and the selected segment, and real elevation only for things that float over content (the floating error, the home demo prompt, the action bar's faint upward shade). Number pins and empty marks use inset rings, not shadows.
+Depth is tonal, not cast: paper sits on paper, the model sits on the plate ground, and white cards (statement, equation, paper excerpt) sit on the plate. Shadows are few and functional: a 1px lift under the green button, a soft lift under a slider thumb and the selected segment, and real elevation only for things that float over content (the floating error, the action bar's faint upward shade). Number pins and empty marks use inset rings, not shadows.
 
 ### Shadow Vocabulary
 - **Action lift** (`box-shadow: 0 1px 2px rgba(29, 35, 33, .14)`): primary button at rest only; removed when pressed or disabled.
