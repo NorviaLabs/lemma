@@ -8,6 +8,7 @@ import hashlib
 import http.client
 import json
 import os
+import re
 import shutil
 import socket
 import subprocess
@@ -1049,6 +1050,38 @@ class ServerTests(unittest.TestCase):
         s, raw = self.req("POST", "/api/papers", {"filename": "galton.txt", "content_type": "text/plain", "data": base64.b64encode(SOURCE.encode()).decode()})
         self.assertEqual(s, 200, raw)
         self.assertGreater(json.loads(raw)["chars"], 40000)
+
+    def test_unexpected_error_is_reported_without_its_message(self):
+        import contextlib
+        import io
+
+        err = io.StringIO()
+        with patch.object(server.store, "list_lessons", side_effect=RuntimeError("paper text sk-secret-123")), contextlib.redirect_stderr(err):
+            s, raw = self.req("GET", "/api/lessons")
+        self.assertEqual(s, 500)
+        eid = re.search(r"error ([0-9a-f]{8})", json.loads(raw)["error"]).group(1)
+        self.assertNotIn(b"sk-secret-123", raw)
+        self.assertIn(f"error {eid} in GET /api/lessons: RuntimeError", err.getvalue())
+        self.assertIn("server.py", err.getvalue())  # where it broke
+        self.assertNotIn("sk-secret-123", err.getvalue())
+
+    def test_connections_beyond_the_limit_wait_their_turn(self):
+        with patch.object(server, "MAX_CONNECTIONS", 1):
+            httpd = server.make_server(0, exact=True)
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+        try:
+            port = httpd.server_address[1]
+            idle = socket.create_connection(("127.0.0.1", port))  # takes the only slot and sends nothing
+            c = http.client.HTTPConnection("127.0.0.1", port, timeout=0.5)
+            c.request("GET", "/api/status", headers={"Host": f"localhost:{port}"})
+            with self.assertRaises(TimeoutError):
+                c.getresponse()
+            idle.close()  # its slot frees up, so the waiting request is answered
+            c.sock.settimeout(10)
+            self.assertEqual(c.getresponse().status, 200)
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
 
 
 class HostedServerTests(unittest.TestCase):

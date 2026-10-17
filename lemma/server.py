@@ -13,13 +13,14 @@ import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import nullcontext
 from http import HTTPStatus
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib import resources
 from urllib.parse import parse_qs, quote, urlsplit
 
-from . import __version__, auth, chatgpt, export, generate, ingest, search, store
+from . import __version__, auth, chatgpt, export, generate, ingest, logs, search, store
 from . import lesson as L
 from .llm import DEFAULT_PROVIDER, PROVIDERS, ProviderError, make_provider
 
@@ -39,6 +40,9 @@ SOURCES: dict[tuple, str] = {}  # (owner, lesson id) -> paper text, for lessons 
 KEEP_PAPERS, KEEP_SOURCES = 5, 200  # papers kept per person, and paper texts kept in all
 SOURCE_READERS = 4  # sources of one request read at the same time
 MAX_RUNNING_EACH, MAX_RUNNING = 2, 8  # outlines and builds running at once, per account and in all, when hosted
+MAX_CONNECTIONS = 32  # requests handled at once; more wait to be accepted
+LARGE_BODY = 1024 * 1024  # a request body this big is an upload, held in memory while it is read
+_uploads = threading.BoundedSemaphore(2)  # uploads handled at once, so a burst of them can't exhaust memory
 _lock = threading.Lock()
 REQUEST = threading.local()  # the current request's headers; one thread per request
 
@@ -220,7 +224,7 @@ def api_search(body):
         except search.SearchError as e:
             record["error"] = str(e)
         except Exception as e:  # keep the server alive and tell the learner honestly
-            record["error"] = f"The search failed unexpectedly ({e.__class__.__name__})."
+            record["error"] = f"The search failed unexpectedly ({e.__class__.__name__}, error {logs.report('search', e)})."
         finally:
             record["done"] = True
 
@@ -603,6 +607,7 @@ ROUTES = [
 class Handler(BaseHTTPRequestHandler):
     server_version = "Lemma"
     sys_version = ""
+    timeout = 60  # seconds a connection may sit silent before it is closed
 
     def log_message(self, format, *args):  # Lemma keeps no usage logs
         pass
@@ -662,6 +667,10 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(403, {"error": "Cross-origin requests are not allowed."})
         if HOSTED and method == "POST" and path == "/api/logout":
             return self._sign_out()  # not in ROUTES: it clears the session cookie
+        with _uploads if int(self.headers.get("Content-Length") or 0) > LARGE_BODY else nullcontext():
+            return self._route(method, path)
+
+    def _route(self, method: str, path: str):
         for m, pattern, fn, has_arg in ROUTES:
             if m != method:
                 continue
@@ -677,7 +686,7 @@ class Handler(BaseHTTPRequestHandler):
             except ApiError as e:
                 return self._json(e.status, {"error": e.message, "problems": e.problems})
             except Exception as e:
-                return self._json(500, {"error": f"Something went wrong inside Lemma ({e.__class__.__name__}: {e})."})
+                return self._json(500, {"error": f"Something went wrong inside Lemma (error {logs.report(f'{method} {pattern}', e)})."})
             if isinstance(result, str):
                 return self._send(200, result.encode("utf-8"), "text/html; charset=utf-8", {"Content-Disposition": "attachment; filename=lesson.html"})
             return self._json(200, result)
@@ -823,7 +832,31 @@ def _free_port(preferred: int, host: str = "127.0.0.1") -> int:
         return s.getsockname()[1]
 
 
-def make_server(port: int = 8765, exact: bool = False, host: str = "127.0.0.1", allowed_hosts: tuple[str, ...] = ()) -> ThreadingHTTPServer:
+class Server(ThreadingHTTPServer):
+    """One thread per request, but at most MAX_CONNECTIONS at once: the rest wait in the listen queue."""
+
+    daemon_threads = True
+
+    def __init__(self, *args, **kwargs):
+        self._slots = threading.BoundedSemaphore(MAX_CONNECTIONS)
+        super().__init__(*args, **kwargs)
+
+    def process_request(self, request, client_address):
+        self._slots.acquire()
+        try:
+            super().process_request(request, client_address)
+        except BaseException:
+            self._slots.release()
+            raise
+
+    def process_request_thread(self, request, client_address):
+        try:
+            super().process_request_thread(request, client_address)
+        finally:
+            self._slots.release()
+
+
+def make_server(port: int = 8765, exact: bool = False, host: str = "127.0.0.1", allowed_hosts: tuple[str, ...] = ()) -> Server:
     """`exact` binds the given port or fails; otherwise the next free port is used.
 
     Listening on any address but loopback makes this a hosted Lemma: it answers only the
@@ -834,6 +867,4 @@ def make_server(port: int = 8765, exact: bool = False, host: str = "127.0.0.1", 
     if HOSTED and not allowed_hosts:
         raise ValueError("A hosted Lemma needs --allowed-hosts: the domain names it is reached by.")
     ALLOWED_HOSTS = LOCAL_HOSTS + tuple(h.strip().lower() for h in allowed_hosts if h.strip())
-    httpd = ThreadingHTTPServer((host, port if exact or HOSTED else _free_port(port, host)), Handler)  # a host expects its own port
-    httpd.daemon_threads = True
-    return httpd
+    return Server((host, port if exact or HOSTED else _free_port(port, host)), Handler)  # a host expects its own port

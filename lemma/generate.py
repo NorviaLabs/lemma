@@ -10,6 +10,7 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor
 
 from . import lesson as L
+from . import logs
 from .llm import Provider, ProviderError
 
 MAX_REPAIRS = 2
@@ -255,7 +256,7 @@ def start(job: Job, fn, *args):
                 job.status, job.error = ("cancelled" if job.cancelled.is_set() else "error"), str(e)
         except Exception as e:  # keep the server alive and tell the learner honestly
             with job.lock:
-                job.status, job.error = "error", f"Unexpected error: {e.__class__.__name__}: {e}"
+                job.status, job.error = "error", f"Unexpected error: {e.__class__.__name__}: {e} (error {logs.report(f'{job.kind} job', e)})"
         finally:
             job.changed()
 
