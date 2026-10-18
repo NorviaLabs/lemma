@@ -251,7 +251,6 @@ button.hall-replay:hover:not(:disabled) { background: transparent; color: var(--
 .gal-reading { padding: clamp(16px, 3vw, 32px); max-width: 36ch; }
 .gal-reading > p:first-child { font-size: clamp(22px, 2.4vw, 32px); line-height: 1.2; font-weight: 600; }
 .gal-reading .small { line-height: 1.6; color: var(--body); }
-.gal-interactive { align-items: flex-start; overflow-y: auto; position: relative; z-index: 1; }
 .activity-lab { width: 100%; padding: 20px; }
 .activity-lab h3 { font-size: 22px; margin: 0 0 12px; }
 .activity-prompt, .activity-feedback { line-height: 1.5; }
@@ -300,12 +299,6 @@ button.hall-replay:hover:not(:disabled) { background: transparent; color: var(--
 .construction-picture .construction-circle { stroke-width: .8; }
 .construction-picture .construction-edge { stroke-width: 1.2; }
 .construction-picture .latest { stroke: var(--green); opacity: 1; }
-.gal-interactive .activity-lab { padding: 12px; font-size: 13px; }
-.gal-interactive .activity-lab h3 { font-size: 17px; }
-.gal-interactive .activity-card { padding: 8px; }
-.gal-interactive .activity-lab button { font-size: 12px; white-space: normal; }
-.gal-interactive .activity-prompt { font-size: 12px; }
-.gal-interactive .activity-lab svg { max-height: 170px; }
 .gal-plate .viz-box, .gal-plate .viz-wrap { width: 100%; height: 100%; padding: 0; }
 .gal-plate .viz { height: 100%; }
 .gal-plate .legend, .gal-plate .viz-status { display: none; }
@@ -1009,6 +1002,15 @@ input[type=file]::file-selector-button { border: 0; border-radius: var(--r); bac
 .gal-item:hover .gal-plate { background: var(--surface); transform: translateY(-3px); box-shadow: var(--lift-hi); }
 .gal-bars li { background: color-mix(in srgb, var(--green) 30%, var(--plate-2)); }
 .gal-title { font-weight: 700; }
+/* a lesson taught without a model: its source's own words, set as a poster on an ultramarine ground */
+.gal-plate.gal-quote-plate, .gal-item:hover .gal-plate.gal-quote-plate { padding: 0; align-items: stretch; background: var(--green-soft); }
+.gal-quote { display: flex; flex-direction: column; width: 100%; margin: 0; padding: clamp(22px, 2.4vw, 32px); }
+.gal-mark { display: block; height: .5em; margin: 0 0 10px -.04em; font: 800 clamp(80px, 7.5vw, 112px)/1 var(--sans); color: var(--green); letter-spacing: -.05em; }
+.gal-quote blockquote { margin: 0; font: italic 700 clamp(17px, 1.5vw, 21px)/1.24 var(--sans); letter-spacing: -.02em; color: var(--ink); text-wrap: pretty;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 8; overflow: hidden; }
+.gal-quote.is-short blockquote { font-size: clamp(20px, 1.85vw, 25px); line-height: 1.18; letter-spacing: -.025em; }
+.gal-quote figcaption { margin-top: auto; padding-top: 12px; border-top: 1.5px solid color-mix(in srgb, var(--green) 28%, transparent); font: 600 13px/1.4 var(--sans); color: var(--green-press);
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .panel.yellow { background: var(--surface); border: 0; border-radius: var(--r-lg); box-shadow: var(--lift); padding: 22px 24px; }
 
 /* search results and lists outside the lesson: grouped white cards */

@@ -262,7 +262,7 @@ The CSS custom properties predate this world, so their names don't match their c
 **Display, body and label font:** Archivo (variable, 400–800), self-hosted.
 **Mono:** Spline Sans Mono, for code and commands only.
 
-**Character:** one grotesque does every job. Headlines are set heavy (800) and tight, which gives the app its confident, current voice; body copy stays at 400 for comfortable reading. The paper's own words are set in Archivo too, at a larger weight-500 size, not in an italic or a serif.
+**Character:** one grotesque does every job. Headlines are set heavy (800) and tight, which gives the app its confident, current voice; body copy stays at 400 for comfortable reading. The paper's own words are set in Archivo too, at a larger weight-500 size, not in an italic or a serif. The one exception is a gallery card for a lesson taught without a model: a short excerpt set bold italic on an ultramarine-soft ground under a large ultramarine quote mark, credited to its author.
 
 ### Hierarchy
 - **Display** (800, clamp(44px, 5vw, 74px), 0.98, -0.045em): the home headline.

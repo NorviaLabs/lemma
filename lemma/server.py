@@ -563,15 +563,65 @@ def api_example(_body):
     return lesson
 
 
+def card_quote(quote: str | None, most: int = 32) -> str | None:
+    """A verbatim run of whole sentences from a quote, short enough to set large on a gallery card. Sentences
+    under five words (headings such as "Reply to Objection 1.") are skipped; a long sentence is cut with an ellipsis."""
+    if not quote:
+        return quote
+    sentences = [s for s in re.split(r"(?<=[.!?;])\s+", quote.strip()) if len(s.split()) >= 5] or [quote.strip()]
+    words = []
+    for s in sentences:
+        if words and len(words) + len(s.split()) > most:
+            break
+        words += s.split()
+    return " ".join(words[:most]).rstrip(",;:") + ("…" if len(words) > most else "")
+
+
+def short_authors(authors: str | None) -> str:
+    """Authors as a card credits them: a single author in full, two by surname, more as "First et al."
+    Notes in brackets (translators, commentary) are dropped, and where a part names who wrote the words
+    ("opinion delivered by Chief Justice Earl Warren"), that person is credited."""
+    text = re.sub(r"\s*\([^)]*\)", "", authors or "").strip()
+    parts = [p.strip() for p in text.split(";") if p.strip()]
+    by = [p.rsplit(" by ", 1)[1] for p in parts if " by " in p]
+    text = by[-1] if by else (parts[0] if parts else "")
+    etal = bool(re.search(r"\bet al\.?", text))
+    names = [n for n in re.split(r",\s*(?:and\s+)?|\s+and\s+|\s*&\s*", re.sub(r",?\s*\bet al\.?", "", text)) if n.strip()]
+    if not names:
+        return ""
+    if len(names) == 1 and not etal:
+        return names[0]
+    def surname(name):  # the last word that isn't initials, with a particle such as "von" kept; capitals tamed
+        words = name.split()
+        keep = [i for i, w in enumerate(words) if not re.fullmatch(r"[A-Z]{1,3}\.?|(?:[A-Z]\.-?)+[A-Z]?\.?", w)]
+        i = keep[-1] if keep else 0
+        word = words[i].title() if words[i].isupper() else words[i]
+        return f"{words[i - 1]} {word}" if i > 0 and words[i - 1] in ("von", "van", "de", "der", "da", "di", "le", "la") else word
+    return f"{surname(names[0])} and {surname(names[1])}" if len(names) == 2 and not etal else f"{surname(names[0])} et al."
+
+
+def quote_author(lesson: dict, block: dict) -> str:
+    """Who wrote a quote: its own source in a combined lesson, otherwise the lesson's source."""
+    source = next((s for s in lesson.get("sources") or [] if s.get("id") == block.get("source_id")), None)
+    return short_authors((source or {}).get("authors") or lesson["source"].get("authors"))
+
+
+def gallery_cover(lesson: dict) -> dict:
+    """The concept a gallery card shows: the first with a model to draw; without models, the one with the
+    shortest quote, which the card sets as a poster."""
+    with_model = [c for c in lesson["concepts"] if c.get("model")]
+    return with_model[0] if with_model else min(lesson["concepts"], key=lambda c: len(c["understand"].get("quote") or "x" * 9999))
+
+
 def api_gallery(_body):
     items = []
     for entry in gallery_index():
         lesson, _ = load_gallery(entry["slug"])
-        cover = next(c for c in lesson["concepts"] if c["id"] == entry["cover"])
+        cover = next((c for c in lesson["concepts"] if c["id"] == entry.get("cover")), None) or gallery_cover(lesson)
         items.append({**lesson["gallery"], "title": lesson["title"], "source": lesson["source"],
                       "concepts": [c["title"] for c in lesson["concepts"]],
                       "cover": {"title": cover["title"], "idea": cover["idea"], "model": cover.get("model"),
-                                "activity": next((a for a in cover.get("activities", []) if a["kind"] in ("sort", "construction", "inheritance")), None),
+                                "quote": card_quote(cover["understand"].get("quote")), "quote_author": quote_author(lesson, cover["understand"]),
                                 "values": entry.get("cover_values", {})}})
     return items
 

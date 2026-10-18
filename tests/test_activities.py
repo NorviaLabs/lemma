@@ -237,17 +237,31 @@ class GalleryActivitiesTests(unittest.TestCase):
         c["activities"] = [a for a in c["activities"] if a["kind"] != "reveal"]
         self.assertTrue(any("followed by reveal" in p for p in L.check_concept(c, None)))
 
+    def test_cards_credit_authors_the_same_way_for_any_lesson(self):
+        cases = {"Edgar Allan Poe": "Edgar Allan Poe", "Shlomo Benartzi and Richard H. Thaler": "Benartzi and Thaler",
+                 "William A. V. Clark, MARK A. FOSSETT": "Clark and Fossett", "Qun Li, Xuhua Guan, Peng Wu, et al.": "Li et al.",
+                 "Philip von Paris, Franck Selsis, D. Kitzmann et al.": "von Paris et al.", "Ioannidis JPA": "Ioannidis JPA",
+                 "C. Herbert, D. Paillard, and B. Dubrulle": "Herbert et al.", "Hegselmann R, Krause U": "Hegselmann and Krause",
+                 "St. Thomas Aquinas (literally translated by Fathers of the English Dominican Province)": "St. Thomas Aquinas",
+                 "Supreme Court of the United States; opinion delivered by Chief Justice Earl Warren": "Chief Justice Earl Warren", "": ""}
+        for authors, credit in cases.items():
+            self.assertEqual(server.short_authors(authors), credit, authors)
+        quote = "Reply to Objection 1. Although those things which are beyond man's knowledge may not be sought for by man through his reason, they must be accepted."
+        self.assertEqual(server.card_quote(quote), quote.split(". ", 1)[1])  # a heading-like fragment is skipped
+        self.assertTrue(server.card_quote(" ".join(["word"] * 50) + ".").endswith("…"))
+
     def test_new_gallery_previews_reuse_the_lessons_interactions(self):
         for card in server.api_gallery({}):
             lesson, _ = server.load_gallery(card["slug"])
             entry = next(e for e in server.gallery_index() if e["slug"] == card["slug"])
             cover = next(c for c in lesson["concepts"] if c["id"] == entry["cover"])
+            self.assertEqual(cover["id"], server.gallery_cover(lesson)["id"] if card["slug"] != "galton-1886" else "why_regression")  # the index matches the rule
             self.assertEqual(card["cover"]["model"], cover.get("model"))
             if cover.get("model"):
                 self.assertTrue(card["cover"]["model"]["visual"])
-            else:  # a lesson taught without models shows a hands-on activity, or its idea, on its card
-                hands_on = [a for a in cover["activities"] if a["kind"] in ("sort", "construction", "inheritance")]
-                self.assertEqual(card["cover"]["activity"], hands_on[0] if hands_on else None)
+            else:  # a lesson taught without models shows a quote from its source on its card
+                self.assertIn(card["cover"]["quote"].rstrip("…"), cover["understand"]["quote"])  # verbatim, maybe shortened
+                self.assertNotIn("activity", card["cover"])  # nothing to fill in on a card
             if lesson.get("generation"):
                 self.assertEqual(lesson["generation"]["model"], "claude-opus-5-5")
                 self.assertEqual(lesson["generation"]["omitted"], len(lesson["omitted"]))

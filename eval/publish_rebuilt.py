@@ -11,6 +11,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from lemma import lesson as L
+from lemma.server import gallery_cover
 from normalize_gallery_sources import quotation_excerpts
 
 RUN = ROOT / "eval/results/rebuilt-2026-10-19/papers"
@@ -23,13 +24,6 @@ PAPERS = {"attention-2017": "01", "ioannidis-2005": "21", "wuhan-2020": "25", "o
           "wave-interference": "wave_interference", "schelling-segregation": "schelling_segregation",
           "information-cascades": "information_cascades", "ice-albedo-feedback": "ice_albedo_feedback",
           "externalities-pigou": "externalities_pigou", "loss-aversion": "loss_aversion"}
-
-
-def cover(lesson):
-    """The first concept with a model to draw on the lesson's card; without models, the first hands-on activity."""
-    with_model = [c["id"] for c in lesson["concepts"] if c.get("model")]
-    hands_on = [c["id"] for c in lesson["concepts"] if any(a.get("kind") in ("sort", "construction", "inheritance") for a in c.get("activities", []))]
-    return (with_model + hands_on + [lesson["concepts"][0]["id"]])[0]
 
 
 def main():
@@ -57,7 +51,7 @@ def main():
         shipped = quotation_excerpts(lesson, source)
         if errors := list(L.check_lesson(lesson, shipped)):
             raise SystemExit(f"{slug}: fails against the source it ships with ({errors[0]}); nothing published")
-        entry["cover"] = cover(lesson)
+        entry["cover"] = gallery_cover(lesson)["id"]
         entry.pop("cover_values", None)
         prepared.append((slug, lesson, shipped, entry["source_file"]))
     for slug, lesson, shipped, source_file in prepared:

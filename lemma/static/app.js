@@ -625,13 +625,12 @@
       const draw = (plate, cover) => {
         if (plate.dataset.drawn) return;
         plate.dataset.drawn = "1";
-        if (!cover.model) {
-          if (cover.activity) {
-            plate.removeAttribute("aria-hidden");
-            plate.classList.add("gal-interactive");
-            window.LemmaActivities.mount(plate, cover.activity);
-          }
-          else plate.append(h("div", { class: "gal-reading" }, h("p", {}, cover.title), h("p", { class: "small" }, cover.idea)));
+        if (!cover.model) {  // a lesson taught without a model shows the source's own words
+          if (cover.quote) {
+            plate.classList.add("gal-quote-plate");
+            plate.append(h("figure", { class: "gal-quote" + (cover.quote.split(" ").length <= 16 ? " is-short" : "") },
+              h("span", { class: "gal-mark" }, "\u201c"), h("blockquote", {}, cover.quote), cover.quote_author ? h("figcaption", {}, `\u2014 ${cover.quote_author}`) : null));
+          } else plate.append(h("div", { class: "gal-reading" }, h("p", {}, cover.title), h("p", { class: "small" }, cover.idea)));
           return;
         }
         const box = h("div", { class: "viz-box" });
