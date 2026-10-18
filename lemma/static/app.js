@@ -921,7 +921,7 @@
       const cs = o.concepts;
       list.replaceChildren(...cs.map((c, i) => h("li", { class: "outline-item" + (c.known ? " known" : "") },
         h("div", {},
-          h("div", { class: "oi-title" }, h("strong", {}, c.title), h("span", { class: "tag" }, c.role || "core"), h("span", { class: "tag" }, c.visual),
+          h("div", { class: "oi-title" }, h("strong", {}, c.title), h("span", { class: "tag" }, c.role || "core"), h("span", { class: "tag" }, c.visual === "none" ? "no model" : c.visual),
             c.hard ? h("span", { class: "tag" }, "hard: has a check") : null,
             (() => { const b = cs.findIndex((x) => x.id === c.builds_on); return b >= 0 && b < i ? h("span", { class: "tag" }, `reuses ${b + 1}'s model`) : null; })(),
             (() => { const n = cs.map((x, j) => (Array.isArray(c.needs) && c.needs.includes(x.id) ? j + 1 : 0)).filter(Boolean); return n.length ? h("span", { class: "tag" }, `after ${n.join(", ")}`) : null; })()),

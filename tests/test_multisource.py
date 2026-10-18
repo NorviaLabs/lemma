@@ -6,6 +6,7 @@ import unittest
 from test_lemma import EXAMPLE, SOURCE, FakeProvider, wait
 from lemma import generate, ingest, lesson as L, search
 from lemma.llm import Reply
+import fakejev  # noqa: E402,F401  Jev is essential, so every search and build asks this stand-in
 
 
 class MultiSourceProvider(FakeProvider):

@@ -23,6 +23,7 @@ from itertools import product
 from . import expr, kernels
 
 VISUAL_TYPES = ("curves", "bars", "table", "agents", "network", "causal", "sampling", "geometry")
+OUTLINE_VISUALS = VISUAL_TYPES + ("none",)  # "none": a concept taught without a live model
 KERNEL_VISUAL = {name: spec["visual"] for name, spec in kernels.KERNELS.items()}
 CHECK_KINDS = ("model", "choice", "truefalse", "numeric", "order")
 ID_RE = re.compile(r"^[a-z][a-z0-9_]{0,31}$")
@@ -608,12 +609,220 @@ def _text(obj, key, where, P: Problems, max_len=None, required=True):
     return v
 
 
-def check_activities(c: dict, where: str, P: Problems):
+TEACHING_BLOCKS = ("explain", "worked", "compare", "stages")
+RESPONSE_BLOCKS = ("choice", "sort", "match", "order", "trace", "passage", "estimate", "construction", "inheritance")
+MODEL_BLOCKS = ("watch", "walk", "goal", "predict", "reveal", "check", "connect")  # need the concept's live model
+ACTIVITY_KINDS = TEACHING_BLOCKS + RESPONSE_BLOCKS + MODEL_BLOCKS
+GENOTYPES = ("AA", "Aa", "aa")
+SHAPES = ("circle", "line", "point")
+
+
+def _items(obj, key, where, P: Problems, lo: int, hi: int, what: str) -> list:
+    v = obj.get(key)
+    if not isinstance(v, list) or not lo <= len(v) <= hi:
+        P.add(where, f"needs {lo}–{hi} {what}")
+        return []
+    return v
+
+
+def _ids(items, where, P: Problems, what: str) -> set:
+    ids = set()
+    for x in items:
+        xid = x.get("id") if isinstance(x, dict) else None
+        if not isinstance(xid, str) or not ID_RE.fullmatch(xid) or xid in ids:
+            P.add(where, f"{what} need unique lower_snake_case ids")
+        else:
+            ids.add(xid)
+    return ids
+
+
+def _hints(a, w, P: Problems):
+    """Response blocks may offer 1–3 hints, each more specific than the last, before Show me."""
+    if "hints" not in a:
+        return
+    hints = a["hints"]
+    if not isinstance(hints, list) or not 1 <= len(hints) <= 3 or not all(isinstance(x, str) and x.strip() for x in hints):
+        P.add(w, "hints must be 1–3 lines that get more specific")
+    elif any(len(x) > 240 for x in hints):
+        P.add(w, "each hint must be at most 240 characters")
+
+
+def _in_range(model, values, w, P: Problems):
+    """A model state named by a block: every key a control, every value within its range."""
+    controls = {k.get("id"): k for k in (model or {}).get("controls", []) if isinstance(k, dict)}
+    if not isinstance(values, dict) or not values:
+        P.add(w, "values must set at least one control")
+        return
+    for k, v in values.items():
+        ctl = controls.get(k)
+        if ctl is None:
+            P.add(w, f"{k!r} is not a control of the model")
+        elif not _finite(v) or not ctl.get("min", 0) <= v <= ctl.get("max", 1):
+            P.add(w, f"{k!r} must be a number within its control's range")
+
+
+def _check_block(a, kind, w, c, P: Problems, source_norm):
+    if kind == "explain":
+        if "text" in a:
+            _text(a, "text", w, P, 2000)
+    elif kind == "worked":
+        for j, s in enumerate(_items(a, "steps", w, P, 2, 8, "steps")):
+            _text(s, "text", f"{w}.steps[{j}]", P, 500)
+            _text(s, "result", f"{w}.steps[{j}]", P, 200, required=False)
+        _text(a, "takeaway", w, P, 700)
+    elif kind == "compare":
+        _text(a, "prompt", w, P, 1000)
+        for j, case in enumerate(_items(a, "cases", w, P, 2, 3, "cases")):
+            cw = f"{w}.cases[{j}]"
+            if not isinstance(case, dict):
+                P.add(cw, "must be an object")
+                continue
+            _text(case, "label", cw, P, 80)
+            _text(case, "text", cw, P, 700, required=False)
+            if "values" in case:
+                if not c.get("model"):
+                    P.add(cw, "values need the concept's model")
+                else:
+                    _in_range(c["model"], case["values"], cw, P)
+            elif not (isinstance(case.get("text"), str) and case["text"].strip()):
+                P.add(cw, "needs 'text' or model 'values'")
+        _text(a, "takeaway", w, P, 700)
+    elif kind == "stages":
+        _text(a, "prompt", w, P, 1000)
+        for j, s in enumerate(_items(a, "stages", w, P, 2, 6, "stages")):
+            _text(s, "label", f"{w}.stages[{j}]", P, 80)
+            _text(s, "text", f"{w}.stages[{j}]", P, 700)
+        _text(a, "takeaway", w, P, 700)
+    elif kind == "choice":
+        mode = a.get("mode")
+        if not isinstance(mode, str) or mode not in ("determinate", "interpretive", "opening"):
+            P.add(w, "mode must be determinate, interpretive or opening")
+        _text(a, "question", w, P, 1000)
+        options = _items(a, "options", w, P, 2, 6, "options")
+        for j, o in enumerate(options):
+            ow = f"{w}.options[{j}]"
+            if not isinstance(o, dict):
+                P.add(ow, "must be an object")
+                continue
+            _text(o, "text", ow, P, 700)
+            _text(o, "feedback", ow, P, 1200)
+        if a.get("multi"):
+            if mode != "determinate":
+                P.add(w, "multi applies only to a determinate choice")
+            answers = a.get("answers")
+            if "answer" in a or not isinstance(answers, list) or not answers or any(type(x) is not int or not 0 <= x < len(options) for x in answers) or len(set(answers)) != len(answers):
+                P.add(w, "a multi choice needs 'answers': the indices of every supported option, and no 'answer'")
+        elif mode == "determinate" and (type(a.get("answer")) is not int or not 0 <= a["answer"] < len(options)):
+            P.add(w, "answer must identify the supported option")
+        if mode in ("interpretive", "opening") and ("answer" in a or "answers" in a):
+            P.add(w, "unscored activities must not have an answer key")
+    elif kind == "sort":
+        _text(a, "prompt", w, P, 1000)
+        _text(a, "takeaway", w, P, 700)
+        groups = _items(a, "groups", w, P, 2, 4, "groups")
+        group_ids = _ids(groups, w, P, "groups")
+        for g in groups:
+            _text(g, "label", w, P, 160)
+        cards = _items(a, "cards", w, P, 2, 8, "cards")
+        _ids(cards, w, P, "cards")
+        for card in cards:
+            if not isinstance(card, dict):
+                continue
+            _text(card, "text", w, P, 700)
+            _text(card, "feedback", w, P, 1200)
+            if card.get("group") not in group_ids:
+                P.add(w, "card must reference an existing group")
+    elif kind == "match":
+        _text(a, "prompt", w, P, 1000)
+        pairs = _items(a, "pairs", w, P, 2, 6, "pairs")
+        _ids(pairs, w, P, "pairs")
+        for j, p in enumerate(pairs):
+            pw = f"{w}.pairs[{j}]"
+            _text(p, "text", pw, P, 300)
+            _text(p, "target", pw, P, 300)
+            _text(p, "feedback", pw, P, 700)
+        targets = [p.get("target") for p in pairs if isinstance(p, dict)]
+        if len(set(targets)) != len(targets):
+            P.add(w, "each pair needs a different target, so the matching is one to one")
+        _text(a, "takeaway", w, P, 700)
+    elif kind == "order":
+        _text(a, "prompt", w, P, 1000)
+        items = _items(a, "items", w, P, 3, 7, "items, listed in the correct order")
+        if not all(isinstance(x, str) and x.strip() and len(x) <= 300 for x in items):
+            P.add(w, "items must be text of at most 300 characters")
+        elif len(set(items)) != len(items):
+            P.add(w, "items must be distinct")
+        _text(a, "explanation", w, P, 1000)
+    elif kind == "trace":
+        _text(a, "prompt", w, P, 1000)
+        nodes = _items(a, "nodes", w, P, 3, 10, "nodes")
+        node_ids = _ids(nodes, w, P, "nodes")
+        for j, n in enumerate(nodes):
+            nw = f"{w}.nodes[{j}]"
+            _text(n, "label", nw, P, 40)
+            if not all(_finite(n.get(k)) and 0 <= n[k] <= 100 for k in ("x", "y")):
+                P.add(nw, "needs x and y between 0 and 100")
+        edges = a.get("edges", [])
+        links = set()
+        if not isinstance(edges, list) or len(edges) > 20:
+            P.add(w, "edges must be a list of at most 20 links")
+            edges = []
+        for e in edges:
+            if not isinstance(e, dict) or e.get("from") not in node_ids or e.get("to") not in node_ids:
+                P.add(w, "each edge must join two existing nodes")
+            else:
+                links.add((e["from"], e["to"]))
+        answer = a.get("answer")
+        if not isinstance(answer, list) or not answer or any(x not in node_ids for x in answer) or len(set(answer)) != len(answer):
+            P.add(w, "answer must list distinct existing node ids")
+        elif a.get("path") and any((x, y) not in links for x, y in zip(answer, answer[1:])):
+            P.add(w, "a path answer must follow the edges, in order")
+        _text(a, "explanation", w, P, 1000)
+    elif kind == "passage":
+        _text(a, "question", w, P, 1000)
+        options = _items(a, "options", w, P, 2, 4, "options")
+        for j, o in enumerate(options):
+            ow = f"{w}.options[{j}]"
+            quote = _text(o, "quote", ow, P, 700)
+            _text(o, "feedback", ow, P, 700)
+            if quote and (len(quote.split()) < 6 or source_norm is not None and not quote_in_source(quote, source_norm)):
+                P.add(ow, "quote must contain at least 6 words and appear word for word in the source")
+        if type(a.get("answer")) is not int or not 0 <= a["answer"] < len(options):
+            P.add(w, "answer must identify the supporting passage")
+    elif kind == "estimate":
+        _text(a, "question", w, P, 1000)
+        _text(a, "unit", w, P, 20, required=False)
+        if not _finite(a.get("answer")) or not _finite(a.get("tolerance")) or a["tolerance"] < 0:
+            P.add(w, "needs a numeric answer and a non-negative tolerance")
+        _text(a, "explanation", w, P, 700)
+    elif kind == "construction":
+        _text(a, "prompt", w, P, 1000)
+        if "steps" in a:  # without steps, the classic two-circle construction of an equilateral triangle
+            for j, s in enumerate(_items(a, "steps", w, P, 2, 6, "steps")):
+                sw = f"{w}.steps[{j}]"
+                _text(s, "label", sw, P, 120)
+                _text(s, "note", sw, P, 400)
+                for shape in _items(s, "shapes", sw, P, 1, 6, "shapes"):
+                    t = shape.get("type") if isinstance(shape, dict) else None
+                    keys = {"circle": ("x", "y", "r"), "line": ("x1", "y1", "x2", "y2"), "point": ("x", "y")}.get(t)
+                    if keys is None:
+                        P.add(sw, f"shape type must be one of {SHAPES}")
+                    elif not all(_finite(shape.get(k)) and 0 <= shape[k] <= 100 for k in keys):
+                        P.add(sw, f"a {t} needs {', '.join(keys)} between 0 and 100")
+            _text(a, "takeaway", w, P, 700)
+    elif kind == "inheritance":
+        _text(a, "prompt", w, P, 1000)
+        for key in ("parent", "second"):
+            if a.get(key, "Aa") not in GENOTYPES:
+                P.add(w, f"{key} must be AA, Aa or aa")
+
+
+def check_activities(c: dict, where: str, P: Problems, source_norm: str | None = None):
     activities = c.get("activities")
     if not isinstance(activities, list) or not 2 <= len(activities) <= 24:
         P.add(where, "activities needs 2–24 teaching and response blocks")
         return
-    seen, taught, engaged = set(), False, False
+    seen, taught, engaged = {}, False, False
     native = {"watch": "animation", "walk": "understand", "goal": "explore", "predict": "predict", "reveal": "predict", "check": "check", "connect": "connect"}
     for i, a in enumerate(activities):
         w = f"{where}.activities[{i}]"
@@ -624,15 +833,16 @@ def check_activities(c: dict, where: str, P: Problems):
         if not isinstance(aid, str) or not ID_RE.fullmatch(aid) or aid in seen:
             P.add(w, "id must be unique lower_snake_case")
         else:
-            seen.add(aid)
+            seen[aid] = a
         kind = a.get("kind")
-        if "title" in a:
-            _text(a, "title", w, P, 160)
-        if kind == "explain":
-            if "text" in a:
-                _text(a, "text", w, P, 2000)
-            taught = True
-        elif isinstance(kind, str) and kind in native:
+        if kind not in ACTIVITY_KINDS:
+            P.add(w, "unsupported activity kind")
+            continue
+        if "title" in a or kind in RESPONSE_BLOCKS + ("worked", "compare", "stages"):
+            _text(a, "title", w, P, 160, required=kind in ("sort", "construction", "inheritance"))
+        if "hypothetical" in a and not isinstance(a["hypothetical"], bool):
+            P.add(w, "hypothetical must be true or false")
+        if kind in native:
             if not c.get("model") or not c.get(native[kind]):
                 P.add(w, f"{kind} needs its model and content")
             if kind == "watch" and not (c.get("animation") or {}).get("steps"):
@@ -643,84 +853,49 @@ def check_activities(c: dict, where: str, P: Problems):
                 P.add(w, "predict must be immediately followed by reveal")
             if kind == "reveal" and (i == 0 or not isinstance(activities[i - 1], dict) or activities[i - 1].get("kind") != "predict"):
                 P.add(w, "reveal must immediately follow predict")
-            if kind in ("watch", "walk"):
-                taught = True
-            if kind in ("goal", "predict", "check"):
-                engaged = True
-                if not taught:
-                    P.add(w, "teach before practice")
             if kind == "goal":
                 explore = c.get("explore")
                 goals = explore.get("goals") if isinstance(explore, dict) else []
                 goals = goals if isinstance(goals, list) else []
                 if type(a.get("i")) is not int or not 0 <= a["i"] < len(goals):
                     P.add(w, "i must identify an existing goal")
-        elif kind in ("sort", "construction", "inheritance"):
-            engaged = True
-            if not taught:
-                P.add(w, "teach before practice")
-            _text(a, "title", w, P, 160)
-            _text(a, "prompt", w, P, 1000)
-            if kind == "inheritance" and a.get("parent", "Aa") not in ("AA", "Aa", "aa"):
-                P.add(w, "parent must be AA, Aa or aa")
-            if kind == "sort":
-                _text(a, "takeaway", w, P, 700)
-                groups = a.get("groups")
-                group_ids = set()
-                if not isinstance(groups, list) or not 2 <= len(groups) <= 4:
-                    P.add(w, "sort needs 2–4 groups")
-                else:
-                    for g in groups:
-                        if not isinstance(g, dict) or not isinstance(g.get("id"), str) or not ID_RE.fullmatch(g["id"]) or g["id"] in group_ids:
-                            P.add(w, "groups need unique lower_snake_case ids")
-                            continue
-                        group_ids.add(g["id"])
-                        _text(g, "label", w, P, 160)
-                cards = a.get("cards")
-                if not isinstance(cards, list) or not 2 <= len(cards) <= 8:
-                    P.add(w, "sort needs 2–8 cards")
-                else:
-                    card_ids = set()
-                    for card in cards:
-                        if not isinstance(card, dict):
-                            P.add(w, "cards must be objects")
-                            continue
-                        cid = card.get("id")
-                        if not isinstance(cid, str) or not ID_RE.fullmatch(cid) or cid in card_ids:
-                            P.add(w, "cards need unique lower_snake_case ids")
-                        else:
-                            card_ids.add(cid)
-                        _text(card, "text", w, P, 700)
-                        _text(card, "feedback", w, P, 1200)
-                        if not isinstance(card.get("group"), str) or card["group"] not in group_ids:
-                            P.add(w, "card must reference an existing group")
-        elif kind == "choice":
-            engaged = True
-            mode = a.get("mode")
-            if not isinstance(mode, str) or mode not in ("determinate", "interpretive", "opening"):
-                P.add(w, "mode must be determinate, interpretive or opening")
-            if not taught and mode != "opening":
-                P.add(w, "teach before practice")
-            _text(a, "question", w, P, 1000)
-            options = a.get("options")
-            if not isinstance(options, list) or not 2 <= len(options) <= 6:
-                P.add(w, "needs 2–6 options")
-                continue
-            for j, o in enumerate(options):
-                ow = f"{w}.options[{j}]"
-                if not isinstance(o, dict):
-                    P.add(ow, "must be an object")
-                    continue
-                _text(o, "text", ow, P, 700)
-                _text(o, "feedback", ow, P, 1200)
-            if mode == "determinate" and (type(a.get("answer")) is not int or not 0 <= a["answer"] < len(options)):
-                P.add(w, "answer must identify the supported option")
-            if mode in ("interpretive", "opening") and "answer" in a:
-                P.add(w, "unscored activities must not have an answer key")
         else:
-            P.add(w, "unsupported activity kind")
+            _check_block(a, kind, w, c, P, source_norm)
+        if kind in RESPONSE_BLOCKS:
+            _hints(a, w, P)
+        if kind in ("watch", "walk") or kind in TEACHING_BLOCKS:
+            taught = True
+        opening = kind == "choice" and a.get("mode") == "opening"
+        if kind in ("goal", "predict", "check") or kind in RESPONSE_BLOCKS:
+            engaged = engaged or not opening
+            if not taught and not opening:
+                P.add(w, "teach before practice")
+        if "revisits" in a:  # a later question that brings the learner back to their opening judgment
+            earlier = seen.get(a["revisits"]) if isinstance(a["revisits"], str) else None
+            if kind != "choice" or not earlier or earlier is a or earlier.get("kind") != "choice" or earlier.get("mode") != "opening":
+                P.add(w, "revisits must name an earlier opening choice, from a choice")
+            elif not taught:
+                P.add(w, "a revisit comes after the teaching")
     if not taught or not engaged:
         P.add(where, "activities must include teaching and meaningful engagement")
+
+
+def check_activity_attribution(c: dict, sources: dict, where: str) -> list[str]:
+    """In a multi-source lesson, each passage option names the source it is quoted from."""
+    problems = []
+    for i, a in enumerate(c.get("activities") or []):
+        if not isinstance(a, dict) or a.get("kind") != "passage":
+            continue
+        for j, o in enumerate(a.get("options") or []):
+            if not isinstance(o, dict) or not isinstance(o.get("quote"), str):
+                continue
+            sid = o.get("source_id")
+            w = f"{where}.activities[{i}].options[{j}]"
+            if sid not in sources:
+                problems.append(f"{w}: quote needs a valid source_id")
+            elif not quote_in_source(o["quote"], normalize_for_match(sources[sid]["text"])):
+                problems.append(f"{w}: quote does not appear in its identified source")
+    return problems
 
 
 def check_concept(c: dict, source_norm: str | None, where: str = "concept") -> Problems:
@@ -735,7 +910,7 @@ def check_concept(c: dict, source_norm: str | None, where: str = "concept") -> P
     _text(c, "recap", where, P, 200)
 
     if "activities" in c:
-        check_activities(c, where, P)
+        check_activities(c, where, P, source_norm)
         if "model" not in c:
             u = c.get("understand")
             if not isinstance(u, dict):
@@ -954,6 +1129,8 @@ def check_lesson(lesson: dict, source_text: str | None) -> Problems:
         P.extend(check_concept(c, norm, f"concepts[{i}]"))
         if sources and isinstance(c, dict) and isinstance(c.get("understand"), dict):
             P.extend(check_attribution(c["understand"], sources, f"concepts[{i}].understand"))
+        if sources and isinstance(c, dict):
+            P.extend(check_activity_attribution(c, sources, f"concepts[{i}]"))
         cid = c.get("id") if isinstance(c, dict) else None
         if cid in seen:
             P.add(f"concepts[{i}]", f"duplicate concept id {cid!r}")
@@ -1090,6 +1267,47 @@ the part of the visual it drives, so the learner can see which slider moves what
 
 SIMULATION KERNELS (deterministic for a given seed; params not given take defaults; values are clamped to range):
 {kernels}
+
+ACTIVITIES: every concept also has "activities", the ordered screens the learner meets, chosen to fit the reasoning
+the concept involves. Teach before asking anything (only an "opening" choice may come first). 2–24 blocks, each with a
+unique lower_snake_case "id". Any block may add "hypothetical": true when its case is made up to illustrate; never
+present made-up material as evidence. Response blocks may add "hints": 1–3 lines, each more specific than the last.
+
+  Blocks that need the concept's model (omit them when it has none), in their usual order:
+  {"id": "tour", "kind": "watch"}  {"id": "how", "kind": "walk"}  {"id": "goal_1", "kind": "goal", "i": 0}
+  {"id": "use", "kind": "predict"} followed at once by {"id": "why", "kind": "reveal"}  {"id": "test", "kind": "check"}  {"id": "eq", "kind": "connect"}
+
+  Teaching blocks:
+  {"id": "idea", "kind": "explain"}                         — the explanation and quote from "understand"
+  {"id": "ex", "kind": "worked", "title": "...", "steps": [{"text": "...", "result": "optional"}], "takeaway": "..."}   — 2–8 steps shown in turn
+  {"id": "cmp", "kind": "compare", "prompt": "...", "cases": [{"label": "...", "text": "..."} | {"label": "...", "values": {"control_id": 1}}], "takeaway": "..."}
+                                                            — 2–3 cases side by side; "values" shows the model in that state
+  {"id": "ev", "kind": "stages", "prompt": "...", "stages": [{"label": "...", "text": "..."}], "takeaway": "..."}   — 2–6 stages revealed one at a time
+
+  Response blocks:
+  {"id": "q", "kind": "choice", "mode": "determinate" | "interpretive" | "opening", "question": "...",
+   "options": [{"text": "...", "feedback": "why it is or isn't supported"}], "answer": 0}
+      — determinate: one supported answer ("answer"), or "multi": true with "answers": [0, 2] for select-all;
+        interpretive: no answer key, feedback explains each reading's support and limits; opening: an unscored first
+        judgment before the teaching. A later choice may add "revisits": "<opening choice id>" to bring the learner back to it.
+  {"id": "s", "kind": "sort", "title": "...", "prompt": "...", "groups": [{"id": "claim", "label": "..."}],
+   "cards": [{"id": "c1", "text": "...", "group": "claim", "feedback": "..."}], "takeaway": "..."}       — 2–4 groups, 2–8 cards
+  {"id": "m", "kind": "match", "prompt": "...", "pairs": [{"id": "p1", "text": "...", "target": "...", "feedback": "..."}], "takeaway": "..."}
+                                                            — 2–6 one-to-one pairs; targets are shuffled for the learner
+  {"id": "o", "kind": "order", "prompt": "...", "items": ["first", "second", "third"], "explanation": "..."}   — 3–7 items, in the correct order
+  {"id": "t", "kind": "trace", "prompt": "...", "nodes": [{"id": "a", "label": "≤ 40 chars", "x": 10, "y": 50}],
+   "edges": [{"from": "a", "to": "b"}], "answer": ["a", "b"], "path": true, "explanation": "..."}
+      — 3–10 nodes at x, y in 0–100; "path": true means the answer is a route along the edges, in order; otherwise a set
+  {"id": "p", "kind": "passage", "question": "Which passage supports ...?", "options": [{"quote": "exact passage", "feedback": "..."}], "answer": 0}
+      — 2–4 passages, each copied word for word from the paper (with "source_id" when there are several sources)
+  {"id": "e", "kind": "estimate", "question": "...", "answer": 45, "tolerance": 5, "unit": "", "explanation": "..."}
+
+Pick blocks for the learning move, not for variety: manipulate a model where its controls are meaningful quantities;
+classify, match, order, trace or compare where the idea is a distinction, an argument, a chain or a case. Never invent
+a number to make an argument into a slider.
+
+A CONCEPT WITHOUT A MODEL (its outline visual is "none") has only "id", "title", "idea", "role", "terms", "recap",
+"understand" ({"explanation", "quote", "quote_where"}) and "activities", using teaching and response blocks only.
 
 CHECK FORMATS (only for hard concepts; every check has "hint" and "misconception" — the mistaken belief behind wrong answers):
   {"kind": "model", "task": "Put the model in a state where ...", "when": "<expression>", "solution": {...}, "hint": "...", "misconception": "..."}

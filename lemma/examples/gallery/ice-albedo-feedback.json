@@ -1,0 +1,2134 @@
+{
+ "version": 1,
+ "id": "gallery-ice-albedo-feedback",
+ "title": "Two Earths Under One Sun: How Ice Can Lock a Planet Into Its Climate",
+ "audience": "A curious adult with no background in this field",
+ "created": "2026-10-18T20:59:14",
+ "source": {
+  "title": "Entropy production and multiple equilibria: the case of the ice-albedo feedback",
+  "authors": "C. Herbert, D. Paillard, and B. Dubrulle",
+  "year": 2011,
+  "venue": "Earth System Dynamics",
+  "url": ""
+ },
+ "intro": {
+  "summary": "This lesson draws on four sources. The main one is a 2011 study by Herbert, Paillard and Dubrulle. It uses a deliberately tiny 'whole-planet' climate model to ask a question: because ice reflects sunlight and melts when it is warm, can the same Sun support more than one stable climate? It can. Over a range of sunlight strengths (about 98% to 108% of today's), the model has a frozen 'snowball' state, an ice-free warm state and an unstable in-between state, so the climate a planet ends up in depends on its history. Two Wikipedia overviews supply context: how the feedback works on today's Earth, and the debated Snowball Earth episodes. A 2013 study (von Paris et al.) adds that the feedback is much weaker for planets around red dwarf stars and under thick atmospheres. The main limitations are that the model is a single-box toy with no geography, clouds or ocean dynamics, so its exact numbers are illustrative. The paper's second theme, the Maximum Entropy Production principle, is only touched on here. It remains unproven, and the authors say they cannot judge it against standard methods. Good follow-up topics are the entropy-production idea itself, one-dimensional energy-balance models with a moving ice edge, the carbonate–silicate cycle that may end a snowball, and Arctic amplification today.",
+  "background": [
+   "Albedo is the share of incoming sunlight a surface reflects: fresh snow reflects most of it, open ocean very little.",
+   "A planet's temperature settles where the sunlight it absorbs equals the heat it radiates back to space.",
+   "A positive feedback is a loop in which a change causes more of the same change, like a microphone squealing near its speaker.",
+   "Geologists find signs of glaciers near the ancient equator around 700 million years ago, which led to the 'Snowball Earth' hypothesis."
+  ],
+  "known": [],
+  "aha": "Under exactly the same sunshine, a planet can sit stably either warm or frozen solid. Which one you get depends only on where it started, and once it tips it can stay stuck even after the Sun returns to its old strength."
+ },
+ "primer": [
+  {
+   "heading": "The question",
+   "body": "Ice is bright and water and land are dark. So when a planet cools and ice spreads, it reflects more sunlight and cools further. When it warms and ice retreats, it absorbs more and warms further. Climate scientists since Budyko and Sellers in 1969 have asked what this loop implies. Could a planet getting exactly the same sunshine end up either warm or frozen solid?",
+   "quote": "Because ice is very reflective, it reflects far more solar energy back to space than open water or any other land cover.",
+   "quote_where": "Introduction (Ice–albedo feedback article)",
+   "quote_source_id": "s1",
+   "source_id": "s1",
+   "source_ids": [
+    "s1",
+    "s3"
+   ]
+  },
+  {
+   "heading": "What they did",
+   "body": "Herbert and colleagues built the simplest model that still holds the idea. The whole Earth is one patch of ground under one layer of air. Each layer is described by a single temperature, and energy flows in from the Sun and out as heat. They made the ground's reflectivity switch smoothly from an ice value to an ice-free value as the temperature passes freezing. Then they asked where the energy books balance, for different strengths of sunlight. They also tested a second, more speculative method, based on a principle called Maximum Entropy Production, and checked that it gives matching answers.",
+   "source_ids": [
+    "s3"
+   ]
+  },
+  {
+   "heading": "What they found",
+   "body": "With fixed reflectivity there is only one balanced climate. With ice that comes and goes, a middle range of sunlight gives three balance points. One is a frozen snowball near 249 K (about −24 °C). One is an ice-free state near 287 K (about 14 °C), close to today's climate. Between them sits a state near 275 K that is unstable: like a ball balanced on a hilltop, any nudge sends the climate to one of the other two. Turn the Sun down or up past the edges of that range and one of the stable states vanishes, so the climate must jump.",
+   "quote": "This range can be determined to be approximately 0.98 S0 ≤ S ≤ 1.08 S0. Outside this range, only one solution subsists.",
+   "quote_where": "Section 2.3",
+   "quote_source_id": "s3",
+   "source_id": "s3",
+   "source_ids": [
+    "s3"
+   ]
+  },
+  {
+   "heading": "Why it matters, and the limits",
+   "body": "Several unanswered questions remain, including whether Earth was a full 'snowball' or a 'slushball' with a thin equatorial band of open (or seasonally open) water. The idea that a climate can have memory, called hysteresis, helps explain how ancient Earth could have frozen over, and why escaping would need a huge push such as volcanic CO2 building up for millions of years. But the evidence for a fully frozen Earth is still debated. Real ice behaves less dramatically than the toy model: today's summer Arctic sea-ice loss is not considered an irreversible tipping point. A later study found the feedback is much weaker under thick atmospheres and around red dwarf stars.",
+   "quote": "For planets around M stars, the ice-albedo feedback is almost entirely masked at high CO2 pressures (albedo change less than 0.04).",
+   "quote_where": "Section 5, Summary and Conclusions",
+   "quote_source_id": "s4",
+   "source_id": "s4",
+   "source_ids": [
+    "s2",
+    "s1",
+    "s4"
+   ]
+  }
+ ],
+ "provider": {
+  "name": "Claude",
+  "model": "claude-opus-5-5"
+ },
+ "concepts": [
+  {
+   "id": "energy_balance",
+   "title": "Where a planet's temperature settles",
+   "idea": "A planet warms or cools until the sunlight it absorbs, set by its reflectivity, equals the heat it radiates, and a brighter surface settles colder.",
+   "role": "prerequisite",
+   "predict": {
+    "question": "A planet has sat at a steady temperature for ages. Then dark volcanic ash settles over much of its surface, so it reflects less sunlight. Nothing else changes. What happens next?",
+    "options": [
+     "It keeps warming without limit, because it now absorbs more sunlight than before",
+     "It warms until it radiates enough extra heat to match the new, larger intake, then settles at a higher temperature",
+     "Nothing: it was already steady, so its temperature stays put",
+     "It cools, because the ash blocks the surface"
+    ],
+    "answer": 1,
+    "why": [
+     "More sunlight does come in, but a warmer planet also radiates more heat. The rising curve catches up with the higher flat line, so the warming stops at a new crossing.",
+     "Right. Lower reflectivity lifts the absorbed-sunlight line. The planet warms, and its radiated heat climbs until it equals the new intake. The crossing has moved right, so the new steady temperature is higher.",
+     "Being steady only meant that intake matched output for the old surface. Darkening raises the intake, so at the old temperature there is now a heat surplus and the planet warms.",
+     "In this model the ash only changes how much light is bounced back. Darker means less is reflected and more is absorbed, which warms the planet rather than cooling it."
+    ]
+   },
+   "terms": [
+    {
+     "term": "albedo",
+     "means": "The share of incoming sunlight a surface or planet reflects straight back to space (0 = absorbs everything, 1 = reflects everything)"
+    },
+    {
+     "term": "energy balance",
+     "means": "The condition where the sunlight a planet absorbs each second equals the heat it radiates away"
+    },
+    {
+     "term": "equilibrium temperature",
+     "means": "The temperature at which a planet is in energy balance, so it stops warming or cooling"
+    }
+   ],
+   "model": {
+    "title": "Sunlight soaked up versus heat radiated, at each temperature",
+    "note": "Teaching model: the whole planet has one average temperature. The greenhouse effect is folded into a fixed factor (0.61), chosen so that today's sunlight and 30% reflectivity give about 288 K. Reflectivity does not depend on temperature here; that comes in the next concept. Herbert et al. (source s3) use a more detailed two-layer version with separate ground and air temperatures. Numbers are illustrative, not the paper's data.",
+    "controls": [
+     {
+      "id": "a",
+      "label": "Reflectivity (share of sunlight bounced back)",
+      "kind": "slider",
+      "min": 0.05,
+      "max": 0.9,
+      "step": 0.05,
+      "default": 0.3,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "s",
+      "label": "Sunlight (1 = today's Sun)",
+      "kind": "slider",
+      "min": 0.8,
+      "max": 1.2,
+      "step": 0.01,
+      "default": 1,
+      "unit": "×",
+      "color": 4
+     },
+     {
+      "id": "t0",
+      "label": "Starting temperature",
+      "kind": "slider",
+      "min": 150,
+      "max": 350,
+      "step": 5,
+      "default": 250,
+      "unit": "K",
+      "color": 2
+     }
+    ],
+    "outputs": [
+     {
+      "id": "absorbed",
+      "label": "Sunlight soaked up",
+      "expr": "(1 - a) * 342 * s",
+      "unit": "W/m²",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "teq",
+      "label": "Settling temperature",
+      "expr": "pow((1 - a) * 342 * s / (0.61 * 0.0000000567), 0.25)",
+      "unit": "K",
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "teq_c",
+      "label": "Settling temperature in °C",
+      "expr": "teq - 273.15",
+      "unit": "°C",
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "net",
+      "label": "Heat gained at the start (− means losing)",
+      "expr": "absorbed - 0.61 * 0.0000000567 * t0^4",
+      "unit": "W/m²",
+      "decimals": 0,
+      "color": 2
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Average surface temperature (K)",
+      "min": 150,
+      "max": 350
+     },
+     "y": {
+      "label": "Energy per square metre each second (W/m²)",
+      "min": 0,
+      "max": 550
+     },
+     "series": [
+      {
+       "id": "absorbed_line",
+       "label": "Sunlight soaked up",
+       "expr": "(1 - a) * 342 * s + 0 * x",
+       "color": 0,
+       "dashed": false
+      },
+      {
+       "id": "emitted_curve",
+       "label": "Heat radiated to space",
+       "expr": "0.61 * 0.0000000567 * x^4",
+       "color": 1,
+       "dashed": false
+      }
+     ],
+     "markers": [
+      {
+       "id": "balance",
+       "x": "pow((1 - a) * 342 * s / (0.61 * 0.0000000567), 0.25)",
+       "label": "Settles here",
+       "color": 3
+      },
+      {
+       "id": "start",
+       "x": "t0",
+       "label": "Start",
+       "color": 2
+      }
+     ],
+     "points": [
+      {
+       "id": "cross",
+       "x": "pow((1 - a) * 342 * s / (0.61 * 0.0000000567), 0.25)",
+       "y": "(1 - a) * 342 * s",
+       "label": "Curves cross",
+       "color": 3
+      },
+      {
+       "id": "start_point",
+       "x": "t0",
+       "y": "0.61 * 0.0000000567 * t0^4",
+       "label": "Heat radiated at start",
+       "color": 2
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Across the bottom runs the planet's average temperature, cold on the left and hot on the right. This flat line is the sunlight the planet soaks up each second.",
+      "focus": "absorbed_line",
+      "ms": 3800
+     },
+     {
+      "say": "This rising curve is the heat the planet radiates to space. A hotter planet glows more strongly, so the curve climbs steeply.",
+      "focus": "emitted_curve",
+      "ms": 3600
+     },
+     {
+      "say": "This slider sets how much sunlight the surface bounces straight back. Watch the flat line drop as it goes up.",
+      "set": {
+       "a": 0.5
+      },
+      "focus": "a",
+      "ms": 3400
+     },
+     {
+      "say": "This one dims or brightens the Sun itself.",
+      "set": {
+       "s": 1.1
+      },
+      "focus": "s",
+      "ms": 2800
+     },
+     {
+      "say": "And this marker is a starting temperature. The box tells you whether the planet gains or loses heat there.",
+      "set": {
+       "t0": 260
+      },
+      "focus": [
+       "start",
+       "net"
+      ],
+      "ms": 3600
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "You control the surface's brightness and the Sun. Steer where the curves cross, and with it the temperature the planet settles at.",
+    "goals": [
+     {
+      "text": "Keep today's Sun, and make the planet settle close to the freezing point of water (between 268 and 278 K).",
+      "when": "abs(teq - 273) < 5 && abs(s - 1) < 0.001",
+      "solution": {
+       "a": 0.45
+      },
+      "hints": [
+       "Which control decides how much of today's sunlight gets soaked up?",
+       "A brighter surface settles colder. You need to cool the planet by roughly 15 degrees from today's crossing.",
+       "Raise the reflectivity one notch at a time and watch the crossing slide left. Stop once the settling temperature lands in the window."
+      ]
+     },
+     {
+      "text": "Dim the Sun to 90% of today's, then change the surface so the planet still settles near today's temperature (within 4 K of 288 K).",
+      "when": "abs(teq - 288) < 4 && abs(s - 0.9) < 0.005",
+      "solution": {
+       "s": 0.9,
+       "a": 0.2
+      },
+      "hints": [
+       "Dimming the Sun lowers the flat line. Which other control can lift it back up?",
+       "A darker surface soaks up more of the light that is left.",
+       "Lower the reflectivity a little below today's value until the settling temperature climbs back near 288 K."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "source_ids": [
+     "s3",
+     "s2",
+     "s1"
+    ],
+    "feedback": {
+     "correct": "Yes. The ash lowers reflectivity, which lifts the absorbed-sunlight line. The planet warms, and its radiated heat climbs until it matches the new intake. It stops at a new, warmer crossing; it does not run away.",
+     "incorrect": "The key is that radiated heat rises with temperature. A change in reflectivity moves the flat absorbed-sunlight line, and the planet warms or cools only until the rising curve meets that line again. Darker means more sunlight absorbed, so the planet warms to a new, higher crossing and stays there."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Take today's Sun and a surface that bounces back 30% of the light. Start the planet cold, at 230 K. Here it radiates far less than it absorbs. The box shows a big surplus, so it warms.",
+       "set": {
+        "a": 0.3,
+        "s": 1,
+        "t0": 230
+       },
+       "focus": [
+        "start",
+        "net"
+       ],
+       "ms": 4200
+      },
+      {
+       "say": "At 260 K it radiates more heat, so the surplus shrinks. It is still positive, though, so the planet keeps warming.",
+       "set": {
+        "t0": 260
+       },
+       "focus": [
+        "start_point",
+        "net"
+       ],
+       "ms": 3600
+      },
+      {
+       "say": "Now overshoot to 320 K. The rising curve is above the flat line. The planet loses more than it gains, so it cools back down.",
+       "set": {
+        "t0": 320
+       },
+       "focus": [
+        "start_point",
+        "net"
+       ],
+       "ms": 3800
+      },
+      {
+       "say": "From either side it heads to the same spot, where the curves cross. At 290 K the box is almost zero: heat in equals heat out. This is energy balance. The temperature at the crossing, about 288 K, is the equilibrium temperature.",
+       "set": {
+        "t0": 290
+       },
+       "focus": [
+        "cross",
+        "teq"
+       ],
+       "ms": 5200
+      },
+      {
+       "say": "The share of sunlight a surface reflects is its albedo. Darken the planet to 0.1, like open ocean. The flat line rises and the crossing slides right, to about 307 K.",
+       "set": {
+        "a": 0.1
+       },
+       "focus": [
+        "absorbed_line",
+        "balance"
+       ],
+       "ms": 4600
+      },
+      {
+       "say": "Now brighten it to 0.6, as if snow covered much of it. The flat line sinks and the crossing slides left, to about 251 K, well below freezing. Our planet at 290 K now loses over 100 W/m², so it will cool until it reaches the new crossing.",
+       "set": {
+        "a": 0.6
+       },
+       "focus": [
+        "balance",
+        "net"
+       ],
+       "ms": 5600
+      },
+      {
+       "say": "So reflectivity and sunlight only move the flat line, and the temperature always follows to where the curves meet. A brighter planet settles colder.",
+       "focus": [
+        "cross",
+        "teq_c"
+       ],
+       "ms": 4000
+      }
+     ]
+    },
+    "explanation": "Every planet takes in sunlight and gives off heat, and the heat it gives off rises steeply as it warms. A planet with a surplus warms and a planet with a deficit cools, so it drifts to the one temperature where intake equals output. Reflectivity (albedo) sets the intake: a brighter surface throws more sunlight back to space, so the balance falls at a colder temperature. Herbert et al. built a simple energy-balance model of this kind; with reflectivity held fixed, they found only one balance point, at a global mean surface temperature of about 288 K. Real planets are more complicated, because clouds, the greenhouse effect and heat transport all matter. This one-number model folds them into a single fixed factor.",
+    "quote": "This low temperature was maintained by the high albedo of the ice sheets, which reflected most incoming solar energy into space.",
+    "quote_where": "Snowball Earth article, section 'During the frozen period'",
+    "source_id": "s2"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "s",
+      "link": "s"
+     },
+     {
+      "text": " × 342 W/m² × (1 − "
+     },
+     {
+      "text": "α",
+      "link": "a"
+     },
+     {
+      "text": ") = ε σ "
+     },
+     {
+      "text": "T",
+      "link": "teq"
+     },
+     {
+      "text": "^{4}"
+     }
+    ],
+    "caption": "The teaching model's rule, a simplified form of the balance in Herbert et al. (s3). Left: sunlight soaked up. s is the Sun relative to today; 342 W/m² is today's globally averaged sunlight (s3: S₀ = 1368 W m⁻² times ξ = 0.25); (1 − α) is the share not reflected, as in s3's Eq. 1. Right: heat radiated. σ is the Stefan–Boltzmann constant, and ε = 0.61 stands in for the greenhouse effect. The T where both sides match is the settling temperature."
+   },
+   "recap": "A planet drifts to the temperature where the sunlight it absorbs equals the heat it radiates. Reflect more, and that crossing moves colder.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "albedo_feedback_loop",
+   "title": "Ice that depends on temperature",
+   "idea": "Because ice forms when it is cold, reflectivity falls as temperature rises, which bends the absorbed-sunlight curve into an S-shape and turns a small cooling into more cooling.",
+   "role": "core",
+   "predict": {
+    "question": "Two planets have the same Sun and the same kind of ice. One sits near 300 K, well above freezing. The other sits near 278 K, just above freezing. Each cools by 5 K. Where does the ice add the most extra cooling?",
+    "options": [
+     "The planet near 278 K, close to freezing",
+     "The planet near 300 K, because it has more heat to lose",
+     "Both the same: ice adds the same push at every temperature",
+     "Neither: cooling always lowers reflectivity"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. The S-shaped curve is steepest around freezing. There, a 5 K cooling turns a lot of ground icy and costs a lot of sunlight.",
+     "A warmer planet does radiate more, but that is the heat curve, not the ice. At 300 K almost no ice forms after a 5 K cooling, so the soaked-up sunlight barely changes.",
+     "The ice switch is smooth but local. Far from freezing the surface is either fully icy or fully ice-free, so the curve is flat and cooling changes almost nothing.",
+     "It works the other way round. Cooling makes ice, and ice raises reflectivity. That is why cooling cuts the sunlight soaked up."
+    ]
+   },
+   "terms": [
+    {
+     "term": "positive feedback",
+     "means": "A loop in which a change causes more of the same change"
+    },
+    {
+     "term": "ice–albedo feedback",
+     "means": "The loop where cooling makes ice, ice raises albedo, and higher albedo causes more cooling. It also runs in reverse for warming."
+    }
+   ],
+   "model": {
+    "title": "Sunlight soaked up versus heat radiated, at each temperature",
+    "note": "Teaching model: the whole planet has one average temperature, and the greenhouse effect is folded into the same fixed factor (0.61) as before. Reflectivity follows the paper's smooth tanh switch centred on freezing (273.15 K), computed here in its equivalent logistic form. The slider sets the ice-free reflectivity, and fully icy ground reflects 0.6. The switch width is 10 K, chosen for this one-layer model; Herbert et al. (source s3) use 15 K in their two-layer ground-and-air model with their own coefficients. Real ice spreads by latitude and season and interacts with clouds, which this ignores. Numbers are illustrative, not the paper's data.",
+    "controls": [
+     {
+      "id": "a",
+      "label": "Reflectivity (share of sunlight bounced back)",
+      "kind": "slider",
+      "min": 0.05,
+      "max": 0.9,
+      "step": 0.05,
+      "default": 0.3,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "s",
+      "label": "Sunlight (1 = today's Sun)",
+      "kind": "slider",
+      "min": 0.8,
+      "max": 1.2,
+      "step": 0.01,
+      "default": 1,
+      "unit": "×",
+      "color": 4
+     },
+     {
+      "id": "t0",
+      "label": "Starting temperature",
+      "kind": "slider",
+      "min": 150,
+      "max": 350,
+      "step": 5,
+      "default": 250,
+      "unit": "K",
+      "color": 2
+     },
+     {
+      "id": "ice",
+      "label": "Let ice form when it's cold",
+      "kind": "toggle",
+      "default": 0,
+      "color": 5,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "refl_start",
+      "label": "Reflectivity at the start temperature",
+      "expr": "a + ice * (max(0.6, a) - a) * logistic((273.15 - t0) / 5)",
+      "unit": "",
+      "decimals": 2,
+      "color": 0
+     },
+     {
+      "id": "absorbed",
+      "label": "Sunlight soaked up at the start",
+      "expr": "(1 - refl_start) * 342 * s",
+      "unit": "W/m²",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "net",
+      "label": "Heat gained at the start (− means losing)",
+      "expr": "absorbed - 0.61 * 0.0000000567 * t0^4",
+      "unit": "W/m²",
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "sun_drop",
+      "label": "Sunlight lost if 5 K colder",
+      "expr": "ice * (max(0.6, a) - a) * 342 * s * (logistic((278.15 - t0) / 5) - logistic((273.15 - t0) / 5))",
+      "unit": "W/m²",
+      "decimals": 1,
+      "color": 5
+     },
+     {
+      "id": "rad_drop",
+      "label": "Heat radiated less if 5 K colder",
+      "expr": "0.61 * 0.0000000567 * (t0^4 - (t0 - 5)^4)",
+      "unit": "W/m²",
+      "decimals": 1,
+      "color": 1
+     },
+     {
+      "id": "feeds",
+      "label": "Cooling feeds on itself? (1 = yes)",
+      "expr": "sun_drop > rad_drop ? 1 : 0",
+      "unit": "",
+      "decimals": 0,
+      "color": 3
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Average surface temperature (K)",
+      "min": 150,
+      "max": 350
+     },
+     "y": {
+      "label": "Energy per square metre each second (W/m²)",
+      "min": 0,
+      "max": 550
+     },
+     "series": [
+      {
+       "id": "absorbed_line",
+       "label": "Sunlight soaked up",
+       "expr": "(1 - (a + ice * (max(0.6, a) - a) * logistic((273.15 - x) / 5))) * 342 * s",
+       "color": 0,
+       "dashed": false
+      },
+      {
+       "id": "no_ice_line",
+       "label": "Soaked up if no ice ever formed",
+       "expr": "(1 - a) * 342 * s + 0 * x",
+       "color": 0,
+       "dashed": true
+      },
+      {
+       "id": "emitted_curve",
+       "label": "Heat radiated to space",
+       "expr": "0.61 * 0.0000000567 * x^4",
+       "color": 1,
+       "dashed": false
+      }
+     ],
+     "markers": [
+      {
+       "id": "freeze",
+       "x": 273.15,
+       "label": "Water freezes",
+       "color": 5
+      },
+      {
+       "id": "start",
+       "x": "t0",
+       "label": "Start",
+       "color": 2
+      }
+     ],
+     "points": [
+      {
+       "id": "start_sun",
+       "x": "t0",
+       "y": "absorbed",
+       "label": "Sunlight soaked up at start",
+       "color": 0
+      },
+      {
+       "id": "start_point",
+       "x": "t0",
+       "y": "0.61 * 0.0000000567 * t0^4",
+       "label": "Heat radiated at start",
+       "color": 2
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Same picture as before. The flat blue line is sunlight soaked up, and the rising curve is heat radiated to space, at each temperature.",
+      "focus": [
+       "absorbed_line",
+       "emitted_curve"
+      ],
+      "ms": 6500
+     },
+     {
+      "say": "New: this switch lets ice form when the planet is cold. Flip it on and watch the soaked-up line.",
+      "set": {
+       "ice": 1
+      },
+      "focus": "ice",
+      "ms": 7000
+     },
+     {
+      "say": "This line marks where water freezes. The dashed line keeps the old no-ice version, so you can compare the two.",
+      "focus": [
+       "freeze",
+       "no_ice_line"
+      ],
+      "ms": 6500
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with the ice switch and the starting temperature. Where does a small cooling start to pay for itself?",
+    "goals": [
+     {
+      "text": "With ice allowed, find a starting temperature where cooling 5 K more would cost more sunlight than it saves in radiated heat.",
+      "when": "ice == 1 && sun_drop > rad_drop",
+      "solution": {
+       "ice": 1,
+       "t0": 275
+      },
+      "hints": [
+       "Sunlight can only change with temperature if ice is able to form.",
+       "The soaked-up line is steepest where the ground is only partly icy. Look near the freezing marker.",
+       "Try starting temperatures within about ten degrees of the freezing line, and compare the two 'if 5 K colder' numbers."
+      ]
+     },
+     {
+      "text": "Find a starting point where the planet would warm back up if ice never formed, yet with ice allowed it keeps losing heat.",
+      "when": "ice == 1 && net < 0 && (1 - a) * 342 * s - 0.61 * 0.0000000567 * t0^4 > 0",
+      "solution": {
+       "ice": 1,
+       "t0": 265
+      },
+      "hints": [
+       "Compare the dashed no-ice line with the solid soaked-up line at your starting point.",
+       "You want the solid line below the radiated-heat curve while the dashed line stays above it.",
+       "Look somewhat below freezing, but not so cold that ice already covers everything and the solid line has flattened out."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "source_ids": [
+     "s3",
+     "s1"
+    ],
+    "feedback": {
+     "correct": "Yes. The ice switch only matters where a small temperature change actually adds or removes ice, which is near freezing. That is where the S-shaped curve is steep and a cooling costs the most sunlight.",
+     "incorrect": "The ice push is not the same everywhere. Far above or far below freezing, a 5 K change adds or removes almost no ice, so the soaked-up line is flat. The extra cooling comes from the steep middle of the S, near freezing."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with no ice and a planet at 275 K. The soaked-up line is flat: cooling does not change how much sunlight the planet absorbs.",
+       "set": {
+        "ice": 0,
+        "t0": 275
+       },
+       "focus": "absorbed_line",
+       "ms": 5500
+      },
+      {
+       "say": "Cool by 5 K and the planet radiates about 14 W/m² less but loses no sunlight. It now loses less heat than it gains, so it warms back up. Cooling undoes itself.",
+       "focus": [
+        "sun_drop",
+        "rad_drop"
+       ],
+       "ms": 6500
+      },
+      {
+       "say": "Now let ice form. Below freezing the ground turns bright, so the soaked-up line drops on the cold side. The straight line bends into an S.",
+       "set": {
+        "ice": 1
+       },
+       "focus": "absorbed_line",
+       "ms": 6500
+      },
+      {
+       "say": "At 275 K, just above freezing, the reflectivity is already about 0.42 instead of 0.3. Patchy ice is bouncing sunlight away.",
+       "focus": "refl_start",
+       "ms": 5500
+      },
+      {
+       "say": "Now a 5 K cooling costs about 25 W/m² of sunlight, more than the 14 W/m² saved in radiated heat. Cooling causes more cooling. A loop like this is a positive feedback; this one is the ice–albedo feedback.",
+       "focus": [
+        "sun_drop",
+        "rad_drop",
+        "feeds"
+       ],
+       "ms": 8000
+      },
+      {
+       "say": "Follow the slide to 265 K. The dashed no-ice line sits far above the heat curve, so a planet without ice would warm back up. With ice, the planet is still losing heat and keeps cooling.",
+       "set": {
+        "t0": 265
+       },
+       "focus": [
+        "net",
+        "no_ice_line"
+       ],
+       "ms": 7000
+      },
+      {
+       "say": "Far from freezing, at 320 K, the S is flat again. No ice forms after a 5 K cooling, so no sunlight is lost. The loop only bites near freezing.",
+       "set": {
+        "t0": 320
+       },
+       "focus": "sun_drop",
+       "ms": 6000
+      },
+      {
+       "say": "Back near freezing, look at the bend. The solid line now meets the heat curve in more than one place. What that means comes next.",
+       "set": {
+        "t0": 275
+       },
+       "focus": [
+        "absorbed_line",
+        "emitted_curve"
+       ],
+       "ms": 6500
+      }
+     ]
+    },
+    "explanation": "Ice is bright, and ice forms when it is cold. So reflectivity is not fixed: it rises as the planet cools and falls as it warms. That bends the sunlight-soaked-up line into an S, low on the cold side and high on the warm side, with the steep part near freezing. On that steep part, a small cooling cuts the absorbed sunlight by more than it cuts the heat radiated, so the planet keeps cooling. Warming works in reverse and melts more ice. Herbert et al. build this into their simple energy-balance model with a smooth tanh switch centred on freezing, following Budyko and Sellers' 1969 models. It is a global-average idealisation: real ice depends on latitude, seasons, clouds and ocean heat. Observations such as Arctic warming nearly four times faster than the global average are consistent with this loop, but they come from far more detailed models and data than this sketch.",
+    "quote": "Indeed, the higher the global temperature on Earth, the less the ice cover is likely to extend, and thus the lower the albedo. A lower albedo leads in turn to a higher global temperature, and so on and so forth until all the ice is melted.",
+    "quote_where": "Herbert et al. 2011, Section 1 (Introduction)",
+    "source_id": "s3"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "α(T) = "
+     },
+     {
+      "text": "α_{F}",
+      "link": "a"
+     },
+     {
+      "text": " + "
+     },
+     {
+      "text": "(α_{I} − α_{F})/2",
+      "link": "ice"
+     },
+     {
+      "text": " × (1 + tanh((T_{0} − "
+     },
+     {
+      "text": "T",
+      "link": "t0"
+     },
+     {
+      "text": ")/ΔT))"
+     }
+    ],
+    "caption": "This is the paper's Eq. 18. α_{F} is the ice-free reflectivity (the blue slider). The ice term (α_{I} − α_{F})/2, switched on by the ice toggle, raises reflectivity toward α_{I} = 0.6 as T drops. T (green) is the temperature you start at. T_{0} = 273.15 K is freezing, as in the paper. ΔT sets how gradual the switch is: 10 K here, 15 K in the paper's two-layer model. The model computes the same S-curve in its equivalent logistic form."
+   },
+   "recap": "Ice makes reflectivity depend on temperature, bending the absorbed-sunlight curve into an S; near freezing, a little cooling costs more sunlight than it saves, so cooling feeds on itself.",
+   "builds_on": "energy_balance",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "three_equilibria",
+   "title": "One Sun, three balanced climates",
+   "idea": "When the S-shaped absorbed-sunlight curve meets the emitted-heat curve, they can cross three times, giving a snowball, an in-between and an ice-free balance point for the same sunlight.",
+   "role": "core",
+   "predict": {
+    "question": "Imagine you could turn the Sun up and down in tiny, smooth steps, with ice allowed. Could the planet ever have exactly two balance points across a whole range of sunlight?",
+    "options": [
+     "Yes: between the three-point window and the one-point region there is a two-point zone",
+     "Only at one exact sunlight, where two crossings touch and merge. Otherwise it is one or three",
+     "No, never, not even for an instant"
+    ],
+    "answer": 1,
+    "why": [
+     "It is tempting to think points disappear one at a time. But the gap curve is always above zero when very cold and below zero when very hot, so it crosses zero an odd number of times. Crossings are born and die in pairs, so there is no lasting two-point zone.",
+     "Right. At the edge of the window the bump of the gap curve just touches zero. For that one exact sunlight two crossings sit on top of each other, so you see two meeting places. A hair either side, there are three or one.",
+     "Close, but at the exact edge the bump touches the zero line without crossing it. That touching point plus the other crossing gives two meeting places for a single instant, before the pair vanishes."
+    ]
+   },
+   "terms": [
+    {
+     "term": "equilibrium",
+     "means": "A temperature where sunlight soaked up exactly equals heat radiated, so the temperature stops changing"
+    },
+    {
+     "term": "multiple equilibria",
+     "means": "Several different balance temperatures possible under the very same conditions, here the same Sun"
+    },
+    {
+     "term": "snowball Earth",
+     "means": "The coldest balance: a planet almost entirely covered in ice, kept cold because the ice reflects so much sunlight"
+    }
+   ],
+   "model": {
+    "title": "Sunlight soaked up versus heat radiated, at each temperature",
+    "note": "Teaching model: the same one-temperature planet as before. The greenhouse effect is folded into a fixed factor (0.61), and reflectivity follows the paper's smooth tanh switch centred on freezing (273.15 K) with a 10 K width, written in its equivalent logistic form. Fully icy ground reflects 0.6. New here: the lower curve is the gap (soaked up minus radiated), drawn five times taller so small gaps show. The balance-point count and the two balance temperatures are estimates. They test the gap a few kelvin inside each flat end of the S-curve, so they can be off by a notch of sunlight right at the edges. With today's Sun this model gives balances near 252, 275 and 286 K, with three points for sunlight between about 0.98 and 1.11. Herbert et al. (source s3) use a two-layer ground-and-air model with their own coefficients and report about 249, 275 and 287 K, with three points between about 0.98 and 1.08. Real ice spreads by latitude and season and interacts with clouds and ocean currents, which this ignores. Numbers are illustrative, not the paper's data.",
+    "controls": [
+     {
+      "id": "a",
+      "label": "Reflectivity (share of sunlight bounced back)",
+      "kind": "slider",
+      "min": 0.05,
+      "max": 0.9,
+      "step": 0.05,
+      "default": 0.3,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "s",
+      "label": "Sunlight (1 = today's Sun)",
+      "kind": "slider",
+      "min": 0.8,
+      "max": 1.2,
+      "step": 0.01,
+      "default": 1,
+      "unit": "×",
+      "color": 4
+     },
+     {
+      "id": "t0",
+      "label": "Starting temperature",
+      "kind": "slider",
+      "min": 150,
+      "max": 350,
+      "step": 5,
+      "default": 250,
+      "unit": "K",
+      "color": 2
+     },
+     {
+      "id": "ice",
+      "label": "Let ice form when it's cold",
+      "kind": "toggle",
+      "default": 0,
+      "color": 5,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "t_cold",
+      "label": "Frozen balance temperature, approx. (if it exists)",
+      "expr": "pow((1 - (a + ice * (max(0.6, a) - a))) * 342 * s / (0.61 * 0.0000000567), 0.25)",
+      "unit": "K",
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "t_warm",
+      "label": "Ice-free balance temperature, approx. (if it exists)",
+      "expr": "pow((1 - a) * 342 * s / (0.61 * 0.0000000567), 0.25)",
+      "unit": "K",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "cold_ok",
+      "label": "Frozen balance exists? (1 = yes)",
+      "expr": "((ice * (max(0.6, a) - a) > 0.001) && (min(min(((1 - (a + ice * (max(0.6, a) - a) * logistic((273.15 - (t_cold + 3)) / 5))) * 342 * s - 0.61 * 0.0000000567 * (t_cold + 3)^4), ((1 - (a + ice * (max(0.6, a) - a) * logistic((273.15 - (t_cold + 6)) / 5))) * 342 * s - 0.61 * 0.0000000567 * (t_cold + 6)^4)), ((1 - (a + ice * (max(0.6, a) - a) * logistic((273.15 - (t_cold + 9)) / 5))) * 342 * s - 0.61 * 0.0000000567 * (t_cold + 9)^4)) < 0)) ? 1 : 0",
+      "unit": "",
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "warm_ok",
+      "label": "Ice-free balance exists? (1 = yes)",
+      "expr": "(max(max(((1 - (a + ice * (max(0.6, a) - a) * logistic((273.15 - (t_warm - 3)) / 5))) * 342 * s - 0.61 * 0.0000000567 * (t_warm - 3)^4), ((1 - (a + ice * (max(0.6, a) - a) * logistic((273.15 - (t_warm - 6)) / 5))) * 342 * s - 0.61 * 0.0000000567 * (t_warm - 6)^4)), ((1 - (a + ice * (max(0.6, a) - a) * logistic((273.15 - (t_warm - 9)) / 5))) * 342 * s - 0.61 * 0.0000000567 * (t_warm - 9)^4)) > 0) ? 1 : 0",
+      "unit": "",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "count",
+      "label": "Balance points (where the curves meet)",
+      "expr": "(cold_ok == 1 && warm_ok == 1 && t_warm - t_cold > 18) ? 3 : 1",
+      "unit": "",
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "net",
+      "label": "Heat gained at the start (− means losing)",
+      "expr": "(1 - (a + ice * (max(0.6, a) - a) * logistic((273.15 - t0) / 5))) * 342 * s - 0.61 * 0.0000000567 * t0^4",
+      "unit": "W/m²",
+      "decimals": 0,
+      "color": 2
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Average surface temperature (K)",
+      "min": 150,
+      "max": 350
+     },
+     "y": {
+      "label": "Energy per square metre each second (W/m²)",
+      "min": -150,
+      "max": 550
+     },
+     "series": [
+      {
+       "id": "absorbed_line",
+       "label": "Sunlight soaked up",
+       "expr": "(1 - (a + ice * (max(0.6, a) - a) * logistic((273.15 - x) / 5))) * 342 * s",
+       "color": 0,
+       "dashed": false
+      },
+      {
+       "id": "no_ice_line",
+       "label": "Soaked up if no ice ever formed",
+       "expr": "(1 - a) * 342 * s + 0 * x",
+       "color": 0,
+       "dashed": true
+      },
+      {
+       "id": "emitted_curve",
+       "label": "Heat radiated to space",
+       "expr": "0.61 * 0.0000000567 * x^4",
+       "color": 1,
+       "dashed": false
+      },
+      {
+       "id": "net_line",
+       "label": "Gap: soaked up minus radiated (×5)",
+       "expr": "5 * ((1 - (a + ice * (max(0.6, a) - a) * logistic((273.15 - x) / 5))) * 342 * s - 0.61 * 0.0000000567 * x^4)",
+       "color": 3,
+       "dashed": false
+      }
+     ],
+     "hlines": [
+      {
+       "id": "zero_line",
+       "y": 0,
+       "label": "Zero gap: gains = losses"
+      }
+     ],
+     "markers": [
+      {
+       "id": "freeze",
+       "x": 273.15,
+       "label": "Water freezes",
+       "color": 5
+      },
+      {
+       "id": "start",
+       "x": "t0",
+       "label": "Start",
+       "color": 2
+      }
+     ],
+     "points": [
+      {
+       "id": "start_sun",
+       "x": "t0",
+       "y": "(1 - (a + ice * (max(0.6, a) - a) * logistic((273.15 - t0) / 5))) * 342 * s",
+       "label": "Sunlight soaked up at start",
+       "color": 0
+      },
+      {
+       "id": "start_point",
+       "x": "t0",
+       "y": "0.61 * 0.0000000567 * t0^4",
+       "label": "Heat radiated at start",
+       "color": 2
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Same picture as before. The solid blue line is sunlight soaked up, and the rising curve is heat radiated. Ice is switched on, so the blue line has its S-bend.",
+      "set": {
+       "ice": 1,
+       "s": 1,
+       "a": 0.3
+      },
+      "focus": [
+       "absorbed_line",
+       "emitted_curve"
+      ],
+      "ms": 6500
+     },
+     {
+      "say": "New: this curve is the gap between them, soaked up minus radiated, stretched five times taller. Above the zero line the planet gains heat. Below it, the planet loses heat.",
+      "focus": [
+       "net_line",
+       "zero_line"
+      ],
+      "ms": 6500
+     },
+     {
+      "say": "And this box counts how many places the two curves meet.",
+      "focus": "count",
+      "ms": 4000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "The three meeting points only exist for some Suns. Find the edges of that window by moving the sunlight and watching the gap curve's dip and bump.",
+    "goals": [
+     {
+      "text": "With ice allowed, make the Sun as bright as it can be while all three balance points still exist",
+      "when": "ice == 1 && count > 2 && s > 1.095",
+      "solution": {
+       "ice": 1,
+       "s": 1.11
+      },
+      "hints": [
+       "Which part of the gap curve has to stay below the zero line for the frozen balance to exist?",
+       "Brighten the Sun slowly and watch the dip on the cold side of the gap curve rise toward zero.",
+       "The window closes somewhere between 1.05× and 1.15×. Step one notch at a time and stop on the last setting where the count is still 3."
+      ]
+     },
+     {
+      "text": "Now find the dimmest Sun that still gives all three balance points",
+      "when": "ice == 1 && count > 2 && s < 0.985",
+      "solution": {
+       "ice": 1,
+       "s": 0.98
+      },
+      "hints": [
+       "Which part of the gap curve has to poke above the zero line for the ice-free balance to exist?",
+       "Dim the Sun step by step and watch the warm-side bump of the gap curve sink toward zero.",
+       "It's only a few notches below today's Sun. When the count drops to 1, step back up once."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. The gap curve starts above zero when very cold and ends below zero when very hot, so it crosses an odd number of times. Pairs of crossings appear or vanish together, and two meeting places happen only at the exact moment a bump touches zero.",
+     "incorrect": "It can look as if balance points disappear one by one. But a dip or bump of the gap curve crosses zero twice, so crossings are created and destroyed in pairs. That leaves one or three, with two only at the single sunlight where a bump just touches zero."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with ice switched off. The soaked-up line is flat, so it meets the radiated curve exactly once, and the gap curve crosses zero once. One balance point.",
+       "set": {
+        "ice": 0,
+        "s": 1,
+        "a": 0.3
+       },
+       "focus": [
+        "net_line",
+        "count"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "Now let ice form. Below freezing the S-bend drags the soaked-up line down under the radiated curve, then lifts it back above it nearer 280 K. Watch the gap curve: it crosses zero, dips, comes back up, then crosses again. Three meetings.",
+       "set": {
+        "ice": 1
+       },
+       "focus": [
+        "absorbed_line",
+        "net_line"
+       ],
+       "ms": 6500
+      },
+      {
+       "say": "Each meeting is an equilibrium, where sunlight in equals heat out and the temperature stops changing. This one Sun has three: frozen near 252 K, in-between near 275 K, ice-free near 286 K. That is multiple equilibria.",
+       "focus": [
+        "t_cold",
+        "t_warm",
+        "count"
+       ],
+       "ms": 7000
+      },
+      {
+       "say": "The coldest balance is a snowball Earth: so much ice that it reflects most sunlight and stays frozen. The warmest is close to today's climate. The middle one sits right on the steep part of the S.",
+       "focus": [
+        "cold_ok",
+        "warm_ok"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "Dim the Sun by 10%. The whole soaked-up line sinks, and the warm-side bump of the gap curve no longer reaches zero. The middle and ice-free meetings vanish together, and only the frozen balance is left.",
+       "set": {
+        "s": 0.9
+       },
+       "focus": [
+        "net_line",
+        "count"
+       ],
+       "ms": 6000
+      },
+      {
+       "say": "Now make the Sun 20% brighter than today. This time the cold-side dip no longer reaches below zero, so the frozen and middle meetings vanish. Only the ice-free balance is left.",
+       "set": {
+        "s": 1.2
+       },
+       "focus": [
+        "net_line",
+        "count"
+       ],
+       "ms": 6000
+      },
+      {
+       "say": "Back to today's Sun: three again. Three balances exist only inside a window of sunlight, here about 0.98 to 1.11. The paper's two-layer model finds about 0.98 to 1.08. Same Sun, three possible climates.",
+       "set": {
+        "s": 1
+       },
+       "focus": [
+        "s",
+        "count"
+       ],
+       "ms": 6500
+      }
+     ]
+    },
+    "explanation": "With ice switched on, the soaked-up curve has an S-bend, so it can dip below the radiated curve and then climb back above it. Every meeting is a temperature where gains and losses cancel, and for today's Sun there are three: a frozen one, an in-between one and an ice-free one. Dim the Sun enough and the warmer pair vanishes. Brighten it enough and the colder pair vanishes, so three balance points exist only inside a window of sunlight. Herbert and colleagues found the same pattern in a simple two-layer energy-balance model. With fixed reflectivity it has one balance near 288 K, but with ice-dependent reflectivity three coexist between about 0.98 and 1.08 times today's sunlight (about 249, 275 and 287 K at today's Sun). This is a deliberately idealised picture with one average temperature, and whether the real Earth ever froze completely or kept open tropical water is still debated.",
+    "quote": "the temperature and the ice cover of the planet are linked in a positive feedback which gives birth to multiple equilibria for some values of the solar constant: fully ice-covered Earth, ice-free Earth and an intermediate unstable solution.",
+    "quote_where": "Abstract",
+    "source_id": "s3",
+    "source_ids": [
+     "s3",
+     "s2"
+    ]
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "(1 − α(T)) × 342 × "
+     },
+     {
+      "text": "S",
+      "link": "s"
+     },
+     {
+      "text": " = 0.61 σ T^{4},   α(T) = "
+     },
+     {
+      "text": "α_{F}",
+      "link": "a"
+     },
+     {
+      "text": " + (α_{I} − α_{F})/2 × (1 + tanh((273.15 − T)/10))   ⇒  number of solutions T: "
+     },
+     {
+      "text": "1 or 3",
+      "link": "count"
+     }
+    ],
+    "caption": "This is the model's balance rule. On the left is sunlight soaked up, with S the sunlight slider. On the right is heat radiated, with the greenhouse effect folded into 0.61σ. α(T) uses the paper's tanh switch (Eq. 18): α_F is the reflectivity slider, and α_I is 0.6, or α_F if ice is off. Each solution T is one balance point, as in the paper's Eq. 21, and the count box shows how many there are."
+   },
+   "recap": "Because ice bends the soaked-up curve into an S, the same Sun can balance the planet at three temperatures (frozen, in-between and ice-free), but only within a window of sunlight.",
+   "builds_on": "albedo_feedback_loop",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "stability_valleys",
+   "title": "Valleys and hilltops: which climates last",
+   "idea": "A balance point is stable if a small warming leads to net cooling (the curve slopes down through zero), so the snowball and warm states are valleys and the middle state is a hilltop the climate rolls away from.",
+   "role": "core",
+   "predict": {
+    "question": "On a different imaginary planet, the net-heating curve crosses zero only twice: going downward at 260 K and going upward at 300 K. Which of these balance points could the planet actually stay at for a long time?",
+    "options": [
+     "The 260 K point",
+     "The 300 K point",
+     "Both points, because net heating is zero at each",
+     "Neither point"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. At 260 K the curve goes from positive to negative. A little warming brings net cooling and a little cooling brings net warming, so every push is undone. It is a valley.",
+     "Tempting, because warmer can sound safer. But an upward crossing means a little warming brings more heating, so the planet runs away from 300 K. That is a hilltop.",
+     "Zero net heating makes a point a balance point. It does not make it a lasting one. Lasting depends on which way the curve crosses zero, and only one of these crossings goes downward.",
+     "A downward crossing always gives a point that pushes the planet back after a small nudge, so the 260 K point does last."
+    ]
+   },
+   "terms": [
+    {
+     "term": "stable equilibrium",
+     "means": "A balance point the climate returns to after a small push, like a ball resting in a valley"
+    },
+    {
+     "term": "unstable equilibrium",
+     "means": "A balance point where any small push grows, like a ball balanced on a hilltop"
+    },
+    {
+     "term": "potential",
+     "means": "A landscape whose downhill direction always shows which way the temperature will move"
+    }
+   ],
+   "model": {
+    "title": "A climate landscape: drop the ball and see where it rolls",
+    "note": "Teaching model: one temperature only. This follows the paper's reduction to ground temperature, which assumes the air adjusts quickly. Reflectivity switches smoothly from 0.7 (icy) to 0.3 (ice-free) around freezing, using the same smooth-step shape as the paper's Eq. 18 but with a 10 K width. Heat given off is a straight line in temperature, not the paper's two-layer radiation scheme. Sunlight is fixed at today's value. The landscape height is the running total of net heating with its sign flipped, scaled by 1/10. The balance points (about 247, 276 and 291 K) are illustrative, not the paper's data. The paper's own model gives about 249, 275 and 287 K.",
+    "controls": [
+     {
+      "id": "start",
+      "label": "Drop the ball at (temperature)",
+      "kind": "slider",
+      "min": 232,
+      "max": 304,
+      "step": 0.5,
+      "default": 260,
+      "unit": "K",
+      "color": 0
+     }
+    ],
+    "outputs": [
+     {
+      "id": "rate",
+      "label": "Net heating where the ball starts",
+      "expr": "342*(0.5 + 0.2*(2*logistic(2*(start-273)/10) - 1)) - (182 + 3*(start-273))",
+      "unit": " W/m²",
+      "decimals": 1,
+      "color": 1
+     },
+     {
+      "id": "final",
+      "label": "Where the ball settles",
+      "expr": "start < 276.02 ? 246.8 : 290.9",
+      "unit": " K",
+      "decimals": 0,
+      "color": 2
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Planet's average surface temperature (K)",
+      "min": 232,
+      "max": 304
+     },
+     "y": {
+      "label": "Landscape height (solid) · net heating in W/m² (dashed)",
+      "min": -65,
+      "max": 50
+     },
+     "series": [
+      {
+       "id": "landscape",
+       "label": "Landscape height",
+       "expr": "1.1*(x-273) - 68.4*ln((exp((x-273)/10)+exp(-(x-273)/10))/2) + 0.15*(x-273)^2",
+       "color": 3,
+       "dashed": false
+      },
+      {
+       "id": "heating",
+       "label": "Net heating (absorbed − given off)",
+       "expr": "342*(0.5 + 0.2*(2*logistic(2*(x-273)/10) - 1)) - (182 + 3*(x-273))",
+       "color": 1,
+       "dashed": true
+      }
+     ],
+     "markers": [
+      {
+       "id": "snow_marker",
+       "x": 246.8,
+       "label": "Frozen balance",
+       "color": 4
+      },
+      {
+       "id": "hill_marker",
+       "x": 276.0,
+       "label": "In-between balance",
+       "color": 5
+      },
+      {
+       "id": "warm_marker",
+       "x": 290.9,
+       "label": "Ice-free balance",
+       "color": 6
+      }
+     ],
+     "hlines": [
+      {
+       "id": "zero_line",
+       "y": 0,
+       "label": "No net heating"
+      }
+     ],
+     "points": [
+      {
+       "id": "ball",
+       "x": "start",
+       "y": "1.1*(start-273) - 68.4*ln((exp((start-273)/10)+exp(-(start-273)/10))/2) + 0.15*(start-273)^2",
+       "label": "Ball (start)",
+       "color": 0
+      },
+      {
+       "id": "end",
+       "x": "final",
+       "y": "1.1*(final-273) - 68.4*ln((exp((final-273)/10)+exp(-(final-273)/10))/2) + 0.15*(final-273)^2",
+       "label": "Settles here",
+       "color": 2
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This solid curve is a landscape for the planet's climate. Left is colder, right is warmer, and a ball always rolls downhill.",
+      "focus": "landscape",
+      "ms": 3600
+     },
+     {
+      "say": "The ball is the planet's temperature. This slider sets where you drop it.",
+      "set": {
+       "start": 250
+      },
+      "focus": [
+       "start",
+       "ball"
+      ],
+      "ms": 3400
+     },
+     {
+      "say": "The dashed curve is net heating: sunlight absorbed minus heat given off. Above the flat line the planet warms. Below it, the planet cools.",
+      "focus": [
+       "heating",
+       "zero_line"
+      ],
+      "ms": 4200
+     },
+     {
+      "say": "The three upright lines mark the three balance points from the last lesson: frozen, in-between and ice-free.",
+      "focus": [
+       "snow_marker",
+       "hill_marker",
+       "warm_marker"
+      ],
+      "ms": 3800
+     },
+     {
+      "say": "This box and the second dot show where the ball finally comes to rest.",
+      "focus": [
+       "final",
+       "end"
+      ],
+      "ms": 3200
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Drop the ball in different places and see which valley claims it. The hilltop is the line that decides the outcome, so use it to your advantage.",
+    "goals": [
+     {
+      "text": "Drop the ball above freezing (273 K) and still have it end up frozen.",
+      "when": "start > 273 && final < 260",
+      "solution": {
+       "start": 275
+      },
+      "hints": [
+       "Freezing is not where the climate's fate is decided. What divides the frozen future from the ice-free one?",
+       "Look at the in-between balance line. Is it exactly at freezing, or a little warmer?",
+       "You need a spot warmer than freezing but still on the cold side of the hilltop. There are only a few degrees of room."
+      ]
+     },
+     {
+      "text": "Make the ball end up ice-free even though the planet starts out cooling (negative net heating).",
+      "when": "final > 280 && rate < 0",
+      "solution": {
+       "start": 298
+      },
+      "hints": [
+       "Cooling does not have to mean freezing. A valley pulls the ball in from both sides.",
+       "The snowball valley warmed balls dropped colder than it. What happens to balls dropped warmer than the ice-free valley floor?",
+       "Try the right-hand side of the ice-free balance line, where the dashed curve sits below zero."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "source_ids": [
+     "s3",
+     "s2"
+    ],
+    "feedback": {
+     "correct": "Yes. Only a downward crossing of zero makes a point last. Just warmer than it the planet cools, and just colder than it the planet warms, so pushes are undone. The upward crossing at 300 K is a hilltop the planet rolls away from.",
+     "incorrect": "It is natural to think zero net heating is enough to stay put. But a balance point lasts only if a small push is undone. That needs the net-heating curve to go from positive to negative as temperature rises, which here happens only at 260 K. At 300 K the curve rises through zero, so any nudge grows."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Drop the ball at 260 K, below freezing. The dashed net-heating curve is under zero here: the planet gives off more heat than it absorbs, so it cools. On the solid landscape this shows as a slope running downhill to the left.",
+       "set": {
+        "start": 260
+       },
+       "focus": [
+        "heating",
+        "rate"
+       ],
+       "ms": 5200
+      },
+      {
+       "say": "Now drop it at 238 K. Net heating is positive, so the planet warms, which is downhill to the right. From either side the ball ends on the same floor, about 247 K.",
+       "set": {
+        "start": 238
+       },
+       "focus": [
+        "rate",
+        "end"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "At that floor the dashed curve crosses zero going downward. A bit warmer means net cooling, and a bit colder means net warming, so every push gets undone. That is a stable equilibrium, a valley.",
+       "focus": [
+        "snow_marker",
+        "heating"
+       ],
+       "ms": 5600
+      },
+      {
+       "say": "The ice-free side works the same way. Start at 284 K: net heating is positive, so the planet warms until it settles near 291 K. There the curve crosses zero downward again. That is a second valley.",
+       "set": {
+        "start": 284
+       },
+       "focus": [
+        "warm_marker",
+        "final"
+       ],
+       "ms": 5400
+      },
+      {
+       "say": "Now go near the in-between balance. At 278 K net heating is small but positive. The ball creeps right, gathers speed and ends up ice-free.",
+       "set": {
+        "start": 278
+       },
+       "focus": [
+        "hill_marker",
+        "rate"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "At 272 K net heating is negative, and the ball slides all the way to the snowball. Between these two starts, near 276 K, the dashed curve crosses zero going upward. There any nudge grows: an unstable equilibrium, a hilltop.",
+       "set": {
+        "start": 272
+       },
+       "focus": [
+        "final",
+        "hill_marker"
+       ],
+       "ms": 6000
+      },
+      {
+       "say": "The solid curve is what the paper calls a potential. Its downhill direction always points the way temperature will move. Valleys are climates that last. The hilltop is the ridge that splits a frozen future from a warm one.",
+       "focus": "landscape",
+       "ms": 5600
+      }
+     ]
+    },
+    "explanation": "Finding a balance point is only half the story. What matters is what happens after a small push. If a little warming leaves the planet losing more heat than it gains, it cools back. The net-heating curve then crosses zero going downward, which is a valley in the landscape. At the in-between point the curve crosses going upward, so a little warming brings more heating and more warming. That is a hilltop dividing the snowball basin from the ice-free one. Herbert and colleagues showed this in a simplified energy-balance model with an ice switch. At today's sunlight they found a snowball state (about 249 K), an ice-free state (about 287 K) and an in-between state (about 275 K), and only the outer two are stable. They also drew the matching landscape (a potential), whose two minima are those states. Budyko's early model likewise found a stable ice-covered state. Caveats: 'stable' here means surviving small pushes in a highly idealised one-number climate. A large enough push can still carry the planet over the hill, and the paper notes its full two-variable model has no such landscape, only the one-temperature reduction does.",
+    "quote": "The stability can also be read directly on Fig. 4 for the 1D-reduced system: stable equilibria correspond to roots of the function with negative derivative, while at the unstable equilibrium, the curve crosses the x-axis with an upward slope.",
+    "quote_where": "Section 2.3",
+    "source_id": "s3"
+   },
+   "check": {
+    "kind": "model",
+    "task": "Put the ball where the planet is almost perfectly balanced (net heating very close to zero) but where any small nudge would send it away instead of back.",
+    "when": "abs(rate) < 2 && start > 270 && start < 282",
+    "solution": {
+     "start": 276
+    },
+    "hint": "There are three places where net heating is near zero. Pick the one where the dashed curve crosses zero going upward.",
+    "misconception": "That every place with zero net heating is a resting place the climate returns to. Balance and stability are different: at an upward crossing the planet is balanced but unstable."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "dT_{g}/dt",
+      "link": "rate"
+     },
+     {
+      "text": " = −∂V/∂"
+     },
+     {
+      "text": "T_{g}",
+      "link": "start"
+     },
+     {
+      "text": " ;  stable where −∂^{2}V/∂T_{g}^{2} < 0"
+     }
+    ],
+    "caption": "The paper's Eqs. 22–23. dT_g/dt, the rate of temperature change, is the net heating (orange box and dashed curve) divided by the surface's heat capacity. T_g is where the ball sits (the slider). V is the solid landscape, the potential. Temperature always moves downhill on V. A point is stable when V curves upward there (a valley floor) and unstable when it curves downward (a hilltop)."
+   },
+   "recap": "Valleys last, hilltops don't: where a little warming brings net cooling the climate is stable, but the in-between state is a ridge the planet rolls away from, toward snowball or ice-free.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "hysteresis_tipping",
+   "title": "Tipping points and a climate with memory",
+   "idea": "Sweeping sunlight down and back up traces a loop: the warm state lasts until about 0.98 of today's Sun, then jumps to snowball, which lasts until about 1.08, so the same Sun can mean warm or frozen depending on history.",
+   "role": "contribution",
+   "predict": {
+    "question": "Snowball Earth episodes are thought to have ended not because the Sun brightened, but because volcanoes slowly built up carbon dioxide, which warms a planet much as a brighter Sun would. Using the loop you just drove, how much extra warming did that build-up need?",
+    "options": [
+     "Just enough to undo the cooling that froze the planet",
+     "Much more: enough to carry it past the point where the frozen climate stops existing",
+     "None would work: once frozen, a planet can never thaw",
+     "Enough to reach the middle balance point, where it rests half-frozen"
+    ],
+    "answer": 1,
+    "why": [
+     "Tempting if climate depended only on present conditions. But the frozen state is balanced in its own right and outlasts the conditions that made it, just as the model's snowball holds on from 0.98 all the way up to 1.08.",
+     "Right. The snowball only lets go at its own tipping point, far beyond where it froze. One estimate in the sources puts the carbon dioxide needed at about 350 times today's level, a figure some researchers consider unreasonably large.",
+     "Budyko concluded this in the 1960s because his model offered no way out. The loop shows an exit: push far enough and the snowball state itself vanishes, so the planet must jump to warm.",
+     "The middle balance point is a hilltop. A planet placed there rolls off toward frozen or warm, so it cannot rest there."
+    ]
+   },
+   "terms": [
+    {
+     "term": "tipping point",
+     "means": "A threshold where a small change makes the current climate disappear, so the planet jumps to a very different one"
+    },
+    {
+     "term": "saddle-node bifurcation",
+     "means": "The moment a stable balance point and an unstable one meet and vanish together as a setting is changed"
+    },
+    {
+     "term": "hysteresis",
+     "means": "When a system's state depends on its history, so the path going down and the path coming back up are different"
+    }
+   ],
+   "model": {
+    "title": "Where the planet settles as the Sun dims and then brightens",
+    "note": "Teaching model: the lines are smooth fits drawn through the values the paper reports for its zero-dimensional, two-layer energy-balance model. At today's Sun these are snowball ≈ 249 K (−24 °C), middle ≈ 275 K (2 °C) and warm ≈ 287 K (14 °C), and the jumps sit at about 0.98 and 1.08 of today's sunlight. The shapes between those points, and the temperatures far from today's Sun, are illustrative, not the paper's data. History is reduced to one story: the Sun first dims to the Step 1 value, then brightens to the Step 2 value. Real sunlight changes far more slowly, and everything else, including carbon dioxide, is held fixed. Where the two solid routes share a stretch, they lie on top of each other.",
+    "controls": [
+     {
+      "id": "low",
+      "label": "Step 1: the Sun first dims to",
+      "kind": "slider",
+      "min": 0.9,
+      "max": 1.0,
+      "step": 0.01,
+      "default": 1.0,
+      "unit": "× today",
+      "color": 3
+     },
+     {
+      "id": "s",
+      "label": "Step 2: then it brightens to",
+      "kind": "slider",
+      "min": 0.9,
+      "max": 1.2,
+      "step": 0.01,
+      "default": 1.0,
+      "unit": "× today",
+      "color": 2
+     }
+    ],
+    "outputs": [
+     {
+      "id": "frozen",
+      "label": "Frozen? (1 = yes, 0 = no)",
+      "expr": "(min(low, s) < 0.975 && s < 1.085) ? 1 : 0",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "temp",
+      "label": "Temperature now",
+      "expr": "frozen == 1 ? (-10 - 48 * sqrt(max(1.08 - s, 0)) - 5.36 * max(1.08 - s, 0)) : (7 + 43.8 * sqrt(max(s - 0.98, 0)) + 40.1 * max(s - 0.98, 0))",
+      "unit": "°C",
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "climates",
+      "label": "Stable climates at this Sun",
+      "expr": "(s >= 0.975 ? 1 : 0) + (s < 1.085 ? 1 : 0)",
+      "decimals": 0,
+      "color": 4
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Sunlight (× today's Sun)",
+      "min": 0.9,
+      "max": 1.2
+     },
+     "y": {
+      "label": "Balanced surface temperature (°C)",
+      "min": -40,
+      "max": 40
+     },
+     "series": [
+      {
+       "id": "route_down",
+       "label": "Warm planet as the Sun dims",
+       "expr": "x >= 0.98 ? (7 + 43.8 * sqrt(max(x - 0.98, 0)) + 40.1 * max(x - 0.98, 0)) : (-10 - 48 * sqrt(max(1.08 - x, 0)) - 5.36 * max(1.08 - x, 0))",
+       "color": 1,
+       "dashed": false
+      },
+      {
+       "id": "route_up",
+       "label": "Frozen planet as the Sun brightens",
+       "expr": "x <= 1.08 ? (-10 - 48 * sqrt(max(1.08 - x, 0)) - 5.36 * max(1.08 - x, 0)) : (7 + 43.8 * sqrt(max(x - 0.98, 0)) + 40.1 * max(x - 0.98, 0))",
+       "color": 0,
+       "dashed": false
+      },
+      {
+       "id": "middle",
+       "label": "Unstable middle balance",
+       "expr": "x < 0.98 ? (-10 - 48 * sqrt(max(1.08 - x, 0)) - 5.36 * max(1.08 - x, 0)) : (x > 1.08 ? (7 + 43.8 * sqrt(max(x - 0.98, 0)) + 40.1 * max(x - 0.98, 0)) : (-10 + (17 / pi) * atan2(sqrt(max(1 - pow(clamp((x - 0.98) / 0.05 - 1, -1, 1), 2), 0)), clamp((x - 0.98) / 0.05 - 1, -1, 1))))",
+       "color": 5,
+       "dashed": true
+      }
+     ],
+     "markers": [
+      {
+       "id": "tip_down",
+       "x": 0.98,
+       "label": "Warm climate ends",
+       "color": 3
+      },
+      {
+       "id": "tip_up",
+       "x": 1.08,
+       "label": "Snowball ends",
+       "color": 6
+      }
+     ],
+     "hlines": [
+      {
+       "id": "freeze",
+       "y": 0,
+       "label": "Water freezes"
+      }
+     ],
+     "points": [
+      {
+       "id": "planet",
+       "x": "s",
+       "y": "temp",
+       "label": "Planet now",
+       "color": 2
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Across the bottom is sunlight, as a fraction of today's Sun. Up the side is the temperature where the planet balances.",
+      "focus": "planet",
+      "ms": 3200
+     },
+     {
+      "say": "The solid lines are the climates the planet can settle into: an upper warm one and a lower frozen one. The dashed line is the unstable middle you met before.",
+      "focus": [
+       "route_down",
+       "route_up",
+       "middle"
+      ],
+      "ms": 4200
+     },
+     {
+      "say": "This slider is Step 1 of the story: how far the Sun dims first.",
+      "focus": "low",
+      "ms": 2800
+     },
+     {
+      "say": "This one is Step 2: how bright the Sun then gets. The dot follows the planet.",
+      "set": {
+       "s": 1.1
+      },
+      "focus": "s",
+      "ms": 3400
+     },
+     {
+      "say": "The readouts say whether the planet is frozen, how warm it is, and how many stable climates this Sun allows.",
+      "set": {
+       "s": 1.0
+      },
+      "focus": [
+       "frozen",
+       "temp",
+       "climates"
+      ],
+      "ms": 3600
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Tell your own two-step story: dim the Sun, then brighten it, and predict where the dot will land before you let go.",
+    "goals": [
+     {
+      "text": "Dim the Sun as far as it can go without the planet ever freezing, and end the story with today's Sun.",
+      "when": "frozen == 0 && low < 0.985 && abs(s - 1) < 0.005",
+      "solution": {
+       "low": 0.98,
+       "s": 1.0
+      },
+      "hints": [
+       "Watch the Frozen? readout while you move Step 1.",
+       "The warm climate disappears at one of the two vertical lines. Which one?",
+       "Move Step 1 one notch at a time near the left line. The last setting before the planet freezes is the one you want."
+      ]
+     },
+     {
+      "text": "Freeze the planet, then thaw it again with the smallest brightening that works.",
+      "when": "low < 0.975 && frozen == 0 && s < 1.095",
+      "solution": {
+       "low": 0.95,
+       "s": 1.09
+      },
+      "hints": [
+       "To freeze the planet, Step 1 has to take the Sun past the end of the warm climate.",
+       "A frozen planet stays frozen until the frozen climate itself stops existing. Find the line where that happens.",
+       "Raise Step 2 one notch at a time past that line, and stop the moment the Frozen? readout changes."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. A frozen planet is balanced in its own right, so it ignores modest warming. Only warming that carries it past the snowball's own tipping point, where that state stops existing, forces the jump back to warm.",
+     "incorrect": "You may have pictured climate as set by present conditions alone, so undoing the cause would undo the effect. With two stable states, the frozen one survives far past the conditions that created it. Escaping takes enough warming to make the snowball state vanish altogether."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with today's Sun. The planet sits on the warm line at about 14 °C.",
+       "set": {
+        "low": 1.0,
+        "s": 1.0
+       },
+       "focus": "planet",
+       "ms": 3000
+      },
+      {
+       "say": "Dim the Sun to 0.98 of today. The planet cools to about 7 °C but stays warm. Right here the warm valley and the middle hilltop meet and vanish together. The paper calls this a saddle-node bifurcation.",
+       "set": {
+        "low": 0.98,
+        "s": 0.98
+       },
+       "focus": "tip_down",
+       "ms": 5200
+      },
+      {
+       "say": "One notch dimmer and there is no warm climate left at all. The planet has nowhere to go but down, all the way to the frozen line, below −25 °C. That edge is a tipping point.",
+       "set": {
+        "low": 0.97,
+        "s": 0.97
+       },
+       "focus": [
+        "planet",
+        "frozen"
+       ],
+       "ms": 5200
+      },
+      {
+       "say": "Now brighten the Sun to 1.05, stronger than today. The planet stays frozen near −18 °C. Its white surface reflects so much light that the snowball is still balanced.",
+       "set": {
+        "low": 0.97,
+        "s": 1.05
+       },
+       "focus": "temp",
+       "ms": 4800
+      },
+      {
+       "say": "Even at 1.08 it hangs on, at about −10 °C, right where the frozen line ends: the second tipping point.",
+       "set": {
+        "low": 0.97,
+        "s": 1.08
+       },
+       "focus": "tip_up",
+       "ms": 4000
+      },
+      {
+       "say": "One notch more and the snowball state vanishes. The planet leaps up to the warm line, near 26 °C. It went down at 0.98 and came back up only at 1.08. A loop like this, where the path depends on history, is called hysteresis.",
+       "set": {
+        "low": 0.97,
+        "s": 1.09
+       },
+       "focus": [
+        "planet",
+        "frozen"
+       ],
+       "ms": 5600
+      },
+      {
+       "say": "Replay the story, but stop at today's Sun. The planet sits frozen at −24 °C, under the very Sun that held it at 14 °C at the start. Same sunshine, two stable climates: its past alone decides, and once tipped it stays stuck.",
+       "set": {
+        "low": 0.97,
+        "s": 1.0
+       },
+       "focus": [
+        "planet",
+        "temp",
+        "climates"
+       ],
+       "ms": 7000
+      }
+     ]
+    },
+    "explanation": "As the Sun dims, a warm planet slides along the warm line. It stays there until that line ends at about 0.98 of today's sunlight, where the warm state and the unstable middle merge and vanish. The planet then has nowhere to go but down to the snowball. Brightening the Sun does not undo this straight away, because the bright ice keeps the frozen state balanced until its own line ends near 1.08. The paper found these two thresholds by tracking every balance point of its simple two-layer energy-balance model as it swept the solar constant. It noted that the loop keeps the same shape even with the greenhouse effect or the surface heat flux switched off. The exact numbers belong to that idealised, globally averaged model. Later work found real climate far less sensitive than the first such models suggested, and whether ancient Earth ever froze completely is still debated.",
+    "quote": "Creation of a pair of stable/unstable equilibria at the tipping points 0.98 S0 and 1.08 S0 is called a saddle-node bifurcation. Thus the hysteresis curve obtained for the temperature stems from the bifurcation structure of the dynamical system as two back-to-back saddle-node bifurcations.",
+    "quote_where": "Section 2.3 (Multiple equilibria)",
+    "source_id": "s3",
+    "source_ids": [
+     "s3",
+     "s2"
+    ]
+   },
+   "check": {
+    "kind": "model",
+    "task": "Put the model in a state where the planet is frozen even though the Sun ends brighter than today's.",
+    "when": "frozen == 1 && s > 1.005",
+    "solution": {
+     "low": 0.95,
+     "s": 1.05
+    },
+    "hint": "First make the planet freeze in Step 1. Then brighten it in Step 2, but not past the line where the frozen climate ends.",
+    "misconception": "That a brighter Sun than today's must mean a warm planet, as if the climate were set by current sunlight alone rather than by the path that led there."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "c_{pg} d"
+     },
+     {
+      "text": "T_{g}",
+      "link": "temp"
+     },
+     {
+      "text": "/dt = (s̄ − s)(1 − α(T_{g}))ξ"
+     },
+     {
+      "text": "S",
+      "link": "s"
+     },
+     {
+      "text": " − t(σT_{g}^{4} − σT_{a}^{4}) − (1 − tμ)σT_{g}^{4} − q"
+     }
+    ],
+    "caption": "The paper's surface energy budget (Eqs. 11 and 16): absorbed sunlight minus heat handed to the air and radiated to space, with q the surface heat flux. S, the sunlight now, is your Step 2 slider. T_g is the dot's temperature, and α(T_g) is the ice-dependent reflectivity. Lowercase s, s̄, t, ξ and μ are fixed coefficients. The planet balances where the right side is zero: each solid line is a set of such zeros, and the planet jumps where its set runs out."
+   },
+   "recap": "With an ice switch, the climate tips to snowball near 0.98 of today's Sun but only tips back near 1.08, so the same Sun can hold a warm or a frozen planet depending on its history.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  }
+ ],
+ "omitted": [
+  {
+   "title": "How strong is the ice switch?",
+   "reason": "concept.model: builds on 'three_equilibria', so it must keep its control 't0'"
+  }
+ ],
+ "sources": [
+  {
+   "id": "s1",
+   "title": "Ice–albedo feedback - Wikipedia",
+   "url": "https://en.wikipedia.org/wiki/Ice%E2%80%93albedo_feedback",
+   "authors": "Wikipedia contributors",
+   "year": null
+  },
+  {
+   "id": "s2",
+   "title": "Snowball Earth - Wikipedia",
+   "url": "https://en.wikipedia.org/wiki/Snowball_Earth",
+   "authors": "Wikipedia contributors",
+   "year": null
+  },
+  {
+   "id": "s3",
+   "title": "Earth Syst. Dynam., 2, 13–23, 2011",
+   "url": "https://esd.copernicus.org/articles/2/13/2011/esd-2-13-2011.pdf",
+   "authors": "Corentin Herbert, Didier Paillard, B. Dubrulle",
+   "year": 2011
+  },
+  {
+   "id": "s4",
+   "title": "The dependence of the ice-albedo feedback on atmospheric properties",
+   "url": "https://arxiv.org/pdf/1308.0899",
+   "authors": "Philip von Paris, Franck Selsis, D. Kitzmann et al.",
+   "year": 2013
+  }
+ ],
+ "category": {
+  "primary": {
+   "id": "earth_climate",
+   "name": "Earth & climate science"
+  },
+  "secondary": null,
+  "probabilities": {
+   "earth_climate": 1.0
+  },
+  "confidence": 1.0,
+  "model": "jev-1.13.0"
+ },
+ "generation": {
+  "provider": "claude",
+  "model": "claude-opus-5-5",
+  "pipeline": "lemma.generate.make_outline + build_lesson",
+  "source_chars": 214427,
+  "omitted": 1
+ }
+}

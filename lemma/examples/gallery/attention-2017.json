@@ -2320,5 +2320,17 @@
    ]
   }
  ],
- "omitted": []
+ "omitted": [],
+ "created": "2026-10-17T17:38:58",
+ "provider": {
+  "name": "Claude",
+  "model": "claude-opus-5-5"
+ },
+ "generation": {
+  "provider": "claude",
+  "model": "claude-opus-5-5",
+  "pipeline": "lemma.generate.make_outline + build_lesson",
+  "source_chars": 39611,
+  "omitted": 0
+ }
 }

@@ -271,6 +271,35 @@ button.hall-replay:hover:not(:disabled) { background: transparent; color: var(--
 .inheritance-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 16px 0; }
 .inheritance-seed { display: grid; justify-items: center; gap: 6px; min-height: 80px; background: var(--lemon); color: var(--ink); }
 .inheritance-seed.wrinkled { border: 3px dashed var(--ink); border-radius: 30% 45% 25% 40%; }
+.activity-lab .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.hypothetical-tag { display: inline-block; margin: 0 0 12px; padding: 6px 10px; border-radius: 8px; background: var(--ochre-soft); color: var(--ochre-ink); font-size: 14px; }
+.activity-hints { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 15px; color: var(--body); }
+.activity-hints:empty { display: none; }
+.revisit { margin: 0 0 12px; padding: 10px 14px; border-left: 3px solid var(--green); background: var(--green-soft); }
+.worked-steps, .evidence-stages { display: grid; gap: 10px; margin: 12px 0 0; padding-left: 22px; line-height: 1.5; }
+.evidence-stages li::marker { font-weight: 700; }
+.step-result { font-weight: 600; color: var(--ink); }
+.compare-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 12px; }
+.compare-case { padding: 14px; border: 1px solid var(--rule-strong); border-radius: var(--r-lg); background: var(--surface); }
+.compare-case h4 { margin: 0 0 8px; font-size: 16px; }
+.compare-case p { margin: 8px 0 0; line-height: 1.5; }
+.compare-model { min-height: 160px; }
+.compare-model .outputs { margin-top: 8px; }
+.trace-diagram { max-width: 520px; margin: 12px auto 0; }
+.trace-edge { stroke: var(--rule-strong); stroke-width: 1.2; }
+.trace-edge.on { stroke: var(--green); stroke-width: 2; }
+.trace-node { cursor: pointer; outline: none; }
+.trace-node circle { fill: var(--surface); stroke: var(--ink); stroke-width: 1; }
+.trace-node.on circle { fill: var(--green-soft); stroke: var(--green); stroke-width: 2; }
+.trace-node:focus-visible circle { stroke: var(--green); stroke-width: 2.5; }
+.trace-node text { font: 600 4.2px var(--sans); fill: var(--ink); pointer-events: none; }
+.trace-node .trace-order { font-size: 4px; fill: var(--green); }
+.passage-option blockquote { margin: 0; font-size: 16px; line-height: 1.5; }
+.passage-option cite { display: block; margin-top: 6px; font-size: 13px; font-style: normal; color: var(--mute); }
+.construction-picture text { font: 600 5px var(--sans); fill: var(--ink); }
+.construction-picture .construction-circle { stroke-width: .8; }
+.construction-picture .construction-edge { stroke-width: 1.2; }
+.construction-picture .latest { stroke: var(--green); opacity: 1; }
 .gal-interactive .activity-lab { padding: 12px; font-size: 13px; }
 .gal-interactive .activity-lab h3 { font-size: 17px; }
 .gal-interactive .activity-card { padding: 8px; }

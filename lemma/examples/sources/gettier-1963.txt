@@ -1,0 +1,41 @@
+VERIFIED QUOTATION EXCERPTS — not the complete source.
+
+Is Justified True Belief Knowledge?
+
+https://fitelson.org/proseminar/gettier.pdf
+
+Opening paragraph
+
+(a) S knows that P IFF (i) P is true, (ii) S believes that P, and (iii) S is justified in believing that P.
+
+Page 121
+
+it is possible for a person to be justified in believing a proposition that is in fact false.
+
+Page 123, Case II
+
+Smith does not know that (h) is true, even though (i) (h) is true, (ii) Smith does believe that (h) is true, and (iii) Smith is justified in believing that (h) is true.
+
+Opening of the paper, definition (a)
+
+(a) S knows that P IFF (i) P is true, (ii) S believes that P, and (iii) S is justified in believing that P.
+
+Opening section, first of the two points Gettier notes before the cases
+
+in that sense of 'justified' in which S's being justified in believing P is a necessary condition of S's knowing that P, it is possible for a person to be justified in believing a proposition that is in fact false.
+
+Opening section, the second of the two points stated before Case I
+
+Secondly, for any proposition P, if S is justified in believing P, and P entails Q, and S deduces Q from P and accepts Q as a result of this deduction, then S is justified in believing Q.
+
+Case I
+
+for (e) is true in virtue of the number of coins in Smith's pocket, while Smith does not know how many coins are in Smith's pocket, and bases his belief in (e) on a count of the coins in Jones's pocket, whom he falsely believes to be the man who will get the job.
+
+Case II
+
+First, Jones does not own a Ford, but is at present driving a rented car. And secondly, by the sheerest coincidence, and entirely unknown to Smith, the place mentioned in proposition (h) happens really to be the place where Brown is.
+
+Case I (p. 122)
+
+But it is equally clear that Smith does not know that (e) is true; for (e) is true in virtue of the number of coins in Smith's pocket, while Smith does not know how many coins are in Smith's pocket, and bases his belief in (e) on a count of the coins in Jones's pocket, whom he falsely believes to be the man who will get the job.

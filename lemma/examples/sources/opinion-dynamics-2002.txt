@@ -1,0 +1,49 @@
+VERIFIED QUOTATION EXCERPTS — not the complete source.
+
+Opinion Dynamics and Bounded Confidence: Models, Analysis, and Simulation
+
+https://www.jasss.org/5/3/2/2.pdf
+
+Abstract
+
+When does opinion formation within an interacting group lead to consensus, polarization or fragmentation?
+
+Introduction (quoting Abelson 1964)
+
+Since universal ultimate agreement is an ubiquitous outcome of a very broad class of mathematical models, we are naturally led to inquire what on earth one must assume in order to generate the bimodal outcome of community cleavage studies.
+
+Introduction
+
+For that reason we carry out the analysis of the above nonlinear model to a large extent by simulations on the computer.
+
+Section 4.1
+
+As the homogeneous and symmetric confidence interval increases we transit from phase to phase. More exactly, we step from fragmentation (plurality) over polarisation (polarity) to consensus (conformity).
+
+Section 4.3
+
+At least under bounded confidence locality of interactions may prevent societies from sharp polarisation.
+
+Section 2
+
+Intuitively, one may expect that this process of repeatedly averaging opinions will bring newly formed opinions of different agents closer to each other until they flow into a consensus among all agents.
+
+Section 2
+
+An agent i takes only those agents j into account whose opinions differ from his own not more than a certain confidence level
+
+Section 4.1
+
+As the homogeneous and symmetric confidence interval increases we transit from phase to phase. More exactly, we step from fragmentation (plurality) over polarisation (polarity) to consensus (conformity).
+
+Section 4.1 (Symmetric confidence), discussion of Figure 5
+
+Figure 5 makes clear that opinion changes start at the extremes and are there (at the start!) most extreme for the most extreme opinions.
+
+Section 4.2.2
+
+The principle cause for all these effects is that with an increasing m those at the extremes become less and less affected by opinions more in the centre of the opinion space.
+
+Section 4.1 (Symmetric confidence)
+
+Under simultaneous updating cracked profiles can never get connected again. Agents/opinions outside ones own sub profile are ‘out of range/reach’ in a quite severe sense: They are not only outside ones own confidence interval, but also outside the confidence intervals of all others one takes seriously, outside the confidence intervals of all others which those others take seriously etc.

@@ -79,6 +79,8 @@
     { id: "test", label: "Make it stick", blurb: "This idea is easy to get backwards, so try it once on your own." },
     { id: "further", label: "Going further", blurb: "The paper's notation, tied to the model." },
   ];
+  const ACTIVITY_LABEL = { explain: "Understand the idea", choice: "Think it through", worked: "Work through an example", compare: "Compare the cases",
+    stages: "Follow the evidence", match: "Match them up", order: "Put it in order", trace: "Trace it", passage: "Find the evidence", estimate: "Estimate it" };
   const SCREEN_VERB = { title: null, watch: "meet", walk: "learn", explain: "learn", goal: "try", predict: "apply", reveal: "apply", check: "test", connect: "further" };
 
   // A small, optional chime when a goal is reached. Off by default; made on the spot, so nothing is downloaded.
@@ -302,7 +304,7 @@
         (this.model.outputs || []).forEach((o, i) => (this.colors[o.id] = o.color ?? ((this.model.controls || []).length + i) % 8));
         this.anim = null;
         this.locked = false;
-        this.verbs = c.activities ? c.activities.map((a) => ({ id: a.id, label: a.title || ({ explain: "Understand the idea", choice: "Think it through" }[a.kind]) || VERBS.find((v) => v.id === SCREEN_VERB[a.kind])?.label || "Explore" })) : VERBS.filter((v) => v.id !== "test" || c.check);
+        this.verbs = c.activities ? c.activities.map((a) => ({ id: a.id, label: a.title || ACTIVITY_LABEL[a.kind] || VERBS.find((v) => v.id === SCREEN_VERB[a.kind])?.label || "Explore" })) : VERBS.filter((v) => v.id !== "test" || c.check);
         this.screens = this.buildScreens();
         const src = lesson.source || {};
         const items = shownPlan();
@@ -355,6 +357,7 @@
         clearInterval(this.autoTimer);
         clearInterval(this.eqTimer);
         if (this.view) this.view.destroy();
+        (this.extraViews || []).forEach((v) => v.destroy());
         document.removeEventListener("keydown", this.onKey);
         if (this.barObs) this.barObs.disconnect();
       }
@@ -543,6 +546,8 @@
         this.narrStart = null;
         this.cancelAnim();
         this.view?.clearTrail();
+        (this.extraViews || []).forEach((v) => v.destroy());
+        this.extraViews = [];
         if (this.caption) this.caption.hidden = true;
         this.locked = false;
         this.pc.screen = i;
@@ -828,56 +833,105 @@
         return { rail: [h("p", { class: "goal-text" }, p.question)], stage: [opts] };
       }
 
-      screen_sort(a) { return this.activityScreen(a); }
-      screen_construction(a) { return this.activityScreen(a); }
-      screen_inheritance(a) { return this.activityScreen(a); }
-
       activityScreen(a) {
         const state = ((this.pc.responses ||= {})[a.id] ||= {});
         const container = h("div", { class: "activity-container" });
-        const update = () => this.setBar({ body: state.done ? "Notice what changed and why before continuing." : "Explore the activity. You can return to the source or continue when ready.", buttons: [this.continueBtn()] });
-        root.LemmaActivities.mount(container, a, state, update);
+        const teaching = ["worked", "compare", "stages"].includes(a.kind);
+        const update = () => this.setBar({ body: state.done ? "Notice what changed and why before continuing." : teaching ? "Take it one step at a time." : "Try it, then check. Hints and Show me are there if you need them.", buttons: [this.continueBtn()] });
+        root.LemmaActivities.mount(container, a, state, update, {
+          // A comparison shows the concept's own model in each case's state, side by side.
+          renderModel: (box, values) => {
+            const state = Object.assign(M.defaults(this.model), values);
+            const pic = h("div", { class: "viz-box" });
+            box.append(pic);
+            const view = new M.ModelView(pic, this.model);
+            const env = view.update(state) || M.compute(this.model, state).env;
+            (this.extraViews ||= []).push(view);
+            // The key numbers under each case, so the difference can be read as well as seen.
+            box.append(h("dl", { class: "outputs" }, (this.model.outputs || []).map((o) =>
+              h("div", { class: "out", style: `--k:var(--model-${this.colors[o.id] % 8})` },
+                h("dt", {}, h("span", { class: "key", "aria-hidden": "true" }), o.label), h("dd", {}, M.fmt(env[o.id], o.decimals ?? 2, o.scale ?? 1, o.unit || ""))))));
+          },
+          sourceTitle: (id) => ((lesson.sources || []).find((s) => s.id === id) || {}).title || "",
+        });
         update();
-        return { rail: [h("p", {}, a.prompt)], stage: [container] };
+        return { rail: [h("p", {}, a.prompt || a.question)], stage: [container] };
       }
+
+      screen_sort(a) { return this.activityScreen(a); }
+      screen_construction(a) { return this.activityScreen(a); }
+      screen_inheritance(a) { return this.activityScreen(a); }
+      screen_worked(a) { return this.activityScreen(a); }
+      screen_compare(a) { return this.activityScreen(a); }
+      screen_stages(a) { return this.activityScreen(a); }
+      screen_match(a) { return this.activityScreen(a); }
+      screen_order(a) { return this.activityScreen(a); }
+      screen_trace(a) { return this.activityScreen(a); }
+      screen_passage(a) { return this.activityScreen(a); }
+      screen_estimate(a) { return this.activityScreen(a); }
 
       screen_choice(a) {
         const responses = (this.pc.responses ||= {});
         const saved = responses[a.id];
-        let selected = saved?.selected ?? null;
+        // A multi choice keeps a set of picks; a single one keeps one index.
+        let selected = saved?.selected ?? (a.multi ? [] : null);
+        const picked = () => (a.multi ? selected.length > 0 : selected !== null);
         const inputs = [];
-        const submit = h("button", { class: "primary", disabled: selected === null, onclick: () => {
-          responses[a.id] = { selected, shown: false };
+        const submit = h("button", { class: "primary", disabled: !picked(), onclick: () => {
+          responses[a.id] = { selected: a.multi ? [...selected] : selected, shown: false, hints: responses[a.id]?.hints || 0 };
           showFeedback();
         } }, a.mode === "determinate" ? "Check" : "Compare reasoning");
-        const options = h("div", { class: "options", role: "radiogroup", "aria-label": a.question }, a.options.map((o, i) => {
-          const input = h("input", { type: "radio", name: `activity-${this.c.id}-${a.id}`, checked: selected === i, onchange: () => {
-            selected = i;
-            submit.disabled = false;
+        const options = h("div", { class: "options", role: a.multi ? "group" : "radiogroup", "aria-label": a.question }, a.options.map((o, i) => {
+          const on = a.multi ? selected.includes(i) : selected === i;
+          const input = h("input", { type: a.multi ? "checkbox" : "radio", name: `activity-${this.c.id}-${a.id}`, checked: on, onchange: () => {
+            if (a.multi) selected = input.checked ? [...selected, i].sort((x, y) => x - y) : selected.filter((x) => x !== i);
+            else selected = i;
+            submit.disabled = !picked();
             this.setBar({ buttons: [submit] });
           } });
           inputs.push(input);
           return h("label", { class: "option" }, input, h("span", {}, o.text));
         }));
+        const answer = a.multi ? a.answers : a.answer;
+        const isRight = (sel) => a.mode !== "determinate" || (a.multi ? sel.length === answer.length && sel.every((x) => answer.includes(x)) : sel === answer);
+        const hintBox = h("div", { class: "activity-hints" });
+        const drawHints = () => hintBox.replaceChildren(...(a.hints || []).slice(0, responses[a.id]?.hints || 0).map((t, i) => h("p", {}, h("strong", {}, `Hint ${i + 1}: `), t)));
         const showFeedback = () => {
           const response = responses[a.id];
-          const right = a.mode !== "determinate" || response.selected === a.answer;
+          const right = isRight(response.selected);
+          const chosen = a.multi ? response.selected : [response.selected];
+          const moreHints = !right && (response.hints || 0) < (a.hints || []).length ? h("button", { class: "ghost", onclick: () => {
+            response.hints = (response.hints || 0) + 1;
+            drawHints();
+            showFeedback();
+          } }, "Hint") : null;
           const show = !right ? h("button", { class: "ghost", onclick: () => {
-            response.selected = a.answer;
+            response.selected = a.multi ? [...answer] : answer;
             response.shown = true;
-            selected = a.answer;
-            inputs.forEach((input, i) => (input.checked = i === a.answer));
+            selected = response.selected;
+            inputs.forEach((input, i) => (input.checked = a.multi ? answer.includes(i) : i === answer));
             showFeedback();
           } }, "Show me") : null;
+          const retry = !right ? h("button", { class: "ghost", onclick: () => { submit.disabled = !picked(); this.setBar({ buttons: [submit] }); } }, "Try again") : null;
           this.setBar({ state: a.mode === "determinate" && right && !response.shown ? "good" : "",
-            head: response.shown ? "Here's one supported answer" : a.mode === "determinate" ? (right ? "That's it" : "Reconsider this") : "Compare the reasoning",
-            body: a.options[response.selected].feedback,
-            buttons: right ? [this.continueBtn()] : [show, this.continueBtn("Continue", true)] });
+            head: response.shown ? "Here's the supported answer" : a.mode === "determinate" ? (right ? "That's it" : "Reconsider this") : "Compare the reasoning",
+            body: chosen.map((i) => (a.multi ? h("p", {}, h("strong", {}, a.options[i].text), " ", a.options[i].feedback) : a.options[i].feedback)),
+            buttons: right ? [this.continueBtn()] : [moreHints, show, retry, this.continueBtn("Continue", true)] });
         };
-        this.setBar({ body: a.mode === "opening" ? "An optional first judgment, not a test. You can reconsider it after reading." : a.mode === "interpretive" ? "Choose a reading to examine its support and limits. Agreement is not required." : "Choose the answer supported by the source and the stated assumptions.",
+        // A later question can bring the learner back to the judgment they made before the teaching.
+        const before = a.revisits && responses[a.revisits];
+        const earlier = before ? (this.c.activities || []).find((x) => x.id === a.revisits) : null;
+        const revisit = earlier && before.selected !== null && before.selected !== undefined
+          ? h("p", { class: "revisit" }, h("strong", {}, "Before the teaching you chose: "), earlier.options[before.selected].text, ". Has your view changed?")
+          : null;
+        this.setBar({ body: a.mode === "opening" ? "An optional first judgment, not a test. You can reconsider it after reading." : a.mode === "interpretive" ? "Choose a reading to examine its support and limits. Agreement is not required." : a.multi ? "Choose every answer the source and the stated assumptions support." : "Choose the answer supported by the source and the stated assumptions.",
           buttons: [a.mode === "opening" ? this.continueBtn("Skip") : null, submit].filter(Boolean) });
+        drawHints();
         if (saved) showFeedback();
-        return { rail: [h("p", { class: "goal-text" }, a.question)], stage: [options] };
+        return {
+          rail: [h("p", { class: "goal-text" }, a.question), a.multi ? h("p", {}, "Choose every one that applies.") : null],
+          stage: [a.hypothetical ? h("p", { class: "hypothetical-tag" }, "Hypothetical teaching case: made up to illustrate the idea, not evidence from the source.") : null, revisit, options, hintBox],
+        };
       }
 
       screen_explain(a = {}) {

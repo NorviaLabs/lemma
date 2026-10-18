@@ -20,7 +20,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib import resources
 from urllib.parse import parse_qs, quote, urlsplit
 
-from . import __version__, auth, categorize, chatgpt, export, generate, ingest, logs, search, store
+from . import __version__, auth, categorize, chatgpt, export, generate, ingest, jev, logs, search, store
 from . import lesson as L
 from .llm import DEFAULT_PROVIDER, PROVIDERS, ProviderError, make_provider
 
@@ -103,8 +103,8 @@ def gallery_index() -> list[dict]:
 
 
 def load_gallery(slug: str) -> tuple[dict, str | None]:
-    """A finished lesson, read-only like the example. Available source files are checked before display;
-    other lessons' quotes were checked against their papers before they were added."""
+    """A finished lesson, read-only like the example, with its checked-in source: Galton's full text, or for the
+    others the verified quotation excerpts its quotes are checked against before display."""
     entry = next((e for e in gallery_index() if e["slug"] == slug), None)
     if entry is None:
         raise ApiError(404, "That lesson isn't in the gallery.")
@@ -145,7 +145,7 @@ def api_status(_body):
         "hosted": HOSTED,
         "user": getattr(REQUEST, "user", None),
         "sign_in": auth.providers() if HOSTED else [],
-        "typesafe": categorize.available(),  # search results and source text also go to TypeSafe, which the privacy notes must say
+        "typesafe": jev.available(),  # search results and source text also go to TypeSafe, which the privacy notes must say
     }
 
 
@@ -227,6 +227,8 @@ def api_search(body):
         if hit := search.cached(query):
             return {"done": True, "result": hit}
         query = search.clean(query)
+        if not jev.available():
+            raise search.SearchError(jev.MISSING)
     except search.SearchError as e:
         raise ApiError(422, str(e)) from None
     with _lock:
@@ -279,6 +281,8 @@ def _provider():
 
 def _new_job(kind: str) -> generate.Job:
     owner = _owner()
+    if not jev.available():  # every outline and build is checked by Jev; without it, nothing is started or paid for
+        raise ApiError(503, jev.MISSING)
     if HOSTED:
         running = [j for j in list(generate.JOBS.values()) if j.status == "running"]
         if sum(j.owner == owner for j in running) >= MAX_RUNNING_EACH:
@@ -354,14 +358,11 @@ def _public_request(record):
 
 
 def _categorize(record, paper):
-    """Stores the lesson's category on its build record. A lesson without one is still a whole lesson."""
+    """Stores the lesson's category on its build record. Jev sorts every lesson, so a failure stops the build."""
     try:
         record["category"] = categorize.categorize(paper)
-    except categorize.CategorizeError:
-        record["category"] = None
-    except Exception as e:  # never let sorting break a build
-        logs.report("categorize", e)
-        record["category"] = None
+    except categorize.CategorizeError as e:
+        raise generate.GenerationError(f"Couldn't sort this lesson into a subject with Jev ({e}). Retry in a moment.") from None
 
 
 def _launch_request(record, provider, owner, build=False):
@@ -420,25 +421,18 @@ def _launch_request(record, provider, owner, build=False):
             paper = {"text": json.dumps({"lemma_sources": sources}, ensure_ascii=False),
                      "title": record["title"], "url": ""}
             record["paper"] = paper
-        # The category comes from the sources themselves; it is sorted out while the outline is drafted.
-        sorting = None
-        if "category" not in record and categorize.available():
-            sorting = threading.Thread(target=_categorize, args=(record, paper), daemon=True)
-            sorting.start()
+        # The category comes from the sources themselves, sorted out before anything is paid for.
+        if not record.get("category"):
+            _categorize(record, paper)
         if not build:
             outline = generate.make_outline(j, provider, paper["text"], record["request"]["audience"])
-            if sorting:
-                sorting.join(categorize.TIMEOUT)
             with j.lock:
                 if not j.cancelled.is_set():
                     record["outline"] = outline
                     j.status = "awaiting_outline"
             return outline
         result = generate.build_lesson(j, provider, paper, record["outline"], record["request"]["audience"], j.id)
-        if sorting:
-            sorting.join(categorize.TIMEOUT)
-        if record.get("category"):
-            result["category"] = record["category"]
+        result["category"] = record["category"]
         j.step("save", "Saving your lesson", "active")
         with _requests_lock:
             if j.cancelled.is_set():

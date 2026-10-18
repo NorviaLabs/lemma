@@ -2,17 +2,20 @@
  {
   "slug": "attention-2017",
   "field": "Machine learning",
-  "cover": "positional_encoding"
+  "cover": "positional_encoding",
+  "source_file": "sources/attention-2017.txt"
  },
  {
   "slug": "ioannidis-2005",
   "field": "Research methods",
-  "cover": "false_alarms_and_power"
+  "cover": "false_alarms_and_power",
+  "source_file": "sources/ioannidis-2005.txt"
  },
  {
   "slug": "wuhan-2020",
   "field": "Epidemiology",
-  "cover": "doubling_time"
+  "cover": "doubling_time",
+  "source_file": "sources/wuhan-2020.txt"
  },
  {
   "slug": "opinion-dynamics-2002",
@@ -20,12 +23,14 @@
   "cover": "splits_lock_in",
   "cover_values": {
    "conf": 0.22
-  }
+  },
+  "source_file": "sources/opinion-dynamics-2002.txt"
  },
  {
   "slug": "gettier-1963",
   "field": "Philosophy",
-  "cover": "three_conditions"
+  "cover": "three_conditions",
+  "source_file": "sources/gettier-1963.txt"
  },
  {
   "slug": "galton-1886",
@@ -68,5 +73,41 @@
   "field": "Mathematics",
   "cover": "circle_equal_distance",
   "source_file": "sources/euclid-equilateral.txt"
+ },
+ {
+  "slug": "wave-interference",
+  "field": "Physics",
+  "cover": "superposition_phase",
+  "source_file": "sources/wave-interference.txt"
+ },
+ {
+  "slug": "schelling-segregation",
+  "field": "Urban studies",
+  "cover": "neighbour_rule",
+  "source_file": "sources/schelling-segregation.txt"
+ },
+ {
+  "slug": "information-cascades",
+  "field": "Social learning",
+  "cover": "weighing_clues",
+  "source_file": "sources/information-cascades.txt"
+ },
+ {
+  "slug": "ice-albedo-feedback",
+  "field": "Climate science",
+  "cover": "energy_balance",
+  "source_file": "sources/ice-albedo-feedback.txt"
+ },
+ {
+  "slug": "externalities-pigou",
+  "field": "Economics",
+  "cover": "private_vs_social_cost",
+  "source_file": "sources/externalities-pigou.txt"
+ },
+ {
+  "slug": "loss-aversion",
+  "field": "Behavioural economics",
+  "cover": "losses_loom_larger",
+  "source_file": "sources/loss-aversion.txt"
  }
 ]

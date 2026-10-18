@@ -8,8 +8,8 @@ papers ranked by relevance and citations, Europe PMC returns biomedical papers w
 serves openly, and arXiv returns preprints.
 
 A search for a concept leads with the overview and explanations; a search for a paper leads with papers.
-When the server has a TypeSafe key, Jev judges how well each result would teach what was searched for, which
-orders each group and decides which results are recommended (see judge()); otherwise the title match does.
+Jev judges how well each result would teach what was searched for, which orders each group (the title match
+breaking ties) and decides which results are recommended (see judge()). Without Jev, a search doesn't run.
 """
 
 from __future__ import annotations
@@ -247,8 +247,8 @@ ROLES = {"overview": "A general introduction or encyclopedia overview",
 
 
 def judge(query: str, results: list[dict], openings: dict) -> dict:
-    """Jev's relevance (0 to 4) and role for each result, by id(result); empty when Jev isn't there or fails."""
-    if not results or not jev.available():
+    """Jev's relevance (0 to 4) and role for each result, by id(result). Raises SearchError when Jev can't judge them."""
+    if not results:
         return {}
     state = {"search": query, "results": [{"n": i, "title": r["title"], "from": r["source"],
                                            "text": (r.get("summary") or openings.get(id(r), ""))[:2 * OPENING]}
@@ -262,9 +262,11 @@ def judge(query: str, results: list[dict], openings: dict) -> dict:
     try:
         answers = jev.ask(state, questions, JEV_TIMEOUT)
         judged = {id(r): (float(answers[f"r{i}_relevance"]["score"]), answers[f"r{i}_role"]["choice"]) for i, r in enumerate(results, 1)}
-    except (jev.JevError, KeyError, TypeError, ValueError) as e:
+    except jev.JevError as e:
+        raise SearchError(f"Couldn't rank the results with Jev ({e}). Try again in a moment.") from None
+    except (KeyError, TypeError, ValueError) as e:
         logs.report("search ranking", e)  # the error's type and where, never the search
-        return {}
+        raise SearchError("Jev sent a ranking Lemma couldn't read. Try again in a moment.") from None
     for r in results:
         relevance, role = judged[id(r)]
         r["judged"] = {"relevance": round(relevance + 1, 2), "role": role}  # on the 1 to 5 scale; not shown to learners
@@ -356,6 +358,10 @@ def search(query: str, on_progress=None) -> dict:
     key = query.lower()
     if hit := cached(query):
         return hit
+    try:
+        jev.require()  # before any service is contacted: results are only shown once Jev has judged them
+    except jev.JevError as e:
+        raise SearchError(str(e)) from None
     result = _search(query, on_progress)
     if not result["unavailable"]:
         with _cache_lock:
@@ -449,8 +455,8 @@ def _search(query: str, on_progress=None) -> dict:
     mode = query_kind(query)
     if mode == "concept":
         results = [r for r in results if r["kind"] != "paper" or not r.get("summary") or closeness(r) < 0]
-    # Jev, when this server has a TypeSafe key, judges how well each result would teach what was searched for;
-    # that orders each group, with the title match breaking ties. Without it, the title match alone orders them.
+    # Jev judges how well each result would teach what was searched for; that orders each group, with the title
+    # match breaking ties.
     judged = judge(query, results, openings)
     rank = lambda r: (-judged.get(id(r), (0, ""))[0], closeness(r))
     indexed = [r for r in results if r["source"] in ("OpenAlex", "Europe PMC")]
@@ -465,7 +471,7 @@ def _search(query: str, on_progress=None) -> dict:
     left = dict(RECOMMEND[mode])
     for result in results:
         relevance, role = judged.get(id(result), (RECOMMEND_AT, ""))
-        suits = relevance >= RECOMMEND_AT and role != "off_topic"  # Jev's judgement, when there is one
+        suits = relevance >= RECOMMEND_AT and role != "off_topic"  # Jev's judgement
         result["recommended"] = bool(result["available"] and suits and left.get(result["kind"]))
         if result["recommended"]:
             left[result["kind"]] -= 1

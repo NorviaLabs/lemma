@@ -1,0 +1,45 @@
+VERIFIED QUOTATION EXCERPTS — not the complete source.
+
+Attention Is All You Need
+
+https://arxiv.org/abs/1706.03762
+
+Introduction
+
+This inherently sequential nature precludes parallelization within training examples, which becomes critical at longer sequence lengths, as memory constraints limit batching across examples.
+
+Abstract
+
+We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely.
+
+Abstract
+
+Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles, by over 2 BLEU.
+
+Introduction
+
+The Transformer allows for significantly more parallelization and can reach a new state of the art in translation quality after being trained for as little as twelve hours on eight P100 GPUs.
+
+Section 3.2.1
+
+We compute the dot products of the query with all keys, divide each by √dk, and apply a softmax function to obtain the weights on the values.
+
+Section 3.2.1
+
+We suspect that for large values of dk, the dot products grow large in magnitude, pushing the softmax function into regions where it has extremely small gradients
+
+Section 3.2.2
+
+Multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions. With a single attention head, averaging inhibits this.
+
+Section 3.5
+
+Since our model contains no recurrence and no convolution, in order for the model to make use of the order of the sequence, we must inject some information about the relative or absolute position of the tokens in the sequence. To this end, we add "positional encodings" to the input embeddings at the bottoms of the encoder and decoder stacks.
+
+Section 4 (Why Self-Attention)
+
+length n is smaller than the representation dimensionality d, which is most often the case with sentence representations used by state-of-the-art models in machine translations, such as word-piece [38] and byte-pair [31] representations. To improve computational performance for tasks involving very long sequences, self-attention could be restricted to considering only a neighborhood of size r in the input sequence centered around the respective output position.
+
+Section 4 (Why Self-Attention)
+
+As noted in Table 1, a self-attention layer connects all positions with a constant number of sequentially executed operations, whereas a recurrent layer requires O(n) sequential operations.

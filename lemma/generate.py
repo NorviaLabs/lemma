@@ -9,7 +9,7 @@ import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 
-from . import factcheck
+from . import factcheck, jev
 from . import lesson as L
 from . import logs
 from .llm import Provider, ProviderError
@@ -40,8 +40,10 @@ concept then teaches before it asks anything: a short narrated tour introduces t
 what each control does), a narrated walkthrough teaches the idea on the model, and a plain explanation with the \
 paper's own words follows. Only then does the learner practise with goals and apply the idea to a new case. \
 Quizzes are the exception: only a concept marked hard gets a check.
-2. Live models, not slides. Each model responds to its controls and can answer "what if?". Goals must need \
-the learner to move controls. Reading a number off the screen is not enough.
+2. Live models where they fit, other activities where they don't. A model responds to its controls and can answer \
+"what if?"; goals must need the learner to move controls, and reading a number off the screen is not enough. When an \
+idea is a distinction, an argument, a legal test, a historical chain or a case, teach it with comparisons, staged \
+evidence and classifying, matching, ordering or tracing tasks instead: never invent a quantity to make it a slider.
 3. One idea at a time. Each concept teaches exactly one mechanism.
 4. Grounded and honest. Every concept quotes the paper word for word: copy one contiguous passage exactly as \
 it appears in the paper text. You may repair spacing broken by PDF extraction, but never change, add, drop \
@@ -88,8 +90,10 @@ Reply with this JSON:
   "aha": "The paper's most surprising result, in one plain sentence a newcomer would find striking",
   "concepts": [
     {{"id": "lower_snake_case", "title": "Short title", "idea": "The one mechanism, in one sentence",
-      "role": "prerequisite | core | contribution", "visual": "curves | bars | table | agents | network | causal | sampling | geometry",
-      "why": "Why this visual shows the mechanism",
+      "role": "prerequisite | core | contribution", "visual": "curves | bars | table | agents | network | causal | sampling | geometry | none",
+      "why": "Why this visual (or no model) teaches the idea",
+      "plans": [{{"blocks": ["watch", "walk", "explain", "goal", "predict", "reveal", "connect"], "why": "What the learner does and why it fits"}},
+                {{"blocks": ["explain", "stages", "choice"], "why": "..."}}],
       "needs": [], "builds_on": null, "hard": false}}
   ]
 }}
@@ -104,6 +108,10 @@ Everything in "needs" and "builds_on" must come earlier in the list, so prerequi
 Small steps: if an idea needs more than one mechanism, split it into 2–3 smaller concepts in a row, each adding one piece.
 Reuse pictures: when a concept can be shown by an earlier concept's model plus at most one new control, set "builds_on" to \
 that earlier concept's id and give it the same visual. Otherwise "builds_on" is null.
+"visual": "none" teaches the concept without a live model, for ideas that are distinctions, arguments, legal tests, \
+cases or history rather than quantities; it cannot be built on. "plans" gives 2–3 different ways to teach the concept, \
+each an ordered list of ACTIVITIES block kinds (see LESSON FORMAT) that teaches before it asks, with one line on what \
+the learner does and why it fits; a plan for a concept with no model uses no model blocks. The best one is chosen later.
 Add "hard": true to at most two concepts, the ones a newcomer is most likely to get wrong even after exploring (counterintuitive or multi-step); every other concept gets "hard": false. Only hard concepts get a quiz-style check."""
 
 
@@ -146,7 +154,85 @@ say which it is. If a simulation kernel only approximates the paper's model, the
 walkthrough describe only behaviour the kernel actually shows;
 - the equation is the paper's own where it has one (otherwise the model's rule, and the caption says so), with \
 at least one part linked to a control or output;
-- the model's note says how it is simplified and whether its numbers are illustrative."""
+- the model's note says how it is simplified and whether its numbers are illustrative;
+- "activities" lists the learner's screens in order (see ACTIVITIES): {plan_rule}"""
+
+
+CONCEPT_TASK_NO_MODEL = """\
+The lesson is for: {audience}
+Lesson outline (for context; build only the concept marked ▶):
+{outline}
+
+Build concept ▶ "{title}" as one JSON object in the LESSON FORMAT, as A CONCEPT WITHOUT A MODEL.
+Its id must be "{id}". Its idea: {idea}
+Why it has no model: {visual}
+
+Make sure that:
+- teach first: the learner knows nothing yet. Teaching blocks (explain, worked, compare, stages) come before any
+response block, except an "opening" choice, an unscored first judgment the learner may revisit later;
+- follow the outline's order: build on the concepts above ▶ without teaching them again, and never rely on one below it;
+- "activities" lists the learner's screens in order: {plan_rule}
+- every response block gives prepared feedback for every option, card or step, so a wrong answer still teaches;
+determinate tasks have one supported answer; interpretive ones explain each reading's support and limits and never
+grade agreement; factual mistakes and misattributions are still corrected;
+- every case, number or person that is not in the paper is marked "hypothetical": true, and nothing invented is
+presented as the paper's evidence, finding or quotation;
+- "understand" holds the explanation (3–6 plain sentences) and a quote copied word for word from the paper that is
+its own statement of the idea, with quote_where; every "passage" option is also copied word for word;
+- show it before naming it: list each technical term in "terms" and introduce it in a teaching block first.{extra}"""
+
+
+PLAN_TIMEOUT = 30  # seconds for Jev to choose every concept's activity plan
+
+
+def plan_rule(choice: dict | None) -> str:
+    """The instruction for one concept's activities: Jev's chosen plan, or the model's own choice."""
+    plan = (choice or {}).get("plan")
+    if plan:
+        return ("follow this plan, chosen as the best way to teach this concept: " + " → ".join(plan["blocks"]) +
+                f" ({plan.get('why', '')}). Use these block kinds in this order; repeat a kind where the content needs it.")
+    return "choose the blocks that best fit the reasoning this concept involves, teaching before asking."
+
+
+def choose_plans(job: Job, outline: dict, concepts: list[dict], audience: str) -> dict:
+    """Jev chooses, for each concept with candidate plans, the one that would best teach it, or none of them.
+    Raises GenerationError when Jev can't, before any concept is drafted."""
+    asking = [c for c in concepts if c.get("plans")]
+    if not asking:
+        return {}
+    job.step("plans", "Choosing how to teach each concept, with Jev", "active")
+    titles = {c["id"]: c["title"] for c in concepts}
+    state = {"audience": audience or "a curious learner with no special background", "lesson": outline.get("summary", ""),
+             "concepts": [{"id": c["id"], "title": c["title"], "idea": c["idea"], "role": c.get("role", "core"),
+                           "relies_on": [titles.get(n, n) for n in c.get("needs") or []],
+                           "has_live_model": c.get("visual") != "none"} for c in concepts]}
+    questions = {}
+    for c in asking:
+        criteria = {f"p{j}": f"{' → '.join(plan['blocks'])}: {plan.get('why', '')}" for j, plan in enumerate(c["plans"], 1)}
+        criteria["none_suitable"] = "None of these plans would teach this concept well"
+        questions[c["id"]] = {"type": "choice", "criteria": criteria,
+                              "instructions": f"Concept '{c['title']}': {c['idea']} Which plan would best help this audience understand it, "
+                                              "judged by what the learner would actually do on each screen? Prefer a live model only where its "
+                                              "controls are meaningful quantities; prefer comparing, classifying, ordering or tracing for "
+                                              "distinctions, arguments and cases. Choose none_suitable rather than a poor plan."}
+    try:
+        answers = jev.ask(state, questions, PLAN_TIMEOUT)
+        chosen = {}
+        for c in asking:
+            pick = answers[c["id"]]["choice"]
+            if pick != "none_suitable" and pick not in questions[c["id"]]["criteria"]:
+                raise KeyError(pick)
+            plan = None if pick == "none_suitable" else c["plans"][int(pick[1:]) - 1]
+            chosen[c["id"]] = {"concept": c["id"], "chosen": pick, "plan": plan, "confidence": answers[c["id"]].get("confidence"), "model": answers.get("_model")}
+    except jev.JevError as e:
+        job.update("plans", "failed", str(e))
+        raise GenerationError(f"Couldn't choose how to teach the concepts with Jev ({e}). Retry in a moment.") from None
+    except (KeyError, TypeError, ValueError):
+        job.update("plans", "failed", "Jev's reply couldn't be read")
+        raise GenerationError("Jev sent a choice of activities Lemma couldn't read. Retry in a moment.") from None
+    picked = sum(1 for x in chosen.values() if x["plan"])
+    job.update("plans", "done", f"Plans chosen for {picked} of {len(asking)} concepts")
+    return chosen
 
 
 REPAIR_TASK = """\
@@ -326,6 +412,11 @@ def check_outline(o, source_text: str | None = None, require_needs: bool = False
     for key in ("title", "summary"):
         if not isinstance(o.get(key), str) or not o[key].strip():
             problems.append(f"needs '{key}'")
+    # The finished lesson's intro limits (lesson.check_lesson), caught here before any concept is paid for.
+    if isinstance(o.get("summary"), str) and len(o["summary"]) > 1500:
+        problems.append(f"'summary' is too long ({len(o['summary'])} characters, limit 1500)")
+    if isinstance(o.get("aha"), str) and len(o["aha"]) > 300:
+        problems.append(f"'aha' is too long ({len(o['aha'])} characters): one sentence of at most 300")
     if not isinstance(o.get("source"), dict) or not isinstance(o["source"].get("title"), str):
         problems.append("needs source.title")
     cs = o.get("concepts")
@@ -346,13 +437,16 @@ def check_outline(o, source_text: str | None = None, require_needs: bool = False
         for key in ("title", "idea"):
             if not isinstance(c.get(key), str) or not c[key].strip():
                 problems.append(f"concepts[{i}] needs '{key}'")
-        if c.get("visual") not in L.VISUAL_TYPES:
-            problems.append(f"concepts[{i}].visual must be one of {L.VISUAL_TYPES}")
+        if c.get("visual") not in L.OUTLINE_VISUALS:
+            problems.append(f"concepts[{i}].visual must be one of {L.OUTLINE_VISUALS}")
+        problems += _check_plans(c, f"concepts[{i}]", require_needs)
         b = c.get("builds_on")
         if b is not None:
             base = next((x for x in cs[:i] if isinstance(x, dict) and x.get("id") == b), None)
             if base is None:
                 problems.append(f"concepts[{i}].builds_on must be the id of an earlier concept, or null")
+            elif c.get("visual") == "none":
+                problems.append(f"concepts[{i}] has no model, so it cannot build on another concept's model")
             elif base.get("visual") != c.get("visual"):
                 problems.append(f"concepts[{i}] builds on '{b}', so it must use the same visual ('{base.get('visual')}')")
         needs = c.get("needs")
@@ -372,6 +466,29 @@ def check_outline(o, source_text: str | None = None, require_needs: bool = False
                     problems.append(f"concepts[{i}].needs names '{n}', which is not a concept in this outline")
     if isinstance(cs, list) and sum(1 for c in cs if isinstance(c, dict) and c.get("hard") is True) > 2:
         problems.append("mark at most two concepts as hard")
+    return problems
+
+
+def _check_plans(c: dict, where: str, required: bool) -> list[str]:
+    """2–3 candidate activity plans per concept (outlines made before plans existed may leave them out)."""
+    plans = c.get("plans")
+    if plans is None:
+        return [f"{where} needs 'plans': 2–3 ways to teach it, each a list of activity block kinds"] if required else []
+    if not isinstance(plans, list) or not 1 <= len(plans) <= 3:
+        return [f"{where}.plans must list 2–3 plans"]
+    problems = []
+    for j, plan in enumerate(plans):
+        w = f"{where}.plans[{j}]"
+        blocks = plan.get("blocks") if isinstance(plan, dict) else None
+        if not isinstance(blocks, list) or not 2 <= len(blocks) <= 12 or any(b not in L.ACTIVITY_KINDS for b in blocks):
+            problems.append(f"{w}.blocks must be 2–12 activity kinds from {L.ACTIVITY_KINDS}")
+            continue
+        if c.get("visual") == "none" and any(b in L.MODEL_BLOCKS for b in blocks):
+            problems.append(f"{w} uses model blocks, but the concept has no model")
+        if not any(b in L.TEACHING_BLOCKS + ("watch", "walk") for b in blocks) or not any(b in L.RESPONSE_BLOCKS + ("goal", "predict", "check") for b in blocks):
+            problems.append(f"{w} must teach and then ask the learner to do something")
+        if not isinstance(plan.get("why"), str) or not plan["why"].strip() or len(plan["why"]) > 300:
+            problems.append(f"{w} needs 'why': one line of at most 300 characters")
     return problems
 
 
@@ -425,7 +542,15 @@ def _ask_json(job: Job, provider: Provider, document: str, task: str, check, sid
         conv.close()
 
 
+def require_jev():
+    try:
+        jev.require()
+    except jev.JevError as e:
+        raise GenerationError(str(e)) from None
+
+
 def make_outline(job: Job, provider: Provider, paper_text: str, audience: str) -> dict:
+    require_jev()  # before anything is paid for: the build that follows can't run without Jev
     job.step("outline", "Reading the paper, summarising it and proposing a path of concepts", "active")
     task = OUTLINE_TASK.format(audience=audience or "a curious learner with no special background", n_hint="three to seven")
     if L.source_map(paper_text):
@@ -454,6 +579,7 @@ def _outline_text(concepts: list[dict], current: str) -> str:
 
 def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audience: str, lesson_id: str | None = None) -> dict:
     """Builds concepts in parallel; each one is published to ``job.lesson`` as soon as it passes the checks."""
+    require_jev()
     concepts = [c for c in outline["concepts"] if isinstance(c, dict)]
     todo = [c for c in concepts if not c.get("known")]
     if not todo:
@@ -487,6 +613,10 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audie
     sources = L.source_map(paper["text"])
     if sources:
         lesson["sources"] = [{k: v for k, v in s.items() if k != "text"} for s in sources.values()]
+    choices = choose_plans(job, outline, todo, audience)
+    if choices:  # what Jev chose and from what, tied to this outline
+        options = {c["id"]: c["plans"] for c in todo if c.get("plans")}
+        lesson["activity_plans"] = [dict(x, options=options[cid]) for cid, x in choices.items()]
     job.lesson = lesson
     norm = L.normalize_for_match(L.source_document(paper["text"]))
     document = paper_document(L.source_document(paper["text"]))
@@ -538,17 +668,23 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audie
                 extra += "\n- the learner already knows these terms, so they may be used freely: " + ", ".join(done_terms)
         if c["id"] == todo_ids[-1] and lesson["intro"].get("aha"):
             extra += "\n- this is the last concept: it must build to the lesson's aha, so the walkthrough ends on it: " + lesson["intro"]["aha"]
-        task = CONCEPT_TASK.format(
+        no_model = c.get("visual") == "none"
+        fields = dict(
             audience=audience or "a curious learner with no special background",
             outline=_outline_text(concepts, c["id"]),
             title=c["title"],
             id=c["id"],
             idea=c["idea"],
-            visual=f"{c.get('visual', '')} ({c.get('why', '')})",
-            check_rule=("this concept is marked hard: include one \"check\", preferably a model check" if c.get("hard") else
-                        "this concept is not marked hard: do not include a \"check\" key"),
+            visual=f"{c.get('visual', '')} ({c.get('why', '')})" if not no_model else c.get("why", ""),
+            plan_rule=plan_rule(choices.get(c["id"])),
             extra=extra,
         )
+        if no_model:
+            task = CONCEPT_TASK_NO_MODEL.format(**fields)
+        else:
+            task = CONCEPT_TASK.format(**fields, check_rule=(
+                "this concept is marked hard: include one \"check\", preferably a model check" if c.get("hard") else
+                "this concept is not marked hard: do not include a \"check\" key"))
         if sources:
             task += MULTI_SOURCE_TASK
 
@@ -557,12 +693,20 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audie
                 obj["id"] = c["id"]
                 if not c.get("hard"):
                     obj.pop("check", None)  # quizzes are only for hard concepts
+                    if isinstance(obj.get("activities"), list):
+                        obj["activities"] = [a for a in obj["activities"] if not (isinstance(a, dict) and a.get("kind") == "check")]
                 obj.pop("builds_on", None)
                 if base:
                     obj["builds_on"] = base["id"]
             problems = list(L.check_concept(obj, norm, "concept"))
+            if isinstance(obj, dict) and not obj.get("activities"):
+                problems.append("concept: needs 'activities', the learner's screens in order (see ACTIVITIES)")
+            if no_model and isinstance(obj, dict) and "model" in obj:
+                problems.append("concept: this concept is taught without a model; remove 'model' and every model block")
             if sources and isinstance(obj, dict) and isinstance(obj.get("understand"), dict):
                 problems += L.check_attribution(obj["understand"], sources, "concept.understand")
+            if sources and isinstance(obj, dict):
+                problems += L.check_activity_attribution(obj, sources, "concept")
             if base and isinstance(obj, dict) and not problems:
                 problems = list(L.check_builds_on(obj, base, "concept"))
             if not problems:  # only a draft that passes the rules is worth Jev's judgement
@@ -575,6 +719,8 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audie
             obj, problems = _ask_json(job, provider, document, task, check, c["id"])
         except (ProviderError, GenerationError) as e:
             obj, problems = None, [str(e)]
+        except jev.JevError as e:  # a concept Jev couldn't check is never shown unchecked
+            obj, problems, passed_rules[0] = None, [f"Jev couldn't check it for critical errors ({e})"], None
         # Jev's flags ask for repairs but never leave a concept out: keep the last draft that passed the rules.
         if problems and passed_rules[0] and all(isinstance(p, factcheck.Flag) for p in passed_rules[0][1]):
             obj, problems = passed_rules[0]

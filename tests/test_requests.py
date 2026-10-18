@@ -15,6 +15,7 @@ from lemma import generate, ingest, server, store
 def _raise(e):
     raise e
 from lemma.llm import ProviderError
+import fakejev  # noqa: E402,F401  Jev is essential, so every search and build asks this stand-in
 from test_lemma import SOURCE, FakeProvider
 from test_multisource import MultiSourceProvider
 
@@ -64,6 +65,25 @@ class RequestTests(unittest.TestCase):
         self.assertEqual(store.request_path(rid).stat().st_mode & 0o777, 0o600)
         server.api_lesson_delete(rid)
         self.assertFalse(store.request_path(rid).exists())
+
+    def test_without_jev_no_build_is_started_or_saved(self):
+        with patch.dict(os.environ, {'TYPESAFE_API_KEY': ''}), patch.object(server, '_first_readable') as read:
+            with self.assertRaises(server.ApiError) as raised:
+                self.create()
+        self.assertEqual(raised.exception.status, 503)
+        self.assertIn('TYPESAFE_API_KEY', raised.exception.message)
+        read.assert_not_called()
+        self.assertEqual(server.api_requests({}), [])
+
+    def test_a_built_lesson_carries_its_category(self):
+        with patch.object(server, '_first_readable', return_value=SimpleNamespace(title='Galton', url='https://example.org/paper', text=SOURCE)):
+            rid = self.create()
+            outline = self.settled(rid)
+        server.REQUEST.body = {'outline': outline['outline']}
+        server.api_request_outline(rid)
+        done = self.settled(rid)
+        self.assertEqual(done['status'], 'done', done.get('error'))
+        self.assertEqual(store.load_lesson(rid)[0]['category']['model'], 'jev-test')
 
     def test_sources_are_read_at_the_same_time_and_keep_their_order(self):
         def slow(urls):

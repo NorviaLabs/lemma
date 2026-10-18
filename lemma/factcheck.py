@@ -16,7 +16,7 @@ import math
 import re
 from collections import Counter
 
-from . import jev, logs
+from . import jev
 from . import lesson as L
 
 TIMEOUT = 30
@@ -95,18 +95,49 @@ def concept_text(c: dict, n: int) -> str:
     if conn.get("equation"):
         out.append("EQUATION: " + " ".join(str(p.get("text", "")) for p in conn["equation"]) + (f" ({conn.get('caption', '')})" if conn.get("caption") else ""))
     for activity in c.get("activities") or []:
-        if activity.get("kind") == "explain" and activity.get("text"):
-            out.append(f"TEACHING: {activity['text']}")
-        elif activity.get("kind") in ("sort", "construction", "inheritance"):
-            out.append("INTERACTIVE TEACHING: " + json.dumps(activity, ensure_ascii=False))
-        elif activity.get("kind") == "choice":
-            out.append(f"ACTIVITY ({activity.get('mode')}): {activity.get('question', '')}")
-            for i, option in enumerate(activity.get("options") or []):
-                marked = " [answer]" if activity.get("mode") == "determinate" and activity.get("answer") == i else ""
-                out.append(f"  {i + 1}. {option.get('text', '')}{marked}: {option.get('feedback', '')}")
+        out += _activity(activity)
     if c.get("recap"):
         out.append(f"RECAP: {c['recap']}")
     return "\n".join(out)
+
+
+def _activity(a: dict) -> list[str]:
+    """A teaching or response block as the learner meets it, with its marked answers, so Jev can judge it."""
+    kind = a.get("kind")
+    tag = " (a labelled hypothetical case)" if a.get("hypothetical") else ""
+    if kind == "explain":
+        return [f"TEACHING: {a['text']}"] if a.get("text") else []
+    if kind == "worked":
+        return [f"WORKED EXAMPLE{tag}: {a.get('title', '')}"] + [f"  step {i}: {s.get('text', '')}" + (f" -> {s['result']}" if s.get("result") else "")
+                                                                for i, s in enumerate(a.get("steps") or [], 1)] + [f"  takeaway: {a.get('takeaway', '')}"]
+    if kind == "stages":
+        return [f"STAGED EVIDENCE{tag}: {a.get('prompt', '')}"] + [f"  stage {i} ({s.get('label', '')}): {s.get('text', '')}" for i, s in enumerate(a.get("stages") or [], 1)] + [f"  takeaway: {a.get('takeaway', '')}"]
+    if kind == "compare":
+        return [f"COMPARISON{tag}: {a.get('prompt', '')}"] + [f"  case {c.get('label', '')}: " + (c.get("text") or "") + (f" (model set to {json.dumps(c['values'])})" if c.get("values") else "")
+                                                               for c in a.get("cases") or []] + [f"  takeaway: {a.get('takeaway', '')}"]
+    if kind == "choice":
+        answers = a.get("answers") if a.get("multi") else [a.get("answer")]
+        out = [f"ACTIVITY ({a.get('mode')}){tag}: {a.get('question', '')}"]
+        for i, option in enumerate(a.get("options") or []):
+            marked = " [answer]" if a.get("mode") == "determinate" and i in (answers or []) else ""
+            out.append(f"  {i + 1}. {option.get('text', '')}{marked}: {option.get('feedback', '')}")
+        return out
+    if kind == "match":
+        return [f"MATCHING{tag}: {a.get('prompt', '')}"] + [f"  {p.get('text', '')} -> {p.get('target', '')} ({p.get('feedback', '')})" for p in a.get("pairs") or []]
+    if kind == "order":
+        return [f"ORDERING{tag}: {a.get('prompt', '')}", "  correct order: " + " -> ".join(a.get("items") or []), f"  why: {a.get('explanation', '')}"]
+    if kind == "trace":
+        names = {n.get("id"): n.get("label", "") for n in a.get("nodes") or []}
+        return [f"TRACING{tag}: {a.get('prompt', '')}", "  links: " + "; ".join(f"{names.get(e.get('from'))} -> {names.get(e.get('to'))}" for e in a.get("edges") or []),
+                "  marked answer: " + " -> ".join(names.get(x, x) for x in a.get("answer") or []), f"  why: {a.get('explanation', '')}"]
+    if kind == "passage":
+        return [f"SUPPORTING PASSAGE: {a.get('question', '')}"] + [f"  {i + 1}. \"{o.get('quote', '')}\"" + (" [answer]" if a.get("answer") == i else "") + f": {o.get('feedback', '')}"
+                                                                  for i, o in enumerate(a.get("options") or [])]
+    if kind == "estimate":
+        return [f"ESTIMATE{tag}: {a.get('question', '')}", f"  marked answer: {a.get('answer')} ± {a.get('tolerance')} {a.get('unit', '')}", f"  why: {a.get('explanation', '')}"]
+    if kind in ("sort", "construction", "inheritance"):
+        return ["INTERACTIVE TEACHING: " + json.dumps(a, ensure_ascii=False)]
+    return []
 
 
 def _exercise(name: str, x: dict | None) -> list[str]:
@@ -261,10 +292,6 @@ class Flag(str):
         return s
 
 
-def available() -> bool:
-    return jev.available()
-
-
 def questions_for(c: dict, kinds=BUILD_KINDS) -> dict:
     """The yes/no questions about one concept, keyed kind|lens (wrong answers: wrong_answer:predict|lens)."""
     qs = {}
@@ -290,16 +317,13 @@ def confirmed(answers: dict) -> dict:
 
 
 def check_concept(c: dict, paper: str, n: int = 1) -> list[Flag]:
-    """Repair requests for the critical errors Jev confirms in a drafted concept; none when Jev isn't available or fails."""
-    if not available() or not isinstance(c, dict):
+    """Repair requests for the critical errors Jev confirms in a drafted concept. Raises jev.JevError when Jev
+    can't check it, so an unchecked concept is never shown."""
+    if not isinstance(c, dict):
         return []
     paper = L.source_document(paper)
     state = f"{concept_text(c, n)}\n\n=== FROM THE PAPER ===\n\n{concept_evidence(c, paper)}"
-    try:
-        found = confirmed(jev.ask(state, questions_for(c), TIMEOUT))
-    except jev.JevError as e:
-        logs.report("factcheck", e)  # the error's type and where, never the concept or the paper
-        return []
+    found = confirmed(jev.ask(state, questions_for(c), TIMEOUT))
     flags = []
     for kind, certainty in found.items():
         base, _, exercise = kind.partition(":")

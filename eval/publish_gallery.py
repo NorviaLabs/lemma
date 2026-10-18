@@ -10,6 +10,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from lemma import lesson as L
+from normalize_gallery_sources import quotation_excerpts
 
 RUN = ROOT / "eval/results/gallery-claude"
 GALLERY = ROOT / "lemma/examples/gallery"
@@ -52,11 +53,7 @@ def main():
             raise SystemExit(f"{slug}: sequence validation failed; no lessons published")
         metadata = json.loads((folder / "source-metadata.json").read_text())
         lesson["source"]["url"] = metadata["url"]
-        excerpts = ["VERIFIED QUOTATION EXCERPTS — not the complete source.", lesson["source"]["title"], metadata["url"]]
-        for block in [*(lesson.get("primer") or []), *(c["understand"] for c in lesson["concepts"])]:
-            if block.get("quote"):
-                excerpts.extend((block.get("quote_where", ""), block["quote"]))
-        excerpt_text = "\n\n".join(excerpts) + "\n"
+        excerpt_text = quotation_excerpts(lesson)
         if L.check_lesson(lesson, excerpt_text):
             raise SystemExit(f"{slug}: excerpt validation failed; no lessons published")
         lesson["generation"] = dict(provider=record["provider"], model=record["model"], pipeline="lemma.generate.make_outline + build_lesson", source_chars=len(source), omitted=0)

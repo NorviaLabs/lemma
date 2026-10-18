@@ -1,7 +1,7 @@
 """Sorts a lesson into a fixed list of subject categories, read from the start of its sources.
 
-Jev (see jev.py) answers a choice question with a probability for every option. Without a TypeSafe key, or
-when Jev fails, a lesson simply has no category. Only each source's title and opening text are sent.
+Jev (see jev.py) answers a choice question with a probability for every option. Every lesson is sorted: a build
+doesn't start without Jev, and stops if Jev can't sort it. Only each source's title and opening text are sent.
 """
 
 from __future__ import annotations
@@ -50,7 +50,6 @@ CATEGORIES = {
 
 
 CategorizeError = jev.JevError
-available = jev.available
 
 
 def _state(paper: dict) -> list[dict]:

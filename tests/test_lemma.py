@@ -28,6 +28,7 @@ os.environ["LEMMA_HOME"] = TMP_HOME
 
 from lemma import auth, categorize, chatgpt, jev, claude, dev, expr, export, generate, ingest, kernels, lesson as L, llm, search, server, store  # noqa: E402
 from lemma.llm import Provider, Reply  # noqa: E402
+import fakejev  # noqa: E402,F401  Jev is essential, so every search and build asks this stand-in
 
 EXAMPLE = json.loads((ROOT / "lemma/examples/gallery/galton-1886.json").read_text())
 SOURCE = (ROOT / "lemma/examples/galton-1886.txt").read_text()
@@ -254,6 +255,10 @@ class FakeConversation:
             self.p.closed += 1
 
 
+FAKE_PLANS = [{"blocks": ["watch", "walk", "explain", "goal", "predict", "reveal", "connect"], "why": "Explore the model, then apply it."},
+              {"blocks": ["explain", "worked", "choice"], "why": "A worked example, then a question."}]
+
+
 class FakeProvider(Provider):
     """Answers like a model would: an outline, then concepts; the first draft of one concept has a bad quote."""
 
@@ -279,7 +284,7 @@ class FakeProvider(Provider):
                 "title": EXAMPLE["title"], "source": {"title": EXAMPLE["source"]["title"], "authors": "Francis Galton", "year": 1886, "venue": None},
                 "summary": EXAMPLE["intro"]["summary"], "background": EXAMPLE["intro"]["background"], "aha": EXAMPLE["intro"]["aha"],
                 "primer": EXAMPLE["primer"],
-                "concepts": [{"id": c["id"], "title": c["title"], "idea": c["idea"], "role": c["role"], "visual": c["model"]["visual"]["type"], "why": "fits", "hard": c.get("hard", False),
+                "concepts": [{"id": c["id"], "title": c["title"], "idea": c["idea"], "role": c["role"], "visual": c["model"]["visual"]["type"], "why": "fits", "hard": c.get("hard", False), "plans": FAKE_PLANS,
                               "needs": [EXAMPLE["concepts"][i - 1]["id"]] if i else []} for i, c in enumerate(EXAMPLE["concepts"])],
             }), "end_turn")
         cid = task.split('Its id must be "')[1].split('"')[0]
@@ -330,6 +335,16 @@ class GenerationTests(unittest.TestCase):
         self.assertTrue(any("word for word" in p for p in generate.check_outline(bad, SOURCE)))
         del bad["primer"]
         self.assertTrue(any(p.startswith("primer") for p in generate.check_outline(bad)))
+
+    def test_outline_meets_the_finished_lessons_intro_limits(self):
+        fp = FakeProvider()
+        outline = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, "")).result
+        long = copy.deepcopy(outline)
+        long["aha"] = "x" * 301
+        self.assertTrue(any("'aha' is too long" in p for p in generate.check_outline(long, SOURCE)))
+        long = copy.deepcopy(outline)
+        long["summary"] = "x" * 1501
+        self.assertTrue(any("'summary' is too long" in p for p in generate.check_outline(long, SOURCE)))
 
     def test_concept_that_never_passes_is_left_out(self):
         class Stubborn(FakeProvider):
@@ -395,8 +410,35 @@ class GenerationTests(unittest.TestCase):
             flags = factcheck.check_concept(concept, SOURCE)
         self.assertEqual([f.kind for f in flags], ["wrong_claim"])
         self.assertTrue(flags[0].startswith("concept: an independent check"))
-        with patch.object(jev, "available", return_value=True), patch.object(jev, "ask", side_effect=jev.JevError("Jev answered 529")):
-            self.assertEqual(factcheck.check_concept(concept, SOURCE), [])  # Jev failing never blocks a build
+        with patch.object(jev, "ask", side_effect=jev.JevError("Jev answered 529")):
+            with self.assertRaises(jev.JevError):  # a concept Jev couldn't check is never passed unchecked
+                factcheck.check_concept(concept, SOURCE)
+
+    def test_a_concept_jev_cannot_check_is_left_out(self):
+        from lemma import factcheck
+        fp = FakeProvider()
+        outline = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, "")).result
+        real = factcheck.check_concept
+
+        def failing(c, paper, n=1):
+            if c.get("id") == "mid_parent":
+                raise jev.JevError("Jev answered 503")
+            return real(c, paper, n)
+
+        with patch.object(factcheck, "check_concept", side_effect=failing):
+            job = wait(generate.start(generate.Job("build"), generate.build_lesson, fp, {"text": SOURCE, "title": "", "url": ""}, outline, ""))
+        self.assertNotIn("mid_parent", [c["id"] for c in job.result["concepts"]])
+        self.assertIn("Jev couldn't check it", job.result["omitted"][0]["reason"])
+
+    def test_nothing_is_paid_for_without_jev(self):
+        fp = FakeProvider()
+        with patch.dict(os.environ, {"TYPESAFE_API_KEY": ""}):
+            job = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, ""))
+            self.assertEqual(job.status, "error")
+            self.assertIn("TYPESAFE_API_KEY", job.error)
+            job = wait(generate.start(generate.Job("build"), generate.build_lesson, fp, {"text": SOURCE, "title": "", "url": ""}, {"concepts": []}, ""))
+            self.assertEqual(job.status, "error")
+        self.assertEqual(fp.calls, 0)
 
     def test_a_flag_that_stays_never_leaves_a_concept_out(self):
         job, fp, rounds = self.build_with_jev(lambda cid, n: cid == "mid_parent")
@@ -416,6 +458,87 @@ class GenerationTests(unittest.TestCase):
         self.assertEqual(checked, ["why_regression"])
         outline["concepts"] = [dict(c, hard=True) for c in outline["concepts"]]
         self.assertIn("mark at most two concepts as hard", generate.check_outline(outline))
+
+    def test_outline_plans_are_checked(self):
+        fp = FakeProvider()
+        outline = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, "")).result
+        self.assertEqual(generate.check_outline(outline, SOURCE, require_needs=True), [])
+        self.assertIn("plans", fp.tasks["outline"])
+        bad = copy.deepcopy(outline)
+        bad["concepts"][0].pop("plans")
+        self.assertTrue(any("needs 'plans'" in p for p in generate.check_outline(bad, SOURCE, require_needs=True)))
+        self.assertEqual(generate.check_outline(bad, SOURCE), [])  # an outline saved before plans existed still builds
+        bad = copy.deepcopy(outline)
+        bad["concepts"][0]["plans"] = [{"blocks": ["explain", "teleport"], "why": "x"}]
+        self.assertTrue(any("activity kinds" in p for p in generate.check_outline(bad)))
+        bad["concepts"][0]["plans"] = [{"blocks": ["explain", "worked"], "why": "Teaches but never asks."}]
+        self.assertTrue(any("teach and then ask" in p for p in generate.check_outline(bad)))
+        bad = copy.deepcopy(outline)
+        bad["concepts"][1]["visual"] = "none"
+        self.assertTrue(any("uses model blocks" in p for p in generate.check_outline(bad)))
+        bad["concepts"][1]["plans"] = [{"blocks": ["explain", "stages", "choice"], "why": "Staged evidence, then a question."}]
+        self.assertEqual(generate.check_outline(bad), [])
+        bad["concepts"][1]["builds_on"] = bad["concepts"][0]["id"]
+        self.assertTrue(any("cannot build on" in p for p in generate.check_outline(bad)))
+
+    def test_jev_chooses_each_concepts_plan_before_drafting(self):
+        fp = FakeProvider()
+        outline = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, "")).result
+        asked = []
+
+        def choose(state, questions, timeout):
+            asked.append((state, questions))
+            return {"_model": "jev-test", **{cid: {"choice": "p2" if i == 0 else "none_suitable", "confidence": .8} for i, cid in enumerate(questions)}}
+
+        with patch.object(jev, "ask", side_effect=lambda state, q, t: choose(state, q, t) if "concepts" in state else fakejev.answer(state, q, t)):
+            job = wait(generate.start(generate.Job("build"), generate.build_lesson, fp, {"text": SOURCE, "title": "", "url": ""}, outline, ""))
+        self.assertEqual(job.status, "done", job.error)
+        state, questions = asked[0]
+        first = outline["concepts"][0]["id"]
+        self.assertEqual(set(questions[first]["criteria"]), {"p1", "p2", "none_suitable"})
+        self.assertIn("explain → worked → choice", fp.tasks[first])  # Jev's choice reached the concept prompt
+        self.assertIn("choose the blocks that best fit", fp.tasks[outline["concepts"][1]["id"]])  # none suitable: the model chooses
+        plans = {x["concept"]: x for x in job.result["activity_plans"]}
+        self.assertEqual(plans[first]["chosen"], "p2")
+        self.assertEqual(plans[first]["options"], FAKE_PLANS)
+        self.assertEqual([s["state"] for s in job.snapshot()["steps"] if s["id"] == "plans"], ["done"])
+
+    def test_no_concept_is_drafted_when_jev_cannot_choose_plans(self):
+        fp = FakeProvider()
+        outline = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, "")).result
+        calls = fp.calls
+        with patch.object(jev, "ask", side_effect=jev.JevError("Jev answered 503")):
+            job = wait(generate.start(generate.Job("build"), generate.build_lesson, fp, {"text": SOURCE, "title": "", "url": ""}, outline, ""))
+        self.assertEqual(job.status, "error")
+        self.assertIn("Jev", job.error)
+        self.assertEqual(fp.calls, calls)
+
+    def test_a_concept_without_a_model_is_built_from_activities(self):
+        class NoModel(FakeProvider):
+            def reply(self, task, turn):
+                if "A CONCEPT WITHOUT A MODEL" not in task:
+                    return super().reply(task, turn)
+                self.tasks[task.split('Its id must be "')[1].split('"')[0]] = task
+                c = copy.deepcopy(EXAMPLE["concepts"][0])
+                c = {k: c[k] for k in ("id", "title", "idea", "role", "terms", "recap")} | {
+                    "understand": {k: c["understand"][k] for k in ("explanation", "quote", "quote_where")},
+                    "activities": [{"id": "learn", "kind": "explain"},
+                                   {"id": "chain", "kind": "order", "prompt": "Order the steps.", "items": ["Measure both parents", "Average them", "Compare with the child"], "explanation": "The mid-parent comes first."}]}
+                if turn == 1:  # a first draft that keeps a model it shouldn't have
+                    c["model"] = EXAMPLE["concepts"][0]["model"]
+                return Reply(json.dumps(c), "end_turn")
+
+        fp = NoModel()
+        outline = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, "")).result
+        first = outline["concepts"][0]
+        first.update(visual="none", why="It is a procedure, not a quantity", plans=[{"blocks": ["explain", "order"], "why": "Order the procedure."}])
+        job = wait(generate.start(generate.Job("build"), generate.build_lesson, fp, {"text": SOURCE, "title": "", "url": ""}, outline, ""))
+        self.assertEqual(job.status, "done", job.error)
+        built = next(c for c in job.result["concepts"] if c["id"] == first["id"])
+        self.assertNotIn("model", built)  # repaired: the model was removed
+        self.assertEqual([a["kind"] for a in built["activities"]], ["explain", "order"])
+        self.assertIn("explain → order", fp.tasks[first["id"]])
+        self.assertEqual(list(L.check_lesson(job.result, SOURCE)), [])
 
     def test_concept_that_builds_on_another_reuses_its_model(self):
         fp = FakeProvider()
@@ -587,14 +710,19 @@ class SearchTests(unittest.TestCase):
         famous = next(x for x in search._search("regression to the mean")["results"] if x["title"] == "A small but famous paper")
         self.assertFalse(famous["recommended"])
 
-    def test_without_jev_the_title_match_decides(self):
-        plain = search._search("regression to the mean")
-        with patch.object(jev, "available", return_value=True), patch.object(jev, "ask", side_effect=jev.JevError("Jev answered 529")), \
-                patch.object(search.logs, "report") as report:
-            failed = search._search("regression to the mean")
-        self.assertEqual([(x["title"], x["recommended"]) for x in failed["results"]], [(x["title"], x["recommended"]) for x in plain["results"]])
-        self.assertTrue(all("judged" not in x for x in failed["results"]))
-        report.assert_called_once()
+    def test_a_search_jev_cannot_rank_fails(self):
+        with patch.object(jev, "ask", side_effect=jev.JevError("Jev answered 529")):
+            with self.assertRaisesRegex(search.SearchError, "Jev"):
+                search._search("regression to the mean")
+        with patch.object(jev, "ask", return_value={"_model": "jev-test"}), patch.object(search.logs, "report"):
+            with self.assertRaisesRegex(search.SearchError, "couldn't read"):  # a reply missing its answers
+                search._search("regression to the mean")
+
+    def test_no_search_runs_without_jev(self):
+        with patch.dict(os.environ, {"TYPESAFE_API_KEY": ""}), patch.object(search, "_search") as run:
+            with self.assertRaisesRegex(search.SearchError, "TYPESAFE_API_KEY"):
+                search.search("a topic nobody has searched for")
+        run.assert_not_called()
 
     def test_a_service_that_fails_is_reported_not_fatal(self):
         def failing(url, retry=True):
@@ -1174,7 +1302,7 @@ class ServerTests(unittest.TestCase):
     def test_gallery_lessons_open_read_only(self):
         items = json.loads(self.req("GET", "/api/gallery")[1])
         self.assertEqual([x["slug"] for x in items], [x["slug"] for x in server.gallery_index()])
-        self.assertEqual(len(items), 12)
+        self.assertEqual(len(items), 18)
         for x in items:
             self.assertTrue(x["field"] and x["concepts"] and x["cover"]["idea"], x["slug"])
             s, raw = self.req("GET", f"/api/gallery/{x['slug']}")
@@ -1192,12 +1320,11 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(s, 200)
         self.assertNotIn(b"Something else entirely", html)
 
-    @unittest.skipUnless((ROOT / "eval/results/pilot-claude").is_dir(), "needs the pilot run's paper texts")
     def test_gallery_quotes_match_their_papers(self):
-        for pid, slug in [(1, "attention-2017"), (21, "ioannidis-2005"), (25, "wuhan-2020"), (45, "opinion-dynamics-2002"), (50, "gettier-1963")]:
-            lesson = json.loads((ROOT / f"lemma/examples/gallery/{slug}.json").read_text())
-            source = (ROOT / f"eval/results/pilot-claude/papers/{pid:02d}/source.txt").read_text()
-            self.assertEqual(list(L.check_lesson(lesson, source)), [], slug)
+        for entry in server.gallery_index():
+            lesson, source = server.load_gallery(entry["slug"])
+            self.assertIsNotNone(source, entry["slug"])
+            self.assertEqual(list(L.check_lesson(lesson, source)), [], entry["slug"])
 
     def test_unexpected_error_is_reported_without_its_message(self):
         import contextlib
@@ -1431,6 +1558,9 @@ class CategorizeTests(unittest.TestCase):
     def setUp(self):
         self.env = patch.dict(os.environ, {"TYPESAFE_API_KEY": "ts-test", "TYPESAFE_URL": f"http://127.0.0.1:{self.httpd.server_address[1]}/v1/systemone"})
         self.env.start()
+        for p in (patch.object(jev, "ask", fakejev.REAL_ASK), patch.object(jev, "RETRY_WAIT", 0)):
+            p.start()
+            self.addCleanup(p.stop)
         FakeJev.status, FakeJev.seen = 200, []
         FakeJev.reply = {"model": "jev-1.13.0", "answers": {"category": {"type": "choice", "choice": "medicine", "confidence": .7,
                          "probabilities": {"medicine": .6, "ai_ml": .3, "other": .1}}}}
@@ -1469,12 +1599,25 @@ class CategorizeTests(unittest.TestCase):
         with self.assertRaises(categorize.CategorizeError):
             categorize.categorize({"title": "t", "text": "x"})
 
-    def test_no_key_means_no_category(self):
+    def test_a_lesson_jev_cannot_sort_stops_its_build(self):
         with patch.dict(os.environ, {"TYPESAFE_API_KEY": ""}):
-            self.assertFalse(categorize.available())
-            record = {}
-            server._categorize(record, {"title": "t", "text": "x"})  # a failed call leaves the lesson uncategorised
-            self.assertIsNone(record["category"])
+            self.assertFalse(jev.available())
+            with self.assertRaisesRegex(generate.GenerationError, "TYPESAFE_API_KEY"):
+                server._categorize({}, {"title": "t", "text": "x"})
+        self.assertEqual(FakeJev.seen, [])
+        FakeJev.status = 401
+        with self.assertRaisesRegex(generate.GenerationError, "401"):
+            server._categorize({}, {"title": "t", "text": "x"})
+
+    def test_a_brief_outage_is_retried_and_a_refusal_is_not(self):
+        FakeJev.status = 503
+        with self.assertRaises(categorize.CategorizeError):
+            categorize.categorize({"title": "t", "text": "x"})
+        self.assertEqual(len(FakeJev.seen), jev.ATTEMPTS)
+        FakeJev.status, FakeJev.seen = 401, []
+        with self.assertRaises(categorize.CategorizeError):
+            categorize.categorize({"title": "t", "text": "x"})
+        self.assertEqual(len(FakeJev.seen), 1)
 
     def test_a_categorised_lesson_passes_the_checks(self):
         lesson = copy.deepcopy(EXAMPLE)

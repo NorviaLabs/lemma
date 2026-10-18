@@ -8,7 +8,7 @@ import signal
 import threading
 import webbrowser
 
-from . import __version__, dev, server
+from . import __version__, dev, jev, server
 from .server import make_server
 
 
@@ -36,6 +36,8 @@ def main(argv=None):
         print(f"Lemma is hosted on {args.host}:{httpd.server_address[1]} for {', '.join(allowed)}  (press Ctrl+C to stop)", flush=True)
     elif not args.dev:  # in dev mode the supervisor prints the address
         print(f"Lemma is running at {url}  (only reachable from this computer; press Ctrl+C to stop)")
+    if not jev.available():
+        print(f"Search and lesson building are off: {jev.MISSING}", flush=True)
     if not args.no_browser and not server.HOSTED:
         threading.Timer(0.5, webbrowser.open, args=(url,)).start()
     try:

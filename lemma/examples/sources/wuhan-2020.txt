@@ -1,0 +1,37 @@
+VERIFIED QUOTATION EXCERPTS — not the complete source.
+
+Early Transmission Dynamics in Wuhan, China, of Novel Coronavirus–Infected Pneumonia
+
+https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7121484/fullTextXML
+
+Introduction
+
+Here, we provide an analysis of data on the first 425 laboratory-confirmed cases in Wuhan to describe the epidemiologic characteristics and transmission dynamics of NCIP.
+
+Abstract
+
+In its early stages, the epidemic doubled in size every 7.4 days. With a mean serial interval of 7.5 days (95% CI, 5.3 to 19), the basic reproductive number was estimated to be 2.2 (95% CI, 1.4 to 3.9).
+
+Discussion
+
+Our estimate was based on information from 10 cases and is somewhat imprecise; it would be important for further studies to provide more information on this distribution.
+
+Results
+
+In the epidemic curve up to January 4, 2020, the epidemic growth rate was 0.10 per day (95% CI, 0.050 to 0.16) and the doubling time was 7.4 days (95% CI, 4.2 to 14).
+
+Results
+
+The development of the epidemic follows an exponential growth in cases, and a decline in the most recent days is likely to be due to under-ascertainment of cases with recent onset and delayed identification and reporting rather than a true turning point in incidence (Figure 1).
+
+Methods, Statistical Analysis
+
+We fitted a gamma distribution to data from cluster investigations to estimate the serial interval distribution, defined as the delay between illness onset dates in successive cases in chains of transmission.
+
+Discussion
+
+We estimated an R0 of approximately 2.2, meaning that on average each patient has been spreading infection to 2.2 other people. In general, an epidemic will increase as long as R0 is greater than 1, and control measures aim to reduce the reproductive number to less than 1.
+
+Results
+
+In the epidemic curve up to January 4, 2020, the epidemic growth rate was 0.10 per day (95% CI, 0.050 to 0.16) and the doubling time was 7.4 days (95% CI, 4.2 to 14). Using the serial interval distribution above, we estimated that R0 was 2.2 (95% CI, 1.4 to 3.9).
