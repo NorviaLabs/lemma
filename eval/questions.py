@@ -6,14 +6,11 @@ lesson only, so the newcomer's view never sees the paper). Every yes/no question
 is what's being looked for: a passed check in Part B, a found error in Part C.
 """
 
-VERSION = "jev-eval-3"
+VERSION = "jev-eval-3"  # unchanged: the questions moved to lemma/factcheck.py word for word
 
-# Each lens leads the question, so the same item is judged from three angles.
-LENSES = {
-    "referee": "You are a strict referee checking a lesson against the research it teaches. ",
-    "teacher": "You are an experienced teacher of this subject, reviewing a lesson before students use it. ",
-    "newcomer": "You are a curious adult new to this field, working through this lesson. ",
-}
+# The lenses and the critical-error questions are shared with the build's own check (lemma/factcheck.py), so the
+# eval measures exactly what a build asks.
+from lemma.factcheck import CONFIRM_AT, CRITICAL, LENSES, WRONG_ANSWER  # noqa: E402,F401
 
 ANSWERS = {  # Part A: Jev chooses one
     "yes": "Fully true",
@@ -41,20 +38,6 @@ PART_A = {
            "ask": "Is the 'Use it' question a genuinely new case rather than a repeat of the walkthrough, answerable from what was taught, with one "
                   "clearly correct answer, plausible wrong options and a correct reason for each?"},
 }
-
-# Part C, for each concept: is there a critical error of this kind? (yes = an error was found)
-CRITICAL = {
-    "wrong_claim": "Does anything in this concept (explanation, narration, hints, note, recap) state that the paper found or argued something "
-                   "the paper excerpt doesn't support, or teach something it contradicts?",
-    "reversed_model": "Look at WHAT THE MODEL DOES: how each output moves as each control rises. Does any of it go against what the paper "
-                      "excerpt says: an effect in the wrong direction, the wrong growth rate (for example logarithmic where the paper says "
-                      "linear) or the wrong rule?",
-    "fabricated_finding": "Does the concept state that the paper found or reported a specific number or result that the paper excerpt "
-                          "doesn't contain? Example values in a teaching model, and numbers the model's note calls illustrative, are not "
-                          "findings: answer no for those.",
-    "misleading_quote": "Read in its context in the paper excerpt, does the quote say something different from what the concept uses it for?",
-}
-WRONG_ANSWER = ("Is the answer this exercise marks as correct actually wrong, given the model and what the concept teaches?")
 
 # Part B, for the whole lesson: concrete checks per dimension (yes = passed). The score is the share passed.
 PART_B = {
@@ -104,7 +87,3 @@ PART_B = {
 
 # The verdict comes from rules, not from another question (see verdict() in jev_judge.py).
 B_PASS = 0.8  # a Part B dimension under this share of checks passed needs fixes
-# A critical error is confirmed when most lenses answer yes at least this surely. On the 2026-10-18 pilot, 0.7 kept
-# 14 of 25 planted errors and no yes on the unmodified lessons; at 0.5 the unmodified lessons got 11 of 140.
-# Any lens at 0.5 or more still sends the concept to a person.
-CONFIRM_AT = 0.7

@@ -9,6 +9,7 @@ import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 
+from . import factcheck
 from . import lesson as L
 from . import logs
 from .llm import Provider, ProviderError
@@ -564,12 +565,21 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audie
                 problems += L.check_attribution(obj["understand"], sources, "concept.understand")
             if base and isinstance(obj, dict) and not problems:
                 problems = list(L.check_builds_on(obj, base, "concept"))
+            if not problems:  # only a draft that passes the rules is worth Jev's judgement
+                problems = factcheck.check_concept(obj, paper["text"], todo_ids.index(c["id"]) + 1)
+                passed_rules[0] = (obj, problems)
             return problems
 
+        passed_rules = [None]  # the latest draft that passed every rule, with what Jev still flags in it
         try:
             obj, problems = _ask_json(job, provider, document, task, check, c["id"])
         except (ProviderError, GenerationError) as e:
             obj, problems = None, [str(e)]
+        # Jev's flags ask for repairs but never leave a concept out: keep the last draft that passed the rules.
+        if problems and passed_rules[0] and all(isinstance(p, factcheck.Flag) for p in passed_rules[0][1]):
+            obj, problems = passed_rules[0]
+        unresolved = [p for p in problems if isinstance(p, factcheck.Flag)]
+        problems = [p for p in problems if not isinstance(p, factcheck.Flag)]
         if problems:
             set_plan(c["id"], "omitted")
             with job.lock:
@@ -577,10 +587,14 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audie
             job.update(c["id"], "failed", "Left out: it didn't pass the quality checks (" + problems[0][:160] + ")")
             return
         ready[c["id"]] = obj
+        if unresolved:  # kept for whoever reviews the lesson; a learner isn't shown them
+            with job.lock:
+                lesson.setdefault("flags", []).extend({"concept": c["id"], "kind": f.kind, "certainty": f.certainty} for f in unresolved)
         set_plan(c["id"], "ready")
         publish()
-        fixes = getattr(job, "repairs", {}).get(c["id"], 0)
-        job.update(c["id"], "done", "Ready" + (f", after {fixes} round{'s' * (fixes != 1)} of fixes" if fixes else ""), problems=[])
+        fixes = getattr(job, "repairs", {}).get(c["id"], len(unresolved) and MAX_REPAIRS)
+        flagged = f", with {len(unresolved)} possible problem{'s' * (len(unresolved) != 1)} left for review" if unresolved else ""
+        job.update(c["id"], "done", "Ready" + (f", after {fixes} round{'s' * (fixes != 1)} of fixes" if fixes else "") + flagged, problems=[])
 
     with ThreadPoolExecutor(max_workers=WORKERS) as pool:
         list(pool.map(build_one, todo))

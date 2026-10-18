@@ -344,6 +344,70 @@ class GenerationTests(unittest.TestCase):
         self.assertEqual(len(job.result["concepts"]), 2)
         self.assertEqual(fp.closed, 4)  # every conversation is closed, including the failed one
 
+    def build_with_jev(self, flagged):
+        """Build the example with a fake Jev that flags concepts while `flagged(concept_id, round)` says so."""
+        from lemma import factcheck
+        rounds = {}
+
+        def fake(c, paper, n=1):
+            rounds[c["id"]] = rounds.get(c["id"], 0) + 1
+            if flagged(c["id"], rounds[c["id"]]):
+                return [factcheck.Flag("concept: " + factcheck.REPAIR["fabricated_finding"], "fabricated_finding", .9)]
+            return []
+
+        class Recording(FakeProvider):  # keeps every message the model was sent
+            sent = []
+
+            def conversation(self, system, document):
+                conv = super().conversation(system, document)
+                send = conv.send
+                conv.send = lambda text, *a, **k: (self.sent.append(text), send(text, *a, **k))[1]
+                return conv
+
+        fp = Recording()
+        outline = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, "")).result
+        with patch.object(factcheck, "check_concept", side_effect=fake):
+            job = wait(generate.start(generate.Job("build"), generate.build_lesson, fp, {"text": SOURCE, "title": "", "url": ""}, outline, ""))
+        self.assertEqual(job.status, "done", job.error)
+        return job, fp, rounds
+
+    def test_a_jev_flag_is_sent_back_for_repair(self):
+        job, fp, rounds = self.build_with_jev(lambda cid, n: cid == "mid_parent" and n == 1)
+        self.assertEqual(rounds["mid_parent"], 2)  # flagged, repaired, then judged clean
+        self.assertEqual(len(job.result["concepts"]), 3)
+        self.assertNotIn("flags", job.result)
+        self.assertEqual(sum("independent check" in m for m in fp.sent), 1)  # the model was asked to fix what Jev found
+
+    def test_factcheck_asks_the_reliable_kinds_and_confirms_only_sure_majorities(self):
+        from lemma import factcheck
+        concept = EXAMPLE["concepts"][1]
+        asked = factcheck.questions_for(concept)
+        self.assertEqual({k.split("|")[0].split(":")[0] for k in asked}, set(factcheck.BUILD_KINDS))
+        self.assertEqual(len({k.split("|")[1] for k in asked}), 3)  # every question through all three lenses
+
+        def ask(state, questions, timeout):
+            self.assertIn("WHAT THE MODEL DOES", state)
+            self.assertIn("FROM THE PAPER", state)
+            sure = {"wrong_claim": [.9, .8, .2], "fabricated_finding": [.9, .6, .65]}  # sure majority / unsure majority
+            return {k: {"type": "noul", "noul": sure.get(k.split("|")[0], [.1] * 3)[list(factcheck.LENSES).index(k.split("|")[1])]} for k in questions}
+
+        with patch.object(jev, "available", return_value=True), patch.object(jev, "ask", side_effect=ask):
+            flags = factcheck.check_concept(concept, SOURCE)
+        self.assertEqual([f.kind for f in flags], ["wrong_claim"])
+        self.assertTrue(flags[0].startswith("concept: an independent check"))
+        with patch.object(jev, "available", return_value=True), patch.object(jev, "ask", side_effect=jev.JevError("Jev answered 529")):
+            self.assertEqual(factcheck.check_concept(concept, SOURCE), [])  # Jev failing never blocks a build
+
+    def test_a_flag_that_stays_never_leaves_a_concept_out(self):
+        job, fp, rounds = self.build_with_jev(lambda cid, n: cid == "mid_parent")
+        self.assertEqual(rounds["mid_parent"], generate.MAX_REPAIRS + 1)  # every draft was judged
+        self.assertEqual(job.result["omitted"], [])
+        self.assertIn("mid_parent", [c["id"] for c in job.result["concepts"]])
+        self.assertEqual(job.result["flags"], [{"concept": "mid_parent", "kind": "fabricated_finding", "certainty": .9}])
+        step = next(s for s in job.snapshot()["steps"] if s["id"] == "mid_parent")
+        self.assertIn("left for review", step["detail"])
+        self.assertEqual(list(L.check_lesson(job.result, SOURCE)), [])
+
     def test_only_hard_concepts_keep_a_check(self):
         fp = FakeProvider()
         outline = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, "")).result
