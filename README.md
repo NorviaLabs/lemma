@@ -96,6 +96,6 @@ Lemma handles at most 32 requests and 2 uploads at once, reads at most 2 PDFs at
 uv run python -m unittest discover tests
 ```
 
-`eval/` holds an evaluation set of 50 papers from 23 fields, a rubric and three judge personas, and `eval/run.py`, which builds a lesson from each paper with real models, has the judges score them and summarises the results against the targets in `PRODUCT.md`. It calls the providers, so it isn't part of the tests.
+`eval/` holds an evaluation set of 50 papers from 23 fields and `eval/run.py`, which builds a lesson from each paper with a real model, judges every lesson with TypeSafe's Jev (the questions are in `eval/questions.py`, each asked three ways with the majority deciding) and summarises the results against the targets in `PRODUCT.md`, with a list of flags for a person to check that shows exactly what Jev was given. `eval/run.py plant` copies lessons with one deliberate critical error each, so judging them measures what the eval catches. It calls paid services, so it isn't part of the tests.
 
 The tests cover the expression language, Python/JavaScript parity (needs `node`), every quality check, the generation pipeline (with a fake provider, including a repair and a concept that is left out), the HTTP provider against a stand-in API (history re-sent on repair, model filtering, bad keys, limits and context errors), the HTTP API and the export.

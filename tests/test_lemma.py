@@ -12,6 +12,7 @@ import re
 import shutil
 import socket
 import subprocess
+import sys
 import tempfile
 import threading
 import time
@@ -1415,6 +1416,69 @@ class CategorizeTests(unittest.TestCase):
         lesson["category"] = categorize.categorize({"title": "t", "text": "x"})
         source = (ROOT / "lemma/examples/galton-1886.txt").read_text()
         self.assertEqual(list(L.check_lesson(lesson, source)), [])
+
+
+sys.path.insert(0, str(ROOT / "eval"))
+import jev_judge  # noqa: E402
+import plant as eval_plant  # noqa: E402
+
+
+class JevEvalTests(unittest.TestCase):
+    """The Jev eval's own logic, with Jev faked: what it plants, what it shows Jev, and how answers combine."""
+
+    source = (ROOT / "lemma/examples/galton-1886.txt").read_text()
+
+    def judged(self, yes_for=(), split=()):
+        """Judge the example with a fake Jev that says yes to critical-error questions whose key contains any of `yes_for`."""
+        def ask(state, questions, timeout):
+            out = {"_model": "fake"}
+            for k, q in questions.items():
+                if q["type"] == "noul":
+                    hit = any(s in k for s in yes_for) or any(s in k for s in split) and k.endswith("|referee")
+                    out[k] = {"type": "noul", "noul": .9 if hit else (.95 if "|B|" in k else .1)}
+                else:
+                    out[k] = {"type": "choice", "choice": "yes", "probabilities": {"yes": .9}}
+            return out
+        with patch.object(jev, "ask", side_effect=ask):
+            judged = jev_judge.judge_lesson(EXAMPLE, self.source)
+        return judged, jev_judge.combine(EXAMPLE, judged)
+
+    def test_every_planted_kind_changes_one_concept_and_leaves_the_original(self):
+        before = json.dumps(EXAMPLE, sort_keys=True)
+        for kind in eval_plant.KINDS:
+            out = eval_plant.plant(EXAMPLE, self.source, kind)
+            self.assertIsNotNone(out, kind)
+            lesson, where = out
+            self.assertEqual(where["kind"], kind)
+            changed = [c["id"] for c, o in zip(lesson["concepts"], EXAMPLE["concepts"]) if c != o]
+            self.assertEqual(changed, [where["concept"]], kind)
+        self.assertEqual(json.dumps(EXAMPLE, sort_keys=True), before)
+
+    def test_jev_sees_the_quote_in_its_paper_context(self):
+        quote = EXAMPLE["concepts"][0]["understand"]["quote"]
+        context = jev_judge.quote_context(self.source, quote)
+        self.assertIn(quote.split()[0], context)
+        self.assertGreater(len(context), len(quote))
+
+    def test_a_clean_lesson_ships(self):
+        judged, r = self.judged()
+        self.assertEqual(r["verdict"], "ship")
+        self.assertEqual(r["critical_errors"], [])
+        self.assertEqual(r["needs_review"], [])
+        # every concept is asked with the paper and as taught, and the lesson twice more
+        self.assertEqual(len(judged["requests"]), 2 * len(EXAMPLE["concepts"]) + 2)
+
+    def test_most_lenses_confirm_a_critical_error(self):
+        _, r = self.judged(yes_for=("|C|reversed_model|",))
+        self.assertEqual(r["verdict"], "dont_ship")
+        self.assertEqual({c["type"] for c in r["critical_errors"]}, {"reversed_model"})
+        self.assertTrue(all(x["state"] and x["question"] for x in r["needs_review"]))  # a person sees what Jev saw
+
+    def test_one_lens_alone_sends_it_to_a_person_without_failing_the_lesson(self):
+        _, r = self.judged(split=("|C|wrong_claim|",))
+        self.assertEqual(r["critical_errors"], [])
+        self.assertEqual(r["verdict"], "ship")
+        self.assertTrue(r["needs_review"] and all(x["why"].startswith("a possible critical error") for x in r["needs_review"]))
 
 
 if __name__ == "__main__":
