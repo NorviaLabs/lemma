@@ -632,6 +632,11 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audie
                 if p["id"] == cid:
                     p["state"] = state
 
+    if len(todo) > 1:  # the concepts start together: cache the paper once first, or each writes its own copy
+        try:
+            provider.warm(system_prompt(), document)
+        except ProviderError:
+            pass  # only a saving; the concepts still build without it
     for i, c in enumerate(todo, 1):
         job.step(c["id"], f"Concept {i}: {c['title']}", "waiting", "Waiting to start")
     # A concept that builds on another waits for it, so it can reuse its finished model. Bases always come

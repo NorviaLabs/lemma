@@ -272,6 +272,10 @@ class FakeProvider(Provider):
     def available(self):
         return True, ""
 
+    def warm(self, system, document):
+        assert "LESSON FORMAT" in system and document.startswith("<paper>")
+        self.warmed = getattr(self, "warmed", []) + [self.calls]  # how many replies came before each warm-up
+
     def conversation(self, system, document):
         assert "LESSON FORMAT" in system and document.startswith("<paper>")
         return FakeConversation(self, document)
@@ -458,6 +462,14 @@ class GenerationTests(unittest.TestCase):
         self.assertEqual(checked, ["why_regression"])
         outline["concepts"] = [dict(c, hard=True) for c in outline["concepts"]]
         self.assertIn("mark at most two concepts as hard", generate.check_outline(outline))
+
+    def test_the_paper_is_cached_once_before_concepts_start(self):
+        fp = FakeProvider()
+        outline = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, "")).result
+        before = fp.calls
+        job = wait(generate.start(generate.Job("build"), generate.build_lesson, fp, {"text": SOURCE, "title": "", "url": ""}, outline, ""))
+        self.assertEqual(job.status, "done", job.error)
+        self.assertEqual(fp.warmed, [before])  # once, and before any concept was drafted
 
     def test_outline_plans_are_checked(self):
         fp = FakeProvider()
@@ -1136,6 +1148,10 @@ class FakeAnthropic(BaseHTTPRequestHandler):
         last = body["messages"][-1]["content"]
         if "LIMIT" in last:
             return self._send(429, json.dumps({"type": "error", "error": {"type": "rate_limit_error", "message": "slow down"}}).encode())
+        if not body.get("stream"):  # a prefill-only warm-up: no content, just the usage
+            return self._send(200, json.dumps({"id": "msg_0", "type": "message", "role": "assistant", "model": body["model"], "content": [],
+                                               "stop_reason": "max_tokens", "stop_sequence": None,
+                                               "usage": {"input_tokens": 0, "output_tokens": 0, "cache_creation_input_tokens": 1200}}).encode())
         turn = sum(m["role"] == "assistant" for m in body["messages"]) + 1
         text = json.dumps({"turn": turn, "model": body["model"]})
         stop = "refusal" if "REFUSE" in last else "max_tokens" if "CUT" in last else "end_turn"
@@ -1179,7 +1195,8 @@ class ClaudeTests(unittest.TestCase):
         self.assertEqual(json.loads(conv.send("repair").text)["turn"], 2)
         first, second = (c["body"] for c in FakeAnthropic.calls)
         self.assertEqual((first["system"], first["stream"], first["thinking"]), ("SYSTEM", True, {"type": "adaptive"}))
-        self.assertEqual(first["cache_control"], {"type": "ephemeral"})
+        self.assertEqual(first["cache_control"], {"type": "ephemeral"})  # this conversation's own turns, for its repairs
+        self.assertEqual(first["messages"][0]["content"][0]["cache_control"], {"type": "ephemeral"})  # the paper, shared by every concept
         self.assertEqual(first["output_config"], {"effort": "high"})
         self.assertEqual(first["fallbacks"], "default")
         self.assertIn(claude.FALLBACK_BETA, FakeAnthropic.calls[0]["headers"]["anthropic-beta"])
@@ -1187,6 +1204,19 @@ class ClaudeTests(unittest.TestCase):
         self.assertEqual([b["type"] for b in second["messages"][2]["content"]], ["thinking", "text"])  # sent back as Claude sent it
         self.assertEqual(second["messages"][2]["content"][0]["signature"], "sig")
         self.assertEqual(conv.send("CUT").stop_reason, "max_tokens")
+
+    def test_warming_caches_the_paper_with_the_real_settings(self):
+        p = llm.make_provider("claude", "good-key")
+        usage = p.warm("SYSTEM", "<paper>text</paper>")
+        self.assertEqual(usage.cache_creation_input_tokens, 1200)
+        p.conversation("SYSTEM", "<paper>text</paper>").send("task")
+        warm, real = (c["body"] for c in FakeAnthropic.calls)
+        self.assertEqual(warm["max_tokens"], 0)
+        self.assertFalse(warm.get("stream"))  # max_tokens 0 rejects streaming
+        self.assertNotIn("cache_control", warm)  # a top-level breakpoint would key the cache to the end of the warm-up
+        self.assertEqual(warm["messages"][0], real["messages"][0])  # the same paper, with the same breakpoint
+        for key in ("system", "thinking", "output_config", "fallbacks", "model"):
+            self.assertEqual(warm[key], real[key], key)  # rendered into the prefix, so they must match
 
     def test_other_models_skip_what_they_dont_take(self):
         conv = llm.make_provider("claude", "good-key", "claude-sonnet-4-6").conversation("S", "<paper>x</paper>")

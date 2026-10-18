@@ -79,6 +79,11 @@ class Provider:
     def conversation(self, system: str, document: str) -> "Conversation":
         raise NotImplementedError
 
+    def warm(self, system: str, document: str):
+        """Caches the system prompt and paper once, before several conversations start from them at the same moment.
+        Most providers cache without being asked, so this does nothing unless a provider needs it."""
+        return None
+
 
 class Conversation:
     def send(self, text: str, cancelled: threading.Event | None = None, on_progress=None) -> Reply:
