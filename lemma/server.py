@@ -146,7 +146,7 @@ def api_status(_body):
         "hosted": HOSTED,
         "user": getattr(REQUEST, "user", None),
         "sign_in": auth.providers() if HOSTED else [],
-        "categorizes": categorize.available(),  # source text also goes to TypeSafe, which the privacy notes must say
+        "typesafe": categorize.available(),  # search results and source text also go to TypeSafe, which the privacy notes must say
     }
 
 

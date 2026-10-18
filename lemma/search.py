@@ -8,6 +8,8 @@ papers ranked by relevance and citations, Europe PMC returns biomedical papers w
 serves openly, and arXiv returns preprints.
 
 A search for a concept leads with the overview and explanations; a search for a paper leads with papers.
+When the server has a TypeSafe key, Jev judges how well each result would teach what was searched for, which
+orders each group and decides which results are recommended (see judge()); otherwise the title match does.
 """
 
 from __future__ import annotations
@@ -24,7 +26,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from . import ingest
+from . import ingest, jev, logs
 from .ingest import USER_AGENT
 
 TIMEOUT = 12
@@ -229,6 +231,46 @@ def libretexts(query: str, n: int = 2) -> list[dict]:
 PAPER_QUERY = re.compile(r'\b10\.\d{4,9}/|arxiv|\b\d{4}\.\d{4,5}\b|\bet al\b|\b(?:1[5-9]|20)\d{2}\b|"', re.I)
 
 
+JEV_TIMEOUT = 3  # seconds: search is interactive, so a slow answer falls back to the title match
+OPENING = 1500  # characters of a result's own text Jev reads when it has no abstract
+RECOMMEND_AT = 2.0  # Jev's relevance runs 0 to 4; 2 is "related", 3 out of 5 on a learner's scale
+RELEVANCE = ["Unrelated to what was searched for",
+             "Barely related: mentions it in passing",
+             "Related: covers it, but it isn't the main subject",
+             "Strongly related: mainly about it",
+             "Exactly what was searched for, and would teach it well"]
+ROLES = {"overview": "A general introduction or encyclopedia overview",
+         "explainer": "An in-depth explanation, such as a textbook chapter or a philosophy encyclopedia entry",
+         "review": "A review or survey that explains a field or a body of research",
+         "study": "A primary study reporting its own research or result",
+         "off_topic": "Not about what was searched for, or not credible scholarship"}
+
+
+def judge(query: str, results: list[dict], openings: dict) -> dict:
+    """Jev's relevance (0 to 4) and role for each result, by id(result); empty when Jev isn't there or fails."""
+    if not results or not jev.available():
+        return {}
+    state = {"search": query, "results": [{"n": i, "title": r["title"], "from": r["source"],
+                                           "text": (r.get("summary") or openings.get(id(r), ""))[:2 * OPENING]}
+                                          for i, r in enumerate(results, 1)]}
+    questions = {}
+    for i in range(1, len(results) + 1):
+        questions[f"r{i}_relevance"] = {"type": "score", "criteria": RELEVANCE,
+                                        "instructions": f"How well would result n={i} help someone learn about what was searched for?"}
+        questions[f"r{i}_role"] = {"type": "choice", "criteria": ROLES,
+                                   "instructions": f"What kind of source is result n={i}, for someone learning about what was searched for?"}
+    try:
+        answers = jev.ask(state, questions, JEV_TIMEOUT)
+        judged = {id(r): (float(answers[f"r{i}_relevance"]["score"]), answers[f"r{i}_role"]["choice"]) for i, r in enumerate(results, 1)}
+    except (jev.JevError, KeyError, TypeError, ValueError) as e:
+        logs.report("search ranking", e)  # the error's type and where, never the search
+        return {}
+    for r in results:
+        relevance, role = judged[id(r)]
+        r["judged"] = {"relevance": round(relevance + 1, 2), "role": role}  # on the 1 to 5 scale; not shown to learners
+    return judged
+
+
 def query_kind(query: str) -> str:
     """"paper" when the search looks for a particular paper (a DOI, an arXiv id, a year, "et al", a quoted or
     long title), otherwise "concept": an idea to learn about."""
@@ -381,6 +423,8 @@ def _search(query: str, on_progress=None) -> dict:
         raise SearchError("Couldn't reach any of the search services. Check your connection and try again.")
     report(to_check=len(results))
 
+    openings = {}  # the start of each verified text, by id(result): what Jev reads for a result without an abstract
+
     def check(result):
         urls = result.get("urls") or [result["url"]]
         try:
@@ -390,6 +434,7 @@ def _search(query: str, on_progress=None) -> dict:
         else:
             # Open the verified copy, not a publisher link that may have returned 403.
             result.update(available=True, url=paper.url, urls=list(dict.fromkeys([paper.url] + urls))[:5])
+            openings[id(result)] = paper.text[:OPENING]
         result["link"] = ingest.reader_link(result["url"])  # what the learner opens, which may differ from what Lemma reads
         report(checked=1, readable=int(result["available"]))
 
@@ -404,18 +449,24 @@ def _search(query: str, on_progress=None) -> dict:
     mode = query_kind(query)
     if mode == "concept":
         results = [r for r in results if r["kind"] != "paper" or not r.get("summary") or closeness(r) < 0]
+    # Jev, when this server has a TypeSafe key, judges how well each result would teach what was searched for;
+    # that orders each group, with the title match breaking ties. Without it, the title match alone orders them.
+    judged = judge(query, results, openings)
+    rank = lambda r: (-judged.get(id(r), (0, ""))[0], closeness(r))
     indexed = [r for r in results if r["source"] in ("OpenAlex", "Europe PMC")]
-    papers = sorted(indexed, key=lambda r: (not r["available"], closeness(r)))[:PAPERS]
-    papers += sorted((r for r in results if r["source"] == "arXiv"), key=closeness)
+    papers = sorted(indexed, key=lambda r: (not r["available"], *rank(r)))[:PAPERS]
+    papers += sorted((r for r in results if r["source"] == "arXiv"), key=rank)
     if mode == "paper":  # one particular paper: the closest match leads, whichever service found it
-        papers.sort(key=lambda r: (not r["available"], closeness(r)))
-    by_kind = {kind: sorted((r for r in results if r["kind"] == kind), key=closeness) for kind in ("overview", "explainer")}
+        papers.sort(key=lambda r: (not r["available"], *rank(r)))
+    by_kind = {kind: sorted((r for r in results if r["kind"] == kind), key=rank) for kind in ("overview", "explainer")}
     order = ["overview", "explainer", "paper"] if mode == "concept" else ["paper", "overview", "explainer"]
     results = [r for kind in order for r in (papers if kind == "paper" else by_kind[kind])]
     # A small, complementary starting set from sources that passed actual ingestion.
     left = dict(RECOMMEND[mode])
     for result in results:
-        result["recommended"] = bool(result["available"] and left.get(result["kind"]))
+        relevance, role = judged.get(id(result), (RECOMMEND_AT, ""))
+        suits = relevance >= RECOMMEND_AT and role != "off_topic"  # Jev's judgement, when there is one
+        result["recommended"] = bool(result["available"] and suits and left.get(result["kind"]))
         if result["recommended"]:
             left[result["kind"]] -= 1
             result["recommendation"] = REASONS[result["kind"]]
