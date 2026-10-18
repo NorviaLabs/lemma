@@ -20,7 +20,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib import resources
 from urllib.parse import parse_qs, quote, urlsplit
 
-from . import __version__, auth, categorize, chatgpt, export, generate, ingest, jev, logs, search, store
+from . import __version__, auth, categorize, chatgpt, claudecode, export, generate, ingest, jev, logs, search, store
 from . import lesson as L
 from .llm import DEFAULT_PROVIDER, PROVIDERS, ProviderError, make_provider
 
@@ -30,7 +30,8 @@ EXAMPLES = resources.files("lemma").joinpath("examples")
 
 DEV = False  # set by `lemma --dev`: live-reload script and /api/dev/events
 # Set by `make_server` when Lemma listens beyond this computer. A hosted Lemma serves other people,
-# so it doesn't offer ChatGPT sign-in, which keeps one person's tokens on the server's disk.
+# so it doesn't offer ChatGPT sign-in, which keeps one person's tokens on the server's disk, or the
+# Claude subscription, which runs the Claude Code signed in on this computer.
 HOSTED = False
 LOCAL_HOSTS = ("localhost", "127.0.0.1", "[::1]")
 ALLOWED_HOSTS: tuple[str, ...] = LOCAL_HOSTS  # Host header names Lemma answers; `--allowed-hosts` adds more
@@ -182,6 +183,12 @@ def api_chatgpt_logout(_body):
     _local_only()
     chatgpt.sign_out()
     return chatgpt.status()
+
+
+def api_claude_code(_body):
+    """Whether this computer's Claude Code is signed in with a Claude subscription. It signs in in a terminal, not here."""
+    _local_only()
+    return claudecode.status(fresh=True)
 
 
 def api_papers(body):
@@ -644,6 +651,7 @@ ROUTES = [
     ("GET", r"/api/chatgpt", api_chatgpt, False),
     ("POST", r"/api/chatgpt/login", api_chatgpt_login, False),
     ("POST", r"/api/chatgpt/logout", api_chatgpt_logout, False),
+    ("GET", r"/api/claude-code", api_claude_code, False),
     ("POST", r"/api/papers", api_papers, False),
     ("POST", r"/api/search", api_search, False),
     ("GET", r"/api/search/([a-f0-9]{12})", api_search_status, True),
@@ -921,7 +929,7 @@ def make_server(port: int = 8765, exact: bool = False, host: str = "127.0.0.1", 
     """`exact` binds the given port or fails; otherwise the next free port is used.
 
     Listening on any address but loopback makes this a hosted Lemma: it answers only the
-    `allowed_hosts` (the public domain names it is reached by), binds exactly `port` and drops ChatGPT sign-in.
+    `allowed_hosts` (the public domain names it is reached by), binds exactly `port` and drops the subscription providers.
     """
     global HOSTED, ALLOWED_HOSTS
     HOSTED = host not in ("127.0.0.1", "localhost", "::1")

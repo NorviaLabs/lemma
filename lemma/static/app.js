@@ -184,6 +184,7 @@
     openai: "OpenAI's models, billed to your OpenAI API account.",
     claude: "Anthropic's Claude models, billed to your Claude API account. Fits long papers (about 1M tokens).",
     chatgpt: "Your ChatGPT Plus or Pro plan, no key needed. For Lemma on your own computer.",
+    "claude-code": "Your Claude Pro or Max plan, through Claude Code on this computer. No key needed.",
   };
 
   // Said wherever the key comes up, so it reads the same each time.
@@ -194,13 +195,13 @@
   function keyForm(onSaved, { compact = false } = {}) {
     const providers = status.providers || [];
     let selected = cred.provider || (providers[0] || {}).id;
-    let chatgpt = { signed_in: false };
+    const signins = {};  // sign-in provider id -> its status, e.g. { signed_in, email }
     let poll = null;
     const body = h("div");
     const msg = h("div", { role: "status" });
     const stopPoll = () => { clearTimeout(poll); poll = null; };
     cleanups.push(stopPoll);
-    const ready = (x) => (x.sign_in ? chatgpt.signed_in : !!cred.keys[x.id]);
+    const ready = (x) => (x.sign_in ? !!(signins[x.id] || {}).signed_in : !!cred.keys[x.id]);
     function draw() {
       const p = providers.find((x) => x.id === selected) || {};
       const key = h("input", { id: "ai-key", type: "password", autocomplete: "off", spellcheck: "false", placeholder: `Paste your ${p.name} key` });
@@ -224,7 +225,7 @@
         modelName.textContent = model.selectedOptions[0] ? model.value : r.current;
       }
       if (ready(p)) loadModels(Object.assign({}, cred, { provider: p.id })).catch((err) => note.replaceChildren(errorBox(err.message)));
-      const save = h("button", { class: "primary", disabled: p.sign_in && !chatgpt.signed_in, onclick: async () => {
+      const save = h("button", { class: "primary", disabled: p.sign_in && !ready(p), onclick: async () => {
         const next = { provider: p.id, keys: Object.assign({}, cred.keys), models: Object.assign({}, cred.models) };
         if (!p.sign_in) next.keys[p.id] = key.value.trim();
         if (!model.disabled && model.value) next.models[p.id] = model.value;
@@ -254,9 +255,30 @@
         h("div", { class: "actions" }, save));
     }
     function signInPart(p) {
+      return p.id === "claude-code" ? claudeCodePart() : chatgptPart();
+    }
+    function claudeCodePart() {
+      const st = signins["claude-code"] || {};
+      if (st.signed_in) {
+        return [h("p", {}, icon("check"), ` Claude Code is signed in${st.email ? ` as ${st.email}` : ""}${st.plan ? ` (${st.plan} plan)` : ""}. `),
+          h("p", { class: "muted small" }, "Lessons count against your plan's usage. To sign out, run ", h("code", {}, "claude auth logout"), " in a terminal.")];
+      }
+      const check = h("button", { class: "primary", onclick: async () => {
+        check.disabled = true;
+        try { signins["claude-code"] = await api("/api/claude-code"); draw(); } catch (err) { msg.replaceChildren(errorBox(err.message)); check.disabled = false; }
+      } }, "Check again");
+      return [h("p", {}, st.installed === false
+          ? ["Install ", h("a", { href: "https://claude.com/claude-code", target: "_blank", rel: "noopener noreferrer" }, "Claude Code"), ", then in a terminal run ", h("code", {}, "claude auth login"), " and sign in with your Claude account."]
+          : ["In a terminal, run ", h("code", {}, "claude auth login"), " and sign in with your Claude account."]),
+        st.error && st.installed !== false ? h("p", { class: "muted small" }, st.error) : null,
+        check,
+        h("p", { class: "muted small" }, "Lemma runs your own Claude Code with all its tools turned off and never sees your sign-in.")].filter(Boolean);
+    }
+    function chatgptPart() {
+      const chatgpt = signins.chatgpt || {};
       if (chatgpt.signed_in) {
         return [h("p", {}, icon("check"), ` Signed in${chatgpt.email ? ` as ${chatgpt.email}` : ""}. `,
-          h("button", { class: "ghost small", onclick: async () => { chatgpt = await api("/api/chatgpt/logout", {}); draw(); } }, "Sign out"))];
+          h("button", { class: "ghost small", onclick: async () => { signins.chatgpt = await api("/api/chatgpt/logout", {}); draw(); } }, "Sign out"))];
       }
       const start = h("button", { class: "primary", onclick: async () => {
         const tab = window.open("", "_blank");  // opened now, while the click still counts, so it isn't blocked
@@ -273,14 +295,17 @@
       stopPoll();
       poll = setTimeout(async () => {
         if (!body.isConnected) return;  // the learner left Settings
-        try { chatgpt = await api("/api/chatgpt"); } catch (e) { return waitForSignIn(); }
+        let chatgpt;
+        try { chatgpt = signins.chatgpt = await api("/api/chatgpt"); } catch (e) { return waitForSignIn(); }
         if (chatgpt.signed_in) { msg.replaceChildren(); return draw(); }
         if (chatgpt.error) return msg.replaceChildren(errorBox(chatgpt.error));
         if (chatgpt.waiting) waitForSignIn();
       }, 1500);
     }
     draw();
-    api("/api/chatgpt").then((r) => { chatgpt = r; draw(); }).catch(() => {});
+    for (const x of providers.filter((x) => x.sign_in)) {
+      api(x.id === "claude-code" ? "/api/claude-code" : "/api/chatgpt").then((r) => { signins[x.id] = r; draw(); }).catch(() => {});
+    }
     return body;
   }
 
@@ -793,7 +818,7 @@
         status.typesafe ? (m === "search"
           ? "Your search words and each result's title and abstract also go to TypeSafe, to rank the results; the start of each selected source, to sort the lesson into a subject; and each drafted concept with the passages it is about, to check it for errors. "
           : "The start of the paper also goes to TypeSafe, to sort the lesson into a subject, and each drafted concept with the passages it is about, to check it for errors. ") : null,
-        // A sign-in provider (ChatGPT, on your own computer only) has no key to speak of.
+        // A sign-in provider (ChatGPT or a Claude subscription, on your own computer only) has no key to speak of.
         (status.providers || []).find((x) => x.id === p.id)?.sign_in
           ? "Build requests, source text and progress are saved so you can return later. Lemma keeps no usage logs. "
           : "Build requests, source text and progress are saved so you can return later; your AI key is not, and stays in this browser. Lemma keeps no usage logs. ",
