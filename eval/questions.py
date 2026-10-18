@@ -6,7 +6,7 @@ lesson only, so the newcomer's view never sees the paper). Every yes/no question
 is what's being looked for: a passed check in Part B, a found error in Part C.
 """
 
-VERSION = "jev-eval-1"
+VERSION = "jev-eval-3"
 
 # Each lens leads the question, so the same item is judged from three angles.
 LENSES = {
@@ -46,9 +46,12 @@ PART_A = {
 CRITICAL = {
     "wrong_claim": "Does anything in this concept (explanation, narration, hints, note, recap) state that the paper found or argued something "
                    "the paper excerpt doesn't support, or teach something it contradicts?",
-    "reversed_model": "Does the model, or any part of it a learner is shown, behave differently from what the paper excerpt says: an effect in "
-                      "the wrong direction, the wrong growth rate (for example logarithmic where the paper says linear) or the wrong rule?",
-    "fabricated_finding": "Does the concept present a number or result as the paper's finding when the paper excerpt doesn't contain it?",
+    "reversed_model": "Look at WHAT THE MODEL DOES: how each output moves as each control rises. Does any of it go against what the paper "
+                      "excerpt says: an effect in the wrong direction, the wrong growth rate (for example logarithmic where the paper says "
+                      "linear) or the wrong rule?",
+    "fabricated_finding": "Does the concept state that the paper found or reported a specific number or result that the paper excerpt "
+                          "doesn't contain? Example values in a teaching model, and numbers the model's note calls illustrative, are not "
+                          "findings: answer no for those.",
     "misleading_quote": "Read in its context in the paper excerpt, does the quote say something different from what the concept uses it for?",
 }
 WRONG_ANSWER = ("Is the answer this exercise marks as correct actually wrong, given the model and what the concept teaches?")
@@ -101,3 +104,7 @@ PART_B = {
 
 # The verdict comes from rules, not from another question (see verdict() in jev_judge.py).
 B_PASS = 0.8  # a Part B dimension under this share of checks passed needs fixes
+# A critical error is confirmed when most lenses answer yes at least this surely. On the 2026-10-18 pilot, 0.7 kept
+# 14 of 25 planted errors and no yes on the unmodified lessons; at 0.5 the unmodified lessons got 11 of 140.
+# Any lens at 0.5 or more still sends the concept to a person.
+CONFIRM_AT = 0.7

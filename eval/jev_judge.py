@@ -38,9 +38,40 @@ def _model(m: dict) -> list[str]:
         out.append(f"  control {c['id']} = {c.get('label', '')} ({rng}, starts at {c.get('default')})")
     for o in m.get("outputs") or []:
         out.append(f"  output {o['id']} = {o.get('label', '')}: computed as {o.get('expr', '')}")
+    out += _behaviour(m)
     if m.get("note"):
         out.append(f"  NOTE: {m['note']}")
     return out
+
+
+def _shown(o: dict, v) -> str:
+    """An output's value as the learner sees it: scaled, rounded, with its unit."""
+    if not isinstance(v, (int, float)) or not math.isfinite(v):
+        return "undefined"
+    v = v * float(o.get("scale", 1) or 1)
+    d = o.get("decimals")
+    text = f"{v:.{int(d)}f}" if isinstance(d, int) else f"{v:.4g}"
+    return text + (o.get("unit") or "")
+
+
+def _behaviour(m: dict) -> list[str]:
+    """What the model actually does: each slider at its low, middle and high end, the others at their defaults.
+    A reversed direction or a wrong growth rate shows in these numbers even when the formula hides it."""
+    outputs = [o for o in m.get("outputs") or [] if o.get("id")]
+    lines = []
+    for c in m.get("controls") or []:
+        if c.get("kind", "slider") != "slider" or not isinstance(c.get("min"), (int, float)) or not isinstance(c.get("max"), (int, float)):
+            continue
+        lo, hi = float(c["min"]), float(c["max"])
+        try:
+            runs = [L.compute(m, {c["id"]: v}) for v in (lo, (lo + hi) / 2, hi)]
+        except Exception:  # a model the checks would reject; the formula is still shown above
+            continue
+        moved = [f"{o.get('label') or o['id']} {' -> '.join(_shown(o, r.get(o['id'])) for r in runs)}" for o in outputs
+                 if len({_shown(o, r.get(o["id"])) for r in runs}) > 1]
+        if moved:
+            lines.append(f"  raising {c['id']} through {lo:g}, {(lo + hi) / 2:g}, {hi:g} moves: " + "; ".join(moved))
+    return (["  WHAT THE MODEL DOES (others at their defaults):"] + lines) if lines else []
 
 
 def concept_text(c: dict, n: int) -> str:
@@ -288,8 +319,9 @@ def combine(lesson: dict, judged: dict) -> dict:
             if target != cid or part != "C":
                 continue
             yes = [v for v in vs if v["answer"] == "yes"]
+            sure = [v for v in vs if v["p"] >= Q.CONFIRM_AT]
             certainty = round(max(v["p"] for v in vs), 3)
-            if len(yes) * 2 > len(vs):
+            if len(sure) * 2 > len(vs):
                 critical.append({"type": kind.split(":")[0], "where": cid, "exercise": kind.split(":")[1] if ":" in kind else None,
                                  "certainty": certainty, "votes": [{k: v[k] for k in ("lens", "answer", "p")} for v in vs]})
                 flag(cid, "C", kind, "a critical error, confirmed by most lenses", certainty)
