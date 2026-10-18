@@ -1076,6 +1076,7 @@ kbd { background: var(--surface); border-radius: 6px; }
 .bar-buttons .ghost { background: transparent; }
 
 /* overview pages: the paper in brief, intro and finish */
+.lesson-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: -4px 0 18px; }
 .overview h1, .brief h1 { font-weight: 800; letter-spacing: -.04em; }
 .hall ol { border-top: 0; background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--lift); padding: 4px 18px; }
 .hall li:last-child { border-bottom: 0; }

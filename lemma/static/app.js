@@ -781,6 +781,7 @@
       privacy.replaceChildren(...[...(m === "search"
         ? ["Your search words go to Wikipedia, the Stanford Encyclopedia of Philosophy, LibreTexts, OpenAlex, Europe PMC and arXiv. Lemma contacts source sites to check readable full text before recommending sources. Selected text goes to ", ...to, " to build one lesson. "]
         : ["When you continue, Lemma sends the paper's text to ", ...to, " to build the lesson. "]),
+        status.categorizes ? "The start of each source also goes to TypeSafe, to sort the lesson into a subject. " : null,
         // A sign-in provider (ChatGPT, on your own computer only) has no key to speak of.
         (status.providers || []).find((x) => x.id === p.id)?.sign_in
           ? "Build requests, source text and progress are saved so you can return later. Lemma keeps no usage logs. "

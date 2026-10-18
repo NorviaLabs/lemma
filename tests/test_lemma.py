@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TMP_HOME = tempfile.mkdtemp(prefix="lemma-test-")
 os.environ["LEMMA_HOME"] = TMP_HOME
 
-from lemma import auth, chatgpt, claude, dev, expr, export, generate, ingest, kernels, lesson as L, llm, search, server, store  # noqa: E402
+from lemma import auth, categorize, chatgpt, claude, dev, expr, export, generate, ingest, kernels, lesson as L, llm, search, server, store  # noqa: E402
 from lemma.llm import Provider, Reply  # noqa: E402
 
 EXAMPLE = json.loads((ROOT / "lemma/examples/galton-1886.json").read_text())
@@ -1288,6 +1288,90 @@ class ExportTests(unittest.TestCase):
         html = export.lesson_html(les)
         self.assertEqual(html.count("</script>"), 6)  # lesson data + 4 scripts + boot
         self.assertIn("&lt;/script&gt;", html.split("<title>")[1].split("</title>")[0])
+
+
+class FakeJev(BaseHTTPRequestHandler):
+    """Answers like TypeSafe's Jev: the choice it was told to give, with a probability for every option."""
+    reply, status, seen = None, 200, []
+
+    def do_POST(self):
+        body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+        FakeJev.seen.append((self.headers.get("Authorization"), body))
+        raw = json.dumps(FakeJev.reply).encode()
+        self.send_response(FakeJev.status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(raw)))
+        self.end_headers()
+        self.wfile.write(raw)
+
+    def log_message(self, *a):
+        pass
+
+
+class CategorizeTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.httpd = ThreadingHTTPServer(("127.0.0.1", 0), FakeJev)
+        threading.Thread(target=cls.httpd.serve_forever, daemon=True).start()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.httpd.shutdown()
+        cls.httpd.server_close()
+
+    def setUp(self):
+        self.env = patch.dict(os.environ, {"TYPESAFE_API_KEY": "ts-test", "TYPESAFE_URL": f"http://127.0.0.1:{self.httpd.server_address[1]}/v1/systemone"})
+        self.env.start()
+        FakeJev.status, FakeJev.seen = 200, []
+        FakeJev.reply = {"model": "jev-1.13.0", "answers": {"category": {"type": "choice", "choice": "medicine", "confidence": .7,
+                         "probabilities": {"medicine": .6, "ai_ml": .3, "other": .1}}}}
+
+    def tearDown(self):
+        self.env.stop()
+
+    def test_primary_and_a_likely_runner_up(self):
+        c = categorize.categorize({"title": "Deep learning for diagnosis", "text": "x" * 100})
+        self.assertEqual(c["primary"], {"id": "medicine", "name": "Medicine"})
+        self.assertEqual(c["secondary"], {"id": "ai_ml", "name": "AI & machine learning"})
+        self.assertEqual(c["probabilities"]["medicine"], .6)
+        auth_header, body = FakeJev.seen[0]
+        self.assertEqual(auth_header, "Bearer ts-test")
+        self.assertEqual(body["model"], categorize.MODEL)
+        q = body["questions"]["category"]
+        self.assertEqual(q["type"], "choice")
+        self.assertEqual(set(q["criteria"]), set(categorize.CATEGORIES))
+
+    def test_an_unlikely_runner_up_is_left_out(self):
+        FakeJev.reply["answers"]["category"]["probabilities"] = {"medicine": .85, "ai_ml": .1, "other": .05}
+        self.assertIsNone(categorize.categorize({"title": "t", "text": "x"})["secondary"])
+
+    def test_sources_share_the_text_budget(self):
+        bundle = json.dumps({"lemma_sources": [{"id": "s1", "title": "A", "text": "a" * 100_000}, {"id": "s2", "title": "B", "text": "b" * 100_000}]})
+        categorize.categorize({"title": "Combined", "text": bundle})
+        sent = FakeJev.seen[0][1]["state"]["sources"]
+        self.assertEqual([s["title"] for s in sent], ["A", "B"])
+        self.assertEqual(sum(len(s["text"]) for s in sent), categorize.STATE_CHARS)
+
+    def test_failures_raise_a_categorize_error(self):
+        FakeJev.status = 401
+        with self.assertRaises(categorize.CategorizeError):
+            categorize.categorize({"title": "t", "text": "x"})
+        FakeJev.status, FakeJev.reply = 200, {"answers": {"category": {"choice": "astrology", "probabilities": {}}}}
+        with self.assertRaises(categorize.CategorizeError):
+            categorize.categorize({"title": "t", "text": "x"})
+
+    def test_no_key_means_no_category(self):
+        with patch.dict(os.environ, {"TYPESAFE_API_KEY": ""}):
+            self.assertFalse(categorize.available())
+            record = {}
+            server._categorize(record, {"title": "t", "text": "x"})  # a failed call leaves the lesson uncategorised
+            self.assertIsNone(record["category"])
+
+    def test_a_categorised_lesson_passes_the_checks(self):
+        lesson = copy.deepcopy(EXAMPLE)
+        lesson["category"] = categorize.categorize({"title": "t", "text": "x"})
+        source = (ROOT / "lemma/examples/galton-1886.txt").read_text()
+        self.assertEqual(list(L.check_lesson(lesson, source)), [])
 
 
 if __name__ == "__main__":
