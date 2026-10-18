@@ -1,0 +1,1825 @@
+{
+ "version": 1,
+ "id": "gallery-poe-red-death",
+ "title": "Behind the Iron Gates: How One Visitor Undoes a Locked Castle",
+ "audience": "A curious adult with no background in this field",
+ "created": "2026-10-18T14:51:46",
+ "source": {
+  "title": "The Masque of the Red Death",
+  "authors": "Edgar Allan Poe",
+  "year": null,
+  "venue": "Project Gutenberg eBook #1064",
+  "url": "https://www.gutenberg.org/files/1064/1064-h/1064-h.htm"
+ },
+ "intro": {
+  "summary": "This is not a research paper. It is a short horror story. A prince tries to escape a deadly plague by locking a thousand healthy friends inside a walled abbey and throwing a lavish masked ball. At midnight a guest dressed as the plague appears, the prince dies on touching distance of it, and then every reveller dies. The lesson uses simple contagion models to explore the logic hidden in the story: why sealing a crowded, healthy group away can turn a single intrusion into total loss. The main limitation is that Poe wrote fiction and allegory, not epidemiology. His Red Death is supernatural, so the models illustrate the story's logic rather than test any claim.",
+  "background": [
+   "Edgar Allan Poe was a 19th-century American writer known for short, dark tales built around a single effect.",
+   "A 'masque' is a masked ball, a party where guests wear costumes that hide who they are.",
+   "Scientists often picture an epidemic as people moving between three states: able to catch it, infected, and removed (recovered or dead).",
+   "Many readers take the story as an allegory, a story where things stand for ideas, about the impossibility of escaping death. That is an interpretation, not something the text states."
+  ],
+  "known": [],
+  "aha": "The welded gates that kept the plague out also packed a thousand never-exposed people together with no exit, so a single intruder was enough to reach nearly all of them."
+ },
+ "primer": [
+  {
+   "heading": "The question",
+   "body": "A horrific plague called the Red Death is sweeping the land. It kills within half an hour, and no one can help its victims. The story asks, in its own way, whether wealth and walls can keep death out.",
+   "quote": "No pestilence had ever been so fatal, or so hideous.",
+   "quote_where": "Opening paragraph"
+  },
+  {
+   "heading": "What happens",
+   "body": "Prince Prospero gathers a thousand healthy knights and ladies. He seals them inside a fortified abbey, and they weld the iron gates shut so that no one can get in or out. Months later he holds a masked ball across seven coloured rooms. The last room is black with blood-red windows, and a huge ebony clock stands in it.",
+   "quote": "With such precautions the courtiers might bid defiance to contagion. The external world could take care of itself.",
+   "quote_where": "Second paragraph"
+  },
+  {
+   "heading": "What is found",
+   "body": "At midnight a tall figure appears in a corpse mask, spattered with the Red Death's scarlet stains. The prince chases it into the black room and falls dead. When the guests seize the costume, they find nothing inside it. Then the whole sealed company dies, one by one.",
+   "quote": "And one by one dropped the revellers in the blood-bedewed halls of their revel, and died each in the despairing posture of his fall.",
+   "quote_where": "Final paragraph"
+  },
+  {
+   "heading": "Why it matters",
+   "body": "The walls were meant to protect the courtiers. Instead they created a crowded group of people who had never been exposed and who had no way out. Once one carrier is inside, that is a perfect setting for a disease to reach everyone. The story turns a precaution into a trap, and that idea echoes in real debates about isolation and crowding.",
+   "quote": "All these and security were within. Without was the “Red Death”.",
+   "quote_where": "Second paragraph"
+  },
+  {
+   "heading": "A note on this lesson",
+   "body": "Poe's Red Death is fictional and supernatural. It has no measured transmission rate, and the story makes no scientific claims. The live models in this lesson are simple teaching models of contagion with made-up numbers. They show why the story's ending feels inevitable. They do not show how any real disease behaves."
+  }
+ ],
+ "provider": {
+  "name": "Claude",
+  "model": "claude-opus-5-5"
+ },
+ "concepts": [
+  {
+   "id": "contagion_spreads",
+   "title": "How a plague moves from person to person",
+   "idea": "Each infected person passes the disease to nearby people with some chance each round, so cases can multiply outward from a few starting points.",
+   "role": "prerequisite",
+   "predict": {
+    "question": "Two illnesses hit identical crowds. A starts with 3 sick people, each with a high chance of passing it to each neighbour per round. B starts with 30 sick, each with only a tiny chance. After many rounds, which most likely reached more of the crowd?",
+    "options": [
+     "Illness A, with fewer starters but a high chance per contact",
+     "Illness B, because it starts with ten times as many sick people",
+     "Both reach about the same share, because both last many rounds"
+    ],
+    "answer": 0,
+    "why": [
+     "Right: with a high chance per contact, each new case makes more new cases, so 3 sick people can grow into most of the crowd. Growth multiplies; it does not just add up.",
+     "It feels as if a bigger head start should win. But if each sick person rarely passes it on, most recover or die before infecting anyone, and B stalls near its 30 starters.",
+     "Time alone does not spread an illness. Each round only matters if sick people actually pass it on, so a weak illness fizzles however long you wait."
+    ]
+   },
+   "terms": [
+    {
+     "term": "transmission probability",
+     "means": "The chance that one sick person passes the illness to one neighbour in one round"
+    },
+    {
+     "term": "susceptible",
+     "means": "Not sick yet, but able to catch the illness"
+    },
+    {
+     "term": "attack rate",
+     "means": "The share of the whole crowd that ever falls sick during an outbreak"
+    }
+   ],
+   "model": {
+    "title": "A crowd on a grid: illness passing from neighbour to neighbour",
+    "note": "Teaching model: people stand still on a 30 × 30 grid and can only catch the illness from the squares beside them. Each round, every sick neighbour gets one independent chance to pass it on. Each sick person leaves the game (recovered or dead) with a fixed 20% chance per round and can never catch or pass it again. Real plagues also travel with people, through the air or by fleas. Poe's story is fiction and gives no rates. All numbers here are illustrative, not taken from the text.",
+    "controls": [
+     {
+      "id": "transmission",
+      "label": "Chance a sick person passes it to one neighbour, per round",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.02,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "initial",
+      "label": "People sick at the start",
+      "kind": "slider",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "default": 3,
+      "unit": "",
+      "color": 3
+     },
+     {
+      "id": "steps",
+      "label": "Rounds to play out",
+      "kind": "slider",
+      "min": 1,
+      "max": 150,
+      "step": 1,
+      "default": 100,
+      "unit": "",
+      "color": 4
+     }
+    ],
+    "outputs": [
+     {
+      "id": "final",
+      "label": "Share of the crowd ever sick",
+      "expr": "sim_final_infected",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "peak",
+      "label": "Most people sick at one time",
+      "expr": "sim_peak_infected",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "two_nb",
+      "label": "Chance to catch it this round with 2 sick neighbours",
+      "expr": "1 - pow(1 - transmission, 2)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 2
+     }
+    ],
+    "visual": {
+     "type": "agents",
+     "kernel": "sir",
+     "params": {
+      "size": 30,
+      "transmission": "transmission",
+      "recovery": 0.2,
+      "vaccinated": 0,
+      "initial": "initial",
+      "steps": "steps",
+      "seed": 7
+     }
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This grid is a crowd. Each square is one person, standing beside the people around them.",
+      "ms": 3500
+     },
+     {
+      "say": "A few people start out sick. This slider sets how many.",
+      "set": {
+       "initial": 3
+      },
+      "focus": "initial",
+      "ms": 3500
+     },
+     {
+      "say": "This slider is the chance that one sick person passes the illness to one neighbour in one round.",
+      "focus": "transmission",
+      "ms": 4000
+     },
+     {
+      "say": "This one sets how many rounds we let the story play out.",
+      "focus": "steps",
+      "ms": 3500
+     },
+     {
+      "say": "These boxes count how much of the crowd ever fell sick, and the most who were sick at once.",
+      "focus": [
+       "final",
+       "peak"
+      ],
+      "ms": 4000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "You've seen a few sick people become many. Now take control of the outbreak and find out what really decides how far it goes.",
+    "goals": [
+     {
+      "text": "Turn a fizzling illness into one that reaches more than half the crowd",
+      "when": "sim_final_infected > 0.5",
+      "solution": {
+       "transmission": 0.5
+      },
+      "hints": [
+       "Starting with more sick people is not the main lever. What makes each case create new ones?",
+       "Raise the chance that a sick person passes it to a neighbour, and watch the share ever sick.",
+       "Very low chances fizzle out. Somewhere well below certainty, each case reliably passes it on and the outbreak sweeps across."
+      ]
+     },
+     {
+      "text": "Start the outbreak with at least 15 sick people, yet keep the share ever sick below 10%",
+      "when": "initial >= 15 && sim_final_infected < 0.1",
+      "solution": {
+       "initial": 20
+      },
+      "hints": [
+       "A big head start only grows if each sick person passes the illness on.",
+       "Raise the number of starting cases, but think about what the chance per contact must be.",
+       "Keep the chance per neighbour very low, the way it was at the very start, so the sick leave the game before passing it on."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. What decides the size of an outbreak is whether each sick person passes the illness on before leaving the game. A high chance per contact turns 3 cases into many. A tiny chance lets even 30 cases fizzle.",
+     "incorrect": "It is natural to think the number of starting cases matters most. But spread works by multiplying: each case makes new cases, which make more. If that chance is tiny, a big start just recovers or dies away. If it is high, a small start still grows."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with a weak illness: 3 sick people, each with only a small chance per neighbour per round. Watch the share ever sick. It stays tiny, because the sick leave the game before passing it on.",
+       "set": {
+        "transmission": 0.02,
+        "initial": 3,
+        "steps": 100
+       },
+       "focus": "final",
+       "ms": 5000
+      },
+      {
+       "say": "Now make the illness catchier and look at just the first 3 rounds. A few neighbours of the first cases have already caught it.",
+       "set": {
+        "transmission": 0.3,
+        "steps": 3
+       },
+       "focus": "transmission",
+       "ms": 5000
+      },
+      {
+       "say": "That chance, for one sick person and one neighbour in one round, is called the transmission probability. Everyone not yet sick, who can still catch it, is susceptible.",
+       "focus": "transmission",
+       "ms": 5500
+      },
+      {
+       "say": "Ten rounds in, each newly sick person is passing it on to their own susceptible neighbours. The small patches spread outward like ripples.",
+       "set": {
+        "steps": 10
+       },
+       "focus": "steps",
+       "ms": 5000
+      },
+      {
+       "say": "A person beside two sick neighbours gets two separate chances to catch it. That is why the risk rises fastest where the illness is thickest.",
+       "focus": "two_nb",
+       "ms": 5000
+      },
+      {
+       "say": "Let it run to 100 rounds. The share who ever fell sick is called the attack rate. It has climbed far past the 3 who started.",
+       "set": {
+        "steps": 100
+       },
+       "focus": "final",
+       "ms": 5000
+      },
+      {
+       "say": "Now the striking case: a single sick person and a high chance per contact. One becomes a few, a few become many, and the illness sweeps outward through the crowd.",
+       "set": {
+        "initial": 1,
+        "transmission": 0.5,
+        "steps": 100
+       },
+       "focus": [
+        "final",
+        "peak"
+       ],
+       "ms": 6000
+      }
+     ]
+    },
+    "explanation": "An illness like this spreads one contact at a time. Each round, every sick person gets a chance to infect each susceptible neighbour, and every new case then gets its own chances. When that chance is high enough, cases multiply outward from even one starting point. When it is low, the sick leave the game before passing it on and the outbreak fizzles, however many people it starts with. Poe's story does not measure any of this: it is fiction, and its Red Death finally arrives in a way no real disease could. But the courtiers' whole plan rests on this same idea, that the plague travels from person to person and can be shut out.",
+    "quote": "The abbey was amply provisioned. With such precautions the courtiers might bid defiance to contagion. The external world could take care of itself.",
+    "quote_where": "Second paragraph of the story"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "P(catch it this round) = 1 − (1 − "
+     },
+     {
+      "text": "p",
+      "link": "transmission"
+     },
+     {
+      "text": ")^{k}"
+     }
+    ],
+    "caption": "Poe's story has no equation, so this is the model's own rule. A susceptible person with k sick neighbours escapes each one with chance 1 − p. They catch it unless they escape all k. The coloured p is the slider for the chance per neighbour per round. The green box shows this rule worked out for k = 2."
+   },
+   "recap": "A plague spreads by chances passed from neighbour to neighbour: if each case reliably makes new cases, a few sick people can become a whole crowd.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "fast_killer_paradox",
+   "title": "Why a faster killer can spread less",
+   "idea": "An outbreak takes off only if each victim infects others before being removed, so a disease that kills in half an hour has less time to pass itself on.",
+   "role": "core",
+   "predict": {
+    "question": "Imagine a second plague that kills just as fast as the Red Death. The difference is that its victims can pass it on for a full day before any marks appear, and in that day they keep mingling. Compared with a half-hour plague that only spreads once the marks show, how will it spread?",
+    "options": [
+     "Much further, because each victim has far longer to pass it on",
+     "Less far, because it is just as deadly",
+     "About the same, because both kill everyone they reach"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. The race is about how long a victim can pass it on before leaving the game, not how deadly the illness is. A hidden day of contact gives many more chances per neighbour.",
+     "Deadliness alone does not slow spread. What matters is how much time victims spend in contact with others before they are removed. Here that time is a whole day, not half an hour.",
+     "Both may kill everyone they infect, but the number they infect is what differs. The longer contact window means each victim reaches more neighbours, so far more people are infected in the first place."
+    ]
+   },
+   "terms": [
+    {
+     "term": "infectious period",
+     "means": "How long a sick person can pass the illness on before they stop, by dying, recovering or being cut off"
+    },
+    {
+     "term": "removal",
+     "means": "A sick person leaving the chain of spread for good, whether they die, recover or are isolated"
+    },
+    {
+     "term": "epidemic threshold",
+     "means": "The tipping line where each victim, on average, passes the illness to exactly one other person. Above it outbreaks grow; below it they fizzle"
+    }
+   ],
+   "model": {
+    "title": "Same crowd, now with a dial for how fast victims leave the game",
+    "note": "Teaching model: the same 30 × 30 grid as before. People stand still and can only catch the illness from the squares beside them, and each sick neighbour gets one independent chance per round. The new slider replaces the old fixed 20% chance of leaving per round. A round is an abstract time step. Poe says the whole illness lasts half an hour but gives no rate of spread, so every number here is illustrative, not taken from the text. The 'chance to pass it to one given neighbour' box uses a simple formula that assumes each sick person gets at least one round of contact before leaving. The grid can differ a little from it, because neighbours share infections. Real diseases can also spread before symptoms show, and real people move around.",
+    "controls": [
+     {
+      "id": "transmission",
+      "label": "Chance a sick person passes it to one neighbour, per round",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.15,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "initial",
+      "label": "People sick at the start",
+      "kind": "slider",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "default": 3,
+      "unit": "",
+      "color": 3
+     },
+     {
+      "id": "steps",
+      "label": "Rounds to play out",
+      "kind": "slider",
+      "min": 1,
+      "max": 150,
+      "step": 1,
+      "default": 100,
+      "unit": "",
+      "color": 4
+     },
+     {
+      "id": "removal",
+      "label": "Chance a sick person leaves the game (dies or recovers), per round",
+      "kind": "slider",
+      "min": 0.01,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.1,
+      "unit": "",
+      "color": 6
+     }
+    ],
+    "outputs": [
+     {
+      "id": "final",
+      "label": "Share of the crowd ever sick",
+      "expr": "sim_final_infected",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "peak",
+      "label": "Most people sick at one time",
+      "expr": "sim_peak_infected",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "avg_rounds",
+      "label": "Average rounds a sick person stays in the game",
+      "expr": "1 / removal",
+      "unit": " rounds",
+      "decimals": 1,
+      "color": 6
+     },
+     {
+      "id": "pass_one",
+      "label": "Chance a victim passes it to one given neighbour before leaving",
+      "expr": "transmission / (transmission + removal - transmission * removal)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 2
+     }
+    ],
+    "visual": {
+     "type": "agents",
+     "kernel": "sir",
+     "params": {
+      "size": 30,
+      "transmission": "transmission",
+      "recovery": "removal",
+      "vaccinated": 0,
+      "initial": "initial",
+      "steps": "steps",
+      "seed": 7
+     }
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Same crowd, same grid as before. Sick squares pass the illness to the squares beside them, round after round.",
+      "focus": "final",
+      "ms": 5000
+     },
+     {
+      "say": "Here is the one new slider: how fast a sick person leaves the game, by dying or recovering. Before, it was fixed. Now you control it.",
+      "focus": "removal",
+      "ms": 5500
+     },
+     {
+      "say": "This box shows how many rounds a sick person stays around. Watch it shrink as victims leave faster.",
+      "set": {
+       "removal": 0.5
+      },
+      "focus": "avg_rounds",
+      "ms": 5500
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with the race between passing the illness on and leaving the game. Can you tip it either way?",
+    "goals": [
+     {
+      "text": "Without lowering the passing chance, make the plague fizzle so fewer than 1 in 10 people are ever sick. Don't go all the way to a one-round illness.",
+      "when": "transmission >= 0.15 && removal < 1 && final < 0.1",
+      "solution": {
+       "removal": 0.8
+      },
+      "hints": [
+       "Which slider decides how much time each victim has to pass it on?",
+       "Watch the box for the chance of passing it to one given neighbour. Fizzling needs that number well below where it starts.",
+       "Victims need to be gone within a round or two on average, but not always after exactly one."
+      ]
+     },
+     {
+      "text": "Make sick people linger longer than at the start, yet still keep the plague to fewer than 1 in 10 people.",
+      "when": "removal < 0.1 && final < 0.1",
+      "solution": {
+       "removal": 0.05,
+       "transmission": 0.01
+      },
+      "hints": [
+       "If victims stay around longer, they get more chances. Something else has to give.",
+       "Lingering longer piles up chances per neighbour, so each single chance must get smaller. Turn down the passing chance.",
+       "Keep an eye on the chance of passing it to one given neighbour. Push it down to roughly where the fizzling plagues had it."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. Spread depends on how long victims can pass the illness on, not on how deadly it is. A day of hidden contact gives each victim many chances per neighbour, so this plague wins the race easily.",
+     "incorrect": "It is tempting to think a deadlier illness spreads less. But on the grid, what decided the outcome was how many rounds of contact each victim got before leaving. A day of hidden contact is a very long window, so this plague spreads much further."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start here. Each round there is a modest chance of passing it to a neighbour, and sick people linger about ten rounds. The plague sweeps across much of the crowd.",
+       "set": {
+        "transmission": 0.15,
+        "removal": 0.1,
+        "initial": 3,
+        "steps": 100
+       },
+       "focus": "final",
+       "ms": 3600
+      },
+      {
+       "say": "Why so far? Ten rounds of small chances add up. Each victim has nearly a two-in-three chance of infecting any given neighbour before leaving.",
+       "focus": "pass_one",
+       "ms": 3600
+      },
+      {
+       "say": "Now make the illness end faster. Victims last about three rounds, and their chance per neighbour drops. Watch the share ever sick shrink.",
+       "set": {
+        "removal": 0.3
+       },
+       "focus": [
+        "avg_rounds",
+        "pass_one",
+        "final"
+       ],
+       "ms": 3800
+      },
+      {
+       "say": "That time a victim can pass it on is the infectious period. Leaving the game, by death or recovery, is called removal. Faster removal means a shorter infectious period.",
+       "focus": "avg_rounds",
+       "ms": 3800
+      },
+      {
+       "say": "Here is the plague of half an hour: every victim is gone after a single round. They get just one chance per neighbour.",
+       "set": {
+        "removal": 1
+       },
+       "focus": "removal",
+       "ms": 3600
+      },
+      {
+       "say": "Most victims are removed before they infect anyone new. The chains break, and the outbreak dies out near the starting squares.",
+       "focus": "final",
+       "ms": 3800
+      },
+      {
+       "say": "The tipping line is where each victim, on average, passes it to exactly one other person. That line is the epidemic threshold. This fast killer has fallen below it, even though the passing chance never changed.",
+       "focus": "pass_one",
+       "ms": 4200
+      }
+     ]
+    },
+    "explanation": "Whether a plague grows is a race between passing it on and leaving the game. Every round a victim stays sick gives them another chance to infect each neighbour. A long illness piles up chances; a half-hour illness gives very few. If, on average, each victim infects fewer than one new person before being removed, the chains break and the outbreak fizzles near where it began. This is an epidemiological reading of Poe's story, not something the story shows. Poe only describes an illness that runs its whole course in half an hour, with marks that make others shun the victim. Both cut the time a victim can pass it on. It is a race, not a rule: some real diseases spread before symptoms, and a high enough passing chance can beat even a fast killer.",
+    "quote": "The scarlet stains upon the body and especially upon the face of the victim, were the pest ban which shut him out from the aid and from the sympathy of his fellow-men. And the whole seizure, progress and termination of the disease, were the incidents of half an hour.",
+    "quote_where": "Opening paragraph"
+   },
+   "check": {
+    "kind": "model",
+    "task": "Make a killer as fast as it gets, with every victim gone after a single round, that still sweeps through more than half the crowd.",
+    "when": "removal >= 0.99 && final > 0.5",
+    "solution": {
+     "removal": 1,
+     "transmission": 0.9
+    },
+    "hint": "With removal at its fastest, the time window is as short as it can be. What else decides who wins the race?",
+    "misconception": "That a disease which removes its victims almost at once can never spread widely. Speed of removal only matters relative to how easily the illness passes. One round with a very high passing chance can still be enough."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "T",
+      "link": "pass_one"
+     },
+     {
+      "text": " = "
+     },
+     {
+      "text": "p",
+      "link": "transmission"
+     },
+     {
+      "text": " / ("
+     },
+     {
+      "text": "p",
+      "link": "transmission"
+     },
+     {
+      "text": " + "
+     },
+     {
+      "text": "r",
+      "link": "removal"
+     },
+     {
+      "text": " − "
+     },
+     {
+      "text": "p",
+      "link": "transmission"
+     },
+     {
+      "text": "·"
+     },
+     {
+      "text": "r",
+      "link": "removal"
+     },
+     {
+      "text": ")"
+     }
+    ],
+    "caption": "This is the teaching model's rule, not Poe's. The story contains no equation. T (green) is the chance a victim infects one given neighbour before leaving. p (orange) is the passing chance per round, and r (the new slider) is the chance of leaving per round. When r rises, T falls, unless p rises to keep up."
+   },
+   "recap": "A plague spreads only if victims pass it on before they are removed, so killing fast can starve a disease of time, unless it passes very easily.",
+   "builds_on": "contagion_spreads",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "crowding_threshold",
+   "title": "Crowded rooms: the tipping point",
+   "idea": "When enough susceptible people are packed side by side, the disease finds an unbroken path through the crowd and reaches almost everyone. Below that density it dies out in pockets.",
+   "role": "core",
+   "predict": {
+    "question": "Picture the prince's ball after half the guests slip away, so the rooms are full of gaps between people. The plague and its passing chance stay exactly the same. What happens to the share of the remaining guests who fall ill?",
+    "options": [
+     "About the same share falls ill. There are just half as many people.",
+     "The share can drop far more than half, because the gaps can break every path through the crowd.",
+     "The share rises, because each sick guest has fewer people to share the illness with.",
+     "The share drops by exactly half, in step with the crowd."
+    ],
+    "answer": 1,
+    "why": [
+     "This seems natural if each person's risk depends only on the illness. In the model, risk also depends on whether an unbroken chain of neighbours links you to a sick person, and thinning the crowd breaks chains.",
+     "Right. Below the crowding where filled squares link up, the outbreak stalls in small pockets. The share of possible victims reached can collapse, not just shrink a little.",
+     "A sick person's chance of passing it to each neighbour does not grow when neighbours are fewer. Fewer neighbours means fewer bridges, so the illness spreads less.",
+     "Halving the crowd does not halve the outcome in step. Near the tipping point a small change in crowding swings the result from most people to a few pockets."
+    ]
+   },
+   "terms": [
+    {
+     "term": "tipping point",
+     "means": "The crowding level where a small change flips an outbreak from dying out in pockets to reaching almost everyone"
+    },
+    {
+     "term": "percolation",
+     "means": "Spreading across a whole space through an unbroken chain of linked neighbours"
+    }
+   ],
+   "model": {
+    "title": "A crowd on a grid, now with gaps",
+    "note": "Teaching model: the same 30 × 30 grid as before. People stand still and catch the illness only from the squares beside them. Each sick person leaves the game (recovered or dead) with a fixed 20% chance per round. New here: some squares hold no one who can catch it. In the simulation these are cells that can never be infected, scattered at random, and they act as gaps the illness cannot cross. The share of the grid ever sick counts the whole grid, gaps included. The new box divides by the filled share so you see the share of possible victims reached. Real crowds move about, and real plagues can travel through the air or by fleas. The exact crowding where spread takes off depends on the grid's layout. Poe's story is fiction and gives no rates or densities. All numbers here are illustrative, not taken from the text.",
+    "controls": [
+     {
+      "id": "transmission",
+      "label": "Chance a sick person passes it to one neighbour, per round",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.6,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "initial",
+      "label": "People sick at the start",
+      "kind": "slider",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "default": 3,
+      "unit": "",
+      "color": 3
+     },
+     {
+      "id": "steps",
+      "label": "Rounds to play out",
+      "kind": "slider",
+      "min": 1,
+      "max": 150,
+      "step": 1,
+      "default": 100,
+      "unit": "",
+      "color": 4
+     },
+     {
+      "id": "crowded",
+      "label": "Share of squares filled with people who can catch it",
+      "kind": "slider",
+      "min": 0.05,
+      "max": 1,
+      "step": 0.05,
+      "default": 1,
+      "unit": "",
+      "color": 6
+     }
+    ],
+    "outputs": [
+     {
+      "id": "final_s",
+      "label": "Share of the people who could catch it who got it",
+      "expr": "min(1, sim_final_infected / crowded)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 6
+     },
+     {
+      "id": "final",
+      "label": "Share of the whole grid ever sick",
+      "expr": "sim_final_infected",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "peak",
+      "label": "Most people sick at one time",
+      "expr": "sim_peak_infected",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 5
+     }
+    ],
+    "visual": {
+     "type": "agents",
+     "kernel": "sir",
+     "params": {
+      "size": 30,
+      "transmission": "transmission",
+      "recovery": 0.2,
+      "vaccinated": "1 - crowded",
+      "initial": "initial",
+      "steps": "steps",
+      "seed": 7
+     }
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Same picture as before: a crowd on a grid. The illness can only jump from a sick person to the squares right next door.",
+      "focus": "transmission",
+      "ms": 5500
+     },
+     {
+      "say": "One new slider: how many squares hold people who can catch it. The rest become gaps. No one there can catch it or pass it on.",
+      "set": {
+       "crowded": 0.5
+      },
+      "focus": "crowded",
+      "ms": 6500
+     },
+     {
+      "say": "And a new box: of the people who could catch it, what share actually did.",
+      "set": {
+       "crowded": 1
+      },
+      "focus": "final_s",
+      "ms": 5000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Hunt for the edge between pockets and sweeping spread. Thin the crowd, change how easily the illness passes, and watch the share of possible victims reached.",
+    "goals": [
+     {
+      "text": "Reach more than half of the people who could catch it, while at least a quarter of the squares stay empty",
+      "when": "crowded <= 0.75 && final_s > 0.5",
+      "solution": {
+       "crowded": 0.75,
+       "transmission": 1
+      },
+      "hints": [
+       "Empty squares break paths. Which other slider makes the illness better at using the paths that remain?",
+       "The surer each pass is, the fewer filled squares the illness needs to cross the room.",
+       "Make every pass as sure as you can, then thin the room slowly from full and stop as soon as a quarter of it is empty."
+      ]
+     },
+     {
+      "text": "Make the outbreak stall in pockets, reaching under a fifth of possible victims, even though more than half the squares are filled",
+      "when": "crowded > 0.5 && final_s < 0.2",
+      "solution": {
+       "crowded": 0.55,
+       "transmission": 0.05
+      },
+      "hints": [
+       "Crowding is only half the story. What else decides whether a chain of neighbours actually carries the illness?",
+       "Keep the room just over half full, then weaken the illness.",
+       "Lower the passing chance a long way. A sick person has only a few rounds before leaving, so each pass must be likely or the chain snaps."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. Thinning a crowd does more than remove people. It cuts the chains of neighbours the illness travels along. Below the tipping point, outbreaks stall in pockets, so the share reached can fall far more than in step with the crowd.",
+     "incorrect": "It is tempting to treat each guest's risk as fixed by the illness alone. In the model, an illness that only jumps between neighbours needs an unbroken chain of filled squares. Gaps snap those chains, and near the tipping point a small thinning collapses the outbreak."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start fully packed, like the prince's crowded rooms. Every square holds someone who can catch it. The illness sweeps across and reaches almost everyone.",
+       "set": {
+        "crowded": 1,
+        "transmission": 0.6,
+        "initial": 3,
+        "steps": 100
+       },
+       "focus": "final_s",
+       "ms": 4500
+      },
+      {
+       "say": "Now leave most squares empty. The same illness, with the same passing chance, fizzles. Each sick person is ringed by gaps, so it dies out in small pockets.",
+       "set": {
+        "crowded": 0.3
+       },
+       "focus": "final_s",
+       "ms": 5000
+      },
+      {
+       "say": "Fill the room back up to nine squares in ten. Paths through the crowd return, and the outbreak again reaches most possible victims.",
+       "set": {
+        "crowded": 0.9
+       },
+       "focus": "final_s",
+       "ms": 5000
+      },
+      {
+       "say": "The change is not gradual. Somewhere between thin and packed is a narrow band where a small shift in crowding flips the outcome. That band is the tipping point.",
+       "focus": "crowded",
+       "ms": 5500
+      },
+      {
+       "say": "Why so sudden? Above the tipping point, filled squares link into one unbroken web that stretches across the room. Spreading through such a web is called percolation. Below it, the web falls apart into islands.",
+       "focus": "final_s",
+       "ms": 6000
+      },
+      {
+       "say": "Now make the illness as strong as it gets: every sick person surely infects every neighbour. Then thin the room again.",
+       "set": {
+        "transmission": 1,
+        "crowded": 0.3
+       },
+       "focus": "transmission",
+       "ms": 5000
+      },
+      {
+       "say": "Even a sure pass cannot cross a gap. With no unbroken path, the strongest illness still stalls in pockets. Crowding decides whether a road exists at all.",
+       "focus": "final_s",
+       "ms": 5500
+      }
+     ]
+    },
+    "explanation": "An illness that jumps only between neighbours needs an unbroken chain of people who can catch it. When the crowd is packed, those chains link into one web across the room, and the outbreak reaches almost everyone. When the crowd is thin, the web breaks into islands and outbreaks die in pockets, however strong the illness. The switch happens over a narrow band of crowding, the tipping point, and it sits lower when each pass is surer (or, from the last concept, when victims stay contagious longer). Poe's story does not measure any of this. It is fiction, and it simply describes rooms 'densely crowded' before the Red Death takes every reveller. The model shows one reason crowding could matter, but it leaves out moving people and airborne spread.",
+    "quote": "But these other apartments were densely crowded, and in them beat feverishly the heart of life.",
+    "quote_where": "The masked ball, just before midnight"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "chance to catch it this round = 1 − (1 − "
+     },
+     {
+      "text": "p",
+      "link": "transmission"
+     },
+     {
+      "text": ")^{k},  k = sick neighbours among the "
+     },
+     {
+      "text": "filled",
+      "link": "crowded"
+     },
+     {
+      "text": " squares next door → "
+     },
+     {
+      "text": "share reached",
+      "link": "final_s"
+     }
+    ],
+    "caption": "This is the model's rule, not Poe's: the story has no equation. p is the passing-chance slider. k counts only sick people in neighbouring squares, and gaps never count. Thinning the crowd (the filled-share slider) keeps k at zero for many people, so chains break and the share reached collapses below the tipping point."
+   },
+   "recap": "Plague needs a chain of neighbours: pack the crowd past the tipping point and it reaches nearly everyone, thin it below and it dies in pockets.",
+   "builds_on": "contagion_spreads",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "double_edged_wall",
+   "title": "What the welded gates really did",
+   "idea": "The wall lowers the chance the plague gets in, but it also keeps the group crowded and fully susceptible and blocks escape, so if the plague does get in, the damage is worse.",
+   "role": "contribution",
+   "predict": {
+    "question": "Suppose the prince had sealed his thousand friends just as tightly, but spread them across many small, separate lodges instead of one packed abbey. Compared with the story, what changes most?",
+    "options": [
+     "The chance the plague gets in drops a lot",
+     "The share who would die if it got in drops, because there is no single packed crowd for it to run through",
+     "Nothing changes: a sealed wall is a sealed wall",
+     "Both the chance it gets in and the damage once inside go up"
+    ],
+    "answer": 1,
+    "why": [
+     "Tempting, because spreading out feels safer. But the chance of a breach depends on how tight the wall is, and the wall is just as tight as before.",
+     "Right. Spreading out cuts only the crowding arrow. From the tipping-point concept, a thin, broken-up group gives the disease no unbroken path, so damage after a breach falls even though the wall is unchanged.",
+     "This treats the wall as the only thing that matters. The wall pushes on several outcomes, and crowding is one of them. Change the crowding and the damage after a breach changes.",
+     "Nothing in the change makes entry easier or the group denser. Spreading out lowers crowding, so damage after a breach should fall, not rise."
+    ]
+   },
+   "terms": [
+    {
+     "term": "expected toll",
+     "means": "The chance the plague gets in times the share who die if it does: the average loss to plan for"
+    },
+    {
+     "term": "breach rate",
+     "means": "How often, each month, the plague gets past the wall anyway"
+    }
+   ],
+   "model": {
+    "title": "One choice, many pushes: sealing the abbey",
+    "note": "Teaching model: Poe's story is fiction and gives no numbers. Here the gates are either open or welded. The plague reaches an open group with a fixed chance each month (40%) and a welded one at the slider's rate. The share who die once it is inside comes from three made-up settings: how packed people are, how many have never met the disease, and whether they can flee. All numbers are illustrative, not from the story.",
+    "controls": [
+     {
+      "id": "weld",
+      "label": "Weld the gates shut",
+      "kind": "toggle",
+      "default": 0,
+      "color": 0,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "leak",
+      "label": "Chance per month the plague slips past the wall",
+      "kind": "slider",
+      "min": 0,
+      "max": 0.3,
+      "step": 0.01,
+      "default": 0.05,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "months",
+      "label": "Months shut away",
+      "kind": "slider",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 2,
+      "unit": " months",
+      "color": 2
+     }
+    ],
+    "outputs": [
+     {
+      "id": "p_in",
+      "label": "Chance the plague gets in",
+      "expr": "weld ? 1 - pow(1 - leak, months) : 1 - pow(0.6, months)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "harm",
+      "label": "Share who die if it gets in",
+      "expr": "(weld ? 1 : 0.8) * (0.3 + 0.7 * (weld ? 0.95 : 0.5)) * (1 - 0.4 * (weld ? 0 : 1))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "expected",
+      "label": "Expected share who die",
+      "expr": "p_in * harm",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "exp_welded",
+      "label": "Expected share who die, gates welded",
+      "expr": "0.965 * (1 - pow(1 - leak, months))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "exp_open",
+      "label": "Expected share who die, gates open",
+      "expr": "0.312 * (1 - pow(0.6, months))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 6
+     }
+    ],
+    "visual": {
+     "type": "causal",
+     "nodes": [
+      {
+       "id": "gates",
+       "label": "Gates welded",
+       "x": 10,
+       "y": 50,
+       "value": "weld"
+      },
+      {
+       "id": "entry",
+       "label": "Plague gets in",
+       "x": 45,
+       "y": 12,
+       "value": "p_in"
+      },
+      {
+       "id": "crowd",
+       "label": "Packed together",
+       "x": 45,
+       "y": 38,
+       "value": "weld ? 0.95 : 0.5"
+      },
+      {
+       "id": "unexposed",
+       "label": "Never met the disease",
+       "x": 45,
+       "y": 62,
+       "value": "weld ? 1 : 0.8"
+      },
+      {
+       "id": "escape",
+       "label": "Can flee",
+       "x": 45,
+       "y": 88,
+       "value": "weld ? 0 : 1"
+      },
+      {
+       "id": "harm_node",
+       "label": "Die if it gets in",
+       "x": 72,
+       "y": 62,
+       "value": "harm"
+      },
+      {
+       "id": "expected_node",
+       "label": "Expected deaths",
+       "x": 90,
+       "y": 30,
+       "value": "expected"
+      }
+     ],
+     "edges": [
+      {
+       "from": "gates",
+       "to": "entry",
+       "strength": "-0.9 * (1 - leak / 0.3)",
+       "label": "keeps it out"
+      },
+      {
+       "from": "gates",
+       "to": "crowd",
+       "strength": 0.7,
+       "label": "keeps them in"
+      },
+      {
+       "from": "gates",
+       "to": "unexposed",
+       "strength": 0.5,
+       "label": "no contact"
+      },
+      {
+       "from": "gates",
+       "to": "escape",
+       "strength": -0.9,
+       "label": "no way out"
+      },
+      {
+       "from": "crowd",
+       "to": "harm_node",
+       "strength": 0.6,
+       "label": "more"
+      },
+      {
+       "from": "unexposed",
+       "to": "harm_node",
+       "strength": 0.5,
+       "label": "more"
+      },
+      {
+       "from": "escape",
+       "to": "harm_node",
+       "strength": -0.6,
+       "label": "fewer"
+      },
+      {
+       "from": "entry",
+       "to": "expected_node",
+       "strength": 0.8,
+       "label": "×"
+      },
+      {
+       "from": "harm_node",
+       "to": "expected_node",
+       "strength": 0.8,
+       "label": "×"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This diagram starts from one choice: the box on the left, the gates. Each arrow shows what that choice pushes up or down.",
+      "focus": "gates",
+      "ms": 4200
+     },
+     {
+      "say": "This switch welds the gates shut, as the courtiers did. Watch every arrow leaving the gates light up at once.",
+      "set": {
+       "weld": 1
+      },
+      "focus": "weld",
+      "ms": 4000
+     },
+     {
+      "say": "This slider is how often the plague still slips past the wall each month. A leakier wall weakens the 'keeps it out' arrow.",
+      "set": {
+       "leak": 0.15
+      },
+      "focus": "leak",
+      "ms": 4200
+     },
+     {
+      "say": "This slider is how long the group stays shut away.",
+      "focus": "months",
+      "ms": 3000
+     },
+     {
+      "say": "On the right, two numbers combine: the chance it gets in, and how many die if it does.",
+      "set": {
+       "weld": 0,
+       "leak": 0.05
+      },
+      "focus": [
+       "p_in",
+       "harm",
+       "expected_node"
+      ],
+      "ms": 4400
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with the prince's choice. First get the best the wall can offer, then look for the conditions under which it turns against the people behind it.",
+    "goals": [
+     {
+      "text": "Weld the gates and keep the chance the plague gets in under 15% across a full six months shut away.",
+      "when": "weld == 1 && months >= 6 && p_in < 0.15",
+      "solution": {
+       "weld": 1,
+       "months": 6,
+       "leak": 0.02
+      },
+      "hints": [
+       "Small monthly risks add up. What has to change for six months to stay safe?",
+       "Weld the gates, set six months, then make the wall itself tighter with the slip-past slider.",
+       "The default monthly leak is too high for six months. You need something under three in a hundred per month."
+      ]
+     },
+     {
+      "text": "Find a case where welding is the worse bet: more expected deaths behind the welded gates than with the gates left open.",
+      "when": "exp_welded > exp_open",
+      "solution": {
+       "weld": 1,
+       "months": 10
+      },
+      "hints": [
+       "Welding wins only while the wall keeps the plague out. What could wear that advantage down?",
+       "There are two routes: a leakier wall, or a longer stay. Either one lets the plague's chance of getting in creep up while the damage once inside stays high.",
+       "With the default leak, compare the two 'expected share' numbers as you stretch the stay. They swap places somewhere past half a year."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. The wall's effects run along separate arrows. Spreading people out cuts the crowding arrow and lowers the damage after a breach. The chance of a breach stays where the wall's tightness puts it.",
+     "incorrect": "It is easy to think of the wall as doing one thing, keeping the plague out. But it pushes on several outcomes at once. Crowding is a separate arrow, and changing it changes how bad a breach would be, not how likely one is."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with the gates open for two months. With the plague raging outside, the chance it reaches the group is high, about 64%. But scattered people who can flee lose about 31% if it comes.",
+       "set": {
+        "weld": 0,
+        "leak": 0.05,
+        "months": 2
+       },
+       "focus": [
+        "p_in",
+        "harm"
+       ],
+       "ms": 5200
+      },
+      {
+       "say": "Now weld the gates. The 'keeps it out' arrow does its job: the chance the plague gets in falls to about 10%. This is the courtiers' bet.",
+       "set": {
+        "weld": 1
+       },
+       "focus": "entry",
+       "ms": 4800
+      },
+      {
+       "say": "Look at the other three arrows. Everyone stays packed together, no one inside has met the disease, and no one can flee. Each of these pushes the share who die if it gets in from about 31% up to about 97%.",
+       "focus": [
+        "crowd",
+        "unexposed",
+        "escape",
+        "harm_node"
+       ],
+       "ms": 6200
+      },
+      {
+       "say": "So the wall is double-edged: less likely to be breached, far worse if it is. To weigh both, multiply them. The chance it gets in times the share who die gives the expected toll, the average loss to plan for.",
+       "focus": "expected",
+       "ms": 5600
+      },
+      {
+       "say": "After two months the expected toll is about 9% behind the wall and about 20% outside it. Welding is winning, for now.",
+       "focus": [
+        "exp_welded",
+        "exp_open"
+       ],
+       "ms": 4600
+      },
+      {
+       "say": "But the wall is never perfect. Call its monthly leak the breach rate. Even a small breach rate adds up: stretch the stay to six months and the welded chance creeps to about 26%.",
+       "set": {
+        "months": 6
+       },
+       "focus": [
+        "months",
+        "p_in"
+       ],
+       "ms": 5400
+      },
+      {
+       "say": "At nine months it flips. About 36% are expected to die behind the wall, against about 31% with open gates. The edge that kept the plague out has worn thin, and the edge that makes a breach deadly is still sharp.",
+       "set": {
+        "months": 9
+       },
+       "focus": [
+        "exp_welded",
+        "exp_open"
+       ],
+       "ms": 6400
+      }
+     ]
+    },
+    "explanation": "Sealing the gates is one choice that pushes on several things at once, and not all in the same direction. It lowers the chance the plague arrives. It also keeps a thousand people packed together, keeps all of them unexposed, and removes any way to flee, so a single breach can sweep through nearly everyone. Poe's story shows this as a plot, not a test. The courtiers weld the bolts so no one can leave, the Red Death gets in anyway, and every reveller dies. The model's numbers are invented to make the trade-off visible. Whether sealing helps or hurts on average depends on how leaky the wall is and how long it must hold, and the story says nothing about real-world rates.",
+    "quote": "The courtiers, having entered, brought furnaces and massy hammers and welded the bolts. They resolved to leave means neither of ingress nor egress to the sudden impulses of despair or of frenzy from within.",
+    "quote_where": "Second paragraph"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "expected deaths",
+      "link": "expected"
+     },
+     {
+      "text": " = "
+     },
+     {
+      "text": "P(gets in)",
+      "link": "p_in"
+     },
+     {
+      "text": " × "
+     },
+     {
+      "text": "share who die if it does",
+      "link": "harm"
+     },
+     {
+      "text": ",   P(gets in) = 1 − (1 − "
+     },
+     {
+      "text": "leak",
+      "link": "leak"
+     },
+     {
+      "text": ")^{"
+     },
+     {
+      "text": "months",
+      "link": "months"
+     },
+     {
+      "text": "}"
+     }
+    ],
+    "caption": "The story has no equation; this is the teaching model's rule. The wall works on the second factor's partner: welding shrinks P(gets in), shown in the leak and months colours, and also raises the share who die if it does, which is set by crowding, lack of exposure and no escape. The expected toll is their product, so the wall helps only while the first factor shrinks faster than the second grows."
+   },
+   "recap": "Welding the gates made a breach less likely but far deadlier. A wall that leaks even a little, held for long enough, can cost more lives than it saves.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "one_intruder",
+   "title": "One masked guest, a thousand victims",
+   "idea": "In a sealed, crowded group where no one has been exposed, a single infected arrival can be enough to reach nearly everyone. Starting small does not mean ending small.",
+   "role": "contribution",
+   "predict": {
+    "question": "A sealed ship carries 500 passengers. None of them has ever met an illness that passes easily from berth to berth, and every berth is full. Compare two voyages: in one, a single sick passenger boards; in the other, ten sick passengers board. How do the final tolls compare?",
+    "options": [
+     "Ten sick passengers end with about ten times as many cases",
+     "Both will most likely reach most of the passengers; ten starters mainly make take-off surer and faster",
+     "One sick passenger cannot start an outbreak among 500 people",
+     "The single sick passenger will reach more people than the ten"
+    ],
+    "answer": 1,
+    "why": [
+     "It feels natural that ten times the cause gives ten times the effect. But in a packed, unexposed crowd the chain runs until it hits the edges, so the ceiling is the crowd, not the start.",
+     "Right: once the illness takes off in a full, never-exposed crowd, it finds a path to almost everyone. More starters lower the chance of an early chance burnout and speed things up, but they barely raise the final toll.",
+     "One case is a tiny share of 500, so it looks harmless. Yet each case that passes the illness on before leaving keeps the chain alive, and in a packed crowd one chain can branch out to nearly everyone.",
+     "Nothing about one starter makes the spread stronger. Both voyages are capped by the same crowd, so the single case does not beat the ten; at best it matches them, and it carries more risk of burning out early."
+    ]
+   },
+   "terms": [
+    {
+     "term": "index case",
+     "means": "The first person who brings an illness into a group"
+    },
+    {
+     "term": "naive population",
+     "means": "A group where no one has met the illness before, so no one is already protected"
+    }
+   ],
+   "model": {
+    "title": "One sick arrival in a sealed crowd",
+    "note": "Teaching model: the same 30 × 30 grid as before, with the same rules. People stand still and catch the illness only from the squares beside them. Each sick person leaves the game (recovered or dead) with a fixed 20% chance per round. Squares not filled with people who can catch it are cells that can never be infected, scattered at random. Poe's Red Death kills within half an hour; here, leaving the game is a per-round chance. Reading the masked figure as one infected arrival is our interpretation: in the story he is a supernatural figure, not a patient. New here are two boxes. One shows the start as a share of the possible victims. The other shows how many squares end up ever sick for each person sick at the start. The simulation uses one fixed random seed. With a single starter, a real outbreak can sometimes die out by chance before it spreads. Real crowds move about, and real plagues can travel through the air or by fleas. Poe's story is fiction and gives no rates or densities. All numbers here are illustrative, not taken from the text.",
+    "controls": [
+     {
+      "id": "transmission",
+      "label": "Chance a sick person passes it to one neighbour, per round",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.6,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "initial",
+      "label": "People sick at the start",
+      "kind": "slider",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "default": 3,
+      "unit": "",
+      "color": 3
+     },
+     {
+      "id": "steps",
+      "label": "Rounds to play out",
+      "kind": "slider",
+      "min": 1,
+      "max": 150,
+      "step": 1,
+      "default": 100,
+      "unit": "",
+      "color": 4
+     },
+     {
+      "id": "crowded",
+      "label": "Share of squares filled with people who can catch it",
+      "kind": "slider",
+      "min": 0.05,
+      "max": 1,
+      "step": 0.05,
+      "default": 1,
+      "unit": "",
+      "color": 6
+     }
+    ],
+    "outputs": [
+     {
+      "id": "final_s",
+      "label": "Share of the people who could catch it who got it",
+      "expr": "min(1, sim_final_infected / crowded)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 6
+     },
+     {
+      "id": "final",
+      "label": "Share of the whole grid ever sick",
+      "expr": "sim_final_infected",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "peak",
+      "label": "Most people sick at one time",
+      "expr": "sim_peak_infected",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "start_share",
+      "label": "Sick at the start, as a share of the people who could catch it",
+      "expr": "min(1, initial / (900 * crowded))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 1,
+      "color": 3
+     },
+     {
+      "id": "per_seed",
+      "label": "People ever sick for each person sick at the start",
+      "expr": "sim_final_infected * 900 / initial",
+      "unit": "",
+      "scale": 1,
+      "decimals": 0,
+      "color": 2
+     }
+    ],
+    "visual": {
+     "type": "agents",
+     "kernel": "sir",
+     "params": {
+      "size": 30,
+      "transmission": "transmission",
+      "recovery": 0.2,
+      "vaccinated": "1 - crowded",
+      "initial": "initial",
+      "steps": "steps",
+      "seed": 7
+     }
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Same crowd on a grid as before: every square filled, three people sick at the start, and the same chance of passing it on.",
+      "focus": [
+       "initial",
+       "crowded"
+      ],
+      "ms": 6000
+     },
+     {
+      "say": "New box: how big the start is next to the whole crowd of possible victims. Right now it's a sliver.",
+      "focus": "start_share",
+      "ms": 6000
+     },
+     {
+      "say": "And another new box: how many people end up sick for each person who was sick at the start.",
+      "focus": "per_seed",
+      "ms": 6500
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play the prince's ball yourself. Shrink the start, then see what it takes to stop a lone intruder.",
+    "goals": [
+     {
+      "text": "Strip the start down to the smallest spark the model allows, and still have the illness reach at least 9 in 10 of the people who could catch it.",
+      "when": "initial == 1 && final_s >= 0.9",
+      "solution": {
+       "initial": 1
+      },
+      "hints": [
+       "Which slider sets how many people bring the illness in?",
+       "Keep the crowd packed and the passing chance where it is, and only touch the number sick at the start.",
+       "Lower the starters one at a time and watch the top box. Does it fall the way the starters do?"
+      ]
+     },
+     {
+      "text": "Keep a single sick arrival, but thin the crowd until he reaches fewer than half of the people who could catch it.",
+      "when": "initial == 1 && final_s < 0.5",
+      "solution": {
+       "initial": 1,
+       "crowded": 0.5
+      },
+      "hints": [
+       "What did the welded gates stop from happening? Think of courtiers who might have fled, or stayed apart.",
+       "With one starter, lower the share of squares filled with people who can catch it.",
+       "Go clearly below the tipping point you found in the crowded-rooms lesson, where the path through the crowd breaks."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. In a full crowd where no one is protected, the final toll is capped by the crowd, not by the number of starters. Ten sick passengers make take-off surer and quicker, but one is usually enough to reach most of the ship.",
+     "incorrect": "It's tempting to think the toll grows with the number of starters. But once the chain takes off in a packed, never-exposed crowd, it keeps finding new people until it reaches the edges. A small start does not mean a small finish."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with a big spark: thirty people sick in a fully packed crowd. The illness sweeps the grid and the top box climbs close to everyone.",
+       "set": {
+        "initial": 30,
+        "crowded": 1,
+        "transmission": 0.6,
+        "steps": 100
+       },
+       "focus": "final_s",
+       "ms": 4000
+      },
+      {
+       "say": "Cut the start to ten. A third of the spark. Watch the top box: it barely moves.",
+       "set": {
+        "initial": 10
+       },
+       "focus": "final_s",
+       "ms": 3600
+      },
+      {
+       "say": "Now just one. This first carrier is called the index case. He is about a tenth of a percent of the crowd, yet the top box still ends near everyone.",
+       "set": {
+        "initial": 1
+       },
+       "focus": [
+        "start_share",
+        "final_s"
+       ],
+       "ms": 4800
+      },
+      {
+       "say": "Look at the people sick per starter: one arrival accounts for nearly the whole grid. Each sick person passes it on before leaving, and in a packed crowd the chain branches outward.",
+       "focus": "per_seed",
+       "ms": 4600
+      },
+      {
+       "say": "That only works because no one here was ever exposed. Every square holds someone who can catch it. A crowd like this is a naive population.",
+       "focus": "crowded",
+       "ms": 4200
+      },
+      {
+       "say": "Suppose half the courtiers had fled or kept apart. Same lone intruder, but now the gaps break the path, and his illness dies out in a pocket.",
+       "set": {
+        "crowded": 0.5
+       },
+       "focus": "final_s",
+       "ms": 4600
+      },
+      {
+       "say": "But the gates were welded. A thousand never-exposed people stayed packed together with no way out. Put the crowd back.",
+       "set": {
+        "crowded": 1
+       },
+       "focus": "crowded",
+       "ms": 4000
+      },
+      {
+       "say": "One masked guest, and the illness reaches nearly everyone. The walls that kept the plague out for months made sure that, once it got in, one carrier was enough.",
+       "focus": [
+        "final_s",
+        "per_seed"
+       ],
+       "ms": 5200
+      }
+     ]
+    },
+    "explanation": "In a packed crowd where no one has met the illness, the number of people who bring it in barely changes the final toll. Once the chain takes off, each sick person passes it to neighbours before leaving, and the chain keeps branching until it reaches the edges of the crowd. More starters make take-off surer and faster, since a single case can sometimes burn out by chance, but they hardly raise the ceiling. The crowd sets the ceiling: how packed it is and how many in it can still catch the illness. Poe's story stages exactly this. The welded gates kept a thousand unexposed revellers packed together with no exit, and after one masked figure enters, every reveller dies. This is fiction, and his Red Death is supernatural, so the story illustrates the mechanism rather than proving anything about real plagues.",
+    "quote": "And now was acknowledged the presence of the Red Death. He had come like a thief in the night. And one by one dropped the revellers in the blood-bedewed halls of their revel, and died each in the despairing posture of his fall.",
+    "quote_where": "Final paragraph of the story"
+   },
+   "check": {
+    "kind": "model",
+    "task": "Show that a big start does not guarantee a big finish: begin with at least twenty people sick, yet have the illness reach fewer than a third of the people who could catch it.",
+    "when": "initial >= 20 && final_s < 0.34",
+    "solution": {
+     "initial": 30,
+     "transmission": 0.05
+    },
+    "hint": "The number of starters isn't what decides the toll. Which conditions make each chain stop before it branches out?",
+    "misconception": "That the size of an outbreak is set mainly by how many cases start it, rather than by whether each case passes it on and whether the crowd offers an unbroken path."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "chance a healthy person catches it this round = 1 − (1 − "
+     },
+     {
+      "text": "p",
+      "link": "transmission"
+     },
+     {
+      "text": ")^{k}"
+     }
+    ],
+    "caption": "This is the model's rule, not Poe's: the story gives no equation. p is the passing-chance slider, and k is how many of a person's neighbours are sick that round. In a full crowd every sick person has healthy neighbours to pass it to, so even one starter keeps finding new victims. Gaps lower k at the edges and can break the chain."
+   },
+   "recap": "In a sealed, packed crowd that has never met the illness, one carrier can reach nearly everyone: the crowd sets the toll, not the size of the start.",
+   "builds_on": "crowding_threshold",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  }
+ ],
+ "omitted": [],
+ "generation": {
+  "provider": "claude",
+  "model": "claude-opus-5-5",
+  "pipeline": "lemma.generate.make_outline + build_lesson",
+  "source_chars": 13957,
+  "omitted": 0
+ }
+}

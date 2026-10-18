@@ -46,3 +46,7 @@ CI runs the unittest discovery command with Node.js 22 installed. Install Node.j
 ## Verification
 
 Run the narrowest relevant tests during development, then the full unittest suite before handing off code changes when possible. For interface changes, also exercise the affected flow in a browser; unit tests alone do not establish visual correctness. Report what was checked and any skipped or blocked validation.
+
+## Publishing and deployment
+
+When asked to publish or deploy, commit and push directly to `main`; do not create a pull request unless explicitly requested. Deploy from a clean `main` matching `origin/main` with `deploy/push.sh ubuntu@34.172.130.18`. Verify the live gallery and lesson endpoints after deployment. Never commit deployment credentials or evaluation-run secrets.

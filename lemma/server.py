@@ -90,7 +90,7 @@ def providers() -> dict:
 
 
 def load_example() -> tuple[dict, str]:
-    lesson = json.loads(EXAMPLES.joinpath("galton-1886.json").read_text(encoding="utf-8"))
+    lesson = json.loads(EXAMPLES.joinpath("gallery/galton-1886.json").read_text(encoding="utf-8"))
     source = EXAMPLES.joinpath("galton-1886.txt").read_text(encoding="utf-8")
     return lesson, source
 
@@ -103,15 +103,14 @@ def gallery_index() -> list[dict]:
 
 
 def load_gallery(slug: str) -> tuple[dict, str | None]:
-    """A finished lesson anyone can open, read-only like the example. Only Galton's paper is public domain, so
-    the others ship without their papers' text: their quotes were checked against it before they were added."""
+    """A finished lesson, read-only like the example. Available source files are checked before display;
+    other lessons' quotes were checked against their papers before they were added."""
     entry = next((e for e in gallery_index() if e["slug"] == slug), None)
     if entry is None:
         raise ApiError(404, "That lesson isn't in the gallery.")
-    if slug == "galton-1886":
-        lesson, source = load_example()
-    else:
-        lesson, source = json.loads(GALLERY.joinpath(f"{slug}.json").read_text(encoding="utf-8")), None
+    lesson = json.loads(GALLERY.joinpath(f"{slug}.json").read_text(encoding="utf-8"))
+    source_path = EXAMPLES.joinpath(entry["source_file"]) if entry.get("source_file") else None
+    source = source_path.read_text(encoding="utf-8") if source_path else None
     lesson["example"] = True  # built in: it can't be saved or edited, only played and downloaded
     lesson["gallery"] = {k: entry[k] for k in ("slug", "field")}
     return lesson, source
@@ -570,7 +569,9 @@ def api_gallery(_body):
         cover = next(c for c in lesson["concepts"] if c["id"] == entry["cover"])
         items.append({**lesson["gallery"], "title": lesson["title"], "source": lesson["source"],
                       "concepts": [c["title"] for c in lesson["concepts"]],
-                      "cover": {"title": cover["title"], "model": cover["model"], "values": entry.get("cover_values", {})}})
+                      "cover": {"title": cover["title"], "idea": cover["idea"], "model": cover.get("model"),
+                                "activity": next((a for a in cover.get("activities", []) if a["kind"] in ("sort", "construction", "inheritance")), None),
+                                "values": entry.get("cover_values", {})}})
     return items
 
 

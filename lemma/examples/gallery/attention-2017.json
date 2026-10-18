@@ -380,7 +380,43 @@
     ],
     "caption": "This is the paper's Equation 1. QK^{T} is every query's dot product with every key: the match scores your sliders set. softmax(…) turns each word's row of scores into weights that add to 100%, the coloured attention bars. Multiplying by V takes the weighted average of the values, the living-thing bar. The division by √d_{k} is a scaling step covered in the next concept. Here, treat it as part of the score."
    },
-   "recap": "Attention scores how well a word's query matches each key, softmaxes the scores into weights that add to 100%, and hands the word a weighted average of the values."
+   "recap": "Attention scores how well a word's query matches each key, softmaxes the scores into weights that add to 100%, and hands the word a weighted average of the values.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "scaled_softmax",
@@ -734,7 +770,47 @@
     "caption": "This is the paper's Equation 1. QKᵀ holds every query-to-key match score; the 'animal' match slider plays one of these. d_k is the 'Numbers in each query and key' slider, and √d_k is the 'stretched by' number. Dividing by √d_k, the scaling factor, gives the 'With fix' row. Leaving it out gives the 'No fix' row. Multiplying by V then blends the words' values, as in the last lesson."
    },
    "recap": "Longer query and key vectors inflate match scores and freeze attention on one word. Dividing by √d_k undoes exactly that inflation, so the weights stay spread and trainable.",
-   "builds_on": "attention_weighted_average"
+   "builds_on": "attention_weighted_average",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "multi_head",
@@ -1036,7 +1112,43 @@
     ],
     "caption": "This is the paper's equation from Section 3.2.2. h (blue, the readers slider) is the number of heads. Each head_{i} runs ordinary attention after its own learned projections W_{i}^{Q}, W_{i}^{K} and W_{i}^{V}. Concat joins the heads' outputs and W^{O} mixes them. d_{k} = d_{model}/h (the per-reader length box) shows how the paper splits 512 into 8 heads of 64; the model splits 96 instead."
    },
-   "recap": "One head can only average, so it blurs different links together. Several smaller heads, each with its own projections, can each lock onto a different link at about the same total cost."
+   "recap": "One head can only average, so it blurs different links together. Several smaller heads, each with its own projections, can each lock onto a different link at about the same total cost.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "positional_encoding",
@@ -1421,7 +1533,47 @@
     ],
     "caption": "This is the paper's own formula. 'pos' is the position you set with slider A or B. Each i is one wave pair: i = 0 is the fastest wave, and larger i gives slower waves, because the divisor 10000^{2i/d_{model}} grows. The model uses d_{model} = 16 and draws only the sine half of pairs i = 0 to 3. The paper uses d_{model} = 512, and its wavelengths run from 2π to 10000·2π. The gap boxes are this lesson's own distance between two fingerprints, not a quantity from the paper."
    },
-   "recap": "Attention can't see order, so each word gets a wave-based fingerprint added to it: fast waves tell neighbours apart, slow waves tell distant places apart, and together every position is unique."
+   "recap": "Attention can't see order, so each word gets a wave-based fingerprint added to it: fast waves tell neighbours apart, slow waves tell distant places apart, and together every position is unique.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "cost_tradeoff",
@@ -1750,7 +1902,43 @@
     ],
     "caption": "From the paper's Table 1 (complexity per layer). n is the input length, set by the input length slider. d is the representation dimension, set by the vector size slider. O(…) means 'grows like', with constant factors dropped, just as the model drops them. Dividing the two gives n/d, the ratio shown in the model."
    },
-   "recap": "Attention pays for every pair of words (n²·d) and recurrence pays for big weight grids (n·d²), so attention is cheaper only while inputs are shorter than the vectors are long."
+   "recap": "Attention pays for every pair of words (n²·d) and recurrence pays for big weight grids (n·d²), so attention is cheaper only while inputs are shorter than the vectors are long.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "one_step_paths",
@@ -2093,7 +2281,43 @@
     ],
     "caption": "From the paper's Table 1. n is sentence length (the length slider). k is the window width of a convolution (the width slider); Table 1's log rate assumes dilated, spaced-out convolutions, and the paper notes ordinary ones need O(n/k) layers. The '1' for self-attention is the flat line: a constant number of steps, whatever the length. The model draws these growth rates without the constant factors that O(·) hides."
    },
-   "recap": "Attention links any two words in one step and handles all words at once. That short path and parallel work let the Transformer train faster and translate better than word-by-word models."
+   "recap": "Attention links any two words in one step and handles all words at once. That short path and parallel work let the Transformer train faster and translate better than word-by-word models.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   }
  ],
  "omitted": []

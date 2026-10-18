@@ -1,0 +1,41 @@
+VERIFIED QUOTATION EXCERPTS — not the complete source.
+
+Proposition 1
+
+https://mathcs.clarku.edu/~djoyce/elements/bookI/propI1.html
+
+Proposition 1, statement
+
+To construct an equilateral triangle on a given finite straight line.
+
+Proposition 1, construction
+
+Describe the circle BCD with center A and radius AB. Again describe the circle ACE with center B and radius BA.
+
+Critiques of the proof
+
+It is surprising that such a short, clear, and understandable proof can be so full of holes.
+
+Critiques of the proof
+
+There are models of geometry in which the circles do not intersect.
+
+Proposition 1, the proof
+
+Now, since the point A is the center of the circle CDB, therefore AC equals AB. Again, since the point B is the center of the circle CAE, therefore BC equals BA.
+
+Proposition 1, proof
+
+Now, since the point A is the center of the circle CDB, therefore AC equals AB. Again, since the point B is the center of the circle CAE, therefore BC equals BA.
+
+Critiques of the proof: 'Why does ABC contain an equilateral triangle?'
+
+Zeno of Sidon criticized the proof because it was not shown that the sides do not meet before they reach the vertices. Suppose AC and BC meet at E before they reach C, that is, the straight lines AEC and BEC have a common segment EC. Then they would contain a triangle ABE which is not equilateral, but isosceles.
+
+Guide, Critiques of the proof: Why does the point C exist?
+
+Indeed, some postulate is needed for that conclusion, such as “If the sum of the radii of two circles is greater than the line joining their centers, then the two circles intersect.”
+
+Critiques of the proof: 'Why does the point C exist?'
+
+There are models of geometry in which the circles do not intersect. Thus, other postulates not mentioned by Euclid are required.

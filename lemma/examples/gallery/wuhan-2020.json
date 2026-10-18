@@ -355,7 +355,43 @@
     ],
     "caption": "This is the model's rule, not an equation printed in the paper. T_{d} (the 'Days to double' box) is the doubling time, and g is the daily rise written as a fraction (10% = 0.10). The starting count does not appear anywhere in the rule, which is why the lines never move when you change it. The paper reports a continuous growth rate r ≈ 0.10 per day, where the standard link is T_{d} = ln 2 ÷ r. Its 7.4-day doubling time comes from the unrounded estimate of r."
    },
-   "recap": "A fixed daily percentage rise means cases double on a fixed schedule, and the faster the daily rise, the shorter that schedule. Early Wuhan doubled about every 7.4 days."
+   "recap": "A fixed daily percentage rise means cases double on a fixed schedule, and the faster the daily rise, the shorter that schedule. Early Wuhan doubled about every 7.4 days.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "reporting_delay_dip",
@@ -700,7 +736,47 @@
     "caption": "This is the teaching model's rule, not an equation from the paper. The first part, n₀ × (1 + g)^t, is the true curve from the last concept (g as a fraction, so 5% is 0.05). The bracket is the share of day-t cases counted by the cut-off T (day 60, counting the whole day). D, the average wait, is the new slider. When T − t is small, meaning recent days, the bracket is near 0, so the counted curve drops even though the true curve keeps rising."
    },
    "recap": "Recent cases are always counted late, so the newest part of an epidemic curve sags. A dip in the last days is not proof that an outbreak is slowing.",
-   "builds_on": "doubling_time"
+   "builds_on": "doubling_time",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "serial_interval",
@@ -1035,7 +1111,43 @@
     ],
     "caption": "This is the model's rule, not an equation printed in the paper. The paper says only that it fitted a gamma distribution. The blue 'mean' is the average-gap slider and the orange 'SD' is the spread slider. Together they fix the gamma curve's shape and scale. The paper reports mean 7.5 and SD 3.4 days."
    },
-   "recap": "The gap between linked cases varies from pair to pair. The paper summed it up as a lopsided curve averaging 7.5 days, but based on only 6 pairs, so it is uncertain."
+   "recap": "The gap between linked cases varies from pair to pair. The paper summed it up as a lopsided curve averaging 7.5 days, but based on only 6 pairs, so it is uncertain.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "reproduction_number",
@@ -1344,7 +1456,43 @@
     ],
     "caption": "This is the model's rule, not an equation printed in the paper. The green part is the starting cases slider. The R_{0} part is the 'People each case infects' slider. Raising it to the power g repeats the multiplication once per round, which is what the round-6 box shows when g = 6."
    },
-   "recap": "Each round of cases is R0 times the last, so the outbreak grows when R0 is above 1 and fades when it is below 1, whatever the starting size."
+   "recap": "Each round of cases is R0 times the last, so the outbreak grows when R0 is above 1 and fades when it is below 1, whatever the starting size.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "growth_to_r0",
@@ -1724,7 +1872,47 @@
     "caption": "This is the model's rule, not an equation printed in the paper. It is the standard result of a renewal equation when the serial interval has a gamma shape with mean m and spread (SD) s, and cases grow at rate r per day. The paper fitted a fuller renewal-equation model and reports R0 = 2.2. The doubling time is ln 2 ÷ r."
    },
    "recap": "Two timings are enough: how fast cases double and how far apart one case is from the next together give R0, and longer gaps mean a bigger R0 for the same growth.",
-   "builds_on": "serial_interval"
+   "builds_on": "serial_interval",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   }
  ],
  "omitted": []

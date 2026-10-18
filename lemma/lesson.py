@@ -608,6 +608,121 @@ def _text(obj, key, where, P: Problems, max_len=None, required=True):
     return v
 
 
+def check_activities(c: dict, where: str, P: Problems):
+    activities = c.get("activities")
+    if not isinstance(activities, list) or not 2 <= len(activities) <= 24:
+        P.add(where, "activities needs 2–24 teaching and response blocks")
+        return
+    seen, taught, engaged = set(), False, False
+    native = {"watch": "animation", "walk": "understand", "goal": "explore", "predict": "predict", "reveal": "predict", "check": "check", "connect": "connect"}
+    for i, a in enumerate(activities):
+        w = f"{where}.activities[{i}]"
+        if not isinstance(a, dict):
+            P.add(w, "must be an object")
+            continue
+        aid = a.get("id")
+        if not isinstance(aid, str) or not ID_RE.fullmatch(aid) or aid in seen:
+            P.add(w, "id must be unique lower_snake_case")
+        else:
+            seen.add(aid)
+        kind = a.get("kind")
+        if "title" in a:
+            _text(a, "title", w, P, 160)
+        if kind == "explain":
+            if "text" in a:
+                _text(a, "text", w, P, 2000)
+            taught = True
+        elif isinstance(kind, str) and kind in native:
+            if not c.get("model") or not c.get(native[kind]):
+                P.add(w, f"{kind} needs its model and content")
+            if kind == "watch" and not (c.get("animation") or {}).get("steps"):
+                P.add(w, "watch needs narration steps")
+            if kind == "walk" and not (c.get("understand") or {}).get("walkthrough", {}).get("steps"):
+                P.add(w, "walk needs walkthrough steps")
+            if kind == "predict" and (i + 1 >= len(activities) or not isinstance(activities[i + 1], dict) or activities[i + 1].get("kind") != "reveal"):
+                P.add(w, "predict must be immediately followed by reveal")
+            if kind == "reveal" and (i == 0 or not isinstance(activities[i - 1], dict) or activities[i - 1].get("kind") != "predict"):
+                P.add(w, "reveal must immediately follow predict")
+            if kind in ("watch", "walk"):
+                taught = True
+            if kind in ("goal", "predict", "check"):
+                engaged = True
+                if not taught:
+                    P.add(w, "teach before practice")
+            if kind == "goal":
+                explore = c.get("explore")
+                goals = explore.get("goals") if isinstance(explore, dict) else []
+                goals = goals if isinstance(goals, list) else []
+                if type(a.get("i")) is not int or not 0 <= a["i"] < len(goals):
+                    P.add(w, "i must identify an existing goal")
+        elif kind in ("sort", "construction", "inheritance"):
+            engaged = True
+            if not taught:
+                P.add(w, "teach before practice")
+            _text(a, "title", w, P, 160)
+            _text(a, "prompt", w, P, 1000)
+            if kind == "inheritance" and a.get("parent", "Aa") not in ("AA", "Aa", "aa"):
+                P.add(w, "parent must be AA, Aa or aa")
+            if kind == "sort":
+                _text(a, "takeaway", w, P, 700)
+                groups = a.get("groups")
+                group_ids = set()
+                if not isinstance(groups, list) or not 2 <= len(groups) <= 4:
+                    P.add(w, "sort needs 2–4 groups")
+                else:
+                    for g in groups:
+                        if not isinstance(g, dict) or not isinstance(g.get("id"), str) or not ID_RE.fullmatch(g["id"]) or g["id"] in group_ids:
+                            P.add(w, "groups need unique lower_snake_case ids")
+                            continue
+                        group_ids.add(g["id"])
+                        _text(g, "label", w, P, 160)
+                cards = a.get("cards")
+                if not isinstance(cards, list) or not 2 <= len(cards) <= 8:
+                    P.add(w, "sort needs 2–8 cards")
+                else:
+                    card_ids = set()
+                    for card in cards:
+                        if not isinstance(card, dict):
+                            P.add(w, "cards must be objects")
+                            continue
+                        cid = card.get("id")
+                        if not isinstance(cid, str) or not ID_RE.fullmatch(cid) or cid in card_ids:
+                            P.add(w, "cards need unique lower_snake_case ids")
+                        else:
+                            card_ids.add(cid)
+                        _text(card, "text", w, P, 700)
+                        _text(card, "feedback", w, P, 1200)
+                        if not isinstance(card.get("group"), str) or card["group"] not in group_ids:
+                            P.add(w, "card must reference an existing group")
+        elif kind == "choice":
+            engaged = True
+            mode = a.get("mode")
+            if not isinstance(mode, str) or mode not in ("determinate", "interpretive", "opening"):
+                P.add(w, "mode must be determinate, interpretive or opening")
+            if not taught and mode != "opening":
+                P.add(w, "teach before practice")
+            _text(a, "question", w, P, 1000)
+            options = a.get("options")
+            if not isinstance(options, list) or not 2 <= len(options) <= 6:
+                P.add(w, "needs 2–6 options")
+                continue
+            for j, o in enumerate(options):
+                ow = f"{w}.options[{j}]"
+                if not isinstance(o, dict):
+                    P.add(ow, "must be an object")
+                    continue
+                _text(o, "text", ow, P, 700)
+                _text(o, "feedback", ow, P, 1200)
+            if mode == "determinate" and (type(a.get("answer")) is not int or not 0 <= a["answer"] < len(options)):
+                P.add(w, "answer must identify the supported option")
+            if mode in ("interpretive", "opening") and "answer" in a:
+                P.add(w, "unscored activities must not have an answer key")
+        else:
+            P.add(w, "unsupported activity kind")
+    if not taught or not engaged:
+        P.add(where, "activities must include teaching and meaningful engagement")
+
+
 def check_concept(c: dict, source_norm: str | None, where: str = "concept") -> Problems:
     P = Problems()
     if not isinstance(c, dict):
@@ -618,6 +733,21 @@ def check_concept(c: dict, source_norm: str | None, where: str = "concept") -> P
     _text(c, "title", where, P, 80)
     _text(c, "idea", where, P, 240)
     _text(c, "recap", where, P, 200)
+
+    if "activities" in c:
+        check_activities(c, where, P)
+        if "model" not in c:
+            u = c.get("understand")
+            if not isinstance(u, dict):
+                P.add(where, "understand must contain the explanation and source quote")
+                return P
+            _text(u, "explanation", f"{where}.understand", P, 1400)
+            quote = _text(u, "quote", f"{where}.understand", P, 700)
+            if quote and (len(quote.split()) < 6 or source_norm is not None and not quote_in_source(quote, source_norm)):
+                P.add(where, "quote must contain at least 6 words and appear word for word in the source")
+            _text(u, "quote_where", f"{where}.understand", P, 300)
+            _check_terms(c, where, P)
+            return P
 
     pr = c.get("predict") or {}
     w = f"{where}.predict"

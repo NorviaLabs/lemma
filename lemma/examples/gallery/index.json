@@ -30,6 +30,43 @@
  {
   "slug": "galton-1886",
   "field": "Statistics",
-  "cover": "why_regression"
+  "cover": "why_regression",
+  "source_file": "galton-1886.txt"
+ },
+ {
+  "slug": "turner-1893",
+  "field": "History",
+  "cover": "waves_of_settlement",
+  "source_file": "sources/turner-1893.txt"
+ },
+ {
+  "slug": "aquinas-senses",
+  "field": "Theology",
+  "cover": "same_conclusion_different_route",
+  "source_file": "sources/aquinas-senses.txt"
+ },
+ {
+  "slug": "mendel-1866",
+  "field": "Biology",
+  "cover": "dominance_masks",
+  "source_file": "sources/mendel-1866.txt"
+ },
+ {
+  "slug": "brown-1954",
+  "field": "Law",
+  "cover": "separate_but_equal_test",
+  "source_file": "sources/brown-1954.txt"
+ },
+ {
+  "slug": "poe-red-death",
+  "field": "Literature",
+  "cover": "contagion_spreads",
+  "source_file": "sources/poe-red-death.txt"
+ },
+ {
+  "slug": "euclid-equilateral",
+  "field": "Mathematics",
+  "cover": "circle_equal_distance",
+  "source_file": "sources/euclid-equilateral.txt"
  }
 ]

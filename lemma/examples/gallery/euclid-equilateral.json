@@ -1,0 +1,2160 @@
+{
+ "version": 1,
+ "id": "gallery-euclid-equilateral",
+ "title": "The Hole in Geometry's First Proof",
+ "audience": "A curious adult with no background in this field",
+ "created": "2026-10-18T14:58:16",
+ "source": {
+  "title": "Proposition 1",
+  "authors": "Euclid (Elements, Book I), with an editor's guide and critique",
+  "year": null,
+  "venue": "",
+  "url": "https://mathcs.clarku.edu/~djoyce/elements/bookI/propI1.html"
+ },
+ "intro": {
+  "summary": "The text presents the first proposition of Euclid's Elements: how to build a triangle with three equal sides on a given line segment, using only two circles and a straightedge. It walks through Euclid's short proof that the triangle really has three equal sides. A modern guide then critiques it and finds that this famously clear proof has logical gaps. The biggest gap is that nothing in Euclid's starting assumptions guarantees that the two circles actually cross. The critique shows where the gaps are and what extra assumptions would fill them. It does not rebuild the whole system, and it notes that more care still leaves missing postulates.",
+  "background": [
+   "Euclid's Elements, written around 300 BCE, builds geometry step by step from a few definitions, postulates (assumed starting rules) and common notions (general truths like 'things equal to the same thing are equal to each other').",
+   "A circle is defined as all the points at the same distance, the radius, from one centre point.",
+   "An equilateral triangle is a triangle whose three sides all have the same length.",
+   "A proof is only as strong as its weakest step: every claim must follow from the rules already stated, not from what a drawing seems to show."
+  ],
+  "known": [],
+  "aha": "Geometry's most famous first proof quietly assumes that two circles cross. Nothing in Euclid's rules guarantees this, and there are geometries where the circles pass right through each other's 'gaps' without meeting."
+ },
+ "primer": [
+  {
+   "heading": "The question",
+   "body": "Given any line segment AB, can you build a triangle with three equal sides on it, using only a compass and a straightedge? This is the very first thing Euclid proves in the Elements, the book that taught geometry for over two thousand years. It looks simple, and the guide calls it a pleasant opening. Because it comes first, it has also drawn more criticism than any other proof.",
+   "quote": "To construct an equilateral triangle on a given finite straight line.",
+   "quote_where": "Proposition 1, statement"
+  },
+  {
+   "heading": "What was done",
+   "body": "Euclid draws a circle centred at A that passes through B, then a circle centred at B that passes through A. He takes C to be a point where the two circles cross and joins C to A and to B. Every point on the first circle is the same distance from A as B is, so AC equals AB. In the same way, BC equals BA. Things equal to the same thing are equal to each other, so all three sides match.",
+   "quote": "Describe the circle BCD with center A and radius AB. Again describe the circle ACE with center B and radius BA.",
+   "quote_where": "Proposition 1, construction"
+  },
+  {
+   "heading": "What was found",
+   "body": "The critique finds several gaps. The most basic one is that Euclid never justifies that the point C exists at all. None of his postulates says that two circles must cross. A second gap, raised in ancient times by Zeno of Sidon, is that nothing rules out the two sides merging into one line before they reach C. A third is that the figure was never shown to lie flat in a plane.",
+   "quote": "It is surprising that such a short, clear, and understandable proof can be so full of holes.",
+   "quote_where": "Critiques of the proof"
+  },
+  {
+   "heading": "Why it matters",
+   "body": "The gap is not just pedantry. There are consistent 'worlds' of geometry that obey all of Euclid's stated rules but in which the two circles slip past each other without touching. In such a world, Proposition 1 fails. Filling the hole needs a new assumption about when circles meet. That lesson shaped how modern mathematicians write down the foundations of geometry. One limit: the guide points out the holes and suggests patches, but it says that even with more care there are still missing postulates.",
+   "quote": "There are models of geometry in which the circles do not intersect.",
+   "quote_where": "Critiques of the proof"
+  }
+ ],
+ "provider": {
+  "name": "Claude",
+  "model": "claude-opus-5-5"
+ },
+ "concepts": [
+  {
+   "id": "circle_equal_distance",
+   "title": "A circle is a set of equal distances",
+   "idea": "Every point on a circle is the same distance from its centre, so any point you pick on it is exactly one radius away.",
+   "role": "prerequisite",
+   "predict": {
+    "question": "You draw a circle around A through B. Then you draw a second, bigger circle, also around A, but this time through a farther point Q. Point R is somewhere on the bigger circle. What can you say about the length AR, without measuring?",
+    "options": [
+     "AR equals AB",
+     "AR equals AQ",
+     "AR equals AQ only if R is directly opposite Q",
+     "You can't tell without measuring"
+    ],
+    "answer": 1,
+    "why": [
+     "Tempting, because AB was the first fixed length. But R is on the bigger circle, and that circle's fixed distance is set by the point it passes through, which is Q, not B.",
+     "Correct: the bigger circle is every point at distance AQ from A. R is on it, so AR equals AQ wherever R sits.",
+     "Position around the circle never matters. Every point on a circle is the same distance from the centre, whether it is next to Q or opposite it.",
+     "You can tell. Being on a circle means being one fixed distance from its centre, so knowing R is on the circle tells you AR."
+    ]
+   },
+   "terms": [
+    {
+     "term": "radius",
+     "means": "The fixed distance from a circle's centre to any point on the circle, such as AB here"
+    },
+    {
+     "term": "I.Def.15",
+     "means": "Euclid's definition of a circle in Book I: a figure whose points are all equally far from one point, its centre"
+    }
+   ],
+   "model": {
+    "title": "A circle around A through B, with a movable point P",
+    "note": "Teaching model: one circle on a flat grid, with A at the origin and B on the horizontal line through A. P is placed by its angle around A, and it can be pushed off the circle. Lengths are in arbitrary units. Numbers are illustrative, not from the paper.",
+    "controls": [
+     {
+      "id": "r",
+      "label": "Length AB (circle size)",
+      "kind": "slider",
+      "min": 1,
+      "max": 3.5,
+      "step": 0.5,
+      "default": 2,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "theta",
+      "label": "Where P sits around the circle",
+      "kind": "slider",
+      "min": 0,
+      "max": 360,
+      "step": 5,
+      "default": 90,
+      "unit": "°",
+      "color": 1
+     },
+     {
+      "id": "off",
+      "label": "Push P off the circle",
+      "kind": "slider",
+      "min": -1,
+      "max": 1,
+      "step": 0.25,
+      "default": 0,
+      "unit": "",
+      "color": 2
+     }
+    ],
+    "outputs": [
+     {
+      "id": "ap",
+      "label": "Length AP",
+      "expr": "r + off",
+      "decimals": 2,
+      "color": 3
+     },
+     {
+      "id": "ab",
+      "label": "Length AB",
+      "expr": "r",
+      "decimals": 2,
+      "color": 0
+     },
+     {
+      "id": "gap",
+      "label": "AP minus AB (gap from circle)",
+      "expr": "ap - ab",
+      "decimals": 2,
+      "color": 2
+     },
+     {
+      "id": "pb",
+      "label": "Length P to B",
+      "expr": "sqrt(pow(ap * cos(theta * pi / 180) - r, 2) + pow(ap * sin(theta * pi / 180), 2))",
+      "decimals": 2,
+      "color": 4
+     }
+    ],
+    "visual": {
+     "type": "geometry",
+     "xmin": -5,
+     "xmax": 5,
+     "ymin": -5,
+     "ymax": 5,
+     "circles": [
+      {
+       "x": 0,
+       "y": 0,
+       "r": "r",
+       "color": 0
+      }
+     ],
+     "segments": [
+      {
+       "x1": 0,
+       "y1": 0,
+       "x2": "r",
+       "y2": 0,
+       "label": "AB",
+       "color": 0
+      },
+      {
+       "x1": 0,
+       "y1": 0,
+       "x2": "(r + off) * cos(theta * pi / 180)",
+       "y2": "(r + off) * sin(theta * pi / 180)",
+       "label": "AP",
+       "color": 3
+      },
+      {
+       "x1": "(r + off) * cos(theta * pi / 180)",
+       "y1": "(r + off) * sin(theta * pi / 180)",
+       "x2": "r",
+       "y2": 0,
+       "label": "P to B",
+       "color": 4
+      }
+     ],
+     "points": [
+      {
+       "x": 0,
+       "y": 0,
+       "label": "A",
+       "color": 7
+      },
+      {
+       "x": "r",
+       "y": 0,
+       "label": "B",
+       "color": 0
+      },
+      {
+       "x": "(r + off) * cos(theta * pi / 180)",
+       "y": "(r + off) * sin(theta * pi / 180)",
+       "label": "P",
+       "color": 1
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Here is a circle drawn around point A, passing through point B. This box shows the length from A to B.",
+      "focus": "ab",
+      "ms": 3200
+     },
+     {
+      "say": "This slider moves B along the line, and the circle grows or shrinks with it.",
+      "set": {
+       "r": 3
+      },
+      "focus": "r",
+      "ms": 3200
+     },
+     {
+      "say": "This one walks point P around the circle.",
+      "set": {
+       "theta": 210
+      },
+      "focus": "theta",
+      "ms": 3000
+     },
+     {
+      "say": "This one pushes P off the circle, outward or inward.",
+      "set": {
+       "off": 0.75
+      },
+      "focus": "off",
+      "ms": 3000
+     },
+     {
+      "say": "The boxes track three lengths: A to P, A to B, and P to B.",
+      "set": {
+       "off": 0
+      },
+      "focus": [
+       "ap",
+       "ab",
+       "pb"
+      ],
+      "ms": 3400
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Now use the rule yourself: a point is on the circle exactly when it is one fixed distance from A.",
+    "goals": [
+     {
+      "text": "Make P sit 2.5 units from A, while P still lies exactly on the circle.",
+      "when": "abs(ap - 2.5) < 0.01 && abs(off) < 0.01",
+      "solution": {
+       "r": 2.5
+      },
+      "hints": [
+       "Pushing P off the circle changes AP, but then P is no longer on the circle.",
+       "If P is on the circle, AP must equal AB. Which length do you actually need to change?",
+       "Keep the push slider at zero and grow the circle a little."
+      ]
+     },
+     {
+      "text": "Keep P on the circle and put it as far from B as it can possibly get.",
+      "when": "abs(off) < 0.01 && abs(pb - 2 * r) < 0.01",
+      "solution": {
+       "theta": 180
+      },
+      "hints": [
+       "Walk P around the circle and watch the P-to-B box.",
+       "The farthest spot is where the straight path from P to B runs right through A.",
+       "There, P to B is AP and AB laid end to end. Look on the side of the circle facing away from B."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Right. A circle is fixed by its centre and one point it passes through. The bigger circle passes through Q, so every point on it, R included, is exactly AQ from A.",
+     "incorrect": "It is easy to hold on to AB as 'the' distance, or to think position matters. But each circle has its own fixed distance, set by the point it was drawn through. Every point on that circle is that same distance from the centre, wherever it sits."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with P sitting right on top of B. Of course AP equals AB here: they are the same segment.",
+       "set": {
+        "r": 2,
+        "theta": 0,
+        "off": 0
+       },
+       "focus": "ap",
+       "ms": 3200
+      },
+      {
+       "say": "Walk P a sixth of the way round. P has moved, but AP still reads 2, the same as AB.",
+       "set": {
+        "theta": 60
+       },
+       "focus": [
+        "ap",
+        "ab"
+       ],
+       "ms": 3400
+      },
+      {
+       "say": "Keep going, almost halfway round. The P-to-B length has changed a lot. AP has not changed at all.",
+       "set": {
+        "theta": 150
+       },
+       "focus": [
+        "ap",
+        "pb"
+       ],
+       "ms": 3600
+      },
+      {
+       "say": "Anywhere on this circle, AP equals AB. That is what a circle is: every point one fixed distance from the centre. That fixed distance is called the radius. Euclid's definition I.Def.15 says exactly this.",
+       "set": {
+        "theta": 270
+       },
+       "focus": [
+        "ap",
+        "ab"
+       ],
+       "ms": 4800
+      },
+      {
+       "say": "Now push P outward, off the circle. AP is now longer than the radius, and the gap box shows by how much. A point is on the circle exactly when that gap is zero.",
+       "set": {
+        "off": 0.5
+       },
+       "focus": "gap",
+       "ms": 4200
+      },
+      {
+       "say": "Put P back and grow the circle instead. B moves out, P rides along, and AP and AB grow together. Both are the radius.",
+       "set": {
+        "off": 0,
+        "r": 3
+       },
+       "focus": [
+        "ap",
+        "ab"
+       ],
+       "ms": 4000
+      },
+      {
+       "say": "So once you know P is on the circle, you know AP without measuring it. Euclid's first proof rests on this single fact.",
+       "set": {
+        "theta": 225
+       },
+       "focus": "ap",
+       "ms": 4200
+      }
+     ]
+    },
+    "explanation": "A circle is not just a round shape. It is the set of all points that are one fixed distance, the radius, from a centre. So if you draw a circle around A through B, any point you find on that circle is exactly as far from A as B is. You never need to measure it, because being on the circle already tells you. Euclid uses this in Proposition 1: he draws a circle around A through B, takes a point C on it, and concludes that AC equals AB, citing his definition of a circle (I.Def.15) in the margin. This is a fact about ideal circles in Euclid's geometry. A circle drawn by hand only approximates it.",
+    "quote": "Now, since the point A is the center of the circle CDB, therefore AC equals AB. Again, since the point B is the center of the circle CAE, therefore BC equals BA.",
+    "quote_where": "Proposition 1, the proof"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "AP",
+      "link": "ap"
+     },
+     {
+      "text": " = "
+     },
+     {
+      "text": "AB",
+      "link": "ab"
+     },
+     {
+      "text": " + "
+     },
+     {
+      "text": "gap",
+      "link": "gap"
+     }
+    ],
+    "caption": "This is the model's rule, not an equation from the paper. AP (length from A to P) equals AB (the radius) plus the gap from the circle. P lies on the circle exactly when the gap is 0, so AP = AB. Euclid writes the same step in words as 'AC equals AB'."
+   },
+   "recap": "Being on a circle means being exactly one radius from its centre, so any point on it is as far from the centre as every other point.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "two_circle_construction",
+   "title": "Two circles make three equal sides",
+   "idea": "If C lies on both the circle around A and the circle around B, each through the other centre, then CA and CB both equal AB, so the triangle has three equal sides.",
+   "role": "core",
+   "predict": {
+    "question": "Suppose you keep the circle around A through B, but draw the circle around B with a radius only half as long as AB. You join a crossing point C to A and to B. What can you say about triangle ABC?",
+    "options": [
+     "All three sides are still equal",
+     "CA equals AB, but CB is only half as long",
+     "No two sides are equal",
+     "All three sides are half of AB"
+    ],
+    "answer": 1,
+    "why": [
+     "Tempting if the crossing point itself seems to do the work. The equal sides come from the radii, though, and here the radius around B is no longer AB.",
+     "Right: C is on the circle around A, so CA equals that radius, AB. C is on the smaller circle around B, so CB equals its radius, half of AB. Two sides match and one is shorter.",
+     "Tempting if you think changing one circle ruins everything. The circle around A is unchanged, so CA still equals AB.",
+     "Tempting if you think shrinking one circle shrinks the whole triangle. AB is the fixed starting line, and CA still equals AB because of the circle around A."
+    ]
+   },
+   "terms": [
+    {
+     "term": "equilateral triangle",
+     "means": "A triangle whose three sides are all the same length (Euclid's I.Def.20)"
+    },
+    {
+     "term": "C.N.1",
+     "means": "Euclid's Common Notion 1: things which equal the same thing also equal one another"
+    }
+   ],
+   "model": {
+    "title": "Two circles, around A and around B, with a movable point P",
+    "note": "Teaching model: two circles on a flat grid, with A at the origin and B on the horizontal line through A. The second circle has centre B and radius BA, as in Euclid. P is placed by its angle around A and can be pushed off the circle around A. When P sits where the circles cross, it plays the role of Euclid's point C. Lengths are in arbitrary units. Numbers are illustrative, not from the paper.",
+    "controls": [
+     {
+      "id": "r",
+      "label": "Length AB (circle size)",
+      "kind": "slider",
+      "min": 1,
+      "max": 3.5,
+      "step": 0.5,
+      "default": 2,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "theta",
+      "label": "Where P sits around the circle",
+      "kind": "slider",
+      "min": 0,
+      "max": 360,
+      "step": 5,
+      "default": 90,
+      "unit": "°",
+      "color": 1
+     },
+     {
+      "id": "off",
+      "label": "Push P off the circle",
+      "kind": "slider",
+      "min": -1,
+      "max": 1,
+      "step": 0.25,
+      "default": 0,
+      "unit": "",
+      "color": 2
+     },
+     {
+      "id": "show_b",
+      "label": "Draw the circle around B",
+      "kind": "toggle",
+      "default": 0,
+      "color": 5,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "ap",
+      "label": "Length AP",
+      "expr": "r + off",
+      "decimals": 2,
+      "color": 3
+     },
+     {
+      "id": "ab",
+      "label": "Length AB",
+      "expr": "r",
+      "decimals": 2,
+      "color": 0
+     },
+     {
+      "id": "pb",
+      "label": "Length P to B",
+      "expr": "sqrt(pow((r + off) * cos(theta * pi / 180) - r, 2) + pow((r + off) * sin(theta * pi / 180), 2))",
+      "decimals": 2,
+      "color": 4
+     },
+     {
+      "id": "gap",
+      "label": "AP minus AB",
+      "expr": "ap - ab",
+      "decimals": 2,
+      "color": 2
+     },
+     {
+      "id": "gap_b",
+      "label": "P to B minus AB",
+      "expr": "pb - ab",
+      "decimals": 2,
+      "color": 5
+     },
+     {
+      "id": "mismatch",
+      "label": "Biggest gap between the three sides",
+      "expr": "max(abs(gap), abs(gap_b))",
+      "decimals": 2,
+      "color": 6
+     }
+    ],
+    "visual": {
+     "type": "geometry",
+     "xmin": -5,
+     "xmax": 5,
+     "ymin": -5,
+     "ymax": 5,
+     "circles": [
+      {
+       "x": 0,
+       "y": 0,
+       "r": "r",
+       "color": 0
+      },
+      {
+       "x": "r",
+       "y": 0,
+       "r": "show_b ? r : 0",
+       "color": 5
+      }
+     ],
+     "segments": [
+      {
+       "x1": 0,
+       "y1": 0,
+       "x2": "r",
+       "y2": 0,
+       "label": "AB",
+       "color": 0
+      },
+      {
+       "x1": 0,
+       "y1": 0,
+       "x2": "(r + off) * cos(theta * pi / 180)",
+       "y2": "(r + off) * sin(theta * pi / 180)",
+       "label": "AP",
+       "color": 3
+      },
+      {
+       "x1": "(r + off) * cos(theta * pi / 180)",
+       "y1": "(r + off) * sin(theta * pi / 180)",
+       "x2": "r",
+       "y2": 0,
+       "label": "P to B",
+       "color": 4
+      }
+     ],
+     "points": [
+      {
+       "id": "pt_a",
+       "x": 0,
+       "y": 0,
+       "label": "A",
+       "color": 7
+      },
+      {
+       "id": "pt_b",
+       "x": "r",
+       "y": 0,
+       "label": "B",
+       "color": 0
+      },
+      {
+       "id": "pt_p",
+       "x": "(r + off) * cos(theta * pi / 180)",
+       "y": "(r + off) * sin(theta * pi / 180)",
+       "label": "P",
+       "color": 1
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Same picture as before: a circle around A that passes through B, and a point P you can move around it or push off it.",
+      "focus": [
+       "pt_a",
+       "pt_p"
+      ],
+      "ms": 3200
+     },
+     {
+      "say": "New switch: draw a second circle, this time with B as its centre, the same size, so it passes through A.",
+      "set": {
+       "show_b": 1
+      },
+      "focus": [
+       "show_b",
+       "pt_b"
+      ],
+      "ms": 3600
+     },
+     {
+      "say": "This new box tracks how far apart the three sides AP, AB and P to B are. Zero would mean they all match.",
+      "focus": "mismatch",
+      "ms": 3400
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Use the two circles to hunt for spots where P makes every side match, and spots where only some do.",
+    "goals": [
+     {
+      "text": "Find the other place where the two circles cross, below the line AB, and confirm that all three sides match there too.",
+      "when": "mismatch < 0.05 && theta > 180",
+      "solution": {
+       "show_b": 1,
+       "theta": 300,
+       "off": 0
+      },
+      "hints": [
+       "Two circles of the same size that pass through each other's centres cross twice.",
+       "Keep P on the circle around A, so no push, and move it into the lower half of the picture.",
+       "The lower crossing is the mirror image of the upper one, reflected in the line AB."
+      ]
+     },
+     {
+      "text": "Put P on the circle around B but clearly off the circle around A. Which sides still match?",
+      "when": "abs(pb - ab) < 0.05 && abs(gap) >= 0.5",
+      "solution": {
+       "show_b": 1,
+       "theta": 75,
+       "off": -1
+      },
+      "hints": [
+       "First pull P well inside, or push it well outside, the circle around A. Then sweep it around until it lands on the circle around B.",
+       "Watch the 'P to B minus AB' box: you want it near zero while 'AP minus AB' stays large.",
+       "With P pulled all the way in, the circle around B passes it somewhere steeper than the upper crossing, but before straight up."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. Each side touching C gets its length from the radius of the circle C sits on. Change one radius and that side changes, while the other side stays put.",
+     "incorrect": "The crossing point is not special in itself. CA equals the radius of the circle around A, and CB equals the radius of the circle around B. With the second radius halved, CB is half of AB while CA still equals AB."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with P straight above A, on the circle around A. AP equals AB, because every point on that circle is one radius from A. But P to B is longer.",
+       "set": {
+        "show_b": 1,
+        "theta": 90,
+        "off": 0,
+        "r": 2
+       },
+       "focus": [
+        "ap",
+        "pb"
+       ],
+       "ms": 3600
+      },
+      {
+       "say": "Slide P down toward B. Now P to B is shorter than AB. It was too long before and too short now, so somewhere in between it must be exactly right.",
+       "set": {
+        "theta": 30
+       },
+       "focus": "pb",
+       "ms": 3600
+      },
+      {
+       "say": "Here it is: the spot where P lands on the circle around B as well. Every side reads the same, and the biggest gap is zero. Euclid calls this crossing point C.",
+       "set": {
+        "theta": 60
+       },
+       "focus": [
+        "pt_p",
+        "mismatch"
+       ],
+       "ms": 3800
+      },
+      {
+       "say": "Why it works: P is on the circle around A, so AP equals AB (I.Def.15). P is also on the circle around B, whose radius is BA, so P to B equals AB too.",
+       "focus": [
+        "ap",
+        "pb",
+        "ab"
+       ],
+       "ms": 4000
+      },
+      {
+       "say": "AP and PB both equal AB. Things which equal the same thing equal one another: Euclid's rule C.N.1. So all three sides match, and the triangle is an equilateral triangle.",
+       "focus": "mismatch",
+       "ms": 4000
+      },
+      {
+       "say": "Push P off the circle around A. It is now on neither circle, AP no longer equals AB, and the match breaks. Both circles are needed.",
+       "set": {
+        "off": 0.5
+       },
+       "focus": [
+        "gap",
+        "off"
+       ],
+       "ms": 3600
+      },
+      {
+       "say": "Put P back on the crossing and make AB longer. The crossing stays at the same angle, and the three sides match again, just bigger. The recipe works for any starting line.",
+       "set": {
+        "off": 0,
+        "r": 3
+       },
+       "focus": [
+        "r",
+        "mismatch"
+       ],
+       "ms": 4000
+      }
+     ]
+    },
+    "explanation": "Euclid's recipe has three moves: draw a circle around A through B, draw a circle around B through A, and join their crossing point C to A and to B. Because C is on the first circle, CA is a radius of it and equals AB. Because C is on the second circle, CB equals BA. Both sides equal AB, so by C.N.1 they equal each other, and all three sides match. That is the definition of an equilateral triangle (I.Def.20). The paper's guide notes there are two crossing points and either one will do. The proof also takes for granted that the circles really do cross at C, and that is something we will question later.",
+    "quote": "Now, since the point A is the center of the circle CDB, therefore AC equals AB. Again, since the point B is the center of the circle CAE, therefore BC equals BA.",
+    "quote_where": "Proposition 1, proof"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "AC",
+      "link": "ap"
+     },
+     {
+      "text": " = "
+     },
+     {
+      "text": "AB",
+      "link": "ab"
+     },
+     {
+      "text": ",   "
+     },
+     {
+      "text": "BC",
+      "link": "pb"
+     },
+     {
+      "text": " = "
+     },
+     {
+      "text": "BA",
+      "link": "ab"
+     },
+     {
+      "text": "   ⇒   AC = BC = AB"
+     }
+    ],
+    "caption": "This is not a formula from the paper. It is the proof's chain of equalities written in symbols. In the model, P stands in for Euclid's C. AC is the 'Length AP' box, BC is the 'Length P to B' box, and AB is the 'Length AB' box. The first two equalities come from I.Def.15 and the arrow from C.N.1."
+   },
+   "recap": "A point on both circles is one radius from A and one radius from B, and both radii are AB, so all three sides are equal.",
+   "builds_on": "circle_equal_distance",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "zeno_shared_segment",
+   "title": "Zeno's worry: sides that merge early",
+   "idea": "If the lines from A and B could meet at a point E before C and then run together, they would enclose a triangle ABE that is not equilateral, so the proof must assume two straight lines cannot share a segment.",
+   "role": "core",
+   "predict": {
+    "question": "Picture something stranger. The lines from A and B touch, separate, touch again and separate again before reaching C, enclosing a chain of small regions like a necklace of bubbles. They never run along each other. Would the rule 'two straight lines cannot share a stretch' rule this out?",
+    "options": [
+     "Yes: if they can't share a stretch, the only place they can meet is C",
+     "No: they can touch at single points without sharing any stretch, so you need a stronger rule, that two straight lines meet in at most one point",
+     "It doesn't matter: each bubble would still be an equilateral triangle"
+    ],
+    "answer": 1,
+    "why": [
+     "Tempting, because the rule did fix Zeno's merging picture. But touching at a single point is not sharing a stretch, so bubble-style meetings slip straight through that rule.",
+     "Right. The paper says the possibilities are 'much more numerous than Zeno's example', and that what is needed is that two infinitely extended straight lines meet in at most one point.",
+     "Euclid's equal-radius argument only covers the full lengths AC and BC. The pieces of a bubble chain have no reason to equal AB, just as AE did not."
+    ]
+   },
+   "terms": [
+    {
+     "term": "common segment",
+     "means": "A stretch of line that two lines both run along together"
+    },
+    {
+     "term": "isosceles triangle",
+     "means": "A triangle with two equal sides; the third side can differ"
+    },
+    {
+     "term": "postulate",
+     "means": "A starting rule that is accepted without proof"
+    }
+   ],
+   "model": {
+    "title": "Two circles, around A and around B, with a movable meeting point P",
+    "note": "Teaching model: the same flat picture as before, with A at the origin and B on the horizontal line through A. A fixed point C marks the upper crossing of the two circles. P now plays the role of Zeno's meeting point E. The side from A runs A to P, the side from B runs B to P, and both then run together from P up to C. On a flat grid these paths visibly bend at P. The point is that Euclid's stated postulates never forbid such lines, not that they look straight here. Because the sliders move in steps, P can only sit near, not always exactly on, the middle line between A and B, so 'isosceles' is judged within a small tolerance. Lengths are in arbitrary units. Numbers are illustrative, not from the paper.",
+    "controls": [
+     {
+      "id": "r",
+      "label": "Length AB (circle size)",
+      "kind": "slider",
+      "min": 1,
+      "max": 3.5,
+      "step": 0.5,
+      "default": 2,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "theta",
+      "label": "Where P sits around the circle",
+      "kind": "slider",
+      "min": 0,
+      "max": 360,
+      "step": 5,
+      "default": 90,
+      "unit": "°",
+      "color": 1
+     },
+     {
+      "id": "off",
+      "label": "Push P off the circle",
+      "kind": "slider",
+      "min": -1,
+      "max": 1,
+      "step": 0.25,
+      "default": 0,
+      "unit": "",
+      "color": 2
+     },
+     {
+      "id": "show_b",
+      "label": "Draw the circle around B",
+      "kind": "toggle",
+      "default": 0,
+      "color": 5,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "ab",
+      "label": "Length AB",
+      "expr": "r",
+      "decimals": 2,
+      "color": 0
+     },
+     {
+      "id": "ap",
+      "label": "Side from A to P",
+      "expr": "r + off",
+      "decimals": 2,
+      "color": 3
+     },
+     {
+      "id": "pb",
+      "label": "Side from P to B",
+      "expr": "sqrt(pow((r + off) * cos(theta * pi / 180) - r, 2) + pow((r + off) * sin(theta * pi / 180), 2))",
+      "decimals": 2,
+      "color": 4
+     },
+     {
+      "id": "shared",
+      "label": "Shared piece from P up to C",
+      "expr": "sqrt(pow((r + off) * cos(theta * pi / 180) - r / 2, 2) + pow((r + off) * sin(theta * pi / 180) - r * sqrt(3) / 2, 2))",
+      "decimals": 2,
+      "color": 6
+     },
+     {
+      "id": "isogap",
+      "label": "Difference between the two slanted sides",
+      "expr": "abs(ap - pb)",
+      "decimals": 2,
+      "color": 2
+     },
+     {
+      "id": "mismatch",
+      "label": "Biggest gap between the sides of the shape A, B, P",
+      "expr": "max(abs(ap - ab), max(abs(pb - ab), abs(ap - pb)))",
+      "decimals": 2,
+      "color": 7
+     }
+    ],
+    "visual": {
+     "type": "geometry",
+     "xmin": -5,
+     "xmax": 5,
+     "ymin": -5,
+     "ymax": 5,
+     "circles": [
+      {
+       "x": 0,
+       "y": 0,
+       "r": "r",
+       "color": 0
+      },
+      {
+       "x": "r",
+       "y": 0,
+       "r": "show_b ? r : 0",
+       "color": 5
+      }
+     ],
+     "segments": [
+      {
+       "x1": 0,
+       "y1": 0,
+       "x2": "r",
+       "y2": 0,
+       "label": "AB",
+       "color": 0
+      },
+      {
+       "x1": 0,
+       "y1": 0,
+       "x2": "r / 2",
+       "y2": "r * sqrt(3) / 2",
+       "label": "straight A to C",
+       "color": 0
+      },
+      {
+       "x1": "r",
+       "y1": 0,
+       "x2": "r / 2",
+       "y2": "r * sqrt(3) / 2",
+       "label": "straight B to C",
+       "color": 0
+      },
+      {
+       "x1": 0,
+       "y1": 0,
+       "x2": "(r + off) * cos(theta * pi / 180)",
+       "y2": "(r + off) * sin(theta * pi / 180)",
+       "label": "side from A",
+       "color": 3
+      },
+      {
+       "x1": "(r + off) * cos(theta * pi / 180)",
+       "y1": "(r + off) * sin(theta * pi / 180)",
+       "x2": "r",
+       "y2": 0,
+       "label": "side from B",
+       "color": 4
+      },
+      {
+       "x1": "(r + off) * cos(theta * pi / 180)",
+       "y1": "(r + off) * sin(theta * pi / 180)",
+       "x2": "r / 2",
+       "y2": "r * sqrt(3) / 2",
+       "label": "shared piece",
+       "color": 6
+      }
+     ],
+     "points": [
+      {
+       "id": "pt_a",
+       "x": 0,
+       "y": 0,
+       "label": "A",
+       "color": 7
+      },
+      {
+       "id": "pt_b",
+       "x": "r",
+       "y": 0,
+       "label": "B",
+       "color": 0
+      },
+      {
+       "id": "pt_c",
+       "x": "r / 2",
+       "y": "r * sqrt(3) / 2",
+       "label": "C",
+       "color": 5
+      },
+      {
+       "id": "pt_p",
+       "x": "(r + off) * cos(theta * pi / 180)",
+       "y": "(r + off) * sin(theta * pi / 180)",
+       "label": "P",
+       "color": 1
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Same picture as before. New: C is now pinned where the two circles cross. Park P on it, and the coloured sides from A and B meet right at C.",
+      "set": {
+       "theta": 60,
+       "off": 0,
+       "show_b": 1
+      },
+      "focus": "pt_c",
+      "ms": 7000
+     },
+     {
+      "say": "Now push P inside the circle. The side from A and the side from B meet at P first, then run together up to C.",
+      "set": {
+       "off": -0.5
+      },
+      "focus": "off",
+      "ms": 6500
+     },
+     {
+      "say": "These readouts measure the shape that A, B and P close off, and the stretch the two sides share.",
+      "focus": [
+       "ap",
+       "pb",
+       "shared"
+      ],
+      "ms": 5500
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Build Zeno's counterexample yourself. Find spots for P where the shape closed off by the two sides and AB has two equal sides, even though both lines still go on to reach C.",
+    "goals": [
+     {
+      "text": "Make triangle ABP isosceles, with its two slanted sides within a twentieth of AB of each other, while the shared piece up to C is longer than a quarter of AB.",
+      "when": "isogap < 0.05 * ab && shared > 0.25 * ab",
+      "solution": {
+       "theta": 50,
+       "off": -0.5
+      },
+      "hints": [
+       "To get two equal slanted sides, P has to sit on the line straight down the middle, halfway between A and B.",
+       "Pull P further inside the circle than the walkthrough did, so the shared piece gets longer. Then turn P around the circle until the two slanted sides match.",
+       "Pulling P inward means you must turn it to a smaller angle to stay on the middle line. Watch the difference readout shrink."
+      ]
+     },
+     {
+      "text": "Make triangle ABP isosceles, within a twentieth of AB, with each slanted side shorter than three quarters of AB.",
+      "when": "isogap < 0.05 * ab && ap < 0.75 * ab",
+      "solution": {
+       "theta": 35,
+       "off": -0.75
+      },
+      "hints": [
+       "The side from A is just how far P sits from A, so pull P well inside the circle.",
+       "Once P is deep inside, turn it until it lands on the middle line again. The difference between the slanted sides should drop near zero.",
+       "The deeper you pull P in, the lower the angle you need to bring it back to the middle line."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. Forbidding a shared stretch only kills Zeno's picture of lines that merge and stay merged. Lines that touch at single points and part again are still allowed, so the real requirement is that two straight lines meet at most once.",
+     "incorrect": "The no-sharing rule fixes the case where the lines run together from E to C. Touching at a point and then separating is not sharing a stretch. The paper says what is really needed is that two straight lines meet in at most one point."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start where the last lesson ended. P sits on the crossing C. The shape closed off is triangle ABC, and all three sides equal AB.",
+       "set": {
+        "r": 2,
+        "theta": 60,
+        "off": 0,
+        "show_b": 1
+       },
+       "focus": "mismatch",
+       "ms": 6000
+      },
+      {
+       "say": "Zeno of Sidon asked: who says the line from A and the line from B first meet at C? Suppose they meet earlier, just below C on the line down the middle.",
+       "set": {
+        "off": -0.25,
+        "theta": 55
+       },
+       "focus": "pt_p",
+       "ms": 6500
+      },
+      {
+       "say": "The region closed off by the two sides and AB is now triangle ABP. Its side from A is shorter than AB.",
+       "focus": "ap",
+       "ms": 5500
+      },
+      {
+       "say": "The side from B is just as short. The difference readout is almost zero. Two equal sides and a third that differs: an isosceles triangle, not an equilateral one.",
+       "focus": "isogap",
+       "ms": 6500
+      },
+      {
+       "say": "From P up to C, both lines run along the same stretch. That shared stretch is a common segment.",
+       "focus": "shared",
+       "ms": 5500
+      },
+      {
+       "say": "Notice what did not break. C is still one radius from A and from B, so 'AC equals AB' still holds. What fails is the claim that the shape the lines enclose is ABC.",
+       "focus": "pt_c",
+       "ms": 7000
+      },
+      {
+       "say": "Zeno's example is the tidy case. Turn P off the middle line and the enclosed triangle is not even isosceles.",
+       "set": {
+        "theta": 65
+       },
+       "focus": "mismatch",
+       "ms": 6000
+      },
+      {
+       "say": "Only a new starting rule, or postulate, closes the gap: two straight lines cannot share a segment. Euclid never states it.",
+       "focus": "pt_p",
+       "ms": 6000
+      }
+     ]
+    },
+    "explanation": "Euclid proves that C is one radius from A and from B, then simply says the three lines enclose an equilateral triangle. Zeno of Sidon pointed out a gap. Nothing in Euclid's stated rules stops the line from A and the line from B meeting at some point E below C and then running together up to C. If that happened, the shape they enclose would be ABE, with two equal sides shorter than AB: isosceles, not equilateral. According to Proclus, Posidonius wrote a refutation, and Proclus also gives a supposed proof that lines cannot share a stretch. The paper judges Zeno's critique sound and that proof faulty, because it leans on properties that were never proven or stated as postulates. So the proof needs an extra assumption: two straight lines cannot share a segment. The paper adds that even this is not enough, and the full requirement is that two straight lines meet in at most one point.",
+    "quote": "Zeno of Sidon criticized the proof because it was not shown that the sides do not meet before they reach the vertices. Suppose AC and BC meet at E before they reach C, that is, the straight lines AEC and BEC have a common segment EC. Then they would contain a triangle ABE which is not equilateral, but isosceles.",
+    "quote_where": "Critiques of the proof: 'Why does ABC contain an equilateral triangle?'"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "AP = BP = "
+     },
+     {
+      "text": "AB",
+      "link": "r"
+     },
+     {
+      "text": " + "
+     },
+     {
+      "text": "push",
+      "link": "off"
+     },
+     {
+      "text": "  <  AB whenever "
+     },
+     {
+      "text": "push",
+      "link": "off"
+     },
+     {
+      "text": " < 0"
+     }
+    ],
+    "caption": "This is the model's rule, not an equation from the paper. It holds when P sits on the middle line between A and B. The side from A is AB plus the push off the circle (blue AB slider plus the push slider). Pushing P inward makes the push negative, so AP and BP stay equal to each other but shorter than AB. That is Zeno's isosceles triangle, which the paper calls ABE and the model calls ABP. With no push, P sits on C and all three sides equal AB."
+   },
+   "recap": "Euclid's proof quietly assumes the sides from A and B first meet at C. If straight lines could share a segment, they might merge early and enclose an isosceles triangle instead.",
+   "builds_on": "two_circle_construction",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "when_circles_meet",
+   "title": "When do two circles actually cross?",
+   "idea": "Two circles cross only if their centres are close enough, roughly when the radii add up to more than the distance between the centres. Euclid never states a rule like this.",
+   "role": "core",
+   "predict": {
+    "question": "Someone copies Euclid's construction on a line AB, but draws each circle with a radius of only half of AB. What do the two circles do?",
+    "options": [
+     "They cross at two points, giving a smaller equilateral triangle",
+     "They touch at exactly one point, the middle of AB, so there is no triangle",
+     "They miss each other completely"
+    ],
+    "answer": 1,
+    "why": [
+     "It is tempting to think any two circles around A and B will cross. But two halves of AB add up to exactly AB, so the radii only just reach each other. There is no gap left for two crossing points.",
+     "Right. The radii add up to exactly the distance between the centres, which is the boundary case. The circles meet at one point, the midpoint of AB. That point lies on the line AB, so no triangle can be built.",
+     "You would be right if each radius were a little less than half of AB. At exactly half, the sum of the radii equals the distance, so the circles still meet at one point."
+    ]
+   },
+   "terms": [
+    {
+     "term": "tangent",
+     "means": "Two circles that touch at exactly one point without crossing"
+    },
+    {
+     "term": "postulate",
+     "means": "A starting assumption accepted without proof, which later proofs are allowed to use"
+    }
+   ],
+   "model": {
+    "title": "Two circles, two radii and the gap between their centres",
+    "note": "Teaching model: two circles drawn in an ordinary flat plane with ordinary coordinates. The full crossing rule shown here also covers the case where one circle sits inside the other, which the guide's suggested postulate leaves out. Lengths are illustrative, not from the paper.",
+    "controls": [
+     {
+      "id": "r1",
+      "label": "Radius of circle around A",
+      "kind": "slider",
+      "min": 0.5,
+      "max": 3.5,
+      "step": 0.1,
+      "default": 2,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "r2",
+      "label": "Radius of circle around B",
+      "kind": "slider",
+      "min": 0.5,
+      "max": 3.5,
+      "step": 0.1,
+      "default": 2,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "d",
+      "label": "Distance from A to B",
+      "kind": "slider",
+      "min": 0.5,
+      "max": 6,
+      "step": 0.1,
+      "default": 2,
+      "unit": "",
+      "color": 2
+     }
+    ],
+    "outputs": [
+     {
+      "id": "total",
+      "label": "Radii added together",
+      "expr": "r1 + r2",
+      "unit": "",
+      "decimals": 1,
+      "color": 3
+     },
+     {
+      "id": "diff",
+      "label": "Difference of radii",
+      "expr": "abs(r1 - r2)",
+      "unit": "",
+      "decimals": 1,
+      "color": 4
+     },
+     {
+      "id": "points",
+      "label": "Shared points",
+      "expr": "(d > r1 + r2 + 0.001 || d < abs(r1 - r2) - 0.001) ? 0 : ((abs(d - r1 - r2) < 0.001 || abs(d - abs(r1 - r2)) < 0.001) ? 1 : 2)",
+      "unit": "",
+      "decimals": 0,
+      "color": 5
+     }
+    ],
+    "visual": {
+     "type": "geometry",
+     "xmin": -7,
+     "xmax": 7,
+     "ymin": -5,
+     "ymax": 5,
+     "circles": [
+      {
+       "x": "-d/2",
+       "y": 0,
+       "r": "r1",
+       "color": 0
+      },
+      {
+       "x": "d/2",
+       "y": 0,
+       "r": "r2",
+       "color": 1
+      }
+     ],
+     "segments": [
+      {
+       "x1": "-d/2",
+       "y1": 0,
+       "x2": "d/2",
+       "y2": 0,
+       "label": "AB",
+       "color": 2
+      },
+      {
+       "x1": "-d/2",
+       "y1": 0,
+       "x2": "(d <= r1 + r2 + 0.001 && d >= abs(r1 - r2) - 0.001) ? (-d/2 + (d*d + r1*r1 - r2*r2)/(2*d)) : -d/2",
+       "y2": "(d <= r1 + r2 + 0.001 && d >= abs(r1 - r2) - 0.001) ? sqrt(max(0, r1*r1 - pow((d*d + r1*r1 - r2*r2)/(2*d), 2))) : 0",
+       "color": 0
+      },
+      {
+       "x1": "d/2",
+       "y1": 0,
+       "x2": "(d <= r1 + r2 + 0.001 && d >= abs(r1 - r2) - 0.001) ? (-d/2 + (d*d + r1*r1 - r2*r2)/(2*d)) : d/2",
+       "y2": "(d <= r1 + r2 + 0.001 && d >= abs(r1 - r2) - 0.001) ? sqrt(max(0, r1*r1 - pow((d*d + r1*r1 - r2*r2)/(2*d), 2))) : 0",
+       "color": 1
+      }
+     ],
+     "points": [
+      {
+       "id": "pt_a",
+       "x": "-d/2",
+       "y": 0,
+       "label": "A",
+       "color": 0
+      },
+      {
+       "id": "pt_b",
+       "x": "d/2",
+       "y": 0,
+       "label": "B",
+       "color": 1
+      },
+      {
+       "id": "c_top",
+       "x": "(d <= r1 + r2 + 0.001 && d >= abs(r1 - r2) - 0.001) ? (-d/2 + (d*d + r1*r1 - r2*r2)/(2*d)) : -50",
+       "y": "(d <= r1 + r2 + 0.001 && d >= abs(r1 - r2) - 0.001) ? sqrt(max(0, r1*r1 - pow((d*d + r1*r1 - r2*r2)/(2*d), 2))) : -50",
+       "label": "C",
+       "color": 5
+      },
+      {
+       "id": "c_bottom",
+       "x": "(d <= r1 + r2 + 0.001 && d >= abs(r1 - r2) - 0.001) ? (-d/2 + (d*d + r1*r1 - r2*r2)/(2*d)) : -50",
+       "y": "(d <= r1 + r2 + 0.001 && d >= abs(r1 - r2) - 0.001) ? -sqrt(max(0, r1*r1 - pow((d*d + r1*r1 - r2*r2)/(2*d), 2))) : -50",
+       "label": "other C",
+       "color": 5
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This is Euclid's set-up again: one circle centred on A, one centred on B, and the line AB between the centres.",
+      "focus": [
+       "pt_a",
+       "pt_b"
+      ],
+      "ms": 3800
+     },
+     {
+      "say": "This slider grows or shrinks the circle around A.",
+      "set": {
+       "r1": 2.8
+      },
+      "focus": "r1",
+      "ms": 3400
+     },
+     {
+      "say": "This one does the same for the circle around B.",
+      "set": {
+       "r2": 1.4
+      },
+      "focus": "r2",
+      "ms": 3400
+     },
+     {
+      "say": "This one slides the two centres apart or together.",
+      "set": {
+       "d": 3.2
+      },
+      "focus": "d",
+      "ms": 3400
+     },
+     {
+      "say": "This counter shows how many points the circles share. C marks the crossing Euclid needs for his triangle.",
+      "set": {
+       "r1": 2,
+       "r2": 2,
+       "d": 2
+      },
+      "focus": [
+       "points",
+       "c_top"
+      ],
+      "ms": 4200
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Now test the crossing rule yourself. Find the ways two circles can fail to meet.",
+    "goals": [
+     {
+      "text": "Without moving the centres, change the circles so they no longer share any point",
+      "when": "points < 0.5 && abs(d - 2) < 0.01",
+      "solution": {
+       "r1": 0.9,
+       "r2": 0.9
+      },
+      "hints": [
+       "Compare the radii added together with the distance between the centres.",
+       "Leave the distance slider alone. Shrink the radii and watch 'Radii added together' fall towards the distance.",
+       "The circles part once the two radii together fall just short of the distance from A to B."
+      ]
+     },
+     {
+      "text": "Make the circles miss each other even though their radii add up to more than the distance between the centres",
+      "when": "points < 0.5 && r1 + r2 > d",
+      "solution": {
+       "r1": 3.5,
+       "r2": 1
+      },
+      "hints": [
+       "Being too far apart is not the only way to miss.",
+       "Try making one circle much bigger than the other, so the big one swallows the small one.",
+       "Watch 'Difference of radii'. It has to grow larger than the distance between the centres."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. Two halves of AB add up to exactly AB. That is the boundary case, so the circles touch once at the midpoint of AB and never cross. That one point lies on the line AB, so there is no triangle.",
+     "incorrect": "It is easy to assume that circles around A and B always cross. The rule depends on the radii added together compared with the distance. At exactly half of AB each, the sum equals the distance, so the circles only touch once, at the middle of AB."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with Euclid's own case: both radii equal the distance AB. The radii together make 4, more than the distance of 2. The circles share two points: C above the line and another below it.",
+       "set": {
+        "r1": 2,
+        "r2": 2,
+        "d": 2
+       },
+       "focus": [
+        "total",
+        "points"
+       ],
+       "ms": 4200
+      },
+      {
+       "say": "Pull the centres apart. The radii together still beat the distance, so there are still two crossings. Watch C slide down towards the line AB.",
+       "set": {
+        "d": 3.2
+       },
+       "focus": "c_top",
+       "ms": 3800
+      },
+      {
+       "say": "Now the distance equals the radii added together. The two crossings merge into a single point on AB. Circles that touch once like this are called tangent.",
+       "set": {
+        "d": 4
+       },
+       "focus": "points",
+       "ms": 4400
+      },
+      {
+       "say": "Go a little further and the circles miss entirely. C is gone. Euclid's proof would have nothing to join to A and B.",
+       "set": {
+        "d": 4.6
+       },
+       "focus": [
+        "points",
+        "d"
+       ],
+       "ms": 4000
+      },
+      {
+       "say": "There is a second way to miss. Here the radii add to 4.5, far more than the distance of 1. Yet the small circle sits inside the big one and shares no point with it. The difference of radii, 2.5, is bigger than the distance.",
+       "set": {
+        "r1": 3.5,
+        "r2": 1,
+        "d": 1
+       },
+       "focus": [
+        "diff",
+        "points"
+       ],
+       "ms": 5200
+      },
+      {
+       "say": "So the full rule has two halves. The distance must be less than the radii added together, and more than their difference.",
+       "set": {
+        "r1": 3.5,
+        "r2": 1,
+        "d": 3
+       },
+       "focus": [
+        "total",
+        "diff",
+        "d"
+       ],
+       "ms": 4400
+      },
+      {
+       "say": "Back to Euclid. Radii equal to AB give a sum of 4 and a difference of 0, and the distance of 2 sits safely between them. C exists. But Euclid never wrote this rule down as a postulate, a starting assumption his proof could use.",
+       "set": {
+        "r1": 2,
+        "r2": 2,
+        "d": 2
+       },
+       "focus": "c_top",
+       "ms": 5200
+      }
+     ]
+    },
+    "explanation": "Two circles cross only when the distance between their centres is less than their radii added together. Otherwise they are too far apart to reach each other. In this model there is also a second condition: the distance must be more than the difference of the radii, or one circle sits inside the other. In Euclid's construction both radii equal AB, so the circles do cross, but nothing in his postulates says so. The guide points out that the proof simply assumes the crossing point C exists. It argues that an extra postulate is needed, and suggests one based on the sum of the radii. The guide's wording leaves out the inside-circle case. That case cannot arise in Euclid's construction, where the radii are equal.",
+    "quote": "Indeed, some postulate is needed for that conclusion, such as “If the sum of the radii of two circles is greater than the line joining their centers, then the two circles intersect.”",
+    "quote_where": "Guide, Critiques of the proof: Why does the point C exist?"
+   },
+   "check": {
+    "kind": "model",
+    "task": "Keep the centres the same distance apart as in Euclid's case, and change the radii so the circles share exactly one point",
+    "when": "abs(d - 2) < 0.01 && (abs(r1 + r2 - d) < 0.05 || abs(abs(r1 - r2) - d) < 0.05)",
+    "solution": {
+     "r1": 1,
+     "r2": 1
+    },
+    "hint": "One shared point happens exactly on the boundary of the rule. Compare the radii added together, or their difference, with the distance.",
+    "misconception": "That circles either cross or miss with nothing in between. In fact there is a boundary case where they just touch, when the distance equals the sum or the difference of the radii."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "|"
+     },
+     {
+      "text": "r_{A}",
+      "link": "r1"
+     },
+     {
+      "text": " − "
+     },
+     {
+      "text": "r_{B}",
+      "link": "r2"
+     },
+     {
+      "text": "| < "
+     },
+     {
+      "text": "d",
+      "link": "d"
+     },
+     {
+      "text": " < "
+     },
+     {
+      "text": "r_{A} + r_{B}",
+      "link": "total"
+     }
+    ],
+    "caption": "This is the model's crossing rule, not Euclid's: he states no such rule. The right half is the guide's suggested postulate. d is the distance from A to B, and it must be less than the radii added together. The left half is the model's addition, which rules out one circle sitting inside the other. When either '<' becomes '=', the circles are tangent and share one point."
+   },
+   "recap": "Two circles cross only if the distance between their centres lies between the difference and the sum of their radii. Euclid's proof needs this, but he never states it.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "circles_that_miss",
+   "title": "A world where the circles never meet",
+   "idea": "In a geometry that keeps only some of the points, such as those with whole-number-fraction coordinates, both circles still exist, but their crossing point C is missing. Without an extra postulate, Euclid's proof breaks.",
+   "role": "contribution",
+   "predict": {
+    "question": "Stay in the fractions-only world, but change the given line: it now runs from A = (0, 0) to B = (3, 4), so it has length 5. Draw Euclid's two circles of radius 5 around A and B. Does their crossing point C exist in this world?",
+    "options": [
+     "Yes: whole-number endpoints make the crossing land on a fraction point",
+     "No: C's coordinates still involve √3, so C is missing again",
+     "Only if the grid is made fine enough",
+     "Yes, because 3-4-5 is a famous whole-number triangle"
+    ],
+    "answer": 1,
+    "why": [
+     "Tempting, because A and B are tidy points. But the crossing works out to (1.5 − 2√3, 2 + 1.5√3), and √3 still appears in it.",
+     "Correct. An equilateral triangle's apex always sits √3/2 of a side away from the base. With fraction endpoints that distance is irrational, so C is never a fraction point.",
+     "A finer grid only brings kept points closer to C. No fraction ever equals an expression containing √3, so no grid ever holds C.",
+     "The 3-4-5 triangle is a right triangle with whole sides. The triangle we need is equilateral with sides 5, 5 and 5, and its third corner is not at whole-number or fraction coordinates."
+    ]
+   },
+   "terms": [
+    {
+     "term": "rational number",
+     "means": "A number you can write as a fraction of two whole numbers, like 3/5 or 7/8"
+    },
+    {
+     "term": "irrational number",
+     "means": "A number no fraction equals exactly, like √3 ≈ 1.7320508…"
+    },
+    {
+     "term": "rational plane",
+     "means": "The 'world' that keeps only the points whose two coordinates are both rational numbers"
+    },
+    {
+     "term": "model of geometry",
+     "means": "A concrete world of points, lines and circles that you can test a list of rules against"
+    }
+   ],
+   "model": {
+    "title": "Euclid's two circles in a world that keeps only grid points",
+    "note": "Teaching model: A = (0, 0), B = (1, 0), so both circles have radius 1. The 'kept' world is every point whose two coordinates are both fractions. The slider shows the fractions with one bottom number at a time, and only the 9 kept points nearest C. Every fraction has some bottom number, so if C were kept it would appear for some setting. The paper says such geometries exist but does not name this one. The fractions-only plane is a standard example. All numbers are computed from this setup, not taken from the paper.",
+    "controls": [
+     {
+      "id": "grid",
+      "label": "Grid fineness (kept points per unit)",
+      "kind": "slider",
+      "min": 1,
+      "max": 40,
+      "step": 1,
+      "default": 4,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "zoom",
+      "label": "Zoom in on the crossing",
+      "kind": "toggle",
+      "default": 0,
+      "color": 5,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "cy",
+      "label": "Height of C",
+      "expr": "sqrt(3) / 2",
+      "unit": "",
+      "decimals": 6,
+      "color": 3
+     },
+     {
+      "id": "gy",
+      "label": "Height of nearest kept point",
+      "expr": "floor(grid * sqrt(3) / 2 + 0.5) / grid",
+      "unit": "",
+      "decimals": 6,
+      "color": 2
+     },
+     {
+      "id": "gx",
+      "label": "Across-position of nearest kept point",
+      "expr": "floor(grid * 0.5 + 0.5) / grid",
+      "unit": "",
+      "decimals": 4,
+      "color": 2
+     },
+     {
+      "id": "miss",
+      "label": "Miss: nearest kept point to C",
+      "expr": "sqrt((gx - 0.5)^2 + (gy - sqrt(3) / 2)^2)",
+      "unit": "",
+      "decimals": 4,
+      "color": 2
+     },
+     {
+      "id": "off_a",
+      "label": "How far that point is off the circle around A",
+      "expr": "abs(sqrt(gx^2 + gy^2) - 1)",
+      "unit": "",
+      "decimals": 4,
+      "color": 1
+     }
+    ],
+    "visual": {
+     "type": "geometry",
+     "xmin": "zoom ? 0.35 : -1.3",
+     "xmax": "zoom ? 0.65 : 2.3",
+     "ymin": "zoom ? 0.72 : -1.3",
+     "ymax": "zoom ? 1.02 : 1.5",
+     "circles": [
+      {
+       "id": "circle_a",
+       "x": 0,
+       "y": 0,
+       "r": 1,
+       "label": "circle around A",
+       "color": 1
+      },
+      {
+       "id": "circle_b",
+       "x": 1,
+       "y": 0,
+       "r": 1,
+       "label": "circle around B",
+       "color": 4
+      }
+     ],
+     "segments": [
+      {
+       "x1": 0,
+       "y1": 0,
+       "x2": 1,
+       "y2": 0,
+       "label": "AB",
+       "color": 7
+      },
+      {
+       "x1": "gx",
+       "y1": "gy",
+       "x2": 0.5,
+       "y2": "cy",
+       "label": "miss",
+       "color": 2
+      }
+     ],
+     "points": [
+      {
+       "id": "pt_a",
+       "x": 0,
+       "y": 0,
+       "label": "A",
+       "color": 1
+      },
+      {
+       "id": "pt_b",
+       "x": 1,
+       "y": 0,
+       "label": "B",
+       "color": 4
+      },
+      {
+       "id": "pt_c",
+       "x": 0.5,
+       "y": "cy",
+       "label": "C (not a kept point)",
+       "color": 3
+      },
+      {
+       "id": "kept_on_a",
+       "x": 0.6,
+       "y": 0.8,
+       "label": "kept point (3/5, 4/5) on circle A",
+       "color": 1
+      },
+      {
+       "id": "nearest",
+       "x": "gx",
+       "y": "gy",
+       "label": "nearest kept point",
+       "color": 2
+      },
+      {
+       "x": "gx - 1 / grid",
+       "y": "gy - 1 / grid",
+       "color": 6
+      },
+      {
+       "x": "gx",
+       "y": "gy - 1 / grid",
+       "color": 6
+      },
+      {
+       "x": "gx + 1 / grid",
+       "y": "gy - 1 / grid",
+       "color": 6
+      },
+      {
+       "x": "gx - 1 / grid",
+       "y": "gy",
+       "color": 6
+      },
+      {
+       "x": "gx + 1 / grid",
+       "y": "gy",
+       "color": 6
+      },
+      {
+       "x": "gx - 1 / grid",
+       "y": "gy + 1 / grid",
+       "color": 6
+      },
+      {
+       "x": "gx",
+       "y": "gy + 1 / grid",
+       "color": 6
+      },
+      {
+       "x": "gx + 1 / grid",
+       "y": "gy + 1 / grid",
+       "color": 6
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Euclid's setup again: one circle around A, one around B, each passing through the other centre.",
+      "focus": [
+       "pt_a",
+       "pt_b"
+      ],
+      "ms": 3000
+     },
+     {
+      "say": "C marks the spot where the circles would cross, the corner Euclid's proof needs.",
+      "focus": "pt_c",
+      "ms": 2800
+     },
+     {
+      "say": "This world keeps only some points: the dots on a grid. This slider sets how fine the grid is.",
+      "set": {
+       "grid": 6
+      },
+      "focus": "grid",
+      "ms": 3600
+     },
+     {
+      "say": "The highlighted dot is the kept point closest to C. This number says how far it misses.",
+      "focus": [
+       "nearest",
+       "miss"
+      ],
+      "ms": 3400
+     },
+     {
+      "say": "And this switch zooms in on the crossing so you can see the gap up close.",
+      "set": {
+       "zoom": 1
+      },
+      "focus": "zoom",
+      "ms": 3000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Hunt for a kept point that sits on C. Try different grids, zoom in, and watch how close you can get.",
+    "goals": [
+     {
+      "text": "Using a grid no finer than 10 points per unit, get a kept point within 0.01 of C.",
+      "when": "miss < 0.01 && grid <= 10",
+      "solution": {
+       "grid": 8
+      },
+      "hints": [
+       "Finer is not always closer. Step through each setting up to 10 and watch the miss box.",
+       "Odd settings put the nearest dot off to one side of C, because ½ is not a whole number of their steps. Stick to even settings.",
+       "Among the even settings, one in the middle of the range puts a dot just above C."
+      ]
+     },
+     {
+      "text": "Find any grid that puts a kept point within 0.001 of C, then zoom in to see the gap that is still left.",
+      "when": "miss < 0.001",
+      "solution": {
+       "grid": 30
+      },
+      "hints": [
+       "The finest grid is not the winner here. Some middle settings line up with C better.",
+       "Check the even settings in the upper half of the range and watch the miss box drop.",
+       "It is an even setting between 26 and 34."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Right. For any line with fraction endpoints, the apex of the equilateral triangle sits √3/2 of a side from the base, and that is never a fraction. So C is missing every time, whatever segment you choose.",
+     "incorrect": "It is natural to expect tidy endpoints to give a tidy crossing. But the crossing always involves √3, which no fraction equals. So in the fractions-only world C is missing for every segment, not only for AB = 1."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with a coarse grid of 4 points per unit. The kept point nearest C misses it by about 0.12, a visible gap.",
+       "set": {
+        "grid": 4,
+        "zoom": 0
+       },
+       "focus": "miss",
+       "ms": 3200
+      },
+      {
+       "say": "Make the grid finer. At 8 per unit, a kept point sits just above C and misses by less than 0.01.",
+       "set": {
+        "grid": 8
+       },
+       "focus": "nearest",
+       "ms": 3200
+      },
+      {
+       "say": "Zoom in. Up close, that dot is clearly not on C. It is not even exactly on the circle around A.",
+       "set": {
+        "zoom": 1
+       },
+       "focus": [
+        "pt_c",
+        "off_a"
+       ],
+       "ms": 3400
+      },
+      {
+       "say": "Go much finer, to 30 per unit. The miss is now well under 0.001. That is tiny, but it is still not zero.",
+       "set": {
+        "grid": 30
+       },
+       "focus": "miss",
+       "ms": 3400
+      },
+      {
+       "say": "Why never zero? C's height is √3/2. √3 is an irrational number: no fraction equals it. Every kept point has a rational number for its height, some fraction m/N, so none of them can be C.",
+       "focus": [
+        "cy",
+        "gy"
+       ],
+       "ms": 4400
+      },
+      {
+       "say": "Now zoom out. This world, the rational plane, is full of points on both circles: (3/5, 4/5) is a kept point on the circle around A. Both circles exist here. Only their crossing is missing.",
+       "set": {
+        "zoom": 0
+       },
+       "focus": "kept_on_a",
+       "ms": 4400
+      },
+      {
+       "say": "So each circle passes through a gap in the other. The rational plane is a model of geometry where Euclid's 'point C, at which the circles cut one another' simply is not there.",
+       "set": {
+        "zoom": 1
+       },
+       "focus": "pt_c",
+       "ms": 4200
+      }
+     ]
+    },
+    "explanation": "Euclid's proof begins by taking 'the point C at which the circles cut one another', but none of his postulates promises that such a point exists. To see that this is a real gap, picture a world that keeps only the points whose coordinates are fractions. Lines and circles still exist there, and the circle around A even contains kept points like (3/5, 4/5). But C sits at height √3/2, an irrational number, so no kept point lands on it. A finer grid only shrinks the miss. The paper does not build this example. It states the general point: such geometries exist, so the proof needs an extra postulate, such as one saying that circles whose radii add up to more than the distance between their centres must cross.",
+    "quote": "There are models of geometry in which the circles do not intersect. Thus, other postulates not mentioned by Euclid are required.",
+    "quote_where": "Critiques of the proof: 'Why does the point C exist?'"
+   },
+   "check": {
+    "kind": "truefalse",
+    "statement": "If the grid were made fine enough, say a million points per unit, some kept point would land exactly on C.",
+    "answer": false,
+    "why": "C's height is √3/2, which is irrational. Every kept point's height is a fraction m/N, and no fraction equals √3/2. A finer grid makes the miss smaller and smaller, but it never reaches zero.",
+    "hint": "What kind of number would C's height have to be for C to sit on some grid?",
+    "misconception": "That getting closer and closer means you eventually arrive. Approaching a point is not the same as containing it."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "C = (1/2, "
+     },
+     {
+      "text": "√3/2",
+      "link": "cy"
+     },
+     {
+      "text": "), but every kept point is (k/"
+     },
+     {
+      "text": "N",
+      "link": "grid"
+     },
+     {
+      "text": ", m/"
+     },
+     {
+      "text": "N",
+      "link": "grid"
+     },
+     {
+      "text": "), and "
+     },
+     {
+      "text": "m/N",
+      "link": "gy"
+     },
+     {
+      "text": " ≠ √3/2 for all whole numbers m, N"
+     }
+    ],
+    "caption": "This is the model's rule, not an equation from the paper. √3/2 is C's height (the 'Height of C' output). N is the grid-fineness slider. m/N is the height of the nearest kept point. Because √3 is irrational, no choice of m and N makes the two heights equal, so C is never in the fractions-only world."
+   },
+   "recap": "Euclid's first proof quietly assumes two circles cross. His rules don't guarantee it: in some geometries the circles slip through each other's gaps and never meet.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  }
+ ],
+ "omitted": [],
+ "generation": {
+  "provider": "claude",
+  "model": "claude-opus-5-5",
+  "pipeline": "lemma.generate.make_outline + build_lesson",
+  "source_chars": 6845,
+  "omitted": 0
+ }
+}

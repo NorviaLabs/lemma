@@ -369,7 +369,43 @@
     ],
     "caption": "This is the paper's definition (a). S is the person and P is the claim. 'IFF' means 'if and only if', so both directions hold: each condition is needed, and together they are enough. In the model, each coloured condition is a switch, and the verdict follows the model's rule: knowledge = truth × belief × reasons."
    },
-   "recap": "On the classic view, knowledge is a belief that is true, actually held and backed by good reasons: all three boxes, or no knowledge."
+   "recap": "On the classic view, knowledge is a belief that is true, actually held and backed by good reasons: all three boxes, or no knowledge.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "justified_but_false",
@@ -716,7 +752,43 @@
     ],
     "caption": "This is the model's rule, not an equation from the paper, which argues in words. The blue part, evidence, is the only thing that sets 'Justified'. The green part, the world switch, is the only thing that sets 'True'. Because no term appears in both, the orange combination 'justified but false' can come out to 1."
    },
-   "recap": "Evidence sets whether a belief is justified, and the world sets whether it is true, so even the best evidence can back a false belief."
+   "recap": "Evidence sets whether a belief is justified, and the world sets whether it is true, so even the best evidence can back a false belief.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "justification_flows",
@@ -1057,7 +1129,43 @@
     "caption": "Gettier's second point, written as a rule. Here P is Smith's claim (d) and Q is claim (e). The blue part is the 'Justified in believing (d)' box, set by the evidence dial. The middle part is the new reasoning switch. The result is the 'Justified in believing (e)' box. In the model, justified_e = justified_d × reasoning switch. Notice what is missing from the rule: 'P is true' appears nowhere, which is why the company-decision switch cannot touch (e)'s justification."
    },
    "recap": "Correct reasoning passes justification from P to Q, and it passes it on even when P is false, because truth never enters the reasoning path.",
-   "builds_on": "justified_but_false"
+   "builds_on": "justified_but_false",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "truth_from_elsewhere",
@@ -1446,7 +1554,43 @@
     "caption": "The paper has no equation. This is the model's rule for when (e) is true. The orange output is the truth of (e). 'Jones picked' is the company switch, and 'Smith has ten coins' is the new switch. Smith's evidence slider appears nowhere in this rule: his reasons never enter what makes (e) true."
    },
    "recap": "Smith's reasons ran through Jones, but what made (e) true ran through Smith himself. A belief's support and its truth-maker can travel by completely separate routes.",
-   "builds_on": "justification_flows"
+   "builds_on": "justification_flows",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "disjunction_luck",
@@ -1825,7 +1969,47 @@
     ],
     "caption": "The paper gives no equation. This is the model's rule for an 'or' claim. F is 1 if Jones owns a Ford (blue switch), B is 1 if Brown is in the named city (Brown and city sliders). The claim is true if either is 1. Smith's evidence only ever supported F."
    },
-   "recap": "An 'or' claim survives if either part is true, so when the part you had evidence for fails, a lucky guess in the other part can keep the claim true."
+   "recap": "An 'or' claim survives if either part is true, so when the part you had evidence for fails, a lucky guess in the other part can keep the claim true.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "gettier_gap",
@@ -2283,7 +2467,47 @@
     "caption": "This is the paper's definition (a), with P = (e) and S = Smith. Each coloured condition is one box readout in the model. Gettier attacks only the 'if' direction: in his cases the right-hand side holds while 'S knows that P' fails. The model's extra 'routes meet' check is our teaching addition, not part of the paper."
    },
    "recap": "True, believed and justified can all line up by luck. When your reasons and the truth-maker never meet, you have a lucky hit, not knowledge, so the three-box test is not enough.",
-   "builds_on": "truth_from_elsewhere"
+   "builds_on": "truth_from_elsewhere",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   }
  ],
  "omitted": []

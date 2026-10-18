@@ -78,6 +78,16 @@ Visual types: curves, bars, tables, agent simulations, networks, causal diagrams
 
 ## Development
 
+### Built-in lessons
+
+The gallery contains twelve playable lessons: attention, research reliability, Wuhan transmission, opinion dynamics, Gettier, Galton, Turner's frontier thesis, Aquinas on scriptural senses, Mendel's peas, Brown v. Board of Education, Poe's *The Masque of the Red Death*, and Euclid's equilateral triangle.
+
+All lesson JSON lives in `lemma/examples/gallery/`, registered by `index.json`. Every concept has an ordered `activities` sequence. The six additions were generated with Claude Opus 5.5 through Lemma's outline, concept-build, repair, and validation pipeline: 30 concepts, none omitted. Each gallery cover uses a live model from its lesson, with the same player and offline export as the original six. Build evidence and full ingested sources remain in ignored `eval/results/gallery-claude/`; published lessons include generation metadata and verified quotation excerpts. No provider is called during playback.
+
+The six new lessons have verified quotation excerpts in `lemma/examples/sources/`; these are not complete source reproductions. Each lesson links to its source. The original five non-Galton lessons retain their existing source-checking tests against the local evaluation corpus. Galton's full public-domain text remains in `lemma/examples/galton-1886.txt`.
+
+This gallery expansion does not yet change automatic generation or add Jev activity selection; those remain separate work described in `docs/lesson-flow-design.md`.
+
 - `uv run lemma --dev` is development mode with hot reload. A supervisor restarts the server on the same port whenever a Python file in `lemma/` changes, including its private OpenCode server; if the new code fails to start, it shows the traceback and waits for your next save. The browser follows along: CSS changes are swapped in place without losing your place in a lesson, and JS, HTML and example changes, or a server restart, reload the page. Server memory (papers brought in and builds in progress) doesn't survive a restart; saved lessons do. Changes to `lemma/dev.py` itself need a manual restart.
 - `uv sync` creates `.venv` from `uv.lock`, using the Python version in `.python-version` (3.12).
 - `uv add <package>` adds a dependency and updates the lock file.

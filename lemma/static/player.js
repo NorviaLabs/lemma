@@ -115,7 +115,7 @@
     const plan = () => lesson.plan || concepts().map((c) => ({ id: c.id, title: c.title, state: "ready" }));
     const shownPlan = () => plan().filter((p) => p.state !== "omitted");
     const building = () => !!lesson.plan && lesson.plan.some((p) => p.state === "waiting" || p.state === "building");
-    const pcOf = (c) => (S.pc[c.id] ||= { screen: 0, prediction: null, goals: {}, hints: {}, watched: false, checkDone: false, checkFirstTry: null, attempts: 0, checkReset: false, values: M.defaults(c.model) });
+    const pcOf = (c) => (S.pc[c.id] ||= { screen: 0, prediction: null, goals: {}, hints: {}, watched: false, checkDone: false, checkFirstTry: null, attempts: 0, checkReset: false, values: c.model ? M.defaults(c.model) : {}, responses: {} });
 
     let keepPlace = false;  // set while a screen is redrawn for a build update, not because the learner moved
     function frame(...kids) {
@@ -185,10 +185,10 @@
           (intro.background || []).length ? h("section", {}, h("h3", {}, "Good to know first"), h("ul", {}, intro.background.map((b) => h("li", {}, b)))) : null,
           (intro.known || []).length ? h("p", { class: "muted" }, "You said you already know: " + intro.known.join("; ") + ". Those concepts are skipped.") : null,
           primer().length ? h("section", { class: "brief-intro" },
-            h("h3", {}, "Start with the paper in brief"),
-            h("p", {}, `${primer().length} short pages: ${primer().map((pg) => pg.heading).join(" · ")}. Then each concept shows its idea working on a live model.`)) : null,
+            h("h3", {}, "Start with the source in brief"),
+            h("p", {}, `${primer().length} short pages: ${primer().map((pg) => pg.heading).join(" · ")}. Then explore each idea through examples and activities.`)) : null,
           slots.actions = introActions(),
-          h("p", { class: "muted small" }, "The models are simplified teaching models, not the paper's data. ", DISCLAIMER,
+          h("p", { class: "muted small" }, concepts().some((c) => c.model) ? "The models are simplified teaching models, not the paper's data. " : "", DISCLAIMER,
             lesson.provider && lesson.provider.name && !lesson.example ? ` Made with ${lesson.provider.name}${lesson.provider.model ? ` (${lesson.provider.model})` : ""}.` : "")),
         slots.hall = hall(`${shownPlan().length} concepts`)));
     }
@@ -250,15 +250,16 @@
       for (const c of concepts()) {
         const pc = S.pc[c.id];
         if (!pc) continue;
-        for (const g of c.explore.goals) { goals++; if (pc.goals[g.id || g.text] === "self") goalsSelf++; }
+        for (const g of c.explore?.goals || []) { goals++; if (pc.goals[g.id || g.text] === "self") goalsSelf++; }
         if (pc.checkDone) { checks++; if (pc.checkFirstTry) checksFirst++; }
       }
+
       const stat = (n, d, label) => h("div", { class: "stat" }, h("div", { class: "stat-num" }, `${n}/${d}`), h("div", { class: "stat-label" }, label));
       frame(h("div", { class: "overview" },
         h("article", {},
-          h("h1", {}, "You've learned the paper's main ideas"),
+          h("h1", {}, "You've explored the source's main ideas"),
           h("p", { class: "source" }, lesson.title),
-          h("div", { class: "stats" }, stat(goalsSelf, goals, "Goals reached on your own"), checks ? stat(checksFirst, checks, "Hard ideas right first time") : null),
+          h("div", { class: "stats" }, goals ? stat(goalsSelf, goals, "Goals reached on your own") : null, checks ? stat(checksFirst, checks, "Hard ideas right first time") : null),
           lesson.intro && lesson.intro.aha ? h("section", { class: "aha" }, h("p", { class: "aha-head" }, "The big surprise"), h("p", { class: "aha-text" }, lesson.intro.aha)) : null,
           h("h3", {}, "What you found"),
           h("ol", { class: "recaps" }, concepts().map((c) => h("li", {}, h("span", {}, h("strong", {}, c.title + ". "), c.recap)))),
@@ -295,13 +296,13 @@
     class ConceptView {
       constructor(c, pc, idx) {
         this.c = c; this.pc = pc; this.idx = idx;
-        this.model = c.model;
+        this.model = c.model || {};
         this.colors = {};
         (this.model.controls || []).forEach((k, i) => (this.colors[k.id] = k.color ?? i));
         (this.model.outputs || []).forEach((o, i) => (this.colors[o.id] = o.color ?? ((this.model.controls || []).length + i) % 8));
         this.anim = null;
         this.locked = false;
-        this.verbs = VERBS.filter((v) => v.id !== "test" || c.check);
+        this.verbs = c.activities ? c.activities.map((a) => ({ id: a.id, label: a.title || ({ explain: "Understand the idea", choice: "Think it through" }[a.kind]) || VERBS.find((v) => v.id === SCREEN_VERB[a.kind])?.label || "Explore" })) : VERBS.filter((v) => v.id !== "test" || c.check);
         this.screens = this.buildScreens();
         const src = lesson.source || {};
         const items = shownPlan();
@@ -332,7 +333,7 @@
           this.bar = h("div", { class: "action-bar", "aria-live": "polite" }));
         this.drawSound();
         this.modelPanel = h("div", { class: "model-panel", "aria-label": "Live model" });
-        this.buildModel();
+        if (c.model) this.buildModel();
         this.onKey = (e) => {
           if (e.key !== "Enter" || e.defaultPrevented || e.isComposing) return;
           const t = e.target;
@@ -359,6 +360,7 @@
       }
 
       buildScreens() {
+        if (this.c.activities) return [{ kind: "title" }, ...this.c.activities.map((a) => ({ ...a, goal: a.kind === "goal" ? this.c.explore.goals[a.i] : undefined }))];
         const has = (a) => !!(a && (a.steps || []).length);
         const list = [{ kind: "title" }];
         if (has(this.c.animation)) list.push({ kind: "watch" });
@@ -540,14 +542,14 @@
         this.narration = null;
         this.narrStart = null;
         this.cancelAnim();
-        this.view.clearTrail();
-        this.caption.hidden = true;
+        this.view?.clearTrail();
+        if (this.caption) this.caption.hidden = true;
         this.locked = false;
         this.pc.screen = i;
         this.backBtn.disabled = i === 0;
         const scr = this.screens[i];
         const { rail, stage } = this["screen_" + scr.kind](scr);
-        this.renderRail(SCREEN_VERB[scr.kind], rail);
+        this.renderRail(scr.id || SCREEN_VERB[scr.kind], rail);
         const uses = ["watch", "walk", "goal", "connect"].includes(scr.kind) || (scr.kind === "check" && this.c.check.kind === "model");
         this.clearPins();
         this.stage.replaceChildren(h("div", { class: "stage-inner" }, ...stage.filter(Boolean), uses ? this.modelPanel : null));
@@ -607,7 +609,7 @@
           stage: [h("div", { class: "title-stage" },
             h("p", { class: "idea" }, this.c.idea),
             this.base() ? h("p", { class: "builds-on" }, h("span", { class: "plate small" }, String(this.base().n)), `Same model as concept ${this.base().n}, “${this.base().title}”, with one new piece.`) : null,
-            h("p", { class: "muted" }, this.base() ? "A quick reminder of the model, then what's new and how it works. Then you try it yourself." : "First a short tour of the model, then how the idea works on it. You try it yourself once you've seen it."))],
+            h("p", { class: "muted" }, this.c.model ? (this.base() ? "A quick reminder of the model, then what's new and how it works. Then you try it yourself." : "First a short tour of the model, then how the idea works on it. You try it yourself once you've seen it.") : "Read the source, work through a case, and compare the reasoning behind your choices."))],
         };
       }
 
@@ -826,19 +828,71 @@
         return { rail: [h("p", { class: "goal-text" }, p.question)], stage: [opts] };
       }
 
-      screen_explain() {
+      screen_sort(a) { return this.activityScreen(a); }
+      screen_construction(a) { return this.activityScreen(a); }
+      screen_inheritance(a) { return this.activityScreen(a); }
+
+      activityScreen(a) {
+        const state = ((this.pc.responses ||= {})[a.id] ||= {});
+        const container = h("div", { class: "activity-container" });
+        const update = () => this.setBar({ body: state.done ? "Notice what changed and why before continuing." : "Explore the activity. You can return to the source or continue when ready.", buttons: [this.continueBtn()] });
+        root.LemmaActivities.mount(container, a, state, update);
+        update();
+        return { rail: [h("p", {}, a.prompt)], stage: [container] };
+      }
+
+      screen_choice(a) {
+        const responses = (this.pc.responses ||= {});
+        const saved = responses[a.id];
+        let selected = saved?.selected ?? null;
+        const inputs = [];
+        const submit = h("button", { class: "primary", disabled: selected === null, onclick: () => {
+          responses[a.id] = { selected, shown: false };
+          showFeedback();
+        } }, a.mode === "determinate" ? "Check" : "Compare reasoning");
+        const options = h("div", { class: "options", role: "radiogroup", "aria-label": a.question }, a.options.map((o, i) => {
+          const input = h("input", { type: "radio", name: `activity-${this.c.id}-${a.id}`, checked: selected === i, onchange: () => {
+            selected = i;
+            submit.disabled = false;
+            this.setBar({ buttons: [submit] });
+          } });
+          inputs.push(input);
+          return h("label", { class: "option" }, input, h("span", {}, o.text));
+        }));
+        const showFeedback = () => {
+          const response = responses[a.id];
+          const right = a.mode !== "determinate" || response.selected === a.answer;
+          const show = !right ? h("button", { class: "ghost", onclick: () => {
+            response.selected = a.answer;
+            response.shown = true;
+            selected = a.answer;
+            inputs.forEach((input, i) => (input.checked = i === a.answer));
+            showFeedback();
+          } }, "Show me") : null;
+          this.setBar({ state: a.mode === "determinate" && right && !response.shown ? "good" : "",
+            head: response.shown ? "Here's one supported answer" : a.mode === "determinate" ? (right ? "That's it" : "Reconsider this") : "Compare the reasoning",
+            body: a.options[response.selected].feedback,
+            buttons: right ? [this.continueBtn()] : [show, this.continueBtn("Continue", true)] });
+        };
+        this.setBar({ body: a.mode === "opening" ? "An optional first judgment, not a test. You can reconsider it after reading." : a.mode === "interpretive" ? "Choose a reading to examine its support and limits. Agreement is not required." : "Choose the answer supported by the source and the stated assumptions.",
+          buttons: [a.mode === "opening" ? this.continueBtn("Skip") : null, submit].filter(Boolean) });
+        if (saved) showFeedback();
+        return { rail: [h("p", { class: "goal-text" }, a.question)], stage: [options] };
+      }
+
+      screen_explain(a = {}) {
         const u = this.c.understand, src = (lesson.sources || []).find((s) => s.id === u.source_id) || lesson.source || {};
-        this.setBar({ body: "Next, you make it happen on the model yourself.", buttons: [this.continueBtn("Try it yourself")] });
+        this.setBar({ buttons: [this.continueBtn(this.c.activities ? "Continue" : "Try it yourself")] });
         return {
-          rail: [h("p", {}, "In plain words, then in the paper's own.")],
+          rail: [h("p", {}, "The idea and its source.")],
           stage: [
-            h("p", { class: "explanation" }, u.explanation),
+            h("p", { class: "explanation" }, a.text || u.explanation),
             u.source_ids ? h("p", { class: "muted small" }, "Sources: ", (lesson.sources || []).filter((s) => u.source_ids.includes(s.id)).map((s) => s.title).join(" · ")) : null,
             (this.c.terms || []).length ? h("dl", { class: "terms" }, h("p", { class: "terms-head" }, (this.c.terms.length > 1 ? "New words" : "New word")),
               ...this.c.terms.map((t) => h("div", { class: "term-def" }, h("dt", {}, t.term), h("dd", {}, t.means)))) : null,
             h("figure", { class: "quote" },
               h("blockquote", {}, u.quote.trim()),
-              h("figcaption", {}, "From the paper", citation(src) ? ` · ${citation(src)}` : "", src.title ? ` · ${src.title}` : "", u.quote_where ? ` · ${u.quote_where}` : "")),
+              h("figcaption", {}, "From the source", citation(src) ? ` · ${citation(src)}` : "", src.title ? ` · ${src.title}` : "", u.quote_where ? ` · ${u.quote_where}` : "")),
           ],
         };
       }

@@ -1,0 +1,1446 @@
+{
+ "version": 1,
+ "id": "gallery-mendel-1866",
+ "title": "The Hidden Hybrids: How Mendel's Peas Revealed a 1 : 2 : 1 Secret Behind 3 : 1",
+ "audience": "A curious adult with no background in this field",
+ "created": "2026-10-18T14:11:28",
+ "source": {
+  "title": "Experiments in Plant-Hybridisation",
+  "authors": "Gregor Mendel",
+  "year": 1865,
+  "venue": "",
+  "url": "https://www.gutenberg.org/cache/epub/69362/pg69362-images.html"
+ },
+ "intro": {
+  "summary": "Mendel asked whether the offspring of plant hybrids follow a fixed numerical law from one generation to the next. Over eight years he crossed pea varieties that differed in sharp either/or characters, such as round or wrinkled seeds, and counted many thousands of their descendants. He found that a hidden ('recessive') character returns in about one plant in four. He also found that the plants which look dominant are of two kinds: one third breed true, and two thirds are hidden hybrids. He explained this by proposing that hybrids make two kinds of egg and pollen cells in equal numbers, which pair up by chance. The main limits are that the work covers one plant group and characters picked because they were easy to sort, that small counts fluctuate a lot, and that a second experiment with beans gave flower colours his simple rule did not fit.",
+  "background": [
+   "A hybrid here means the offspring of two plant varieties that differ in some visible feature, such as seed shape.",
+   "Pea flowers normally fertilise themselves, so an experimenter can control exactly which pollen reaches which flower.",
+   "In 1865 nobody knew about genes or chromosomes; Mendel reasoned only from counting plants and seeds.",
+   "A ratio like '3 to 1' is an average: a single pod or plant can differ from it by chance."
+  ],
+  "known": [],
+  "aha": "The plants that look the same (dominant) are secretly two different kinds: one third are pure and two thirds are hidden hybrids. So the famous 3 : 1 is really 1 : 2 : 1, which is exactly what you get if hybrids make two kinds of egg and pollen in equal numbers that meet by chance."
+ },
+ "primer": [
+  {
+   "heading": "The question",
+   "body": "Plant breeders had long seen that crossing the same two varieties always gives the same-looking hybrids. But when those hybrids reproduce, their offspring scatter into many forms, and nobody had found a rule for how many of each appear. Mendel thought the reason was that no one had counted carefully enough, generation by generation.",
+   "quote": "not one has been carried out to such an extent and in such a way as to make it possible to determine the number of different forms under which the offspring of hybrids appear, or to arrange these forms with certainty according to their separate generations, or to definitely ascertain their statistical relations",
+   "quote_where": "Introductory Remarks"
+  },
+  {
+   "heading": "What he did",
+   "body": "He chose garden peas, which fertilise themselves inside a closed flower, so stray pollen rarely interferes. He picked seven characters that come in two clear forms, for example round versus wrinkled seeds and tall versus short stems. He crossed varieties that differed in these characters, in both directions, and let the hybrids fertilise themselves. Then he sorted and counted the offspring, and their offspring in turn, over several generations and more than 10,000 plants."
+  },
+  {
+   "heading": "What he found",
+   "body": "In the hybrids, one form completely masks the other. He called the visible one dominant and the hidden one recessive. In the next generation the hidden form comes back unchanged, in about one plant in four, across all seven characters (overall 2.98 to 1). When he grew the dominant-looking plants on, about one third bred true. The other two thirds split again, 3 to 1, just as their hybrid parents had.",
+   "quote": "In this generation there reappear, together with the dominant characters, also the recessive ones with their full peculiarities, and this occurs in the definitely expressed average proportion of three to one, so that among each four plants of this generation three display the dominant character and one the recessive.",
+   "quote_where": "The First Generation [Bred] from the Hybrids"
+  },
+  {
+   "heading": "His explanation",
+   "body": "Mendel proposed that a hybrid makes two kinds of egg cell and two kinds of pollen cell, one for each parental form, in equal numbers. Which pollen meets which egg is a matter of chance. Equal kinds pairing at random give on average one true-breeding dominant, two hybrids and one true-breeding recessive in every four offspring: 1 : 2 : 1. Because the hybrids look dominant, this shows up as 3 : 1. He tested the idea by crossing hybrids back to the pure parents and got the predicted forms in nearly equal numbers.",
+   "quote": "the hybrids produce egg cells and pollen cells which in equal numbers represent all constant forms which result from the combinations of the characters brought together in fertilisation.",
+   "quote_where": "The Reproductive Cells of Hybrids"
+  },
+  {
+   "heading": "Why it matters, and its limits",
+   "body": "This turned the messy variety among hybrid offspring into a simple counting law. That law became the foundation of genetics. Mendel was careful about its limits. Single plants and pods can stray far from the average, so the true ratios appear only in large counts. He studied one plant group and only sharply defined characters. In a bean cross, flower colours did not fit the simple rule, and he offered only a tentative explanation for them. He also called for the key experiments to be repeated."
+  }
+ ],
+ "provider": {
+  "name": "Claude",
+  "model": "claude-opus-5-5"
+ },
+ "concepts": [
+  {
+   "id": "dominance_masks",
+   "title": "One form hides the other in the hybrid",
+   "idea": "When two pure pea varieties are crossed, the hybrid shows only the dominant form, whichever parent supplied it.",
+   "role": "prerequisite",
+   "predict": {
+    "question": "Stem length is another of Mendel's characters, and long stem is the form that shows in hybrids. He crosses a 1 ft dwarf pea with a 6 ft tall pea. How tall are the hybrids?",
+    "options": [
+     "About as tall as the tall parent, or even a little taller",
+     "About halfway, roughly 3 to 4 ft",
+     "Dwarf, like the short parent",
+     "Half the hybrids tall, half dwarf"
+    ],
+    "answer": 0,
+    "why": [
+     "Right: the long-stem form wins in the hybrid. Mendel reports that 1 ft × 6 ft crosses gave hybrids of 6 to 7½ ft. He put the extra height down to the vigour often seen when very different stems are crossed.",
+     "Halfway is what blending would predict, the slider's left end. Pea hybrids did not blend for any of the seven characters.",
+     "Dwarfness is the form that disappears in the hybrid, so it cannot be the one you see.",
+     "A cross of two pure plants gives uniform hybrids that all look alike. A mix of forms only appears in later generations."
+    ]
+   },
+   "terms": [
+    {
+     "term": "dominant",
+     "means": "The parent's form that shows, whole or almost unchanged, in the hybrid"
+    },
+    {
+     "term": "recessive",
+     "means": "The parent's form that disappears in the hybrid but is not destroyed"
+    },
+    {
+     "term": "reciprocal cross",
+     "means": "The same cross done both ways, swapping which plant bears the seed and which gives the pollen"
+    }
+   ],
+   "model": {
+    "title": "Crossing round-seeded and wrinkled-seeded peas",
+    "note": "Teaching model: one character (seed shape) from two pure-breeding parents. Each cell gives a 0–100 score for how round the offspring's seeds look. The slider is a what-if: its right end (1) matches what Mendel saw in peas, and lower values show an imagined blending plant, not anything he reported for these characters. Numbers are illustrative, not counts from the paper.",
+    "controls": [
+     {
+      "id": "seed",
+      "label": "Seed-bearing plant is round (off = wrinkled)",
+      "kind": "toggle",
+      "default": 1,
+      "color": 0,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "pollen",
+      "label": "Pollen plant is round (off = wrinkled)",
+      "kind": "toggle",
+      "default": 1,
+      "color": 1,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "h",
+      "label": "What if: how completely one form wins when parents differ",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 1,
+      "unit": "",
+      "color": 2
+     }
+    ],
+    "outputs": [
+     {
+      "id": "look",
+      "label": "Offspring seeds look round",
+      "expr": "seed == pollen ? 100 * seed : 50 + 50 * h",
+      "unit": "%",
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "differ",
+      "label": "Parents differ (1 = yes, a hybrid)",
+      "expr": "seed != pollen ? 1 : 0",
+      "decimals": 0,
+      "color": 4
+     }
+    ],
+    "visual": {
+     "type": "table",
+     "columns": [
+      "Pollen plant: round",
+      "Pollen plant: wrinkled"
+     ],
+     "rows": [
+      {
+       "label": "Seed-bearing plant: round",
+       "cells": [
+        {
+         "value": "100",
+         "highlight": "seed == 1 && pollen == 1"
+        },
+        {
+         "value": "50 + 50 * h",
+         "highlight": "seed == 1 && pollen == 0"
+        }
+       ]
+      },
+      {
+       "label": "Seed-bearing plant: wrinkled",
+       "cells": [
+        {
+         "value": "50 + 50 * h",
+         "highlight": "seed == 0 && pollen == 1"
+        },
+        {
+         "value": "0",
+         "highlight": "seed == 0 && pollen == 0"
+        }
+       ]
+      }
+     ],
+     "decimals": 0,
+     "scale": "sequential",
+     "scale_min": 0,
+     "scale_max": 100
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This grid crosses two pea plants. Each row is the plant that bears the seed. Each column is the plant that gives the pollen. Each cell scores how round the offspring's seeds look: 100 is fully round, 0 is fully wrinkled.",
+      "focus": "look",
+      "ms": 4500
+     },
+     {
+      "say": "This switch picks the seed-bearing plant: round or wrinkled.",
+      "set": {
+       "seed": 1
+      },
+      "focus": "seed",
+      "ms": 2800
+     },
+     {
+      "say": "This switch picks the pollen plant. Flip it and the highlighted cell moves.",
+      "set": {
+       "pollen": 0
+      },
+      "focus": "pollen",
+      "ms": 3000
+     },
+     {
+      "say": "This slider is a what-if. It sets how completely one form wins when the parents differ. Its right end is what Mendel actually saw in peas.",
+      "focus": "h",
+      "ms": 3800
+     },
+     {
+      "say": "These boxes read out the highlighted cross: how round the offspring look, and whether the parents differ.",
+      "set": {
+       "pollen": 1
+      },
+      "focus": [
+       "look",
+       "differ"
+      ],
+      "ms": 3200
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with both directions of the cross, then use the what-if slider to see what peas did not do.",
+    "goals": [
+     {
+      "text": "Make a hybrid whose round form comes only from the pollen plant, and show it still looks fully round.",
+      "when": "seed == 0 && pollen == 1 && look >= 99.5",
+      "solution": {
+       "seed": 0,
+       "pollen": 1
+      },
+      "hints": [
+       "A hybrid needs two parents that differ.",
+       "If the round form must come from the pollen, think about which form the seed-bearing plant has to carry.",
+       "The highlighted cell should end up in the bottom row."
+      ]
+     },
+     {
+      "text": "Imagine a plant whose hybrids blend. Make a round × wrinkled hybrid that looks exactly halfway between its parents.",
+      "when": "seed != pollen && abs(look - 50) < 0.5",
+      "solution": {
+       "pollen": 0,
+       "h": 0
+      },
+      "hints": [
+       "First you need a hybrid, so the parents must differ.",
+       "Once you have one, the what-if slider decides how much the round form wins.",
+       "Halfway means neither form wins at all. Where on the slider is that?"
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. The long-stem form wins in the hybrid just as round seed shape does. Mendel's 1 ft × 6 ft crosses gave hybrids of 6 to 7½ ft, sometimes taller than the tall parent, which he put down to hybrid vigour.",
+     "incorrect": "You may have pictured the two heights averaging out. In peas the hybrid shows one parent's form, here the long stem, and the dwarf form vanishes from view. Mendel's 1 ft × 6 ft crosses gave hybrids of 6 to 7½ ft."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with two pure round plants. Pure means they breed true: round plants give round seeds. Their offspring score 100, no surprise.",
+       "set": {
+        "seed": 1,
+        "pollen": 1,
+        "h": 1
+       },
+       "focus": "look",
+       "ms": 3500
+      },
+      {
+       "say": "Now cross a round seed-bearing plant with wrinkled pollen. This makes a hybrid. You might expect something half-round. The box still says 100. The wrinkled form has vanished from sight.",
+       "set": {
+        "pollen": 0
+       },
+       "focus": [
+        "look",
+        "differ"
+       ],
+       "ms": 4500
+      },
+      {
+       "say": "Mendel named the form that shows in the hybrid dominant. The one that withdraws he called recessive. For seed shape, round is dominant and wrinkled is recessive.",
+       "focus": "look",
+       "ms": 4000
+      },
+      {
+       "say": "Swap the roles: a wrinkled seed-bearing plant with round pollen. Doing the cross both ways is called a reciprocal cross. The result is the same: 100, fully round.",
+       "set": {
+        "seed": 0,
+        "pollen": 1
+       },
+       "focus": [
+        "seed",
+        "pollen"
+       ],
+       "ms": 4500
+      },
+      {
+       "say": "What if hybrids blended instead? Pull the what-if slider to the left end and the hybrid lands halfway, at 50. Earlier breeders did see in-between hybrids for some characters, such as leaf form.",
+       "set": {
+        "h": 0
+       },
+       "focus": "h",
+       "ms": 4500
+      },
+      {
+       "say": "Peas did not behave like this. For all seven characters Mendel chose, the hybrid matched one parent so closely that the other form could not be detected.",
+       "set": {
+        "h": 1
+       },
+       "focus": "h",
+       "ms": 4000
+      },
+      {
+       "say": "Look at the whole grid now. Both mixed cells read 100, whichever plant brought the round form. The recessive form is hidden, not destroyed: Mendel chose the word because it reappears unchanged in the hybrids' own offspring.",
+       "focus": "look",
+       "ms": 5000
+      }
+     ]
+    },
+    "explanation": "When Mendel crossed two pure pea varieties that differed in one sharp character, the hybrid did not come out in between. In all seven characters he tested (including seed shape, seed colour, pod shape and stem length), it looked like one parent so closely that the other form could not be seen. He called the visible form dominant and the hidden one recessive. He made every cross in both directions, and it made no difference whether the dominant form came from the seed-bearing plant or the pollen plant. This holds for the clear, either-or pea characters he deliberately chose. Other plants and other characters can give in-between hybrids, and even here tall hybrids sometimes grew taller than the tall parent.",
+    "quote": "It was furthermore shown by the whole of the experiments that it is perfectly immaterial whether the dominant character belong to the seed-bearer or to the pollen parent; the form of the hybrid remains identical in both cases.",
+    "quote_where": "The Forms of the Hybrids"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "look",
+      "link": "look"
+     },
+     {
+      "text": "(Aa) = 50 + 50 × "
+     },
+     {
+      "text": "h",
+      "link": "h"
+     },
+     {
+      "text": ";  in peas h = 1, so Aa looks like A"
+     }
+    ],
+    "caption": "This is the teaching model's rule, not an equation from the paper. Mendel writes A for the dominant form (round), a for the recessive form (wrinkled) and Aa for the hybrid. The orange-linked look is the readout box. h is the what-if slider: at h = 1 the hybrid looks exactly like A, which is Mendel's finding for peas, and at h = 0 it would blend to halfway."
+   },
+   "recap": "In Mendel's peas the hybrid shows only the dominant form, and it does not matter which parent supplied it. The recessive form is hidden, not lost.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "chance_fluctuation",
+   "title": "Ratios only appear in large counts",
+   "idea": "The share of recessive offspring in a single plant or pod scatters widely by chance, and only large totals settle near one in four.",
+   "role": "prerequisite",
+   "predict": {
+    "question": "A hybrid pea pod holds 8 seeds. On average one seed in four should be wrinkled. How surprising is a pod with no wrinkled seed at all?",
+    "options": [
+     "Impossible: 8 seeds must include 2 wrinkled ones",
+     "Fairly common: roughly 1 pod in 10",
+     "Extremely rare: under 1 pod in 1,000"
+    ],
+    "answer": 1,
+    "why": [
+     "This treats the 3 : 1 rule as a quota every pod must meet. It is only an average, and 8 seeds is a tiny count that luck can swing a long way.",
+     "Right. Each seed has a 3-in-4 chance of being round, so all 8 round happens about (3/4)^8 ≈ 10% of the time. Mendel reported that pods of six to nine seeds 'often' held only round seeds.",
+     "This would hold for a large count, where the share sits close to one in four. With only 8 seeds the swing is huge, so an all-round pod is ordinary."
+    ]
+   },
+   "terms": [
+    {
+     "term": "sample size",
+     "means": "How many seeds are counted together before the share is worked out"
+    },
+    {
+     "term": "chance fluctuation",
+     "means": "The way a count's share wanders away from the true rate purely by luck"
+    }
+   ],
+   "model": {
+    "title": "Share of wrinkled seeds on many hybrid plants",
+    "note": "Teaching model: each seed is treated as an independent draw with a 1-in-4 chance of being wrinkled, and plants differ only by luck. The simulation approximates each plant's share with a bell curve that has the same average and spread as this 1-in-4 draw, so very small counts can show shares slightly below 0%. Numbers are illustrative, except Mendel's counts, which are quoted from the paper.",
+    "controls": [
+     {
+      "id": "n",
+      "label": "Seeds counted on each plant",
+      "kind": "slider",
+      "min": 10,
+      "max": 500,
+      "step": 5,
+      "default": 30,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "plants",
+      "label": "Number of plants",
+      "kind": "slider",
+      "min": 20,
+      "max": 400,
+      "step": 10,
+      "default": 100,
+      "unit": "",
+      "color": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "swing",
+      "label": "Typical swing either side of 25%",
+      "expr": "1.96 * sqrt(0.1875 / n)",
+      "unit": " pts",
+      "scale": 100,
+      "decimals": 1,
+      "color": 0
+     },
+     {
+      "id": "lo",
+      "label": "Low end for most plants",
+      "expr": "max(0, 0.25 - swing)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "hi",
+      "label": "High end for most plants",
+      "expr": "min(1, 0.25 + swing)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "scatter",
+      "label": "Scatter of the dots in this batch",
+      "expr": "sim_sd_of_means",
+      "unit": " pts",
+      "scale": 1,
+      "decimals": 1,
+      "color": 3
+     }
+    ],
+    "visual": {
+     "type": "sampling",
+     "kernel": "mean",
+     "params": {
+      "mu": 25,
+      "sd": 43.3,
+      "n": "n",
+      "samples": "plants"
+     }
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Each dot is one pea plant grown from a hybrid. Its position shows what percent of that plant's seeds came out wrinkled. The long-run rate is one in four, or 25%.",
+      "focus": "scatter",
+      "ms": 5500
+     },
+     {
+      "say": "This slider sets how many seeds we count on each plant. Watch the dots spread out when we count only a few.",
+      "set": {
+       "n": 10
+      },
+      "focus": "n",
+      "ms": 5000
+     },
+     {
+      "say": "This slider sets how many plants we look at, so how many dots there are.",
+      "set": {
+       "plants": 200
+      },
+      "focus": "plants",
+      "ms": 4000
+     },
+     {
+      "say": "These two boxes give the range where most plants land, and this one gives the typical swing away from 25%.",
+      "set": {
+       "n": 30,
+       "plants": 100
+      },
+      "focus": [
+       "lo",
+       "hi",
+       "swing"
+      ],
+      "ms": 5500
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with how many seeds you count on each plant. Find how big a count must be before chance stops hiding the one-in-four rule.",
+    "goals": [
+     {
+      "text": "Find roughly the smallest count at which a plant with one wrinkled seed in three (a 2 : 1 split) would fall outside the range where most plants land",
+      "when": "hi < 1/3 && hi > 0.325",
+      "solution": {
+       "n": 105
+      },
+      "hints": [
+       "One seed in three is about 33%. Which box tells you the top of the usual range?",
+       "More seeds per plant pull the high end down toward 25%. Raise the count until the high end slips just under 33%, then stop.",
+       "The crossing happens somewhere between 100 and 130 seeds per plant."
+      ]
+     },
+     {
+      "text": "Cut the typical swing to half of what it is at 30 seeds, while counting as few seeds as you can",
+      "when": "swing <= 0.0776 && swing >= 0.07",
+      "solution": {
+       "n": 120
+      },
+      "hints": [
+       "At 30 seeds the swing is about 15.5 points, so you want about 7.8 points.",
+       "Doubling the seeds does not halve the swing: the swing shrinks with the square root of the count.",
+       "Ask which multiple of 30 has a square root of 2."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. A pod of 8 is a tiny count, so its share of wrinkled seeds swings widely. With a 3-in-4 chance per seed of being round, all 8 round comes up about one time in ten. Mendel saw just this: pods with only round seeds were common.",
+     "incorrect": "The 3 : 1 rule describes an average over many seeds, not a quota for each pod. With only 8 seeds, chance alone moves the share a long way, so a pod with no wrinkled seed (about (3/4)^8 ≈ 10%) is an everyday sight."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start small: 10 seeds per plant, about one pod's worth. The dots smear from near 0% to over half wrinkled, though every plant follows the same one-in-four rule.",
+       "set": {
+        "n": 10,
+        "plants": 100
+       },
+       "focus": [
+        "lo",
+        "hi"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "Now 30 seeds, close to one plant's crop. Most plants land between about 10% and 40%. Mendel's extremes fit this picture: one plant gave 43 round to 2 angular (4%), another 14 round to 15 angular (52%), among hundreds of plants.",
+       "set": {
+        "n": 30
+       },
+       "focus": [
+        "lo",
+        "hi"
+       ],
+       "ms": 7000
+      },
+      {
+       "say": "This wandering is called chance fluctuation. Nothing differs between these plants. Luck alone decides which seeds turn out wrinkled.",
+       "focus": "scatter",
+       "ms": 4500
+      },
+      {
+       "say": "The number of seeds counted together is the sample size. Raise it to 270, nine times as many, and the swing falls to about a third. The swing shrinks with the square root of the count.",
+       "set": {
+        "n": 270
+       },
+       "focus": [
+        "n",
+        "swing"
+       ],
+       "ms": 6000
+      },
+      {
+       "say": "At 500 seeds, nearly every plant lands within about 4 points of 25%.",
+       "set": {
+        "n": 500
+       },
+       "focus": "swing",
+       "ms": 4000
+      },
+      {
+       "say": "Adding more plants does not tighten the cloud. It only fills it in. Each dot's spread depends on how many seeds stand behind it.",
+       "set": {
+        "plants": 400
+       },
+       "focus": [
+        "plants",
+        "scatter"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "Mendel pooled 7,324 seeds for seed shape. At that size the swing is only about 1 point, and his 1,850 wrinkled seeds came to 25.3%, a ratio of 2.96 to 1.",
+       "focus": "swing",
+       "ms": 6000
+      }
+     ]
+    },
+    "explanation": "A single plant or pod is a small count, and luck decides which seeds come out recessive, so its share can land far from one in four. The swing shrinks only with the square root of the count: four times the seeds halves it. Mendel saw this directly. Single plants ranged from 43 : 2 to 14 : 15, and no pod held more than five angular or five green seeds. Yet his large pooled totals (7,324 and 8,023 seeds) gave 2.96 : 1 and 3.01 : 1. He concluded that a true ratio can only be read from many counts added together. Even then it is an average with some leftover uncertainty, as his smaller 100-plant tests showed.",
+    "quote": "The true ratios of the numbers can only be ascertained by an average deduced from the sum of as many single values as possible; the greater the number the more are merely chance elements eliminated.",
+    "quote_where": "The Reproductive Cells of Hybrids"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "swing ≈ ",
+      "link": "swing"
+     },
+     {
+      "text": "1.96 × √(p(1 − p) / "
+     },
+     {
+      "text": "n",
+      "link": "n"
+     },
+     {
+      "text": "),  with p = 1/4"
+     }
+    ],
+    "caption": "Mendel gives no formula for the spread. This is the model's standard rule for how far a share usually wanders. The blue n is the seeds counted per plant (the slider), and the blue swing is the output box. The 1/4 is the one-in-four recessive rate, and 1.96 marks the range that holds about 95% of plants."
+   },
+   "recap": "One plant's ratio is mostly luck; only big pooled counts settle near 3 : 1, and halving the scatter takes four times the seeds.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "equal_cells_random_pairing",
+   "title": "Two kinds of egg and pollen, meeting by chance",
+   "idea": "If a hybrid makes A and a egg cells and A and a pollen cells in equal numbers that pair at random, its offspring come out on average as 1 A : 2 Aa : 1 a.",
+   "role": "core",
+   "predict": {
+    "question": "Mendel also fertilised a hybrid's eggs with pollen from a pure recessive plant, so every pollen grain carries a. If the hybrid's eggs are half A and half a, what should the offspring be on average?",
+    "options": [
+     "1 A : 2 Aa : 1 a, as usual",
+     "Half hybrids Aa, half pure a",
+     "All pure a, like the pollen parent",
+     "All hybrids Aa"
+    ],
+    "answer": 1,
+    "why": [
+     "1 : 2 : 1 is what you get when both sides are half A and half a. Here the pollen side is all a, so no egg can meet A pollen, and pure A offspring cannot appear.",
+     "Correct. Every pollen grain carries a. An A egg makes Aa, and an a egg makes a. The eggs are half and half, so the offspring are half Aa and half a. Mendel counted 31, 26, 27 and 26 seeds of the four kinds in one such cross.",
+     "The pollen is all a, but half the eggs still carry A. Those eggs make hybrids, not pure a plants.",
+     "Only the A eggs make hybrids. The a eggs meet a pollen and make pure a plants, which are half the offspring."
+    ]
+   },
+   "terms": [
+    {
+     "term": "reproductive cells",
+     "means": "The egg cells and pollen cells. One of each joins to start a new plant"
+    },
+    {
+     "term": "constant form",
+     "means": "A plant made from an egg and a pollen grain of the same kind (A with A, or a with a). Its offspring stay the same"
+    },
+    {
+     "term": "1 : 2 : 1 ratio",
+     "means": "One pure A plant to two hybrids to one pure a plant, on average"
+    }
+   ],
+   "model": {
+    "title": "A hybrid pea's pollen meets its own eggs",
+    "note": "Teaching model: one pair of characters, and the long-run average share of each pairing when egg and pollen meet purely by chance. It shows no chance scatter, though real counts fluctuate around these averages. The 50/50 setting is Mendel's hypothesis. Unequal shares are illustrative what-ifs, not the paper's data.",
+    "controls": [
+     {
+      "id": "p",
+      "label": "Share of pollen carrying A",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.8,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "q",
+      "label": "Share of eggs carrying A",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.8,
+      "unit": "",
+      "color": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "pure_dom",
+      "label": "Pure A offspring (A)",
+      "expr": "p * q",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 1,
+      "color": 2
+     },
+     {
+      "id": "hybrids",
+      "label": "Hybrid offspring (Aa)",
+      "expr": "p * (1 - q) + (1 - p) * q",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 1,
+      "color": 3
+     },
+     {
+      "id": "pure_rec",
+      "label": "Pure a offspring (a)",
+      "expr": "(1 - p) * (1 - q)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 1,
+      "color": 4
+     }
+    ],
+    "visual": {
+     "type": "table",
+     "columns": [
+      "Pollen carrying A",
+      "Pollen carrying a"
+     ],
+     "rows": [
+      {
+       "label": "Egg carrying A",
+       "cells": [
+        "100 * p * q",
+        "100 * (1 - p) * q"
+       ]
+      },
+      {
+       "label": "Egg carrying a",
+       "cells": [
+        "100 * p * (1 - q)",
+        "100 * (1 - p) * (1 - q)"
+       ]
+      }
+     ],
+     "decimals": 1,
+     "scale": "sequential",
+     "scale_min": 0,
+     "scale_max": 100
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This grid is a hybrid pea fertilising itself. Each column is a kind of pollen grain, and each row is a kind of egg.",
+      "focus": [
+       "p",
+       "q"
+      ],
+      "ms": 3200
+     },
+     {
+      "say": "Each square is one way an egg and a pollen grain can meet. Its number is the percentage of seeds made that way.",
+      "focus": "hybrids",
+      "ms": 3200
+     },
+     {
+      "say": "This slider sets how much of the pollen carries A rather than a. Watch the columns shift.",
+      "set": {
+       "p": 0.6
+      },
+      "focus": "p",
+      "ms": 3000
+     },
+     {
+      "say": "This one does the same for the eggs, and it shifts the rows.",
+      "set": {
+       "q": 0.6
+      },
+      "focus": "q",
+      "ms": 3000
+     },
+     {
+      "say": "These three boxes add up the squares: pure A offspring, hybrid offspring and pure a offspring.",
+      "set": {
+       "p": 0.8,
+       "q": 0.8
+      },
+      "focus": [
+       "pure_dom",
+       "hybrids",
+       "pure_rec"
+      ],
+      "ms": 3400
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "You have seen equal cells give 1 : 2 : 1. Now play with lopsided cells and see which parts of the pattern survive.",
+    "goals": [
+     {
+      "text": "Keep hybrids at exactly half of the offspring, but make pure A plants three times as common as pure a plants.",
+      "when": "abs(hybrids - 0.5) < 0.01 && abs(pure_dom - 3 * pure_rec) < 0.02",
+      "solution": {
+       "p": 0.75,
+       "q": 0.5
+      },
+      "hints": [
+       "In the walkthrough, one change left the hybrids at half. What was still balanced then?",
+       "Keep one slider evenly split. Then pure A and pure a simply follow the A and a shares of the other slider.",
+       "On the other slider, the A share must be three times the a share."
+      ]
+     },
+     {
+      "text": "Make pure A and pure a plants equally common while more than 60% of the offspring are hybrids.",
+      "when": "abs(pure_dom - pure_rec) < 0.01 && hybrids > 0.6",
+      "solution": {
+       "p": 0.8,
+       "q": 0.2
+      },
+      "hints": [
+       "Equal numbers of pure A and pure a plants do not require 50/50 on both sides.",
+       "Try tilting the pollen toward A and the eggs toward a.",
+       "Pure A is (pollen A share) × (egg A share), and pure a is the two a shares multiplied. Make the sliders mirror images of each other, then push them far apart."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. Each egg kind meets the pollen in proportion to the pollen's shares. All-a pollen turns A eggs into hybrids and a eggs into pure a plants, so you get half and half. Mendel used this cross to test his idea, and the four seed kinds came out in nearly equal numbers.",
+     "incorrect": "It is tempting to expect 1 : 2 : 1 whenever a hybrid is involved. But 1 : 2 : 1 needs both the eggs and the pollen to be half A and half a. Here the pollen is all a, so only two squares of the grid are possible, and each holds half the offspring."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Mendel's key guess: a hybrid's reproductive cells, its eggs and its pollen, come in two kinds, A and a, in equal numbers. Set both sides to half and half.",
+       "set": {
+        "p": 0.5,
+        "q": 0.5
+       },
+       "focus": [
+        "p",
+        "q"
+       ],
+       "ms": 3600
+      },
+      {
+       "say": "Chance alone decides which pollen grain meets which egg. Every pairing is equally likely, so each square gets 25%.",
+       "focus": "pure_dom",
+       "ms": 3200
+      },
+      {
+       "say": "Top-left and bottom-right are an egg and a pollen grain of the same kind. They make plants that breed true, A or a. Mendel calls each of these a constant form. Each is 25%.",
+       "focus": [
+        "pure_dom",
+        "pure_rec"
+       ],
+       "ms": 3800
+      },
+      {
+       "say": "The other two squares both join A with a. It makes no difference which parent brought which, so both make the same hybrid, Aa. Two squares give 50%.",
+       "focus": "hybrids",
+       "ms": 3800
+      },
+      {
+       "say": "So the offspring come out 25 : 50 : 25. That is the 1 : 2 : 1 ratio: one pure A, two hybrids, one pure a.",
+       "focus": [
+        "pure_dom",
+        "hybrids",
+        "pure_rec"
+       ],
+       "ms": 3400
+      },
+      {
+       "say": "Now break the equal numbers. Make 80% of the pollen carry A. Hybrids stay at half, but pure A and pure a are no longer equal.",
+       "set": {
+        "p": 0.8
+       },
+       "focus": [
+        "pure_dom",
+        "pure_rec"
+       ],
+       "ms": 3800
+      },
+      {
+       "say": "Tilt the eggs as well, and the hybrids fall well below half. The 1 : 2 : 1 is gone.",
+       "set": {
+        "q": 0.8
+       },
+       "focus": "hybrids",
+       "ms": 3400
+      },
+      {
+       "say": "Only equal shares on both sides give back the 1 : 2 : 1, and with it the one-in-four recessive plants Mendel counted.",
+       "set": {
+        "p": 0.5,
+        "q": 0.5
+       },
+       "focus": [
+        "pure_dom",
+        "hybrids",
+        "pure_rec"
+       ],
+       "ms": 3600
+      }
+     ]
+    },
+    "explanation": "Mendel explained his counts with one assumption. A hybrid makes two kinds of egg and two kinds of pollen, A and a, in equal numbers, and chance decides which meets which. Then the four pairings are equally likely on average. A with A gives a pure A plant and a with a gives a pure a plant, each a constant form that breeds true. Both mixed pairings give the hybrid Aa, so the offspring run 1 A : 2 Aa : 1 a. To test the idea, he crossed hybrids with pure parents. Against pure ab plants, the four predicted kinds of seed came out in nearly equal numbers, for example 31, 26, 27 and 26. He stressed that this holds only on average: single plants and pods can stray a long way from it.",
+    "quote": "It remains, therefore, purely a matter of chance which of the two sorts of pollen will become united with each separate egg cell. According, however, to the law of probability, it will always happen, on the average of many cases, that each pollen form A and a will unite equally often with each egg cell form A and a",
+    "quote_where": "The Reproductive Cells of Hybrids"
+   },
+   "check": {
+    "kind": "model",
+    "task": "Put the model in a state where exactly one offspring in four is a pure a plant, but pure A plants are not one in four, so the pattern is not 1 : 2 : 1.",
+    "when": "abs(pure_rec - 0.25) < 0.005 && abs(pure_dom - 0.25) > 0.05",
+    "solution": {
+     "p": 0,
+     "q": 0.75
+    },
+    "hint": "Pure a is (pollen a share) × (egg a share). There is more than one way to get a quarter. Try making all of one parent's cells the same kind.",
+    "misconception": "That one recessive plant in four proves the hybrid makes A and a cells in equal numbers. Lopsided cells can also give a quarter pure a. Only the full 1 : 2 : 1 split points to equal numbers."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "A/A + A/a + a/A + a/a = "
+     },
+     {
+      "text": "A",
+      "link": "pure_dom"
+     },
+     {
+      "text": " + "
+     },
+     {
+      "text": "2Aa",
+      "link": "hybrids"
+     },
+     {
+      "text": " + "
+     },
+     {
+      "text": "a",
+      "link": "pure_rec"
+     }
+    ],
+    "caption": "This is Mendel's own equation. Each fraction is one square of the grid: the pollen cell is written above the line and the egg cell below. A/A gives the pure A plant (the pure A box). A/a and a/A both give the hybrid, hence 2Aa (the hybrid box). a/a gives the pure a plant (the pure a box). In the model's general form, pure A = p × q, hybrids = p(1 − q) + (1 − p)q and pure a = (1 − p)(1 − q). These reduce to Mendel's 1 : 2 : 1 only when p = q = ½."
+   },
+   "recap": "Equal numbers of A and a eggs and pollen, joined by chance, give on average 1 pure A : 2 hybrids : 1 pure a. Unequal cell numbers would break that pattern.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "hidden_hybrids",
+   "title": "3 : 1 is really 1 : 2 : 1",
+   "idea": "Because hybrids look dominant, the 1 : 2 : 1 of offspring kinds appears as 3 : 1 by looks, and two thirds of the dominant-looking plants are hidden hybrids that split again.",
+   "role": "contribution",
+   "predict": {
+    "question": "A hybrid tall pea fertilises itself. From its offspring you pick 300 plants that all have tall stems, and you grow each one's seeds. Under Mendel's idea, about how many of the 300 give only tall offspring?",
+    "options": [
+     "All 300",
+     "About 225",
+     "About 150",
+     "About 100"
+    ],
+    "answer": 3,
+    "why": [
+     "They all look tall, so it is tempting to think they are all the same. But looks hide the hybrids, and only the pure ones breed true.",
+     "225 is three quarters of 300. That mixes up the 3 : 1 by looks with the split inside the tall group. Among tall plants alone, pure to hybrid is 1 : 2.",
+     "Half would mean pure and hybrid tall plants are equally common. The grid has two hybrid cells for every pure-A cell, so hybrids outnumber pure plants two to one.",
+     "Right. Of the three dominant-looking cells, only one (A with A) is pure. So one third of 300, about 100, breed true. The other 200 are hidden hybrids that split again. Chance scatter will move the count a little."
+    ]
+   },
+   "terms": [
+    {
+     "term": "breeding test",
+     "means": "Growing a plant's own seeds to see whether it is pure (all offspring alike) or a hidden hybrid (offspring split again)"
+    }
+   ],
+   "model": {
+    "title": "Same grid, now sorted by how the plants look",
+    "note": "Teaching model: one pair of characters, showing the long-run average share of each pairing when egg and pollen meet by chance. It has no chance scatter, though Mendel's real counts fluctuated (for example 1.93 : 1 and 2.13 : 1). Hybrids are treated as looking exactly like pure dominant plants, as Mendel found for his seven pea characters. The 50/50 setting is Mendel's hypothesis. Other settings are illustrative what-ifs, not the paper's data. The looks ratio is capped at 999 when almost no plants look recessive.",
+    "controls": [
+     {
+      "id": "p",
+      "label": "Share of pollen carrying A",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.8,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "q",
+      "label": "Share of eggs carrying A",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.8,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "by_looks",
+      "label": "Group cells by looks",
+      "kind": "toggle",
+      "default": 0,
+      "color": 5,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "pure_dom",
+      "label": "Pure A offspring (A)",
+      "expr": "p * q",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 1,
+      "color": 2
+     },
+     {
+      "id": "hybrids",
+      "label": "Hybrid offspring (Aa)",
+      "expr": "p * (1 - q) + (1 - p) * q",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 1,
+      "color": 3
+     },
+     {
+      "id": "pure_rec",
+      "label": "Pure a offspring (a)",
+      "expr": "(1 - p) * (1 - q)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 1,
+      "color": 4
+     },
+     {
+      "id": "looks_dom",
+      "label": "Look dominant (A or Aa)",
+      "expr": "pure_dom + hybrids",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 1,
+      "color": 5
+     },
+     {
+      "id": "hidden_share",
+      "label": "Hybrids among the dominant-looking",
+      "expr": "hybrids / max(looks_dom, 0.0001)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 1,
+      "color": 3
+     },
+     {
+      "id": "ratio",
+      "label": "Dominant-looking per recessive-looking",
+      "expr": "min(looks_dom / max(pure_rec, 0.001), 999)",
+      "unit": " : 1",
+      "decimals": 2,
+      "color": 6
+     }
+    ],
+    "visual": {
+     "type": "table",
+     "columns": [
+      "Pollen carrying A",
+      "Pollen carrying a"
+     ],
+     "rows": [
+      {
+       "label": "Egg carrying A",
+       "cells": [
+        {
+         "value": "100 * p * q",
+         "highlight": "by_looks"
+        },
+        {
+         "value": "100 * (1 - p) * q",
+         "highlight": "by_looks"
+        }
+       ]
+      },
+      {
+       "label": "Egg carrying a",
+       "cells": [
+        {
+         "value": "100 * p * (1 - q)",
+         "highlight": "by_looks"
+        },
+        "100 * (1 - p) * (1 - q)"
+       ]
+      }
+     ],
+     "decimals": 1,
+     "scale": "sequential",
+     "scale_min": 0,
+     "scale_max": 100
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This is the same grid as before. Pollen runs across the top and eggs down the side. Each cell is the share of offspring from that pairing.",
+      "focus": [
+       "p",
+       "q"
+      ],
+      "ms": 5000
+     },
+     {
+      "say": "New switch: group the cells by how the plants look. Any cell holding an A lights up, because a plant with an A looks dominant.",
+      "set": {
+       "by_looks": 1
+      },
+      "focus": "by_looks",
+      "ms": 5500
+     },
+     {
+      "say": "New numbers too: how many plants look dominant, how many of those are really hybrids, and the ratio you would count by eye.",
+      "focus": [
+       "looks_dom",
+       "hidden_share",
+       "ratio"
+      ],
+      "ms": 5500
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with what the eye sees versus what each plant really is. Can you make looks tell a different story from the plants' real make-up?",
+    "goals": [
+     {
+      "text": "Make the dominant-looking plants split evenly: half pure A, half hidden hybrids.",
+      "when": "abs(hidden_share - 0.5) < 0.03",
+      "solution": {
+       "p": 1,
+       "q": 0.5
+      },
+      "hints": [
+       "Pure A plants come from A meeting A. Hidden hybrids come from A meeting a. You want those two pairings to happen equally often.",
+       "Try taking one kind of pollen out entirely, so that no plant can be pure a and the grid gets simpler.",
+       "Once every pollen grain carries A, the egg slider alone sets the split between pure and hybrid plants. Look for the point where the two match."
+      ]
+     },
+     {
+      "text": "Get a 3 : 1 split by looks in which not a single dominant-looking plant would breed true.",
+      "when": "abs(ratio - 3) < 0.1 && hidden_share > 0.99",
+      "solution": {
+       "p": 0.75,
+       "q": 0
+      },
+      "hints": [
+       "For no dominant-looking plant to breed true, an egg carrying A must never meet pollen carrying A.",
+       "So one of the two sliders must have no A in it at all.",
+       "Then the share that looks recessive depends only on the other slider. Move it while watching the looks ratio."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. Tall plants come from three cells, and only one of them (A with A) is pure. So about one third of the 300, roughly 100, breed true. The other two thirds are hybrids hiding behind the dominant look.",
+     "incorrect": "The trap is to treat 'looks dominant' as one kind of plant. The 3 in 3 : 1 is made of 1 pure A plus 2 hybrids. So only a third of the tall plants breed true, and the rest split again, as Mendel found in his second generation."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with Mendel's hypothesis: half the pollen and half the eggs carry A. With the switch off, the grid sorts plants by kind: 25% pure A, 50% hybrids, 25% pure a. That is the 1 : 2 : 1 you met before.",
+       "set": {
+        "p": 0.5,
+        "q": 0.5,
+        "by_looks": 0
+       },
+       "focus": [
+        "pure_dom",
+        "hybrids",
+        "pure_rec"
+       ],
+       "ms": 6500
+      },
+      {
+       "say": "But a hybrid looks exactly like the pure dominant parent. Turn on grouping by looks. Three cells light up together, because all of them contain an A.",
+       "set": {
+        "by_looks": 1
+       },
+       "focus": "by_looks",
+       "ms": 5500
+      },
+      {
+       "say": "So by eye you count 75% dominant against 25% recessive: 3 to 1. That is what Mendel counted, for example 5,474 round seeds against 1,850 wrinkled ones, with an average of 2.98 to 1 across his seven experiments.",
+       "focus": [
+        "looks_dom",
+        "ratio"
+       ],
+       "ms": 7000
+      },
+      {
+       "say": "Now look inside the lit cells. Only one of the three is pure A. The other two are hybrids. So two thirds of the dominant-looking plants are hidden hybrids.",
+       "focus": "hidden_share",
+       "ms": 6000
+      },
+      {
+       "say": "Your eye can't tell them apart, but their seeds can. That is a breeding test: grow each plant's seeds. Pure ones give only dominant offspring; hybrids split 3 : 1 again. Mendel grew 565 round-seeded plants: 193 bred true, 372 split.",
+       "focus": "hybrids",
+       "ms": 8000
+      },
+      {
+       "say": "Would any shares give this pattern? Tilt both shares towards A. The looks ratio jumps to 24 : 1, and hidden hybrids fall to a third. Unequal egg and pollen shares do not match what Mendel counted.",
+       "set": {
+        "p": 0.8,
+        "q": 0.8
+       },
+       "focus": [
+        "ratio",
+        "hidden_share"
+       ],
+       "ms": 6500
+      },
+      {
+       "say": "Back to equal shares. One rule gives both counts: 3 : 1 by looks, and 2 : 1 hybrids to pure among dominant-looking plants. So 3 : 1 is really 1 : 2 : 1, just what equal A and a eggs and pollen meeting by chance produce.",
+       "set": {
+        "p": 0.5,
+        "q": 0.5,
+        "by_looks": 1
+       },
+       "focus": [
+        "ratio",
+        "hidden_share"
+       ],
+       "ms": 8500
+      }
+     ]
+    },
+    "explanation": "The plants that look dominant are not one kind but two: pure A plants and hybrids that only look like them. In the 1 : 2 : 1 grid, pure A plus the two hybrid cells make the 3 of 3 : 1, and only one of those three breeds true. Mendel tested this by growing the seeds of plants that looked dominant. About one third gave only dominant offspring, and about two thirds split 3 : 1 again. In his two largest experiments the hybrid-to-pure ratios were 1.93 and 2.13 to 1, averaging close to 2 to 1. The smaller experiments of 100 plants scattered more, as chance predicts. Getting both the 3 : 1 and the 2 : 1 from one rule is strong support for his idea that hybrids make two kinds of egg and pollen in equal numbers. It fits the counts but does not by itself prove the mechanism.",
+    "quote": "The ratio of 3 to 1, in accordance with which the distribution of the dominant and recessive characters results in the first generation, resolves itself therefore in all experiments into the ratio of 2 : 1 : 1 if the dominant character be differentiated according to its significance as a hybrid character or a parental one.",
+    "quote_where": "The Second Generation [Bred] from the Hybrids"
+   },
+   "check": {
+    "kind": "model",
+    "task": "Put the model in a state that matches both of Mendel's counts at once: 3 dominant-looking plants for every recessive-looking one, and two thirds of the dominant-looking plants being hidden hybrids.",
+    "when": "abs(ratio - 3) < 0.1 && abs(hidden_share - 0.667) < 0.02",
+    "solution": {
+     "p": 0.5,
+     "q": 0.5,
+     "by_looks": 1
+    },
+    "hint": "Both numbers depend on how often A meets A, A meets a, and a meets a. Which shares of A in pollen and eggs make the four cells equal?",
+    "misconception": "That a 3 : 1 split by looks means three plants of one kind for every one of another. In fact the 3 hides two kinds, 1 pure and 2 hybrid, and only equal egg and pollen shares give both counts."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "A",
+      "link": "pure_dom"
+     },
+     {
+      "text": " + "
+     },
+     {
+      "text": "2Aa",
+      "link": "hybrids"
+     },
+     {
+      "text": " + "
+     },
+     {
+      "text": "a",
+      "link": "pure_rec"
+     },
+     {
+      "text": "   →   by looks: ("
+     },
+     {
+      "text": "A + 2Aa",
+      "link": "looks_dom"
+     },
+     {
+      "text": ") : a = "
+     },
+     {
+      "text": "3 : 1",
+      "link": "ratio"
+     }
+    ],
+    "caption": "A + 2Aa + a is Mendel's own expression for the offspring of a hybrid. A (pure dominant), 2Aa (hybrids) and a (pure recessive) match the three coloured outputs. The grouping on the right is the model's step: because Aa looks like A, the first two terms merge into the 3 of 3 : 1, and 2 of those 3 are hybrids."
+   },
+   "recap": "The 3 dominant-looking plants are 1 pure plus 2 hidden hybrids, so Mendel's 3 : 1 by looks is really 1 : 2 : 1 by kind, just as equal shares of A and a egg and pollen predict.",
+   "builds_on": "equal_cells_random_pairing",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  }
+ ],
+ "omitted": [],
+ "generation": {
+  "provider": "claude",
+  "model": "claude-opus-5-5",
+  "pipeline": "lemma.generate.make_outline + build_lesson",
+  "source_chars": 87377,
+  "omitted": 0
+ }
+}

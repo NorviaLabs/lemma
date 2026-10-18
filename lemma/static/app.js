@@ -600,6 +600,15 @@
       const draw = (plate, cover) => {
         if (plate.dataset.drawn) return;
         plate.dataset.drawn = "1";
+        if (!cover.model) {
+          if (cover.activity) {
+            plate.removeAttribute("aria-hidden");
+            plate.classList.add("gal-interactive");
+            window.LemmaActivities.mount(plate, cover.activity);
+          }
+          else plate.append(h("div", { class: "gal-reading" }, h("p", {}, cover.title), h("p", { class: "small" }, cover.idea)));
+          return;
+        }
         const box = h("div", { class: "viz-box" });
         plate.append(box);
         const view = new M.ModelView(box, cover.model);
@@ -622,10 +631,10 @@
     });
     return list;
   }
-  const GALLERY_LEAD = "Six finished lessons, one from each of six fields. Open any of them and play it through: you don't need an account or a key.";
+  const GALLERY_LEAD = "Explore lessons across disciplines, from working models to arguments and close reading. You don't need an account or a key.";
   function gallerySection() {
     return h("section", { class: "gallery-sec", "aria-labelledby": "gallery-title" },
-      h("div", { class: "gal-head" }, h("h2", { id: "gallery-title" }, "Lessons made from real papers"), h("p", { class: "lead" }, GALLERY_LEAD)),
+      h("div", { class: "gal-head" }, h("h2", { id: "gallery-title" }, "Lessons from papers and primary sources"), h("p", { class: "lead" }, GALLERY_LEAD)),
       galleryList("h3"));
   }
   function showGallery() {

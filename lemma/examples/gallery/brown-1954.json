@@ -1,0 +1,2141 @@
+{
+ "version": 1,
+ "id": "gallery-brown-1954",
+ "title": "Equal Buildings, Unequal Schools: How the Court Saw Past the Facilities",
+ "audience": "A curious adult with no background in this field",
+ "created": "2026-10-18T14:45:47",
+ "source": {
+  "title": "Brown v. Board of Education of Topeka, 347 U.S. 483 (1954)",
+  "authors": "Chief Justice Earl Warren, delivering the unanimous opinion of the Supreme Court of the United States",
+  "year": 1954,
+  "venue": "Supreme Court of the United States (opinion transcript via the U.S. National Archives)",
+  "url": "https://www.archives.gov/milestone-documents/brown-v-board-of-education"
+ },
+ "intro": {
+  "summary": "The Court asked whether the Constitution allows a state to separate Black and white children into different public schools by law, if the schools are 'equal' in buildings, teachers and other measurable things. It looked at the history of the Fourteenth Amendment and found it inconclusive. It then judged the question by education's role in American life in 1954, and it drew on earlier graduate-school cases and on a lower court's finding about how segregation affects children. It concluded that separating children by race makes their education unequal even when the facilities match, so 'separate but equal' has no place in public education. The main limitation is that this is a legal judgment, not a study: it relies on a lower court's findings and on 'modern authority' in psychology that it does not lay out. It also left for later how schools would actually be desegregated.",
+  "background": [
+   "The Fourteenth Amendment (1868) says no state may deny any person 'the equal protection of the laws'.",
+   "In Plessy v. Ferguson (1896), a case about railway cars, the Court allowed racially separate facilities as long as they were 'substantially equal'.",
+   "Brown combined four cases from Kansas, South Carolina, Virginia and Delaware, all brought on behalf of Black children refused entry to white schools.",
+   "A court 'opinion' is the written reasoning behind a decision. Later courts treat it as a rule to follow."
+  ],
+  "known": [],
+  "aha": "Even when two schools are made identical in every measurable way (buildings, courses, teachers, pay), the Court concluded they are still unequal, because the harm comes from the legal act of separating children, not from the facilities."
+ },
+ "primer": [
+  {
+   "heading": "The question",
+   "body": "For almost 60 years, American law let states keep Black and white people apart as long as each group got 'equal' facilities. In these four cases, Black children were refused entry to white public schools. The lower courts had found their schools equal, or becoming equal, in buildings, courses, teachers and pay. That left the Court with a sharp question: if everything you can count is equal, can separation by itself still be unequal?",
+   "quote": "Does segregation of children in public schools solely on the basis of race, even though the physical facilities and other \"tangible\" factors may be equal, deprive the children of the minority group of equal educational opportunities? We believe that it does.",
+   "quote_where": "Opinion of the Court"
+  },
+  {
+   "heading": "What they did",
+   "body": "The Court first asked what the amendment's authors intended. It found the record 'inconclusive', partly because public schooling barely existed in much of the country in 1868. So it judged schools by their place in life in 1954, when education had become 'the very foundation of good citizenship.' It then built on earlier law-school cases, which had counted things no one can measure, such as the chance to discuss ideas with other students. It also relied on a Kansas court's finding about how segregation affects children's motivation to learn.",
+   "quote": "Our decision, therefore, cannot turn on merely a comparison of these tangible factors in the Negro and white schools involved in each of the cases. We must look instead to the effect of segregation itself on public education.",
+   "quote_where": "Opinion of the Court"
+  },
+  {
+   "heading": "What they found",
+   "body": "The Court found that separating children by race, when the law requires it, tells them they are lower in status. That sense of inferiority can weaken their motivation and their learning. Because this harm comes from the separation itself, equal buildings cannot repair it. The Court ruled unanimously that segregated public schools violate the equal protection of the laws.",
+   "quote": "We conclude that, in the field of public education, the doctrine of \"separate but equal\" has no place. Separate educational facilities are inherently unequal.",
+   "quote_where": "Opinion of the Court"
+  },
+  {
+   "heading": "Why it matters, and its limits",
+   "body": "The decision overturned 'separate but equal' in public education and helped drive the civil rights movement of the 1950s. It also had limits. The opinion cites psychological evidence it does not present in detail, and some scholars criticised it for leaning on social science instead of precedent. It also set no plan for change: a second ruling in 1955 told states to desegregate only 'with all deliberate speed,' and resistance was widespread. The models in this lesson are simplified teaching pictures of the Court's reasoning. They are not measurements of real schools."
+  }
+ ],
+ "provider": {
+  "name": "Claude",
+  "model": "claude-opus-5-5"
+ },
+ "concepts": [
+  {
+   "id": "separate_but_equal_test",
+   "title": "The old yardstick: compare what you can count",
+   "idea": "Under Plessy's 'separate but equal' rule, a court checks separate schools only by comparing measurable things such as buildings, curricula, teacher qualifications and salaries, and separation passes if those match.",
+   "role": "prerequisite",
+   "predict": {
+    "question": "A different town keeps its schools apart by race. A court finds the two schools equal on buildings, curricula, teachers' qualifications and teachers' pay. But students at one school can never meet or debate students at the other. Judged by the old yardstick alone, what does the court conclude?",
+    "options": [
+     "The schools pass: the separation is lawful",
+     "The schools fail: losing contact with other students is a gap",
+     "The court cannot decide until it measures the lost contact",
+     "The schools fail simply because they are separate"
+    ],
+    "answer": 0,
+    "why": [
+     "Correct. The old yardstick only lines up measurable features. Every pair matches, so separation passes. Nothing on the scale records lost contact between students.",
+     "This feels right, but the old yardstick has no bar for contact between students. It only compares things like buildings, curricula and teachers, and those all match here.",
+     "The old test never tried to measure contact between students. It is not on the list of things compared, so there is nothing left to wait for.",
+     "Under the old rule, being separate was explicitly allowed. That was the whole point of the doctrine: separation was fine if the counted features matched."
+    ]
+   },
+   "terms": [
+    {
+     "term": "separate but equal",
+     "means": "The rule from Plessy v. Ferguson (1896): a state may keep the races apart if it gives each group substantially equal facilities"
+    },
+    {
+     "term": "tangible factors",
+     "means": "The measurable features a court can line up and compare, such as buildings, curricula, teachers' qualifications and salaries"
+    }
+   ],
+   "model": {
+    "title": "Two separate schools, compared feature by feature",
+    "note": "Teaching model: each school is reduced to four scores out of 100. The white school is fixed at 80 on every feature. A gap of 5 points or less counts as 'equal enough', standing in for the courts' 'substantially equal'. Real courts compared facts and findings, not scores. Numbers are illustrative, not from the case record.",
+    "controls": [
+     {
+      "id": "b_build",
+      "label": "Black school: buildings",
+      "kind": "slider",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 50,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "b_curr",
+      "label": "Black school: curriculum",
+      "kind": "slider",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 60,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "b_teach",
+      "label": "Black school: teachers' qualifications",
+      "kind": "slider",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 70,
+      "unit": "",
+      "color": 2
+     },
+     {
+      "id": "b_pay",
+      "label": "Black school: teachers' pay",
+      "kind": "slider",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 55,
+      "unit": "",
+      "color": 3
+     }
+    ],
+    "outputs": [
+     {
+      "id": "biggest_gap",
+      "label": "Biggest gap behind the white school",
+      "expr": "max(max(max(0, 80 - b_build), max(0, 80 - b_curr)), max(max(0, 80 - b_teach), max(0, 80 - b_pay)))",
+      "unit": " pts",
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "matched",
+      "label": "Features that match (of 4)",
+      "expr": "(80 - b_build <= 5 ? 1 : 0) + (80 - b_curr <= 5 ? 1 : 0) + (80 - b_teach <= 5 ? 1 : 0) + (80 - b_pay <= 5 ? 1 : 0)",
+      "unit": "",
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "passes",
+      "label": "Passes the old test? (1 = yes)",
+      "expr": "biggest_gap <= 5 ? 1 : 0",
+      "unit": "",
+      "decimals": 0,
+      "color": 7
+     }
+    ],
+    "visual": {
+     "type": "bars",
+     "bars": [
+      {
+       "id": "a_build_bar",
+       "label": "Buildings: white school",
+       "value": 80,
+       "color": 6
+      },
+      {
+       "id": "b_build_bar",
+       "label": "Buildings: Black school",
+       "value": "b_build",
+       "color": 0
+      },
+      {
+       "id": "a_curr_bar",
+       "label": "Curriculum: white school",
+       "value": 80,
+       "color": 6
+      },
+      {
+       "id": "b_curr_bar",
+       "label": "Curriculum: Black school",
+       "value": "b_curr",
+       "color": 1
+      },
+      {
+       "id": "a_teach_bar",
+       "label": "Teachers: white school",
+       "value": 80,
+       "color": 6
+      },
+      {
+       "id": "b_teach_bar",
+       "label": "Teachers: Black school",
+       "value": "b_teach",
+       "color": 2
+      },
+      {
+       "id": "a_pay_bar",
+       "label": "Pay: white school",
+       "value": 80,
+       "color": 6
+      },
+      {
+       "id": "b_pay_bar",
+       "label": "Pay: Black school",
+       "value": "b_pay",
+       "color": 3
+      }
+     ],
+     "min": 0,
+     "max": 100,
+     "unit": "",
+     "decimals": 0
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Each pair of bars compares two separate schools on one thing you can count: buildings, curriculum, teachers' qualifications and teachers' pay.",
+      "focus": [
+       "a_build_bar",
+       "b_build_bar"
+      ],
+      "ms": 4500
+     },
+     {
+      "say": "The grey bars are the white school. They stay fixed at the same level on every feature.",
+      "focus": [
+       "a_build_bar",
+       "a_curr_bar",
+       "a_teach_bar",
+       "a_pay_bar"
+      ],
+      "ms": 4000
+     },
+     {
+      "say": "These four sliders set the Black school's score on each feature. Watch the buildings bar rise.",
+      "set": {
+       "b_build": 70
+      },
+      "focus": "b_build",
+      "ms": 4500
+     },
+     {
+      "say": "Three boxes read off the result: the biggest gap, how many features match, and whether the pair passes the old test.",
+      "focus": [
+       "biggest_gap",
+       "matched",
+       "passes"
+      ],
+      "ms": 5000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "You are now the court applying the old rule. Move the Black school's bars and watch when the verdict flips.",
+    "goals": [
+     {
+      "text": "Make the schools pass the old test while the Black school still trails the white school on every single feature",
+      "when": "passes == 1 && b_build < 80 && b_curr < 80 && b_teach < 80 && b_pay < 80",
+      "solution": {
+       "b_build": 75,
+       "b_curr": 75,
+       "b_teach": 75,
+       "b_pay": 75
+      },
+      "hints": [
+       "The old rule asked for 'substantially' equal, not identical. How small a gap still counts as equal?",
+       "Raise one bar slowly toward its grey partner and watch the 'Features that match' box. Note the exact moment that feature starts to count.",
+       "Every bar must sit just below its grey partner, inside the allowed gap. One notch too low on any feature and the verdict flips back."
+      ]
+     },
+     {
+      "text": "Get three of the four features to match while the schools still fail the test overall",
+      "when": "matched == 3 && passes == 0",
+      "solution": {
+       "b_build": 80,
+       "b_curr": 80,
+       "b_teach": 80,
+       "b_pay": 55
+      },
+      "hints": [
+       "Does the test average the features, or does each one count on its own?",
+       "Close three gaps completely and leave one wide open.",
+       "You want 'Features that match' to read one less than four, with the verdict box still at 0."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Right. The old yardstick only compares measurable features. When all of them match, separation passes, whatever else the students lose.",
+     "incorrect": "You probably judged the case by what seems fair. The old yardstick is narrower than that. It lines up counted features such as buildings, curricula and teachers, and nothing else. If those match, being kept apart is allowed."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start where many districts were: the Black school trails on every feature. The biggest gap is 30 points, and the pair fails.",
+       "set": {
+        "b_build": 50,
+        "b_curr": 60,
+        "b_teach": 70,
+        "b_pay": 55
+       },
+       "focus": "biggest_gap",
+       "ms": 4000
+      },
+      {
+       "say": "In 1896 the Supreme Court decided Plessy v. Ferguson and set the rule courts used for nearly 60 years: 'separate but equal'. A state could keep the races apart if each got substantially equal facilities.",
+       "focus": "passes",
+       "ms": 5500
+      },
+      {
+       "say": "So how does a court check 'equal'? It lines up the things it can measure. These came to be called tangible factors: buildings, curricula, teachers' qualifications and salaries.",
+       "focus": [
+        "b_build_bar",
+        "b_curr_bar",
+        "b_teach_bar",
+        "b_pay_bar"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "Raise buildings, curriculum and pay to match the white school. Three features now match, but the verdict is still no. A 10-point gap in teachers is enough to fail.",
+       "set": {
+        "b_build": 80,
+        "b_curr": 80,
+        "b_pay": 80
+       },
+       "focus": [
+        "matched",
+        "passes"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "Each feature counts on its own. A strong building cannot make up for weak teachers.",
+       "focus": "b_teach_bar",
+       "ms": 3500
+      },
+      {
+       "say": "Now close the last gap to within a few points. 'Substantially equal' does not mean identical, and the verdict flips to yes.",
+       "set": {
+        "b_teach": 75
+       },
+       "focus": "passes",
+       "ms": 4500
+      },
+      {
+       "say": "Look at what just passed: two schools that still keep children apart by race. The yardstick has a bar for every counted feature, and no bar at all for separation itself.",
+       "focus": [
+        "passes",
+        "a_teach_bar",
+        "b_teach_bar"
+       ],
+       "ms": 6000
+      }
+     ]
+    },
+    "explanation": "Under the 'separate but equal' doctrine from Plessy v. Ferguson (1896), keeping children apart by race was lawful as long as the separate schools were substantially equal. Courts checked this by comparing tangible factors one by one: buildings, curricula, teachers' qualifications and salaries. A clear shortfall on any one of them meant inequality, but if they all matched, separation passed. Nothing on the scale measured the fact of being kept apart. The Brown opinion notes that lower courts in Kansas, South Carolina and Virginia denied relief to the Black plaintiffs on exactly this doctrine. The scores and the 5-point allowance here are illustrative. Real courts weighed facts, not numbers.",
+    "quote": "Under that doctrine, equality of treatment is accorded when the races are provided substantially equal facilities, even though these facilities be separate.",
+    "quote_where": "Opinion of the Court (Chief Justice Warren), describing Plessy v. Ferguson"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "biggest gap",
+      "link": "biggest_gap"
+     },
+     {
+      "text": " = max(80 − "
+     },
+     {
+      "text": "B_{buildings}",
+      "link": "b_build"
+     },
+     {
+      "text": ", 80 − "
+     },
+     {
+      "text": "B_{curriculum}",
+      "link": "b_curr"
+     },
+     {
+      "text": ", 80 − "
+     },
+     {
+      "text": "B_{teachers}",
+      "link": "b_teach"
+     },
+     {
+      "text": ", 80 − "
+     },
+     {
+      "text": "B_{pay}",
+      "link": "b_pay"
+     },
+     {
+      "text": ");  "
+     },
+     {
+      "text": "passes",
+      "link": "passes"
+     },
+     {
+      "text": " if biggest gap ≤ 5"
+     }
+    ],
+    "caption": "This is the teaching model's rule, not an equation from the opinion, which has none. Each coloured B is the Black school's score on one tangible factor, set by the matching slider. 80 is the white school's fixed score. The verdict looks only at the worst gap, so every factor must match. Separation itself never enters the formula."
+   },
+   "recap": "Under 'separate but equal', a court only compared measurable features side by side. If they matched, keeping children apart passed the test.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "tangible_route_closed",
+   "title": "When the buildings match, the old escape route closes",
+   "idea": "Earlier cases won by pointing to a specific measurable gap, so the Court never had to judge 'separate but equal' itself; once lower courts found the schools equalized, that route was gone and the doctrine had to be faced directly.",
+   "role": "core",
+   "predict": {
+    "question": "In the Delaware case bundled into Brown, the state's highest court kept the 'separate but equal' rule, yet still ordered the Black plaintiffs admitted to the white schools. What best explains how it could do both?",
+    "options": [
+     "The white schools were found better than the Black schools, so a measurable gap was there to rule on",
+     "The Delaware court had rejected 'separate but equal'",
+     "The Delaware schools had been fully equalized",
+     "The Supreme Court had already overruled Plessy before Delaware ruled"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. The Delaware court found the white schools superior. That is a measurable gap, so the old route was still open. It could order admission while leaving the doctrine untouched, just as in Gaines or Sweatt.",
+     "Tempting, because it ruled for the plaintiffs. But the opinion says the Delaware court 'adhered to that doctrine'. It won on the gap, not by rejecting the rule.",
+     "If the schools had been equalized, the old yardstick would have passed them and the plaintiffs would have lost, as in the other three lower courts. Equal facilities close the route. They do not open it.",
+     "Brown itself is the decision that set Plessy aside for public schools, so no earlier overruling existed. Delaware had to work inside the old rule, and a measurable gap let it do so."
+    ]
+   },
+   "terms": [
+    {
+     "term": "relief",
+     "means": "What a court orders to fix a wrong. Here, admitting the plaintiffs to the school they were kept out of."
+    },
+    {
+     "term": "finding",
+     "means": "A lower court's official conclusion about the facts, which the Supreme Court takes as its starting point"
+    }
+   ],
+   "model": {
+    "title": "Two separate schools, compared feature by feature: is there a gap left to win on?",
+    "note": "Teaching model: each school is reduced to four scores out of 100, and the white school is fixed at 80. A gap of 5 points or less counts as 'equal enough', standing in for the courts' 'substantially equal'. Raising the Black school's sliders stands for the equalizing that lower courts found had been done or was under way. 'Old route open' simply means at least one gap is bigger than 5 points. Real cases turned on legal findings, not scores. Numbers are illustrative, not from the case record.",
+    "controls": [
+     {
+      "id": "b_build",
+      "label": "Black school: buildings",
+      "kind": "slider",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 50,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "b_curr",
+      "label": "Black school: curriculum",
+      "kind": "slider",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 60,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "b_teach",
+      "label": "Black school: teachers' qualifications",
+      "kind": "slider",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 70,
+      "unit": "",
+      "color": 2
+     },
+     {
+      "id": "b_pay",
+      "label": "Black school: teachers' pay",
+      "kind": "slider",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 55,
+      "unit": "",
+      "color": 3
+     }
+    ],
+    "outputs": [
+     {
+      "id": "biggest_gap",
+      "label": "Biggest gap behind the white school",
+      "expr": "max(max(max(0, 80 - b_build), max(0, 80 - b_curr)), max(max(0, 80 - b_teach), max(0, 80 - b_pay)))",
+      "unit": " pts",
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "matched",
+      "label": "Features that match (of 4)",
+      "expr": "(80 - b_build <= 5 ? 1 : 0) + (80 - b_curr <= 5 ? 1 : 0) + (80 - b_teach <= 5 ? 1 : 0) + (80 - b_pay <= 5 ? 1 : 0)",
+      "unit": "",
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "route_open",
+      "label": "Old route open: a measurable gap to win on (1 = yes)",
+      "expr": "biggest_gap > 5 ? 1 : 0",
+      "unit": "",
+      "decimals": 0,
+      "color": 7
+     },
+     {
+      "id": "faces_doctrine",
+      "label": "Court must rule on 'separate but equal' itself (1 = yes)",
+      "expr": "1 - route_open",
+      "unit": "",
+      "decimals": 0,
+      "color": 7
+     }
+    ],
+    "visual": {
+     "type": "bars",
+     "bars": [
+      {
+       "id": "a_build_bar",
+       "label": "Buildings: white school",
+       "value": 80,
+       "color": 6
+      },
+      {
+       "id": "b_build_bar",
+       "label": "Buildings: Black school",
+       "value": "b_build",
+       "color": 0
+      },
+      {
+       "id": "a_curr_bar",
+       "label": "Curriculum: white school",
+       "value": 80,
+       "color": 6
+      },
+      {
+       "id": "b_curr_bar",
+       "label": "Curriculum: Black school",
+       "value": "b_curr",
+       "color": 1
+      },
+      {
+       "id": "a_teach_bar",
+       "label": "Teachers: white school",
+       "value": 80,
+       "color": 6
+      },
+      {
+       "id": "b_teach_bar",
+       "label": "Teachers: Black school",
+       "value": "b_teach",
+       "color": 2
+      },
+      {
+       "id": "a_pay_bar",
+       "label": "Pay: white school",
+       "value": 80,
+       "color": 6
+      },
+      {
+       "id": "b_pay_bar",
+       "label": "Pay: Black school",
+       "value": "b_pay",
+       "color": 3
+      }
+     ],
+     "min": 0,
+     "max": 100,
+     "unit": "",
+     "decimals": 0
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Same picture as before. The white school's bars are fixed at 80, and the Black school's bars sit beside them. The same four sliders move the Black school's bars.",
+      "focus": [
+       "a_build_bar",
+       "b_build_bar"
+      ],
+      "ms": 4500
+     },
+     {
+      "say": "What's new is two readouts. Is there still a measurable gap the plaintiffs could win on?",
+      "focus": "route_open",
+      "ms": 3500
+     },
+     {
+      "say": "And if not, does the Court have to rule on 'separate but equal' itself? Right now it does not. There is plenty of gap to point at.",
+      "focus": "faces_doctrine",
+      "ms": 4000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Move the Black school's features up and down. When can plaintiffs still win by pointing at a gap, and when is the doctrine itself the only thing left to argue about?",
+    "goals": [
+     {
+      "text": "Keep the Black school slightly behind on every single feature, yet leave the plaintiffs no measurable gap to win on, so the Court must face the doctrine.",
+      "when": "faces_doctrine == 1 && b_build < 80 && b_curr < 80 && b_teach < 80 && b_pay < 80",
+      "solution": {
+       "b_build": 75,
+       "b_curr": 75,
+       "b_teach": 75,
+       "b_pay": 75
+      },
+      "hints": [
+       "Does a feature have to reach the white school's score exactly before it stops counting as a gap?",
+       "Recall what this model treats as 'equal enough', the stand-in for 'substantially equal'.",
+       "Bring every feature up until it sits just under the white school, inside the allowed margin, but not level with it."
+      ]
+     },
+     {
+      "text": "Recreate a graduate-school-style case: the schools match on every feature but one, so the plaintiffs can still win without the Court touching the doctrine.",
+      "when": "matched == 3 && route_open == 1",
+      "solution": {
+       "b_build": 80,
+       "b_curr": 80,
+       "b_teach": 80
+      },
+      "hints": [
+       "You need exactly one feature the plaintiffs can still point at.",
+       "Watch the 'Features that match' readout as you raise sliders one at a time.",
+       "Raise three of the Black school's features until each one counts as a match, and leave the fourth clearly behind."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. A court can keep 'separate but equal' and still rule for Black plaintiffs whenever a measurable gap exists. Delaware found the white schools superior, so the old route was open to it.",
+     "incorrect": "A ruling for the plaintiffs does not mean the rule was rejected. As long as one school is measurably worse, a court can grant relief on that gap alone and leave the doctrine standing. Delaware did exactly that."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start where the graduate-school cases stood: the Black school well behind on every feature. The biggest gap is 30 points, in buildings.",
+       "set": {
+        "b_build": 50,
+        "b_curr": 60,
+        "b_teach": 70,
+        "b_pay": 55
+       },
+       "focus": "biggest_gap",
+       "ms": 4000
+      },
+      {
+       "say": "In Gaines, Sipuel, Sweatt and McLaurin, Black students were denied a specific benefit that white students got. Pointing at that gap was enough to win. The order to fix it, admission, is called relief.",
+       "focus": "route_open",
+       "ms": 5000
+      },
+      {
+       "say": "So the Court never had to ask whether separate schools could ever be equal. In Sweatt it openly set that question aside. Even one gap keeps the route open: here only the buildings lag.",
+       "set": {
+        "b_curr": 80,
+        "b_teach": 80,
+        "b_pay": 80
+       },
+       "focus": "b_build_bar",
+       "ms": 5000
+      },
+      {
+       "say": "Improve the buildings partway. The gap shrinks to 15 points. That is still something a lawyer can point to.",
+       "set": {
+        "b_build": 65
+       },
+       "focus": "biggest_gap",
+       "ms": 4000
+      },
+      {
+       "say": "In Brown, the lower courts made a finding, an official conclusion of fact: the schools had been equalized, or were being equalized, in buildings, curricula, teachers and pay. Close the last gap.",
+       "set": {
+        "b_build": 80
+       },
+       "focus": "b_build_bar",
+       "ms": 5000
+      },
+      {
+       "say": "Every feature matches. The old route switches off. Under the old yardstick the plaintiffs now lose, and three of the lower courts ruled exactly that.",
+       "focus": "route_open",
+       "ms": 4500
+      },
+      {
+       "say": "The question the Court had set aside in Sweatt is now unavoidable. Can separate schools be equal at all? The Court has to judge 'separate but equal' itself.",
+       "focus": "faces_doctrine",
+       "ms": 5000
+      }
+     ]
+    },
+    "explanation": "Before Brown, the Court decided four graduate-school cases: Gaines, Sipuel, Sweatt and McLaurin. In each, Black students were denied a specific benefit that white students enjoyed, so the Court could grant relief on that inequality alone. As the opinion says, it never needed to reexamine the doctrine, and in Sweatt it expressly reserved the question of whether Plessy applies to public schools. In Brown, the lower courts had found the schools equalized, or being equalized, on tangible factors. With no measurable gap left, the old yardstick pointed against the plaintiffs, and three lower courts ruled that way. So the Court said its decision could not turn on comparing tangible factors and had to look at segregation itself. Note that the Court took the lower courts' findings as given. Some schools were only 'being equalized', and the Supreme Court measured nothing itself.",
+    "quote": "Here, unlike Sweatt v. Painter, there are findings below that the Negro and white schools involved have been equalized, or are being equalized, with respect to buildings, curricula, qualifications and salaries of teachers, and other \"tangible\" factors. Our decision, therefore, cannot turn on merely a comparison of these tangible factors in the Negro and white schools involved in each of the cases. We must look instead to the effect of segregation itself on public education.",
+    "quote_where": "Opinion of the Court (Warren, C.J.), discussion of the earlier 'separate but equal' cases"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "largest gap = max(80 − "
+     },
+     {
+      "text": "buildings",
+      "link": "b_build"
+     },
+     {
+      "text": ", 80 − "
+     },
+     {
+      "text": "curriculum",
+      "link": "b_curr"
+     },
+     {
+      "text": ", 80 − "
+     },
+     {
+      "text": "teachers",
+      "link": "b_teach"
+     },
+     {
+      "text": ", 80 − "
+     },
+     {
+      "text": "pay",
+      "link": "b_pay"
+     },
+     {
+      "text": ");  old route open if "
+     },
+     {
+      "text": "largest gap",
+      "link": "biggest_gap"
+     },
+     {
+      "text": " > 5, otherwise the Court "
+     },
+     {
+      "text": "must rule on the doctrine",
+      "link": "faces_doctrine"
+     }
+    ],
+    "caption": "This is the teaching model's rule, not an equation from the opinion, which has none. Each coloured feature is one of the Black school's sliders, compared with the white school's 80. The largest remaining gap decides whether plaintiffs can win by pointing at something measurable. When every gap is 5 points or less, the only question left is the doctrine itself."
+   },
+   "recap": "Earlier plaintiffs won by pointing at a measurable gap. Once the lower courts found the schools equalized, no gap was left, and the Court had to judge 'separate but equal' head-on.",
+   "builds_on": "separate_but_equal_test",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "intangible_factors",
+   "title": "What a school gives that you cannot measure",
+   "idea": "The quality of an education also depends on intangible things, such as discussing and exchanging views with other students, and separation cuts these off no matter how good the building is.",
+   "role": "core",
+   "predict": {
+    "question": "A new case: a student is admitted to the very same building as everyone else, with the same teachers and books. But a rule makes the student sit apart and stay out of class discussions. On the model, what happens?",
+    "options": [
+     "Nothing is lost: the building and teachers are the same",
+     "Only the buildings arrow drops",
+     "The classmates arrow drops, so opportunity falls even with identical facilities",
+     "Opportunity rises, because the student gets a quieter place to study"
+    ],
+    "answer": 2,
+    "why": [
+     "This is the old yardstick: it checks only what can be counted. But the second arrow, learning with other students, is cut even though every facility matches.",
+     "Tempting if you think all harm must show up in the facilities. Here the buildings, books and teachers are identical, so that arrow stays exactly where it was.",
+     "Right. Facilities feed one path and contact with other students feeds another. Keeping a student apart cuts the second path, however good the first one is.",
+     "A quiet seat might seem like a perk. But the Court counted the 'ability to study, to engage in discussions and exchange views with other students' as part of what a school gives, so being kept apart takes something away."
+    ]
+   },
+   "terms": [
+    {
+     "term": "intangible considerations",
+     "means": "Qualities of a school that cannot be measured objectively, such as discussing and exchanging views with other students"
+    }
+   ],
+   "model": {
+    "title": "Two paths into what a school gives a child",
+    "note": "Teaching model: each school's educational opportunity is a weighted sum of two paths, buildings/books/teachers and learning with other students. A law that keeps the schools apart holds School B's classmates path at 40 out of 100. School A's buildings are fixed at 80 and its classmates path is kept at full, because the paper focuses on the minority children; the model does not track what separation costs the other group. The paper gives no formula and no numbers. All weights and values are illustrative, not the paper's data.",
+    "controls": [
+     {
+      "id": "t",
+      "label": "School B's buildings, books & teachers",
+      "kind": "slider",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 50,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "sep",
+      "label": "Law keeps the schools apart",
+      "kind": "toggle",
+      "default": 1,
+      "color": 6,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "w",
+      "label": "How much learning comes from classmates",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.4,
+      "unit": "",
+      "color": 2
+     }
+    ],
+    "outputs": [
+     {
+      "id": "building_gap",
+      "label": "Buildings gap (A − B)",
+      "expr": "80 - t",
+      "unit": "",
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "exchange",
+      "label": "B: learning with other students",
+      "expr": "sep == 1 ? 40 : 100",
+      "unit": "/100",
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "opp_b",
+      "label": "School B's opportunity",
+      "expr": "(1 - w) * t + w * exchange",
+      "unit": "",
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "opp_a",
+      "label": "School A's opportunity",
+      "expr": "(1 - w) * 80 + w * 100",
+      "unit": "",
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "gap",
+      "label": "Opportunity gap (A − B)",
+      "expr": "opp_a - opp_b",
+      "unit": "",
+      "decimals": 0,
+      "color": 5
+     }
+    ],
+    "visual": {
+     "type": "causal",
+     "nodes": [
+      {
+       "id": "law",
+       "label": "Law keeps schools apart",
+       "x": 50,
+       "y": 10,
+       "value": "sep * 100"
+      },
+      {
+       "id": "tb",
+       "label": "School B: buildings, books, teachers",
+       "x": 14,
+       "y": 45,
+       "value": "t"
+      },
+      {
+       "id": "xb",
+       "label": "School B: learning with other students",
+       "x": 38,
+       "y": 45,
+       "value": "exchange"
+      },
+      {
+       "id": "ob",
+       "label": "School B: educational opportunity",
+       "x": 26,
+       "y": 85,
+       "value": "opp_b"
+      },
+      {
+       "id": "ta",
+       "label": "School A: buildings, books, teachers",
+       "x": 62,
+       "y": 45,
+       "value": 80
+      },
+      {
+       "id": "xa",
+       "label": "School A: learning with other students",
+       "x": 86,
+       "y": 45,
+       "value": 100
+      },
+      {
+       "id": "oa",
+       "label": "School A: educational opportunity",
+       "x": 74,
+       "y": 85,
+       "value": "opp_a"
+      }
+     ],
+     "edges": [
+      {
+       "from": "law",
+       "to": "xb",
+       "strength": "sep == 1 ? -0.8 : 0",
+       "label": "cuts off"
+      },
+      {
+       "from": "tb",
+       "to": "ob",
+       "strength": "1 - w",
+       "label": "buildings weight"
+      },
+      {
+       "from": "xb",
+       "to": "ob",
+       "strength": "w",
+       "label": "classmates weight"
+      },
+      {
+       "from": "ta",
+       "to": "oa",
+       "strength": "1 - w",
+       "label": "buildings weight"
+      },
+      {
+       "from": "xa",
+       "to": "oa",
+       "strength": "w",
+       "label": "classmates weight"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Two schools, side by side. Each bottom box is what that school gives a child: its educational opportunity.",
+      "focus": [
+       "ob",
+       "oa"
+      ],
+      "ms": 3000
+     },
+     {
+      "say": "One arrow in is the buildings, books and teachers. This slider sets School B's. School A's stay put.",
+      "set": {
+       "t": 70
+      },
+      "focus": "t",
+      "ms": 3200
+     },
+     {
+      "say": "The other arrow is learning alongside other students: talking, arguing, swapping ideas.",
+      "focus": "xb",
+      "ms": 3000
+     },
+     {
+      "say": "This switch is a law that keeps the schools apart. Flip it off and School B's students can learn with everyone.",
+      "set": {
+       "sep": 0
+      },
+      "focus": "sep",
+      "ms": 3200
+     },
+     {
+      "say": "Flip it back on, and School B's second arrow shrinks.",
+      "set": {
+       "sep": 1
+      },
+      "focus": "xb",
+      "ms": 2600
+     },
+     {
+      "say": "The last slider sets how much of learning comes from classmates at all.",
+      "focus": "w",
+      "ms": 2800
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play the role of a lower court, then of the Supreme Court. Match the things you can count, and see what the count misses.",
+    "goals": [
+     {
+      "text": "Pass the old yardstick: keep the schools separated and make School B's buildings exactly match School A's, while School B still trails in opportunity.",
+      "when": "abs(building_gap) < 0.5 && sep == 1 && gap > 5",
+      "solution": {
+       "t": 80
+      },
+      "hints": [
+       "The old yardstick only looks at one arrow on each side. Which slider moves School B's?",
+       "Watch the buildings gap box. You want it to read zero, with the switch left on.",
+       "School A's buildings value is shown on its node. Bring School B's to the same number."
+      ]
+     },
+     {
+      "text": "Keep the schools separated, give School B the best buildings possible, and still leave B more than 20 points behind A in opportunity.",
+      "when": "t == 100 && sep == 1 && gap > 20",
+      "solution": {
+       "t": 100,
+       "w": 0.55
+      },
+      "hints": [
+       "Start by giving School B every advantage the old yardstick can see.",
+       "Even at the top, the buildings arrow cannot refill the classmates arrow. Which slider makes that second arrow count for more?",
+       "The gap grows as classmates count for more. You need them to count for a bit more than half of learning."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. Facilities and contact with other students are separate paths. Keeping a student apart cuts the second one even inside an identical building, which is why the Court looked past the facilities.",
+     "incorrect": "You were probably judging by the facilities alone, the way 'separate but equal' did. The Court counted something the facilities cannot show: the chance to study, discuss and exchange views with other students. Cutting a student off from that lowers opportunity even when every building, book and teacher is the same."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start where the cases began: separate schools, and School B's buildings behind School A's.",
+       "set": {
+        "t": 50,
+        "sep": 1,
+        "w": 0.4
+       },
+       "focus": "building_gap",
+       "ms": 3000
+      },
+      {
+       "say": "Now equalize the buildings, as the lower courts found had happened. The buildings gap is zero, so the old yardstick passes.",
+       "set": {
+        "t": 80
+       },
+       "focus": "building_gap",
+       "ms": 3200
+      },
+      {
+       "say": "But look at the opportunity gap: still 24 points. School B's classmates arrow is held down by the separation, and the buildings never touched it.",
+       "focus": [
+        "gap",
+        "xb"
+       ],
+       "ms": 3600
+      },
+      {
+       "say": "Push School B's buildings past A's, all the way to the top. B now has better facilities, yet still trails. Better buildings feed only one arrow.",
+       "set": {
+        "t": 100
+       },
+       "focus": "gap",
+       "ms": 3600
+      },
+      {
+       "say": "That second arrow is what the Court called intangible considerations. In an earlier graduate-school case, it meant a student's 'ability to study, to engage in discussions and exchange views with other students'.",
+       "set": {
+        "t": 80
+       },
+       "focus": "xb",
+       "ms": 4200
+      },
+      {
+       "say": "The Court said these matter even more for children in grade and high schools. Give classmates more weight in learning and watch the gap.",
+       "set": {
+        "w": 0.7
+       },
+       "focus": [
+        "w",
+        "gap"
+       ],
+       "ms": 3600
+      },
+      {
+       "say": "Buildings gap: zero. Opportunity gap: 42. The old yardstick sees nothing wrong, because it only measures the arrow that separation leaves alone.",
+       "focus": [
+        "building_gap",
+        "gap"
+       ],
+       "ms": 4000
+      }
+     ]
+    },
+    "explanation": "A school gives a child two kinds of things. Some can be counted, like buildings, books and teachers' pay. Others cannot, like learning by talking and trading ideas with other students. Separation by law cuts the second path, and spending on the first path does nothing to refill it. In Brown, the facilities had been found equal, so the Court looked to these intangible considerations. It drew on two earlier graduate-school cases, Sweatt and McLaurin, and said the point applies even more strongly to young children. The Court made this as a legal argument from precedent, not by measuring anything, so the weights and numbers in this model are invented for teaching.",
+    "quote": "In McLaurin v. Oklahoma State Regents, supra, the Court, in requiring that a Negro admitted to a white graduate school be treated like all other students, again resorted to intangible considerations: \". . . his ability to study, to engage in discussions and exchange views with other students, and, in general, to learn his profession.\" Such considerations apply with added force to children in grade and high schools.",
+    "quote_where": "Opinion of the Court (Chief Justice Warren)"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "opportunity_{B}",
+      "link": "opp_b"
+     },
+     {
+      "text": " = (1 − "
+     },
+     {
+      "text": "w",
+      "link": "w"
+     },
+     {
+      "text": ") × "
+     },
+     {
+      "text": "buildings_{B}",
+      "link": "t"
+     },
+     {
+      "text": " + "
+     },
+     {
+      "text": "w",
+      "link": "w"
+     },
+     {
+      "text": " × "
+     },
+     {
+      "text": "classmates_{B}",
+      "link": "exchange"
+     }
+    ],
+    "caption": "This is the model's teaching rule, not the paper's: the opinion has no equation. The buildings term is the slider for School B's facilities, w is how much learning comes from classmates, and the classmates term drops when the law keeps the schools apart. Raising the buildings term can never change the classmates term."
+   },
+   "recap": "Equal buildings fill only one path. Separation cuts off learning with other students, a part of education no building can supply.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "stigma_chain",
+   "title": "The message of separation: from law to learning",
+   "idea": "Separation required by law is read as a sign that one group is inferior; that sense of inferiority lowers a child's motivation, which slows educational development, and the effect is stronger when the law sanctions it.",
+   "role": "core",
+   "predict": {
+    "question": "Imagine a town where schools end up separated by race, but no law requires it. The buildings and teachers are equal. By the Kansas finding the Court quoted, how does the harm to learning compare with the same separation required by law?",
+    "options": [
+     "Exactly the same harm, because the separation is the same",
+     "Some harm, but less than when the law requires it",
+     "No harm at all, because no law sends a message",
+     "More harm, because nobody can be held to account"
+    ],
+    "answer": 1,
+    "why": [
+     "Tempting if you think only the physical separation matters. The finding says the impact is greater when separation has the backing of law, so removing that backing should shrink the harm.",
+     "Right. The finding says segregation itself is harmful and the impact is greater with the sanction of law. Without the law the first link weakens but is not cut. Brown ruled only on separation that state law required or permitted.",
+     "Tempting because the law amplifies the message. But the finding opens by saying segregation in schools has a detrimental effect, before it mentions the law, so the harm does not drop to zero.",
+     "A plausible worry, but the finding points the other way. Official backing is what makes separation read most clearly as a verdict of inferiority, so the law-required case is the stronger one."
+    ]
+   },
+   "terms": [
+    {
+     "term": "stigma",
+     "means": "A mark of disgrace: being treated as lesser by the community, which the person may come to feel about themselves"
+    },
+    {
+     "term": "sanction of law",
+     "means": "Official backing: the law requires or approves the practice, so it carries the community's authority"
+    },
+    {
+     "term": "causal chain",
+     "means": "A series of causes where each step produces the next, so an effect at the start travels to the end"
+    }
+   ],
+   "model": {
+    "title": "From a school rule to a child's learning",
+    "note": "Teaching model: a four-step path with made-up link strengths. The Court described this mechanism in words and never measured it. The law's backing is modelled as doubling the first link, and the motivation-to-learning link is fixed at 0.8. All numbers are illustrative, not data from the case.",
+    "controls": [
+     {
+      "id": "sep",
+      "label": "Children kept in separate schools",
+      "kind": "toggle",
+      "default": 1,
+      "color": 0,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "law",
+      "label": "A law requires the separation",
+      "kind": "toggle",
+      "default": 0,
+      "color": 1,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "a",
+      "label": "How strongly separation reads as 'you are lower'",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.5,
+      "unit": "",
+      "color": 2
+     },
+     {
+      "id": "b",
+      "label": "How much that feeling dampens motivation",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.5,
+      "unit": "",
+      "color": 3
+     }
+    ],
+    "outputs": [
+     {
+      "id": "inferiority",
+      "label": "Sense of inferiority",
+      "expr": "sep * a * (0.5 + 0.5 * law)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "motivation",
+      "label": "Motivation to learn",
+      "expr": "1 - b * inferiority",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "learning",
+      "label": "Educational development (vs. no separation)",
+      "expr": "1 - 0.8 * (1 - motivation)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "loss",
+      "label": "Learning lost",
+      "expr": "1 - learning",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 5
+     }
+    ],
+    "visual": {
+     "type": "causal",
+     "nodes": [
+      {
+       "id": "sep_node",
+       "label": "Separation",
+       "x": 12,
+       "y": 30,
+       "value": "sep"
+      },
+      {
+       "id": "law_node",
+       "label": "Backing of law",
+       "x": 12,
+       "y": 75,
+       "value": "law"
+      },
+      {
+       "id": "inf_node",
+       "label": "Sense of inferiority",
+       "x": 40,
+       "y": 50,
+       "value": "inferiority"
+      },
+      {
+       "id": "mot_node",
+       "label": "Motivation to learn",
+       "x": 66,
+       "y": 50,
+       "value": "motivation"
+      },
+      {
+       "id": "learn_node",
+       "label": "Educational development",
+       "x": 90,
+       "y": 50,
+       "value": "learning"
+      }
+     ],
+     "edges": [
+      {
+       "from": "sep_node",
+       "to": "inf_node",
+       "strength": "sep * a",
+       "label": "message"
+      },
+      {
+       "from": "law_node",
+       "to": "inf_node",
+       "strength": "law * sep * a * 0.5",
+       "label": "adds weight"
+      },
+      {
+       "from": "inf_node",
+       "to": "mot_node",
+       "strength": "-b",
+       "label": "dampens"
+      },
+      {
+       "from": "mot_node",
+       "to": "learn_node",
+       "strength": 0.8,
+       "label": "drives"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Each box is one step on a path from a school rule to a child's learning. Arrows carry an effect from one box to the next.",
+      "focus": [
+       "sep_node",
+       "inf_node",
+       "mot_node",
+       "learn_node"
+      ],
+      "ms": 3600
+     },
+     {
+      "say": "This switch decides whether children are kept in separate schools at all.",
+      "focus": "sep",
+      "ms": 2800
+     },
+     {
+      "say": "This switch says whether a law requires that separation, or it just happens.",
+      "focus": "law",
+      "ms": 2800
+     },
+     {
+      "say": "These two sliders set how strongly the first two arrows pass the effect along. Thicker arrows carry more.",
+      "focus": [
+       "a",
+       "b"
+      ],
+      "ms": 3400
+     },
+     {
+      "say": "Down here is the end result: how much learning is lost compared with children who are not separated.",
+      "focus": "loss",
+      "ms": 3000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "The harm travels link by link. Play with the links: which ones can you weaken, and how much does the law's backing add?",
+    "goals": [
+     {
+      "text": "The law now backs the separation. Without ending separation, bring the learning lost below 10%.",
+      "when": "law == 1 && sep == 1 && loss < 0.1",
+      "solution": {
+       "law": 1,
+       "b": 0.2
+      },
+      "hints": [
+       "Separation and the law both stay. What else carries the harm to learning?",
+       "Any weak link cuts what reaches the end. Try weakening how much the feeling dampens motivation.",
+       "With the law on and the message slider at its start, the motivation slider has to fall below half of where it began."
+      ]
+     },
+     {
+      "text": "Turn the law off but keep the separation. Make the learning lost match what the law-backed default causes, about 20%.",
+      "when": "law == 0 && sep == 1 && abs(loss - 0.2) < 0.015",
+      "solution": {
+       "a": 1,
+       "b": 0.5
+      },
+      "hints": [
+       "Without the law, the first link is weaker. What would have to make up for that?",
+       "The law doubled the message. Without it, the message itself has to land harder.",
+       "Leave the motivation slider where it is. The learning lost grows in step with the message slider, so ask how far it must go to double the loss."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. The finding says segregation itself is harmful, and that the harm is greater when the law backs it. Take the law away and the first link weakens, but the path is not cut.",
+     "incorrect": "The finding the Court quoted makes two claims. Segregation in schools has a detrimental effect, and that impact is greater with the sanction of law. So separation without a law sits in between: less harm than the law-backed case, but more than none."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with no separation. Nothing enters the path, so no learning is lost.",
+       "set": {
+        "sep": 0,
+        "law": 0,
+        "a": 0.5,
+        "b": 0.5
+       },
+       "focus": "loss",
+       "ms": 2800
+      },
+      {
+       "say": "Now separate the children, with no law requiring it. Many children read this as a message: 'you are lower.' That branding as lesser is called stigma. Watch the sense of inferiority rise.",
+       "set": {
+        "sep": 1
+       },
+       "focus": "inf_node",
+       "ms": 4200
+      },
+      {
+       "say": "That feeling pushes motivation down. This arrow is negative: more inferiority means less wish to learn.",
+       "focus": "mot_node",
+       "ms": 3400
+      },
+      {
+       "say": "Lower motivation slows educational development. The effect has passed through three steps. That is a causal chain: each step causes the next.",
+       "focus": [
+        "learn_node",
+        "loss"
+       ],
+       "ms": 4200
+      },
+      {
+       "say": "Now let a law require the separation. Official backing, the sanction of law, makes the message read as the community's verdict. The first link doubles.",
+       "set": {
+        "law": 1
+       },
+       "focus": [
+        "law_node",
+        "inf_node"
+       ],
+       "ms": 4200
+      },
+      {
+       "say": "Notice what did not change: buildings, books and teachers. Nothing tangible moved, yet the learning lost doubled, from 10% to 20%.",
+       "focus": "loss",
+       "ms": 3800
+      },
+      {
+       "say": "Each link matters. If the feeling never touched motivation, the chain would break and learning would be safe.",
+       "set": {
+        "b": 0
+       },
+       "focus": "b",
+       "ms": 3400
+      },
+      {
+       "say": "Restore that link and the harm flows end to end again. It starts at a law and ends in a child's education.",
+       "set": {
+        "b": 0.5
+       },
+       "focus": [
+        "inf_node",
+        "mot_node",
+        "learn_node"
+       ],
+       "ms": 3600
+      }
+     ]
+    },
+    "explanation": "The harm the Court described travels in steps. Separation sends a message that one group is inferior, and children can take that message in. That sense of inferiority weakens their motivation to learn, and weaker motivation slows their educational development. When a law requires the separation, the message carries official weight, so the first step is stronger and more harm reaches the end. The Court did not test this itself. It quoted a finding by the Kansas trial court, which had still ruled against the Black plaintiffs, and said the finding was 'amply supported by modern authority', meaning psychological research of the time. Some critics later objected that the decision leaned on social-science data rather than precedent, and the opinion gives no measured sizes for these links.",
+    "quote": "The impact is greater when it has the sanction of the law, for the policy of separating the races is usually interpreted as denoting the inferiority of the negro group. A sense of inferiority affects the motivation of a child to learn.",
+    "quote_where": "Opinion of the Court, quoting the finding of the Kansas district court"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "learning lost = 0.8 × "
+     },
+     {
+      "text": "b",
+      "link": "b"
+     },
+     {
+      "text": " × "
+     },
+     {
+      "text": "a",
+      "link": "a"
+     },
+     {
+      "text": " × (½ + ½ · "
+     },
+     {
+      "text": "law",
+      "link": "law"
+     },
+     {
+      "text": ") × "
+     },
+     {
+      "text": "separated",
+      "link": "sep"
+     },
+     {
+      "text": " = "
+     },
+     {
+      "text": "loss",
+      "link": "loss"
+     }
+    ],
+    "caption": "This is the teaching model's rule, not the paper's: the opinion states the mechanism in words and gives no equation. 'separated' is the first switch and 'law' the second, which doubles the first link. a is the message strength and b is how much the feeling dampens motivation. 0.8 is the fixed link from motivation to development. Multiplying the links shows why weakening any one of them shrinks the harm."
+   },
+   "recap": "Separation backed by law tells children they are inferior; that feeling lowers motivation, which slows learning, even when the buildings are equal.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "inherently_unequal",
+   "title": "Inherently unequal: why equal buildings cannot fix it",
+   "idea": "Because the harm runs through separation itself and not through the facilities, pushing tangible equality all the way to perfect still leaves an unequal outcome. Only removing legally mandated separation closes the gap.",
+   "role": "contribution",
+   "predict": {
+    "question": "A district keeps separate schools by law but spends extra, so the Black school gets newer buildings and better-paid teachers than the white school. Under the Court's reasoning, what follows?",
+    "options": [
+     "The schools are still unequal, because the harm comes from the separation, which spending does not touch",
+     "The schools are now equal, because the extra spending makes up for the separation",
+     "They count as equal as long as the two schools' test scores match",
+     "It depends on whether the law requires the separation or only permits it"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. Better facilities can at best leave the measurable shortfall at zero. The path from separation to the message to motivation to learning has no facilities input, so a gap remains. The Court called separate facilities unequal by their nature.",
+     "This is the old Plessy yardstick, where separation passes if the money adds up. The Court rejected that yardstick for public education, because the harm does not run through money.",
+     "Matching outcomes on a test is still a measurable comparison. The Court's point was that separation harms children in ways such a comparison misses: their sense of status and their 'hearts and minds'.",
+     "The Court's holding covered state laws 'permitting or requiring' segregation. Either way the state backs the separation, so the same conclusion applies."
+    ]
+   },
+   "terms": [
+    {
+     "term": "inherently unequal",
+     "means": "Unequal by its very nature, so no improvement to buildings, courses or pay can make it equal"
+    },
+    {
+     "term": "equal protection of the laws",
+     "means": "The Fourteenth Amendment's promise that a state must treat people equally under its laws; the Court held segregated schools broke it"
+    }
+   ],
+   "model": {
+    "title": "From a school rule to a child's learning",
+    "note": "Teaching model: a four-step path with made-up link strengths, plus a box for measurable shortfalls (buildings, courses, teachers, pay). That box is fixed at zero because the lower courts found the schools 'equalized, or being equalized'; the model shows the best case for facilities, with perfect equality. The Court described this mechanism in words and never measured it. The law's backing is modelled as doubling the first link, and the motivation-to-learning link is fixed at 0.8. All numbers are illustrative, not data from the case.",
+    "controls": [
+     {
+      "id": "sep",
+      "label": "Children kept in separate schools",
+      "kind": "toggle",
+      "default": 1,
+      "color": 0,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "law",
+      "label": "A law requires the separation",
+      "kind": "toggle",
+      "default": 0,
+      "color": 1,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "a",
+      "label": "How strongly separation reads as 'you are lower'",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.5,
+      "unit": "",
+      "color": 2
+     },
+     {
+      "id": "b",
+      "label": "How much that feeling dampens motivation",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.5,
+      "unit": "",
+      "color": 3
+     }
+    ],
+    "outputs": [
+     {
+      "id": "inferiority",
+      "label": "Sense of inferiority",
+      "expr": "sep * a * (0.5 + 0.5 * law)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "motivation",
+      "label": "Motivation to learn",
+      "expr": "1 - b * inferiority",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "learning",
+      "label": "Educational development (vs. no separation)",
+      "expr": "1 - 0.8 * (1 - motivation)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "loss",
+      "label": "Learning lost",
+      "expr": "1 - learning",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "tangible_loss",
+      "label": "Learning lost to worse facilities (schools matched)",
+      "expr": "0",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 6
+     },
+     {
+      "id": "total_gap",
+      "label": "Total gap between the schools",
+      "expr": "loss + tangible_loss",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 7
+     }
+    ],
+    "visual": {
+     "type": "causal",
+     "nodes": [
+      {
+       "id": "sep_node",
+       "label": "Separation",
+       "x": 12,
+       "y": 30,
+       "value": "sep"
+      },
+      {
+       "id": "law_node",
+       "label": "Backing of law",
+       "x": 12,
+       "y": 75,
+       "value": "law"
+      },
+      {
+       "id": "inf_node",
+       "label": "Sense of inferiority",
+       "x": 40,
+       "y": 50,
+       "value": "inferiority"
+      },
+      {
+       "id": "mot_node",
+       "label": "Motivation to learn",
+       "x": 66,
+       "y": 50,
+       "value": "motivation"
+      },
+      {
+       "id": "learn_node",
+       "label": "Educational development",
+       "x": 90,
+       "y": 50,
+       "value": "learning"
+      },
+      {
+       "id": "fac_node",
+       "label": "Measurable shortfall (matched: none)",
+       "x": 60,
+       "y": 88,
+       "value": "tangible_loss"
+      },
+      {
+       "id": "gap_node",
+       "label": "Total gap between the schools",
+       "x": 90,
+       "y": 88,
+       "value": "total_gap"
+      }
+     ],
+     "edges": [
+      {
+       "from": "sep_node",
+       "to": "inf_node",
+       "strength": "sep * a",
+       "label": "message"
+      },
+      {
+       "from": "law_node",
+       "to": "inf_node",
+       "strength": "law * sep * a * 0.5",
+       "label": "adds weight"
+      },
+      {
+       "from": "inf_node",
+       "to": "mot_node",
+       "strength": "-b",
+       "label": "dampens"
+      },
+      {
+       "from": "mot_node",
+       "to": "learn_node",
+       "strength": 0.8,
+       "label": "drives"
+      },
+      {
+       "from": "learn_node",
+       "to": "gap_node",
+       "strength": "loss",
+       "label": "lost learning"
+      },
+      {
+       "from": "fac_node",
+       "to": "gap_node",
+       "strength": "tangible_loss",
+       "label": "adds nothing"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Along the top is the path from the last lesson. Separation sends a message, the message dents motivation, and motivation drives learning.",
+      "focus": [
+       "sep_node",
+       "inf_node",
+       "mot_node",
+       "learn_node"
+      ],
+      "ms": 4500
+     },
+     {
+      "say": "New, at the bottom: the measurable shortfall, meaning worse buildings, courses, teachers or pay. Here the schools already match perfectly, so it is zero.",
+      "focus": [
+       "fac_node",
+       "tangible_loss"
+      ],
+      "ms": 4500
+     },
+     {
+      "say": "The switches and sliders are the ones you used before: separation, the law's backing, and how hard the message lands.",
+      "focus": [
+       "sep",
+       "law",
+       "a",
+       "b"
+      ],
+      "ms": 4000
+     },
+     {
+      "say": "Both routes end here, in the total gap between separated children and white children.",
+      "focus": [
+       "gap_node",
+       "total_gap"
+      ],
+      "ms": 4000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "The facilities are already as good as they can get. Play with the separation path to see how big a gap can survive perfect facilities, then find the one change that closes it for good.",
+    "goals": [
+     {
+      "text": "Keep the schools perfectly matched and the children separated, and make them lose more than 15% of their learning without touching the two feelings sliders",
+      "when": "sep == 1 && a == 0.5 && b == 0.5 && total_gap > 0.15",
+      "solution": {
+       "law": 1
+      },
+      "hints": [
+       "The facilities box is already at zero, so the gap has to come from the top path.",
+       "If the feelings sliders stay put, what else in the last lesson made the message heavier?",
+       "In the Brown cases, the separation was not private custom. It was the state's own rule."
+      ]
+     },
+     {
+      "text": "Close the total gap completely without weakening the message. Leave the two feelings sliders where they are, or raise them",
+      "when": "total_gap < 0.001 && a >= 0.5 && b >= 0.5",
+      "solution": {
+       "sep": 0
+      },
+      "hints": [
+       "Facilities can't help: they are already perfect. Where does the remaining gap start?",
+       "Every box on the top path traces back to one starting point.",
+       "One switch removes the message at its source."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. Extra spending can only work on the measurable route, and that route is already at zero once the schools match. The harm the Court identified runs from the separation itself, so the schools stay unequal however they are funded.",
+     "incorrect": "You may have used the old Plessy yardstick, where equal or better facilities make separation acceptable. The Court rejected that yardstick for public education: the harm comes from the act of separating children, which money does not reach."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Set it up like the Brown cases. A law requires separate schools, and the lower courts found the schools equalized in buildings, curricula, teachers and pay. The measurable shortfall is zero.",
+       "set": {
+        "sep": 1,
+        "law": 1,
+        "a": 0.5,
+        "b": 0.5
+       },
+       "focus": [
+        "fac_node",
+        "tangible_loss"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "Plessy's yardstick stops at that bottom box. It sees zero shortfall and says the separation passes.",
+       "focus": "fac_node",
+       "ms": 4500
+      },
+      {
+       "say": "Now look at the total. The gap is still 20%, even though nothing measurable differs.",
+       "focus": "total_gap",
+       "ms": 4500
+      },
+      {
+       "say": "Where does it come from? The top path never runs through buildings or pay. Separation, then message, then motivation, then learning: all still at work.",
+       "focus": [
+        "inf_node",
+        "mot_node",
+        "learn_node"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "Facilities are already perfect, so there is nothing left to improve. This is what the Court meant by 'inherently unequal': the separation is unequal by its nature, however good the schools are.",
+       "focus": "loss",
+       "ms": 5500
+      },
+      {
+       "say": "Now take away the separation itself. The message disappears at its source, and the gap closes to zero.",
+       "set": {
+        "sep": 0
+       },
+       "focus": [
+        "sep_node",
+        "total_gap"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "Put the separation back and the 20% gap returns, with every measurable thing still identical. The harm comes from the legal act of separating children, so the Court held the plaintiffs were denied the equal protection of the laws.",
+       "set": {
+        "sep": 1
+       },
+       "focus": [
+        "gap_node",
+        "total_gap"
+       ],
+       "ms": 7000
+      }
+     ]
+    },
+    "explanation": "The walkthrough split the harm into two routes. The measurable route is the only one Plessy's yardstick checks, and in these cases the lower courts had found it closed: the schools were equalized in buildings, curricula, teachers and pay. The other route starts from the separation itself, as a legally backed message of inferiority that lowers motivation and learning. No facilities improvement reaches it. So the Court concluded that 'separate but equal' has no place in public education, and that the plaintiffs were denied equal protection. The Court never measured how large this harm is. It relied on a Kansas court's finding and on 'modern authority' in psychology, and some scholars at the time objected to leaning on social science instead of precedent. The model's numbers are invented.",
+    "quote": "We conclude that, in the field of public education, the doctrine of \"separate but equal\" has no place. Separate educational facilities are inherently unequal.",
+    "quote_where": "Opinion of the Court (Chief Justice Warren), concluding paragraphs"
+   },
+   "check": {
+    "kind": "model",
+    "task": "Keep the children separated in perfectly matched schools, and put the model in a state where at least 30% of their learning is lost.",
+    "when": "sep == 1 && tangible_loss < 0.001 && total_gap >= 0.3",
+    "solution": {
+     "law": 1,
+     "a": 1
+    },
+    "hint": "With the facilities perfect, the whole gap has to come from the top path. Which settings make the message hit harder?",
+    "misconception": "Once buildings, courses and teachers are equal, any harm that remains must be small. In fact the separation route can be large on its own, because facilities never feed into it."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "gap",
+      "link": "total_gap"
+     },
+     {
+      "text": " = "
+     },
+     {
+      "text": "shortfall",
+      "link": "tangible_loss"
+     },
+     {
+      "text": " + 0.8 × "
+     },
+     {
+      "text": "b",
+      "link": "b"
+     },
+     {
+      "text": " × "
+     },
+     {
+      "text": "sep",
+      "link": "sep"
+     },
+     {
+      "text": " × "
+     },
+     {
+      "text": "a",
+      "link": "a"
+     },
+     {
+      "text": " × (0.5 + 0.5 × "
+     },
+     {
+      "text": "law",
+      "link": "law"
+     },
+     {
+      "text": ")"
+     }
+    ],
+    "caption": "This is the model's rule, not the Court's; the opinion uses no equation. The shortfall term is the measurable route, held at zero because the schools were found equalized. The second term is the message path from the last lesson, set by b, sep, a and law. However perfect the facilities, only switching sep to 0 removes that term. The weight 0.8 is invented."
+   },
+   "recap": "Make two schools identical in every measurable way and they are still unequal, because the harm comes from the legal act of separating children, not from the facilities.",
+   "builds_on": "stigma_chain",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  }
+ ],
+ "omitted": [],
+ "generation": {
+  "provider": "claude",
+  "model": "claude-opus-5-5",
+  "pipeline": "lemma.generate.make_outline + build_lesson",
+  "source_chars": 16458,
+  "omitted": 0
+ }
+}

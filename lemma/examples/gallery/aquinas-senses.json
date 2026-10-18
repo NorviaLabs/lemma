@@ -1,0 +1,2365 @@
+{
+ "version": 1,
+ "id": "gallery-aquinas-senses",
+ "title": "Why a Lowly Picture Can Tell You More: Inside Aquinas's Case for Revealed Knowledge",
+ "audience": "A curious adult with no background in this field",
+ "created": "2026-10-18T14:06:24",
+ "source": {
+  "title": "Question 1. The nature and extent of sacred doctrine (Summa Theologiae, First Part)",
+  "authors": "St. Thomas Aquinas; literally translated by Fathers of the English Dominican Province",
+  "year": 1920,
+  "venue": "The Summa Theologiæ of St. Thomas Aquinas, Second and Revised Edition, 1920 (online edition, New Advent)",
+  "url": "https://www.newadvent.org/summa/1001.htm"
+ },
+ "intro": {
+  "summary": "Aquinas asks whether people need any knowledge beyond what philosophy can reach by reason alone. If so, he asks what kind of knowledge it is. He works through ten questions in a fixed pattern: objections, a counter-authority, his own answer, then replies. He argues that a 'sacred doctrine' taught by revelation is needed, that it counts as a real science resting on borrowed principles, and that it can rightly teach through humble bodily images. The main limit is that this is a theological argument from premises accepted on faith, not an empirical study. Claims such as 'reason reaches truth about God only for a few' are argued observations, not measurements.",
+  "background": [
+   "Aquinas wrote the Summa Theologiae between about 1265 and 1274 as a teaching handbook. This text is the 1920 English translation.",
+   "For Aquinas, a 'science' (scientia) means any organised body of knowledge that reasons from principles to conclusions, not only lab science.",
+   "Each 'article' follows the same pattern: objections first, then 'On the contrary', then 'I answer that', then replies to each objection.",
+   "'Sacred doctrine' is his name for knowledge taught through divine revelation, centred on Scripture."
+  ],
+  "known": [],
+  "aha": "Aquinas argues that describing God with a lowly image, like a worm or a stone, teaches more truly than a noble image like the sun. Nobody mistakes the lowly picture for a literal description, so it points the mind beyond all pictures."
+ },
+ "primer": [
+  {
+   "heading": "The question",
+   "body": "Philosophy, built by human reason, already studies everything that exists, even God. So why would anyone need a second kind of knowledge? Aquinas takes this objection seriously. His answer is that a second, revealed body of knowledge is required.",
+   "quote": "It was necessary for man's salvation that there should be a knowledge revealed by God besides philosophical science built up by human reason.",
+   "quote_where": "Article 1, I answer that"
+  },
+  {
+   "heading": "What they did",
+   "body": "Aquinas does not run experiments. He sets out ten questions: is this doctrine needed, is it a science, is it one science, and so on. For each one he states the strongest objections and then answers them. He often argues by analogy. A musician takes his rules on trust from arithmetic. Sight unifies man, donkey and stone under the single aspect of colour. An astronomer and a physicist both prove the earth is round, by different routes."
+  },
+  {
+   "heading": "What they found",
+   "body": "His most practical argument concerns truths about God that reason could in principle discover. Even for these, revelation is needed, because reason's route is narrow, slow and error-prone. He also concludes that sacred doctrine is one science, unified by a single viewpoint. It reasons from its starting points rather than trying to prove them. And it rightly teaches through bodily images. Surprisingly, it does better with lowly images than with noble ones.",
+   "quote": "the truth about God such as reason could discover, would only be known by a few, and that after a long time, and with the admixture of many errors.",
+   "quote_where": "Article 1, I answer that"
+  },
+  {
+   "heading": "Why it matters",
+   "body": "This opening question set the terms for how faith and reason relate in much of Western thought. Several of its ideas still apply to teaching anything hard. Different methods can reach the same conclusion. A field can rest on principles it borrows from another field. A crude metaphor can mislead less than a polished one. These are not proven results. They are arguments built on Aquinas's theological starting points, and readers who reject those starting points will weigh them differently.",
+   "quote": "it is more fitting that divine truths should be expounded under the figure of less noble than of nobler bodies, and this for three reasons.",
+   "quote_where": "Article 9, Reply to Objection 3"
+  }
+ ],
+ "provider": {
+  "name": "Claude",
+  "model": "claude-opus-5-5"
+ },
+ "concepts": [
+  {
+   "id": "same_conclusion_different_route",
+   "title": "Same conclusion, different route",
+   "idea": "What separates two kinds of knowledge is the route by which a conclusion is reached, not the conclusion itself, so one truth can belong to two sciences.",
+   "role": "prerequisite",
+   "predict": {
+    "question": "A surveyor proves a field is 100 metres wide by trigonometry, sighting angles from a distance. A labourer proves the same width by walking it with a measuring chain. By Aquinas's rule, how many kinds of knowledge hold this conclusion?",
+    "options": [
+     "One kind, because the conclusion is identical",
+     "Two kinds, because the routes differ: abstract mathematics versus handling the ground itself",
+     "None, until both methods are combined into a single proof",
+     "One kind: only the more precise method counts as knowledge"
+    ],
+    "answer": 1,
+    "why": [
+     "It feels natural to sort knowledge by what it says. Aquinas sorts it by how it is obtained, and here the two means differ.",
+     "Correct. This mirrors the astronomer, who works by mathematics, and the physicist, who works by matter itself. One conclusion is reached by two means, so two sciences hold it.",
+     "Each route is a full proof on its own. Aquinas's astronomer does not need the physicist to have proved the earth is round.",
+     "Aquinas does not rank the astronomer's proof over the physicist's here. Each is a genuine proof by its own means."
+    ]
+   },
+   "terms": [
+    {
+     "term": "science",
+     "means": "In Aquinas's sense: an organised body of knowledge that proves conclusions by a particular means, not only modern lab science"
+    },
+    {
+     "term": "sacred doctrine",
+     "means": "Knowledge learned through what God has revealed, rather than built up by human reason alone"
+    },
+    {
+     "term": "theology",
+     "means": "Knowledge about God. Aquinas names two kinds: one that is part of philosophy, and one inside sacred doctrine"
+    }
+   ],
+   "model": {
+    "title": "Two routes into one claim",
+    "note": "Teaching model: each route is a slider, and a route counts as a full proof once it reaches the halfway mark. Aquinas does not speak of partial proofs; the threshold only lets you switch routes on and off. The claim's own value is the strongest route reaching it, so adding a second route does not change the claim. Numbers are illustrative, not the text's. Aquinas argues by analogy and does not measure anything.",
+    "controls": [
+     {
+      "id": "math",
+      "label": "Route through mathematics (astronomer)",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 1,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "matter",
+      "label": "Route through matter itself (physicist)",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "reason",
+      "label": "Route through human reason (philosophy)",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 1,
+      "unit": "",
+      "color": 4
+     },
+     {
+      "id": "revelation",
+      "label": "Route through revelation (taught by God)",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0,
+      "unit": "",
+      "color": 5
+     }
+    ],
+    "outputs": [
+     {
+      "id": "earth_count",
+      "label": "Fields holding 'the earth is round'",
+      "expr": "(math >= 0.5 ? 1 : 0) + (matter >= 0.5 ? 1 : 0)",
+      "unit": "",
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "earth_strength",
+      "label": "The claim itself (strongest route)",
+      "expr": "max(math, matter)",
+      "unit": "",
+      "decimals": 1,
+      "color": 2
+     },
+     {
+      "id": "god_count",
+      "label": "Fields holding the truth about God",
+      "expr": "(reason >= 0.5 ? 1 : 0) + (revelation >= 0.5 ? 1 : 0)",
+      "unit": "",
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "god_strength",
+      "label": "The truth itself (strongest route)",
+      "expr": "max(reason, revelation)",
+      "unit": "",
+      "decimals": 1,
+      "color": 3
+     }
+    ],
+    "visual": {
+     "type": "causal",
+     "nodes": [
+      {
+       "id": "math_node",
+       "label": "Mathematics (abstracting from matter)",
+       "x": 12,
+       "y": 12,
+       "value": "math"
+      },
+      {
+       "id": "matter_node",
+       "label": "Matter itself",
+       "x": 12,
+       "y": 40,
+       "value": "matter"
+      },
+      {
+       "id": "earth",
+       "label": "The earth is round",
+       "x": 70,
+       "y": 26,
+       "value": "earth_strength"
+      },
+      {
+       "id": "reason_node",
+       "label": "Human reason",
+       "x": 12,
+       "y": 62,
+       "value": "reason"
+      },
+      {
+       "id": "revelation_node",
+       "label": "Revelation",
+       "x": 12,
+       "y": 90,
+       "value": "revelation"
+      },
+      {
+       "id": "god",
+       "label": "A truth about God reason can reach",
+       "x": 70,
+       "y": 76,
+       "value": "god_strength"
+      }
+     ],
+     "edges": [
+      {
+       "from": "math_node",
+       "to": "earth",
+       "strength": "math",
+       "label": "astronomer"
+      },
+      {
+       "from": "matter_node",
+       "to": "earth",
+       "strength": "matter",
+       "label": "physicist"
+      },
+      {
+       "from": "reason_node",
+       "to": "god",
+       "strength": "reason",
+       "label": "philosopher"
+      },
+      {
+       "from": "revelation_node",
+       "to": "god",
+       "strength": "revelation",
+       "label": "taught by God"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "The top half shows one claim, 'the earth is round', with two arrows that can lead into it.",
+      "focus": "earth",
+      "ms": 2800
+     },
+     {
+      "say": "This slider sets the astronomer's route, arguing from numbers and figures. Past the halfway mark it counts as a full proof.",
+      "set": {
+       "math": 0.3
+      },
+      "focus": "math",
+      "ms": 3200
+     },
+     {
+      "say": "This one sets the physicist's route, through matter itself. Watch its arrow thicken.",
+      "set": {
+       "math": 1,
+       "matter": 1
+      },
+      "focus": "matter",
+      "ms": 3000
+     },
+     {
+      "say": "The bottom half has the same shape: one truth about God, reached by human reason or by revelation.",
+      "set": {
+       "revelation": 1
+      },
+      "focus": [
+       "reason",
+       "revelation"
+      ],
+      "ms": 3400
+     },
+     {
+      "say": "These boxes count how many fields hold each claim.",
+      "focus": [
+       "earth_count",
+       "god_count"
+      ],
+      "ms": 2800
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with the routes. Remember that a field is fixed by its route, not by where it ends up.",
+    "goals": [
+     {
+      "text": "Keep the earth's roundness proved, but have it held only by the physicist's field",
+      "when": "matter >= 0.5 && earth_count < 1.5",
+      "solution": {
+       "math": 0,
+       "matter": 1
+      },
+      "hints": [
+       "Which arrow belongs to the physicist, and which to the astronomer?",
+       "You need the route through matter to count as a proof, and the route through mathematics not to count.",
+       "A route counts once its slider passes the middle. Bring one route above the middle and the other below it."
+      ]
+     },
+     {
+      "text": "Let the same truth about God belong to two different fields at once",
+      "when": "god_count > 1.5",
+      "solution": {
+       "revelation": 1
+      },
+      "hints": [
+       "Which arrow into the truth about God is empty right now?",
+       "The route through revelation has to count as a proof alongside human reason.",
+       "Push the revelation slider past the halfway mark and watch the count box."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Right. The width is one conclusion, but trigonometry from afar and chaining the ground are different means of knowing. Aquinas's rule, 'sciences are differentiated according to the various means', makes these two kinds of knowledge.",
+     "incorrect": "You probably sorted knowledge by its conclusion. Aquinas sorts it by its route: two different means of reaching the same width make two kinds of knowledge, as with the astronomer and the physicist."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with the astronomer alone. The mathematical route proves the earth is round, and one field holds the claim.",
+       "set": {
+        "math": 1,
+        "matter": 0,
+        "reason": 1,
+        "revelation": 0
+       },
+       "focus": "earth_count",
+       "ms": 3000
+      },
+      {
+       "say": "Now add the physicist, who proves it by working with matter itself. Look at the claim box: its value has not changed. It is the very same conclusion.",
+       "set": {
+        "matter": 1
+       },
+       "focus": "earth",
+       "ms": 3400
+      },
+      {
+       "say": "Yet the count jumps to 2. Aquinas calls each organised way of proving a science, and a science is marked out by its route, its means of knowing.",
+       "focus": "earth_count",
+       "ms": 3600
+      },
+      {
+       "say": "Remove the astronomer's route. The claim still stands, but now a different, single science holds it. The claim did not decide which field owns it. The route did.",
+       "set": {
+        "math": 0
+       },
+       "focus": "earth_strength",
+       "ms": 3600
+      },
+      {
+       "say": "Aquinas needs this point for a bigger question. An objector says philosophy already studies everything, even God, so any other knowledge is superfluous. Here philosophy reaches a truth about God by reason.",
+       "set": {
+        "math": 1
+       },
+       "focus": "reason_node",
+       "ms": 4000
+      },
+      {
+       "say": "Add the route through revelation. The truth about God is unchanged, but a second science now holds it. Aquinas calls this one sacred doctrine.",
+       "set": {
+        "revelation": 1
+       },
+       "focus": "god_count",
+       "ms": 3600
+      },
+      {
+       "say": "Both halves now look alike: two routes, one conclusion, two sciences each time. So there are two kinds of theology that differ in kind, even where they say the same thing.",
+       "focus": [
+        "earth_count",
+        "god_count"
+       ],
+       "ms": 4000
+      }
+     ]
+    },
+    "explanation": "Aquinas meets an objection: philosophy already treats everything that exists, even God, so any further knowledge would be superfluous. His reply rests on how sciences are told apart: by the means through which knowledge is obtained, not by the conclusions they reach. The astronomer and the physicist both prove the earth is round, one by mathematics and one by matter itself, so one truth can sit inside two sciences. In the same way, truths about God that reason can reach may also be taught by revelation, and so the theology in sacred doctrine differs in kind from the theology that is part of philosophy. This is an argument by analogy, not an experiment. The model only counts routes to show the shape of his reasoning.",
+    "quote": "Sciences are differentiated according to the various means through which knowledge is obtained. For the astronomer and the physicist both may prove the same conclusion: that the earth, for instance, is round: the astronomer by means of mathematics (i.e. abstracting from matter), but the physicist by means of matter itself.",
+    "quote_where": "Question 1, Article 1, Reply to Objection 2"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "sciences holding C = [",
+      "link": "earth_count"
+     },
+     {
+      "text": "mathematics route",
+      "link": "math"
+     },
+     {
+      "text": " ≥ ½] + ["
+     },
+     {
+      "text": "matter route",
+      "link": "matter"
+     },
+     {
+      "text": " ≥ ½]"
+     }
+    ],
+    "caption": "Aquinas gives no formula; this is the model's counting rule. Each bracket is 1 if that route counts as a proof and 0 if not. Blue and orange are the astronomer's and physicist's routes, and the result is the count box. The same rule, with reason and revelation in place of the two routes, counts the fields holding the truth about God."
+   },
+   "recap": "A science is defined by how it knows, not by what it concludes, so one truth can belong to two sciences.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "few_slow_errors",
+   "title": "Reason's route: few, slow, and mixed with error",
+   "idea": "Even when reason can reach a truth, it gets there for only a few people, only after a long time, and mixed with errors, while being taught reaches many people quickly and reliably.",
+   "role": "core",
+   "predict": {
+    "question": "Imagine a society where every single person has the talent, the time and the will to study. Take a truth about God that reason could work out. By Aquinas's argument, would people still need to be taught it?",
+    "options": [
+     "No: once everyone can reason, reason's route is enough",
+     "Yes: reason's route would still be slow and mixed with error",
+     "Yes, but only because the truth would now lie above reason"
+    ],
+    "answer": 1,
+    "why": [
+     "Tempting, because it removes the most visible limit, the 'few'. But Aquinas names three separate bottlenecks. Raising the ceiling leaves the long climb and the errors untouched, as the model shows when you lift only that slider.",
+     "Right. The three limits act separately and stack on one another. Even with everyone able to try, the truth arrives 'after a long time, and with the admixture of many errors', so teaching still reaches people 'more fitly and more surely'.",
+     "This mixes up two of Aquinas's arguments. Truths above reason are his first reason for teaching. Here the truth is, by assumption, within reason's reach. The need comes from how reason gets there, not from the truth being out of reach."
+    ]
+   },
+   "terms": [
+    {
+     "term": "natural reason",
+     "means": "Human thinking working on its own, with no outside teaching from God. In this lesson it is the route of working a truth out for yourself."
+    },
+    {
+     "term": "divine revelation",
+     "means": "Truth made known by God and passed on by teaching, instead of being discovered by each person"
+    }
+   ],
+   "model": {
+    "title": "Who holds one truth, year by year: working it out vs being taught",
+    "note": "Teaching model: Aquinas gives no numbers. Here his three limits become three factors: a ceiling (the share with talent and leisure), a time scale (how fast those people get there) and an error share. The taught curve simply rises close to everyone within a few years, with no errors. All curves and numbers are illustrative, not data from the text.",
+    "controls": [
+     {
+      "id": "cap",
+      "label": "Share with the talent and leisure to work it out",
+      "kind": "slider",
+      "min": 0.05,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.2,
+      "unit": "",
+      "color": 2
+     },
+     {
+      "id": "slow",
+      "label": "Years it takes them to work it out",
+      "kind": "slider",
+      "min": 5,
+      "max": 120,
+      "step": 5,
+      "default": 30,
+      "unit": " yrs",
+      "color": 1
+     },
+     {
+      "id": "err",
+      "label": "Share of their conclusions mixed with mistakes",
+      "kind": "slider",
+      "min": 0,
+      "max": 0.8,
+      "step": 0.05,
+      "default": 0.4,
+      "unit": "",
+      "color": 3
+     }
+    ],
+    "outputs": [
+     {
+      "id": "reached40",
+      "label": "Reached some conclusion by reason, year 40",
+      "expr": "cap * (1 - exp(-40 / slow))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "reason_ok",
+      "label": "Hold the truth free of error by reason, year 40",
+      "expr": "reached40 * (1 - err)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "err_gap",
+      "label": "Hold it mixed with error, year 40",
+      "expr": "reached40 * err",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "taught_ok",
+      "label": "Hold it when taught, year 40",
+      "expr": "1 - exp(-40 / 2)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "half_time",
+      "label": "Years for reason to reach half its ceiling",
+      "expr": "slow * ln(2)",
+      "unit": " yrs",
+      "decimals": 0,
+      "color": 1
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Years",
+      "min": 0,
+      "max": 100
+     },
+     "y": {
+      "label": "Share of all people who hold the truth",
+      "min": 0,
+      "max": 1
+     },
+     "series": [
+      {
+       "id": "taught",
+       "label": "Taught it",
+       "expr": "1 - exp(-x / 2)",
+       "color": 0,
+       "dashed": false
+      },
+      {
+       "id": "reached",
+       "label": "Reached some conclusion by reason",
+       "expr": "cap * (1 - exp(-x / slow))",
+       "color": 3,
+       "dashed": true
+      },
+      {
+       "id": "reason_curve",
+       "label": "Reached it by reason, free of error",
+       "expr": "cap * (1 - err) * (1 - exp(-x / slow))",
+       "color": 1,
+       "dashed": false
+      }
+     ],
+     "fills": [
+      {
+       "series": 1,
+       "from": 0,
+       "to": 100,
+       "label": "Mixed with error",
+       "color": 3
+      },
+      {
+       "series": 2,
+       "from": 0,
+       "to": 100,
+       "label": "Free of error",
+       "color": 1
+      }
+     ],
+     "markers": [
+      {
+       "id": "year40",
+       "x": 40,
+       "label": "Year 40",
+       "color": 4
+      }
+     ],
+     "hlines": [
+      {
+       "id": "ceiling",
+       "y": "cap",
+       "label": "Ceiling: those with talent and leisure"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Time runs left to right, in years. Height is the share of all people who hold one truth about God, a truth reason could in principle work out.",
+      "focus": "year40",
+      "ms": 4200
+     },
+     {
+      "say": "This curve is people who are simply taught it. It shoots up within a few years.",
+      "focus": "taught",
+      "ms": 3200
+     },
+     {
+      "say": "This curve is people working it out for themselves. The dashed line counts anyone who reached some conclusion.",
+      "focus": [
+       "reason_curve",
+       "reached"
+      ],
+      "ms": 3800
+     },
+     {
+      "say": "This slider sets how many have the talent and leisure to try. It moves the flat ceiling line.",
+      "set": {
+       "cap": 0.4
+      },
+      "focus": [
+       "cap",
+       "ceiling"
+      ],
+      "ms": 3600
+     },
+     {
+      "say": "These two set how many years the work takes, and how often the answer comes out mixed with mistakes. That second share is the shaded band.",
+      "set": {
+       "cap": 0.2
+      },
+      "focus": [
+       "slow",
+       "err"
+      ],
+      "ms": 4400
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. The three limits are separate. Giving everyone the ability to reason removes only the ceiling. The slow climb and the errors remain, so being taught still gets the truth to people 'more fitly and more surely'.",
+     "incorrect": "You probably treated 'few people' as the whole problem. Aquinas names three limits, and the model multiplies them: ceiling × speed × freedom from error. Lift one and the other two still hold the curve down."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with reason at its dream best. Everyone can try, it takes only a few years, and no one makes mistakes. The reasoning curve almost hugs the taught one.",
+       "set": {
+        "cap": 1,
+        "slow": 5,
+        "err": 0
+       },
+       "focus": "reason_curve",
+       "ms": 4200
+      },
+      {
+       "say": "Aquinas's first limit: few. Most people lack the ability, the free time or the will for long study. Drop the ceiling to one person in five. The whole curve is squashed under that line.",
+       "set": {
+        "cap": 0.2
+       },
+       "focus": [
+        "ceiling",
+        "cap"
+       ],
+       "ms": 4600
+      },
+      {
+       "say": "Second limit: a long time. Even gifted people need years of groundwork before they reach truths about God. Stretch the years, and by year 40 the curve is still climbing.",
+       "set": {
+        "slow": 40
+       },
+       "focus": [
+        "reached",
+        "year40"
+       ],
+       "ms": 4600
+      },
+      {
+       "say": "Third limit: error. Many who reach a view carry mistakes in with it. The shaded band between the dashed line and the solid curve is truth mixed with error.",
+       "set": {
+        "err": 0.4
+       },
+       "focus": [
+        "err_gap",
+        "reason_curve"
+       ],
+       "ms": 4600
+      },
+      {
+       "say": "This is the route of natural reason: human thinking left to itself. The three limits stack. A small share, times a slow climb, times only part of it free of error.",
+       "focus": "reason_ok",
+       "ms": 4400
+      },
+      {
+       "say": "Now the other route. Aquinas calls it divine revelation: the same truth taught by God and handed on. It reaches nearly everyone in a few years, with no error band.",
+       "focus": [
+        "taught",
+        "taught_ok"
+       ],
+       "ms": 4400
+      },
+      {
+       "say": "Compare the two at year 40. Under a tenth of people hold the truth cleanly by reason. Nearly everyone holds it when taught. Same truth, two routes, very different reach.",
+       "focus": [
+        "reason_ok",
+        "taught_ok"
+       ],
+       "ms": 5000
+      }
+     ]
+    },
+    "explanation": "In the last concept you saw that one truth can be reached by two routes. Here Aquinas asks why the second route matters, even for truths reason could find by itself. His answer is that reason's route has three limits that stack. Only a few people have the talent and leisure. Even they need a long time. What they reach comes mixed with many errors. Teaching avoids all three: it reaches many people quickly and without that error. Since he holds that human salvation depends on knowing this truth, he concludes it was fitting that it be taught by revelation 'more fitly and more surely'. Note that this is a reasoned argument from what he sees as plain facts about human life, not a measured study. The curves only picture his claim.",
+    "quote": "Even as regards those truths about God which human reason could have discovered, it was necessary that man should be taught by a divine revelation; because the truth about God such as reason could discover, would only be known by a few, and that after a long time, and with the admixture of many errors.",
+    "quote_where": "Article 1, 'I answer that'"
+   },
+   "explore": {
+    "prompt": "You are the advocate for reason's route. See how far you can push it, and which limits matter.",
+    "goals": [
+     {
+      "text": "Make reason's route bring at least half of all people to the truth, free of error, by year 40",
+      "when": "reason_ok >= 0.5",
+      "solution": {
+       "cap": 0.8,
+       "slow": 10,
+       "err": 0.2
+      },
+      "hints": [
+       "One slider alone won't get you there. Which limits are still shrinking the solid curve?",
+       "Even if everyone can try, errors and a slow climb still cut the share. You will need to work on at least two sliders, probably all three.",
+       "Lift the ceiling high, make the years needed much shorter than 40, and keep mistakes to a small fraction."
+      ]
+     },
+     {
+      "text": "Give at least four in five people the talent to try and remove all error, yet keep reason's error-free share below one third at year 40",
+      "when": "cap > 0.79 && err <= 0.05 && reason_ok < 0.33",
+      "solution": {
+       "cap": 0.8,
+       "err": 0,
+       "slow": 80
+      },
+      "hints": [
+       "With a high ceiling and no mistakes, which limit is left?",
+       "The years slider stretches the climb. At year 40 the curve can still be far below its ceiling.",
+       "The time needed must be well beyond a single 40-year stretch, much longer than where the slider starts."
+      ]
+     }
+    ]
+   },
+   "check": {
+    "kind": "model",
+    "task": "Show a world where at least half of all people reach some conclusion by reason by year 40, but more of them hold it mixed with error than free of error.",
+    "when": "reached40 >= 0.5 && err_gap > reason_ok",
+    "solution": {
+     "cap": 1,
+     "slow": 10,
+     "err": 0.6
+    },
+    "hint": "Reaching many people depends on the ceiling and the years. Whether they get it right depends on a different slider.",
+    "misconception": "That reaching many people by reason means many hold the truth. Aquinas treats error as a separate limit: a wide reach can still leave most people with truth mixed with mistakes."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "share free of error by reason = "
+     },
+     {
+      "text": "c",
+      "link": "cap"
+     },
+     {
+      "text": " × (1 − e^{−t/"
+     },
+     {
+      "text": "T",
+      "link": "slow"
+     },
+     {
+      "text": "}) × (1 − "
+     },
+     {
+      "text": "ε",
+      "link": "err"
+     },
+     {
+      "text": ") = "
+     },
+     {
+      "text": "reason_ok",
+      "link": "reason_ok"
+     }
+    ],
+    "caption": "This is the model's rule, not Aquinas's, since he writes no equation. Each factor is one of his three limits. c (green) is the ceiling, the 'few'. T (blue) is the time scale, 'after a long time'. ε (red) is the error share, 'with the admixture of many errors'. Taught, the share is simply 1 − e^{−t/2}: many people, quickly, with no error factor."
+   },
+   "recap": "Reason reaches some truths about God only for a few, slowly and with errors. Teaching reaches many, fast and reliably. That is why Aquinas held teaching was needed.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "borrowed_principles",
+   "title": "A science built on borrowed starting points",
+   "idea": "A science can be genuine even when it does not prove its own first principles, as long as it takes them from a higher science, the way music takes its rules from arithmetic.",
+   "role": "core",
+   "predict": {
+    "question": "An engineer designs a bridge using formulas that were proved in physics. She has never proved them herself. A critic says her design work therefore isn't real knowledge. Applying Aquinas's account, what follows?",
+    "options": [
+     "Her work can be genuine knowledge: the formulas come from a higher science, and she reasons soundly from them",
+     "It isn't genuine until she proves the physics formulas herself",
+     "It counts only if the formulas are obvious to everyone without any proof",
+     "Her design is surer than the physics, because she adds her own reasoning on top"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. She is in the musician's position. Her starting points come in along the arrow from a higher science, and she reasons forward from them. Her conclusions are only as firm as that physics and her own reasoning.",
+     "This is the critic's assumption: every science must prove its own starting points. Aquinas denies it. A lower science leaves its starting points to the higher science and argues from them, not for them.",
+     "This is the other route, the self-evident one that arithmetic uses. Aquinas's point is that it is not the only route. Starting points that are not obvious can still be grounded by a higher science.",
+     "In the model, conclusions can never be firmer than their starting points, and borrowed starting points are never firmer than their source. Adding reasoning carries the support forward. It does not raise it."
+    ]
+   },
+   "terms": [
+    {
+     "term": "first principles",
+     "means": "The starting points a science reasons from. It does not prove them inside itself."
+    },
+    {
+     "term": "self-evident",
+     "means": "Seen to be true directly, by the natural light of the mind, with no proof needed, like the basic truths of arithmetic"
+    },
+    {
+     "term": "on authority",
+     "means": "Accepted because someone who knows the proof teaches it, not because you proved it yourself"
+    }
+   ],
+   "model": {
+    "title": "Where a science's starting points get their support",
+    "note": "Teaching model: Aquinas gives an argument, not a formula. Here 'firmness' is a made-up score from 0 to 1. Starting points are as firm as the stronger of two routes: seen directly by the science itself, or carried in from a higher science (that science's sureness × the strength of the link). Conclusions are as firm as their starting points × how soundly the science reasons from them. 'Science' means an organised body of reasoned knowledge in Aristotle's sense, not modern experimental science. All numbers are illustrative.",
+    "controls": [
+     {
+      "id": "self_light",
+      "label": "How clear the starting points are on their own",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0,
+      "unit": "",
+      "color": 2
+     },
+     {
+      "id": "higher",
+      "label": "How sure the higher science is",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.9,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "borrow",
+      "label": "Strength of the link from the higher science",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "reasoning",
+      "label": "How soundly the lower science reasons forward",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.6,
+      "unit": "",
+      "color": 3
+     }
+    ],
+    "outputs": [
+     {
+      "id": "carried",
+      "label": "Support carried along the link",
+      "expr": "higher * borrow",
+      "decimals": 2,
+      "color": 1
+     },
+     {
+      "id": "grounded",
+      "label": "How firmly the starting points stand",
+      "expr": "max(self_light, carried)",
+      "decimals": 2,
+      "color": 4
+     },
+     {
+      "id": "concl",
+      "label": "How firmly the conclusions stand",
+      "expr": "grounded * reasoning",
+      "decimals": 2,
+      "color": 5
+     }
+    ],
+    "visual": {
+     "type": "causal",
+     "nodes": [
+      {
+       "id": "higher_node",
+       "label": "Higher science",
+       "x": 15,
+       "y": 20,
+       "value": "higher"
+      },
+      {
+       "id": "own_node",
+       "label": "Its own direct insight",
+       "x": 15,
+       "y": 80,
+       "value": "self_light"
+      },
+      {
+       "id": "principles",
+       "label": "Starting points",
+       "x": 50,
+       "y": 50,
+       "value": "grounded"
+      },
+      {
+       "id": "conclusions",
+       "label": "Conclusions",
+       "x": 85,
+       "y": 50,
+       "value": "concl"
+      }
+     ],
+     "edges": [
+      {
+       "from": "higher_node",
+       "to": "principles",
+       "strength": "borrow",
+       "label": "taken over"
+      },
+      {
+       "from": "own_node",
+       "to": "principles",
+       "strength": "self_light",
+       "label": "seen directly"
+      },
+      {
+       "from": "principles",
+       "to": "conclusions",
+       "strength": "reasoning",
+       "label": "reasoned from"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This is a chain of knowledge. On the right are a science's conclusions. In the middle are the starting points it reasons from.",
+      "focus": [
+       "principles",
+       "conclusions"
+      ],
+      "ms": 3600
+     },
+     {
+      "say": "Bottom left: can this science see that its starting points are true just by looking? This slider says how clearly.",
+      "focus": "self_light",
+      "ms": 3200
+     },
+     {
+      "say": "Top left sits a higher science. This slider sets how sure that higher science is of what it knows.",
+      "focus": "higher",
+      "ms": 3200
+     },
+     {
+      "say": "This slider is the arrow between them: how fully the lower science takes its starting points from the higher one. Watch the arrow thicken.",
+      "set": {
+       "borrow": 0.5
+      },
+      "focus": "borrow",
+      "ms": 3600
+     },
+     {
+      "say": "The last slider is the arrow to the right: how soundly the science reasons forward. The two numbers on the right show how firm everything stands.",
+      "focus": [
+       "reasoning",
+       "concl"
+      ],
+      "ms": 3800
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play the musician. Your science can't see its own starting points directly. Find out what it takes to make your conclusions solid, and what can bring them down even when you borrow faithfully.",
+    "goals": [
+     {
+      "text": "Like music, give this science no direct insight into its own starting points. Then get its conclusions to stand at least 0.6 firm.",
+      "when": "self_light < 0.05 && concl >= 0.6",
+      "solution": {
+       "borrow": 1,
+       "reasoning": 0.8
+      },
+      "hints": [
+       "With nothing seen directly, where else can the starting points get their support?",
+       "Open the link from the higher science. Then look at the conclusions: is borrowing alone enough?",
+       "Even with full borrowing, the conclusions stall short of the target. The arrow to the right, reasoning forward, has to get stronger too."
+      ]
+     },
+     {
+      "text": "Keep the link to the higher science at full strength and the science's own insight at zero, and leave its reasoning where it started. Now make its conclusions fall below 0.3.",
+      "when": "borrow > 0.95 && self_light < 0.05 && reasoning > 0.55 && reasoning < 0.65 && concl < 0.3",
+      "solution": {
+       "borrow": 1,
+       "higher": 0.4
+      },
+      "hints": [
+       "If the link and the reasoning stay fixed, what else feeds the starting points?",
+       "Borrowed starting points can be no firmer than the science they come from.",
+       "Lower the higher science's sureness until the conclusions dip under the line. You'll need to go below half."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. Not proving your own starting points does not disqualify a science, as long as they are grounded in a higher science that does know them. The engineer, like the musician, takes them on authority and reasons soundly from them. Her conclusions are still only as firm as the physics she relies on.",
+     "incorrect": "You may have assumed every real science must prove its own starting points, or that they must be obvious to everyone. Aquinas allows a second route: starting points carried in from a higher science. The lower science argues from them, not for them, and can never be surer than its source."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with music, as Aquinas pictures it. Its starting points are the rules of number and ratio behind harmony. They are not obvious to the musician by his own lights. With no arrow in, they stand on nothing, and so do the conclusions.",
+       "set": {
+        "self_light": 0,
+        "borrow": 0,
+        "higher": 0.9,
+        "reasoning": 0.6
+       },
+       "focus": [
+        "principles",
+        "conclusions"
+       ],
+       "ms": 4800
+      },
+      {
+       "say": "Now compare arithmetic. Its starting points are known 'by the natural light of intelligence'. They are self-evident: seen to be true directly. Turn that route up and the starting points stand by themselves.",
+       "set": {
+        "self_light": 1
+       },
+       "focus": [
+        "self_light",
+        "grounded"
+       ],
+       "ms": 4600
+      },
+      {
+       "say": "Back to music. Close the self-evident route and open the arrow from arithmetic. The musician takes the rules on authority from the mathematician, who does know their proofs.",
+       "set": {
+        "self_light": 0,
+        "borrow": 1
+       },
+       "focus": [
+        "borrow",
+        "carried"
+       ],
+       "ms": 4800
+      },
+      {
+       "say": "The starting points stand again, at the higher science's level of sureness. Nothing was proved inside music. The support arrived along the arrow. These starting points are the science's first principles.",
+       "focus": "grounded",
+       "ms": 4600
+      },
+      {
+       "say": "A science does not argue for its first principles. It argues from them. Strengthen the reasoning arrow and watch the conclusions climb toward the firmness of their starting points, but never past it.",
+       "set": {
+        "reasoning": 1
+       },
+       "focus": [
+        "reasoning",
+        "concl"
+       ],
+       "ms": 4600
+      },
+      {
+       "say": "Sacred doctrine sits where music sits. Its first principles, the articles of faith, are not self-evident to us. They are taken from a higher knowing, God's own, through revelation. So, Aquinas argues, it is a real science.",
+       "focus": [
+        "higher_node",
+        "principles",
+        "conclusions"
+       ],
+       "ms": 5600
+      }
+     ]
+    },
+    "explanation": "Aquinas faces an objection: every science starts from self-evident principles, but faith's principles are not self-evident, since not everyone accepts them. He answers that there are two kinds of science. Some, like arithmetic and geometry, start from principles the mind sees directly. Others, like music and perspective, start from principles proved in a higher science and simply take them over. A lower science of this kind is still a real science, because it reasons soundly from principles grounded elsewhere. Aquinas places sacred doctrine in this second group, with God's own knowledge as the higher science. This is a philosophical argument, not a finding. It works only if you grant that such a higher knowledge exists and is passed on by revelation, and Aquinas himself admits that not all people accept these principles.",
+    "quote": "So it is that sacred doctrine is a science because it proceeds from principles established by the light of a higher science, namely, the science of God and the blessed. Hence, just as the musician accepts on authority the principles taught him by the mathematician, so sacred science is established on principles revealed by God.",
+    "quote_where": "Article 2, I answer that"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "conclusions",
+      "link": "concl"
+     },
+     {
+      "text": " = "
+     },
+     {
+      "text": "reasoning",
+      "link": "reasoning"
+     },
+     {
+      "text": " × max("
+     },
+     {
+      "text": "own insight",
+      "link": "self_light"
+     },
+     {
+      "text": ", "
+     },
+     {
+      "text": "higher sureness",
+      "link": "higher"
+     },
+     {
+      "text": " × "
+     },
+     {
+      "text": "link",
+      "link": "borrow"
+     },
+     {
+      "text": ")"
+     }
+    ],
+    "caption": "This is the teaching model's rule, not an equation from Aquinas, who argues in words. The max(…) is how firm the starting points are. It takes whichever route is stronger: green for the self-evident route of arithmetic, or blue for the borrowed route of music, which is only as strong as the higher science behind it. The reasoning arrow then carries that firmness to the conclusions."
+   },
+   "recap": "A science need not prove its first principles: like music borrowing from arithmetic, it can take them from a higher science and reason from there. Aquinas argues sacred doctrine does just this.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "one_formal_aspect",
+   "title": "One viewpoint makes one science",
+   "idea": "A body of knowledge counts as one science when it sees every topic under one shared aspect, just as sight takes in man, donkey and stone as coloured, even though the topics are scattered across many other sciences.",
+   "role": "core",
+   "predict": {
+    "question": "A health school studies diet, exercise, sleep and surgery. These topics come from many different fields, but every one is studied only as it bears on the body's health. On Aquinas's test, is this one science?",
+    "options": [
+     "No: its topics belong to many separate fields",
+     "Yes: every topic is studied under one aspect, health",
+     "Only if it proves its own starting points",
+     "It depends on how many topics it covers"
+    ],
+    "answer": 1,
+    "why": [
+     "Tempting, because the topics really are scattered. But that is sorting by the things studied. Aquinas judges unity by the aspect under which they are studied, not by the things themselves.",
+     "Right. Health plays the role that colour plays for sight and that 'as revealed' plays for sacred doctrine. One shared aspect gathers the scattered topics into one science.",
+     "This mixes in the previous concept. There, a science could borrow its starting points and still be genuine. Proving or borrowing principles is a separate question from what makes a science one.",
+     "In the model, the count of sciences under 'as revealed' stayed at 1 whether you added one topic or four. The number of topics does not decide unity; the shared viewpoint does."
+    ]
+   },
+   "terms": [
+    {
+     "term": "formal object",
+     "means": "The one aspect under which a faculty or science takes in everything it studies, as colour is for sight and 'divinely revealed' is for sacred doctrine"
+    },
+    {
+     "term": "material object",
+     "means": "The things themselves that a science happens to deal with, such as God, angels, bodies or morals, apart from the aspect under which they are seen"
+    }
+   ],
+   "model": {
+    "title": "Sorting topics into sciences",
+    "note": "Teaching model: four topics, three philosophical sciences and an on/off switch for viewing everything as revealed by God. A cell shows 1 if that column treats that topic in your current group, and 0 if not. God is always in the group, because the paper says sacred doctrine treats 'of God primarily'. Placing angels with God under the philosophers' theology is this model's simplification, following Aristotle's tradition. The paper itself says only that angels, bodies and human morals 'belong to separate philosophical sciences'. Real sacred doctrine treats creatures only so far as they relate to God and fall within revelation, which the switch does not show. The counts are illustrative, not data from the text.",
+    "controls": [
+     {
+      "id": "angels",
+      "label": "Add angels",
+      "kind": "toggle",
+      "default": 0,
+      "color": 0,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "bodies",
+      "label": "Add bodies",
+      "kind": "toggle",
+      "default": 0,
+      "color": 1,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "morals",
+      "label": "Add human morals",
+      "kind": "toggle",
+      "default": 0,
+      "color": 3,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "lens",
+      "label": "View every topic as revealed by God",
+      "kind": "toggle",
+      "default": 0,
+      "color": 2,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "topics",
+      "label": "Topics in the group",
+      "expr": "1 + angels + bodies + morals",
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "phil_needed",
+      "label": "Sciences needed when sorted by topic",
+      "expr": "1 + bodies + morals",
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "sciences",
+      "label": "Sciences needed now",
+      "expr": "lens == 1 ? 1 : phil_needed",
+      "decimals": 0,
+      "color": 2
+     }
+    ],
+    "visual": {
+     "type": "table",
+     "columns": [
+      "Study of nature",
+      "Study of right action",
+      "Philosophers' theology",
+      "As revealed by God"
+     ],
+     "rows": [
+      {
+       "label": "God",
+       "cells": [
+        "0",
+        "0",
+        "1 - lens",
+        "lens"
+       ]
+      },
+      {
+       "label": "Angels",
+       "cells": [
+        "0",
+        "0",
+        "angels * (1 - lens)",
+        "angels * lens"
+       ]
+      },
+      {
+       "label": "Bodies",
+       "cells": [
+        "bodies * (1 - lens)",
+        "0",
+        "0",
+        "bodies * lens"
+       ]
+      },
+      {
+       "label": "Human morals",
+       "cells": [
+        "0",
+        "morals * (1 - lens)",
+        "0",
+        "morals * lens"
+       ]
+      }
+     ],
+     "decimals": 0,
+     "scale": "sequential",
+     "scale_min": 0,
+     "scale_max": 1
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Each row is a topic: God, angels, bodies, human morals. Each column is a way of studying. A lit cell means that column handles that topic.",
+      "focus": "topics",
+      "ms": 3800
+     },
+     {
+      "say": "These switches add topics to the group. Here come angels.",
+      "set": {
+       "angels": 1
+      },
+      "focus": "angels",
+      "ms": 3000
+     },
+     {
+      "say": "Now bodies and human morals. Watch which columns light up.",
+      "set": {
+       "bodies": 1,
+       "morals": 1
+      },
+      "focus": [
+       "bodies",
+       "morals"
+      ],
+      "ms": 3400
+     },
+     {
+      "say": "This box counts how many separate sciences the group needs.",
+      "focus": "sciences",
+      "ms": 3000
+     },
+     {
+      "say": "And this switch changes how every topic is viewed. Flip it and watch the count.",
+      "set": {
+       "lens": 1
+      },
+      "focus": "lens",
+      "ms": 3600
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with the grouping. Find out when scattered topics need many sciences and when one way of seeing gathers them into one.",
+    "goals": [
+     {
+      "text": "Bring God, bodies and human morals together into a single science.",
+      "when": "lens == 1 && bodies == 1 && morals == 1",
+      "solution": {
+       "lens": 1,
+       "bodies": 1,
+       "morals": 1
+      },
+      "hints": [
+       "Adding the topics is only half of it. What else changes the count of sciences?",
+       "Sorted by topic, these three land in three different columns. Is there one way of seeing that could hold them all?",
+       "After adding the two topics, try the switch that changes how every topic is viewed."
+      ]
+     },
+     {
+      "text": "Sorting the philosophers' way, build a group of three topics that needs only two sciences.",
+      "when": "lens == 0 && topics == 3 && phil_needed == 2",
+      "solution": {
+       "angels": 1,
+       "bodies": 1
+      },
+      "hints": [
+       "Some topics share a column, so adding them costs no new science.",
+       "Watch which column each topic lights. Two of the four rows sit in the same column.",
+       "God is always in the group. Which other topic lights God's column?"
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. The health school's topics are scattered, but it sees them all under one aspect, health. On Aquinas's test, one shared aspect makes one science, just as 'divinely revealed' unifies sacred doctrine.",
+     "incorrect": "You probably counted the topics or the fields they come from. Aquinas says unity is judged 'not indeed, in its material aspect' but by the one aspect under which things are studied. Health is that aspect here, so it is one science."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with God alone, sorted the philosophers' way. One cell lights: philosophers' theology, which Aristotle called the 'divine science'. One science.",
+       "set": {
+        "lens": 0,
+        "angels": 0,
+        "bodies": 0,
+        "morals": 0
+       },
+       "focus": "phil_needed",
+       "ms": 3800
+      },
+      {
+       "say": "Add bodies. They light a different column, the study of nature. Now the group needs two sciences.",
+       "set": {
+        "bodies": 1
+       },
+       "focus": "sciences",
+       "ms": 3400
+      },
+      {
+       "say": "Add human morals: a third column, the study of right action. Three sciences. This is the objection Aquinas answers: these topics 'belong to separate philosophical sciences', so how could one science hold them?",
+       "set": {
+        "morals": 1
+       },
+       "focus": "sciences",
+       "ms": 4800
+      },
+      {
+       "say": "Add angels. In this model they sit with God under first causes, so the count stays at three. Even in philosophy, a science is held together by a shared way of looking, not by a list of things.",
+       "set": {
+        "angels": 1
+       },
+       "focus": "phil_needed",
+       "ms": 4600
+      },
+      {
+       "say": "Aquinas's comparison: a man, a donkey and a stone are very different things. Yet sight takes them all in as one kind of thing: coloured. The things are sight's material object. Colour is its formal object.",
+       "focus": "topics",
+       "ms": 5000
+      },
+      {
+       "say": "Now view every topic as revealed by God. All four rows light up in one column, and the count of sciences drops to 1.",
+       "set": {
+        "lens": 1
+       },
+       "focus": "sciences",
+       "ms": 4200
+      },
+      {
+       "say": "The topics did not change. Only the viewpoint did. 'As revealed' is the formal object of sacred doctrine, and one formal object makes one science. A caveat: creatures enter only so far as they relate to God.",
+       "focus": [
+        "topics",
+        "sciences"
+       ],
+       "ms": 5200
+      }
+     ]
+    },
+    "explanation": "Sorted by subject matter, God, bodies and human morals fall into different philosophical sciences, so it looks as if no single science could hold them all. Aquinas answers that unity is measured by the aspect under which things are studied, not by the things themselves. Sight is one faculty even though men, donkeys and stones differ, because it takes them all in as coloured. In the same way, sacred doctrine takes in everything precisely as divinely revealed, so it is one science however varied its topics are. He adds a limit: it treats God first, and creatures only so far as they relate to God and can be included in revelation. This is an argument by analogy and definition, not an empirical finding.",
+    "quote": "Therefore, because Sacred Scripture considers things precisely under the formality of being divinely revealed, whatever has been divinely revealed possesses the one precise formality of the object of this science; and therefore is included under sacred doctrine as under one science.",
+    "quote_where": "Summa Theologiae I, Question 1, Article 3, 'I answer that'"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "sciences needed",
+      "link": "sciences"
+     },
+     {
+      "text": " = "
+     },
+     {
+      "text": "seen as revealed",
+      "link": "lens"
+     },
+     {
+      "text": " ? 1 : 1 + "
+     },
+     {
+      "text": "bodies",
+      "link": "bodies"
+     },
+     {
+      "text": " + "
+     },
+     {
+      "text": "morals",
+      "link": "morals"
+     }
+    ],
+    "caption": "The text has no equation. This is the model's counting rule. If every topic is seen as revealed (green switch), one science suffices. Otherwise you count columns. The first 1 is the philosophers' theology column, which holds God and, in this model, angels, so angels add nothing. Bodies (study of nature) and human morals (study of right action) each add a column. The aspect, not the list of topics, sets the count."
+   },
+   "recap": "A science is one because it sees everything under one aspect, as sight sees all things as coloured, so sacred doctrine, seeing all as revealed, is one science despite its scattered topics.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "images_reach_the_many",
+   "title": "Teaching through bodily images",
+   "idea": "Because human knowledge starts from the senses, truths taught through pictures of material things reach far more people, including the 'simple', than truths stated only in abstract terms.",
+   "role": "core",
+   "predict": {
+    "question": "Imagine a sacred text written only for trained philosophers, with no 'simple' readers at all. On Aquinas's argument, would teaching through bodily images still be fitting?",
+    "options": [
+     "No: images exist only for people who cannot follow abstract argument",
+     "Yes, at least in part: his first reason, that all human knowledge starts from the senses, applies to philosophers too",
+     "Yes, but only because philosophers enjoy poetry"
+    ],
+    "answer": 1,
+    "why": [
+     "Tempting, because the model's gap is largest when the crowd is mostly simple. But Aquinas gives two reasons, and only the second is about the simple. The first is about every human mind.",
+     "Right. 'All our knowledge originates from sense' holds for scholars as much as for anyone. Even a room of experts reaches intellectual truths by way of things perceived, so imagery still fits them, though it adds less than it does for the simple.",
+     "Aquinas explicitly separates this from poetry, which uses images to please. Sacred doctrine uses them 'as both necessary and useful', because of how human knowing works, not for enjoyment."
+    ]
+   },
+   "terms": [
+    {
+     "term": "the simple",
+     "means": "Aquinas's name for people who cannot grasp intellectual (abstract) truths by themselves"
+    },
+    {
+     "term": "sensible objects",
+     "means": "Things we perceive with the senses: things seen, heard, touched. Every human mind starts from these"
+    },
+    {
+     "term": "metaphor",
+     "means": "Putting forward a truth by likening it to something else, here a spiritual truth likened to a material thing"
+    }
+   ],
+   "model": {
+    "title": "Who grasps the truth: plain statement vs picture",
+    "note": "Teaching model: the crowd is split into two kinds of listener, and each kind has a fixed chance of grasping a plain abstract statement or a picture. The 'familiarity' slider is the model's own addition. It stands for how firmly the picture is rooted in everyday sense experience. Aquinas gives a philosophical argument, not measurements. Numbers are illustrative, not the paper's data.",
+    "controls": [
+     {
+      "id": "s",
+      "label": "Share of the crowd who can't follow abstract argument",
+      "kind": "slider",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "default": 10,
+      "unit": "%",
+      "color": 0
+     },
+     {
+      "id": "c",
+      "label": "How familiar the picture is (everyday things seen and touched)",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.5,
+      "unit": "",
+      "color": 2
+     }
+    ],
+    "outputs": [
+     {
+      "id": "abs_reach",
+      "label": "Crowd grasping the plain statement",
+      "expr": "(1 - s / 100) * 0.85 + (s / 100) * 0.05",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "img_reach",
+      "label": "Crowd grasping the picture",
+      "expr": "(1 - s / 100) * (0.7 + 0.2 * c) + (s / 100) * (0.1 + 0.75 * c)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "gap",
+      "label": "Extra reach from the picture",
+      "expr": "img_reach - abs_reach",
+      "unit": " pts",
+      "scale": 100,
+      "decimals": 0,
+      "color": 4
+     }
+    ],
+    "visual": {
+     "type": "bars",
+     "bars": [
+      {
+       "id": "stmt_bar",
+       "label": "Plain statement",
+       "value": "abs_reach * 100",
+       "color": 1
+      },
+      {
+       "id": "pic_bar",
+       "label": "Picture of material things",
+       "value": "img_reach * 100",
+       "color": 3
+      }
+     ],
+     "min": 0,
+     "max": 100,
+     "unit": "%",
+     "decimals": 0
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "One truth, taught to a crowd in two ways: as a plain abstract statement, and through a picture of everyday things.",
+      "focus": [
+       "stmt_bar",
+       "pic_bar"
+      ],
+      "ms": 3200
+     },
+     {
+      "say": "This bar is the share of the crowd who grasp the plain statement.",
+      "focus": "stmt_bar",
+      "ms": 2800
+     },
+     {
+      "say": "This one is the share who grasp the same truth through the picture.",
+      "focus": "pic_bar",
+      "ms": 2800
+     },
+     {
+      "say": "This slider sets how much of the crowd can't follow abstract argument on their own. Watch both bars move.",
+      "set": {
+       "s": 40
+      },
+      "focus": "s",
+      "ms": 3600
+     },
+     {
+      "say": "This slider sets how familiar the picture is: built from things everyone has seen and touched, or from things nobody knows.",
+      "set": {
+       "c": 0.8
+      },
+      "focus": "c",
+      "ms": 3600
+     },
+     {
+      "say": "The bottom number is how many more people the picture reaches.",
+      "focus": "gap",
+      "ms": 2600
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Shape the crowd and the picture yourself. When does imagery pay off, and when does it add nothing?",
+    "goals": [
+     {
+      "text": "In a crowd where at least half can't follow abstract argument, make the picture reach at least 40 points more of the crowd than the plain statement.",
+      "when": "s >= 50 && gap >= 0.4",
+      "solution": {
+       "s": 70,
+       "c": 0.9
+      },
+      "hints": [
+       "Two things widen the gap: who is in the crowd, and what the picture is made of.",
+       "Fill the room with listeners who can't follow abstract argument, then check how familiar the picture is.",
+       "Once the crowd slider is past halfway, the familiarity slider needs to sit well above its middle."
+      ]
+     },
+     {
+      "text": "With at least half the crowd unable to follow abstract argument, make the picture do no better than the plain statement: the two bars within 3 points of each other.",
+      "when": "s >= 50 && abs(gap) < 0.03",
+      "solution": {
+       "s": 75,
+       "c": 0
+      },
+      "hints": [
+       "A picture only helps if listeners can link it to things they have actually sensed.",
+       "Turn the picture's familiarity all the way down, then move the crowd slider slowly.",
+       "With an unfamiliar picture, the two bars meet somewhere in the upper part of the crowd slider's range."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. Aquinas has two reasons. Imagery suits every human mind, because all knowledge starts from the senses. And it lets a teaching meant for everyone reach the simple too. Remove the simple and the first reason still stands.",
+     "incorrect": "You may have read the argument as being only about the simple. Aquinas's first reason is more basic: 'it is natural to man to attain to intellectual truths through sensible objects'. That holds for scholars as well, so imagery still fits them, just with a smaller gain."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with a room of scholars. Both bars sit near 77%. Trained minds follow the plain statement, and the picture adds almost nothing.",
+       "set": {
+        "s": 10,
+        "c": 0.5
+       },
+       "focus": "gap",
+       "ms": 3600
+      },
+      {
+       "say": "Now let more of the room be people who cannot grasp intellectual truths by themselves. Aquinas calls them 'the simple'. The statement bar drops fast.",
+       "set": {
+        "s": 60
+       },
+       "focus": "stmt_bar",
+       "ms": 3800
+      },
+      {
+       "say": "The picture bar falls far less. The simple can still take hold of a truth through things they have seen and touched.",
+       "focus": "pic_bar",
+       "ms": 3400
+      },
+      {
+       "say": "Aquinas's reason: 'all our knowledge originates from sense.' Sensible objects, things we perceive, are where every mind starts, learned or not.",
+       "focus": [
+        "pic_bar",
+        "c"
+       ],
+       "ms": 4000
+      },
+      {
+       "say": "So the picture has to come from that sensed world. Make it unfamiliar and its bar sinks back to the statement's level. The advantage disappears.",
+       "set": {
+        "c": 0
+       },
+       "focus": "c",
+       "ms": 3800
+      },
+      {
+       "say": "Now take a familiar image and a mostly simple crowd. The statement reaches about 1 in 5. The picture reaches most of the room.",
+       "set": {
+        "s": 80,
+        "c": 1
+       },
+       "focus": [
+        "stmt_bar",
+        "pic_bar"
+       ],
+       "ms": 4000
+      },
+      {
+       "say": "That gap is why a teaching 'proposed to all' speaks in metaphor: a spiritual truth given in the likeness of material things.",
+       "focus": "gap",
+       "ms": 3600
+      }
+     ]
+    },
+    "explanation": "Aquinas asks whether Scripture should teach through metaphors, and he answers yes for two reasons. First, it is natural for humans to reach intellectual truths through sensible objects, because all our knowledge starts from the senses. Second, Scripture is meant for everyone, wise and unwise alike. Truths put in pictures of bodily things can reach even the simple, who cannot grasp abstract ideas on their own. This echoes the earlier point that a teaching meant to save everyone must reach the many, not just a few. Note that this is an argument from how human knowing works, not a survey of audiences: the reach percentages in the model are invented. Aquinas also adds that the truth is not lost inside the images, since what one passage teaches in figures, other passages teach more openly.",
+    "quote": "It is also befitting Holy Writ, which is proposed to all without distinction of persons — \"To the wise and to the unwise I am a debtor\" (Romans 1:14) — that spiritual truths be expounded by means of figures taken from corporeal things, in order that thereby even the simple who are unable by themselves to grasp intellectual things may be able to understand it.",
+    "quote_where": "Article 9, I answer that"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "reach_{picture}",
+      "link": "img_reach"
+     },
+     {
+      "text": " = (1 − "
+     },
+     {
+      "text": "s",
+      "link": "s"
+     },
+     {
+      "text": ")·(0.7 + 0.2"
+     },
+     {
+      "text": "c",
+      "link": "c"
+     },
+     {
+      "text": ") + "
+     },
+     {
+      "text": "s",
+      "link": "s"
+     },
+     {
+      "text": "·(0.1 + 0.75"
+     },
+     {
+      "text": "c",
+      "link": "c"
+     },
+     {
+      "text": ");   "
+     },
+     {
+      "text": "reach_{statement}",
+      "link": "abs_reach"
+     },
+     {
+      "text": " = (1 − "
+     },
+     {
+      "text": "s",
+      "link": "s"
+     },
+     {
+      "text": ")·0.85 + "
+     },
+     {
+      "text": "s",
+      "link": "s"
+     },
+     {
+      "text": "·0.05"
+     }
+    ],
+    "caption": "Aquinas gives no equation. This is the model's own rule. s is the share of the crowd who can't follow abstract argument, written as a fraction of the slider's percent. c is the picture's familiarity. Each reach is a weighted mix of the two kinds of listener. The simple almost never grasp the statement (0.05), but they grasp a familiar picture well (up to 0.85). That difference is what makes the picture bar pull ahead as s grows."
+   },
+   "recap": "Since every human mind starts from the senses, a truth put in pictures of material things reaches the many, the simple included, where a bare abstract statement reaches only the trained few.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "lowly_images_better",
+   "title": "Why a worm can say more than the sun",
+   "idea": "The nobler the image used for God, the more likely people take it literally. A lowly image is plainly not literal, so it guards against error and points beyond itself.",
+   "role": "contribution",
+   "predict": {
+    "question": "Aquinas says noble images are risky 'especially for those who could think of nothing nobler than bodies.' Now picture a teacher speaking to trained philosophers who easily think about things beyond bodies. For this audience, what happens to the lowly image's advantage in guarding against error?",
+    "options": [
+     "It shrinks, because these listeners are unlikely to read even a noble image literally",
+     "It grows, because philosophers are more easily misled by images",
+     "It stays exactly the same for every audience",
+     "It flips, so lowly images now cause more error than noble ones"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. The danger of a noble image comes from listeners who mistake the picture for the thing. Fewer such listeners means less danger to guard against. The lowly image still carries the second benefit: it shows what God is not.",
+     "You might think learning makes people overthink images. Aquinas locates the risk in minds that can think of nothing higher than bodies, and these listeners are the opposite.",
+     "You might think the argument depends only on the image. Aquinas explicitly ties the risk to the listener ('especially for those...'), so the audience matters.",
+     "You might think the trade-off simply reverses. Nothing in the argument makes a worm likely to be read as a literal description of God, for any audience."
+    ]
+   },
+   "terms": [
+    {
+     "term": "similitude",
+     "means": "Aquinas's word for an image or comparison drawn from material things, used to speak about God"
+    },
+    {
+     "term": "via negativa",
+     "means": "The 'negative way': knowing God more truly by what He is not than by what He is"
+    }
+   ],
+   "model": {
+    "title": "Noble or lowly image: how likely is it to be read at face value?",
+    "note": "Teaching model: Aquinas gives an argument, not measurements. The curves are an invented picture of his first two reasons: the risk of a face-value reading rises with the image's nobility, and more steeply for listeners who think only in bodily terms. His third reason, hiding truths from the unworthy, is left out. The worm, stone, lion and sun positions and every number are illustrative, not taken from the text.",
+    "controls": [
+     {
+      "id": "n",
+      "label": "How noble the image is (worm → sun)",
+      "kind": "slider",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "default": 8,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "b",
+      "label": "How much the listener thinks only in bodily terms",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.5,
+      "unit": "",
+      "color": 3
+     }
+    ],
+    "outputs": [
+     {
+      "id": "risk",
+      "label": "Chance it is taken at face value",
+      "expr": "(0.15 + 0.85 * b) * logistic(1.2 * (n - 5))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "beyond",
+      "label": "Chance it clearly points beyond itself",
+      "expr": "1 - risk",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 2
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Nobility of the image (lowly → noble)",
+      "min": 0,
+      "max": 10
+     },
+     "y": {
+      "label": "Strength (0 to 1)",
+      "min": 0,
+      "max": 1
+     },
+     "series": [
+      {
+       "id": "risk_curve",
+       "label": "Taken at face value",
+       "expr": "(0.15 + 0.85 * b) * logistic(1.2 * (x - 5))",
+       "color": 1,
+       "dashed": false
+      },
+      {
+       "id": "beyond_curve",
+       "label": "Clearly points beyond itself",
+       "expr": "1 - (0.15 + 0.85 * b) * logistic(1.2 * (x - 5))",
+       "color": 2,
+       "dashed": false
+      },
+      {
+       "id": "resemblance",
+       "label": "How grand the thing itself is",
+       "expr": "x / 10",
+       "color": 4,
+       "dashed": true
+      }
+     ],
+     "markers": [
+      {
+       "id": "chosen",
+       "x": "n",
+       "label": "Your image",
+       "color": 0
+      },
+      {
+       "id": "worm",
+       "x": 1,
+       "label": "Worm",
+       "color": 5
+      },
+      {
+       "id": "stone",
+       "x": 2,
+       "label": "Stone",
+       "color": 5
+      },
+      {
+       "id": "lion",
+       "x": 6,
+       "label": "Lion",
+       "color": 5
+      },
+      {
+       "id": "sun",
+       "x": 9,
+       "label": "Sun",
+       "color": 5
+      }
+     ],
+     "points": [
+      {
+       "id": "chosen_point",
+       "x": "n",
+       "y": "risk",
+       "label": "Face-value risk",
+       "color": 1
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Along the bottom are images someone might use for God: a lowly worm on the left, the blazing sun on the right.",
+      "focus": [
+       "worm",
+       "sun"
+      ],
+      "ms": 3500
+     },
+     {
+      "say": "The rising curve shows how likely a listener is to take the image at face value, as if God really were that thing.",
+      "focus": "risk_curve",
+      "ms": 3500
+     },
+     {
+      "say": "Its mirror shows how plainly the image points past itself, to something no picture can hold.",
+      "focus": "beyond_curve",
+      "ms": 3200
+     },
+     {
+      "say": "The dashed line is simply how grand the thing in the picture is. A sun is grander than a worm.",
+      "focus": "resemblance",
+      "ms": 3000
+     },
+     {
+      "say": "This slider picks the image. Watch the marker slide toward the lowly end.",
+      "set": {
+       "n": 4
+      },
+      "focus": "n",
+      "ms": 3000
+     },
+     {
+      "say": "This slider sets the listener: how much they can only think in terms of bodies.",
+      "set": {
+       "b": 0.8
+      },
+      "focus": "b",
+      "ms": 3000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "You are choosing a picture of God for a particular listener. Play with both sliders and find where a picture stays safe from being taken at face value.",
+    "goals": [
+     {
+      "text": "For a listener who thinks only in bodily terms, find the noblest image whose chance of being taken at face value stays under 20%.",
+      "when": "b >= 0.95 && risk < 0.2 && n >= 3.5",
+      "solution": {
+       "b": 1,
+       "n": 3.5
+      },
+      "hints": [
+       "Set up the listener first: who is most at risk?",
+       "With that listener, slide the image down from the sun and watch the face-value box.",
+       "The risk falls below 20% somewhere between the lion and the stone. You want the noblest spot that still qualifies."
+      ]
+     },
+     {
+      "text": "Use the sun itself as your image, or something even grander, and still get its chance of being taken at face value under 20%.",
+      "when": "n >= 9 && risk < 0.2",
+      "solution": {
+       "n": 9,
+       "b": 0
+      },
+      "hints": [
+       "Move your image marker onto the sun first. If the image stays there, what else changes the risk?",
+       "Aquinas says noble images mislead 'especially' one kind of listener. Who is the opposite kind?",
+       "Lower the listener slider and watch the risk. It has to reach listeners who readily think beyond bodies."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. The noble image is dangerous because some listeners can't get past bodies and mistake the picture for God. Where listeners readily think beyond bodies, that danger shrinks. The lowly image's guard against error matters less, though it still shows what God is not.",
+     "incorrect": "The risk Aquinas names is not built into the noble image alone. It is 'especially for those who could think of nothing nobler than bodies.' Change the listener and the size of the danger changes too."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with the obvious choice: the sun, for an ordinary listener. More than half the time it is taken at face value.",
+       "set": {
+        "n": 9,
+        "b": 0.5
+       },
+       "focus": "risk",
+       "ms": 3200
+      },
+      {
+       "say": "Why pick the sun? One objection in the paper says higher creatures come nearer to the divine likeness, so they should be the images of God. The dashed line is high here.",
+       "focus": "resemblance",
+       "ms": 3800
+      },
+      {
+       "say": "Each picture drawn from a material thing is what Aquinas calls a similitude. Now turn the listener into someone who can think of nothing nobler than bodies.",
+       "set": {
+        "b": 1
+       },
+       "focus": "b",
+       "ms": 3600
+      },
+      {
+       "say": "Face-value risk is now almost certain. Such a listener may truly believe God is a shining ball of light.",
+       "focus": "chosen_point",
+       "ms": 3200
+      },
+      {
+       "say": "Step down to the lion. It is less grand, but it is still noble enough to be mistaken for a portrait. The risk is still high.",
+       "set": {
+        "n": 6
+       },
+       "focus": "risk",
+       "ms": 3400
+      },
+      {
+       "say": "Now go all the way down to the worm. Nobody thinks God is literally a worm. The face-value risk collapses, and the image plainly points beyond itself.",
+       "set": {
+        "n": 1
+       },
+       "focus": "beyond",
+       "ms": 3800
+      },
+      {
+       "say": "Aquinas adds a second reason: 'what He is not is clearer to us than what He is.' This is the via negativa. An image far from God tells us God is above anything we can say.",
+       "focus": "beyond_curve",
+       "ms": 4200
+      },
+      {
+       "say": "So the dashed line, the grandeur of the image, is lowest at the worm, yet this is where the truth comes through most clearly. The worm teaches more truly than the sun, because it points the mind beyond every picture.",
+       "focus": [
+        "worm",
+        "beyond_curve",
+        "resemblance"
+       ],
+       "ms": 4800
+      }
+     ]
+    },
+    "explanation": "One objection said that if Scripture must picture God, it should use the noblest creatures, since they are most like Him. Aquinas, following Dionysius, answers the opposite way. A noble similitude like the sun or a radiant body can be mistaken for a literal description, especially by people who can think of nothing higher than bodies. A lowly similitude, like a worm or a stone, cannot be mistaken that way, so it protects the mind from error. It also fits how we know God in this life, which is more by what He is not than by what He is. This is a philosophical and theological argument from how human knowing works, not a measured result, and the curves only picture its shape. Aquinas also gives a third reason, hiding truths from the unworthy, which this model leaves out.",
+    "quote": "it is more fitting that divine truths should be expounded under the figure of less noble than of nobler bodies, and this for three reasons. Firstly, because thereby men's minds are the better preserved from error. For then it is clear that these things are not literal descriptions of divine truths, which might have been open to doubt had they been expressed under the figure of nobler bodies, especially for those who could think of nothing nobler than bodies.",
+    "quote_where": "Article 9, Reply to Objection 3"
+   },
+   "check": {
+    "kind": "model",
+    "task": "For a listener who thinks only in bodily terms, choose an image that clearly points beyond itself at least 90% of the time.",
+    "when": "b >= 0.95 && beyond >= 0.9",
+    "solution": {
+     "b": 1,
+     "n": 1
+    },
+    "hint": "Set the listener to the most body-bound end. Then ask which end of the image scale cannot be mistaken for a portrait of God.",
+    "misconception": "That a nobler image is always the safer way to speak of God because it resembles Him more. For a body-bound mind, nobility is exactly what invites a literal reading."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "face-value risk",
+      "link": "risk"
+     },
+     {
+      "text": " = (0.15 + 0.85 × "
+     },
+     {
+      "text": "listener",
+      "link": "b"
+     },
+     {
+      "text": ") × logistic(1.2 × ("
+     },
+     {
+      "text": "nobility",
+      "link": "n"
+     },
+     {
+      "text": " − 5));  "
+     },
+     {
+      "text": "points beyond",
+      "link": "beyond"
+     },
+     {
+      "text": " = 1 − risk"
+     }
+    ],
+    "caption": "Aquinas gives no equation. This is the teaching model's own rule. The image's nobility (the image slider) pushes the face-value risk up along an S-shaped curve. The listener term scales how high that risk can climb, since the danger is 'especially for those who could think of nothing nobler than bodies.' Whatever is not taken at face value points beyond the image."
+   },
+   "recap": "A lowly image can't be mistaken for a portrait of God, so it guards against error and shows what God is not. That is why, for Aquinas, a worm can say more than the sun.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
+  }
+ ],
+ "omitted": [],
+ "generation": {
+  "provider": "claude",
+  "model": "claude-opus-5-5",
+  "pipeline": "lemma.generate.make_outline + build_lesson",
+  "source_chars": 35636,
+  "omitted": 0
+ }
+}

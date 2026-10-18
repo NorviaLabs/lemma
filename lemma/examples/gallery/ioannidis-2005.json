@@ -334,7 +334,43 @@
     ],
     "caption": "These are the paper's definitions. α (the cut-off slider) is the false-alarm rate when nothing is real. 1 − β is the power: the expected share of studies passing when the effect is real. In the model, power grows with the real difference and with the people in each group."
    },
-   "recap": "With no real effect, about 1 in 20 studies still come out 'significant' at 0.05. A real effect gets caught only as often as power allows, so small studies of small effects often miss."
+   "recap": "With no real effect, about 1 in 20 studies still come out 'significant' at 0.05. A real effect gets caught only as often as power allows, so small studies of small effects often miss.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "counting_the_field",
@@ -653,7 +689,43 @@
     ],
     "caption": "These are two cells of the paper's Table 1, for c ideas probed in a field. In the model, c = 1,000 and R = 1/(false ideas for every true one), so R/(R + 1) is the share of ideas that are true. The part (1 − β) is the paper's notation for power, the chance of catching a real effect, and is linked to the power slider. α is the cut-off's false-alarm rate, linked to the α slider. Together the two cells make the significant row."
    },
-   "recap": "A field's significant results are true hits (power × true ideas) plus false alarms (α × false ideas). When true ideas are rare, the false alarms win the count."
+   "recap": "A field's significant results are true hits (power × true ideas) plus false alarms (α × false ideas). When true ideas are rare, the false alarms win the count.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "ppv_and_prior_odds",
@@ -1028,7 +1100,47 @@
     ],
     "caption": "This is the paper's own formula. (1 − β) is the power slider. R is the field's odds of true to false ideas, set as 10 to the power of the odds slider. α is the cut-off slider, and PPV is the 'chance a significant result is true' output. The bottom equals (1 − β)R + α, which is true hits plus false alarms. So PPV passes 50% exactly when (1 − β)R > α."
    },
-   "recap": "A significant result is probably true only if power × R beats α. In long-shot fields or with weak studies, most claimed findings are false alarms."
+   "recap": "A significant result is probably true only if power × R beats α. In long-shot fields or with weak studies, most claimed findings are false alarms.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "bias_u",
@@ -1424,7 +1536,43 @@
     "caption": "This is the paper's formula with bias (Table 2). [1 − β] is power, R is the field's odds (set on the slider as a power of ten), α is the cut-off, and every u is the new bias slider. β = 1 − power is the miss rate, so uβR counts the true ideas the study missed that bias still pushes through, while u − uα counts the false ideas bias turns into claims. Set u = 0 and it collapses back to the last concept's PPV = (1 − β)R/(R − βR + α)."
    },
    "recap": "Bias acts on every false idea but can only rescue the true ideas a study missed, so it mostly adds false claims and drags PPV down, hardest in long-shot fields.",
-   "builds_on": "ppv_and_prior_odds"
+   "builds_on": "ppv_and_prior_odds",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "many_teams",
@@ -1847,7 +1995,47 @@
     "caption": "The paper's formula for n independent studies with no bias (its Table 3). R is the field's odds (the odds slider shows its power of ten). β is the miss rate, 1 − power, so 1 − βⁿ is the 'some team catches a real effect' readout. α is the cut-off, so 1 − (1 − α)ⁿ is the 'some team raises a false alarm' readout. n is the number of teams, and PPV is the chance the 'significant' result is true."
    },
    "recap": "Every extra team chasing the same question adds new chances for a false alarm but can't add much to true hits, so a lone 'significant' result from a hot field is worth less.",
-   "builds_on": "ppv_and_prior_odds"
+   "builds_on": "ppv_and_prior_odds",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   }
  ],
  "omitted": []

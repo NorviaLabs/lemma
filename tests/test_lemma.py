@@ -29,7 +29,7 @@ os.environ["LEMMA_HOME"] = TMP_HOME
 from lemma import auth, categorize, chatgpt, jev, claude, dev, expr, export, generate, ingest, kernels, lesson as L, llm, search, server, store  # noqa: E402
 from lemma.llm import Provider, Reply  # noqa: E402
 
-EXAMPLE = json.loads((ROOT / "lemma/examples/galton-1886.json").read_text())
+EXAMPLE = json.loads((ROOT / "lemma/examples/gallery/galton-1886.json").read_text())
 SOURCE = (ROOT / "lemma/examples/galton-1886.txt").read_text()
 NORM = L.normalize_for_match(SOURCE)
 
@@ -1173,9 +1173,10 @@ class ServerTests(unittest.TestCase):
 
     def test_gallery_lessons_open_read_only(self):
         items = json.loads(self.req("GET", "/api/gallery")[1])
-        self.assertEqual([x["slug"] for x in items], ["attention-2017", "ioannidis-2005", "wuhan-2020", "opinion-dynamics-2002", "gettier-1963", "galton-1886"])
+        self.assertEqual([x["slug"] for x in items], [x["slug"] for x in server.gallery_index()])
+        self.assertEqual(len(items), 12)
         for x in items:
-            self.assertTrue(x["field"] and x["concepts"] and x["cover"]["model"]["visual"], x["slug"])
+            self.assertTrue(x["field"] and x["concepts"] and x["cover"]["idea"], x["slug"])
             s, raw = self.req("GET", f"/api/gallery/{x['slug']}")
             self.assertEqual(s, 200, raw)
             lesson = json.loads(raw)
@@ -1394,7 +1395,7 @@ class ExportTests(unittest.TestCase):
         les = copy.deepcopy(EXAMPLE)
         les["title"] = "</script><script>alert(1)</script>"
         html = export.lesson_html(les)
-        self.assertEqual(html.count("</script>"), 6)  # lesson data + 4 scripts + boot
+        self.assertEqual(html.count("</script>"), len(export.SCRIPTS) + 2)  # lesson data, scripts, boot
         self.assertIn("&lt;/script&gt;", html.split("<title>")[1].split("</title>")[0])
 
 

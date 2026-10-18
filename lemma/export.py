@@ -8,7 +8,7 @@ import json
 import re
 from importlib import resources
 
-SCRIPTS = ("expr.js", "kernels.js", "visuals.js", "player.js")
+SCRIPTS = ("expr.js", "kernels.js", "visuals.js", "activities.js", "player.js")
 
 # connect-src 'none' and form-action 'none': the page cannot send the learner's answers anywhere.
 CSP = "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'"

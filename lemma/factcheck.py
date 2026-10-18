@@ -11,6 +11,7 @@ Only the error kinds the eval showed Jev confirms reliably are asked during a bu
 
 from __future__ import annotations
 
+import json
 import math
 import re
 from collections import Counter
@@ -93,6 +94,16 @@ def concept_text(c: dict, n: int) -> str:
     conn = c.get("connect") or {}
     if conn.get("equation"):
         out.append("EQUATION: " + " ".join(str(p.get("text", "")) for p in conn["equation"]) + (f" ({conn.get('caption', '')})" if conn.get("caption") else ""))
+    for activity in c.get("activities") or []:
+        if activity.get("kind") == "explain" and activity.get("text"):
+            out.append(f"TEACHING: {activity['text']}")
+        elif activity.get("kind") in ("sort", "construction", "inheritance"):
+            out.append("INTERACTIVE TEACHING: " + json.dumps(activity, ensure_ascii=False))
+        elif activity.get("kind") == "choice":
+            out.append(f"ACTIVITY ({activity.get('mode')}): {activity.get('question', '')}")
+            for i, option in enumerate(activity.get("options") or []):
+                marked = " [answer]" if activity.get("mode") == "determinate" and activity.get("answer") == i else ""
+                out.append(f"  {i + 1}. {option.get('text', '')}{marked}: {option.get('feedback', '')}")
     if c.get("recap"):
         out.append(f"RECAP: {c['recap']}")
     return "\n".join(out)

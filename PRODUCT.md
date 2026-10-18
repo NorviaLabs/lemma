@@ -63,7 +63,7 @@ Lemma is independent and not affiliated with Brilliant.org or 3Blue1Brown. Its l
 
 ## Evidence on Hand
 
-- The built-in example lesson, from Galton's 1886 "Regression towards Mediocrity in Hereditary Stature" (public domain), with its source text: `lemma/examples/galton-1886.json` and `galton-1886.txt`.
+- The built-in example lesson, from Galton's 1886 "Regression towards Mediocrity in Hereditary Stature" (public domain), with its source text: `lemma/examples/gallery/galton-1886.json` and `galton-1886.txt`.
 - Real generation runs on that paper through both OpenCode Go and Codex, each passing the quality checks on the first draft.
 - There are no users, testimonials, measured learning outcomes, benchmark results, adoption numbers or press yet. Don't fabricate any; the success measures above are targets, not results.
 

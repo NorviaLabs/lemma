@@ -401,7 +401,43 @@
     ],
     "caption": "The first part is the paper's equation (2.1) written for two people. Person 1 is Ann and person 2 is Ben. a_{12} is how much Ann listens to Ben (the blue slider). Her own share a_{11} is what is left, 1 − a_{12}, because the weights add up to 1. Ben's rule is the same, with a_{21} (the orange slider). Subtracting the two rules gives this model's gap rule: each round the gap is multiplied by 1 − a_{12} − a_{21}, which is the 'share kept each round' box."
    },
-   "recap": "Repeatedly mixing your opinion with someone else's shrinks the gap by the same fraction every round, so as long as someone keeps listening, the two end up agreeing. If no one listens, nothing changes."
+   "recap": "Repeatedly mixing your opinion with someone else's shrinks the gap by the same fraction every round, so as long as someone keeps listening, the two end up agreeing. If no one listens, nothing changes.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "confidence_window",
@@ -799,7 +835,43 @@
     ],
     "caption": "This is the paper's bounded-confidence model (BC) with the set (2.3). Your opinion x_{i} is the You slider. ε is the listening distance. I(i, x) is the set of people inside the band, and |I| is how many there are, you included. Your next opinion x_{i}(t+1) is a plain average over that set."
    },
-   "recap": "Under bounded confidence you average only the opinions within ε of your own, with equal weight. Anyone further away is ignored, so who you listen to shifts as opinions move."
+   "recap": "Under bounded confidence you average only the opinions within ε of your own, with equal weight. Anyone further away is ignored, so who you listen to shifts as opinions move.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "three_phases",
@@ -1069,7 +1141,47 @@
     ],
     "caption": "The paper's bounded-confidence rule (BC). Each person i takes the plain average of everyone whose opinion is within ε of their own, and the model runs exactly this rule. The highlighted ε is the listening range slider. Widening it moves the crowd through the phases that the group count shows."
    },
-   "recap": "Widen how far people listen, and a crowd moves from many surviving opinions, to two camps, to one consensus."
+   "recap": "Widen how far people listen, and a crowd moves from many surviving opinions, to two camps, to one consensus.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "edge_pull",
@@ -1408,7 +1520,43 @@
     ],
     "caption": "This is the paper's bounded-confidence rule (BC). Your next opinion x_{i}(t+1) is the plain average of everyone in I, the set of people whose opinions are within ε of yours. In the model, x_{i} is the slider for your opinion and ε is the listening-range slider. Because the model treats the crowd as a smooth even spread, the average of that set is just the midpoint of your window, cut off at 0 and 1. The curve plots that average minus x_{i}, which is the per-round change the paper calls Δ_{i}."
    },
-   "recap": "Averaging moves you only when the people you hear are lopsided around you, so the first to move are the opinions at the edges, and they are pulled toward the centre."
+   "recap": "Averaging moves you only when the people you hear are lopsided around you, so the first to move are the opinions at the edges, and they are pulled toward the centre.",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "own_side_bias",
@@ -1771,7 +1919,43 @@
     "caption": "This is the paper's rule from Section 4.2.2. β_r(x) is the share of the window pointing upward for someone at opinion x. m is the lean slider. ε_r and ε_l are your upward and downward reach in the model. The paper's ε_total is the full window width, which equals 2 × our ε slider. At m = 0 both sides get half. At m = 1 someone at 0 gets no upward reach at all."
    },
    "recap": "Tilt each listening window toward your own side, and the edges stop hearing the centre: their inward pull fades and, at full lean, the extremes stay where they are.",
-   "builds_on": "edge_pull"
+   "builds_on": "edge_pull",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   },
   {
    "id": "splits_lock_in",
@@ -2054,7 +2238,47 @@
     "caption": "This is the paper's bounded-confidence rule (BC), which the model runs exactly. Each person's next opinion is the plain average of everyone within ε of them. ε is the listening range slider, and t counts the rounds set by the talking-time slider. A split is a gap with |x_{i} − x_{j}| > ε: across it, nobody is in anyone's set I, so the two sides never mix again."
    },
    "recap": "With middling open-mindedness, the edges bunch up and pull the middle apart. Once the gap is wider than the listening range, the two camps can never hear each other again.",
-   "builds_on": "three_phases"
+   "builds_on": "three_phases",
+   "activities": [
+    {
+     "id": "watch",
+     "kind": "watch"
+    },
+    {
+     "id": "walk",
+     "kind": "walk"
+    },
+    {
+     "id": "explain",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_0",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "predict",
+     "kind": "predict"
+    },
+    {
+     "id": "reveal",
+     "kind": "reveal"
+    },
+    {
+     "id": "check",
+     "kind": "check"
+    },
+    {
+     "id": "connect",
+     "kind": "connect"
+    }
+   ]
   }
  ],
  "omitted": []
