@@ -15,7 +15,8 @@ Grammar (lowest to highest precedence)::
     power    := atom ('^' unary)?
     atom     := number | name | name '(' args ')' | '(' ternary ')'
 
-Booleans are numbers: comparisons and logic return 1 or 0.
+Booleans are numbers: comparisons and logic return 1 or 0. Brackets (calls included) nest at most
+``MAX_NESTING`` deep, so a runaway expression fails as a normal error instead of exhausting the stack.
 """
 
 from __future__ import annotations
@@ -23,7 +24,9 @@ from __future__ import annotations
 import math
 import re
 
-__all__ = ["ExprError", "parse", "evaluate", "names", "FUNCTIONS", "CONSTANTS"]
+__all__ = ["ExprError", "parse", "evaluate", "names", "FUNCTIONS", "CONSTANTS", "MAX_NESTING"]
+
+MAX_NESTING = 24  # real lessons nest at most 13 deep; an iteration unrolled by hand goes far deeper
 
 
 class ExprError(ValueError):
@@ -211,6 +214,12 @@ class _Parser:
         self.src = src
         self.toks = [("op", _KEYWORDS[v]) if k == "name" and v in _KEYWORDS else (k, v) for k, v in _tokenize(src)]
         self.i = 0
+        self.depth = 0
+
+    def open(self):
+        self.depth += 1
+        if self.depth > MAX_NESTING:
+            raise ExprError(f"brackets nest more than {MAX_NESTING} deep; write it more simply, as several outputs that build on each other")
 
     def peek(self):
         return self.toks[self.i]
@@ -299,12 +308,14 @@ class _Parser:
             return ("num", float(v))
         if k == "name":
             if self.accept("("):
+                self.open()
                 args = []
                 if not self.accept(")"):
                     args.append(self.ternary())
                     while self.accept(","):
                         args.append(self.ternary())
                     self.expect(")")
+                self.depth -= 1
                 if v not in FUNCTIONS:
                     raise ExprError(f"unknown function {v!r}")
                 _, lo, hi = FUNCTIONS[v]
@@ -315,8 +326,10 @@ class _Parser:
                 return ("num", CONSTANTS[v])
             return ("name", v)
         if k == "op" and v == "(":
+            self.open()
             node = self.ternary()
             self.expect(")")
+            self.depth -= 1
             return node
         raise ExprError(f"unexpected {v or 'end of expression'!r} in {self.src!r}")
 
@@ -329,7 +342,10 @@ def parse(src: str) -> tuple:
         return ("num", float(src))
     node = _cache.get(src)
     if node is None:
-        node = _Parser(src).parse()
+        try:
+            node = _Parser(src).parse()
+        except RecursionError:  # long chains of ternaries or signs can recurse deeply without brackets
+            raise ExprError("expression is too deeply nested") from None
         if len(_cache) < 5000:
             _cache[src] = node
     return node

@@ -3,6 +3,7 @@
   "use strict";
 
   class ExprError extends Error {}
+  const MAX_NESTING = 24; // keep in step with expr.py
 
   const TOKEN = /\s*(?:(\d+\.?\d*(?:[eE][+-]?\d+)?|\.\d+(?:[eE][+-]?\d+)?)|([A-Za-z_][A-Za-z0-9_]*)|(<=|>=|==|!=|&&|\|\||[-+*/%^()<>!?:,]))/y;
   const KEYWORDS = { and: "&&", or: "||", not: "!" };
@@ -89,6 +90,7 @@
     this.src = src;
     this.toks = tokenize(src);
     this.i = 0;
+    this.depth = 0;
   }
   Parser.prototype = {
     peek() { return this.toks[this.i]; },
@@ -99,6 +101,9 @@
       return null;
     },
     expect(op) { if (!this.accept(op)) throw new ExprError(`expected '${op}' in '${this.src}'`); },
+    open() {
+      if (++this.depth > MAX_NESTING) throw new ExprError(`brackets nest more than ${MAX_NESTING} deep; write it more simply, as several outputs that build on each other`);
+    },
     parse() {
       const n = this.ternary();
       if (this.peek()[0] !== "end") throw new ExprError(`unexpected '${this.peek()[1]}' in '${this.src}'`);
@@ -125,12 +130,14 @@
       if (k === "num") return ["num", parseFloat(v)];
       if (k === "name") {
         if (this.accept("(")) {
+          this.open();
           const args = [];
           if (!this.accept(")")) {
             args.push(this.ternary());
             while (this.accept(",")) args.push(this.ternary());
             this.expect(")");
           }
+          this.depth--;
           const f = FUNCTIONS[v];
           if (!f) throw new ExprError(`unknown function '${v}'`);
           if (args.length < f[1] || args.length > f[2]) throw new ExprError(`${v}() takes ${f[1]}–${f[2]} arguments, got ${args.length}`);
@@ -139,7 +146,7 @@
         if (v in CONSTANTS) return ["num", CONSTANTS[v]];
         return ["name", v];
       }
-      if (k === "op" && v === "(") { const n = this.ternary(); this.expect(")"); return n; }
+      if (k === "op" && v === "(") { this.open(); const n = this.ternary(); this.expect(")"); this.depth--; return n; }
       throw new ExprError(`unexpected '${v || "end of expression"}' in '${this.src}'`);
     },
   };
@@ -199,5 +206,5 @@
 
   function evaluate(src, env) { return ev(parse(src), env); }
 
-  root.LemmaExpr = { ExprError, parse, evaluate, names, FUNCTIONS, CONSTANTS, normcdf };
+  root.LemmaExpr = { ExprError, parse, evaluate, names, FUNCTIONS, CONSTANTS, MAX_NESTING, normcdf };
 })(typeof window !== "undefined" ? window : globalThis);

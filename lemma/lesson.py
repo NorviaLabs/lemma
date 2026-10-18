@@ -1223,6 +1223,8 @@ clamp(x, lo, hi) sin cos tan atan atan2 erf normpdf(x, mu, sd) normcdf(x, mu, sd
 logistic sign. Constants pi, e, true, false. Booleans are 1/0. Names are control ids, earlier output ids, and for
 simulation visuals sim_<metric>. Inside a curves series the variable x is the horizontal coordinate.
 == compares with a tiny tolerance; prefer ranges (abs(a - b) < 0.05) or inequalities in goals.
+Brackets nest at most 24 deep. To repeat a step (a loop settling toward a value), give each round its own output
+that reads the one before, instead of nesting copies of the formula inside each other.
 
 OUTPUT display: value × scale (default 1), shown with `decimals` (default 2) and `unit`.
 

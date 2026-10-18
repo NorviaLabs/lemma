@@ -726,6 +726,9 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audie
             obj, problems = None, [str(e)]
         except jev.JevError as e:  # a concept Jev couldn't check is never shown unchecked
             obj, problems, passed_rules[0] = None, [f"Jev couldn't check it for critical errors ({e})"], None
+        except Exception as e:  # a bug met by one concept leaves that concept out, not the whole lesson
+            eid = logs.report(f"concept {c['id']}", e)
+            obj, problems, passed_rules[0] = None, [f"an unexpected error while checking it ({e.__class__.__name__}, error {eid})"], None
         # Jev's flags ask for repairs but never leave a concept out: keep the last draft that passed the rules.
         if problems and passed_rules[0] and all(isinstance(p, factcheck.Flag) for p in passed_rules[0][1]):
             obj, problems = passed_rules[0]

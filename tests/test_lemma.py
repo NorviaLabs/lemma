@@ -54,6 +54,16 @@ class ExprTests(unittest.TestCase):
         with self.assertRaises(expr.ExprError):
             expr.evaluate("missing + 1", {})
 
+    def test_deep_nesting_is_an_error_not_a_crash(self):
+        deep = "sqrt(" * (expr.MAX_NESTING + 1) + "x" + ")" * (expr.MAX_NESTING + 1)
+        within = "(" * expr.MAX_NESTING + "x" + ")" * expr.MAX_NESTING
+        self.assertEqual(expr.evaluate(within, {"x": 4}), 4)
+        for bad in (deep, "(" * 2000 + "1" + ")" * 2000, "x ? 1 : " * 3000 + "0", "-" * 5000 + "1"):
+            with self.assertRaises(expr.ExprError):
+                expr.evaluate(bad, {"x": 1})
+        with self.assertRaises(expr.ExprError):
+            expr.names(deep)
+
     def test_non_finite_does_not_raise(self):
         self.assertEqual(expr.evaluate("1/0", {}), float("inf"))
         self.assertNotEqual(expr.evaluate("sqrt(-1)", {}), expr.evaluate("sqrt(-1)", {}))  # nan
@@ -65,7 +75,8 @@ class BrowserParityTests(unittest.TestCase):
         cases = {
             "kernels": [["schelling", {"tolerance": 0.5}], ["sir", {"vaccinated": 0.3}], ["opinion", {}], ["opinion", {"rule": 1, "confidence": 0.15, "agents": 300, "rounds": 200}], ["network", {"rule": 1}],
                         ["mean", {"n": 5}], ["two_group", {"mu2": 0.4}], ["regression", {"r": 0.6, "seed": 54, "people": 1000}]],
-            "exprs": [["normcdf(x, 1, 2) + norminv(0.3) * binom(7, 3)", {"x": 0.4}], ["round(2.345, 2) - 7 % 3", {}], ["a == 0.3", {"a": 0.1 + 0.2}]],
+            "exprs": [["normcdf(x, 1, 2) + norminv(0.3) * binom(7, 3)", {"x": 0.4}], ["round(2.345, 2) - 7 % 3", {}], ["a == 0.3", {"a": 0.1 + 0.2}],
+                      ["(" * expr.MAX_NESTING + "1" + ")" * expr.MAX_NESTING, {}], ["max(" * (expr.MAX_NESTING + 1) + "1" + ")" * (expr.MAX_NESTING + 1), {}]],
         }
         out = subprocess.run(["node", str(ROOT / "tests/crosscheck.js")], input=json.dumps(cases), capture_output=True, text=True, check=True)
         js = json.loads(out.stdout)
@@ -73,7 +84,10 @@ class BrowserParityTests(unittest.TestCase):
             for key, v in kernels.run(k, p).items():
                 self.assertAlmostEqual(v, jm[key], places=12, msg=f"{k}.{key}")
         for (e, env), jv in zip(cases["exprs"], js["exprs"]):
-            self.assertAlmostEqual(expr.evaluate(e, env), jv, places=12, msg=e)
+            try:
+                self.assertAlmostEqual(expr.evaluate(e, env), jv, places=12, msg=e)
+            except expr.ExprError:
+                self.assertEqual(jv, "ERR", e)  # both engines reject the same expressions
 
 
 class CheckTests(unittest.TestCase):
@@ -433,6 +447,24 @@ class GenerationTests(unittest.TestCase):
             job = wait(generate.start(generate.Job("build"), generate.build_lesson, fp, {"text": SOURCE, "title": "", "url": ""}, outline, ""))
         self.assertNotIn("mid_parent", [c["id"] for c in job.result["concepts"]])
         self.assertIn("Jev couldn't check it", job.result["omitted"][0]["reason"])
+
+    def test_an_unexpected_error_in_one_concept_leaves_only_that_concept_out(self):
+        from lemma import factcheck
+        fp = FakeProvider()
+        outline = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, "")).result
+        real = factcheck.check_concept
+
+        def failing(c, paper, n=1):
+            if c.get("id") == "mid_parent":
+                raise RecursionError("maximum recursion depth exceeded")
+            return real(c, paper, n)
+
+        with patch.object(factcheck, "check_concept", side_effect=failing), patch("sys.stderr"):
+            job = wait(generate.start(generate.Job("build"), generate.build_lesson, fp, {"text": SOURCE, "title": "", "url": ""}, outline, ""))
+        self.assertEqual(job.status, "done", job.error)
+        self.assertNotIn("mid_parent", [c["id"] for c in job.result["concepts"]])
+        self.assertTrue(job.result["concepts"])  # the other concepts are kept
+        self.assertIn("unexpected error while checking it (RecursionError", job.result["omitted"][0]["reason"])
 
     def test_nothing_is_paid_for_without_jev(self):
         fp = FakeProvider()
