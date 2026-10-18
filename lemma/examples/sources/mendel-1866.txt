@@ -10,24 +10,48 @@ not one has been carried out to such an extent and in such a way as to make it p
 
 The First Generation [Bred] from the Hybrids
 
-In this generation there reappear, together with the dominant characters, also the recessive ones with their full peculiarities, and this occurs in the definitely expressed average proportion of three to one, so that among each four plants of this generation three display the dominant character and one the recessive.
+this occurs in the definitely expressed average proportion of three to one, so that among each four plants of this generation three display the dominant character and one the recessive.
 
 The Reproductive Cells of Hybrids
 
-the hybrids produce egg cells and pollen cells which in equal numbers represent all constant forms which result from the combinations of the characters brought together in fertilisation.
+It remains, therefore, purely a matter of chance which of the two sorts of pollen will become united with each separate egg cell.
+
+The Reproductive Cells of Hybrids
+
+Even the validity of the law formulated for Pisum requires still to be confirmed, and a repetition of the more important experiments is consequently much to be desired
 
 The Forms of the Hybrids
 
-It was furthermore shown by the whole of the experiments that it is perfectly immaterial whether the dominant character belong to the seed-bearer or to the pollen parent; the form of the hybrid remains identical in both cases.
+Henceforth in this paper those characters which are transmitted entire, or almost unchanged in the hybridisation, and therefore in themselves constitute the characters of the hybrid, are termed the dominant, and those which become latent in the process recessive.
 
-The Reproductive Cells of Hybrids
+The First Generation [Bred] from the Hybrids
 
-The true ratios of the numbers can only be ascertained by an average deduced from the sum of as many single values as possible; the greater the number the more are merely chance elements eliminated.
+These two experiments are important for the determination of the average ratios, because with a smaller number of experimental plants they show that very considerable fluctuations may occur.
+
+The Second Generation [Bred] from the Hybrids
+
+It is therefore demonstrated that, of those forms which possess the dominant character in the first generation, in two-thirds the hybrid character is embodied, while one-third remains constant with the dominant character.
+
+The Offspring of Hybrids in which Several Differentiating Characters are Associated
+
+the offspring of the hybrids in which several essentially different characters are combined represent the terms of a series of combinations, in which the developmental series for each pair of differentiating characters are associated. It is demonstrated at the same time that the relation of each pair of different characters in hybrid union is independent of the other differences in the two original parental stocks.
 
 The Reproductive Cells of Hybrids
 
 It remains, therefore, purely a matter of chance which of the two sorts of pollen will become united with each separate egg cell. According, however, to the law of probability, it will always happen, on the average of many cases, that each pollen form A and a will unite equally often with each egg cell form A and a
 
-The Second Generation [Bred] from the Hybrids
+Section 'The Reproductive Cells of Hybrids'
 
-The ratio of 3 to 1, in accordance with which the distribution of the dominant and recessive characters results in the first generation, resolves itself therefore in all experiments into the ratio of 2 : 1 : 1 if the dominant character be differentiated according to its significance as a hybrid character or a parental one.
+In all the experiments, therefore, there appeared all the forms which the proposed theory demands, and also in nearly equal numbers.
+
+
+
+The law of combination of different characters which governs the development of the hybrids finds therefore its foundation and explanation in the principle enunciated, that the hybrids produce egg cells and pollen cells which in equal numbers represent all constant forms which result from the combinations of the characters brought together in fertilisation.
+
+
+
+Those forms which in the first generation maintain the recessive character do not further vary in the second generation as regards this character; they remain constant in their offspring.
+
+
+
+It was furthermore shown by the whole of the experiments that it is perfectly immaterial whether the dominant character belong to the seed-bearer or to the pollen parent; the form of the hybrid remains identical in both cases.

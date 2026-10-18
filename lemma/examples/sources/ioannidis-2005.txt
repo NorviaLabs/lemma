@@ -4,34 +4,34 @@ Why Most Published Research Findings Are False
 
 https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1182327/fullTextXML
 
-Introduction
+Abstract
 
-It can be proven that most claimed research findings are false.
+There is increasing concern that most current published research findings are false.
 
 Abstract
 
 Simulations show that for most study designs and settings, it is more likely for a research claim to be false than true.
 
-Most Research Findings Are False for Most Research Designs and for Most Fields
-
-A finding from a well-conducted, adequately powered randomized controlled trial starting with a 50% pre-study chance that the intervention is effective is eventually true about 85% of the time.
-
 Modeling the Framework for False Positive Findings
 
+Research is not most appropriately represented and summarized by p-values, but, unfortunately, there is a widespread notion that medical research articles should be interpreted based only on p-values.
+
+Section 'It can be proven that most claimed research findings are false'
+
 The probability of a study finding a true relationship reflects the power 1 - β (one minus the Type II error rate). The probability of claiming a relationship when none truly exists reflects the Type I error rate, α.
-
-Section: Modeling the Framework for False Positive Findings
-
-Let R be the ratio of the number of “true relationships” to “no relationships” among those tested in the field. R is characteristic of the field and can vary a lot depending on whether the field targets highly likely relationships or searches for only one or a few true relationships among thousands and millions of hypotheses that may be postulated.
 
 Modeling the Framework for False Positive Findings
 
 According to the 2 × 2 table, one gets PPV = (1 - β)R/(R - βR + α). A research finding is thus more likely true than false if (1 - β)R > α.
 
-Modeling the Framework for False Positive Findings: Bias
+Corollaries, Corollary 1
 
-Let u be the proportion of probed analyses that would not have been “research findings,” but nevertheless end up presented and reported as such, because of bias. Bias should not be confused with chance variability that causes some findings to be false by chance even though the study design, data, analysis, and presentation are perfect.
+The smaller the studies conducted in a scientific field, the less likely the research findings are to be true. Small sample size means smaller power and, for all functions above, the PPV for a true research finding decreases as power decreases towards 1 − β = 0.05.
 
-Box 1
+Bias section
 
-Furthermore, even in the absence of any bias, when ten independent research teams perform similar experiments around the world, if one of them finds a formally statistically significant association, the probability that the research finding is true is only 1.5 × 10−4, hardly any higher than the probability we had before any of this extensive research was undertaken!
+Thus, with increasing bias, the chances that a research finding is true diminish considerably.
+
+Corollaries (Corollary 6)
+
+Corollary 6: The hotter a scientific field (with more scientific teams involved), the less likely the research findings are to be true. This seemingly paradoxical corollary follows because, as stated above, the PPV of isolated findings decreases when many teams of investigators are involved in the same field.

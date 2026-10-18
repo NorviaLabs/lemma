@@ -1,8 +1,9 @@
 {
  "version": 1,
  "id": "gallery-wuhan-2020",
- "title": "From Doubling Time to R0: How Wuhan's First 425 Cases Revealed How Contagious a New Virus Was",
+ "title": "From Doubling Time to R0: Reading the First Weeks of COVID-19 in Wuhan",
  "audience": "A curious adult with no background in this field",
+ "created": "2026-10-19T02:29:22",
  "source": {
   "title": "Early Transmission Dynamics in Wuhan, China, of Novel Coronavirus–Infected Pneumonia",
   "authors": "Qun Li, Xuhua Guan, Peng Wu, et al.",
@@ -11,131 +12,333 @@
   "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7121484/fullTextXML"
  },
  "intro": {
-  "summary": "In January 2020 a new coronavirus was spreading in Wuhan, and nobody yet knew how fast it moved from person to person. The authors gathered detailed records on the first 425 laboratory-confirmed cases. They estimated how long infection takes to cause symptoms, how long passes between one person falling ill and the person they infect falling ill, and how quickly case numbers grew. From these timings they estimated that cases doubled about every 7.4 days and that each case infected about 2.2 others on average. The main limitation is the small amount of early data: the incubation estimate rests on 10 cases and the serial interval on 6 pairs, so the uncertainty is wide (R0 between 1.4 and 3.9).",
+  "summary": "In January 2020 a new coronavirus pneumonia was spreading in Wuhan, and nobody yet knew how easily it passed between people. The authors gathered detailed records on the first 425 laboratory-confirmed cases: who they were, what they were exposed to, and when they fell ill. From these records they estimated how long infection takes to cause symptoms, how far apart linked cases fall ill, how fast the epidemic was doubling, and how many people each case infects on average. They found that the epidemic doubled about every 7.4 days and that each case infected about 2.2 others, which is clear evidence of human-to-human spread from mid-December. Several key numbers rest on very few cases (10 for the incubation period, 6 pairs for the serial interval), so the uncertainty ranges are wide, and mild or unusual infections were probably missed.",
   "background": [
-   "An epidemic grows exponentially when each infected person passes the infection on to more than one other person.",
-   "Cases are usually counted by the day symptoms started, but a case only enters the records after the person sees a doctor and is tested.",
-   "R0 (the basic reproductive number) is the average number of people one case infects in a population where nobody is immune yet.",
-   "Early outbreak numbers rest on a few hundred patients, so each estimate comes with a range of plausible values (a confidence interval)."
+   "An epidemic grows exponentially when every case passes the infection on to more than one new person, so the count keeps multiplying.",
+   "Epidemiologists describe that growth with the doubling time, which is how many days it takes for the number of new cases to double.",
+   "The basic reproductive number, R0, is the average number of people one case infects in a population where nobody is yet immune.",
+   "Case counts always lag behind real infections, because people need time to fall ill, see a doctor, get tested and be reported."
   ],
   "known": [],
-  "aha": "Without watching anyone infect anyone else, you can work out how many people each case infects (about 2.2) from just two timings: how fast case counts double (7.4 days) and how long it takes to go from one sick person to the next (7.5 days)."
+  "aha": "Just by timing how fast cases doubled and how many days apart linked patients fell ill, you can work out that each case was infecting about two other people, without ever watching a single infection happen."
  },
  "primer": [
   {
    "heading": "The question",
-   "body": "In December 2019, doctors in Wuhan began seeing pneumonia caused by a new coronavirus. Many early patients had visited one seafood market, so it was not yet clear whether people were catching it from each other. Public health teams urgently needed to know how fast it spread and how long it hid before symptoms appeared.",
-   "quote": "Here, we provide an analysis of data on the first 425 laboratory-confirmed cases in Wuhan to describe the epidemiologic characteristics and transmission dynamics of NCIP.",
-   "quote_where": "Introduction"
+   "body": "In late December 2019, hospitals in Wuhan, a city of 11 million, reported pneumonia cases with no known cause. Most were linked to one seafood market. Health officials urgently needed to know two things. Was the virus only jumping from animals at the market, or was it also passing from person to person? And how fast was it spreading?",
+   "quote": "We analyzed data on the first 425 confirmed cases in Wuhan to determine the epidemiologic characteristics of NCIP.",
+   "quote_where": "Abstract"
   },
   {
    "heading": "What they did",
-   "body": "Field teams interviewed patients, relatives and contacts to record when each person was exposed, fell ill, saw a doctor and was admitted to hospital. From these dates the authors estimated three delays: the incubation period (infection to symptoms), the serial interval (one case's symptoms to the next case's symptoms) and the delays to medical care. They then fitted a transmission model to cases that began between December 10 and January 4. That gave a growth rate, and from the growth rate they derived R0."
+   "body": "Field teams interviewed patients, relatives and health care workers. They recorded when each person fell ill, when they saw a doctor, and what they had been exposed to in the two weeks before. From a few well-documented cases and clusters they estimated two time gaps: the incubation period (infection to symptoms) and the serial interval (one case's symptoms to the next linked case's symptoms). They then fitted a transmission model to the early rise in cases that were not linked to the market. From this they worked out the growth rate, the doubling time and R0."
   },
   {
    "heading": "What they found",
-   "body": "The median patient age was 59, and there were no cases in children under 15. More than half of the earliest cases were linked to the market, but cases with no market link soon grew exponentially, which is a sign of person-to-person spread. The mean incubation period was 5.2 days, with 95% of people showing symptoms by 12.5 days.",
+   "body": "More than half of the earliest cases were linked to the market. After the market closed, fewer than one in ten were. Symptoms began on average about 5 days after infection, and linked cases fell ill about 7.5 days apart. The epidemic doubled roughly every week. Combining that growth speed with the 7.5-day gap gives an R0 of about 2.2: each case was infecting about two others.",
    "quote": "In its early stages, the epidemic doubled in size every 7.4 days. With a mean serial interval of 7.5 days (95% CI, 5.3 to 19), the basic reproductive number was estimated to be 2.2 (95% CI, 1.4 to 3.9).",
    "quote_where": "Abstract"
   },
   {
-   "heading": "Why it matters",
-   "body": "An R0 above 1 means an outbreak keeps growing unless something changes. To stop it, control measures must push the number of people each case infects below 1. The incubation estimate supported a 14-day quarantine for exposed people. These numbers became starting points for many later forecasts."
-  },
-  {
-   "heading": "Limits to keep in mind",
-   "body": "Early data were thin. Mild or unusual cases were probably missed, and testing kits only reached Wuhan on January 11. The fall in cases at the end of the epidemic curve is most likely a reporting delay, not a real decline. For that reason the authors used only the data up to January 4 to estimate growth.",
+   "heading": "Why it matters, and its limits",
+   "body": "An R0 above 1 means the outbreak keeps growing unless transmission is cut by more than half. The incubation estimate supported a 14-day quarantine for exposed people. The estimates are early and rough, though. Testing was scarce at first, mild cases were probably missed, and some numbers rest on a handful of patients. That is why the ranges are wide, for example 1.4 to 3.9 for R0.",
    "quote": "Our estimate was based on information from 10 cases and is somewhat imprecise; it would be important for further studies to provide more information on this distribution.",
    "quote_where": "Discussion"
   }
  ],
+ "provider": {
+  "name": "Claude",
+  "model": "claude-opus-5-5"
+ },
  "concepts": [
   {
+   "id": "market_to_people",
+   "title": "Clues that the virus was spreading person to person",
+   "idea": "When the share of cases linked to the original source falls sharply while total cases keep rising, and cases cluster among close contacts, the infection must be passing between people.",
+   "role": "prerequisite",
+   "terms": [
+    {
+     "term": "market-linked case",
+     "means": "A patient who reported exposure to the Huanan Seafood Wholesale Market, the suspected original source"
+    },
+    {
+     "term": "zoonotic infection",
+     "means": "An infection caught directly from animals or their surroundings rather than from another person"
+    },
+    {
+     "term": "cluster",
+     "means": "A small group of linked cases among people in close contact, where one person's illness follows another's"
+    },
+    {
+     "term": "human-to-human transmission",
+     "means": "The virus passing from one infected person to another"
+    }
+   ],
+   "recap": "Once the market link fades while cases keep climbing, and illness runs through close contacts and health care workers, the best explanation is that people are infecting people.",
+   "understand": {
+    "explanation": "At first, most patients had visited one seafood market, so each early market-linked case could have been a zoonotic infection, caught from animals or the market itself. Then the picture changed: 55% of patients who fell ill before January 1 had a market link, but only 8.6% of later patients did, and cases with no market link kept rising fast even after the market closed. The team also found more than one cluster of illness among close contacts, where one person fell ill and then another, and a growing share of cases among health care workers, who meet the virus through patients. No single clue settles it, and changes in case definitions and testing affect the numbers. Together, though, the clues point to human-to-human transmission among close contacts since mid-December 2019.",
+    "quote": "Although the majority of the earliest cases were linked to the Huanan Seafood Wholesale Market and the patients could have been infected through zoonotic or environmental exposures, it is now clear that human-to-human transmission has been occurring and that the epidemic has been gradually growing in recent weeks.",
+    "quote_where": "Discussion"
+   },
+   "activities": [
+    {
+     "id": "first_guess",
+     "kind": "choice",
+     "mode": "opening",
+     "question": "A new illness appears in a city. Most of the first patients had visited one food market. A few weeks later, most new patients have never been near that market, and the number of patients keeps climbing even after the market is shut. What is your first guess about what is going on?",
+     "options": [
+      {
+       "text": "The virus is now spreading from person to person.",
+       "feedback": "A strong first instinct. Keep it in mind: the evidence ahead tests whether the clues really support it, and which clues matter most."
+      },
+      {
+       "text": "The market is still the main source; the newer patients just forgot they went there.",
+       "feedback": "Faulty memory is a fair worry, since exposure histories come from interviews. But could forgetting explain cases still rising after the market closed? Watch for that in the evidence."
+      },
+      {
+       "text": "Another animal source somewhere else in the city is infecting people.",
+       "feedback": "That is possible in principle, and it is why a falling market share alone is not proof. Look out for clues that point specifically to people, not animals."
+      },
+      {
+       "text": "There is no way to tell yet.",
+       "feedback": "Caution is healthy with early data. The stages ahead show how several separate clues can add up to a confident conclusion, even when each is imperfect."
+      }
+     ]
+    },
+    {
+     "id": "evidence",
+     "kind": "stages",
+     "prompt": "Reveal the evidence from the first 425 confirmed cases in Wuhan, one clue at a time. Ask yourself after each: does this point to animals, or to people?",
+     "stages": [
+      {
+       "label": "1. The starting point",
+       "text": "On December 29, 2019, hospitals reported the first 4 cases of a pneumonia with no known cause. All 4 were linked to the Huanan Seafood Wholesale Market. A patient who reported exposure to this market is called a market-linked case. At this stage the patients could have caught it directly from animals or the market environment. That is a zoonotic infection: one caught from animals, not from another person."
+      },
+      {
+       "label": "2. The market share collapses",
+       "text": "The team split patients by when they fell ill. Among those with onset before January 1, 2020 (the day the market was closed), 55% were market-linked. Among later patients, only 8.6% were. The original source now explains only a small slice of new illness."
+      },
+      {
+       "label": "3. Yet cases keep rising",
+       "text": "If only the market were infecting people, closing it should make new cases dry up. Instead, the paper reports an exponential increase in cases with no market link, beginning in late December. Something other than the market was producing new patients."
+      },
+      {
+       "label": "4. Illness runs through close contacts",
+       "text": "The team investigated 5 clusters of cases. A cluster is a small group of linked patients in close contact, where one falls ill and then another does some days later. That pattern is what you expect when one person infects the next, which is called human-to-human transmission."
+      },
+      {
+       "label": "5. Health care workers fall ill",
+       "text": "The share of cases among health care workers gradually rose across three time periods. Their main exposure is the patients they treat, not a seafood market. The paper notes the share was still lower than in the earlier SARS and MERS outbreaks."
+      },
+      {
+       "label": "6. Reasons for care",
+       "text": "The numbers are not perfect measurements. Early on, the definition of a suspected case could rely on a market link, which may have drawn attention to market visitors. On January 18 the definition changed to travel to Wuhan or contact with patients from Wuhan. Testing kits reached Wuhan on January 11, and exposure histories came from interviews. Each of these can shift the shares, which is why no single clue is decisive on its own."
+      }
+     ],
+     "takeaway": "No single clue proves person-to-person spread. A shrinking market share, cases rising after the market closed, clusters among close contacts and infected health care workers all point the same way, and together they make the case."
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "sort_clues",
+     "kind": "sort",
+     "title": "What does each clue point to?",
+     "prompt": "Sort each piece of information from the paper by what it mainly tells us.",
+     "groups": [
+      {
+       "id": "people",
+       "label": "Points to spread between people"
+      },
+      {
+       "id": "source",
+       "label": "Points to the market or animal source"
+      },
+      {
+       "id": "caveat",
+       "label": "A reason for caution about the numbers"
+      }
+     ],
+     "cards": [
+      {
+       "id": "c1",
+       "text": "55% of patients who fell ill before January 1 were market-linked",
+       "group": "source",
+       "feedback": "This fits an early outbreak driven largely by the market. On its own it says the source mattered early on, not that people were passing it on."
+      },
+      {
+       "id": "c2",
+       "text": "Only 8.6% of patients who fell ill on or after January 1 were market-linked",
+       "group": "people",
+       "feedback": "Most later patients had no market link, so something else was infecting them. Combined with the other clues, people are the likeliest source."
+      },
+      {
+       "id": "c3",
+       "text": "Cases with no market link rose exponentially from late December",
+       "group": "people",
+       "feedback": "Fast growth among patients who never visited the market is hard to explain by the market. It is what an infection passed from person to person would produce."
+      },
+      {
+       "id": "c4",
+       "text": "The first 4 reported cases were all linked to the market",
+       "group": "source",
+       "feedback": "This is why the market was the first suspect. It is about the start of the outbreak, not about how it spread later."
+      },
+      {
+       "id": "c5",
+       "text": "The team investigated 5 clusters of cases among close contacts",
+       "group": "people",
+       "feedback": "Linked illnesses among close contacts, falling ill one after another, are the most direct sign of one person infecting the next."
+      },
+      {
+       "id": "c6",
+       "text": "The share of cases among health care workers rose over time",
+       "group": "people",
+       "feedback": "Health care workers meet the virus through patients, so their infections point to spread from person to person."
+      },
+      {
+       "id": "c7",
+       "text": "The early suspected-case definition could rely on a link to the market",
+       "group": "caveat",
+       "feedback": "If doctors were looking for market visitors, early market-linked shares may be inflated. This affects how far we can trust the 55% versus 8.6% contrast on its own."
+      },
+      {
+       "id": "c8",
+       "text": "Testing kits only reached Wuhan on January 11",
+       "group": "caveat",
+       "feedback": "More testing finds more cases, so some of the rise in January reflects better detection, not only more infections. It is a limit on the numbers, not a clue about the source."
+      }
+     ],
+     "takeaway": "Several separate clues point to people, a couple describe the market's early role, and the caveats explain why the conclusion rests on all the clues together rather than any one figure."
+    },
+    {
+     "id": "revisit_guess",
+     "kind": "choice",
+     "mode": "determinate",
+     "revisits": "first_guess",
+     "question": "Look back at your first guess. Which set of evidence makes the strongest case that the virus was passing between people in Wuhan?",
+     "options": [
+      {
+       "text": "The fall in market-linked cases from 55% to 8.6%, on its own",
+       "feedback": "This is an important clue, but on its own it could also reflect another animal source or a change in how cases were defined and found. It needs support from other clues."
+      },
+      {
+       "text": "The rise in the total number of cases, on its own",
+       "feedback": "Total cases could rise if many people were still catching it from animals, or simply because testing improved. Rising totals alone do not say where infections came from."
+      },
+      {
+       "text": "A falling market share, non-linked cases rising after the market closed, clusters among close contacts and infected health care workers, taken together",
+       "feedback": "Correct. Each clue has weaknesses, but they all point the same way. That agreement is why the paper concludes that human-to-human transmission had occurred among close contacts since mid-December 2019."
+      },
+      {
+       "text": "The fact that the first cases were linked to the market",
+       "feedback": "This points the other way: it suggests the outbreak began with an animal or environmental source. It tells us where the outbreak started, not how it spread later."
+      }
+     ],
+     "answer": 2,
+     "hints": [
+      "Which option combines more than one kind of evidence?",
+      "Think about which clues would be hard to explain if only the market were infecting people."
+     ]
+    }
+   ]
+  },
+  {
    "id": "doubling_time",
-   "title": "Cases that double every week",
-   "idea": "When cases grow by a fixed percentage each day, they double over a fixed time, and a faster daily growth rate means a shorter doubling time.",
+   "title": "Growth rate and doubling time",
+   "idea": "A steady daily growth rate r makes cases double every ln(2)/r days, so a rate of 0.10 per day means doubling about every week.",
    "role": "prerequisite",
    "predict": {
-    "question": "Town A's cases rise 6% a day and double about every 12 days. Town B's cases rise only 3% a day. About how long does Town B take to double?",
+    "question": "Imagine control measures had cut Wuhan's early growth rate from 0.10 to 0.07 per day (a made-up scenario). Roughly how often would cases double then?",
     "options": [
-     "About 6 days",
-     "About 12 days",
-     "About 24 days",
-     "About 48 days"
+     "About every 5 days",
+     "About every 10 days",
+     "Still about every 7 days",
+     "About every 3 weeks"
     ],
-    "answer": 2,
+    "answer": 1,
     "why": [
-     "This mixes up the direction. Slower daily growth stretches the time to double. It does not shrink it.",
-     "This would hold only if the time to double did not depend on the daily growth. Halving the daily growth roughly doubles the time instead.",
-     "Right. For small daily percentages, the days to double are roughly inversely proportional to the daily growth. Half the growth means about twice the time: 23 to 24 days.",
-     "This overshoots. It treats halving the growth as quadrupling the time, but the relationship is roughly one-for-one: half the speed, about twice the time."
+     "This gets the direction backwards. A lower rate means slower growth, so the doubling time gets longer, not shorter.",
+     "Right: 0.69 ÷ 0.07 ≈ 9.9, so about 10 days. Cutting the rate by 30% stretches the doubling time by about 40%, because the two are inversely related.",
+     "It is tempting to think a small change in rate barely matters. But the doubling time is ln 2 divided by the rate, so any change in r changes it.",
+     "Three weeks would need a rate near 0.03. Cutting the rate by under a third does not triple the doubling time. It stretches it by the inverse of the cut: 0.10 ÷ 0.07 ≈ 1.4 times."
     ]
    },
    "terms": [
     {
      "term": "growth rate",
-     "means": "How much the case count rises each day, as a share of the day before (for example 10% a day)"
-    },
-    {
-     "term": "doubling time",
-     "means": "How many days it takes for the number of cases to double"
+     "means": "The fraction by which cases increase each day, written r. A rate of 0.10 per day is roughly 10% more cases each day."
     },
     {
      "term": "exponential growth",
-     "means": "Growth by the same percentage each day, so the daily rise keeps getting bigger and the count doubles at regular intervals"
+     "means": "Growth where cases rise by the same fraction every day, so they double over equal stretches of time."
+    },
+    {
+     "term": "doubling time",
+     "means": "The number of days it takes for case numbers to double."
     }
    ],
    "model": {
-    "title": "Cases over the first two months of a teaching outbreak",
-    "note": "Teaching model: cases rise by exactly the same percentage every day, with no randomness, no reporting delays and no control measures. Numbers are illustrative, not the paper's data, except where the text quotes the paper's estimates.",
+    "title": "Cases climbing day by day",
+    "note": "Teaching model: cases rise smoothly at one fixed daily rate from a chosen starting count. It has no randomness, no reporting delays and no slowdown. Numbers are illustrative. The only figures from the paper are the ones cited in the text (0.10 per day, doubling in 7.4 days).",
     "controls": [
      {
-      "id": "g",
-      "label": "Daily rise in cases",
+      "id": "r",
+      "label": "Daily rate r (per day)",
       "kind": "slider",
-      "min": 5,
-      "max": 30,
-      "step": 1,
-      "default": 5,
-      "unit": "% per day",
+      "min": 0.02,
+      "max": 0.3,
+      "step": 0.01,
+      "default": 0.05,
+      "unit": "",
       "color": 0
      },
      {
       "id": "n0",
-      "label": "Cases on day 0",
+      "label": "Starting cases",
       "kind": "slider",
-      "min": 1,
-      "max": 12,
-      "step": 1,
+      "min": 5,
+      "max": 25,
+      "step": 5,
       "default": 10,
-      "unit": "cases",
-      "color": 1
+      "unit": "",
+      "color": 2
      }
     ],
     "outputs": [
      {
-      "id": "td",
+      "id": "dt",
       "label": "Days to double",
-      "expr": "ln(2) / ln(1 + g / 100)",
-      "unit": " days",
+      "expr": "ln(2) / r",
+      "unit": "days",
       "decimals": 1,
-      "color": 3
+      "color": 1
      },
      {
-      "id": "c28",
-      "label": "Cases after 4 weeks",
-      "expr": "n0 * pow(1 + g / 100, 28)",
+      "id": "daily_pct",
+      "label": "Daily rise in cases",
+      "expr": "exp(r) - 1",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 1,
+      "color": 0
+     },
+     {
+      "id": "cases28",
+      "label": "Cases on day 28",
+      "expr": "n0 * exp(r * 28)",
       "unit": "",
       "decimals": 0,
-      "color": 1
+      "color": 3
      }
     ],
     "visual": {
      "type": "curves",
      "x": {
-      "label": "Day",
+      "label": "Days since start",
       "min": 0,
-      "max": 60
+      "max": 42
      },
      "y": {
       "label": "Cases",
@@ -146,7 +349,7 @@
       {
        "id": "cases",
        "label": "Cases",
-       "expr": "n0 * pow(1 + g / 100, x)",
+       "expr": "n0 * exp(r * x)",
        "color": 0,
        "dashed": false
       }
@@ -154,43 +357,38 @@
      "markers": [
       {
        "id": "d1",
-       "x": "ln(2) / ln(1 + g / 100)",
+       "x": "dt",
        "label": "×2",
-       "color": 3
+       "color": 1
       },
       {
        "id": "d2",
-       "x": "2 * ln(2) / ln(1 + g / 100)",
+       "x": "2 * dt",
        "label": "×4",
-       "color": 3
+       "color": 1
       },
       {
        "id": "d3",
-       "x": "3 * ln(2) / ln(1 + g / 100)",
+       "x": "3 * dt",
        "label": "×8",
-       "color": 3
-      },
-      {
-       "id": "d4",
-       "x": "4 * ln(2) / ln(1 + g / 100)",
-       "label": "×16",
-       "color": 3
+       "color": 1
       }
      ],
-     "points": [
+     "hlines": [
       {
-       "id": "p0",
-       "x": 0,
-       "y": "n0",
-       "label": "start",
-       "color": 1
+       "id": "h1",
+       "y": "2 * n0",
+       "label": "2× start"
       },
       {
-       "id": "p4",
-       "x": "4 * ln(2) / ln(1 + g / 100)",
-       "y": "16 * n0",
-       "label": "16 × start",
-       "color": 1
+       "id": "h2",
+       "y": "4 * n0",
+       "label": "4× start"
+      },
+      {
+       "id": "h3",
+       "y": "8 * n0",
+       "label": "8× start"
       }
      ]
     }
@@ -198,365 +396,391 @@
    "animation": {
     "steps": [
      {
-      "say": "This curve counts the cases in a made-up outbreak, day by day.",
+      "say": "This rising line counts cases, day by day, over six weeks.",
       "focus": "cases",
       "ms": 3000
      },
      {
-      "say": "This slider sets how much the count rises each day, as a percentage of the day before. Watch the curve steepen.",
+      "say": "This slider sets how fast cases grow each day. Watch the line steepen.",
       "set": {
-       "g": 10
+       "r": 0.15
       },
-      "focus": "g",
-      "ms": 3800
+      "focus": "r",
+      "ms": 3500
      },
      {
-      "say": "Each vertical line marks the day the count has doubled again: 2, 4, 8 and then 16 times the start.",
+      "say": "These lines mark when cases reach 2, 4 and 8 times where they started.",
       "focus": [
        "d1",
        "d2",
        "d3",
-       "d4"
+       "h1"
       ],
-      "ms": 4200
+      "ms": 3500
      },
      {
-      "say": "This box shows how many days each doubling takes.",
-      "focus": "td",
+      "say": "This slider sets how many cases you start with.",
+      "set": {
+       "n0": 20
+      },
+      "focus": "n0",
       "ms": 3000
      },
      {
-      "say": "And this slider sets how many cases there are on day 0.",
+      "say": "These boxes show the days to double, the daily rise and the cases on day 28.",
       "set": {
-       "n0": 6
+       "r": 0.05,
+       "n0": 10
       },
-      "focus": "n0",
-      "ms": 3200
+      "focus": [
+       "dt",
+       "daily_pct",
+       "cases28"
+      ],
+      "ms": 3500
      }
     ]
    },
    "explore": {
-    "prompt": "Play with the daily rise and the starting count. Watch the vertical lines: when do they move, and when do they stay put?",
+    "prompt": "Now steer the curve yourself. Use the rule you just saw: days to double = 0.69 ÷ rate.",
     "goals": [
      {
-      "text": "Make the cases double about once a week (between 6.5 and 7.5 days), roughly what the paper found in early Wuhan",
-      "when": "td >= 6.5 && td <= 7.5",
+      "text": "Make cases double about once a week, as they did in early Wuhan.",
+      "when": "abs(dt - 7) < 0.5",
       "solution": {
-       "g": 10
+       "r": 0.1
       },
       "hints": [
-       "Only one slider changes how fast the count doubles.",
-       "Raise the daily rise. At 5% a day the count takes about 14 days to double, so you need roughly twice the speed.",
-       "Raise it a point at a time and stop when 'Days to double' falls between 6.5 and 7.5."
+       "Which control changes how many days a doubling takes?",
+       "Right now cases double in about two weeks. A one-week doubling is half that time.",
+       "Doubling the rate halves the days to double."
       ]
      },
      {
-      "text": "Squeeze all four doublings (16 times the start) into the first 16 days",
-      "when": "4 * td <= 16",
+      "text": "Reach at least 160 cases by day 28 while cases still take 7 days or more to double.",
+      "when": "cases28 >= 160 && dt >= 7",
       "solution": {
-       "g": 20
+       "r": 0.09,
+       "n0": 15
       },
       "hints": [
-       "Four doublings in 16 days means each doubling must take 4 days or less.",
-       "The starting count won't help. The lines don't move when you change it, so push the daily rise up instead.",
-       "Keep raising the daily rise until 'Days to double' reads 4 or less."
+       "Speeding up growth alone breaks the 7-day limit. Look at the other control too.",
+       "The starting-cases slider lifts the whole curve without changing the days to double.",
+       "Set the rate just under the one-week pace, then raise the start until the day-28 box clears 160."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. The time to double depends only on the daily percentage. Halve that percentage and the count needs about twice as many days to double.",
-     "incorrect": "The days to double are set entirely by the daily percentage, and the link runs the opposite way to the speed. Slower daily growth means a longer wait. For small percentages, half the growth gives about twice the wait, so 3% a day takes about 24 days."
+     "correct": "Yes. Doubling time is ln 2 (about 0.69) divided by the rate: 0.69 ÷ 0.07 ≈ 10 days. A slower rate gives a longer doubling time, in inverse proportion.",
+     "incorrect": "The doubling time is not fixed, and it does not scale up with the rate. It equals 0.69 divided by the rate, so lowering r from 0.10 to 0.07 stretches it from about 7 to about 10 days."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start slow. Cases rise 5% a day from 10 cases. That fixed daily percentage is called the growth rate.",
+       "say": "Start slow: r = 0.05 per day, about 5% more cases each day. This daily fraction is the growth rate.",
        "set": {
-        "g": 5,
+        "r": 0.05,
         "n0": 10
        },
-       "focus": "g",
-       "ms": 3600
-      },
-      {
-       "say": "Going from 10 cases to 20 takes about 14 days. That's the first line.",
-       "focus": "d1",
-       "ms": 3200
-      },
-      {
-       "say": "Going from 20 to 40 takes the same 14 days, and 40 to 80 does too. The lines are evenly spaced. This fixed gap is the doubling time.",
        "focus": [
-        "d2",
-        "d3",
-        "td"
+        "r",
+        "daily_pct"
        ],
-       "ms": 4400
+       "ms": 3500
       },
       {
-       "say": "The curve keeps bending upward because each day's rise is bigger than the last, even though the percentage never changes. This is exponential growth.",
-       "focus": "cases",
-       "ms": 4200
+       "say": "Cases hit 2× at about day 14, 4× at day 28 and 8× near day 42. The gaps are equal: going from 10 to 20 takes as long as going from 40 to 80.",
+       "focus": [
+        "d1",
+        "d2",
+        "d3"
+       ],
+       "ms": 4000
       },
       {
-       "say": "Now start with just 3 cases. The whole curve sinks, but the lines don't budge. The doubling time doesn't care how many cases you start with.",
+       "say": "Rising by the same fraction every day is called exponential growth. The fixed time per doubling is the doubling time: here about 13.9 days.",
+       "focus": "dt",
+       "ms": 3500
+      },
+      {
+       "say": "Now make the rate four times bigger: 0.20 per day. The doubling time falls to about 3.5 days, a quarter as long.",
        "set": {
-        "n0": 3
+        "r": 0.2
+       },
+       "focus": "dt",
+       "ms": 4000
+      },
+      {
+       "say": "That is the rule: doubling time = ln 2 ÷ r, about 0.69 ÷ r. Double the rate and you halve the doubling time.",
+       "focus": [
+        "r",
+        "dt"
+       ],
+       "ms": 3500
+      },
+      {
+       "say": "Double the starting cases to 20. The curve sits higher, but the doubling lines don't move. Doubling time depends only on the rate.",
+       "set": {
+        "n0": 20
        },
        "focus": [
         "n0",
         "d1"
        ],
-       "ms": 4200
+       "ms": 4000
       },
       {
-       "say": "Back to 10 cases, and the daily rise jumps to 20%. Each doubling now takes under 4 days, so all four fit inside about two weeks.",
+       "say": "Back to 10 cases. At 0.20 per day they become about 2,700 by day 28, roughly eight doublings. At 0.05 it was about 40. Small daily rates make huge gaps within weeks.",
        "set": {
-        "n0": 10,
-        "g": 20
+        "n0": 10
        },
-       "focus": [
-        "d4",
-        "td"
-       ],
-       "ms": 4200
-      },
-      {
-       "say": "Finally, about 10% a day. The count doubles roughly once a week, close to the 7.4 days the paper estimated for early Wuhan.",
-       "set": {
-        "g": 10
-       },
-       "focus": "td",
-       "ms": 4200
+       "focus": "cases28",
+       "ms": 4500
       }
      ]
     },
-    "explanation": "When cases rise by the same percentage every day, each doubling takes the same number of days, however many cases there already are. A faster daily rise shortens that doubling time, and a slower one stretches it. The authors fitted a model to the dates when symptoms began, for cases not linked to the seafood market, from December 10 to January 4. They estimated a growth rate of about 0.10 per day, which means cases doubled roughly every 7.4 days. Their uncertainty was wide: the doubling time could plausibly be anywhere from about 4 to 14 days. They stopped at January 4 on purpose, because more awareness and testing after that would find a larger share of infections, and that would make growth look faster than it was.",
+    "explanation": "When an epidemic grows by a steady fraction each day, each doubling takes the same number of days, however big the outbreak already is. That number, the doubling time, equals ln 2 (about 0.69) divided by the daily growth rate r. A rate of 0.10 per day, roughly 10% more cases each day, gives about 0.69 ÷ 0.10 ≈ 7 days. The paper fitted a transmission model to Wuhan cases with onset between December 10 and January 4 that were not linked to the market. It estimated r = 0.10 per day and a doubling time of 7.4 days; the small gap from 6.9 likely reflects rounding and how the uncertain estimates were summarised. Both numbers are uncertain: the doubling time's 95% interval runs from 4.2 to 14 days.",
     "quote": "In the epidemic curve up to January 4, 2020, the epidemic growth rate was 0.10 per day (95% CI, 0.050 to 0.16) and the doubling time was 7.4 days (95% CI, 4.2 to 14).",
     "quote_where": "Results"
    },
    "connect": {
     "equation": [
      {
+      "text": "cases(t) = "
+     },
+     {
+      "text": "n_{0}",
+      "link": "n0"
+     },
+     {
+      "text": " × e^{"
+     },
+     {
+      "text": "r",
+      "link": "r"
+     },
+     {
+      "text": "t},   "
+     },
+     {
       "text": "T_{d}",
-      "link": "td"
+      "link": "dt"
      },
      {
-      "text": " = ln 2 ÷ ln(1 + "
+      "text": " = ln 2 ÷ "
      },
      {
-      "text": "g",
-      "link": "g"
-     },
-     {
-      "text": ")"
+      "text": "r",
+      "link": "r"
      }
     ],
-    "caption": "This is the model's rule, not an equation printed in the paper. T_{d} (the 'Days to double' box) is the doubling time, and g is the daily rise written as a fraction (10% = 0.10). The starting count does not appear anywhere in the rule, which is why the lines never move when you change it. The paper reports a continuous growth rate r ≈ 0.10 per day, where the standard link is T_{d} = ln 2 ÷ r. Its 7.4-day doubling time comes from the unrounded estimate of r."
+    "caption": "This is the model's rule. The paper reports both r and the doubling time but does not print this formula; it is the standard link between them for steady exponential growth. r is the daily rate slider, n₀ is the starting-cases slider, and T_d is the 'Days to double' box."
    },
-   "recap": "A fixed daily percentage rise means cases double on a fixed schedule, and the faster the daily rise, the shorter that schedule. Early Wuhan doubled about every 7.4 days.",
+   "recap": "Doubling time = ln 2 ÷ growth rate: Wuhan's early rate of about 0.10 per day meant cases doubled roughly every week (the paper's estimate: 7.4 days).",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
     },
     {
      "id": "goal_1",
      "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
      "i": 1
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
     },
     {
-     "id": "connect",
+     "id": "eq",
      "kind": "connect"
     }
    ]
   },
   {
-   "id": "reporting_delay_dip",
-   "title": "Why the latest days look like a decline",
-   "idea": "Cases are only counted after a delay, so the most recent days are always undercounted, and a still-growing epidemic can look as if it is falling.",
+   "id": "reporting_delay",
+   "title": "Why the epidemic curve seemed to fall",
+   "idea": "Because recent cases have not yet been diagnosed and reported, a still-growing epidemic looks as if it is declining at the end of the curve, so growth must be estimated from an earlier window.",
    "role": "core",
    "predict": {
-    "question": "A city publishes a chart of new cases by the day people fell ill, and the last week seems to be falling. Two weeks later, the city publishes the same chart again. What most likely happens to those 'falling' days?",
+    "question": "A health agency plots cases by the day each person fell ill. The last 10 days before its data cut-off are falling. Two weeks later it re-plots the same days, adding every case reported since. If the epidemic really kept growing, what will those 10 days look like now?",
     "options": [
-     "They rise as late cases for those days arrive, and a new dip appears at the new latest days",
-     "They stay the same, because once a day has passed its count is final",
-     "They drop further, confirming that the outbreak is ending",
-     "Any dip vanishes for good, because everyone now knows about the outbreak"
+     "They fill in and now rise",
+     "They still fall, because counts for past days are final",
+     "They fall even more steeply",
+     "They level off into a flat plateau"
     ],
     "answer": 0,
     "why": [
-     "Right: people who fell ill on those days keep being counted as their tests and reports come in. The days fill in upward, and the newest days now carry the undercount.",
-     "It is tempting to treat a past day as closed. But a case is filed under the day the person fell ill, often long after that day, so past days keep growing.",
-     "This reads the dip as a real trend. Under a delay, counts for a given day can only rise as reports arrive, never fall.",
-     "More awareness can shorten the wait, but some wait always remains. So the newest days will still be undercounted on the next chart too."
+     "Right. The missing cases were people already ill but not yet reported. As their reports arrive they are added to the days they fell ill, so the late days fill in and the rise reappears.",
+     "It is tempting to treat a past day's count as settled. But the curve is plotted by the day people fell ill, so later reports are added back to earlier days and those counts keep growing for weeks.",
+     "This would only happen if cases were removed over time. New reports only add cases to past days, so the late days can only go up.",
+     "A plateau would need new infections to stop rising. Here they kept growing, so once the delayed reports arrive the counts keep climbing rather than levelling off."
     ]
    },
    "terms": [
     {
      "term": "epidemic curve",
-     "means": "A chart of new cases plotted by the day each person fell ill"
+     "means": "A chart of cases plotted by the day each person fell ill"
     },
     {
      "term": "reporting delay",
-     "means": "The time between a person falling ill and their case appearing in the official count"
+     "means": "The time between someone falling ill and their case appearing in the data"
     },
     {
      "term": "under-ascertainment",
-     "means": "Cases that really happened but have not (yet) been found and counted"
+     "means": "Cases that exist but have not yet been found and counted"
     }
    ],
    "model": {
-    "title": "True cases versus cases counted so far, as seen on day 60",
-    "note": "Teaching model: true cases rise by exactly the same percentage every day with no randomness. Each case's wait before being counted follows one simple spread-out pattern with the average you set, and that average never changes over time. Real delays changed as tests became available. Numbers are illustrative, not the paper's data.",
+    "title": "True cases versus cases counted by the cut-off",
+    "note": "Teaching model: true cases grow at one fixed daily rate. Each case waits a random time before being counted, with an exponential spread around the average you set. The wait and the testing effort never change over time. Day 42 is the data cut-off. The vertical axis rescales to fit the true curve, so starting cases only change the scale. Numbers are illustrative, not the paper's data. The only paper figures cited are the 0.10-per-day growth rate and the measured delays from falling ill to hospital admission.",
     "controls": [
      {
-      "id": "g",
-      "label": "Daily rise in cases",
+      "id": "r",
+      "label": "Daily rate r (per day)",
       "kind": "slider",
-      "min": 5,
-      "max": 30,
-      "step": 1,
-      "default": 5,
-      "unit": "% per day",
+      "min": 0.02,
+      "max": 0.3,
+      "step": 0.01,
+      "default": 0.05,
+      "unit": "",
       "color": 0
      },
      {
       "id": "n0",
-      "label": "Cases on day 0",
+      "label": "Starting cases",
       "kind": "slider",
-      "min": 1,
-      "max": 12,
-      "step": 1,
+      "min": 5,
+      "max": 25,
+      "step": 5,
       "default": 10,
-      "unit": "cases",
-      "color": 1
+      "unit": "",
+      "color": 2
      },
      {
       "id": "delay",
-      "label": "Average days until a case is counted",
+      "label": "Average wait before a case is counted (days)",
       "kind": "slider",
       "min": 0,
       "max": 14,
       "step": 1,
       "default": 0,
-      "unit": " days",
-      "color": 2
+      "unit": "days",
+      "color": 3
      }
     ],
     "outputs": [
      {
-      "id": "td",
-      "label": "Days to double",
-      "expr": "ln(2) / ln(1 + g / 100)",
-      "unit": " days",
+      "id": "dt",
+      "label": "True days to double",
+      "expr": "ln(2) / r",
+      "unit": "days",
       "decimals": 1,
-      "color": 3
-     },
-     {
-      "id": "true_last",
-      "label": "True new cases on day 60",
-      "expr": "n0 * pow(1 + g / 100, 60)",
-      "unit": "",
-      "decimals": 0,
-      "color": 0
-     },
-     {
-      "id": "counted_last",
-      "label": "Day-60 cases counted so far",
-      "expr": "true_last * (1 - exp(-0.5 / max(delay, 0.1)))",
-      "unit": "",
-      "decimals": 0,
-      "color": 2
-     },
-     {
-      "id": "share_last",
-      "label": "Share of day-60 cases counted",
-      "expr": "1 - exp(-0.5 / max(delay, 0.1))",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 0,
-      "color": 2
+      "color": 1
      },
      {
       "id": "peak_day",
-      "label": "Counted curve tops out on day",
-      "expr": "clamp(60.5 - max(delay, 0.1) * ln(1 + 1 / (ln(1 + g / 100) * max(delay, 0.1))), 0, 60)",
+      "label": "Day the counted curve peaks",
+      "expr": "42 - (delay < 0.5 ? 0 : max(delay, 0.5) * ln(1 + 1 / (r * max(delay, 0.5))))",
       "unit": "",
-      "decimals": 0,
-      "color": 2
+      "decimals": 1,
+      "color": 4
      },
      {
-      "id": "fake_fall",
-      "label": "Days that look like a decline",
-      "expr": "60 - peak_day",
-      "unit": " days",
+      "id": "late_rate",
+      "label": "Growth read from days 34–40 (per day)",
+      "expr": "r + (ln(1 - exp(-2 / max(delay, 0.1))) - ln(1 - exp(-8 / max(delay, 0.1)))) / 6",
+      "unit": "",
+      "decimals": 2,
+      "color": 6
+     },
+     {
+      "id": "early_rate",
+      "label": "Growth read from days 0–24 (per day)",
+      "expr": "r + (ln(1 - exp(-18 / max(delay, 0.1))) - ln(1 - exp(-42 / max(delay, 0.1)))) / 24",
+      "unit": "",
+      "decimals": 2,
+      "color": 5
+     },
+     {
+      "id": "week_share",
+      "label": "Counted so far, of people ill a week before cut-off",
+      "expr": "1 - exp(-7 / max(delay, 0.1))",
+      "unit": "%",
+      "scale": 100,
       "decimals": 0,
-      "color": 2
+      "color": 3
      }
     ],
     "visual": {
      "type": "curves",
      "x": {
-      "label": "Day people fell ill",
+      "label": "Day each person fell ill",
       "min": 0,
-      "max": 60
+      "max": 45
      },
      "y": {
-      "label": "New cases that day",
+      "label": "Cases",
       "min": 0,
-      "max": "1.1 * n0 * pow(1 + g / 100, 60)"
+      "max": "1.2 * n0 * exp(r * 42)"
      },
      "series": [
       {
        "id": "cases",
-       "label": "True new cases",
-       "expr": "n0 * pow(1 + g / 100, x)",
+       "label": "True cases",
+       "expr": "n0 * exp(r * x)",
        "color": 0,
        "dashed": false
       },
       {
        "id": "counted",
-       "label": "Counted so far",
-       "expr": "n0 * pow(1 + g / 100, x) * (1 - exp(-(60.5 - x) / max(delay, 0.1)))",
-       "color": 2,
+       "label": "Counted by the cut-off",
+       "expr": "max(0, n0 * exp(r * x) * (1 - exp(-(42 - x) / max(delay, 0.1))))",
+       "color": 3,
        "dashed": true
+      }
+     ],
+     "fills": [
+      {
+       "series": 1,
+       "from": 0,
+       "to": 24,
+       "label": "Earlier window for reading growth",
+       "color": 5
       }
      ],
      "markers": [
       {
        "id": "cutoff",
-       "x": 60,
-       "label": "Today (day 60)",
-       "color": 5
+       "x": 42,
+       "label": "Data cut-off",
+       "color": 7
       },
       {
-       "id": "peak",
+       "id": "fake_peak",
        "x": "peak_day",
-       "label": "Counted top",
-       "color": 2
+       "label": "Counted peak",
+       "color": 4
       }
      ]
     }
@@ -564,147 +788,129 @@
    "animation": {
     "steps": [
      {
-      "say": "Same picture as before: the solid curve is new cases each day, rising by a fixed percentage. The line on the right marks today, day 60.",
-      "set": {
-       "delay": 0,
-       "g": 5,
-       "n0": 10
-      },
+      "say": "Same picture as before. The solid curve is true cases climbing at a steady daily rate, now plotted by the day each person fell ill.",
+      "focus": "cases",
+      "ms": 5500
+     },
+     {
+      "say": "New: the dashed curve shows only the cases that have been counted by the data cut-off on day 42.",
       "focus": [
-       "cases",
+       "counted",
        "cutoff"
       ],
-      "ms": 5000
+      "ms": 5500
      },
      {
-      "say": "New: a case only joins the count some days after the person falls ill. This slider sets how long that takes on average.",
-      "set": {
-       "delay": 7
-      },
+      "say": "This new slider sets how long a case waits, on average, before it is counted. It starts at zero, so the two curves match exactly.",
       "focus": "delay",
-      "ms": 5000
-     },
-     {
-      "say": "The dashed curve shows what has been counted by today. Keep an eye on its right-hand end.",
-      "focus": "counted",
-      "ms": 4500
+      "ms": 6000
      }
     ]
    },
    "explore": {
-    "prompt": "You are the analyst on day 60. Play with the wait and the growth speed, and watch how long the counted curve seems to fall even though true cases never stop rising.",
+    "prompt": "Now make the counting delay fool you. Tune the growth and the wait so the dashed curve tells a story the true curve doesn't.",
     "goals": [
      {
-      "text": "Make the counted curve look as if cases have been falling for more than a week",
-      "when": "fake_fall > 7",
+      "text": "Make the counted data look like it's shrinking in its last days (negative growth read from days 34–40), while true cases double in 5 days or less.",
+      "when": "late_rate < 0 && dt <= 5",
       "solution": {
-       "delay": 8
+       "r": 0.15,
+       "delay": 7
       },
       "hints": [
-       "What makes recent cases slow to show up in the count?",
-       "Use the 'Average days until a case is counted' slider and watch 'Days that look like a decline'.",
-       "Lengthen the wait a day at a time until more than 7 days look like a decline."
+       "Two things must hold at once: fast true growth, and a falling tail in the dashed curve.",
+       "First speed up the true growth until 'True days to double' reads 5 or less. Then watch the late growth reading.",
+       "Faster growth fights the dip, so a short wait won't be enough. Raise the wait one day at a time until the late reading turns negative."
       ]
      },
      {
-      "text": "Keep the wait at 10 days or more, but make the false decline last under 5 days",
-      "when": "delay >= 10 && fake_fall < 5",
+      "text": "Make the counted curve peak more than two weeks before the cut-off.",
+      "when": "peak_day < 28",
       "solution": {
-       "delay": 12,
-       "g": 20
+       "r": 0.03,
+       "delay": 14
       },
       "hints": [
-       "With the wait fixed, the only other thing you can change is how the true curve behaves.",
-       "Try a much faster daily rise: when today's cases dwarf last week's, the counted curve keeps climbing until close to today.",
-       "Keep the wait long and push the daily rise toward its top until the decline lasts under 5 days."
+       "Where the counted curve peaks depends on two things, not one.",
+       "Push the wait as long as it goes and check the peak day. Still not early enough? Try changing how fast true cases grow.",
+       "Slower true growth means a gentler rise near the end, so the missing recent cases win out earlier. Lower the daily rate step by step."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. A delay only ever means cases arrive late, never that they vanish. So the 'falling' days fill in upward later, and the newest days take over the undercount.",
-     "incorrect": "The dip near today does not show that fewer people fell ill. It shows that their cases have not been counted yet. As reports arrive, those days rise, and the newest days carry the gap instead."
+     "correct": "Yes. Cases are filed under the day people fell ill, so late reports fill in the recent days. The apparent fall was a counting gap, not fewer infections.",
+     "incorrect": "The dip came from cases not yet reported, not from fewer people falling ill. Each report is added to the day that person fell ill, so the late days fill in as reports arrive and the rise reappears."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "This chart puts cases under the day each person fell ill. That is called an epidemic curve. With no wait at all, the dashed counted curve sits right on the true one.",
+       "say": "Set true growth to 0.10 per day, the paper's early estimate for Wuhan, and turn off the counting wait. The dashed curve sits right on the solid one.",
        "set": {
-        "delay": 0,
-        "g": 5,
-        "n0": 10
+        "r": 0.1,
+        "n0": 10,
+        "delay": 0
+       },
+       "focus": "cases",
+       "ms": 4500
+      },
+      {
+       "say": "This chart of cases by the day each person fell ill is called an epidemic curve. Now let each case take about 3 days on average to be counted. Only the last few days sag.",
+       "set": {
+        "delay": 3
        },
        "focus": "counted",
        "ms": 5000
       },
       {
-       "say": "Now cases take about 3 days on average to be counted. This wait is the reporting delay. Far back in time, nearly every case has had time to arrive, so the curves still match.",
+       "say": "That wait is a reporting delay. Stretch it to 9 days, close to the average the paper found between falling ill and hospital admission in early January. Now the dashed curve peaks well before the cut-off.",
        "set": {
-        "delay": 3
+        "delay": 9
        },
-       "focus": "cases",
+       "focus": "fake_peak",
        "ms": 5500
       },
       {
-       "say": "Near today it is different. Many people who fell ill in the last few days have not been counted yet, so the dashed curve bends down at the end.",
-       "focus": [
-        "counted",
-        "peak"
-       ],
+       "say": "Only about half of the people who fell ill a week before the cut-off are counted so far. Cases that exist but aren't yet found are called under-ascertainment.",
+       "focus": "week_share",
        "ms": 5000
       },
       {
-       "say": "Stretch the wait to 7 days. Only about 7% of today's true cases are in the count so far. Missing cases like these are called under-ascertainment.",
-       "set": {
-        "delay": 7
-       },
-       "focus": "share_last",
-       "ms": 5500
-      },
-      {
-       "say": "The counted curve now tops out around day 51 and slides down after it: about 9 days that look like a decline. The true curve never stopped rising.",
-       "focus": [
-        "peak",
-        "fake_fall"
-       ],
-       "ms": 5500
-      },
-      {
-       "say": "Make the wait even longer, 12 days. The false peak moves further back, and about 11 days now look like a fall.",
-       "set": {
-        "delay": 12
-       },
-       "focus": "fake_fall",
+       "say": "Read growth from the last days and you get a negative number. The epidemic seems to be shrinking, yet the true rate is still 0.10 per day.",
+       "focus": "late_rate",
        "ms": 5000
       },
       {
-       "say": "Now speed up the true growth to 15% a day with the same wait. The false fall shrinks to about 5 days, but it does not go away. Any delay at all leaves a dip at the end.",
-       "set": {
-        "g": 15
-       },
+       "say": "Read it from days 0 to 24 instead. Those cases have had weeks to be counted, so the estimate lands close to the true 0.10.",
+       "focus": "early_rate",
+       "ms": 5000
+      },
+      {
+       "say": "That's the lesson: true cases still soar, the counted curve falls, and only the earlier window tells the truth. If day 42 stands for January 22, this window roughly matches the paper's December 10 to January 4.",
        "focus": [
+        "cases",
         "counted",
-        "fake_fall"
+        "cutoff"
        ],
        "ms": 6000
       }
      ]
     },
-    "explanation": "Each case is filed under the day the person fell ill, but it only reaches the count days later, after a test, a report and a confirmation. On any given day, the most recent days are therefore missing many cases that really happened. The counted epidemic curve bends down at the end even while true cases keep growing. The longer the wait, the longer this false decline. The paper's own chart of the first 425 Wuhan cases fell in its last days, and the authors said this was most likely delayed identification and reporting, not a real turning point. They also estimated that the average time from falling ill to hospital admission was 9.1 to 12.5 days in the early periods, which shows how long these waits can be. A real slowdown can also look like this, so the raw counts alone cannot tell the two apart. Analysts have to allow for the delay before reading the latest days.",
+    "explanation": "An epidemic curve files each case under the day the person fell ill. But a case only appears once it has been found, tested and reported. People who fell ill shortly before the cut-off mostly haven't been counted yet. So the curve sags at its right edge even while true infections keep rising. The paper saw this drop in its Wuhan curve and judged it to be under-ascertainment, not a real turning point. It estimated growth only from cases that began by January 4, although its data ran to January 22. Its stated reason was that awareness and testing rose after the outbreak was announced, which changes the share of cases found. Caveat: this model uses one fixed delay. Real delays and testing changed over time, and that also bends the curve.",
     "quote": "The development of the epidemic follows an exponential growth in cases, and a decline in the most recent days is likely to be due to under-ascertainment of cases with recent onset and delayed identification and reporting rather than a true turning point in incidence (Figure 1).",
     "quote_where": "Results"
    },
    "check": {
     "kind": "model",
-    "task": "Show that even a fast outbreak can fake a fall: make cases double in under 6 days while the counted curve still seems to fall for at least 5 days.",
-    "when": "td < 6 && fake_fall >= 5",
+    "task": "Show that a peak in the counted curve is not a turning point: make the counted curve peak more than a week before the cut-off while true cases still double in under 10 days.",
+    "when": "peak_day < 35 && dt < 10",
     "solution": {
-     "g": 13,
+     "r": 0.08,
      "delay": 14
     },
-    "hint": "Faster growth shortens the false fall, so don't push the daily rise much past what you need for doubling in under 6 days. Then make the wait as long as the slider allows.",
-    "misconception": "That a fast-growing outbreak is safe from this illusion because its rise will always show through. Speed only shortens the dip. A long enough reporting delay still makes a rapidly doubling epidemic look as if it is falling."
+    "hint": "A long wait pulls the counted peak earlier. But true cases must still double within 10 days, so don't slow growth too much.",
+    "misconception": "A peak followed by a drop in the reported curve means the epidemic has turned. In fact, a reporting delay alone can create that shape while infections keep climbing."
    },
    "connect": {
     "equation": [
@@ -716,215 +922,205 @@
       "link": "n0"
      },
      {
-      "text": " × (1 + "
+      "text": " · exp("
      },
      {
-      "text": "g",
-      "link": "g"
+      "text": "r",
+      "link": "r"
      },
      {
-      "text": ")^{t} × (1 − e^{−(T − t)/"
+      "text": " · t) · [1 − exp(−(42 − t) / "
      },
      {
       "text": "D",
       "link": "delay"
      },
      {
-      "text": "})"
+      "text": ")]"
      }
     ],
-    "caption": "This is the teaching model's rule, not an equation from the paper. The first part, n₀ × (1 + g)^t, is the true curve from the last concept (g as a fraction, so 5% is 0.05). The bracket is the share of day-t cases counted by the cut-off T (day 60, counting the whole day). D, the average wait, is the new slider. When T − t is small, meaning recent days, the bracket is near 0, so the counted curve drops even though the true curve keeps rising."
+    "caption": "This is the teaching model's rule; the paper gives no equation for it. The first part is the true exponential curve, set by starting cases n₀ and the daily rate r. The bracket is the share of people who fell ill on day t who are counted by the day-42 cut-off, when the average wait is D. It shrinks towards zero as t nears the cut-off."
    },
-   "recap": "Recent cases are always counted late, so the newest part of an epidemic curve sags. A dip in the last days is not proof that an outbreak is slowing.",
-   "builds_on": "doubling_time",
+   "recap": "A late dip in an epidemic curve can be nothing but uncounted recent cases. Read growth from an earlier window that has had time to fill in.",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
     },
     {
      "id": "goal_1",
      "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
      "i": 1
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
     },
     {
-     "id": "check",
+     "id": "test",
      "kind": "check"
     },
     {
-     "id": "connect",
+     "id": "eq",
      "kind": "connect"
     }
-   ]
+   ],
+   "builds_on": "doubling_time"
   },
   {
    "id": "serial_interval",
-   "title": "The gap from one sick person to the next",
-   "idea": "The serial interval is the time from one person's symptoms to the symptoms of the person they infected, and it varies from pair to pair around an average.",
-   "role": "prerequisite",
+   "title": "The serial interval: how far apart linked cases fall ill",
+   "idea": "The serial interval is the spread of delays between one person's illness onset and the onset of the person they infected, and the paper estimated a mean of 7.5 days from only 6 pairs.",
+   "role": "core",
    "predict": {
-    "question": "Two made-up diseases both have an average gap of 7 days between linked cases. For disease A the gaps vary little (SD about 1 day). For disease B they vary a lot (SD about 4 days). You trace 100 linked pairs for each. What would you expect to see?",
+    "question": "Suppose a later team measured 60 linked pairs from the same outbreak, and the gaps turned out just as spread out as before. Compared with the 6-pair estimate, what should happen to the plausible range for the average gap?",
     "options": [
-     "Disease B shows more very short gaps (under 3 days) and more very long ones (over 12 days)",
-     "Both diseases show the same mix of gaps, because their averages match",
-     "Disease B's pairs will turn out to have a longer average gap",
-     "Disease A shows more very long gaps than disease B"
+     "It shrinks to about a third as wide",
+     "It stays about the same width",
+     "It shrinks to a tenth as wide",
+     "The individual gaps bunch up more tightly"
     ],
     "answer": 0,
     "why": [
-     "Right: a bigger spread pushes pairs out to both sides of the same average. The long side stretches furthest, because gaps can't drop below zero.",
-     "Tempting, because the average is the headline number. But the average is only the centre. The spread decides how far individual pairs stray from it.",
-     "It's easy to think a wider curve must mean a longer gap. But the average was set to 7 days for both diseases. Widening the spread doesn't move the average, though the peak does slide left.",
-     "A narrow spread keeps nearly every pair close to 7 days, so disease A has almost no very long gaps. Long gaps come from a large spread."
+     "Right: the range shrinks with the square root of the number of pairs. Ten times the pairs gives √10 ≈ 3.2, so the range is about a third as wide.",
+     "Tempting if you think the spread of gaps fixes the uncertainty. The spread stays the same, but averaging over more pairs pins the average down much better.",
+     "Tempting if uncertainty fell in step with the number of pairs. It falls with the square root, so ten times the pairs gives roughly a third, not a tenth.",
+     "This mixes up two things. More pairs make us surer of the average. They do not change how varied real gaps are, because that variation belongs to the disease."
     ]
    },
    "terms": [
     {
      "term": "serial interval",
-     "means": "The number of days from one person's first symptoms to the first symptoms of someone they infected"
+     "means": "The number of days between one person's illness onset and the illness onset of someone they infected"
     },
     {
-     "term": "standard deviation (SD)",
-     "means": "A measure of how far individual values typically sit from the average"
+     "term": "distribution",
+     "means": "The full pattern of how often each value turns up, not just a single typical value"
     },
     {
-     "term": "skewed",
-     "means": "Lopsided: the curve has a long tail stretching out on one side"
+     "term": "confidence interval",
+     "means": "A range of values for an estimate that fits the data; narrow means well pinned down, wide means very uncertain"
     }
    ],
    "model": {
-    "title": "How many days pass between one person falling ill and the next",
-    "note": "Teaching model: the gaps follow a smooth gamma-shaped curve set only by an average and a spread. The paper fitted the same kind of curve, but to just 6 linked pairs and with help from earlier SARS data. The slider curves are illustrative. The dashed curve uses the paper's reported mean of 7.5 days and SD of 3.4 days.",
+    "title": "Days between one person falling ill and the next person in the chain falling ill",
+    "note": "Teaching model: the curve is a gamma curve set by its average and spread, the same kind of curve the paper fitted. The range for the average uses a simple textbook approximation (average ± 1.96 × spread ÷ √pairs), so it is symmetric and narrower than the paper's own 95% interval of 5.3 to 19 days. The paper's interval also drew on a prior based on SARS. The starting values of 7.5 and 3.4 days and 6 pairs are the paper's. Other settings are illustrative.",
     "controls": [
      {
       "id": "m",
-      "label": "Average gap (days)",
+      "label": "Average gap",
       "kind": "slider",
-      "min": 3,
-      "max": 12,
+      "min": 4,
+      "max": 14,
       "step": 0.5,
-      "default": 5,
-      "unit": " days",
+      "default": 7.5,
+      "unit": "days",
       "color": 0
      },
      {
       "id": "s",
-      "label": "Spread of gaps (days)",
+      "label": "Spread of gaps",
       "kind": "slider",
-      "min": 1,
-      "max": 6,
-      "step": 0.2,
-      "default": 2,
-      "unit": " days",
+      "min": 1.5,
+      "max": 5,
+      "step": 0.1,
+      "default": 3.4,
+      "unit": "days",
       "color": 1
      },
      {
-      "id": "show_paper",
-      "label": "Show the paper's estimate",
-      "kind": "toggle",
-      "default": 0,
-      "color": 2,
-      "min": 0,
-      "max": 1,
-      "step": 1
+      "id": "n",
+      "label": "Linked pairs studied",
+      "kind": "slider",
+      "min": 2,
+      "max": 100,
+      "step": 1,
+      "default": 6,
+      "unit": "",
+      "color": 2
      }
     ],
     "outputs": [
      {
-      "id": "peak",
-      "label": "Most common gap",
-      "expr": "max(0, m - s * s / m)",
+      "id": "lo",
+      "label": "Low end for the average",
+      "expr": "max(0, m - 1.96 * s / sqrt(n))",
       "unit": " days",
       "decimals": 1,
-      "color": 3
+      "color": 2
      },
      {
-      "id": "short_end",
-      "label": "Shorter typical gap (average − spread)",
-      "expr": "max(0, m - s)",
+      "id": "hi",
+      "label": "High end for the average",
+      "expr": "m + 1.96 * s / sqrt(n)",
       "unit": " days",
       "decimals": 1,
-      "color": 1
+      "color": 2
      },
      {
-      "id": "long_end",
-      "label": "Longer typical gap (average + spread)",
-      "expr": "m + s",
+      "id": "width",
+      "label": "Width of that range",
+      "expr": "3.92 * s / sqrt(n)",
       "unit": " days",
       "decimals": 1,
-      "color": 1
+      "color": 2
      }
     ],
     "visual": {
      "type": "curves",
      "x": {
-      "label": "Days from first person's symptoms to second person's symptoms",
+      "label": "Days between linked illness onsets",
       "min": 0,
       "max": 25
      },
      "y": {
       "label": "How common that gap is",
       "min": 0,
-      "max": 0.45
+      "max": 0.3
      },
      "series": [
       {
-       "id": "fitted",
-       "label": "Gaps between linked pairs",
-       "expr": "exp(((m*m/(s*s)) - 1) * ln(max(x, 0.1)) - max(x, 0.1) * m / (s*s) - (m*m/(s*s)) * ln(s*s/m) - (((m*m/(s*s)) + 1.5) * ln((m*m/(s*s)) + 2) - ((m*m/(s*s)) + 2) + 0.5 * ln(2*pi) + 1 / (12 * ((m*m/(s*s)) + 2)) - 1 / (360 * pow((m*m/(s*s)) + 2, 3)) - ln(m*m/(s*s)) - ln((m*m/(s*s)) + 1)))",
-       "color": 0,
-       "dashed": false
-      },
-      {
-       "id": "paper_curve",
-       "label": "Paper's estimate (7.5 ± 3.4 days)",
-       "expr": "show_paper * exp(3.866 * ln(max(x, 0.1)) - max(x, 0.1) / 1.5413 - 4.866 * ln(1.5413) - 2.978)",
-       "color": 2,
-       "dashed": true
-      }
-     ],
-     "fills": [
-      {
-       "series": 0,
-       "from": 14,
-       "to": 25,
-       "label": "Gaps over two weeks",
-       "color": 4
+       "id": "si_curve",
+       "label": "Gaps between linked cases",
+       "expr": "exp(((m/s)^2 - 1) * ln(max(x, 0.01)) - x * m / s^2 - (m/s)^2 * ln(s^2 / m) - (((m/s)^2 + 1.5) * ln((m/s)^2 + 2) - ((m/s)^2 + 2) + 0.9189385 + 1 / (12 * ((m/s)^2 + 2)) - 1 / (360 * ((m/s)^2 + 2)^3) - ln((m/s)^2) - ln((m/s)^2 + 1)))",
+       "color": 0
       }
      ],
      "markers": [
       {
-       "id": "mean_marker",
+       "id": "mean_mark",
        "x": "m",
        "label": "Average",
        "color": 0
       },
       {
-       "id": "peak_marker",
-       "x": "max(0, m - s * s / m)",
-       "label": "Most common",
-       "color": 3
+       "id": "lo_mark",
+       "x": "lo",
+       "label": "Low end",
+       "color": 2
+      },
+      {
+       "id": "hi_mark",
+       "x": "hi",
+       "label": "High end",
+       "color": 2
       }
      ]
     }
@@ -932,349 +1128,346 @@
    "animation": {
     "steps": [
      {
-      "say": "Picture two people: one falls ill, then someone they infected falls ill a few days later. This curve shows how common each length of gap is.",
-      "set": {
-       "m": 5,
-       "s": 2,
-       "show_paper": 0
-      },
-      "focus": "fitted",
-      "ms": 4500
+      "say": "This curve shows gaps in days. Each gap is how long after one person falls ill the person they infected falls ill. Higher on the curve means that gap is more common.",
+      "focus": "si_curve",
+      "ms": 3800
      },
      {
-      "say": "This slider sets the average gap. Watch the whole curve slide to the right.",
+      "say": "This slider moves the average gap. Watch the curve and its middle line slide right.",
       "set": {
-       "m": 8
+       "m": 10
       },
       "focus": "m",
-      "ms": 3500
+      "ms": 3200
      },
      {
-      "say": "This slider sets how much the gaps differ from pair to pair. More spread makes the curve wider and flatter.",
+      "say": "This one sets how spread out the gaps are, from tightly bunched to widely scattered.",
       "set": {
-       "s": 3.4
+       "s": 2
       },
       "focus": "s",
-      "ms": 4000
+      "ms": 3200
      },
      {
-      "say": "The solid line marks the average, and the other line marks the most common gap.",
-      "focus": [
-       "mean_marker",
-       "peak_marker"
-      ],
-      "ms": 3500
-     },
-     {
-      "say": "This switch lays the paper's own estimate over the curve as a dashed line.",
+      "say": "This last slider is how many linked pairs were measured. The two outer lines show where the true average could plausibly sit, given that many pairs.",
       "set": {
-       "show_paper": 1
+       "m": 7.5,
+       "s": 3.4
       },
       "focus": [
-       "show_paper",
-       "paper_curve"
+       "n",
+       "lo_mark",
+       "hi_mark"
       ],
-      "ms": 3500
+      "ms": 4200
      }
     ]
    },
    "explore": {
-    "prompt": "Shape the curve yourself. Try to rebuild the paper's estimate, then see how spread pulls the peak away from the average.",
+    "prompt": "Play with how much evidence you have and how varied the gaps are, and watch how well the average gets pinned down.",
     "goals": [
      {
-      "text": "Rebuild the paper's estimate: make your curve match an average of 7.5 days and an SD of 3.4 days",
-      "when": "abs(m - 7.5) < 0.1 && abs(s - 3.4) < 0.1",
+      "text": "Keep the gaps as spread out as the paper found, and make the range for the average narrower than 2 days.",
+      "when": "width < 2 && abs(s - 3.4) < 0.05",
       "solution": {
-       "m": 7.5,
-       "s": 3.4
+       "n": 50
       },
       "hints": [
-       "Turn on the paper's dashed curve and try to lay your solid curve on top of it.",
-       "You need both sliders. The average slider moves the curve sideways, and the spread slider makes it wider.",
-       "Set the average gap to 7.5 days, then raise the spread to 3.4 days."
+       "Which slider stands for how much evidence you collected?",
+       "In the walkthrough, four times the pairs only halved the range. You need it to shrink further than that.",
+       "The range shrinks with the square root of the number of pairs. Look somewhere between 40 and 60 pairs."
       ]
      },
      {
-      "text": "Keep the average where it is and widen the spread until the most common gap sits at least 2 days before the average",
-      "when": "m - peak >= 2",
+      "text": "Now suppose you are stuck with only 6 pairs, as the paper was. Get the range for the average below 3 days anyway.",
+      "when": "n == 6 && width < 3",
       "solution": {
-       "s": 3.4
+       "s": 1.8
       },
       "hints": [
-       "Watch the two vertical lines. What makes them drift apart?",
-       "Only the spread slider pulls the peak away from the average. The curve can't go below zero days, so it leans.",
-       "Keep widening the spread and watch the gap between the two lines grow past 2 days."
+       "If you can't collect more pairs, what about the gaps themselves would make their average easier to pin down?",
+       "Try a disease whose gaps are more tightly bunched.",
+       "The spread has to come down to a bit under 2 days."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. Two diseases can share an average gap and still look very different pair by pair. The spread decides how many pairs fall far from the average, and the long side reaches furthest.",
-     "incorrect": "The average is only the centre of the curve. The spread is a separate setting: with the same average, a larger spread puts more pairs at very short gaps and many more at very long ones, because the curve can't go below zero."
+     "correct": "Yes. The uncertainty in the average shrinks with the square root of the number of pairs. Ten times the pairs makes the range about a third as wide, while the real variety of gaps stays the same.",
+     "incorrect": "The spread of individual gaps is a property of the disease and does not shrink with more data. What shrinks is the uncertainty in the average, and it falls with the square root of the number of pairs, so ten times the pairs gives about a third the width."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Imagine every pair behaved the same: the second person always falls ill about 5 days after the first. The curve is a tall, narrow spike.",
-       "set": {
-        "m": 5,
-        "s": 1,
-        "show_paper": 0
-       },
-       "focus": "fitted",
-       "ms": 4500
-      },
-      {
-       "say": "This gap, from the first person's symptoms to the symptoms of the person they infected, is called the serial interval.",
-       "focus": "mean_marker",
-       "ms": 4000
-      },
-      {
-       "say": "Real pairs aren't alike. Some infections show up fast, others slowly. Raise the spread and the spike melts into a wide hill.",
-       "set": {
-        "s": 3
-       },
-       "focus": "s",
-       "ms": 4500
-      },
-      {
-       "say": "We measure that spread with the standard deviation (SD): roughly how far a typical pair sits from the average. Here most pairs fall between about 2 and 8 days.",
-       "focus": [
-        "short_end",
-        "long_end"
-       ],
-       "ms": 5000
-      },
-      {
-       "say": "Notice the hill leans. A gap can't be shorter than zero days but can stretch far to the right, so the curve is skewed. The most common gap now sits before the average.",
-       "focus": [
-        "peak_marker",
-        "peak"
-       ],
-       "ms": 5500
-      },
-      {
-       "say": "Now the paper's numbers: an average of 7.5 days and an SD of 3.4 days. Switch on their estimate and your curve lies right on top of it.",
+       "say": "Here are the paper's numbers. On average, 7.5 days passed between one person's illness onset and the onset of someone they infected. This delay is called the serial interval.",
        "set": {
         "m": 7.5,
         "s": 3.4,
-        "show_paper": 1
+        "n": 6
        },
-       "focus": "paper_curve",
+       "focus": [
+        "si_curve",
+        "mean_mark"
+       ],
+       "ms": 4500
+      },
+      {
+       "say": "The gap is not the same for every pair. Some pairs fall ill a few days apart, and some more than two weeks apart. So the serial interval is a whole distribution, with a spread of about 3.4 days.",
+       "focus": [
+        "s",
+        "si_curve"
+       ],
+       "ms": 4800
+      },
+      {
+       "say": "Now the catch. The paper had only 6 linked pairs, from 5 family or contact clusters. With so few, even the average is uncertain. In this simple model it could plausibly sit anywhere from about 5 to 10 days.",
+       "focus": [
+        "lo_mark",
+        "hi_mark",
+        "width"
+       ],
+       "ms": 5200
+      },
+      {
+       "say": "Suppose there were four times as many pairs. The range for the average halves. Uncertainty falls with the square root of the number of pairs, so it falls slowly.",
+       "set": {
+        "n": 24
+       },
+       "focus": [
+        "n",
+        "width"
+       ],
+       "ms": 4800
+      },
+      {
+       "say": "Back to 6 pairs, but now imagine the gaps were tightly bunched. Then even a few pairs would tell you the average fairly well. A wide spread makes a small sample much less informative.",
+       "set": {
+        "n": 6,
+        "s": 2
+       },
+       "focus": [
+        "s",
+        "width"
+       ],
        "ms": 5000
       },
       {
-       "say": "Look at the shaded tail. Under this curve, a small share of pairs fall ill more than two weeks apart, even though the typical gap is about a week.",
-       "focus": "fitted",
-       "ms": 5000
+       "say": "Back at the paper's real case. Its own range, a 95% confidence interval, ran from 5.3 to 19 days. It is wider and lopsided because it used a fitted curve and a SARS-based starting guess. So 7.5 days is a best guess, not a settled fact.",
+       "set": {
+        "s": 3.4,
+        "n": 6
+       },
+       "focus": [
+        "lo_mark",
+        "hi_mark"
+       ],
+       "ms": 6000
       }
      ]
     },
-    "explanation": "The serial interval is the time from one person's symptoms to the symptoms of someone they infected. It isn't one fixed number. Each pair of cases has its own gap, so we describe a whole curve with an average and a spread, measured as the standard deviation (SD). Because gaps can't be negative but can be long, the curve leans, with a tail of long gaps. The paper fitted a gamma curve to 6 linked pairs found in 5 clusters of cases. It estimated an average of 7.5 days with an SD of 3.4 days. With so few pairs the average is uncertain: the paper's 95% interval runs from 5.3 to 19 days. The fit also leaned on earlier data about SARS.",
-    "quote": "We fitted a gamma distribution to data from cluster investigations to estimate the serial interval distribution, defined as the delay between illness onset dates in successive cases in chains of transmission.",
-    "quote_where": "Methods, Statistical Analysis"
+    "explanation": "When one person infects another, you usually can't see the moment of infection, but you can see when each falls ill. The serial interval is the gap between those two illness onsets, and it varies from pair to pair, so it is described as a distribution with an average and a spread. The team traced 5 clusters of cases, found 6 infector–infected pairs, and fitted a gamma curve to their onset gaps: an average of 7.5 days, give or take 3.4. Because only 6 pairs were available, the average is very uncertain: the paper's 95% confidence interval runs from 5.3 to 19 days. More pairs, or less varied gaps, would narrow that range.",
+    "quote": "On the basis of the dates of illness onset of 6 pairs of cases in these clusters, we estimated that the serial interval distribution had a mean (±SD) of 7.5±3.4 days (95% CI, 5.3 to 19) (Figure 2B).",
+    "quote_where": "Results"
    },
    "connect": {
     "equation": [
      {
-      "text": "gap ~ Gamma(shape = ("
+      "text": "range for the average ≈ "
      },
      {
-      "text": "mean",
+      "text": "μ",
       "link": "m"
      },
      {
-      "text": " / "
+      "text": " ± 1.96 × "
      },
      {
-      "text": "SD",
+      "text": "σ",
       "link": "s"
      },
      {
-      "text": ")², scale = "
+      "text": " ÷ √"
      },
      {
-      "text": "SD",
-      "link": "s"
-     },
-     {
-      "text": "² / "
-     },
-     {
-      "text": "mean",
-      "link": "m"
-     },
-     {
-      "text": ")"
+      "text": "n",
+      "link": "n"
      }
     ],
-    "caption": "This is the model's rule, not an equation printed in the paper. The paper says only that it fitted a gamma distribution. The blue 'mean' is the average-gap slider and the orange 'SD' is the spread slider. Together they fix the gamma curve's shape and scale. The paper reports mean 7.5 and SD 3.4 days."
+    "caption": "This is the model's simple rule, not an equation from the paper. μ is the average gap (7.5 days in the paper), σ is the spread of gaps (3.4 days), and n is the number of linked pairs (6). The paper fitted a gamma curve with a SARS-based prior, which gave a wider, lopsided 95% CI of 5.3 to 19 days."
    },
-   "recap": "The gap between linked cases varies from pair to pair. The paper summed it up as a lopsided curve averaging 7.5 days, but based on only 6 pairs, so it is uncertain.",
+   "recap": "The serial interval is the gap between linked cases' illness onsets. The paper's average of 7.5 days rests on just 6 pairs, so it is a rough estimate with a wide range.",
    "activities": [
     {
-     "id": "watch",
+     "id": "ex",
+     "kind": "worked",
+     "hypothetical": true,
+     "title": "Reading gaps off a made-up chain of cases",
+     "steps": [
+      {
+       "text": "Imagine a chain: A infects B, and B infects C. Investigators can't see when anyone was infected, but they do know when each person fell ill."
+      },
+      {
+       "text": "A falls ill on day 0. B falls ill on day 8. C falls ill on day 15."
+      },
+      {
+       "text": "Gap for the pair A → B: 8 − 0.",
+       "result": "8 days"
+      },
+      {
+       "text": "Gap for the pair B → C: 15 − 8.",
+       "result": "7 days"
+      },
+      {
+       "text": "Two pairs give two different gaps. Their average is (8 + 7) ÷ 2.",
+       "result": "7.5 days"
+      },
+      {
+       "text": "Two pairs can't tell you much. Another chain might show gaps of 3 and 14 days. The paper had only 6 such pairs."
+      }
+     ],
+     "takeaway": "Each infector–infected pair gives one gap between illness onsets. Gaps differ from pair to pair, so you need many pairs to know their average well. These numbers are made up, and matching the paper's 7.5 is a coincidence."
+    },
+    {
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
     },
     {
      "id": "goal_1",
      "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
      "i": 1
     },
     {
-     "id": "predict",
-     "kind": "predict"
-    },
-    {
-     "id": "reveal",
-     "kind": "reveal"
-    },
-    {
-     "id": "connect",
+     "id": "eq",
      "kind": "connect"
     }
    ]
   },
   {
-   "id": "reproduction_number",
-   "title": "R0: how many people each case infects",
-   "idea": "If every case infects R others, each generation of cases is R times the one before, so the outbreak grows when R is above 1 and dies out when R is below 1.",
+   "id": "r0_threshold",
+   "title": "R0 and the line between growth and fade-out",
+   "idea": "If each case infects R others per generation, case numbers multiply by R each generation, so the outbreak grows when R is above 1 and dies out when it is below 1.",
    "role": "core",
    "predict": {
-    "question": "City A has 1,000 cases, and each case infects 0.9 people on average. City B has only 5 cases, but each case infects 1.3 people on average. If nothing changes, which city has more cases per round after many rounds of infection?",
+    "question": "A cut of about 55% in transmission stops growth if R₀ is 2.2. But the paper's 95% interval for R₀ ran from 1.4 to 3.9. If the true R₀ were at the top of that range, would the same 55% cut still stop growth?",
     "options": [
-     "City A, because it started with far more cases",
-     "City B, because its outbreak grows while A's shrinks",
-     "They end up roughly equal",
-     "Neither: both outbreaks die out"
+     "Yes: a cut that works for 2.2 works across the whole range",
+     "No: at 3.9 each case would still infect about 1.8 others, so cases would keep growing",
+     "No: no cut can ever stop an outbreak whose R₀ is above 2",
+     "It would hold cases exactly flat"
     ],
     "answer": 1,
     "why": [
-     "A big head start is tempting to trust. But with 0.9 each round is 10% smaller than the last, so A's cases keep falling however many it starts with.",
-     "Correct. B multiplies by 1.3 each round and A by 0.9. Starting size only sets the height, not the direction. In this simple model B overtakes A after about 15 rounds.",
-     "Nothing pulls the two cities toward each other. One curve rises and the other falls, so the gap only widens once B passes A.",
-     "Small numbers like 5 can feel fragile. On average, though, a value above 1 means each round is bigger than the last, so B's outbreak grows. Only A's fades."
+     "Tempting, because 2.2 is the headline estimate. But the cut only removes a share of transmission: 3.9 × 0.45 ≈ 1.8, which is still above 1.",
+     "Right. What matters is the number left after the cut: 3.9 × 0.45 ≈ 1.75. That is above 1, so each round is bigger than the last. The uncertainty in R₀ carries straight into how much control is needed.",
+     "A bigger R₀ needs a bigger cut, but some cut always works. At 3.9, removing roughly three of every four infections brings the number below 1.",
+     "Flat would need exactly 1 infection per case after the cut. At the top of the range the number is about 1.75, well above the line, so cases grow."
     ]
    },
    "terms": [
     {
-     "term": "R0",
-     "means": "The basic reproductive number: how many new cases one case causes, on average, in a population where nobody is immune yet"
+     "term": "basic reproductive number (R₀)",
+     "means": "The average number of people one case infects when nobody in the population is immune yet and nothing is done to stop it"
     },
     {
-     "term": "threshold",
-     "means": "The value 1 for R0: above it outbreaks grow, below it they shrink"
+     "term": "reproductive number",
+     "means": "The average number of people one case actually infects once control measures are in place; the aim of control is to push it below 1"
     }
    ],
    "model": {
-    "title": "Cases in each round of infection",
-    "note": "Teaching model: every case infects exactly the average number of people, rounds happen in neat steps, and nobody becomes immune, so growth never slows by itself. Real chains are random, and some people infect many and others none. The 2.2 overlay is the paper's estimate. All other numbers are illustrative, not the paper's data.",
+    "title": "Cases, round by round of infection",
+    "note": "Teaching model: every case infects exactly the same average number of people, and each round of infection is one serial interval. Rounds are really separate steps but are drawn as a smooth curve. Nobody becomes immune, and the outbreak starts from 10 cases. The paper itself fitted a renewal-equation transmission model to Wuhan onset dates. The figure of about 2.2 infections per case is the paper's estimate and the figure of about 3 for SARS is quoted in the paper; all other numbers are illustrative.",
     "controls": [
      {
-      "id": "r",
-      "label": "People each case infects",
+      "id": "r0",
+      "label": "New infections per case, with no control",
       "kind": "slider",
       "min": 0.5,
-      "max": 3,
+      "max": 3.5,
       "step": 0.1,
-      "default": 1.5,
+      "default": 2.2,
       "unit": "",
       "color": 0
      },
      {
-      "id": "c0",
-      "label": "Cases in the first round",
+      "id": "cut",
+      "label": "Transmission cut by control measures",
       "kind": "slider",
-      "min": 1,
-      "max": 50,
-      "step": 1,
-      "default": 10,
-      "unit": "",
-      "color": 2
-     },
-     {
-      "id": "show_paper",
-      "label": "Show the paper's estimate (2.2)",
-      "kind": "toggle",
-      "default": 0,
-      "color": 3,
       "min": 0,
-      "max": 1,
-      "step": 1
+      "max": 90,
+      "step": 5,
+      "default": 0,
+      "unit": "%",
+      "color": 1
      }
     ],
     "outputs": [
      {
-      "id": "gen6",
-      "label": "Cases in round 6",
-      "expr": "c0 * pow(r, 6)",
-      "unit": "",
-      "decimals": 0,
-      "color": 0
-     },
-     {
-      "id": "total",
-      "label": "Total cases, rounds 0–6",
-      "expr": "c0 * (1 + r + pow(r, 2) + pow(r, 3) + pow(r, 4) + pow(r, 5) + pow(r, 6))",
-      "unit": "",
-      "decimals": 0,
+      "id": "r_after",
+      "label": "New infections per case, after the cut",
+      "expr": "r0 * (1 - cut / 100)",
+      "decimals": 2,
       "color": 1
      },
      {
-      "id": "growth",
-      "label": "Change from one round to the next",
-      "expr": "r - 1",
-      "unit": "%",
-      "scale": 100,
+      "id": "gen5",
+      "label": "Cases in round 5",
+      "expr": "10 * pow(r_after, 5)",
       "decimals": 0,
-      "color": 0
+      "color": 2
+     },
+     {
+      "id": "gen8",
+      "label": "Cases in round 8",
+      "expr": "10 * pow(r_after, 8)",
+      "decimals": 0,
+      "color": 2
      }
     ],
     "visual": {
      "type": "curves",
      "x": {
-      "label": "Round of infection",
+      "label": "Round of infection (each round ≈ one serial interval)",
       "min": 0,
-      "max": 6
+      "max": 8
      },
      "y": {
       "label": "New cases in that round",
       "min": 0,
-      "max": 150
+      "max": 100
      },
      "series": [
       {
-       "id": "cases",
-       "label": "Cases per round",
-       "expr": "c0 * pow(r, x)",
+       "id": "before",
+       "label": "No control",
+       "expr": "10 * pow(r0, x)",
        "color": 0,
-       "dashed": false
-      },
-      {
-       "id": "steady",
-       "label": "No change (same as the first round)",
-       "expr": "c0",
-       "color": 7,
        "dashed": true
       },
       {
-       "id": "paper",
-       "label": "Paper's estimate: 2.2 people per case",
-       "expr": "show_paper > 0.5 ? c0 * pow(2.2, x) : -100",
+       "id": "after",
+       "label": "With the cut",
+       "expr": "10 * pow(r0 * (1 - cut / 100), x)",
+       "color": 1,
+       "dashed": false
+      },
+      {
+       "id": "flat",
+       "label": "Each case just replaces itself",
+       "expr": "10",
        "color": 3,
        "dashed": true
       }
@@ -1284,381 +1477,354 @@
    "animation": {
     "steps": [
      {
-      "say": "Each point on this curve is one round of infection: the new cases caught from the round before.",
-      "focus": "cases",
-      "ms": 3000
+      "say": "Every round, each sick person passes the virus on to some new people. This curve counts the new cases in each round, starting from 10.",
+      "focus": "after",
+      "ms": 4200
      },
      {
-      "say": "This slider sets how many people each sick person passes the virus to, on average. Watch the curve bend.",
+      "say": "This slider sets how many people one case infects when nobody does anything to stop it.",
       "set": {
-       "r": 2
+       "r0": 2.2
       },
-      "focus": "r",
-      "ms": 3200
+      "focus": "r0",
+      "ms": 3800
      },
      {
-      "say": "This one sets how many cases start the chain.",
+      "say": "This one is control measures, such as isolation and quarantine. They cut transmission by a percentage. Watch the solid curve bend down.",
       "set": {
-       "c0": 20
+       "cut": 30
       },
-      "focus": "c0",
-      "ms": 2600
+      "focus": "cut",
+      "ms": 4200
      },
      {
-      "say": "The dashed flat line shows 'no change': every round the same size as the first.",
-      "focus": "steady",
-      "ms": 2800
-     },
-     {
-      "say": "These boxes count the cases in round 6 and the total so far.",
+      "say": "The dashed curve is the outbreak with no control. The flat line marks each case only replacing itself.",
       "focus": [
-       "gen6",
-       "total"
+       "before",
+       "flat"
       ],
-      "ms": 2800
+      "ms": 4000
      },
      {
-      "say": "And this switch overlays a curve built from the paper's own estimate.",
+      "say": "These boxes count the cases five and eight rounds in.",
       "set": {
-       "show_paper": 1
+       "cut": 0
       },
-      "focus": "show_paper",
-      "ms": 2800
+      "focus": [
+       "gen5",
+       "gen8"
+      ],
+      "ms": 3400
      }
     ]
    },
    "explore": {
-    "prompt": "Play with the two sliders. Find the knife-edge between growing and fading, then see whether a big start can still fizzle out.",
+    "prompt": "Now use control measures yourself. Find the cut that just tips the outbreak from growing to fading, and no bigger. Cutting more than needed costs a city a lot.",
     "goals": [
      {
-      "text": "Find the setting where every round of infection is the same size as the first",
-      "when": "abs(r - 1) < 0.05",
+      "text": "Keep the no-control number at the paper's estimate of 2.2. Find the smallest cut that stops cases from growing.",
+      "when": "abs(r0 - 2.2) < 0.01 && r_after < 1 && cut <= 55",
       "solution": {
-       "r": 1.0
+       "r0": 2.2,
+       "cut": 55
       },
       "hints": [
-       "You want the solid curve to lie on top of the dashed flat line.",
-       "Only the 'People each case infects' slider changes the curve's shape. Slide it until the change per round reads 0%.",
-       "Each case has to replace itself exactly: one person infects one person."
+       "Growth stops when each case, after the cut, infects fewer than one person.",
+       "Watch the 'after the cut' box as you raise the cut. Stop at the first setting where it drops below 1.",
+       "Halving transmission isn't quite enough. You need a little more than half."
       ]
      },
      {
-      "text": "Start with 40 or more cases and still end up with fewer than 5 cases in round 6",
-      "when": "c0 >= 40 && gen6 < 5",
+      "text": "SARS spread at about 3 infections per case and was brought under control. Find the smallest cut that would stop an outbreak like that from growing.",
+      "when": "abs(r0 - 3) < 0.01 && r_after < 1 && cut <= 70",
       "solution": {
-       "c0": 45,
-       "r": 0.6
+       "r0": 3,
+       "cut": 70
       },
       "hints": [
-       "A big start is fine, as long as each round shrinks fast enough.",
-       "Set the first-round cases to 40 or more, then push 'People each case infects' well below 1.",
-       "Each round multiplies by the number you set, five times over. Lower it until the round-6 box drops under 5."
+       "First make the no-control number match SARS.",
+       "Then raise the cut until the after-cut number falls below 1, and go no further.",
+       "With 3 infections per case, you must remove a bit more than two of every three infections."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Right. The number each case infects decides the direction, and starting size only decides the height. Above 1 an outbreak grows from any start. Below 1 it shrinks from any start, so the small growing outbreak eventually overtakes the big shrinking one.",
-     "incorrect": "It is natural to think the bigger outbreak stays bigger. But each round multiplies by the same factor: 0.9 makes A smaller every round, and 1.3 makes B bigger every round. Given enough rounds, the direction beats the head start."
+     "correct": "Yes. A fixed cut only removes a share of transmission. If the true R₀ is higher, the same share leaves more than one infection per case, and the outbreak keeps growing. So the paper's wide uncertainty interval matters for planning.",
+     "incorrect": "The cut multiplies R₀; it does not set the result directly. At the top of the paper's range, 3.9 × 0.45 ≈ 1.75, which is still above 1. Growth stops only when the number left after the cut is below 1."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Suppose each case infects 2 people. Ten cases make 20, then 40, then 80. Each round is double the last.",
+       "say": "Say each case infects 2 people. Ten cases make 20, then 40, then 80. The count multiplies by 2 every round, so by round 5 there are 320.",
        "set": {
-        "r": 2,
-        "c0": 10,
-        "show_paper": 0
+        "r0": 2,
+        "cut": 0
        },
-       "focus": "cases",
-       "ms": 3600
+       "focus": "gen5",
+       "ms": 5200
       },
       {
-       "say": "Lower it to 1.5. The outbreak still grows, just more gently: each round is 1.5 times the one before.",
+       "say": "Now each case infects exactly 1 person. Ten cases stay ten. Each case only replaces itself, so the curve sits on the flat line.",
        "set": {
-        "r": 1.5
+        "r0": 1
        },
-       "focus": "gen6",
-       "ms": 3400
+       "focus": "flat",
+       "ms": 5000
       },
       {
-       "say": "At exactly 1, each case simply replaces itself. The curve lies flat on the dashed line, with no growth and no decline.",
+       "say": "Just below 1: 10, then 8, then 6.4. The outbreak fades even though every case still infects someone. By round 8 fewer than 2 cases are left.",
        "set": {
-        "r": 1
+        "r0": 0.8
        },
-       "focus": "steady",
-       "ms": 3600
+       "focus": "gen8",
+       "ms": 5400
       },
       {
-       "say": "Drop below 1, to 0.8. Each round is 80% of the last, so the chain fades away.",
+       "say": "Just above 1, it slowly but surely grows: 10 becomes about 43 by round 8. This average number of people infected by one case, in a population where nobody is immune, is the basic reproductive number (R₀). The value 1 is the knife-edge.",
        "set": {
-        "r": 0.8
-       },
-       "focus": "cases",
-       "ms": 3400
-      },
-      {
-       "say": "This average, how many others one case infects when nobody is immune yet, is called the basic reproductive number, R0. The value 1 is the threshold: just above it, at 1.1, the curve tips upward again.",
-       "set": {
-        "r": 1.1
+        "r0": 1.2
        },
        "focus": [
-        "r",
-        "growth"
+        "after",
+        "r0"
        ],
-       "ms": 4600
+       "ms": 6400
       },
       {
-       "say": "A bigger start doesn't change the direction. Forty cases with R0 at 0.9 still shrink, round after round.",
+       "say": "The paper estimated R₀ ≈ 2.2 for Wuhan's early epidemic. Ten cases become about 500 by round 5, and the curve shoots off the chart.",
        "set": {
-        "c0": 40,
-        "r": 0.9
+        "r0": 2.2
        },
-       "focus": "c0",
-       "ms": 3800
+       "focus": [
+        "before",
+        "gen5"
+       ],
+       "ms": 5400
       },
       {
-       "say": "The paper estimated R0 at about 2.2 in early Wuhan. Each round more than doubles, and the curve shoots off the chart within four rounds.",
+       "say": "Control measures don't have to stop every infection. They lower the reproductive number, which is the number each case actually infects. A 30% cut leaves about 1.54: still growing.",
        "set": {
-        "c0": 10,
-        "r": 2.2,
-        "show_paper": 1
+        "cut": 30
        },
-       "focus": "paper",
-       "ms": 4400
+       "focus": "r_after",
+       "ms": 5600
+      },
+      {
+       "say": "Halve transmission and each case still infects 1.1 people. Growth is far slower than the dashed curve, but it is still growth. Halving is not quite enough.",
+       "set": {
+        "cut": 50
+       },
+       "focus": [
+        "after",
+        "r_after"
+       ],
+       "ms": 6000
       }
      ]
     },
-    "explanation": "Every case starts its own small chain, so each round of infection is the previous round multiplied by R0, the basic reproductive number: the average number of people one case infects. Multiply by more than 1 again and again and you get the explosive growth from the first concept. Multiply by less than 1 and each round is smaller, so the outbreak dies out. That is why 1 is the threshold, and why control measures aim to push transmission below it. Using cases with symptoms starting up to January 4, the authors estimated R0 at about 2.2, though the 95% interval was wide (1.4 to 3.9). It is an average: real cases vary a lot, and the value can change as behaviour and control measures change.",
+    "explanation": "If each case infects R people on average, every round of infection multiplies the case count by R. Above 1, the count multiplies up round after round. Below 1, it shrinks toward zero. At exactly 1, it holds steady. The paper estimated the basic reproductive number (R₀) at about 2.2 (95% CI 1.4 to 3.9), from the growth of Wuhan cases up to January 4 combined with the serial interval. Even the low end of that range is above 1, which means the outbreak would keep growing without control. Control measures aim to push the reproductive number below 1. The paper notes that SARS, with an R₀ near 3, was controlled by isolation and infection control. R₀ is an average, though: real cases vary, super-spreading can occur, and this estimate came from early, incomplete data.",
     "quote": "We estimated an R0 of approximately 2.2, meaning that on average each patient has been spreading infection to 2.2 other people. In general, an epidemic will increase as long as R0 is greater than 1, and control measures aim to reduce the reproductive number to less than 1.",
     "quote_where": "Discussion"
    },
    "connect": {
     "equation": [
      {
-      "text": "cases in round g = "
+      "text": "cases in round g = 10 × ("
      },
      {
-      "text": "cases in round 0",
-      "link": "c0"
+      "text": "R₀",
+      "link": "r0"
      },
      {
-      "text": " × "
+      "text": " × (1 − "
      },
      {
-      "text": "R_{0}",
-      "link": "r"
+      "text": "cut",
+      "link": "cut"
+     },
+     {
+      "text": "))"
      },
      {
       "text": "^{g}"
      }
     ],
-    "caption": "This is the model's rule, not an equation printed in the paper. The green part is the starting cases slider. The R_{0} part is the 'People each case infects' slider. Raising it to the power g repeats the multiplication once per round, which is what the round-6 box shows when g = 6."
+    "caption": "This is the teaching model's rule, not the paper's renewal-equation model. R₀ is the first slider. It is multiplied by the share of transmission left after the cut, which the second slider sets. Together they give the number each case actually infects (the 'after the cut' box). That number is raised to the power of the round number g. If it is above 1, the power explodes; if it is below 1, it shrinks toward zero."
    },
-   "recap": "Each round of cases is R0 times the last, so the outbreak grows when R0 is above 1 and fades when it is below 1, whatever the starting size.",
+   "recap": "Cases multiply by R each round of infection, so the epidemic grows above R = 1 and fades below it; control must push R under 1.",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
     },
     {
      "id": "goal_1",
      "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
      "i": 1
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
     },
     {
-     "id": "connect",
+     "id": "eq",
      "kind": "connect"
     }
    ]
   },
   {
    "id": "growth_to_r0",
-   "title": "Reading R0 from growth speed and serial interval",
-   "idea": "Daily growth speed and the serial interval together fix R0: the same doubling time implies a larger R0 when generations are spaced further apart.",
+   "title": "Turning doubling time into R0",
+   "idea": "R0 is the growth rate seen across one serial interval, so the same doubling time implies a larger R0 when the serial interval is longer.",
    "role": "contribution",
    "predict": {
-    "question": "Suppose a later study finds that the gaps between linked pairs average about 5 days, not 7.5. The doubling time stays at about a week. What happens to the R0 estimate?",
+    "question": "Two new outbreaks both have cases doubling every 7 days. In city A, linked patients fall ill about 4 days apart. In city B, they fall ill about 10 days apart. In which city is each case infecting more people?",
     "options": [
-     "R0 goes down",
-     "R0 goes up",
-     "R0 stays at 2.2, because the doubling time didn't change",
-     "R0 can't be worked out without counting each person's contacts"
+     "City A, with the 4-day gap",
+     "City B, with the 10-day gap",
+     "The same in both, because they double equally fast",
+     "You can't say without watching infections happen"
     ],
-    "answer": 0,
+    "answer": 1,
     "why": [
-     "Right. Shorter gaps fit more generations into each week. Each generation then needs to multiply less to produce the same weekly doubling, so R0 falls.",
-     "You might link faster spreading with a bigger R0. Here the growth speed is fixed. Shorter gaps mean more generations per week, so each one multiplies less.",
-     "The doubling time is only half the story. The same doubling time gives different R0 values depending on how far apart the generations are.",
-     "Counting contacts is one way to estimate R0, but this lesson's point is that two timings are enough. Growth speed plus the gap between cases fixes R0."
+     "A short gap can feel like 'faster spread', but the growth speed is already fixed. With a short gap, each case only has to infect a few people for cases to double every 7 days.",
+     "Right. In 10 days, cases doubling every 7 days grow by well over twice. Each generation must be much bigger than the last, so each case is infecting more people.",
+     "It is tempting to read R0 straight from the doubling time. But R0 is growth per generation, and the generations are a different length in each city.",
+     "This is the point of the method. The doubling speed and the gap between linked illnesses together let you work out R0 without observing any single infection."
     ]
    },
    "terms": [
     {
      "term": "renewal equation",
-     "means": "A rule saying that today's new cases are produced by earlier cases, each passing infection on after a serial-interval delay"
+     "means": "A rule that builds today's new cases from earlier cases, weighted by how many days ago those earlier cases fell ill"
     }
    ],
    "model": {
-    "title": "How fast cases grow and how far apart cases are, combined",
-    "note": "Teaching model: it assumes steady exponential growth and a gamma-shaped serial interval, and links them with a standard formula. The paper fitted a fuller renewal-equation model that also included animal-to-human infections and used SARS data as prior information. The paper reports R0 = 2.2 (95% CI 1.4 to 3.9). With the paper's growth rate of 0.10 per day and its 7.5 ± 3.4-day interval, this simple formula gives about 2.0. The dashed curve uses the paper's reported mean and SD. All other slider values are illustrative.",
+    "title": "How many people each case infects, from growth speed and the gap between linked illnesses",
+    "note": "Teaching model: it uses the standard result for a steadily growing outbreak whose gaps between linked illnesses follow a gamma distribution, the shape the paper fitted. The spread of the gaps is fixed at the paper's SD of 3.4 days, and only the average gap moves. With the paper's central values (growth 0.10 per day, 7.5-day gap), this formula gives about 2.0. The paper's 2.2 came from its full fitted model, which averaged over uncertainty and used a SARS-based prior for the gap. Other slider positions are illustrative, not the paper's data.",
     "controls": [
      {
-      "id": "m",
-      "label": "Average gap (days)",
+      "id": "r",
+      "label": "Growth rate (per day)",
       "kind": "slider",
-      "min": 3,
-      "max": 12,
-      "step": 0.5,
-      "default": 5,
-      "unit": " days",
+      "min": 0.01,
+      "max": 0.3,
+      "step": 0.01,
+      "default": 0.05,
+      "unit": "/day",
       "color": 0
      },
      {
-      "id": "s",
-      "label": "Spread of gaps (days)",
+      "id": "gap",
+      "label": "Average days between linked patients falling ill",
       "kind": "slider",
-      "min": 1,
-      "max": 6,
-      "step": 0.2,
-      "default": 2,
+      "min": 2,
+      "max": 20,
+      "step": 0.5,
+      "default": 5,
       "unit": " days",
       "color": 1
-     },
-     {
-      "id": "show_paper",
-      "label": "Show the paper's estimate",
-      "kind": "toggle",
-      "default": 0,
-      "color": 2,
-      "min": 0,
-      "max": 1,
-      "step": 1
-     },
-     {
-      "id": "r",
-      "label": "Daily growth rate",
-      "kind": "slider",
-      "min": 0.02,
-      "max": 0.2,
-      "step": 0.01,
-      "default": 0.05,
-      "unit": " per day",
-      "color": 5
      }
     ],
     "outputs": [
      {
-      "id": "doubling_time",
-      "label": "Days for cases to double",
+      "id": "doubling",
+      "label": "Doubling time",
       "expr": "ln(2) / r",
       "unit": " days",
       "decimals": 1,
-      "color": 5
+      "color": 0
      },
      {
-      "id": "shrunk_area",
-      "label": "Size of orange curve (blue curve = 1)",
-      "expr": "pow(1 + r * s * s / m, -(m * m) / (s * s))",
+      "id": "doublings",
+      "label": "Doublings within one gap",
+      "expr": "gap * r / ln(2)",
       "unit": "",
       "decimals": 2,
-      "color": 6
+      "color": 3
      },
      {
       "id": "r0",
       "label": "People each case infects (R0)",
-      "expr": "1 / shrunk_area",
+      "expr": "pow(1 + r * 11.56 / gap, gap * gap / 11.56)",
       "unit": "",
-      "decimals": 2,
-      "color": 6
-     },
-     {
-      "id": "r0_fixed",
-      "label": "R0 if every gap equalled the average",
-      "expr": "exp(r * m)",
-      "unit": "",
-      "decimals": 2,
-      "color": 7
+      "decimals": 1,
+      "color": 2
      }
     ],
     "visual": {
      "type": "curves",
      "x": {
-      "label": "Days from first person's symptoms to second person's symptoms",
+      "label": "Growth rate of cases (per day)",
       "min": 0,
-      "max": 25
+      "max": 0.3
      },
      "y": {
-      "label": "How common that gap is",
+      "label": "People each case infects",
       "min": 0,
-      "max": 0.45
+      "max": 7
      },
      "series": [
       {
-       "id": "fitted",
-       "label": "Gaps between linked pairs",
-       "expr": "exp(((m*m/(s*s)) - 1) * ln(max(x, 0.1)) - max(x, 0.1) * m / (s*s) - (m*m/(s*s)) * ln(s*s/m) - (((m*m/(s*s)) + 1.5) * ln((m*m/(s*s)) + 2) - ((m*m/(s*s)) + 2) + 0.5 * ln(2*pi) + 1 / (12 * ((m*m/(s*s)) + 2)) - 1 / (360 * pow((m*m/(s*s)) + 2, 3)) - ln(m*m/(s*s)) - ln((m*m/(s*s)) + 1)))",
-       "color": 0,
+       "id": "r0_curve",
+       "label": "With your gap",
+       "expr": "pow(1 + x * 11.56 / gap, gap * gap / 11.56)",
+       "color": 2,
        "dashed": false
       },
       {
        "id": "paper_curve",
-       "label": "Paper's estimate (7.5 ± 3.4 days)",
-       "expr": "show_paper * exp(3.866 * ln(max(x, 0.1)) - max(x, 0.1) / 1.5413 - 4.866 * ln(1.5413) - 2.978)",
-       "color": 2,
+       "label": "With Wuhan's 7.5-day gap",
+       "expr": "pow(1 + x * 11.56 / 7.5, 56.25 / 11.56)",
+       "color": 1,
        "dashed": true
-      },
-      {
-       "id": "shrunk",
-       "label": "Gaps shrunk for past growth",
-       "expr": "exp(((m*m/(s*s)) - 1) * ln(max(x, 0.1)) - max(x, 0.1) * m / (s*s) - (m*m/(s*s)) * ln(s*s/m) - (((m*m/(s*s)) + 1.5) * ln((m*m/(s*s)) + 2) - ((m*m/(s*s)) + 2) + 0.5 * ln(2*pi) + 1 / (12 * ((m*m/(s*s)) + 2)) - 1 / (360 * pow((m*m/(s*s)) + 2, 3)) - ln(m*m/(s*s)) - ln((m*m/(s*s)) + 1))) * exp(-r * x)",
-       "color": 6,
-       "dashed": false
-      }
-     ],
-     "fills": [
-      {
-       "series": 2,
-       "from": 0,
-       "to": 25,
-       "label": "Size left after shrinking",
-       "color": 6
       }
      ],
      "markers": [
       {
-       "id": "mean_marker",
-       "x": "m",
-       "label": "Average",
+       "id": "rate_marker",
+       "x": "r",
+       "label": "Your growth rate",
        "color": 0
+      }
+     ],
+     "hlines": [
+      {
+       "id": "line_one",
+       "y": 1,
+       "label": "Each case replaced exactly once"
       },
       {
-       "id": "peak_marker",
-       "x": "max(0, m - s * s / m)",
-       "label": "Most common",
-       "color": 3
+       "id": "paper_line",
+       "y": 2.2,
+       "label": "Paper's estimate: 2.2"
+      }
+     ],
+     "points": [
+      {
+       "id": "now_point",
+       "x": "r",
+       "y": "r0",
+       "label": "Your outbreak"
       }
      ]
     }
@@ -1666,163 +1832,150 @@
    "animation": {
     "steps": [
      {
-      "say": "Same picture as before. The blue curve shows the gaps between one person falling ill and the next, and these two sliders still set its average and spread.",
-      "focus": [
-       "fitted",
-       "m",
-       "s"
-      ],
-      "ms": 6500
+      "say": "This solid curve answers one question: for a given speed of growth, how many people must each case be infecting?",
+      "focus": "r0_curve",
+      "ms": 4500
      },
      {
-      "say": "New: this slider sets how fast cases climb each day. This box shows how many days that takes to double the case count.",
+      "say": "This slider sets how fast cases grow each day. Watch the marker and the dot slide along the curve.",
       "set": {
        "r": 0.1
       },
-      "focus": [
-       "r",
-       "doubling_time"
-      ],
-      "ms": 6000
+      "focus": "r",
+      "ms": 4500
      },
      {
-      "say": "The orange curve is the blue one, shrunk. This box shows how many people each case infects. Keep an eye on both.",
+      "say": "This slider sets the average number of days between one patient falling ill and the person they infected falling ill. Watch the solid curve bend.",
+      "set": {
+       "gap": 10
+      },
+      "focus": "gap",
+      "ms": 5000
+     },
+     {
+      "say": "The dashed curve keeps Wuhan's 7.5-day gap fixed for comparison. The flat line at 1 marks where an outbreak only just holds steady.",
       "focus": [
-       "shrunk",
-       "r0"
+       "paper_curve",
+       "line_one"
       ],
-      "ms": 6000
+      "ms": 5000
      }
     ]
    },
    "explore": {
-    "prompt": "Play with the growth slider and the gap sliders together. See how the same doubling time can mean very different numbers of people infected per case.",
+    "prompt": "Use the two sliders to build outbreaks of your own. Remember that how many people each case infects depends on both the growth speed and the gap.",
     "goals": [
      {
-      "text": "Keep cases doubling in 6 to 8 days, and get each case infecting more than 2 people",
-      "when": "doubling_time > 6 && doubling_time < 8 && r0 > 2",
+      "text": "Make an outbreak where cases double in about a week, yet each case infects only about 1.5 people.",
+      "when": "doubling >= 6 && doubling <= 8 && r0 >= 1.4 && r0 <= 1.6",
       "solution": {
        "r": 0.1,
-       "m": 7.5
+       "gap": 4.5
       },
       "hints": [
-       "First set the growth so the doubling box reads about a week. Then think about which gap slider adds work for each generation.",
-       "Find the growth rate that makes the doubling box read about a week. Then space the generations further apart.",
-       "Keep that growth and lengthen the average gap until each case infects more than 2 people."
+       "First get the doubling time near a week. Then ask what makes each generation smaller.",
+       "With the growth fixed, a shorter gap fits less growth into each generation.",
+       "Keep the growth near Wuhan's and bring the gap well below Wuhan's 7.5 days."
       ]
      },
      {
-      "text": "Hold the growth at 0.10 per day, and find gaps that make each case infect fewer than 1.5 people",
-      "when": "abs(r - 0.1) < 0.001 && r0 < 1.5",
+      "text": "Give the virus a gap about twice as long as Wuhan's, then find the growth speed at which each case still infects about 2.2 people.",
+      "when": "gap >= 14 && gap <= 16 && abs(r0 - 2.2) < 0.2",
       "solution": {
-       "r": 0.1,
-       "m": 4
+       "r": 0.05,
+       "gap": 15
       },
       "hints": [
-       "With the growth fixed, only the timing of generations can change R0.",
-       "Shorter gaps fit more generations into a week, so each one needs to multiply less.",
-       "Keep the growth at 0.10 and shorten the average gap until each case infects fewer than 1.5 people."
+       "With a longer gap, the same growth speed would give a much bigger number. So which way must growth move?",
+       "Slow the growth rate down until the dot sits near the 2.2 line.",
+       "You'll need cases doubling much more slowly than once a week, somewhere around once every two weeks."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. With the growth speed fixed, shorter gaps pack more generations into each week, so each generation multiplies by less. That means a smaller R0.",
-     "incorrect": "The doubling time alone doesn't fix R0. You also need the spacing of generations. The same weekly doubling with 5-day gaps instead of 7.5-day gaps means more, smaller steps, so R0 is lower."
+     "correct": "Yes. R0 is the growth over one gap between linked illnesses. With the same doubling speed, a longer gap holds more growth, so each case must be infecting more people.",
+     "incorrect": "You may have assumed the doubling speed alone settles R0. It doesn't: R0 is growth per generation. When generations are 10 days apart instead of 4, each one must be bigger to give the same 7-day doubling."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Cases growing 10% a day double in about 7 days. If the gaps between cases average 5 days, that growth needs each case to infect only about 1.6 people.",
+       "say": "Put in Wuhan's two measured ingredients. Cases grew about 0.10 per day (the paper's rounded figure; its 7.4-day doubling matches about 0.094). Linked patients fell ill 7.5 days apart on average.",
        "set": {
         "r": 0.1,
-        "m": 5,
-        "s": 2,
-        "show_paper": 0
+        "gap": 7.5
        },
        "focus": [
-        "doubling_time",
-        "r0"
+        "r",
+        "gap"
        ],
        "ms": 6000
       },
       {
-       "say": "Now stretch the average gap to 7.5 days and keep the same growth. R0 climbs to about 2.1. Fewer generations fit into each week, so each one has to multiply more to keep up.",
+       "say": "Now count how much growth fits inside one gap. In 7.5 days, cases growing this fast double about once.",
+       "focus": "doublings",
+       "ms": 5000
+      },
+      {
+       "say": "One gap is one generation: infector, then infected. If cases roughly double per generation, each case must be passing the virus on to about two people. The model reads about 2.0.",
+       "focus": [
+        "r0",
+        "now_point"
+       ],
+       "ms": 6500
+      },
+      {
+       "say": "Keep the growth exactly the same, but suppose linked patients fell ill 12 days apart. More growth now fits inside each generation, so each case must infect about 3 people.",
        "set": {
-        "m": 7.5
+        "gap": 12
        },
        "focus": [
-        "mean_marker",
+        "gap",
         "r0"
        ],
        "ms": 6500
       },
       {
-       "say": "Here is why, on the orange curve. Today's new cases were infected by people who fell ill one gap earlier, when the outbreak was smaller. The orange curve shrinks each gap by how much smaller the outbreak was that many days back.",
-       "focus": "shrunk",
+       "say": "The paper's uncertainty range for the gap stretched to 19 days. With that gap, the same growth would imply over 6. This is why the uncertain gap matters so much, and why the paper also drew on SARS's known gap to steady its estimate.",
+       "set": {
+        "gap": 19
+       },
+       "focus": "now_point",
        "ms": 7500
       },
       {
-       "say": "This rule, new cases now coming from earlier cases after a serial-interval delay, is a renewal equation. The orange area, about 0.48, is infectors per new case today. Flip it: each infector caused about 1 ÷ 0.48 ≈ 2.1 cases.",
+       "say": "The paper combined the two ingredients with a renewal equation. That rule builds each day's new cases from earlier cases, weighted by how long ago they fell ill. The curve here is what that rule gives for a steadily growing outbreak.",
+       "set": {
+        "gap": 7.5
+       },
+       "focus": "r0_curve",
+       "ms": 7000
+      },
+      {
+       "say": "Just by timing how fast cases doubled and how many days apart linked patients fell ill, you can work out that each case infected about two others, without watching a single infection happen. The paper's full model said 2.2.",
        "focus": [
-        "shrunk_area",
-        "r0"
+        "now_point",
+        "paper_line"
        ],
        "ms": 8000
-      },
-      {
-       "say": "Widen the spread to the paper's 3.4 days. Short gaps shrink a little and long gaps shrink a lot, but they don't cancel out. The orange area grows, so R0 dips to about 2.0. If every gap were exactly 7.5 days, R0 would be 2.1.",
-       "set": {
-        "s": 3.4
-       },
-       "focus": [
-        "r0",
-        "r0_fixed"
-       ],
-       "ms": 7500
-      },
-      {
-       "say": "The timing is uncertain. The paper's range for the average gap went well past 7.5 days. At 12 days the same growth means R0 above 3; at 5.5 days, only about 1.65. That is a big reason the paper's R0 range is so wide.",
-       "set": {
-        "m": 12
-       },
-       "focus": [
-        "mean_marker",
-        "r0"
-       ],
-       "ms": 7500
-      },
-      {
-       "say": "Now the paper's numbers: gaps averaging 7.5 days, cases growing about 10% a day, doubling roughly weekly. Out comes about 2 people per case; the paper's fuller fit gave 2.2. Nobody watched anyone infect anyone. Two timings were enough.",
-       "set": {
-        "m": 7.5,
-        "s": 3.4,
-        "r": 0.1,
-        "show_paper": 1
-       },
-       "focus": [
-        "paper_curve",
-        "r0"
-       ],
-       "ms": 8500
       }
      ]
     },
-    "explanation": "How fast cases grow tells you how much the outbreak multiplies per day. The serial interval tells you how many days one generation of cases takes. Put them together and you get how much each generation multiplies, which is R0. Longer gaps mean fewer generations per week, so the same doubling time needs a bigger R0. The paper fitted a renewal-equation model to the cases not linked to the market up to January 4. It found a growth rate of 0.10 per day and a doubling time of 7.4 days (0.10 is rounded, which is why it doesn't give exactly 7.4 here). Combined with the 7.5-day serial interval, this gave R0 = 2.2. The confidence interval runs from 1.4 to 3.9, partly because the serial interval came from only 6 pairs of cases. Early under-counting and changing testing could also bias the growth estimate.",
+    "explanation": "The doubling time tells you how fast cases grow per day. The gap between linked illnesses tells you how many days one generation of infection takes. Put the two together and you get the growth over one generation. That is R0: how many new cases each case produces. So the same doubling time means a bigger R0 if the gap is longer, and a smaller R0 if it is shorter. The paper measured growth from cases with onset up to January 4, estimated the gap from only 6 pairs of linked cases, and fitted a renewal-equation model to get an R0 of 2.2. Its uncertainty range (1.4 to 3.9) is wide partly because the gap was so uncertain.",
     "quote": "In the epidemic curve up to January 4, 2020, the epidemic growth rate was 0.10 per day (95% CI, 0.050 to 0.16) and the doubling time was 7.4 days (95% CI, 4.2 to 14). Using the serial interval distribution above, we estimated that R0 was 2.2 (95% CI, 1.4 to 3.9).",
     "quote_where": "Results"
    },
    "check": {
     "kind": "model",
-    "task": "Make cases double every 9 to 11 days (slower than in Wuhan) while each case still infects more than 2 people.",
-    "when": "doubling_time > 9 && doubling_time < 11 && r0 > 2",
+    "task": "Keep cases growing exactly as fast as in Wuhan (0.10 per day), but put the model in a state where each case must be infecting more than 3 people.",
+    "when": "abs(r - 0.1) < 0.005 && r0 > 3",
     "solution": {
-     "r": 0.07,
-     "m": 11
+     "r": 0.1,
+     "gap": 12
     },
-    "hint": "Slower growth gives a smaller R0 unless the generations are spaced much further apart. Set the growth so the doubling box reads about 10 days, then stretch the average gap.",
-    "misconception": "That slower growth always means a smaller R0. Growth speed alone doesn't fix R0. A slow-doubling outbreak can still have each case infecting many people if the gap between cases is long."
+    "hint": "If the growth rate can't move, which other ingredient feeds into R0?",
+    "misconception": "That the doubling time alone fixes R0, so two outbreaks that double equally fast must spread equally per case. R0 also depends on how long each generation of infection takes."
    },
    "connect": {
     "equation": [
@@ -1838,88 +1991,331 @@
       "link": "r"
      },
      {
-      "text": " × "
+      "text": " × σ² / "
      },
      {
-      "text": "s",
-      "link": "s"
+      "text": "T",
+      "link": "gap"
      },
      {
-      "text": "² ÷ "
-     },
-     {
-      "text": "m",
-      "link": "m"
-     },
-     {
-      "text": ") raised to the power ("
-     },
-     {
-      "text": "m",
-      "link": "m"
-     },
-     {
-      "text": "² ÷ "
-     },
-     {
-      "text": "s",
-      "link": "s"
-     },
-     {
-      "text": "²)"
+      "text": ")^{T²/σ²}"
      }
     ],
-    "caption": "This is the model's rule, not an equation printed in the paper. It is the standard result of a renewal equation when the serial interval has a gamma shape with mean m and spread (SD) s, and cases grow at rate r per day. The paper fitted a fuller renewal-equation model and reports R0 = 2.2. The doubling time is ln 2 ÷ r."
+    "caption": "This is the model's rule, not an equation printed in the paper. It is the standard renewal-equation result for an outbreak growing at rate r (the growth slider) whose gaps between linked illnesses follow a gamma distribution with mean T (the gap slider) and SD σ, fixed here at the paper's 3.4 days. R0 is the output read off the curve. With σ near zero, the rule becomes simply e^{r×T}, the growth over one exact gap."
    },
-   "recap": "Two timings are enough: how fast cases double and how far apart one case is from the next together give R0, and longer gaps mean a bigger R0 for the same growth.",
-   "builds_on": "serial_interval",
+   "recap": "R0 is growth measured across one generation of infection, so Wuhan's doubling time and 7.5-day serial interval together imply each case infected about two others.",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
     },
     {
      "id": "goal_1",
      "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
      "i": 1
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
     },
     {
-     "id": "check",
+     "id": "test",
      "kind": "check"
     },
     {
-     "id": "connect",
+     "id": "eq",
      "kind": "connect"
     }
    ]
   }
  ],
  "omitted": [],
- "created": "2026-10-17T17:51:09",
- "provider": {
-  "name": "Claude",
-  "model": "claude-opus-5-5"
+ "activity_plans": [
+  {
+   "concept": "market_to_people",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "choice",
+     "stages",
+     "explain",
+     "sort",
+     "choice"
+    ],
+    "why": "After an unscored guess, the evidence is revealed in stages: 55% market-linked cases before January 1 versus 8.6% after, then clusters and health care workers. The learner sorts clues by what they point to and revisits the guess."
+   },
+   "confidence": 0.83,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "choice",
+      "stages",
+      "explain",
+      "sort",
+      "choice"
+     ],
+     "why": "After an unscored guess, the evidence is revealed in stages: 55% market-linked cases before January 1 versus 8.6% after, then clusters and health care workers. The learner sorts clues by what they point to and revisits the guess."
+    },
+    {
+     "blocks": [
+      "explain",
+      "compare",
+      "passage",
+      "choice"
+     ],
+     "why": "The learner compares two hypothetical scenarios side by side: animal-only spread, and animal plus human spread. They then pick the passage from the paper that supports human transmission and judge a new case."
+    }
+   ]
+  },
+  {
+   "concept": "doubling_time",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "connect"
+    ],
+    "why": "The learner drags the growth rate and watches doubling-time markers move along the curve. A goal asks them to reach a one-week doubling time, then they predict the doubling time for a new rate."
+   },
+   "confidence": 0.98,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner drags the growth rate and watches doubling-time markers move along the curve. A goal asks them to reach a one-week doubling time, then they predict the doubling time for a new rate."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "estimate",
+      "goal",
+      "connect"
+     ],
+     "why": "After the tour the learner estimates how many cases there would be after a month from a handful of starting cases. They then check the estimate on the model."
+    }
+   ]
+  },
+  {
+   "concept": "reporting_delay",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "check",
+     "connect"
+    ],
+    "why": "The learner lengthens the delay and watches a fake peak appear before the cut-off. A goal asks them to make the observed curve drop although the real one rises. The check guards against reading the dip as a turning point."
+   },
+   "confidence": 0.48,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "check",
+      "connect"
+     ],
+     "why": "The learner lengthens the delay and watches a fake peak appear before the cut-off. A goal asks them to make the observed curve drop although the real one rises. The check guards against reading the dip as a turning point."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "compare",
+      "goal",
+      "check"
+     ],
+     "why": "The learner compares the model with a short delay and with a long delay side by side. They then use the model to show why the authors stopped the growth estimate at January 4."
+    }
+   ]
+  },
+  {
+   "concept": "serial_interval",
+   "chosen": "p2",
+   "plan": {
+    "blocks": [
+     "worked",
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "connect"
+    ],
+    "why": "A worked example walks through a hypothetical cluster: A falls ill on day 0, B on day 8, C on day 15. Reading off the gaps grounds the idea before the learner manipulates the curve."
+   },
+   "confidence": 0.59,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner shapes the distribution to match the paper's mean of 7.5 and SD of 3.4 days. They then predict what a longer gap would mean for spotting the next generation of cases."
+    },
+    {
+     "blocks": [
+      "worked",
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "connect"
+     ],
+     "why": "A worked example walks through a hypothetical cluster: A falls ill on day 0, B on day 8, C on day 15. Reading off the gaps grounds the idea before the learner manipulates the curve."
+    }
+   ]
+  },
+  {
+   "concept": "r0_threshold",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "connect"
+    ],
+    "why": "The learner moves R across 1 and watches growth flip to decline. A goal asks them to find how much transmission must be cut, starting from 2.2, to stop growth."
+   },
+   "confidence": 0.83,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner moves R across 1 and watches growth flip to decline. A goal asks them to find how much transmission must be cut, starting from 2.2, to stop growth."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "compare",
+      "goal",
+      "connect"
+     ],
+     "why": "The learner compares R = 2.2 (the paper's estimate) with R = 3 (the paper's figure for SARS) and R = 0.8. They see why control aims to push R below 1."
+    }
+   ]
+  },
+  {
+   "concept": "growth_to_r0",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "check",
+     "connect"
+    ],
+    "why": "The learner sets the growth rate to 0.10 per day and the serial interval to 7.5 days and reads R0 near 2. They then stretch the serial interval and watch R0 climb. The check targets the belief that faster doubling alone fixes R0."
+   },
+   "confidence": 0.85,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "check",
+      "connect"
+     ],
+     "why": "The learner sets the growth rate to 0.10 per day and the serial interval to 7.5 days and reads R0 near 2. They then stretch the serial interval and watch R0 climb. The check targets the belief that faster doubling alone fixes R0."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "worked",
+      "goal",
+      "check",
+      "connect"
+     ],
+     "why": "A worked example multiplies the growth over one 7.5-day gap step by step. The learner then uses the model to find serial intervals that would push R0 to the ends of the paper's 1.4 to 3.9 range."
+    }
+   ]
+  }
+ ],
+ "category": {
+  "primary": {
+   "id": "public_health",
+   "name": "Public health & epidemiology"
+  },
+  "secondary": null,
+  "probabilities": {
+   "public_health": 1.0
+  },
+  "confidence": 1.0,
+  "model": "jev-1.13.0"
  },
  "generation": {
   "provider": "claude",

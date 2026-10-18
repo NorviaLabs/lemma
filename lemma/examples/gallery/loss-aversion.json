@@ -1,54 +1,57 @@
 {
  "version": 1,
  "id": "gallery-loss-aversion",
- "title": "Why Checking Your Savings Too Often Can Cost You: Loss Aversion and Looking Less",
+ "title": "Why Checking Your Stocks Too Often Makes Them Feel Worse",
  "audience": "A curious adult with no background in this field",
- "created": "2026-10-18T20:59:08",
+ "created": "2026-10-19T02:40:46",
  "source": {
   "title": "Myopic Loss Aversion and the Equity Premium Puzzle",
-  "authors": "Shlomo Benartzi, Richard H. Thaler",
+  "authors": "Shlomo Benartzi and Richard H. Thaler",
   "year": 1993,
-  "venue": "NBER Working Paper No. 4369",
+  "venue": "NBER Working Paper Series (Working Paper No. 4369)",
   "url": ""
  },
  "intro": {
-  "summary": "This lesson follows one idea. People feel a loss about twice as strongly as an equal gain, and this changes what they choose depending on how often they look at their results. Benartzi and Thaler (1993) asked why stocks have paid so much more than safe bonds. Their simulations, using prospect theory parameters from earlier work, showed that loss aversion plus checking a portfolio about once a year can explain the gap. A large meta-analysis by Brown, Imai, Vieider and Camerer puts the typical loss-aversion coefficient near 1.955, a bit below the famous 2.25. A 19-country replication of prospect theory's core choice patterns largely succeeded. Limits: the stock-market argument rests on simulations with US data from 1926 to 1990. It shows the explanation is plausible, not proven. Loss aversion is also debated: some researchers argue it vanishes for small stakes or is better explained by inertia or 'loss attention', and the meta-analysis finds possible publication bias and large differences between studies. Gaps worth exploring later: probability weighting, the endowment effect, expectation-based reference points (Kőszegi–Rabin), and the loss-attention alternative.",
+  "summary": "This lesson draws on four sources to ask two linked questions: how much more do losses hurt than equal gains, and can that one bias explain why stocks have paid far more than bonds for a century? A large meta-analysis (Brown, Imai, Vieider and Camerer) pooled 607 estimates from 150 articles. It puts the average 'loss aversion coefficient' at about 1.96 (95% interval 1.82–2.11), a little below the famous 2.25, and possibly nearer 1.74 if missing low results are taken into account. Benartzi and Thaler's simulations show that a loss-averse investor who reviews a portfolio about once a year would find stocks and bonds about equally attractive. That matches the large historical stock premium without assuming extreme fear of risk. The main limits are these: the simulation shows the explanation is plausible, not that it is correct. Estimates of loss aversion vary widely between studies. Critics argue that loss aversion fades at small stakes, or that some effects reflect attention or inertia rather than losses weighing more. Topics covered only lightly here, and worth following up, include probability weighting, the endowment effect, loss attention, expectation-based reference points and the neural evidence.",
   "background": [
-   "A 'reference point' is the baseline, often what you have now, against which outcomes count as gains or losses.",
-   "Stocks bounce up and down a lot but have earned more on average, while bonds and treasury bills pay less but are steadier.",
-   "Prospect theory, proposed by Kahneman and Tversky in 1979, describes how people actually choose under risk, rather than how a perfectly rational chooser should.",
-   "A meta-analysis combines the numbers reported by many separate studies into one overall estimate, giving more weight to more precise studies."
+   "Prospect theory, proposed by Kahneman and Tversky in 1979, says people judge outcomes as gains or losses relative to a reference point (such as what they have now), rather than by their total wealth.",
+   "The 'equity premium' is the extra return stocks have earned over safe assets: about 7% a year after inflation for US stocks since 1926, against under 1% for treasury bills.",
+   "A meta-analysis combines many studies' estimates of the same number, giving more weight to precise estimates, to find the best overall value and how much it varies.",
+   "Standard economics explains the premium by risk aversion, but the amount of risk aversion needed looks implausibly extreme."
   ],
   "known": [],
-  "aha": "The same stocks look too scary to someone who checks them every month but worth holding to someone who checks once a year, and a loss aversion of about 2 plus a yearly look is enough to explain why stocks have paid about 6.5% a year more than bonds."
+  "aha": "The same loss-averse investor can find stocks unattractive or attractive depending only on how often they check them, and if people check about once a year, a loss aversion of about 2 is enough to explain why stocks have paid around 6% a year more than bonds."
  },
  "primer": [
   {
    "heading": "The question",
-   "body": "Since 1926, US stocks have earned about 7% a year after inflation, while treasury bills earned under 1%. Economists call this gap the equity premium. Standard theory says people would need to be absurdly afraid of risk to turn down that extra return. So why does anyone hold bonds at all? Benartzi and Thaler offered an answer drawn from the psychology of how people feel gains and losses.",
-   "quote": "We are left with a pair of questions: why is the equity premium so large? or, why is anyone willing to hold bonds?",
+   "body": "Would you take a coin flip that wins $200 on heads and loses $100 on tails? On average it pays $50, yet many people say no. Their reason: losing $100 would feel worse than winning $200 would feel good. Psychologists call this loss aversion. These sources ask how strong it really is, and whether it can solve a famous puzzle in finance.",
+   "quote": "In cognitive science and behavioral economics, loss aversion is a cognitive bias in which the same situation is perceived as worse if it is framed as a loss, rather than a gain.",
+   "quote_where": "Opening paragraph",
+   "quote_source_id": "s1",
+   "source_id": "s1",
+   "source_ids": [
+    "s1",
+    "s4"
+   ]
+  },
+  {
+   "heading": "The puzzle",
+   "body": "Over most of the last century, stocks earned far more than bonds. To explain such a large gap, standard theory needs investors who are absurdly afraid of risk. Mehra and Prescott estimated a 'risk aversion' level above 30, where about 1 is considered realistic. So why does anyone hold bonds at all?",
+   "quote": "Since 1926, the annual real return on stocks has been about 7 percent while the real return on treasury bills has been less than 1 percent.",
    "quote_where": "Section 1, Introduction",
+   "quote_source_id": "s4",
    "source_id": "s4",
    "source_ids": [
     "s4"
    ]
   },
   {
-   "heading": "Losses loom larger",
-   "body": "The first ingredient is loss aversion. Losing $100 hurts more than winning $100 pleases. The strength of this is captured by one number, λ (lambda). A λ of 2 means a loss feels twice as big as an equal gain. Kahneman and Tversky's 1992 study of 25 graduate students gave λ = 2.25, and that number became the standard.",
-   "quote": "Loss aversion refers to the tendency for individuals to be more sensitive to reductions in their levels of well being than to increases.",
-   "quote_where": "Section 1, Introduction",
-   "source_id": "s4",
-   "source_ids": [
-    "s4",
-    "s1"
-   ]
-  },
-  {
-   "heading": "How big is λ, really?",
-   "body": "Decades later, Brown and colleagues gathered 607 estimates of λ from 150 papers across economics, psychology, neuroscience and other fields. They pooled them in a way that trusts precise estimates more and pulls noisy, extreme ones toward the middle. Their best estimate is λ ≈ 1.955, with a 95% credible range of about 1.82 to 2.11. That range sits above 1, the value for no loss aversion, and below the classic 2.25. They also flag possible publication bias: after correcting for it, the estimate drops to about 1.74. Separately, a 19-country study re-ran Kahneman and Tversky's original 1979 choice questions and found that most patterns held up.",
-   "quote": "Many analyses, to this day, cite this number as the typical degree of loss aversion.",
-   "quote_where": "Section 1, Introduction (on the 2.25 estimate)",
+   "heading": "How big is loss aversion?",
+   "body": "Loss aversion is summarised by one number, λ (lambda): how many times more a loss hurts than an equal gain pleases. An early study of 25 graduate students reported 2.25, and many models still use it. A 2022 meta-analysis gathered every estimate it could find and combined them, giving less weight to imprecise ones. It found an average close to 2 (about 1.96). Estimates vary a lot from study to study, and a large 19-country replication found that the classic prospect theory choice patterns largely hold up.",
+   "quote": "We examine 607 empirical estimates of loss aversion from 150 articles in economics, psychology, neuroscience, and several other disciplines.",
+   "quote_where": "Abstract",
+   "quote_source_id": "s2",
    "source_id": "s2",
    "source_ids": [
     "s2",
@@ -57,26 +60,32 @@
   },
   {
    "heading": "What Benartzi and Thaler did",
-   "body": "The second ingredient is how often you look. Paul Samuelson once offered a colleague a coin flip: win $200 or lose $100. The colleague refused one flip but would accept 100 of them. With loss aversion, looking at one flip at a time makes the bet feel bad, while judging many together makes losses rare. Benartzi and Thaler drew thousands of samples from historical stock and bond returns for 1926 to 1990. They asked how often a prospect-theory investor (λ = 2.25) would have to check their portfolio to feel equally happy with stocks and bonds.",
-   "source_ids": [
-    "s4"
-   ]
-  },
-  {
-   "heading": "What they found",
-   "body": "The answer was about once a year: somewhere between 9 and 13 months, depending on whether real or nominal returns were used and whether stocks were compared with bonds or treasury bills. That is the calendar on which tax forms, annual reports and pension statements arrive. Such an investor would pick about a 50-50 split between stocks and bonds, which is close to what many real investors hold. Checking less often would shrink the premium stocks need to offer. With a 20-year evaluation period it would be only about 1.4% a year instead of 6.5%.",
-   "quote": "Using simulations we find that the size of the equity premium is consistent with the previously estimated parameters of prospect theory if investors evaluate their portfolios annually.",
+   "body": "They added a second ingredient: how often investors check their results. Over short periods, stocks lose money often. Over long periods, they rarely do. Using real US returns from 1926 to 1990, they simulated a loss-averse investor and asked how often that investor would have to review the portfolio to find stocks and bonds equally attractive.",
+   "quote": "Second, investors are assumed to evaluate their portfolios frequently, even if they have long-term investment goals such as saving for retirement or managing a pension plan.",
    "quote_where": "Abstract",
+   "quote_source_id": "s4",
    "source_id": "s4",
    "source_ids": [
     "s4"
    ]
   },
   {
-   "heading": "Why it matters, and the limits",
-   "body": "The work suggests that how often people or institutions look at their results is a choice, and that choice has a price. The authors call the extra premium 'the price of excessive vigilance'. The authors themselves say they can only show their explanation is plausible, not correct. It also relies on loss aversion, which is contested. Some studies find no loss aversion for small stakes. Gal argues that inertia explains the same behaviour. Yechiam and Hochman propose that losses grab attention rather than carrying extra weight. Other large studies have replicated loss aversion and found that its size varies in predictable ways.",
+   "heading": "What they found",
+   "body": "The answer came out at roughly once a year, which is how often many people get tax forms and annual statements. With that review period, the best mix was about half stocks and half bonds, similar to what many real investors choose. If investors looked only every 20 years, a premium of about 1.4% would have been enough. The authors call the remaining 5.1% a year 'the price of excessive vigilance'.",
+   "quote": "Using simulations we find that the size of the equity premium is consistent with the previously estimated parameters of prospect theory if investors evaluate their portfolios annually.",
+   "quote_where": "Abstract",
+   "quote_source_id": "s4",
+   "source_id": "s4",
+   "source_ids": [
+    "s4"
+   ]
+  },
+  {
+   "heading": "Why it matters, and the doubts",
+   "body": "If this holds, part of the stock premium is a reward paid to people who can bear to look less often. But a simulation that fits the data is not proof. Loss aversion varies by setting and person. The meta-analysis finds hints that low estimates may go unpublished. Some researchers argue that losses mainly grab attention, or that people simply stick with what they have, rather than weighing losses more.",
    "quote": "Multiple studies have questioned the existence of loss aversion.",
    "quote_where": "Criticisms",
+   "quote_source_id": "s1",
    "source_id": "s1",
    "source_ids": [
     "s1",
@@ -92,153 +101,158 @@
  "concepts": [
   {
    "id": "losses_loom_larger",
-   "title": "Losses loom larger than gains",
-   "idea": "A loss of a given size feels about λ times as bad as an equal gain feels good, which puts a kink in the value curve at zero.",
+   "title": "Losses hurt more than gains feel good",
+   "idea": "A value curve that is steeper for losses than for gains makes a loss of a given size feel about λ times worse than an equal gain feels good.",
    "role": "prerequisite",
    "predict": {
-    "question": "Ana weighs losses twice as heavily as gains. One morning she finds $20 on the street. That afternoon she loses a $20 note. If she feels each event on its own, how does her day feel overall?",
+    "question": "Someone in this model has λ = 2. They lose $10 on Monday and win $10 back on Tuesday. Counting both feelings, where do they end up compared with before Monday?",
     "options": [
-     "Neutral: the two events cancel out",
-     "Mildly bad, about −20",
-     "Bad, about −40",
-     "Good, about +20"
+     "Worse off: the pain of the loss outweighs the pleasure of the win",
+     "Exactly even: they got the money back",
+     "Better off: the win came last, so it counts more",
+     "It depends on whether $10 is a lot of money to them"
     ],
-    "answer": 1,
+    "answer": 0,
     "why": [
-     "Her money ends where it started, so it is tempting to say the feelings cancel. But the loss side is twice as steep: −40 of pain against +20 of joy does not cancel.",
-     "Right. The find feels like +20. The loss feels like 2 × 20 = 40 of pain. Together that is +20 − 40 = −20, so the day feels mildly bad even though she is no poorer.",
-     "−40 is the pain of the loss alone. It forgets that the morning's +20 of joy still counts and partly offsets it.",
-     "Picking this means the gain was weighted more heavily than the loss. Loss aversion says the opposite: the loss side is the steeper one."
+     "Correct. The loss side is λ times steeper, so the $10 loss carries twice the feeling of the $10 win. The total feeling is negative even though the money is back.",
+     "That is how the money adds up. The curve scores feelings, though, and each lost dollar counts about twice, so equal amounts do not cancel.",
+     "Order plays no part here. Each change is scored from the starting point, and the loss side is steeper whichever comes first.",
+     "In this model pain is λ times the pleasure at every size, because the bend matches on both sides. Some real studies find less loss aversion for small stakes; that doubt comes later."
     ]
    },
    "terms": [
     {
      "term": "reference point",
-     "means": "The starting position that outcomes are compared to. Moving above it is a gain and moving below it is a loss. In this model it is zero."
+     "means": "The starting point that gains and losses are measured from. Here it is 'no change in money'."
+    },
+    {
+     "term": "diminishing sensitivity",
+     "means": "Each extra unit of gain or loss adds less feeling than the one before, so the curve flattens."
     },
     {
      "term": "loss aversion",
-     "means": "The pattern where losing an amount feels worse than gaining the same amount feels good."
+     "means": "Feeling a loss more strongly than a gain of the same size."
     },
     {
-     "term": "loss aversion coefficient",
-     "means": "λ: how many times steeper the loss side of the value curve is than the gain side. λ = 1 means no loss aversion, and λ > 1 means losses loom larger."
+     "term": "loss aversion coefficient (λ)",
+     "means": "How many times more a loss counts than an equal gain. λ = 1 means no loss aversion. λ above 1 means losses loom larger."
     }
    ],
    "model": {
-    "title": "How good or bad a money change feels",
-    "note": "Teaching model: the value curve is drawn as two straight lines meeting at zero. The papers' bend for diminishing sensitivity is switched off here, so the curvature equals 1. The starting position is fixed at zero and amounts are in made-up money units. The values 2.25 and 'about 2' mentioned in the lesson come from the cited papers. All other numbers are illustrative.",
+    "title": "How a win and a loss feel",
+    "note": "Teaching model: it uses the 1992 prospect-theory value curve with the same bend (power 0.88) for gains and losses and a single multiplier on losses. It ignores how people weight probabilities and how people differ from one another. Amounts are illustrative units. λ = 2.25 is Tversky and Kahneman's 1992 median and about 1.96 is the meta-analysis mean, both as reported by Brown et al. All other numbers are illustrative.",
     "controls": [
      {
-      "id": "lambda",
-      "label": "How much heavier a loss weighs",
+      "id": "lam",
+      "label": "Extra sting of losses (×)",
       "kind": "slider",
       "min": 0.5,
       "max": 3,
-      "step": 0.25,
+      "step": 0.05,
       "default": 1,
       "unit": "×",
-      "color": 0
-     },
-     {
-      "id": "gain",
-      "label": "Size of the win",
-      "kind": "slider",
-      "min": 0,
-      "max": 200,
-      "step": 10,
-      "default": 50,
-      "unit": "",
       "color": 2
      },
      {
-      "id": "loss",
-      "label": "Size of the loss",
+      "id": "gain_amt",
+      "label": "Size of the win",
       "kind": "slider",
-      "min": 0,
-      "max": 200,
-      "step": 10,
+      "min": 5,
+      "max": 100,
+      "step": 5,
       "default": 50,
       "unit": "",
       "color": 1
+     },
+     {
+      "id": "loss_amt",
+      "label": "Size of the loss",
+      "kind": "slider",
+      "min": 5,
+      "max": 100,
+      "step": 5,
+      "default": 50,
+      "unit": "",
+      "color": 3
      }
     ],
     "outputs": [
      {
-      "id": "gain_feel",
-      "label": "How good the win feels",
-      "expr": "gain",
-      "unit": "",
-      "decimals": 0,
-      "color": 2
-     },
-     {
-      "id": "loss_feel",
-      "label": "How bad the loss feels",
-      "expr": "lambda * loss",
-      "unit": "",
+      "id": "felt_gain",
+      "label": "Good feeling of the win",
+      "expr": "pow(gain_amt, 0.88)",
       "decimals": 1,
       "color": 1
      },
      {
-      "id": "net",
-      "label": "Net feeling (good − bad)",
-      "expr": "gain - lambda * loss",
-      "unit": "",
+      "id": "felt_loss",
+      "label": "Pain of the loss",
+      "expr": "lam * pow(loss_amt, 0.88)",
       "decimals": 1,
       "color": 3
+     },
+     {
+      "id": "ratio",
+      "label": "Pain ÷ good feeling",
+      "expr": "felt_loss / felt_gain",
+      "decimals": 2,
+      "unit": "×",
+      "color": 2
      }
     ],
     "visual": {
      "type": "curves",
      "x": {
-      "label": "Money lost (left) or won (right)",
-      "min": -200,
-      "max": 200
+      "label": "Change in money (loss ← 0 → gain)",
+      "min": -100,
+      "max": 100
      },
      "y": {
       "label": "How it feels",
-      "min": -600,
-      "max": 200
+      "min": -180,
+      "max": 70
      },
      "series": [
       {
-       "id": "value_curve",
-       "label": "Felt value",
-       "expr": "x >= 0 ? x : lambda * x",
-       "color": 0,
-       "dashed": false
+       "id": "mirror",
+       "label": "Losses with no extra sting",
+       "expr": "x >= 0 ? pow(abs(x), 0.88) : -pow(abs(x), 0.88)",
+       "color": 4,
+       "dashed": true
       },
       {
-       "id": "fair_line",
-       "label": "If losses counted the same as wins",
-       "expr": "x",
-       "color": 7,
-       "dashed": true
+       "id": "value_curve",
+       "label": "Felt value",
+       "expr": "x >= 0 ? pow(abs(x), 0.88) : -lam * pow(abs(x), 0.88)",
+       "color": 0,
+       "dashed": false
       }
      ],
-     "markers": [
+     "hlines": [
       {
-       "id": "zero_marker",
-       "x": 0,
-       "label": "Where you start",
-       "color": 7
+       "id": "zero_line",
+       "y": 0,
+       "label": "No feeling either way"
       }
      ],
      "points": [
       {
-       "id": "gain_pt",
-       "x": "gain",
-       "y": "gain",
-       "label": "The win",
-       "color": 2
+       "id": "start",
+       "x": 0,
+       "y": 0,
+       "label": "Where you start"
       },
       {
-       "id": "loss_pt",
-       "x": "-loss",
-       "y": "-lambda * loss",
-       "label": "The loss",
-       "color": 1
+       "id": "gain_point",
+       "x": "gain_amt",
+       "y": "pow(gain_amt, 0.88)",
+       "label": "The win"
+      },
+      {
+       "id": "loss_point",
+       "x": "-loss_amt",
+       "y": "-lam * pow(loss_amt, 0.88)",
+       "label": "The loss"
       }
      ]
     }
@@ -246,619 +260,638 @@
    "animation": {
     "steps": [
      {
-      "say": "Left to right is money: losses on the left, wins on the right. Up and down is how much the change feels good or bad.",
+      "say": "This curve shows how a change in money feels. To the right of the middle you are winning. To the left you are losing.",
       "focus": "value_curve",
-      "ms": 3800
+      "ms": 3000
      },
      {
-      "say": "The dashed line is someone who feels a loss exactly as strongly as a win of the same size.",
-      "focus": "fair_line",
+      "say": "The middle is where you start: no change at all, and no feeling either way.",
+      "focus": "start",
+      "ms": 2600
+     },
+     {
+      "say": "This slider sets how many times extra a loss stings. Watch the left side dive while the right side stays put.",
+      "set": {
+       "lam": 2.25
+      },
+      "focus": "lam",
       "ms": 3400
      },
      {
-      "say": "This slider sets how much heavier a loss weighs. Watch the left half tilt down while the right half stays put.",
-      "set": {
-       "lambda": 2
-      },
-      "focus": "lambda",
-      "ms": 4000
+      "say": "These two sliders set the size of a win and of a loss. The dots show how each one feels.",
+      "focus": [
+       "gain_amt",
+       "loss_amt",
+       "gain_point",
+       "loss_point"
+      ],
+      "ms": 3200
      },
      {
-      "say": "These two sliders place a win and a loss on the curve.",
-      "set": {
-       "gain": 80
-      },
+      "say": "These boxes read off the good feeling, the pain, and how many times bigger the pain is.",
       "focus": [
-       "gain",
-       "loss",
-       "gain_pt",
-       "loss_pt"
+       "felt_gain",
+       "felt_loss",
+       "ratio"
       ],
-      "ms": 3600
-     },
-     {
-      "say": "The boxes read off how good the win feels, how bad the loss feels, and the two added together.",
-      "focus": [
-       "gain_feel",
-       "loss_feel",
-       "net"
-      ],
-      "ms": 3600
+      "ms": 3000
      }
     ]
    },
    "explore": {
-    "prompt": "Play with the loss weight and the two amounts. Try to make lopsided feelings appear, and then try to balance them out.",
+    "prompt": "Play with the sting and the two sizes. Can you make a small loss outweigh a big win, or find a win that makes up for a loss?",
     "goals": [
      {
       "text": "Make a loss hurt more than a win twice its size feels good.",
-      "when": "loss > 0 && gain >= 2 * loss - 0.001 && lambda * loss > gain",
+      "when": "felt_loss > felt_gain && gain_amt >= 2 * loss_amt",
       "solution": {
-       "gain": 100,
-       "loss": 50,
-       "lambda": 2.25
+       "lam": 1.9,
+       "gain_amt": 40,
+       "loss_amt": 20
       },
       "hints": [
-       "First size the win so that it is double the loss.",
-       "Now the loss side has to be steep enough that its pain beats the bigger win. Which slider makes the left half steeper?",
-       "Find the loss weight at which the two feelings exactly tie, then go one notch higher."
+       "First make the win at least double the loss. Then decide how much extra the loss must sting.",
+       "Doubling a win does not double its good feeling, because the curve flattens. So the sting needs to be a bit less than 2.",
+       "Watch the 'Pain ÷ good feeling' box. Raise the sting slowly from 1 until that box crosses 1. You will land somewhere between 1.5 and 2."
       ]
      },
      {
-      "text": "Make a win and a loss of different sizes feel exactly equally strong (net feeling zero), while losses still weigh more than wins.",
-      "when": "loss > 0 && lambda > 1 && abs(gain - lambda * loss) < 0.01",
+      "text": "With the extra sting at the 1992 estimate, find a win that feels at least as good as the loss feels bad.",
+      "when": "lam >= 2.2 && lam <= 2.3 && felt_gain >= felt_loss",
       "solution": {
-       "lambda": 2,
-       "loss": 50,
-       "gain": 100
+       "lam": 2.25,
+       "gain_amt": 60,
+       "loss_amt": 20
       },
       "hints": [
-       "Losses only loom larger when the loss weight is above 1.",
-       "The pain of the loss is the loss times the weight. The win has to equal that pain.",
-       "Choose a weight that is easy to multiply, like a whole number. Then make the win that many times bigger than the loss."
+       "Set the sting to the 1992 value first. Then you need a much bigger win than loss.",
+       "Keep the loss small so the win has room to grow on the slider.",
+       "The win has to be well over twice the loss, somewhere between two and three times as big."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. Each event is read off the kinked curve on its own. +20 of joy against 2 × 20 = 40 of pain leaves −20, so an even day in money terms feels like a bad day.",
-     "incorrect": "It is tempting to think equal amounts cancel. With a kink at zero they do not: the loss is read off the steeper left side, so its pain is λ times bigger than the matching joy."
+     "correct": "Right. With λ = 2, the $10 loss carries twice the feeling of the $10 win. Ending up with the same money still leaves a net bad feeling.",
+     "incorrect": "The money is back where it started, but the curve scores feelings, not dollars. The loss side is λ times steeper, so equal-sized losses and gains do not cancel. In this model that holds at every size."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start with the loss weight at 1. Winning 50 feels like +50 and losing 50 feels like −50. The curve is one straight line, sitting right on the dashed line.",
+       "say": "Start with no extra sting. A loss of 50 hurts exactly as much as a win of 50 feels good, so the ratio is 1. The middle point, where gains and losses are counted from, is called the reference point.",
        "set": {
-        "lambda": 1,
-        "gain": 50,
-        "loss": 50
+        "lam": 1,
+        "gain_amt": 50,
+        "loss_amt": 50
        },
-       "focus": "value_curve",
-       "ms": 4500
-      },
-      {
-       "say": "Everything is measured from zero, your current position. This starting point is called the reference point. What matters is whether you move up or down from it, not your total wealth.",
-       "focus": "zero_marker",
-       "ms": 4800
-      },
-      {
-       "say": "Now double the loss weight. The right half does not move: winning 50 still feels like +50.",
-       "set": {
-        "lambda": 2
-       },
-       "focus": "gain_feel",
+       "focus": "ratio",
        "ms": 4200
       },
       {
-       "say": "But the left half is now twice as steep. Losing 50 feels like −100. The line bends sharply at zero, so it has a kink.",
-       "focus": "loss_pt",
+       "say": "Double the win to 100. The good feeling rises from about 31 to about 58, which is less than double. Each extra unit adds less feeling. This is called diminishing sensitivity, and it bends both sides of the curve.",
+       "set": {
+        "gain_amt": 100
+       },
+       "focus": "felt_gain",
        "ms": 4600
       },
       {
-       "say": "This lopsidedness is loss aversion. The weight is called the loss aversion coefficient, written λ. Tversky and Kahneman's 1992 study of 25 graduate students reported a median of 2.25.",
+       "say": "Back to a win of 50. Now give losses extra weight. The gain side does not move, but the loss side gets steeper, and the curve now has a sharp kink at the starting point.",
        "set": {
-        "lambda": 2.25
+        "gain_amt": 50,
+        "lam": 2.25
        },
-       "focus": "lambda",
-       "ms": 5200
+       "focus": "value_curve",
+       "ms": 4200
       },
       {
-       "say": "Same size, unequal feelings. With the loss aversion coefficient at 2.25, a +50 win and a −50 loss together feel like −62.5.",
-       "focus": "net",
+       "say": "The same 50 now brings 2.25 times as much pain as pleasure. Feeling losses more than equal gains is called loss aversion, and the multiplier is the loss aversion coefficient (λ).",
+       "focus": "ratio",
        "ms": 4400
       },
       {
-       "say": "To make up for losing 50, a win would have to be about 2.25 times bigger. At a win of 110 the net feeling is almost back to zero.",
+       "say": "The dashed line shows what losses would feel like with no extra sting. The gap between it and the solid curve is the extra pain that λ adds.",
+       "focus": "mirror",
+       "ms": 3800
+      },
+      {
+       "say": "Shrink both amounts to 20. The ratio stays at 2.25. Because the bend is the same on both sides, a loss is λ times worse at every size.",
        "set": {
-        "gain": 110
+        "gain_amt": 20,
+        "loss_amt": 20
+       },
+       "focus": "ratio",
+       "ms": 4200
+      },
+      {
+       "say": "Tversky and Kahneman's 1992 value of 2.25 came from 25 students. A later pooling of 607 estimates puts the average near 1.96. Losses still loom about twice as large.",
+       "set": {
+        "lam": 1.95,
+        "gain_amt": 50,
+        "loss_amt": 50
        },
        "focus": [
-        "gain_pt",
-        "loss_pt",
-        "net"
+        "lam",
+        "loss_point"
        ],
-       "ms": 5200
+       "ms": 4800
       }
      ]
     },
-    "explanation": "Prospect theory says people judge outcomes as gains or losses from a reference point, not as total wealth. On the loss side the value curve is steeper by the loss aversion coefficient λ, so it has a kink at zero. Estimates are typically around 2: losing something feels about twice as bad as getting it feels good. Benartzi and Thaler, and Brown and colleagues, both cite Tversky and Kahneman's 1992 median of 2.25, which came from just 25 students answering unpaid questions. Not everyone agrees: some studies find no loss aversion for small stakes, and some researchers argue that losses mainly grab attention rather than carrying more weight. This model also simplifies by drawing straight lines. The papers' curves bend slightly (curvature 0.88), so each extra dollar matters a little less.",
+    "explanation": "In prospect theory, people judge outcomes as gains or losses from a starting point, not as total wealth. The value curve rises for gains, falls for losses, and flattens as amounts grow on both sides. Loss aversion makes the loss side steeper by a multiplier, the loss aversion coefficient (λ), which puts a kink at the starting point. With the same bend on both sides, a loss of any size feels λ times as bad as an equal gain feels good. Tversky and Kahneman (1992) reported a median λ of 2.25 from 25 graduate students. Brown and colleagues pooled 607 estimates from 150 papers and found an average of about 1.96 (95% credible interval 1.82 to 2.11), with wide variation between studies. Some studies find little loss aversion for small stakes.",
     "quote": "Empirical estimates of loss aversion are typically in the neighborhood of 2, meaning the disutility of giving something up is twice as great as the utility of acquiring it",
     "quote_where": "Section 1 (Introduction)",
     "source_id": "s4",
     "source_ids": [
-     "s4",
      "s2",
+     "s4",
      "s1"
     ]
    },
    "connect": {
     "equation": [
      {
-      "text": "U(x) = x^{α} if x ≥ 0;   U(x) = −"
-     },
-     {
-      "text": "λ",
-      "link": "lambda"
-     },
-     {
-      "text": "(−x)^{β} if x < 0"
-     }
-    ],
-    "caption": "This is the value function in equation (3) of Brown et al., following Tversky and Kahneman (1992). The coloured λ is the loss-weight slider: it multiplies only the loss side, and that is what creates the kink at zero. The model sets α = β = 1, which gives straight lines like Benartzi and Thaler's bi-linear version. Tversky and Kahneman estimated α = β = 0.88."
-   },
-   "recap": "Measured from where you start, a loss feels about λ times as bad as an equal gain feels good. Estimates put λ near 2, which gives the value curve a kink at zero.",
-   "activities": [
-    {
-     "id": "watch",
-     "kind": "watch"
-    },
-    {
-     "id": "walk",
-     "kind": "walk"
-    },
-    {
-     "id": "explain",
-     "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
-    },
-    {
-     "id": "goal_1",
-     "kind": "goal",
-     "i": 1
-    },
-    {
-     "id": "predict",
-     "kind": "predict"
-    },
-    {
-     "id": "reveal",
-     "kind": "reveal"
-    },
-    {
-     "id": "connect",
-     "kind": "connect"
-    }
-   ]
-  },
-  {
-   "id": "when_to_take_a_coin_flip",
-   "title": "When is a coin flip worth taking?",
-   "idea": "A loss-averse person accepts a 50/50 bet only when the possible gain is more than λ times the possible loss, so Samuelson's win-$200 / lose-$100 flip gets refused.",
-   "role": "core",
-   "predict": {
-    "question": "Someone with λ = 2 turns down a coin flip that wins $150 or loses $100. You double both stakes to win $300 or lose $200. In this simple model, what do they do now?",
-    "options": [
-     "They take it, because the possible win is now much bigger",
-     "They still refuse, because the gain is still only 1.5 times the loss",
-     "They take it, because the average payoff doubled to $50"
-    ],
-    "answer": 1,
-    "why": [
-     "The win did grow, but so did the loss. The model compares the gain with λ times the loss: 300 is still less than 2 × 200.",
-     "Right. Doubling both stakes keeps the ratio at 1.5, below λ = 2, so the felt total stays negative. Some studies find loss aversion fades at small stakes, so real people may not scale this neatly.",
-     "The average payoff did double, but the person was never judging the average. In felt value the loss half also doubled, so the total just becomes twice as negative."
-    ]
-   },
-   "terms": [
-    {
-     "term": "mixed bet",
-     "means": "A gamble that can end in either a gain or a loss, like a coin flip that wins $200 or loses $100"
-    },
-    {
-     "term": "break-even point",
-     "means": "The stakes at which the felt gain and the felt loss cancel exactly, so the person is torn: gain = λ × loss for a 50/50 flip"
-    }
-   ],
-   "model": {
-    "title": "How a coin flip feels: the gain half, the loss half and their total",
-    "note": "Teaching model: money is valued in a straight line (no curvature), and each 50% chance counts as exactly one half, with no probability weighting. This is the same simple rule Benartzi & Thaler use for Samuelson's bet, where they fix λ at 2.5; here λ is a slider. Felt values are in 'felt dollars' and are illustrative, not data from any study.",
-    "controls": [
-     {
-      "id": "gain",
-      "label": "Amount you could win",
-      "kind": "slider",
-      "min": 0,
-      "max": 500,
-      "step": 10,
-      "default": 200,
-      "unit": "$",
-      "color": 0
-     },
-     {
-      "id": "loss",
-      "label": "Amount you could lose",
-      "kind": "slider",
-      "min": 10,
-      "max": 300,
-      "step": 10,
-      "default": 100,
-      "unit": "$",
-      "color": 1
-     },
-     {
-      "id": "lam",
-      "label": "How much more a loss hurts (λ)",
-      "kind": "slider",
-      "min": 0.5,
-      "max": 4,
-      "step": 0.1,
-      "default": 2.5,
-      "unit": "×",
-      "color": 3
-     }
-    ],
-    "outputs": [
-     {
-      "id": "ev",
-      "label": "Average payoff in plain money",
-      "expr": "0.5 * gain - 0.5 * loss",
-      "unit": "$",
-      "decimals": 1,
-      "color": 4
-     },
-     {
-      "id": "gain_half",
-      "label": "Felt value of the winning side",
-      "expr": "0.5 * gain",
-      "unit": "",
-      "decimals": 1,
-      "color": 0
-     },
-     {
-      "id": "loss_half",
-      "label": "Felt pain of the losing side",
-      "expr": "0.5 * lam * loss",
-      "unit": "",
-      "decimals": 1,
-      "color": 1
-     },
-     {
-      "id": "total",
-      "label": "Felt total (above 0 = take it)",
-      "expr": "gain_half - loss_half",
-      "unit": "",
-      "decimals": 1,
-      "color": 2
-     },
-     {
-      "id": "ratio",
-      "label": "Win ÷ loss",
-      "expr": "gain / loss",
-      "unit": "×",
-      "decimals": 2,
-      "color": 5
-     }
-    ],
-    "visual": {
-     "type": "bars",
-     "bars": [
-      {
-       "id": "gain_bar",
-       "label": "Winning side (½ × win)",
-       "value": "gain_half",
-       "color": 0
-      },
-      {
-       "id": "loss_bar",
-       "label": "Losing side (½ × λ × loss)",
-       "value": "-loss_half",
-       "color": 1
-      },
-      {
-       "id": "total_bar",
-       "label": "Felt total",
-       "value": "total",
-       "color": 2
-      }
-     ],
-     "min": -600,
-     "max": 300,
-     "unit": "",
-     "decimals": 0
-    }
-   },
-   "animation": {
-    "steps": [
-     {
-      "say": "Here is a coin flip: heads you win some money, tails you lose some. The green bar is how good the winning side feels, counted at half weight because it happens half the time.",
-      "focus": "gain_bar",
-      "ms": 3800
-     },
-     {
-      "say": "The bar pointing down is how much the losing side hurts, also at half weight. Losses get multiplied by λ, the extra sting you met in the last concept.",
-      "focus": "loss_bar",
-      "ms": 3800
-     },
-     {
-      "say": "The last bar adds the two. Above zero, the flip feels worth taking. Below zero, the person says no.",
-      "focus": "total_bar",
-      "ms": 3400
-     },
-     {
-      "say": "This slider sets the prize. Watch the winning bar grow.",
-      "set": {
-       "gain": 300
-      },
-      "focus": "gain",
-      "ms": 3000
-     },
-     {
-      "say": "These two set what's at risk and how much a loss stings. Together they size the bar pointing down.",
-      "set": {
-       "gain": 200
-      },
-      "focus": [
-       "loss",
-       "lam"
-      ],
-      "ms": 3400
-     }
-    ]
-   },
-   "explore": {
-    "prompt": "You've seen the colleague turn down Samuelson's flip. Now play bookmaker: change the deal, or the person, until the felt total flips sign.",
-    "goals": [
-     {
-      "text": "Keep the $200 prize and the loss aversion as they are. Make the flip worth taking by changing only what can be lost.",
-      "when": "gain == 200 && lam == 2.5 && total > 0",
-      "solution": {
-       "loss": 70
-      },
-      "hints": [
-       "Which bar does the 'amount you could lose' slider resize?",
-       "Each $10 less at risk takes λ × $5 off the pain bar. You need to win back the 25 felt points the total is missing.",
-       "Find the loss at which the pain bar exactly matches the winning bar, then go one step lower so the total is strictly positive."
-      ]
-     },
-     {
-      "text": "Keep the original $200 / $100 stakes. Find the person who is exactly torn about this flip: the felt total sits at zero.",
-      "when": "gain == 200 && loss == 100 && abs(total) < 2",
-      "solution": {
-       "lam": 2
-      },
-      "hints": [
-       "Leave the stakes alone and move λ. Watch the bar pointing down.",
-       "Torn means the winning bar and the pain bar are the same size.",
-       "At break-even, win = λ × loss. Plug in the two stakes you're keeping and solve for λ."
-      ]
-     }
-    ]
-   },
-   "understand": {
-    "source_ids": [
-     "s4",
-     "s2",
-     "s1"
-    ],
-    "feedback": {
-     "correct": "Yes. For a 50/50 flip the verdict depends only on whether win ÷ loss beats λ. Scaling both stakes by the same factor leaves that ratio unchanged, so the refusal stands.",
-     "incorrect": "It's tempting to think a bigger prize or a bigger average payoff wins the person over. In this model, though, the loss half grows in step with the gain half. Only the ratio of win to loss, compared with λ, decides the verdict."
-    },
-    "walkthrough": {
-     "steps": [
-      {
-       "say": "Start with Samuelson's flip: win $200 or lose $100. Let λ = 1, a person who weighs losses and gains equally. Winning side +100, losing side −50, total +50. They take it.",
-       "set": {
-        "gain": 200,
-        "loss": 100,
-        "lam": 1
-       },
-       "focus": "total_bar",
-       "ms": 4200
-      },
-      {
-       "say": "Now give the person the loss aversion Benartzi & Thaler use for this example: λ = 2.5. The same $100 loss now hurts 125 felt points at half weight. The total drops to −25 and the flip is refused, just as Samuelson's colleague refused it.",
-       "set": {
-        "lam": 2.5
-       },
-       "focus": [
-        "loss_bar",
-        "total_bar"
-       ],
-       "ms": 5000
-      },
-      {
-       "say": "Look at the plain money, though. The average payoff is still +$50. Nothing about the flip got worse. Only the way the loss is felt changed.",
-       "focus": "ev",
-       "ms": 4000
-      },
-      {
-       "say": "A bet like this, with a chance of gaining and a chance of losing, is called a mixed bet. It's exactly the kind of choice where loss aversion shows up. Let's raise the prize until the person is torn.",
-       "set": {
-        "gain": 250
-       },
-       "focus": "total_bar",
-       "ms": 4600
-      },
-      {
-       "say": "At a $250 prize the two bars cancel: total 0. This is the break-even point, and the win ÷ loss ratio there equals λ, 2.5. For a 50/50 flip, the prize must be more than λ times the loss.",
-       "focus": [
-        "ratio",
-        "total_bar"
-       ],
-       "ms": 5000
-      },
-      {
-       "say": "Check the rule with a more loss-averse person, λ = 3. Break-even moves to a prize three times the loss: $300 against $100.",
-       "set": {
-        "lam": 3,
-        "gain": 300
-       },
-       "focus": [
-        "lam",
-        "ratio"
-       ],
-       "ms": 4600
-      },
-      {
-       "say": "Back to Samuelson's flip at λ = 2.5: a 2-to-1 bet, but a 2.5-to-1 sting. A positive average payoff, yet the felt total is below zero. That gap is the whole story of the refusal.",
-       "set": {
-        "lam": 2.5,
-        "gain": 200
-       },
-       "focus": [
-        "total_bar",
-        "ev"
-       ],
-       "ms": 5200
-      }
-     ]
-    },
-    "explanation": "For a 50/50 flip, a loss-averse person adds half the gain to half the loss multiplied by λ. The flip feels worth taking only when the gain is more than λ times the loss. Samuelson's colleague turned down a win-$200 / lose-$100 flip even though it paid +$50 on average. Benartzi and Thaler show that a simple value rule with losses weighted 2.5 times reproduces that refusal. The meta-analysis puts a typical λ near 2, which makes a 2-to-1 flip a borderline case, so real verdicts on such bets will vary from person to person. This model leaves out curved values and probability weighting. Some studies also find little or no loss aversion for small stakes, so treat the rule as a clean sketch, not an exact prediction.",
-    "quote": "Consider the problem first posed by Paul Samuelson (1963). Samuelson asked a colleague whether he would be willing to accept the following bet: a 50% chance to win $200 and a 50% chance to lose $100. The colleague turned this bet down",
-    "quote_where": "Section 1 (Introduction), Benartzi & Thaler",
-    "source_id": "s4"
-   },
-   "connect": {
-    "equation": [
-     {
-      "text": "felt total = ½ × "
-     },
-     {
-      "text": "G",
-      "link": "gain"
-     },
-     {
-      "text": " − ½ × "
+      "text": "U(x) = x^{α} for gains (x ≥ 0);   U(x) = −"
      },
      {
       "text": "λ",
       "link": "lam"
      },
      {
-      "text": " × "
-     },
-     {
-      "text": "L",
-      "link": "loss"
-     },
-     {
-      "text": "  →  take it only if  "
-     },
-     {
-      "text": "G ÷ L",
-      "link": "ratio"
-     },
-     {
-      "text": " > λ"
+      "text": "(−x)^{β} for losses (x < 0),   with α = β = 0.88"
      }
     ],
-    "caption": "Benartzi & Thaler's simple utility values gains at x and losses at 2.5x. Here the 2.5 becomes the λ slider. G is the amount you could win and L the amount you could lose; each side gets weight ½ for its 50% chance. This is the model's rule, built from the paper's value function with straight-line values and no probability weighting. The felt total is the third bar, and win ÷ loss is the ratio box."
+    "caption": "This is equation (3) in Brown et al., following Tversky and Kahneman (1992). The coloured λ is the 'extra sting' slider: it multiplies only the loss side. The powers α and β make both sides flatten. The model fixes both at 0.88, the 1992 medians, so the pain-to-pleasure ratio for equal amounts is exactly λ. If α and β differed, the ratio would change with the size of the amount."
    },
-   "recap": "A 50/50 flip feels worth taking only when the win is more than λ times the loss, so a loss-averse person can refuse a bet that pays off on average.",
+   "recap": "On the value curve the loss side is λ times steeper than the gain side, so losses loom about twice as large as equal gains (λ around 2).",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
     },
     {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
+     "id": "cmp",
+     "kind": "compare",
+     "prompt": "Same win and loss of 50, two different stings. Compare the left side of the curve and the ratio box.",
+     "cases": [
+      {
+       "label": "λ = 1: no loss aversion",
+       "values": {
+        "lam": 1,
+        "gain_amt": 50,
+        "loss_amt": 50
+       }
+      },
+      {
+       "label": "λ = 2.25: the 1992 estimate",
+       "values": {
+        "lam": 2.25,
+        "gain_amt": 50,
+        "loss_amt": 50
+       }
+      }
+     ],
+     "takeaway": "At λ = 1 the curve is the same on both sides, and a loss and an equal gain cancel out. At λ = 2.25 the loss side is more than twice as steep, so the same 50 hurts 2.25 times as much as it pleases."
     },
     {
      "id": "goal_1",
      "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
      "i": 1
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
     },
     {
-     "id": "connect",
+     "id": "eq",
      "kind": "connect"
     }
    ]
   },
   {
-   "id": "how_big_is_lambda",
-   "title": "How big is λ? Pooling many noisy studies",
-   "idea": "Combining hundreds of estimates, and pulling noisy ones toward the overall mean more strongly than precise ones, gives a best guess for λ of about 1.955 rather than the famous 2.25.",
+   "id": "rejecting_a_good_bet",
+   "title": "Why people turn down a bet that pays on average",
+   "idea": "A 50/50 bet is accepted only when the felt value of the gain outweighs λ times the felt value of the loss, so loss-averse people reject bets that have a positive average payoff.",
    "role": "core",
    "predict": {
-    "question": "Suppose new research showed that labs genuinely differ in λ far more than the 2022 meta-analysis found, so the middle hump becomes much wider. A small, noisy study reports λ = 4. How would pooling now treat it?",
+    "question": "Some estimates in the meta-analysis fall below 1, which the paper calls loss tolerance. Take someone with λ = 0.8. On a coin flip they can win 50 or lose 60, so the average payoff is −5. Using the rule you just practised, what do they do?",
     "options": [
-     "It gets pulled toward the middle more strongly than before",
-     "It gets pulled less, so its combined guess stays closer to 4",
-     "Nothing changes, because only the study's own uncertainty matters",
-     "It gets pushed past the middle, below 1.955"
+     "Take it: for them the win feels better than the loss stings",
+     "Turn it down: the average payoff is negative",
+     "Feel exactly indifferent",
+     "Turn it down: losses always sting more than gains please"
     ],
-    "answer": 1,
+    "answer": 0,
     "why": [
-     "It is tempting to think a wider spread makes every study look less reliable. The pull compares the study's uncertainty with the true spread between studies, so a wider spread makes the pull weaker.",
-     "Correct. If studies really do differ a lot, a reading of 4 is more believable as a genuine result. The pull share se²/(τ² + se²) falls as τ grows, so the estimate stays nearer to what was reported.",
-     "The study's own uncertainty is only half of the comparison. The same uncertainty gives a strong pull when studies agree and a weak pull when they differ.",
-     "Pooling moves an estimate part of the way toward the middle and never past it. The combined guess is a weighted average of the reported value and the middle, so it always lands between the two."
+     "Correct. The rule compares the felt win with λ × the felt loss, not dollars with dollars. The win is worth about 31.3, and 0.8 × 36.7 ≈ 29.4 for the loss, so the bet feels slightly good even though it loses money on average.",
+     "This would hold for someone who judges only by the average payoff. The felt-value rule ignores the plain average. With λ below 1 the loss is shrunk, and that is enough to tip this bet into acceptance.",
+     "Indifference needs the felt win to equal λ × the felt loss exactly. Here they differ, at about 31.3 against 29.4, so the bet's dot sits a little above the line, not on it.",
+     "That is the typical case (λ > 1), but λ is a number that varies. When λ is below 1, losses sting less than equal gains please, and the same rule gives the opposite verdict."
     ]
    },
    "terms": [
     {
-     "term": "meta-analysis",
-     "means": "A study of studies: gathering many published estimates by clear rules and combining them statistically"
+     "term": "expected value",
+     "means": "The average payoff of a bet if it were played many times; for a coin flip, half the win minus half the loss"
     },
     {
-     "term": "standard error",
-     "means": "How uncertain one study's estimate is. Small samples or noisy designs give large standard errors"
-    },
-    {
-     "term": "shrinkage",
-     "means": "Pulling each estimate toward the overall mean, more strongly the more uncertain it is (also called pooling)"
-    },
-    {
-     "term": "heterogeneity",
-     "means": "How much the true λ genuinely differs from study to study beyond chance noise, measured by τ"
+     "term": "mixed lottery",
+     "means": "A bet whose outcomes include both a gain and a loss; only bets like this reveal how big λ is"
     }
    ],
    "model": {
-    "title": "Where one study's λ probably lies, once you weigh it against all the others",
-    "note": "Teaching model: it applies the paper's simple pooling rule (the normal-normal model M1a, Online Appendix C) to one study at a time. The overall middle is fixed at the paper's preferred estimate of 1.955, and the spread between studies defaults to 0.75, close to the paper's estimate of τ. The paper's preferred model (M2) is richer: it is log-normal, nests estimates within papers and allows heavy tails. All humps are scaled to a height of 1. The single study's numbers are illustrative and do not come from a real study.",
+    "title": "How a win and a loss feel",
+    "note": "Teaching model: the same value curve as before (power 0.88 for gains and losses, one multiplier λ on losses), now applied to a 50/50 coin flip. Each outcome is weighted exactly ½, which ignores the probability weighting that real prospect theory adds. Amounts are illustrative units. Because the curve is a power curve, scaling both amounts by the same factor never changes whether a bet is accepted, so a win of 100 against a loss of 50 behaves like Samuelson's $200 against $100. λ = 2.25 (Tversky and Kahneman's 1992 median) and about 1.96 (the meta-analysis mean) are as reported by Brown et al. All other numbers are illustrative, not the papers' data.",
     "controls": [
      {
-      "id": "lam_hat",
-      "label": "This study's λ",
+      "id": "lam",
+      "label": "Extra sting of losses (×)",
+      "kind": "slider",
+      "min": 0.5,
+      "max": 3,
+      "step": 0.05,
+      "default": 1,
+      "unit": "×",
+      "color": 2
+     },
+     {
+      "id": "gain_amt",
+      "label": "Size of the win",
+      "kind": "slider",
+      "min": 5,
+      "max": 100,
+      "step": 5,
+      "default": 50,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "loss_amt",
+      "label": "Size of the loss",
+      "kind": "slider",
+      "min": 5,
+      "max": 100,
+      "step": 5,
+      "default": 50,
+      "unit": "",
+      "color": 3
+     }
+    ],
+    "outputs": [
+     {
+      "id": "felt_gain",
+      "label": "Good feeling of the win",
+      "expr": "pow(gain_amt, 0.88)",
+      "decimals": 1,
+      "color": 1
+     },
+     {
+      "id": "felt_loss",
+      "label": "Pain of the loss",
+      "expr": "lam * pow(loss_amt, 0.88)",
+      "decimals": 1,
+      "color": 3
+     },
+     {
+      "id": "avg_payoff",
+      "label": "Average payoff of the bet",
+      "expr": "0.5 * gain_amt - 0.5 * loss_amt",
+      "decimals": 1,
+      "color": 4
+     },
+     {
+      "id": "bet_value",
+      "label": "How the whole bet feels (above 0 = take it)",
+      "expr": "0.5 * felt_gain - 0.5 * felt_loss",
+      "decimals": 1,
+      "color": 5
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Change in money (loss ← 0 → gain)",
+      "min": -100,
+      "max": 100
+     },
+     "y": {
+      "label": "How it feels",
+      "min": -180,
+      "max": 70
+     },
+     "series": [
+      {
+       "id": "mirror",
+       "label": "Losses with no extra sting",
+       "expr": "x >= 0 ? pow(abs(x), 0.88) : -pow(abs(x), 0.88)",
+       "color": 4,
+       "dashed": true
+      },
+      {
+       "id": "value_curve",
+       "label": "Felt value",
+       "expr": "x >= 0 ? pow(abs(x), 0.88) : -lam * pow(abs(x), 0.88)",
+       "color": 0,
+       "dashed": false
+      }
+     ],
+     "hlines": [
+      {
+       "id": "zero_line",
+       "y": 0,
+       "label": "No feeling either way"
+      }
+     ],
+     "points": [
+      {
+       "id": "start",
+       "x": 0,
+       "y": 0,
+       "label": "Where you start"
+      },
+      {
+       "id": "gain_point",
+       "x": "gain_amt",
+       "y": "pow(gain_amt, 0.88)",
+       "label": "The win"
+      },
+      {
+       "id": "loss_point",
+       "x": "-loss_amt",
+       "y": "-lam * pow(loss_amt, 0.88)",
+       "label": "The loss"
+      },
+      {
+       "id": "bet_point",
+       "x": "(gain_amt - loss_amt) / 2",
+       "y": "0.5 * pow(gain_amt, 0.88) - 0.5 * lam * pow(loss_amt, 0.88)",
+       "label": "The whole bet"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This is the same picture as before: the felt-value curve, with one dot for a win and one for a loss.",
+      "set": {
+       "lam": 1,
+       "gain_amt": 50,
+       "loss_amt": 50
+      },
+      "focus": "value_curve",
+      "ms": 5500
+     },
+     {
+      "say": "Now imagine a coin flip that pays the win or costs the loss. This new dot sits exactly halfway between the two, and it shows how the whole bet feels.",
+      "focus": "bet_point",
+      "ms": 6500
+     },
+     {
+      "say": "Watch its height. Above the 'no feeling' line, the bet feels worth taking. Below it, the person says no. The new number below gives that height.",
+      "focus": [
+       "bet_value",
+       "zero_line"
+      ],
+      "ms": 6500
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Use the three sliders to build coin-flip bets, and watch the whole-bet dot move against the line.",
+    "goals": [
+     {
+      "text": "Build a bet that makes money on average but that the person still turns down.",
+      "when": "avg_payoff > 0 && bet_value < 0",
+      "solution": {
+       "lam": 2,
+       "gain_amt": 100,
+       "loss_amt": 60
+      },
+      "hints": [
+       "The average payoff depends only on the two amounts. The felt value also depends on the sting.",
+       "First give the win a clear edge over the loss, so the average is positive. Then raise the sting.",
+       "With the win at its biggest and a loss a little over half of it, keep raising the sting until the whole-bet dot drops below the line."
+      ]
+     },
+     {
+      "text": "For a clearly loss-averse person (a sting of at least 1.5), set up a bet right at the edge: it is accepted, but a loss one notch bigger would get it rejected.",
+      "when": "lam >= 1.5 && bet_value > 0 && pow(gain_amt, 0.88) - lam * pow(loss_amt + 5, 0.88) <= 0",
+      "solution": {
+       "lam": 1.95,
+       "gain_amt": 100,
+       "loss_amt": 45
+      },
+      "hints": [
+       "You want the whole-bet dot just above the line, not far above it.",
+       "Pick a sting of 1.5 or more and make the win large. Then shrink the loss one step at a time until the dot first rises above the line.",
+       "Check the edge: if the next step up in loss would push the dot back under the line, you have found the largest loss this person accepts."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Right. The decision comes from comparing the felt win with λ × the felt loss. When λ is below 1 the loss is discounted, so even a bet that loses money on average can feel worth taking.",
+     "incorrect": "You probably judged the bet by its average payoff, or assumed losses always loom larger. The rule weighs the felt win against λ × the felt loss. At λ = 0.8 the loss of 60 feels like about 29.4, which is less than the win's 31.3, so the bet is accepted."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with no extra sting and a fair coin flip: win 50 or lose 50. The whole-bet dot sits right on the line. The bet feels like nothing.",
+       "set": {
+        "lam": 1,
+        "gain_amt": 50,
+        "loss_amt": 50
+       },
+       "focus": "bet_point",
+       "ms": 4500
+      },
+      {
+       "say": "Make the win twice the loss: win 100, lose 50, like Samuelson's $200 vs $100 in $2 units. On average it pays +25, its expected value. With no sting, the dot rises above the line: take it.",
+       "set": {
+        "gain_amt": 100
+       },
+       "focus": [
+        "avg_payoff",
+        "bet_point"
+       ],
+       "ms": 6500
+      },
+      {
+       "say": "Now give losses Tversky and Kahneman's median sting, λ = 2.25. The loss dot plunges and the whole-bet dot drops below the line. The expected value is still +25, yet the bet is rejected, just like Samuelson's colleague.",
+       "set": {
+        "lam": 2.25
+       },
+       "focus": [
+        "loss_point",
+        "bet_point"
+       ],
+       "ms": 7000
+      },
+      {
+       "say": "The rule: take the bet only if the felt win beats λ × the felt loss. Here 57.5 loses to 70.4. A bet with both a gain and a loss is called a mixed lottery, the kind of bet that reveals λ.",
+       "focus": [
+        "felt_gain",
+        "felt_loss"
+       ],
+       "ms": 7000
+      },
+      {
+       "say": "Shrink the loss to 40. The dot creeps up to just under the line, at −0.1. That is still a no, even though the win is now 2.5 times the loss.",
+       "set": {
+        "loss_amt": 40
+       },
+       "focus": "bet_value",
+       "ms": 5500
+      },
+      {
+       "say": "One more step, to a loss of 35, and the dot finally crosses the line. With λ = 2.25, this person needs the win to be roughly two and a half times the loss before a coin flip feels worth it.",
+       "set": {
+        "loss_amt": 35
+       },
+       "focus": [
+        "bet_point",
+        "zero_line"
+       ],
+       "ms": 6500
+      }
+     ]
+    },
+    "explanation": "A coin-flip bet feels like the average of its two felt values: half the good feeling of the win minus half of λ times the felt loss. A bet that makes money on average can still feel bad, because the loss is magnified by λ before it is weighed. So a person with λ near 2 turns down a 50/50 bet unless the win is about two to two and a half times the loss. Benartzi and Thaler open with Paul Samuelson's colleague, who refused to win $200 or lose $100 on a coin flip, and they use exactly this asymmetry to explain the refusal. The meta-analysis notes that only mixed bets, with both a gain and a loss, can reveal λ. This model is simplified: it weights each outcome by exactly ½ and uses one curve for everyone, while real people distort probabilities and differ a lot in λ.",
+    "quote": "Of more interest here is what the colleague offered as his rationale for turning down the bet: \"I wont bet because I would feel the $100 loss more than the $200 gain.' This sentiment is the intuition behind the concept of loss aversion.",
+    "quote_where": "Section 1 (Introduction), Benartzi and Thaler",
+    "source_ids": [
+     "s4",
+     "s2"
+    ],
+    "source_id": "s4"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "V",
+      "link": "bet_value"
+     },
+     {
+      "text": " = ½·"
+     },
+     {
+      "text": "x",
+      "link": "gain_amt"
+     },
+     {
+      "text": "^{0.88} − ½·"
+     },
+     {
+      "text": "λ",
+      "link": "lam"
+     },
+     {
+      "text": "·("
+     },
+     {
+      "text": "−y",
+      "link": "loss_amt"
+     },
+     {
+      "text": ")^{0.88}"
+     }
+    ],
+    "caption": "This is the meta-analysis's equation (2) for a mixed bet, w⁺(p)U(x) + w⁻(1−p)U(y), with U(y) = −λ(−y)^{β}. Here both decision weights are set to ½ (the model ignores probability weighting), and α = β = 0.88. The win x is the green slider, the loss −y is the orange slider, and λ is the sting slider. V is the whole-bet dot's height: take the bet when it is above 0."
+   },
+   "recap": "A loss-averse person takes a coin flip only if the felt win beats λ times the felt loss, so with λ near 2 they turn down bets that pay on average.",
+   "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "use",
+     "kind": "predict"
+    },
+    {
+     "id": "why",
+     "kind": "reveal"
+    },
+    {
+     "id": "eq",
+     "kind": "connect"
+    }
+   ],
+   "builds_on": "losses_loom_larger"
+  },
+  {
+   "id": "pooling_many_estimates",
+   "title": "Combining 607 estimates: noisy ones get pulled in",
+   "idea": "When many estimates are combined, each one is pulled toward the overall average, and the pull is stronger the less precise the estimate (larger standard error) and the more alike all the studies are.",
+   "role": "core",
+   "terms": [
+    {
+     "term": "standard error",
+     "means": "The typical size of a study's measurement error. A wide curve means a large standard error, so the study is less sure of its number."
+    },
+    {
+     "term": "between-study spread",
+     "means": "How much the true λ really differs from study to study, beyond measurement error. Written τ; the paper's simplest model estimates τ ≈ 0.75."
+    },
+    {
+     "term": "pooling factor",
+     "means": "The share of the gap between a study's reported λ and the overall average that gets closed: se² ÷ (τ² + se²)."
+    },
+    {
+     "term": "shrinkage",
+     "means": "Pulling each estimate toward the overall average when estimates are combined. Another word for pooling."
+    }
+   ],
+   "model": {
+    "title": "One study's λ, combined with what all the other studies say",
+    "note": "Teaching model: one study is combined with a fixed overall average of 1.81, the value from the paper's simplest model (M1). The real analysis estimates the average and τ from all 607 estimates at once. The authors' preferred model also lets λ spread log-normally and groups estimates by paper. Curves are scaled so each peaks at height 1. The reported λ and uncertainty settings are illustrative and do not describe a specific study.",
+    "controls": [
+     {
+      "id": "lam",
+      "label": "This study's reported λ",
       "kind": "slider",
       "min": 0.5,
       "max": 6,
-      "step": 0.05,
-      "default": 4,
+      "step": 0.1,
+      "default": 5,
       "unit": "",
       "color": 0
      },
@@ -866,16 +899,16 @@
       "id": "se",
       "label": "How unsure this study is",
       "kind": "slider",
-      "min": 0.05,
+      "min": 0.1,
       "max": 3,
-      "step": 0.05,
-      "default": 0.2,
+      "step": 0.1,
+      "default": 0.3,
       "unit": "",
-      "color": 1
+      "color": 0
      },
      {
       "id": "tau",
-      "label": "How much studies truly differ",
+      "label": "How much studies really differ",
       "kind": "slider",
       "min": 0.1,
       "max": 2,
@@ -887,26 +920,18 @@
     ],
     "outputs": [
      {
-      "id": "pool",
-      "label": "Pull toward the middle",
+      "id": "pull",
+      "label": "Pull toward the average",
       "expr": "se^2 / (tau^2 + se^2)",
       "unit": "%",
       "scale": 100,
       "decimals": 0,
-      "color": 1
-     },
-     {
-      "id": "pooled",
-      "label": "Combined best guess for λ",
-      "expr": "(1 - pool) * lam_hat + pool * 1.955",
-      "unit": "",
-      "decimals": 2,
       "color": 3
      },
      {
-      "id": "post_sd",
-      "label": "Combined uncertainty",
-      "expr": "sqrt(1 / (1 / (se^2) + 1 / (tau^2)))",
+      "id": "pooled",
+      "label": "Combined estimate of λ",
+      "expr": "(1 - pull) * lam + pull * 1.81",
       "unit": "",
       "decimals": 2,
       "color": 3
@@ -920,45 +945,51 @@
       "max": 6
      },
      "y": {
-      "label": "How plausible (tallest = 1)",
+      "label": "How plausible (peak = 1)",
       "min": 0,
-      "max": 1.15
+      "max": 1.1
      },
      "series": [
       {
-       "id": "study",
-       "label": "What this one study says",
-       "expr": "exp(-0.5 * ((x - lam_hat) / se)^2)",
+       "id": "study_curve",
+       "label": "This study's result",
+       "expr": "exp(-0.5 * ((x - lam) / se)^2)",
        "color": 0,
-       "dashed": true
+       "dashed": false
       },
       {
-       "id": "literature",
-       "label": "Where true λ values sit across all studies",
-       "expr": "exp(-0.5 * ((x - 1.955) / tau)^2)",
+       "id": "tau_curve",
+       "label": "Where studies' true λ tend to lie",
+       "expr": "exp(-0.5 * ((x - 1.81) / tau)^2)",
        "color": 2,
        "dashed": true
       },
       {
-       "id": "combined",
-       "label": "Combined picture for this study",
-       "expr": "exp(-0.5 * ((x - pooled) / post_sd)^2)",
+       "id": "pooled_curve",
+       "label": "Combined estimate",
+       "expr": "exp(-0.5 * ((x - pooled) / (se * tau / sqrt(se^2 + tau^2)))^2)",
        "color": 3,
        "dashed": false
       }
      ],
      "markers": [
       {
-       "id": "middle",
-       "x": 1.955,
-       "label": "Overall middle 1.955",
-       "color": 2
+       "id": "reported_marker",
+       "x": "lam",
+       "label": "Reported",
+       "color": 0
       },
       {
-       "id": "famous",
-       "x": 2.25,
-       "label": "Famous 2.25 (1992)",
-       "color": 5
+       "id": "mean_marker",
+       "x": 1.81,
+       "label": "Average of all studies (1.81)",
+       "color": 4
+      },
+      {
+       "id": "pooled_marker",
+       "x": "pooled",
+       "label": "Combined",
+       "color": 3
       }
      ]
     }
@@ -966,178 +997,170 @@
    "animation": {
     "steps": [
      {
-      "say": "Along the bottom is λ: how many times worse a loss feels than an equal gain. Each hump shows where λ plausibly lies.",
-      "focus": "combined",
-      "ms": 3600
+      "say": "The axis is λ, the loss-aversion number you met earlier. The blue curve is one study. Its peak sits at the λ it reported, here 5.",
+      "focus": "study_curve",
+      "ms": 3200
      },
      {
-      "say": "The dashed blue hump is what one single study reports. This slider moves its answer.",
-      "set": {
-       "lam_hat": 3
-      },
-      "focus": [
-       "study",
-       "lam_hat"
-      ],
-      "ms": 3800
+      "say": "This line marks the average λ across all the studies, about 1.8.",
+      "focus": "mean_marker",
+      "ms": 2600
      },
      {
-      "say": "This slider sets how unsure that study is. Watch its hump spread out.",
+      "say": "This slider sets how unsure the study is. Watch its curve get wider.",
       "set": {
        "se": 0.8
       },
       "focus": "se",
-      "ms": 3600
+      "ms": 3000
      },
      {
-      "say": "The dashed green hump stands for hundreds of other studies, centred near 1.955. Its slider sets how much studies truly differ from one another.",
-      "focus": [
-       "literature",
-       "tau",
-       "middle"
-      ],
-      "ms": 4200
+      "say": "This one sets how much studies genuinely differ from each other. It widens the dashed curve around the average.",
+      "set": {
+       "tau": 1.3
+      },
+      "focus": "tau",
+      "ms": 3200
      },
      {
-      "say": "The solid hump blends the two. Its peak is the combined best guess, and the pink line marks the famous 2.25.",
+      "say": "The orange line is the study's combined estimate. This box shows how far it gets pulled toward the average.",
       "focus": [
-       "combined",
-       "pooled",
-       "famous"
+       "pooled_marker",
+       "pull"
       ],
-      "ms": 3800
+      "ms": 3200
      }
     ]
    },
    "explore": {
-    "prompt": "Play with how sure the study is and how much studies differ. Before you let go of a slider, try to predict where the solid hump will land.",
+    "prompt": "Play with one study that reports a strikingly high λ. Find out what makes the combination trust it less, and what makes it trust it more.",
     "goals": [
      {
-      "text": "Make a study that reported a λ above 4 end up with a combined best guess below 2.5.",
-      "when": "lam_hat > 4 && pooled < 2.5",
+      "text": "Keep the study reporting λ = 5, but get its combined estimate below 3.",
+      "when": "abs(lam - 5) < 0.05 && pooled < 3",
       "solution": {
-       "lam_hat": 4.5,
-       "se": 1.5
+       "se": 1.0
       },
       "hints": [
-       "What kind of study would you trust least when it reports a surprising number?",
-       "Keep the reported λ just above 4, then make the study much less sure of itself and watch the pull percentage.",
-       "You need the pull toward the middle to reach roughly four-fifths."
+       "Leave the reported λ at 5. What would make the combination trust this study's own number less?",
+       "Make this study more unsure and watch the orange line slide toward the average.",
+       "With the spread between studies left alone, the pull has to close well over half the gap. Look between 0.5 and 1.5 on the uncertainty slider."
       ]
      },
      {
-      "text": "Without making the study any less sure than it starts out, get its answer pulled more than halfway to the middle.",
-      "when": "pool > 0.5 && se <= 0.2",
+      "text": "Leave the study's uncertainty where it starts, but get it pulled more than halfway to the average.",
+      "when": "abs(se - 0.3) < 0.01 && pull > 0.5",
       "solution": {
-       "tau": 0.15
+       "tau": 0.25
       },
       "hints": [
-       "The pull compares two widths: the study's own hump and one other hump.",
-       "Leave the uncertainty slider alone and use the slider for how much studies truly differ.",
-       "The pull passes 50% once the green hump is narrower than the study's own hump."
+       "You can't touch the study's own uncertainty. What else decides whether a λ of 5 looks believable?",
+       "Make the studies more alike by narrowing the dashed curve around the average.",
+       "The pull passes 50% once the spread between studies becomes smaller than the study's own uncertainty."
       ]
      }
     ]
    },
+   "predict": {
+    "question": "Two meta-analyses each contain a study reporting λ = 3.5, with the same fairly large uncertainty. In meta-analysis A the studies disagree a lot. In meta-analysis B they nearly agree. In which one does that study's combined estimate end up closer to its field's average?",
+    "options": [
+     "In B, where the studies nearly agree",
+     "In A, where the studies disagree a lot",
+     "The same in both, because only the study's own uncertainty matters",
+     "In neither, because a study's own result is never changed"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. When studies are alike (small τ), the pooling factor se²/(τ² + se²) is large, so a λ of 3.5 looks out of line and is pulled most of the way in.",
+     "It can seem that disagreement should 'correct' outliers more. In fact a wide spread makes 3.5 a believable true value, so the pull is weaker in A.",
+     "The study's uncertainty is only half the formula. τ sits in the denominator too, and the two fields have different τ.",
+     "The reported number stays on record, but the combined estimate for that study does move unless its standard error is near zero."
+    ]
+   },
    "understand": {
     "feedback": {
-     "correct": "Right. The pull is set by the study's uncertainty relative to the true spread between studies. When labs genuinely differ a lot, an extreme reading is more believable, so it is pulled less.",
-     "incorrect": "You may have assumed a wider spread makes the middle more trustworthy, or that only the study's own noise matters. The pull share is se²/(τ² + se²). Raising τ shrinks it, so the noisy λ = 4 stays closer to 4. It also never crosses past the middle."
+     "correct": "Yes. How hard a study is pulled depends on its uncertainty compared with the real spread between studies. When studies nearly agree, even a moderately noisy outlier is drawn strongly toward the shared average.",
+     "incorrect": "The pull is se² ÷ (τ² + se²). With equal uncertainty, the field where studies agree (small τ) gives the larger pull, because an unusual value is less believable there."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "A meta-analysis gathers many published estimates and combines them by fixed rules. Start with one sure study reporting λ = 4. Its blue hump is narrow, and the combined guess barely moves: about 3.87, a 7% pull.",
+       "say": "Start with a very sure study reporting λ = 5. Its narrow curve says '5, give or take a little'. The combined estimate sits almost on top of it: the pull is about 2%.",
        "set": {
-        "lam_hat": 4,
-        "se": 0.2,
+        "lam": 5,
+        "se": 0.1,
         "tau": 0.75
        },
-       "focus": [
-        "study",
-        "pooled",
-        "pool"
-       ],
-       "ms": 5200
+       "focus": "pull",
+       "ms": 3600
       },
       {
-       "say": "The width of that blue hump is the study's standard error. Small samples and noisy designs make it big. Widen it a lot and watch the combined hump slide left toward the middle.",
+       "say": "The width of the blue curve is the study's standard error, the typical size of its measurement error. Raise it to 0.5. The orange line slides about a third of the way toward the average.",
+       "set": {
+        "se": 0.5
+       },
+       "focus": "pooled_marker",
+       "ms": 3800
+      },
+      {
+       "say": "Now a very noisy study, with a standard error of 1.5. It is pulled about 80% of the way in, because its data barely outweigh what all the other studies say.",
        "set": {
         "se": 1.5
        },
-       "focus": [
-        "se",
-        "combined"
-       ],
-       "ms": 5000
+       "focus": "pooled",
+       "ms": 3800
       },
       {
-       "say": "Now the pull is 80%, and the best guess falls to about 2.36. This is shrinkage: an extreme number from an unsure study is mostly treated as noise, so the guess leans on everything else we know.",
-       "focus": [
-        "pool",
-        "pooled"
-       ],
-       "ms": 5200
-      },
-      {
-       "say": "Take a medium-sure study. With the usual spread between studies, it is pulled about 31%, to roughly 3.37.",
+       "say": "The dashed curve is the between-study spread τ: how much true λ really differs from study to study. The paper's simplest model put τ near 0.75.",
        "set": {
-        "se": 0.5,
-        "tau": 0.75
+        "se": 0.5
+       },
+       "focus": "tau_curve",
+       "ms": 3600
+      },
+      {
+       "say": "Make studies very different (τ = 2). Now a λ of 5 is believable on its own, so the same moderately unsure study barely moves: a pull of about 6%.",
+       "set": {
+        "tau": 2
+       },
+       "focus": "pull",
+       "ms": 3800
+      },
+      {
+       "say": "Make studies very alike (τ = 0.2). Now 5 looks out of line with everyone else, and the very same study is pulled about 86% of the way, to roughly 2.2.",
+       "set": {
+        "tau": 0.2
        },
        "focus": [
-        "pool",
-        "pooled"
+        "pooled_marker",
+        "pull"
        ],
-       "ms": 4400
+       "ms": 4000
       },
       {
-       "say": "The spread between studies is called heterogeneity. If studies agreed closely, a reading of 4 would look out of place. Narrow the green hump and the same study is pulled about 74%, to roughly 2.50.",
-       "set": {
-        "tau": 0.3
-       },
-       "focus": [
-        "tau",
-        "literature",
-        "pool"
-       ],
-       "ms": 5400
-      },
-      {
-       "say": "The famous 2.25 (Tversky and Kahneman, 1992) came from 25 students and had no reported standard error, so the authors filled one in. With an illustrative moderate uncertainty, it slides toward 1.955, to about 2.18.",
-       "set": {
-        "lam_hat": 2.25,
-        "se": 0.4,
-        "tau": 0.75
-       },
-       "focus": [
-        "famous",
-        "pooled"
-       ],
-       "ms": 5600
-      },
-      {
-       "say": "High λ estimates in this literature tend to be the noisy ones. A study reporting 5 with large uncertainty ends near 2.33. Do this to all 607 estimates and the long right tail shrinks, leaving an overall middle of 1.955.",
-       "set": {
-        "lam_hat": 5,
-        "se": 2
-       },
-       "focus": [
-        "combined",
-        "middle"
-       ],
-       "ms": 5800
+       "say": "The share of the gap that gets closed is the pooling factor: uncertainty² ÷ (spread² + uncertainty²). This pulling-in is called shrinkage. The orange curve is the narrowest: combining evidence also adds certainty.",
+       "focus": "pooled_curve",
+       "ms": 4600
       }
      ]
     },
-    "explanation": "A meta-analysis treats each published λ as a noisy reading of a true value. Shrinkage then pulls every reading toward the overall middle, by an amount set by its standard error compared with the heterogeneity, which is how much studies genuinely differ. Precise studies keep their values. Noisy, extreme ones are pulled hard, and in this literature those tend to be the high ones, so the combined picture loses much of its long right tail. Brown, Imai, Vieider and Camerer did this for 607 estimates from 150 papers (1992–2017). The raw estimates averaged 1.97 (median 1.69). Their preferred model, which also groups estimates by paper, gives 1.955 with a 95% credible interval of 1.820 to 2.105, which excludes both 1 (no loss aversion) and the famous 2.25. Caveats: the heterogeneity is large, and design features explain only about 15.5% of it. Allowing for possible publication bias lowers the estimate to about 1.74. Critics summarised on the Wikipedia page report no loss aversion for small stakes in some studies, and a 2025 re-meta-analysis (Yechiam and Zeif) argues the effect is not robust.",
-    "quote": "This is meta-analytic pooling at work—estimates that fall far from the mean are shrunk towards more plausible values, with the amount of shrinkage proportional to the standard error.",
-    "quote_where": "Section 4.3",
-    "source_id": "s2",
+    "explanation": "A meta-analysis cannot simply average 607 numbers, because some come from small or noisy studies. Brown and colleagues treated each reported λ as a noisy reading of that study's true λ, and treated the true λs as scattered around one overall average with a between-study spread τ. Each estimate is then pulled toward the average by the pooling factor se²/(τ² + se²), so noisy studies (large standard error) and fields where studies agree (small τ) are pulled hardest. In their simplest model this turned the raw mean of 1.97 into 1.81 (95% credible interval 1.74–1.88). Estimates with standard errors below about 0.4 barely moved, while very noisy ones, often the largest λs, were pulled strongly. Shrinkage is not a verdict that a big estimate is wrong, since a precise big estimate stays big. It also rests on assumptions (normal spread, independent estimates) that the authors then relaxed, which gave their preferred estimate of 1.955 (1.820–2.105).",
+    "quote": "estimates that fall far from the mean are shrunk towards more plausible values, with the amount of shrinkage proportional to the standard error.",
+    "quote_where": "Section 4.3 (Average Loss Aversion in the Literature)",
     "source_ids": [
-     "s2",
-     "s1"
-    ]
+     "s2"
+    ],
+    "source_id": "s2"
+   },
+   "check": {
+    "kind": "model",
+    "task": "Put the model in a state where a study reporting a large λ (4 or more) keeps nearly all of it: its combined estimate ends within 0.2 of what it reported.",
+    "when": "lam >= 4 && (lam - pooled) < 0.2",
+    "solution": {
+     "se": 0.1
+    },
+    "hint": "Pooling doesn't judge a number by how big it is. Ask what makes the combination trust a study's own result.",
+    "misconception": "Large estimates are simply errors, so combining studies always drags them back to the average. In fact a precise large estimate is barely moved, because shrinkage depends on uncertainty and spread, not on size."
    },
    "connect": {
     "equation": [
@@ -1146,232 +1169,418 @@
       "link": "pooled"
      },
      {
-      "text": " = (1 − ω_{i}) "
-     },
-     {
-      "text": "λ̂_{i}",
-      "link": "lam_hat"
-     },
-     {
-      "text": " + ω_{i} λ_{0},   "
+      "text": " = (1 − "
      },
      {
       "text": "ω_{i}",
-      "link": "pool"
+      "link": "pull"
      },
      {
-      "text": " = "
+      "text": ") × "
      },
      {
-      "text": "se_{i}²",
+      "text": "λ_{i}",
+      "link": "lam"
+     },
+     {
+      "text": " + "
+     },
+     {
+      "text": "ω_{i}",
+      "link": "pull"
+     },
+     {
+      "text": " × λ_{0},   with  ω_{i} = "
+     },
+     {
+      "text": "se_{i}",
       "link": "se"
      },
      {
-      "text": " / ("
+      "text": "² / ("
      },
      {
-      "text": "τ²",
+      "text": "τ",
       "link": "tau"
      },
      {
-      "text": " + se_{i}²)"
+      "text": "² + "
+     },
+     {
+      "text": "se_{i}",
+      "link": "se"
+     },
+     {
+      "text": "²)"
      }
     ],
-    "caption": "This is the paper's pooling equation (C.3–C.4, Online Appendix). λ̂_{i} (blue) is what study i reported, and λ̃_{i} (dark) is its pooled estimate. ω_{i} is the pooling factor, shown as 'Pull toward the middle'. It grows with the study's standard error se_{i} and shrinks with the heterogeneity τ (green). λ_{0} is the overall mean, fixed here at the paper's preferred 1.955."
+    "caption": "The paper's pooling equations (C.3) and (C.4). λ_{i} is the study's reported λ (blue slider) and λ̃_{i} is its combined estimate (orange). λ_{0} is the overall mean, fixed here at the paper's M1 value of 1.81. ω_{i} is the pooling factor, shown as 'Pull toward the average'. se_{i} is the study's standard error ('How unsure this study is') and τ is the between-study spread ('How much studies really differ')."
    },
-   "recap": "Weigh each study by how sure it is. Noisy extreme estimates get pulled toward the middle, and the best combined guess for λ is about 1.955 (95% interval 1.82–2.1), a little below the famous 2.25.",
+   "recap": "Combining studies pulls each estimate toward the average, more when it is noisy or when studies are alike. That turned a raw mean of 1.97 into a pooled 1.81.",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
     },
     {
      "id": "goal_1",
      "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
      "i": 1
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
     },
     {
-     "id": "connect",
+     "id": "test",
+     "kind": "check"
+    },
+    {
+     "id": "eq",
      "kind": "connect"
     }
    ]
   },
   {
+   "id": "is_loss_aversion_real",
+   "title": "How solid is loss aversion? The evidence and the doubts",
+   "idea": "Loss aversion is widely supported (most estimates exceed 1; classic choice patterns replicate in 19 countries), but its size varies with stakes and methods, and rivals like loss attention and inertia explain some findings.",
+   "role": "core",
+   "terms": [
+    {
+     "term": "replication",
+     "means": "Running an earlier study again, with new people, to see whether the same result comes back"
+    },
+    {
+     "term": "publication bias",
+     "means": "When whether a study gets published depends on what it found, so the published record is skewed"
+    },
+    {
+     "term": "loss attention",
+     "means": "The rival idea that losses make people pay more attention, without making losses weigh more than gains"
+    }
+   ],
+   "recap": "Loss aversion holds up on average (λ near 2; classic patterns replicate across countries), but its size varies with stakes and methods, and rival accounts explain some of its evidence.",
+   "understand": {
+    "explanation": "In concept 1 you met λ, the number that says how many times worse a loss feels than an equal gain feels good. A meta-analysis that pooled 607 estimates puts the average at 1.955. A large replication, which reran Kahneman and Tversky's 1979 choice questions with 4,098 new people in 19 countries, found the classic patterns again for 94% of items, though somewhat weaker. But the size of λ shifts with who is studied and how, and some studies find no loss aversion at all when the amounts at stake are small. Publication bias may push the average up a little, and two rival accounts compete with loss aversion: loss attention (losses grab attention without weighing more) and inertia (people simply stick with what they have). A fair summary is that loss aversion is well supported on average, but its exact size is uncertain, and some findings credited to it may have other causes.",
+    "quote": "Mkrva, Johnson, Gächter, and Herrmann (2019) cast doubt on these critiques, replicating loss aversion in five unique samples while also showing how the magnitude of loss aversion varies in theoretically predictable ways.",
+    "quote_where": "Loss aversion (Wikipedia), Criticisms section",
+    "source_id": "s1",
+    "source_ids": [
+     "s1",
+     "s2",
+     "s3"
+    ]
+   },
+   "activities": [
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "ev",
+     "kind": "stages",
+     "prompt": "Weigh the evidence one piece at a time. After each stage, ask yourself: does this make loss aversion look stronger, weaker, or just more complicated?",
+     "stages": [
+      {
+       "label": "1. Pooling the literature",
+       "text": "Brown, Imai, Vieider and Camerer (s2) collected 607 estimates of λ from 150 articles reported from 1992 to 2017, in economics, psychology, neuroscience and other fields. The distribution of reported estimates has 93.9% of its mass above 1, the loss-averse side. Among the 419 estimates that came with standard errors, 398 (95%) are larger than 1. The authors' preferred model gives an average λ of 1.955, with a 95% credible interval of 1.820 to 2.105. That interval excludes 1 (no loss aversion). It also excludes the famous 2.25, which came from 25 graduate students in 1992."
+      },
+      {
+       "label": "2. Rerunning the classic study",
+       "text": "Ruggeri and colleagues (s3) directly tested Kahneman and Tversky's original 1979 methods with 4,098 participants in 19 countries and 13 languages. They adjusted only for current and local currencies, and every participant answered every item. The original results replicated for 94% of items and for 12 of 13 theoretical contrasts, 'with some attenuation', meaning the effects were somewhat weaker than in 1979. This tests prospect theory's choice patterns as a whole, not the size of λ alone."
+      },
+      {
+       "label": "3. Checking for a skewed record",
+       "text": "If studies that find loss aversion are published more easily than those that don't, the published average could be too high. The meta-analysis checked for this. A bias-corrected model gives 1.742 (95% credible interval 1.674 to 1.811). Unpublished working papers came out about 0.25 lower than published studies, roughly 1.73. The authors warn that their bias test may mislead, partly because λ must be larger than 0 by construction. Even so, the corrected values stay above 1."
+      },
+      {
+       "label": "4. The size depends on how you measure",
+       "text": "Estimates vary far more than chance alone would produce. Field experiments, general-population samples and means of individual-level estimates tend to give higher λ. Yet the coded study features explain only 15.5% of the variation between estimates. One survey that the meta-analysis mentions but did not include found a median λ of 0.99 in a representative sample of Americans, and 1.84 in a college sample using a highly similar protocol."
+      },
+      {
+       "label": "5. The critics",
+       "text": "Several studies found no loss aversion for small payoffs, a pattern called magnitude-dependent loss aversion. David Gal argued that status quo bias and the endowment effect are explained more simply by psychological inertia. Yechiam and Hochman proposed loss attention. In their account, losses raise arousal more than equal gains do: pupil diameter and heart rate rise more after losses. This happens even for small amounts where people show no loss aversion in their choices. In reply, Mrkva and colleagues replicated loss aversion in five samples and showed that its size varies in predictable ways."
+      }
+     ],
+     "takeaway": "Two strands of evidence point the same way: the pooled estimates and the cross-country replication both show loss aversion on average. Its size is less certain than the single number 2.25 suggested, and some of the findings it explains have rival explanations."
+    },
+    {
+     "id": "s",
+     "kind": "sort",
+     "title": "Supports, challenges or refines?",
+     "prompt": "Put each finding where it fits best. 'Supports' means it backs the existence of loss aversion. 'Challenges' means it questions whether loss aversion is the right explanation. 'Refines' means it accepts loss aversion but adjusts its size or where it applies.",
+     "groups": [
+      {
+       "id": "supports",
+       "label": "Supports loss aversion"
+      },
+      {
+       "id": "challenges",
+       "label": "Challenges loss aversion"
+      },
+      {
+       "id": "refines",
+       "label": "Refines its size or scope"
+      }
+     ],
+     "cards": [
+      {
+       "id": "c1",
+       "text": "398 of the 419 meta-analysis estimates that came with standard errors (95%) are larger than 1.",
+       "group": "supports",
+       "feedback": "Supports. Across many studies and methods, nearly all estimates fall on the loss-averse side of 1."
+      },
+      {
+       "id": "c2",
+       "text": "The original 1979 results replicated for 94% of items across 19 countries.",
+       "group": "supports",
+       "feedback": "Supports. A large, multinational replication of the founding study largely succeeded, though with some attenuation, meaning weaker effects than in 1979."
+      },
+      {
+       "id": "c3",
+       "text": "Several studies found no loss aversion when the amounts at stake were small.",
+       "group": "challenges",
+       "feedback": "Challenges. If loss aversion disappears for small stakes, it is not the universal rule it is often described as. Some researchers call it magnitude-dependent."
+      },
+      {
+       "id": "c4",
+       "text": "Pupil size and heart rate rise more after losses than after equal gains, even when choices show no loss aversion.",
+       "group": "challenges",
+       "feedback": "Challenges. This is key evidence for loss attention: losses can matter to the body and mind without being weighted more in choices. It offers a rival reading of some findings credited to loss aversion."
+      },
+      {
+       "id": "c5",
+       "text": "Status quo bias and the endowment effect may be explained more simply by psychological inertia.",
+       "group": "challenges",
+       "feedback": "Challenges. Gal argued that a simple tendency to stay put explains these patterns without any gain–loss asymmetry. That undercuts some of the classic evidence for loss aversion."
+      },
+      {
+       "id": "c6",
+       "text": "Field experiments and general-population samples tend to give higher λ than lab studies with students.",
+       "group": "refines",
+       "feedback": "Refines. These findings do not question that loss aversion exists. They say its measured size depends on the setting and the people studied."
+      },
+      {
+       "id": "c7",
+       "text": "Correcting for possible publication bias lowers the average from 1.955 to 1.742.",
+       "group": "refines",
+       "feedback": "Refines. You might call this a challenge, but the corrected value is still above 1. It lowers the size rather than removing the effect, and the authors caution that the correction itself is uncertain."
+      },
+      {
+       "id": "c8",
+       "text": "The widely cited 2.25, from 25 graduate students, seems a bit too high next to the pooled average.",
+       "group": "refines",
+       "feedback": "Refines. The meta-analysis keeps loss aversion but updates the number that models and simulations often plug in."
+      }
+     ],
+     "hints": [
+      "Ask of each card: does it doubt the effect exists, or only its size and where it shows up?",
+      "A finding that lowers λ but leaves it above 1 adjusts the effect rather than denying it.",
+      "Rival explanations for the same behaviour, such as attention or inertia, belong under 'challenges'."
+     ],
+     "takeaway": "Most of the large-scale evidence supports loss aversion. The doubts fall into two kinds: rival explanations for some of the same behaviour, and findings that the size of λ moves with stakes and methods."
+    },
+    {
+     "id": "q",
+     "kind": "choice",
+     "mode": "interpretive",
+     "question": "Having weighed all of this, which summary of loss aversion do you find most defensible?",
+     "options": [
+      {
+       "text": "It is settled: for everyone, a loss weighs exactly twice as much as an equal gain.",
+       "feedback": "This reading has some support: the pooled average is close to 2, and the classic patterns replicate. But 'exactly' and 'for everyone' go beyond the evidence. Estimates vary widely between studies, one representative sample had a median of 0.99, and small stakes can show no loss aversion at all."
+      },
+      {
+       "text": "It is real on average, with λ around 2 in typical studies, but its size varies with stakes, people and methods, and some findings may have other causes.",
+       "feedback": "This reading fits the most evidence: the meta-analysis, the 19-country replication, the variation between studies and the critiques. Its limit is that an average over very different studies does not tell you how loss-averse any one person or situation will be. It also leaves open how much attention or inertia explain."
+      },
+      {
+       "text": "It is mostly an illusion: attention and inertia explain the findings better.",
+       "feedback": "The critics give real reasons for this view: no loss aversion at small stakes, stronger arousal after losses without loss-averse choices, and inertia explaining status quo effects. But these accounts explain some findings, not all. Large pooled and replication studies still find loss aversion, Mrkva and colleagues replicated it in five samples, and one can argue that loss aversion is the simpler account."
+      },
+      {
+       "text": "Nothing can be concluded, because the studies disagree too much.",
+       "feedback": "The estimates do vary far more than chance would produce. But disagreement about size is not total uncertainty. The main credible interval (1.820 to 2.105) and the bias-corrected one (1.674 to 1.811) both exclude 1. That is real information about the direction of the effect."
+      }
+     ]
+    }
+   ]
+  },
+  {
    "id": "bundling_bets",
-   "title": "Judge one bet or many together?",
-   "idea": "Adding up several copies of the same bet before judging it makes an overall loss rarer, so a bet refused alone can feel good as a bundle.",
+   "title": "One bet: no. Two bets together: yes",
+   "idea": "Combining several independent bets and judging only the total makes losses rarer and smaller relative to gains, so a loss-averse person who rejects one bet can accept a bundle of them.",
    "role": "core",
    "predict": {
-    "question": "Samuelson's colleague agrees to two of the win-$200 / lose-$100 flips. This time he watches each flip land and feels each result the moment it happens, before the next one. With losses hurting 2.5 times as much, how should the deal feel to him?",
+    "question": "Take the same person (losses count 2.5×) and a bundle of six flips, which they happily accept when judging the total. Now suppose they watch the result after every single flip and feel each win or loss as it happens. What does the model say about this way of experiencing the same six flips?",
     "options": [
-     "Good: two flips together come out positive, as the model showed",
-     "Bad: each flip is felt on its own, and a single flip feels negative",
-     "Neutral: the money at stake is the same either way",
-     "Good, but only if λ is above 2.5"
+     "They still accept: it is the same bundle, and its total felt value is positive",
+     "They now reject it: each flip judged alone feels negative, so six such feelings add up to a clearly negative value",
+     "It comes out exactly neutral: watching closely cancels the gains against the losses",
+     "They like it even more: watching each flip gives them more chances to enjoy a win"
     ],
     "answer": 1,
     "why": [
-     "Tempting, because the two-flip bundle did go positive. But that only happens when the flips are added up before they are judged. Feeling each flip as it lands means judging them one at a time.",
-     "Right. Grouping is what made losses rarer. If he feels each flip separately, he gets two single-flip experiences, each at 100 − 125 = −25 felt dollars, so the deal still feels bad.",
-     "The plain-money payoff is indeed the same. Loss aversion makes the feeling depend on how outcomes are grouped, so the same money can feel good or bad.",
-     "A larger λ makes losses hurt more, so it pushes the felt value down. Raising λ can never turn a refused bet into an accepted one."
+     "It is tempting because the money at stake has not changed. But the felt value depends on what gets judged. If each flip is felt alone, the wins inside the bundle no longer cushion the losses.",
+     "Correct. Judged one at a time, each flip is worth 0.5 × 200 − 2.5 × 0.5 × 100 = −25, so six of them add up to about −150. Bundling only helps if the person judges the total and not the steps along the way.",
+     "Nothing in the rule makes gains and losses cancel out exactly. Each lone flip has a definite negative felt value under λ = 2.5, and adding six of them makes it more negative, not zero.",
+     "Watching more does show more wins, but it shows the losses one by one too, and each loss is felt 2.5 times as strongly. On balance, every flip seen alone is a net negative."
     ]
    },
    "terms": [
     {
      "term": "aggregation rule",
-     "means": "How someone groups outcomes before judging them: one bet at a time, or several added up into one total"
+     "means": "How a person groups outcomes before judging them, for example flip by flip or as one total"
     },
     {
      "term": "mental accounting",
-     "means": "The informal bookkeeping people use to group, label and judge money outcomes"
+     "means": "The informal bookkeeping people use to sort, group and judge money outcomes"
     }
    ],
    "model": {
-    "title": "How a bundle of coin flips feels: gains, losses and their total, per flip",
-    "note": "Teaching model: money is valued in a straight line (no curvature), and each outcome counts with its plain probability (no probability weighting). The flips are added up first, and only the bundle's total is judged. This is the simple rule Benartzi & Thaler use for Samuelson's bet, where λ = 2.5. Bars show felt value per flip so that bundles of different sizes can be compared. Samuelson's bet and the two-flip outcomes (+$400, +$100, −$200) come from the paper. All other numbers are illustrative, not data.",
+    "title": "How good a bundle of coin-flip bets feels",
+    "note": "Teaching model: every flip is an independent 50/50 bet to win $200 or lose $100, as in Samuelson's bet. The total is judged with the paper's simple rule: gains count once and losses count λ times (the paper's example uses 2.5). It leaves out the curvature and probability weighting of full prospect theory, and it allows at most six flips. Bars for win counts above the bundle size show zero. The $200/−$100 bet and λ = 2.5 come from Benartzi and Thaler's example. Other settings are illustrative, not the paper's data.",
     "controls": [
      {
-      "id": "gain",
-      "label": "Amount you could win",
-      "kind": "slider",
-      "min": 0,
-      "max": 500,
-      "step": 10,
-      "default": 200,
-      "unit": "$",
-      "color": 0
-     },
-     {
-      "id": "loss",
-      "label": "Amount you could lose",
-      "kind": "slider",
-      "min": 10,
-      "max": 300,
-      "step": 10,
-      "default": 100,
-      "unit": "$",
-      "color": 1
-     },
-     {
-      "id": "lam",
-      "label": "How much more a loss hurts (λ)",
-      "kind": "slider",
-      "min": 0.5,
-      "max": 4,
-      "step": 0.1,
-      "default": 2.5,
-      "unit": "×",
-      "color": 3
-     },
-     {
       "id": "n",
-      "label": "Flips added up before judging",
+      "label": "Number of flips bundled together",
       "kind": "slider",
       "min": 1,
-      "max": 10,
+      "max": 6,
       "step": 1,
       "default": 1,
       "unit": "",
-      "color": 6
+      "color": 0
+     },
+     {
+      "id": "lam",
+      "label": "Loss weight λ",
+      "kind": "slider",
+      "min": 1,
+      "max": 6,
+      "step": 0.1,
+      "default": 2.5,
+      "unit": "",
+      "color": 3
      }
     ],
     "outputs": [
      {
-      "id": "ev",
-      "label": "Average payoff per flip in plain money",
-      "expr": "0.5 * gain - 0.5 * loss",
+      "id": "avg_total",
+      "label": "Average total payoff",
+      "expr": "50 * n",
       "unit": "$",
-      "decimals": 1,
-      "color": 4
+      "decimals": 0,
+      "color": 6
      },
      {
-      "id": "gain_side",
-      "label": "Felt value of winning results, per flip",
-      "expr": "pow(0.5, n) / n * ((1 <= n) * binom(max(n, 1), 1) * max(gain - (n - 1) * loss, 0) + (2 <= n) * binom(max(n, 2), 2) * max(2 * gain - (n - 2) * loss, 0) + (3 <= n) * binom(max(n, 3), 3) * max(3 * gain - (n - 3) * loss, 0) + (4 <= n) * binom(max(n, 4), 4) * max(4 * gain - (n - 4) * loss, 0) + (5 <= n) * binom(max(n, 5), 5) * max(5 * gain - (n - 5) * loss, 0) + (6 <= n) * binom(max(n, 6), 6) * max(6 * gain - (n - 6) * loss, 0) + (7 <= n) * binom(max(n, 7), 7) * max(7 * gain - (n - 7) * loss, 0) + (8 <= n) * binom(max(n, 8), 8) * max(8 * gain - (n - 8) * loss, 0) + (9 <= n) * binom(max(n, 9), 9) * max(9 * gain - (n - 9) * loss, 0) + (10 <= n) * binom(max(n, 10), 10) * max(10 * gain - (n - 10) * loss, 0))",
-      "unit": "",
+      "id": "loss_chance",
+      "label": "Chance the total is a loss",
+      "expr": "(1 + (n >= 4 ? n : 0)) / pow(2, n)",
+      "unit": "%",
+      "scale": 100,
       "decimals": 1,
-      "color": 0
+      "color": 3
      },
      {
-      "id": "loss_side",
-      "label": "Felt pain of losing results, per flip",
-      "expr": "lam * pow(0.5, n) / n * (n * loss + (1 <= n) * binom(max(n, 1), 1) * max((n - 1) * loss - gain, 0) + (2 <= n) * binom(max(n, 2), 2) * max((n - 2) * loss - 2 * gain, 0) + (3 <= n) * binom(max(n, 3), 3) * max((n - 3) * loss - 3 * gain, 0) + (4 <= n) * binom(max(n, 4), 4) * max((n - 4) * loss - 4 * gain, 0) + (5 <= n) * binom(max(n, 5), 5) * max((n - 5) * loss - 5 * gain, 0) + (6 <= n) * binom(max(n, 6), 6) * max((n - 6) * loss - 6 * gain, 0) + (7 <= n) * binom(max(n, 7), 7) * max((n - 7) * loss - 7 * gain, 0) + (8 <= n) * binom(max(n, 8), 8) * max((n - 8) * loss - 8 * gain, 0) + (9 <= n) * binom(max(n, 9), 9) * max((n - 9) * loss - 9 * gain, 0) + (10 <= n) * binom(max(n, 10), 10) * max((n - 10) * loss - 10 * gain, 0))",
+      "id": "gains_felt",
+      "label": "Felt good from winning totals",
+      "expr": "((n / pow(2, n)) * max(300 - 100 * n, 0)) + (n >= 2 ? binom(n, min(2, n)) / pow(2, n) * (600 - 100 * n) : 0) + (n >= 3 ? binom(n, min(3, n)) / pow(2, n) * (900 - 100 * n) : 0) + (n >= 4 ? binom(n, min(4, n)) / pow(2, n) * (1200 - 100 * n) : 0) + (n >= 5 ? binom(n, min(5, n)) / pow(2, n) * (1500 - 100 * n) : 0) + (n >= 6 ? binom(n, min(6, n)) / pow(2, n) * (1800 - 100 * n) : 0)",
       "unit": "",
       "decimals": 1,
       "color": 1
      },
      {
-      "id": "total",
-      "label": "Felt total per flip (above 0 = take it)",
-      "expr": "gain_side - loss_side",
+      "id": "losses_felt",
+      "label": "Felt pain from losing totals",
+      "expr": "lam * (100 * n + n * max(100 * n - 300, 0)) / pow(2, n)",
       "unit": "",
       "decimals": 1,
-      "color": 2
+      "color": 3
      },
      {
-      "id": "p_loss",
-      "label": "Chance the whole bundle ends in a loss",
-      "expr": "pow(0.5, n) * (1 + (1 <= n) * binom(max(n, 1), 1) * (gain < (n - 1) * loss) + (2 <= n) * binom(max(n, 2), 2) * (2 * gain < (n - 2) * loss) + (3 <= n) * binom(max(n, 3), 3) * (3 * gain < (n - 3) * loss) + (4 <= n) * binom(max(n, 4), 4) * (4 * gain < (n - 4) * loss) + (5 <= n) * binom(max(n, 5), 5) * (5 * gain < (n - 5) * loss) + (6 <= n) * binom(max(n, 6), 6) * (6 * gain < (n - 6) * loss) + (7 <= n) * binom(max(n, 7), 7) * (7 * gain < (n - 7) * loss) + (8 <= n) * binom(max(n, 8), 8) * (8 * gain < (n - 8) * loss) + (9 <= n) * binom(max(n, 9), 9) * (9 * gain < (n - 9) * loss) + (10 <= n) * binom(max(n, 10), 10) * (10 * gain < (n - 10) * loss))",
-      "unit": "%",
-      "scale": 100,
+      "id": "felt",
+      "label": "Felt value of the bundle (positive = yes)",
+      "expr": "gains_felt - losses_felt",
+      "unit": "",
+      "decimals": 1,
+      "color": 4
+     },
+     {
+      "id": "single_felt",
+      "label": "Felt value of one flip alone",
+      "expr": "100 - 50 * lam",
+      "unit": "",
       "decimals": 1,
       "color": 5
-     },
-     {
-      "id": "bundle",
-      "label": "Felt value of the whole bundle",
-      "expr": "total * n",
-      "unit": "",
-      "decimals": 1,
-      "color": 7
      }
     ],
     "visual": {
      "type": "bars",
      "bars": [
       {
-       "id": "gain_bar",
-       "label": "Winning results (felt, per flip)",
-       "value": "gain_side",
-       "color": 0
+       "id": "bar_k0",
+       "label": "0 wins",
+       "value": "-lam * 100 * n / pow(2, n)",
+       "color": 3
       },
       {
-       "id": "loss_bar",
-       "label": "Losing results (λ × loss, per flip)",
-       "value": "-loss_side",
+       "id": "bar_k1",
+       "label": "1 win",
+       "value": "(n / pow(2, n)) * ((300 - 100 * n) >= 0 ? (300 - 100 * n) : lam * (300 - 100 * n))",
+       "color": 2
+      },
+      {
+       "id": "bar_k2",
+       "label": "2 wins",
+       "value": "n >= 2 ? binom(n, min(2, n)) / pow(2, n) * (600 - 100 * n) : 0",
        "color": 1
       },
       {
-       "id": "total_bar",
-       "label": "Felt total per flip",
-       "value": "total",
-       "color": 2
+       "id": "bar_k3",
+       "label": "3 wins",
+       "value": "n >= 3 ? binom(n, min(3, n)) / pow(2, n) * (900 - 100 * n) : 0",
+       "color": 1
+      },
+      {
+       "id": "bar_k4",
+       "label": "4 wins",
+       "value": "n >= 4 ? binom(n, min(4, n)) / pow(2, n) * (1200 - 100 * n) : 0",
+       "color": 1
+      },
+      {
+       "id": "bar_k5",
+       "label": "5 wins",
+       "value": "n >= 5 ? binom(n, min(5, n)) / pow(2, n) * (1500 - 100 * n) : 0",
+       "color": 1
+      },
+      {
+       "id": "bar_k6",
+       "label": "6 wins",
+       "value": "n >= 6 ? binom(n, min(6, n)) / pow(2, n) * (1800 - 100 * n) : 0",
+       "color": 1
       }
      ],
-     "min": -600,
-     "max": 300,
+     "min": -300,
+     "max": 150,
      "unit": "",
      "decimals": 0
     }
@@ -1379,54 +1588,58 @@
    "animation": {
     "steps": [
      {
-      "say": "This is the coin-flip picture you know: Samuelson's flip, win $200 or lose $100, with losses hurting 2.5 times as much. The bars now show felt value per flip.",
+      "say": "Each flip wins $200 or loses $100, with even odds. Each bar is one way a bundle of flips can end, sorted by how many flips won.",
+      "focus": [
+       "bar_k0",
+       "bar_k1",
+       "bar_k2"
+      ],
+      "ms": 3800
+     },
+     {
+      "say": "A bar's height is how good or bad that ending feels, times how likely it is. Bars above the line feel good. Bars below the line are losing totals, which sting extra.",
+      "focus": [
+       "bar_k0",
+       "bar_k1"
+      ],
+      "ms": 4000
+     },
+     {
+      "say": "This slider sets how many flips are bundled together and judged only by their total. Watch the bars reshape.",
       "set": {
-       "gain": 200,
-       "loss": 100,
-       "lam": 2.5,
+       "n": 3
+      },
+      "focus": "n",
+      "ms": 3600
+     },
+     {
+      "say": "This slider is the loss weight λ you met earlier: how many times worse a loss feels than an equal gain.",
+      "focus": "lam",
+      "ms": 3200
+     },
+     {
+      "say": "This box adds every bar together. Above zero, the person says yes to the bundle. Below zero, they say no.",
+      "set": {
        "n": 1
       },
-      "focus": "total_bar",
-      "ms": 6500
-     },
-     {
-      "say": "One new slider: how many copies of the flip get added up before you judge the result. At 1, it is the single bet from before.",
-      "focus": "n",
-      "ms": 6000
-     },
-     {
-      "say": "And one new number: the chance that the whole bundle, once added up, ends below zero.",
-      "focus": "p_loss",
-      "ms": 5500
+      "focus": "felt",
+      "ms": 3400
      }
     ]
    },
    "explore": {
-    "prompt": "You've seen grouping make losses rarer. Now test how far that goes: find the turning point for Samuelson's bet, then build a bet where grouping isn't enough.",
+    "prompt": "Keep the paper's loss weight and play with the bundle size. Watch how the losing bars shrink and when the felt value flips sign.",
     "goals": [
      {
-      "text": "Keep Samuelson's bet as it is (win $200, lose $100, λ = 2.5). Find the smallest bundle that feels worth taking.",
-      "when": "total > 0 && n <= 2 && abs(gain - 200) < 1 && abs(loss - 100) < 1 && abs(lam - 2.5) < 0.01",
+      "text": "Keeping the loss weight at the paper's 2.5, find the smallest bundle of flips that this person would accept.",
+      "when": "felt > 0 && n <= 2 && abs(lam - 2.5) < 0.05",
       "solution": {
        "n": 2
       },
       "hints": [
-       "Only one slider changes how the flips are grouped.",
-       "Move it up one step at a time and watch whether the felt total bar is above or below zero.",
-       "You won't need to go far: watch for the first step where the total bar flips sign."
-      ]
-     },
-     {
-      "text": "Make a bet whose plain-money average per flip is still positive, yet a bundle of four or more flips still feels bad.",
-      "when": "n >= 4 && total < 0 && ev > 0",
-      "solution": {
-       "n": 4,
-       "gain": 110
-      },
-      "hints": [
-       "Grouping helps fastest when the edge is big. What happens if the edge is thin?",
-       "Bring the win amount down until it is only a little above the loss amount, so the average stays just above zero.",
-       "Then set the bundle to at least four flips and check that the felt total stays below zero."
+       "Leave λ alone. Only the number of flips needs to change.",
+       "Add flips one at a time and watch the felt value box after each step.",
+       "You don't need a big bundle. Try the very first sizes above a single flip."
       ]
      }
     ]
@@ -1436,219 +1649,201 @@
      "s4"
     ],
     "feedback": {
-     "correct": "Yes. The good feeling from bundling only appears when outcomes are added up before they are judged. If each flip is felt as it lands, every flip is judged alone, and alone each one feels negative.",
-     "incorrect": "You may have assumed that agreeing to two flips is what matters. In this model, what matters is how the results are grouped when they are judged. Feeling each flip separately brings back the single-flip judgment, which is negative at λ = 2.5."
+     "correct": "Right. What matters is what gets judged. Felt one flip at a time, every flip is a −25 experience under λ = 2.5, so six of them feel clearly bad. The same six flips judged as one total feel clearly good.",
+     "incorrect": "You probably assumed that the money decides. In this model, the grouping decides. A bundle only cushions losses with wins if the person looks at the total. Watched flip by flip, each loss is felt on its own at 2.5 times its size, and each lone flip feels like −25."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start with Samuelson's flip judged alone. The winning side is worth 100 felt dollars and the losing side costs 125, so the felt total is −25. Refused, with a 50% chance of a loss.",
+       "say": "Start with one flip and λ = 2.5. Half the time you gain $200 (feels like +200). Half the time you lose $100 (feels like −250). Averaged: 100 − 125 = −25. The person says no.",
        "set": {
-        "gain": 200,
-        "loss": 100,
-        "lam": 2.5,
-        "n": 1
+        "n": 1,
+        "lam": 2.5
        },
-       "focus": "total_bar",
-       "ms": 5000
+       "focus": "felt",
+       "ms": 4800
       },
       {
-       "say": "Now add two flips together before judging. There are three results: win both (+$400, 1 in 4), one of each (+$100, 2 in 4), lose both (−$200, 1 in 4). Only 1 time in 4 does the bundle lose.",
-       "set": {
-        "n": 2
-       },
-       "focus": "p_loss",
-       "ms": 6500
+       "say": "Yet this flip pays $50 on average. As you saw before, a loss-averse person turns down a bet that pays on average.",
+       "focus": "avg_total",
+       "ms": 3800
       },
       {
-       "say": "Look at the bars. The losing bar shrank more than the winning bar, so the felt total is now +12.5 per flip, or +25 for the bundle. The same bet that was refused now feels worth taking.",
+       "say": "Now bundle three flips and judge only the total. Ending with a loss now requires all three flips to lose, which happens only 1 time in 8. One win plus two losses breaks exactly even.",
+       "set": {
+        "n": 3
+       },
        "focus": [
-        "loss_bar",
-        "total_bar",
-        "bundle"
+        "loss_chance",
+        "bar_k0"
        ],
-       "ms": 6000
+       "ms": 5200
       },
       {
-       "say": "Nothing changed in plain money: the average is still $50 per flip. Only the grouping changed, and loss aversion is sensitive to grouping.",
-       "focus": "ev",
+       "say": "The losing bar is shorter, and the winning bars have grown. The pain from losses is about 94, against about 188 of good feeling. The felt value is now positive. The flips themselves did not change.",
+       "focus": [
+        "losses_felt",
+        "gains_felt"
+       ],
        "ms": 5000
       },
       {
-       "say": "This choice of how to group outcomes before judging them is an aggregation rule. It is one part of mental accounting, the informal bookkeeping people use to score money outcomes.",
-       "focus": "n",
-       "ms": 5500
+       "say": "This is an aggregation rule at work: the way outcomes are grouped before judging them. It is part of mental accounting. Inside a bundle, wins quietly cancel losses before anything is judged.",
+       "focus": "felt",
+       "ms": 5000
       },
       {
-       "say": "Add six flips together. A loss now needs at most one win in six, about an 11% chance. Most losing results are also small, because wins cancel them out. The felt total climbs to about +41 per flip.",
+       "say": "Bundle six flips. A losing total now happens only about 11% of the time, and the felt value climbs well above zero.",
        "set": {
         "n": 6
        },
        "focus": [
-        "p_loss",
-        "total_bar"
+        "loss_chance",
+        "felt"
        ],
-       "ms": 6500
+       "ms": 4400
       },
       {
-       "say": "Now make losses hurt even more, λ = 4. Alone, this flip would be badly refused. Judged as a bundle of six, it still feels good, because losses have become so rare.",
+       "say": "Now make losses hurt more, at λ = 4. One flip alone now feels like −100, but the six-flip bundle still feels clearly good. The same bet gets opposite answers depending on how it is grouped.",
        "set": {
         "lam": 4
        },
-       "focus": "total_bar",
-       "ms": 6000
+       "focus": [
+        "single_felt",
+        "felt"
+       ],
+       "ms": 5400
       }
      ]
     },
-    "explanation": "When copies of a bet are added up before they are judged, wins and losses partly cancel. With two of Samuelson's flips, the bundle loses only 1 time in 4 instead of half the time, and its single losing result is the only one that gets the extra loss weight. So the felt pain shrinks faster than the felt pleasure, while the plain-money average per flip never changes. Benartzi and Thaler use exactly this case: with losses weighted 2.5 times, Samuelson's colleague should refuse one flip but accept two, as long as only the total is judged. Two caveats: this is a worked thought experiment with a simple straight-line value rule, not a measured experiment. And Samuelson showed that refusing one bet while accepting many is inconsistent with standard expected-utility theory, so the example shows how loss aversion plus grouping could explain the pattern, not that it is wise.",
+    "explanation": "Benartzi and Thaler start from Samuelson's colleague, who refused one 50/50 bet to win $200 or lose $100 but would take a hundred of them. With losses counted 2.5 times, one flip feels like −25. Two flips judged as a single total lose money only 1 time in 4, and the felt value becomes +25. Bundling changes nothing about any flip. It changes what gets judged: inside the total, wins offset losses, so losing totals become rarer and smaller relative to the gains. The paper shows this with simple arithmetic on its toy utility function, so it is a worked example, not a measured result. Under standard expected-utility theory this yes-to-many, no-to-one pattern counts as inconsistent, and the trend is not perfectly smooth: four flips can end in a loss more often than three.",
     "quote": "The distribution of outcomes created by the portfolio of two bets {$400, .25; 100, .50; -$200, .25) yields positive expected utility with the hypothesized utility function, though of course simple repetitions of the single bet are unattractive if evaluated one at a time.",
-    "quote_where": "Section 1 (Introduction)",
+    "quote_where": "Section 1 (Introduction), Benartzi and Thaler",
     "source_id": "s4"
    },
    "check": {
     "kind": "model",
-    "task": "Show that bundling is not special to Samuelson's numbers. Choose a different win or loss amount, where a single flip is refused, then group enough flips that the bundle feels worth taking.",
-    "when": "0.5 * gain - 0.5 * lam * loss < 0 && total > 0 && abs(gain - 200) + abs(loss - 100) > 1",
+    "task": "Someone claims: 'If you refuse one bet, you must refuse any bundle of copies of it.' Prove them wrong for a person whose losses weigh at least 6 times as much as gains. Put the model in a state where this person turns down one flip on its own but accepts the bundle.",
+    "when": "lam >= 5.95 && single_felt < 0 && felt > 0",
     "solution": {
-     "gain": 300,
-     "loss": 200,
-     "n": 5
+     "lam": 6,
+     "n": 6
     },
-    "hint": "First change the bet so the single flip's felt total is below zero but the plain-money average is still positive. Then raise the number of flips added up until the felt total bar crosses zero.",
-    "misconception": "That the two-flip result is a quirk of Samuelson's particular amounts, or that bundling works by raising the average payoff. In fact any bet with a positive average gets rarer losses when grouped, and the average per flip never moves."
+    "hint": "Push the loss weight to the top of its range. Then try bundle sizes from small to large and watch the felt value box. Small bundles are not enough at this weight.",
+    "misconception": "Believing that the same bet must always get the same answer. In fact, the answer depends on whether each bet is judged alone or only as part of a total, because inside a bundle the wins offset the losses before they are felt."
    },
    "connect": {
     "equation": [
      {
-      "text": "V = Σ_{k} C("
+      "text": "V(bundle) = Σ_{k} p_{k} · U(300k − 100"
      },
      {
       "text": "n",
       "link": "n"
      },
      {
-      "text": ", k)·(½)^{n}·v(k·"
-     },
-     {
-      "text": "win",
-      "link": "gain"
-     },
-     {
-      "text": " − (n−k)·"
-     },
-     {
-      "text": "loss",
-      "link": "loss"
-     },
-     {
-      "text": "),   v(x) = x if x ≥ 0,  "
+      "text": "),   U(x) = x if x ≥ 0,   U(x) = "
      },
      {
       "text": "λ",
       "link": "lam"
      },
      {
-      "text": "·x if x < 0"
+      "text": "x if x < 0   →   "
+     },
+     {
+      "text": "V",
+      "link": "felt"
      }
     ],
-    "caption": "The paper scores a gamble as V(G) = Σ π_i v(x_i), with v(x) = x for gains and 2.5x for losses in Samuelson's bet (the λ slider). For a bundle, the model lists each possible number of wins k among n flips, weights it by its plain probability C(n,k)·(½)^n, and applies v to the added-up total. The bars divide V by n. The binomial listing is the model's own bookkeeping; the paper writes out only the two-flip case."
+    "caption": "U is the paper's simple utility function: gains count once, losses count λ times (the paper writes 2.5x). The bundle sum is the model's rule, not an equation printed in the paper. k is the number of winning flips, 300k − 100n is the total in dollars for n flips, and p_{k} = binom(n, k)/2^{n} is its chance. Each bar is one term of the sum, and the felt value box is V."
    },
-   "recap": "Judged one at a time, Samuelson's flip feels bad. Added up before judging, losses become rarer and smaller, and the very same bets feel good.",
-   "builds_on": "when_to_take_a_coin_flip",
+   "recap": "Judge many bets as one total and wins cushion losses, so a loss-averse person who refuses one bet can welcome a bundle of them, but only if they don't feel each flip separately.",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
     },
     {
      "id": "goal_1",
      "kind": "goal",
-     "i": 1
+     "i": 0
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
     },
     {
-     "id": "check",
+     "id": "test",
      "kind": "check"
     },
     {
-     "id": "connect",
+     "id": "eq",
      "kind": "connect"
     }
    ]
   },
   {
-   "id": "evaluation_period",
-   "title": "How often you check decides stocks versus bonds",
-   "idea": "The longer the gap between portfolio check-ups, the less often stocks show a loss, so their felt value rises until it matches bonds at roughly a one-year evaluation period.",
-   "role": "contribution",
+   "id": "how_often_you_look",
+   "title": "How often you check decides whether stocks feel worth it",
+   "idea": "The longer the evaluation period, the less often a risky asset shows a loss, so for a loss-averse investor its felt value rises above a safe asset's once the period is long enough.",
+   "role": "core",
    "predict": {
-    "question": "Suppose stocks kept the same average return but swung up and down much less, and λ stayed the same. Where would the point at which stocks catch up with bonds move?",
+    "question": "A second investor feels losses even more sharply than the first: λ = 3 instead of 2.25. The stock and the safe asset are the same. What happens to the shortest checking interval at which stocks feel worth holding?",
     "options": [
-     "To a shorter gap between check-ups",
-     "To a longer gap between check-ups",
-     "It would not move, because only λ sets it",
-     "Stocks would never catch up"
+     "It gets longer: this investor must check less often before stocks win",
+     "It gets shorter: this investor can check more often",
+     "It stays the same, because λ does not change the returns",
+     "Stocks can never beat the safe asset for this investor"
     ],
     "answer": 0,
     "why": [
-     "Correct. Smaller swings mean a loss shows up less often at any check-up, so each tally stings less often. Stocks reach the felt value of bonds after a shorter wait.",
-     "Tempting if you think calmer stocks are somehow less rewarding. Their average return is unchanged and losses get rarer, so they catch up sooner, not later.",
-     "λ sets how hard each loss hits. How often a loss appears also matters, and that depends on the swings and on the gap between checks.",
-     "Calmer stocks with the same average return are more attractive, not less. If wild stocks catch up at some gap, calm ones catch up earlier."
+     "Right. Each loss that a check shows now weighs 3 times as much. The stock needs a lower chance of showing a loss, and only a longer interval between checks delivers that. In this model the crossover moves from about 10 months to roughly 16–17 months.",
+     "This is tempting if you think a stronger reaction makes someone a more careful investor. A bigger λ makes every visible loss cost more, so stocks need more time between checks to win, not less.",
+     "The returns are indeed unchanged, but felt value depends on how losses are weighed as well as on the returns. Raising λ pulls the stock curve down at every interval, so the crossing point moves.",
+     "A bigger λ lowers the stock curve but does not keep it down forever. Losses keep getting rarer as the interval grows, so even a very loss-averse investor ends up preferring stocks if they check rarely enough."
     ]
    },
    "terms": [
     {
      "term": "evaluation period",
-     "means": "How much time passes between the moments an investor adds up gains and losses. This is not the same as how long they plan to hold."
-    },
-    {
-     "term": "prospective utility",
-     "means": "Prospect theory's version of expected satisfaction: the weighted felt value of all possible gains and losses"
+     "means": "How much time passes between the moments when an investor looks at their returns and judges them as gains or losses"
     },
     {
      "term": "myopic loss aversion",
-     "means": "Loss aversion combined with frequent evaluation of results. Benartzi and Thaler's proposed explanation for the large gap between stock and bond returns"
+     "means": "Benartzi and Thaler's name for loss aversion combined with frequent checking, which makes risky assets feel worse than they are over the long run"
     }
    ],
    "model": {
-    "title": "How good stocks and bonds feel, by months between check-ups",
-    "note": "Teaching model, not the paper's data. Stock and bond returns over the gap are treated as bell-shaped, using round illustrative numbers: stocks average 10% a year with 20% swings, bonds 5% with 6% swings. The paper instead resampled historical US monthly returns from 1926–1990. Value follows the simplified variant the paper also tried: gains count once, losses count λ times, and plain probabilities are used, with no probability weighting or curved value. Curves are rescaled to a per-year rate so both fit on one chart; this does not move the crossing. The crossing points here are illustrative. This model crosses near 9 months at λ = 2.25. The paper reports 8 months for that simplified variant, and 11–12 months for its full prospect-theory comparison of stocks and bonds in nominal terms.",
+    "title": "How good a stock and a safe asset feel, depending on how often you check",
+    "note": "Teaching model, simplified in four ways. (1) Returns over each checking interval are normal, with an 8% mean and a 20% spread per year; this is the illustrative stock in the paper's introduction. (2) The safe asset pays a sure 1% a year. (3) Felt value uses a two-slope curve, where gains count once and losses count λ times, with true probabilities. (4) Values are shown per year of holding so the safe line stays flat; at very short intervals the stock curve falls off the bottom of the chart. The paper instead resampled real 1926–1990 US returns and used the full prospect-theory curves. It found a crossover of 9–12 months, or 8 months with the simple two-slope curve. The numbers here are illustrative, not the paper's data.",
     "controls": [
      {
       "id": "months",
-      "label": "Months between check-ups",
+      "label": "How often you check (months)",
       "kind": "slider",
       "min": 1,
       "max": 36,
       "step": 1,
       "default": 3,
       "unit": " mo",
-      "color": 2
+      "color": 4
      },
      {
       "id": "lam",
-      "label": "Loss sensitivity λ",
+      "label": "Loss aversion λ",
       "kind": "slider",
       "min": 1,
       "max": 4,
@@ -1660,99 +1855,88 @@
     ],
     "outputs": [
      {
-      "id": "p_loss",
-      "label": "Chance stocks look like a loss at a check-up",
-      "expr": "normcdf(-0.5 * sqrt(months / 12), 0, 1)",
+      "id": "stock",
+      "label": "Stocks: felt value per year",
+      "expr": "100*(0.08 + (lam - 1)*(0.08*normcdf(-0.4*sqrt(months/12), 0, 1) - 0.2*normpdf(0.4*sqrt(months/12), 0, 1)/sqrt(months/12)))",
       "unit": "%",
-      "scale": 100,
-      "decimals": 0,
-      "color": 0
-     },
-     {
-      "id": "v_stock",
-      "label": "Felt value of stocks (% a year)",
-      "expr": "0.10 + (lam - 1) * (0.10 * normcdf(-0.5 * sqrt(months / 12), 0, 1) - 0.20 / sqrt(months / 12) * normpdf(0.5 * sqrt(months / 12), 0, 1))",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 1,
-      "color": 0
-     },
-     {
-      "id": "v_bond",
-      "label": "Felt value of bonds (% a year)",
-      "expr": "0.05 + (lam - 1) * (0.05 * normcdf(-0.8333 * sqrt(months / 12), 0, 1) - 0.06 / sqrt(months / 12) * normpdf(0.8333 * sqrt(months / 12), 0, 1))",
-      "unit": "%",
-      "scale": 100,
       "decimals": 1,
       "color": 1
      },
      {
-      "id": "gap",
-      "label": "Stocks minus bonds",
-      "expr": "v_stock - v_bond",
-      "unit": " pts",
-      "scale": 100,
+      "id": "safe",
+      "label": "Safe asset: felt value per year",
+      "expr": "1",
+      "unit": "%",
       "decimals": 1,
-      "color": 4
+      "color": 2
+     },
+     {
+      "id": "gap",
+      "label": "Stocks minus safe",
+      "expr": "stock - safe",
+      "unit": "%",
+      "decimals": 1,
+      "color": 5
+     },
+     {
+      "id": "loss_chance",
+      "label": "Chance a check shows a loss",
+      "expr": "normcdf(-0.4*sqrt(months/12), 0, 1)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 6
      }
     ],
     "visual": {
      "type": "curves",
      "x": {
-      "label": "Months between check-ups",
+      "label": "How often you check (months between looks)",
       "min": 1,
       "max": 36
      },
      "y": {
-      "label": "Felt value per year (% return)",
-      "min": -20,
-      "max": 12
+      "label": "Felt value per year (%)",
+      "min": -6,
+      "max": 8
      },
      "series": [
       {
        "id": "stock_curve",
-       "label": "Stocks",
-       "expr": "100 * (0.10 + (lam - 1) * (0.10 * normcdf(-0.5 * sqrt(x / 12), 0, 1) - 0.20 / sqrt(x / 12) * normpdf(0.5 * sqrt(x / 12), 0, 1)))",
-       "color": 0,
+       "label": "Stocks (8% average, 20% spread)",
+       "expr": "100*(0.08 + (lam - 1)*(0.08*normcdf(-0.4*sqrt(x/12), 0, 1) - 0.2*normpdf(0.4*sqrt(x/12), 0, 1)/sqrt(x/12)))",
+       "color": 1,
        "dashed": false
       },
       {
-       "id": "bond_curve",
-       "label": "Bonds",
-       "expr": "100 * (0.05 + (lam - 1) * (0.05 * normcdf(-0.8333 * sqrt(x / 12), 0, 1) - 0.06 / sqrt(x / 12) * normpdf(0.8333 * sqrt(x / 12), 0, 1)))",
-       "color": 1,
-       "dashed": false
+       "id": "safe_line",
+       "label": "Safe asset (sure 1%)",
+       "expr": "1",
+       "color": 2,
+       "dashed": true
       }
      ],
      "markers": [
       {
-       "id": "checkup",
+       "id": "check_marker",
        "x": "months",
-       "label": "Your check-up gap",
-       "color": 2
+       "label": "Your checking interval",
+       "color": 4
       }
      ],
      "hlines": [
       {
-       "id": "zero",
+       "id": "zero_line",
        "y": 0,
-       "label": "Feels like nothing gained or lost"
+       "label": "Feels like nothing"
       }
      ],
      "points": [
       {
-       "id": "stock_pt",
+       "id": "stock_point",
        "x": "months",
-       "y": "100 * v_stock",
-       "label": "Stocks here",
-       "color": 0
-      },
-      {
-       "id": "bond_pt",
-       "x": "months",
-       "y": "100 * v_bond",
-       "label": "Bonds here",
-       "color": 1
+       "y": "stock",
+       "label": "Stocks here"
       }
      ]
     }
@@ -1760,84 +1944,69 @@
    "animation": {
     "steps": [
      {
-      "say": "This curve shows how good holding stocks feels, on average, to someone who tallies gains and losses each time they check.",
+      "say": "This curve shows how good a stock feels per year to someone who dislikes losses. It depends on how often they look at it.",
       "focus": "stock_curve",
       "ms": 4000
      },
      {
-      "say": "This one is bonds: smaller returns, but much calmer.",
-      "focus": "bond_curve",
-      "ms": 3200
+      "say": "The dashed line is a safe asset paying a sure 1% a year. It never shows a loss, so it always feels like 1%.",
+      "focus": "safe_line",
+      "ms": 3800
      },
      {
-      "say": "This slider sets how many months pass between check-ups. The upright line marks your choice.",
+      "say": "This slider sets how many months pass between looks. The marker moves with it.",
       "set": {
-       "months": 12
-      },
-      "focus": "months",
-      "ms": 4000
-     },
-     {
-      "say": "This slider is λ from earlier: how much harder a loss hits than an equal gain. Watch both curves bend.",
-      "set": {
-       "lam": 3
-      },
-      "focus": "lam",
-      "ms": 4200
-     },
-     {
-      "say": "These boxes show how often stocks look like a loss at a check-up, and which side is ahead.",
-      "set": {
-       "lam": 2.25,
-       "months": 3
+       "months": 6
       },
       "focus": [
-       "p_loss",
-       "gap"
+       "months",
+       "check_marker"
       ],
-      "ms": 4000
+      "ms": 3800
+     },
+     {
+      "say": "This slider sets λ: how many times worse a loss feels than an equal gain feels good.",
+      "focus": "lam",
+      "ms": 3600
+     },
+     {
+      "say": "These boxes read out both felt values at your interval, plus the chance that a single look shows a loss.",
+      "focus": [
+       "stock",
+       "safe",
+       "loss_chance"
+      ],
+      "ms": 4200
      }
     ]
    },
    "explore": {
-    "prompt": "Play the investor. Change how often you peek and how much losses sting, and watch where stocks overtake bonds.",
+    "prompt": "Keep λ at 2.25 and play with how often you check. Find the point where holding stocks starts to feel better than the safe asset.",
     "goals": [
      {
-      "text": "Keep λ at its starting value. Find the gap between check-ups at which stocks and bonds feel about equally good.",
-      "when": "abs(gap) < 0.0025 && abs(lam - 2.25) < 0.001",
+      "text": "With λ at 2.25, find the shortest checking interval (in whole months) at which stocks feel better than the safe asset.",
+      "when": "abs(lam - 2.25) < 0.01 && stock > safe && (100*(0.08 + (lam - 1)*(0.08*normcdf(-0.4*sqrt(max(months - 1, 1)/12), 0, 1) - 0.2*normpdf(0.4*sqrt(max(months - 1, 1)/12), 0, 1)/sqrt(max(months - 1, 1)/12)))) <= safe",
       "solution": {
-       "months": 9
+       "lam": 2.25,
+       "months": 10
       },
       "hints": [
-       "Stocks trail at short gaps and lead at long ones, so somewhere in between they must meet.",
-       "Move the check-up slider and watch the 'Stocks minus bonds' box change sign.",
-       "The sign flips between the 3-month starting point and the 18-month point from the walkthrough. Search month by month in that range."
-      ]
-     },
-     {
-      "text": "Picture an investor who reviews their portfolio once a year and is exactly torn between stocks and bonds. How loss-sensitive must they be?",
-      "when": "months == 12 && abs(gap) < 0.0015",
-      "solution": {
-       "months": 12,
-       "lam": 2.55
-      },
-      "hints": [
-       "First put the check-up gap at one year.",
-       "At one year with the starting λ, stocks are slightly ahead. Should λ go up or down to pull them back level?",
-       "Raise λ in small steps until the gap box sits near zero. You won't need to go far past the starting value."
+       "Stocks win when losses show up rarely enough. Which slider changes how often a look shows a loss?",
+       "Leave λ alone and lengthen the interval one month at a time, watching the 'Stocks minus safe' box.",
+       "The walkthrough had stocks losing at 6 months and winning at 12. The switch happens in between, so find the first month where the gap turns positive."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Right. What hurts stocks is how often a check-up shows a loss. Calmer swings make losses rarer at every gap, so stocks match bonds after a shorter wait.",
-     "incorrect": "You may have pictured the crossing as fixed by λ alone, or calm stocks as less rewarding. The felt value of stocks depends on how often a loss shows up. Smaller swings with the same average make losses rarer, so stocks catch up sooner."
+     "correct": "Yes. A bigger λ makes each visible loss cost more, so the stock needs an even lower chance of showing a loss. Only a longer interval between checks delivers that, so the crossover moves later.",
+     "incorrect": "λ does not change the returns, but it changes how much each loss you see hurts. With λ = 3 the stock curve sits lower at every interval, so it meets the safe line further to the right. Stocks still win eventually, because losses keep getting rarer as the interval grows."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start with no loss aversion: λ = 1, so a loss counts exactly like a gain. Felt value is then just the average return, and stocks sit above bonds at every gap.",
+       "say": "Start with λ = 1, so losses and gains count equally. The stock feels like its plain 8% average however often you look, far above the safe 1%.",
        "set": {
         "lam": 1,
         "months": 3
@@ -1846,196 +2015,192 @@
        "ms": 4200
       },
       {
-       "say": "Now set λ = 2.25, Tversky and Kahneman's estimate. Checking every 3 months, stocks feel like about −4% a year and bonds about +2%. The paper calls this kind of weighted felt value prospective utility.",
+       "say": "Now set λ = 2.25, the median Tversky and Kahneman reported. If you look every month, about 45% of looks show a loss. Each one stings 2.25 times as much, so stocks feel far worse than the safe asset.",
        "set": {
-        "lam": 2.25
+        "lam": 2.25,
+        "months": 1
        },
-       "focus": "gap",
+       "focus": "loss_chance",
        "ms": 5200
       },
       {
-       "say": "Why the dive? Peek every month and stocks look like a loss about 44% of the time. Each of those losses stings 2.25 times as hard.",
+       "say": "The time between looks is the evaluation period. Stretch it to 6 months and the chance of seeing a loss falls to about 39%. Stocks still feel worse than a sure 1%.",
        "set": {
-        "months": 1
+        "months": 6
        },
-       "focus": "p_loss",
-       "ms": 4400
+       "focus": [
+        "check_marker",
+        "stock"
+       ],
+       "ms": 4800
       },
       {
-       "say": "Stretch the gap to two years. The gains have time to outweigh the dips, so a loss shows only about 24% of the time, and stocks pull clearly ahead. This gap between tallies is the evaluation period.",
+       "say": "Why does waiting help? The average gain grows in step with time, but the spread grows only with its square root. Over longer periods the gain outruns the swings.",
+       "focus": "stock_point",
+       "ms": 4600
+      },
+      {
+       "say": "At a 12-month evaluation period only about a third of looks show a loss. The stock curve has climbed above the safe line, so a yearly checker would rather hold stocks.",
+       "set": {
+        "months": 12
+       },
+       "focus": [
+        "stock_curve",
+        "safe_line"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "Look every two years and fewer than 30% of looks show a loss. Stocks now feel worth almost 5% a year, against the safe asset's 1%.",
        "set": {
         "months": 24
        },
        "focus": [
-        "p_loss",
-        "stock_pt"
+        "loss_chance",
+        "gap"
        ],
-       "ms": 5200
-      },
-      {
-       "say": "Use the pooled estimate from earlier, λ ≈ 1.95. With milder loss aversion, stocks just edge past bonds at about 7 months in this model.",
-       "set": {
-        "lam": 1.95,
-        "months": 7
-       },
-       "focus": "checkup",
        "ms": 4600
       },
       {
-       "say": "Put λ back to 2.25 with the same 7-month checker, and bonds win again. Stronger loss aversion pushes the crossing to longer gaps. Loss aversion plus frequent checking is what the paper calls myopic loss aversion.",
+       "say": "Nothing changed about the stock or the investor, only the habit of looking. Benartzi and Thaler call loss aversion plus frequent looking myopic loss aversion. Here the curves cross somewhere between 6 and 12 months.",
        "set": {
-        "lam": 2.25
-       },
-       "focus": "gap",
-       "ms": 5400
-      },
-      {
-       "say": "Check every 18 months instead and stocks lead by about 2 points. In this model the crossing sits under a year. The paper's simulations on real returns put it between 9 and 12 months.",
-       "set": {
-        "months": 18
+        "months": 12
        },
        "focus": [
         "stock_curve",
-        "bond_curve"
+        "safe_line"
        ],
-       "ms": 5000
+       "ms": 5600
       }
      ]
     },
-    "explanation": "Over a short gap, the big swings of stocks often add up to a loss. With λ near 2 each loss stings about twice as hard, so stocks feel worse than steady bonds. Stretch the gap and gains have time to outweigh the dips: losses show up less often, and the felt value of stocks climbs until it matches bonds. Benartzi and Thaler simulated this by drawing 10,000 n-month returns from historical US monthly returns (1926–1990), for gaps of 1 to 18 months, and scoring them with Tversky and Kahneman's 1992 prospect theory parameters. The point where stocks and bonds felt equal fell between 9 and 12 months, which the authors argue is a plausible check-up length, since taxes and the most complete fund reports come once a year. They stress this tests whether the explanation is plausible and cannot prove it correct. The crossing also depends on λ, and the pooled estimate of about 1.96 from the meta-analysis is below the 2.25 they used.",
+    "explanation": "If you check a risky investment often, many checks show a loss. With λ near 2, each loss stings more than twice as much as an equal gain pleases, so the stock feels worse than a safe 1%. Over a longer evaluation period the average gain builds faster than the swings, so fewer checks show a loss and the stock's felt value climbs until it crosses the safe line. Benartzi and Thaler tested this by drawing from real 1926–1990 US returns and scoring them with Tversky and Kahneman's prospect-theory parameters. They found the crossover at about one year, or about 8 months with a simple two-slope curve. They present this as a plausibility check, not a proof: it shows the idea fits the numbers. They also note that real investors may look at several intervals at once.",
     "quote": "As the figures show, the horizon at which the prospective utility for stocks is equal to the value for bonds or treasury bills is always between 9 and 12 months, or roughly one year.",
-    "quote_where": "Section 4, How often are portfolios evaluated?",
-    "quote_source_id": "s4",
+    "quote_where": "Section 4 (How often are portfolios evaluated?)",
     "source_id": "s4",
     "source_ids": [
-     "s4",
-     "s2"
+     "s4"
     ]
-   },
-   "check": {
-    "kind": "model",
-    "task": "Someone peeks at their portfolio every single month. Put the model in a state where stocks still feel better to them than bonds.",
-    "when": "months == 1 && gap > 0",
-    "solution": {
-     "months": 1,
-     "lam": 1.25
-    },
-    "hint": "At a one-month gap, stocks look like a loss almost half the time. What would make those frequent losses hurt less?",
-    "misconception": "Thinking a frequent checker will prefer stocks just because their average return is higher. In this model, losses show up so often at short gaps that only near-neutral loss sensitivity, with λ close to 1, keeps stocks ahead."
    },
    "connect": {
     "equation": [
      {
-      "text": "V = Σ p_{i} · v(x_{i}),   v(x) = x if x ≥ 0,   v(x) = "
+      "text": "V",
+      "link": "stock"
+     },
+     {
+      "text": "(T) = E[r_{T}] + ("
      },
      {
       "text": "λ",
       "link": "lam"
      },
      {
-      "text": " · x if x < 0,   where x is the return over "
+      "text": " − 1) × E[min(r_{T}, 0)],   r_{T} ~ Normal(8% × "
      },
      {
-      "text": "n",
+      "text": "T",
       "link": "months"
      },
      {
-      "text": " months"
+      "text": ", 20% × √"
+     },
+     {
+      "text": "T",
+      "link": "months"
+     },
+     {
+      "text": ")"
      }
     ],
-    "caption": "This is the simplified variant the paper tried in Section 4: a straight-line value function with plain probabilities in place of decision weights. λ, linked to the loss-sensitivity slider, multiplies every loss. n, linked to the check-up slider, is the evaluation period over which returns x are added up before being scored. The model averages v(x) over a bell-shaped spread of n-month returns. The paper's main analysis used curved value (α = β = 0.88) and decision weights π_{i} in place of p_{i}."
+    "caption": "This is the model's rule, not the paper's full prospect-theory formula. It uses the two-slope value curve from the paper's sensitivity check: gains count once, losses count λ times, and probabilities are the true ones. V is the stock's felt value over one evaluation period T (the checking-interval slider, in years here). The model divides V by T to show it per year. The minus-one term is the extra sting of the loss part, and it shrinks as T grows. λ is the loss-aversion slider."
    },
-   "recap": "Check less often and stocks show losses less often, so for a loss-averse investor they catch up with bonds at an evaluation period of roughly one year.",
+   "recap": "Checking less often hides most losses, so a loss-averse investor who looks yearly rather than monthly can find stocks worth holding.",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
     },
     {
      "id": "goal_1",
      "kind": "goal",
-     "i": 1
+     "i": 0
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
     },
     {
-     "id": "check",
-     "kind": "check"
-    },
-    {
-     "id": "connect",
+     "id": "eq",
      "kind": "connect"
     }
    ]
   },
   {
    "id": "price_of_vigilance",
-   "title": "The price of checking too often",
-   "idea": "Lengthening the evaluation period shrinks the extra return stocks must offer to stay attractive, from about 6.5% a year at one year to about 1.4% at twenty years.",
+   "title": "The equity premium as the price of looking too often",
+   "idea": "The stock premium needed to make a loss-averse investor indifferent between stocks and bonds falls steeply as the evaluation period lengthens, and a one-year period with λ near 2 matches the roughly 6.5% premium actually seen.",
    "role": "contribution",
    "predict": {
-    "question": "A pension fund will last for decades, but its manager reports returns to the board every quarter. Another fund's manager is reviewed only every five years. Compared with that manager, what extra return must stocks offer before the quarterly-reviewed one is content to hold them?",
+    "question": "A large meta-analysis puts the average loss aversion λ near 1.96, a bit lower than the 2.25 used in this model. For an investor who checks once a year, how big an extra return would stocks need so that they feel exactly as good as the sure 1%?",
     "options": [
-     "A larger extra return",
-     "The same extra return, because both funds last for decades",
-     "A smaller extra return, because quarterly checks catch problems early",
-     "It depends only on how big each fund is"
+     "A smaller extra return than about 6%",
+     "A larger extra return than about 6%",
+     "The same: λ doesn't affect the balance point",
+     "No extra return would ever be enough"
     ],
     "answer": 0,
     "why": [
-     "Right. What matters is how often gains and losses are counted, not how long the money stays invested. Quarterly reports show losses far more often, so a loss-averse manager needs a bigger extra return. The paper argues this for pension funds.",
-     "Tempting, since the horizon really is long. But a loss is felt each time it is counted, so a long horizon with frequent reports acts like a short one. The paper calls this an agency problem: the manager's horizon is short.",
-     "Frequent checks do give earlier warning, but they also turn the same stocks into many small visible losses. For someone who feels losses about twice as strongly as gains, that raises the needed extra return.",
-     "Fund size plays no role. In prospect theory, value depends on gains and losses measured as returns, not on how much wealth there is. Only the evaluation period and loss sensitivity move the break-even premium."
+     "Right. A lower λ means each loss stings less, so stocks need less extra return to make up for the losing years. In this toy the balance moves from about 6.1% to about 5%.",
+     "That would hold if λ went up. A smaller λ shrinks the penalty on losing years, so stocks feel better and need less extra return to break even.",
+     "λ is exactly what sets how hard the losing years hit. Change it and the stocks curve moves, so the balance point moves too.",
+     "Even at λ = 1.95, a yearly checker sees a loss only some of the time. A big enough extra return always lifts stocks above the sure 1%, as the slider shows."
     ]
    },
    "terms": [
     {
      "term": "equity premium",
-     "means": "The extra yearly return stocks pay over bonds. In the paper's US data it was historically about 6.5% a year."
+     "means": "The extra average yearly return that stocks pay over safe assets such as bonds"
     },
     {
-     "term": "break-even premium",
-     "means": "The smallest equity premium at which stocks feel exactly as good as bonds for a given evaluation period"
+     "term": "price of excessive vigilance",
+     "means": "The paper's name for the 5.1% a year that yearly checking costs a 20-year investor: the 6.5% premium a yearly checker needs minus the 1.4% a 20-year checker would need"
+    },
+    {
+     "term": "indifferent",
+     "means": "Liking two options exactly equally, so neither choice feels better"
     }
    ],
    "model": {
-    "title": "How good stocks and bonds feel, by months between check-ups",
-    "note": "Teaching model, not the paper's data. This is the same picture as before, with one new slider. Stock and bond returns over the gap are treated as bell-shaped, using round illustrative numbers. Bonds average 5% a year with 6% swings. Stocks average 5% plus the new extra-return slider, with 20% swings, so the default of 5 gives the earlier 10%. The paper instead resampled historical US monthly returns from 1926–1990. Value follows the simplified variant the paper also tried: gains count once, losses count λ times, and plain probabilities are used, with no probability weighting or curved value. Curves are rescaled to a per-year rate. In this toy model, at λ = 2.25, the extra return that just levels stocks with bonds is about 9% at 3 months, 6.4% at 6, 4.4% at 12 and 2.9% at 24. These are illustrative. The paper's own figures (6.5% at 1 year, 4.65% at 2, 3.0% at 5, 2.0% at 10, 1.4% at 20) come from full prospect theory using real stock and 5-year bond returns. The chart stops at 36 months, so the paper's longer periods are quoted rather than shown.",
+    "title": "How much extra return stocks need, depending on how often you check",
+    "note": "Teaching model: the same simplified picture as before, plus one new slider. (1) Stock returns over each checking interval are normal with a 20% yearly spread. Their average is the safe 1% plus the extra-return slider; at 7%, this is the 8% stock the paper uses as an example in its introduction. (2) The safe asset pays a sure 1% a year. (3) Felt value uses the two-slope curve (gains count once, losses count λ times) with true probabilities, shown per year of holding. (4) The checking slider stops at 36 months, so the paper's 5-, 10- and 20-year results are quoted, not shown. The paper instead drew samples from real 1926–1990 US monthly returns, compared stocks with 5-year bonds for this analysis, and used full prospect theory (λ = 2.25, curvature 0.88, decision weights). In this toy, a yearly checker with λ = 2.25 balances at an extra return of about 6.1%. The paper's simulation found the actual 6.5% premium consistent with a one-year period. All curve values here are illustrative, not the paper's data.",
     "controls": [
      {
       "id": "months",
-      "label": "Months between check-ups",
+      "label": "How often you check (months)",
       "kind": "slider",
       "min": 1,
       "max": 36,
       "step": 1,
       "default": 3,
       "unit": " mo",
-      "color": 2
+      "color": 4
      },
      {
       "id": "lam",
-      "label": "Loss sensitivity λ",
+      "label": "Loss aversion λ",
       "kind": "slider",
       "min": 1,
       "max": 4,
@@ -2046,111 +2211,106 @@
      },
      {
       "id": "prem",
-      "label": "Extra yearly return of stocks over bonds",
+      "label": "Stocks' extra yearly return over the safe asset",
       "kind": "slider",
       "min": 0,
-      "max": 12,
+      "max": 10,
       "step": 0.1,
-      "default": 5,
+      "default": 7,
       "unit": "%",
-      "color": 5
+      "color": 0
      }
     ],
     "outputs": [
      {
-      "id": "p_loss",
-      "label": "Chance stocks look like a loss at a check-up",
-      "expr": "normcdf(-(0.05 + prem / 100) * 5 * sqrt(months / 12), 0, 1)",
+      "id": "stock",
+      "label": "Stocks: felt value per year",
+      "expr": "100*((0.01 + prem/100) + (lam - 1)*((0.01 + prem/100)*normcdf(-5*(0.01 + prem/100)*sqrt(months/12), 0, 1) - 0.2*normpdf(5*(0.01 + prem/100)*sqrt(months/12), 0, 1)/sqrt(months/12)))",
       "unit": "%",
-      "scale": 100,
-      "decimals": 0,
-      "color": 0
-     },
-     {
-      "id": "v_stock",
-      "label": "Felt value of stocks (% a year)",
-      "expr": "(0.05 + prem / 100) + (lam - 1) * ((0.05 + prem / 100) * normcdf(-(0.05 + prem / 100) * 5 * sqrt(months / 12), 0, 1) - 0.20 / sqrt(months / 12) * normpdf((0.05 + prem / 100) * 5 * sqrt(months / 12), 0, 1))",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 1,
-      "color": 0
-     },
-     {
-      "id": "v_bond",
-      "label": "Felt value of bonds (% a year)",
-      "expr": "0.05 + (lam - 1) * (0.05 * normcdf(-0.8333 * sqrt(months / 12), 0, 1) - 0.06 / sqrt(months / 12) * normpdf(0.8333 * sqrt(months / 12), 0, 1))",
-      "unit": "%",
-      "scale": 100,
       "decimals": 1,
       "color": 1
      },
      {
-      "id": "gap",
-      "label": "Stocks minus bonds",
-      "expr": "v_stock - v_bond",
-      "unit": " pts",
-      "scale": 100,
+      "id": "safe",
+      "label": "Safe asset: felt value per year",
+      "expr": "1",
+      "unit": "%",
       "decimals": 1,
-      "color": 4
+      "color": 2
+     },
+     {
+      "id": "gap",
+      "label": "Stocks minus safe",
+      "expr": "stock - safe",
+      "unit": "%",
+      "decimals": 2,
+      "color": 5
+     },
+     {
+      "id": "loss_chance",
+      "label": "Chance a check shows a loss",
+      "expr": "normcdf(-5*(0.01 + prem/100)*sqrt(months/12), 0, 1)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 6
      }
     ],
     "visual": {
      "type": "curves",
      "x": {
-      "label": "Months between check-ups",
+      "label": "How often you check (months between looks)",
       "min": 1,
       "max": 36
      },
      "y": {
-      "label": "Felt value per year (% return)",
-      "min": -20,
-      "max": 12
+      "label": "Felt value per year (%)",
+      "min": -6,
+      "max": 10
      },
      "series": [
       {
        "id": "stock_curve",
-       "label": "Stocks",
-       "expr": "100 * ((0.05 + prem / 100) + (lam - 1) * ((0.05 + prem / 100) * normcdf(-(0.05 + prem / 100) * 5 * sqrt(x / 12), 0, 1) - 0.20 / sqrt(x / 12) * normpdf((0.05 + prem / 100) * 5 * sqrt(x / 12), 0, 1)))",
-       "color": 0,
+       "label": "Stocks (1% + extra return, 20% spread)",
+       "expr": "100*((0.01 + prem/100) + (lam - 1)*((0.01 + prem/100)*normcdf(-5*(0.01 + prem/100)*sqrt(x/12), 0, 1) - 0.2*normpdf(5*(0.01 + prem/100)*sqrt(x/12), 0, 1)/sqrt(x/12)))",
+       "color": 1,
        "dashed": false
       },
       {
-       "id": "bond_curve",
-       "label": "Bonds",
-       "expr": "100 * (0.05 + (lam - 1) * (0.05 * normcdf(-0.8333 * sqrt(x / 12), 0, 1) - 0.06 / sqrt(x / 12) * normpdf(0.8333 * sqrt(x / 12), 0, 1)))",
-       "color": 1,
-       "dashed": false
+       "id": "safe_line",
+       "label": "Safe asset (sure 1%)",
+       "expr": "1",
+       "color": 2,
+       "dashed": true
       }
      ],
      "markers": [
       {
-       "id": "checkup",
+       "id": "check_marker",
        "x": "months",
-       "label": "Your check-up gap",
-       "color": 2
+       "label": "Your checking interval",
+       "color": 4
+      },
+      {
+       "id": "year_marker",
+       "x": 12,
+       "label": "Once a year",
+       "color": 7
       }
      ],
      "hlines": [
       {
-       "id": "zero",
+       "id": "zero_line",
        "y": 0,
-       "label": "Feels like nothing gained or lost"
+       "label": "Feels like nothing"
       }
      ],
      "points": [
       {
-       "id": "stock_pt",
+       "id": "stock_point",
        "x": "months",
-       "y": "100 * v_stock",
-       "label": "Stocks here",
-       "color": 0
-      },
-      {
-       "id": "bond_pt",
-       "x": "months",
-       "y": "100 * v_bond",
-       "label": "Bonds here",
-       "color": 1
+       "y": "stock",
+       "label": "Stocks here"
       }
      ]
     }
@@ -2158,169 +2318,145 @@
    "animation": {
     "steps": [
      {
-      "say": "Same picture as before. The orange curve shows how good stocks feel and the blue curve how good bonds feel, for each gap between check-ups.",
+      "say": "Same picture as before. The solid curve is how good stocks feel at each checking interval, the dashed line is the sure 1%, and the vertical line marks how often you look.",
       "focus": [
        "stock_curve",
-       "bond_curve"
+       "safe_line",
+       "check_marker"
       ],
       "ms": 6000
      },
      {
-      "say": "One new slider: how much more stocks pay than bonds each year, on average. Raise it and watch the stock curve lift.",
+      "say": "One new slider: how much more stocks earn on average each year than the safe asset. Raise it and the whole stocks curve lifts.",
       "set": {
-       "prem": 7
+       "prem": 9
       },
       "focus": "prem",
-      "ms": 6500
+      "ms": 5500
      },
      {
-      "say": "The bond curve never moves with it, because this slider only changes stocks. Back to 5% for now.",
+      "say": "Lower it and the curve sinks. Wherever the curve crosses the dashed line, stocks and the sure thing feel the same.",
       "set": {
        "prem": 5
       },
-      "focus": "bond_curve",
+      "focus": "stock_curve",
       "ms": 5500
      }
     ]
    },
    "explore": {
-    "prompt": "You are the market. For a given check-up habit, how small can the extra return on stocks be and still keep a loss-averse investor willing to hold them? Hunt for the level points.",
+    "prompt": "You're the market. Find how much extra return stocks must pay before a loss-averse person (λ = 2.25) is happy to hold them. Do it first for someone who checks once a year, then for someone who checks only every three years.",
     "goals": [
      {
-      "text": "For an investor who checks every six months, find the smallest extra return at which stocks feel at least as good as bonds, without touching the loss sensitivity.",
-      "when": "abs(months - 6) < 0.5 && abs(lam - 2.25) < 0.01 && gap >= 0 && gap < 0.003",
+      "text": "Keep λ at 2.25. For someone who checks once a year, find the extra return that makes stocks and the safe asset feel equal (gap within ±0.15%).",
+      "when": "abs(months - 12) < 0.5 && abs(lam - 2.25) < 0.01 && abs(gap) < 0.15",
       "solution": {
-       "months": 6,
-       "prem": 6.4
+       "months": 12,
+       "prem": 6.1
       },
       "hints": [
-       "Which slider lifts the stock curve without moving bonds?",
-       "Set the check-up gap to half a year first. Then nudge the extra return up a little at a time and watch 'Stocks minus bonds' cross zero.",
-       "It lands between the level point you saw at 3 months and the one at 12 months, and closer to the 3-month one than you might expect."
+       "First set the checking slider to match someone who looks once a year.",
+       "Then move the extra-return slider and watch the 'Stocks minus safe' box head toward zero.",
+       "The balance sits between 5% and 7%. Nudge in small steps until the stocks point lands on the dashed line."
       ]
      },
      {
-      "text": "Stocks now pay only 3% a year more than bonds. Without touching the loss sensitivity, find a check-up gap at which that is just enough: stocks ahead of bonds, but by less than half a point.",
-      "when": "abs(prem - 3) < 0.05 && abs(lam - 2.25) < 0.01 && gap >= 0 && gap < 0.005",
+      "text": "Keep λ at 2.25. Now find the extra return that makes stocks and the safe asset feel equal for someone who checks only every 3 years (gap within ±0.15%).",
+      "when": "abs(months - 36) < 0.5 && abs(lam - 2.25) < 0.01 && abs(gap) < 0.15",
       "solution": {
-       "months": 24,
-       "prem": 3
+       "months": 36,
+       "prem": 3.4
       },
       "hints": [
-       "Is 3% more or less than what a yearly checker needs? That tells you which way the check-up gap must move.",
-       "With the extra return at 3%, lengthen the gap one step at a time and watch 'Stocks minus bonds' climb through zero.",
-       "It crosses a little before the two-year mark. Pushing all the way to 36 months overshoots the half-point limit."
+       "Three years is the longest interval this slider allows.",
+       "Checking that rarely makes the stocks point jump up, so you'll need to lower the extra return, not raise it.",
+       "The answer is well below 5% but more than half of your yearly answer. Use small steps and watch the gap."
       ]
      }
     ]
    },
    "understand": {
-    "source_ids": [
-     "s4",
-     "s2"
-    ],
     "feedback": {
-     "correct": "Yes. The quarterly-reviewed manager counts gains and losses four times a year, so stocks show losses often. That manager behaves like a short-horizon investor and needs a bigger equity premium. The paper argues exactly this for pension funds and endowments: their managers' short reporting horizons create myopic loss aversion even when the money is invested for decades.",
-     "incorrect": "You may have assumed that how long the money stays invested decides things. In this model what counts is the evaluation period: how often gains and losses are felt. Frequent reports turn the same stocks into many small visible losses. A loss-averse manager then needs a larger equity premium to hold them, however long the fund lasts."
+     "correct": "Yes. λ sets how much the losing years hurt. With λ near 1.96 they hurt less, so in this toy a yearly checker needs a smaller extra return: about 5% rather than about 6.1%. The exact match to the real premium depends on which λ you trust.",
+     "incorrect": "You may have expected λ to make no difference, or to push the answer up. The balance comes from weighing gains against λ times the losses. A smaller λ shrinks the loss side, so stocks need less extra return before they feel as good as the sure 1%."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start where we left off: a check-up every 3 months, with stocks paying 5% a year more than bonds. Stocks feel about 6 points worse than bonds, because losses show up too often.",
+       "say": "Take someone with λ = 2.25 who checks once a year. With stocks earning 7% more than the safe asset each year, the stocks point sits above the dashed line, so stocks feel better.",
        "set": {
-        "months": 3,
+        "months": 12,
         "lam": 2.25,
-        "prem": 5
+        "prem": 7
        },
-       "focus": "gap",
-       "ms": 4200
-      },
-      {
-       "say": "How much extra must stocks pay before this investor is happy? Raise it to about 9% and the dots meet. That extra yearly return is the equity premium. The level that just ties stocks with bonds is the break-even premium.",
-       "set": {
-        "prem": 9.1
-       },
-       "focus": [
-        "prem",
-        "stock_pt",
-        "bond_pt"
-       ],
-       "ms": 6000
-      },
-      {
-       "say": "Now let the same investor check only every two years, keeping that 9%. Losses rarely show at a check-up, so stocks jump far ahead, by about 8 points.",
-       "set": {
-        "months": 24
-       },
-       "focus": [
-        "checkup",
-        "stock_pt"
-       ],
+       "focus": "stock_point",
        "ms": 5000
       },
       {
-       "say": "So a two-year checker would settle for much less. Lower the extra return until the dots meet again. That happens at only about 3%.",
+       "say": "That extra average yearly return of stocks over a safe asset is called the equity premium. Lower it until the point sits on the dashed line. At about 6.1%, this person is indifferent: stocks and the sure thing feel equal.",
        "set": {
-        "prem": 2.9
+        "prem": 6.1
        },
-       "focus": [
-        "prem",
-        "gap"
-       ],
-       "ms": 5200
+       "focus": "gap",
+       "ms": 6500
       },
       {
-       "say": "In between, at one check-up a year, the dots meet at about 4.4% in this toy model. Rarer looks need a smaller premium: about 9%, then 4.4%, then 3%. The break-even premium falls as the evaluation period grows.",
+       "say": "Keep that same 6.1% premium, but now check only every 3 years. The point leaps well above the line. Fewer looks mean fewer losing reports, so the same premium is now more than enough.",
        "set": {
-        "months": 12,
-        "prem": 4.4
+        "months": 36
+       },
+       "focus": "stock_point",
+       "ms": 6000
+      },
+      {
+       "say": "So how much does a 3-year checker actually need? Lower the premium until the point is back on the line: only about 3.4%. The longer the evaluation period, the smaller the premium needed.",
+       "set": {
+        "prem": 3.4
        },
        "focus": [
-        "checkup",
+        "stock_point",
         "gap"
        ],
        "ms": 6000
       },
       {
-       "say": "Now picture someone who checks every month. Even a 12% extra return leaves stocks feeling worse than bonds. Watching too closely is expensive.",
-       "set": {
-        "months": 1,
-        "prem": 12
-       },
-       "focus": [
-        "stock_pt",
-        "gap"
-       ],
-       "ms": 5200
-      },
-      {
-       "say": "Back to a yearly look. The paper used full prospect theory on real 1926–1990 returns. It finds a one-year evaluation period needs about 6.5%, which is just what stocks actually paid over bonds. At 20 years it would be only 1.4%.",
-       "set": {
-        "months": 12,
-        "prem": 4.4
-       },
-       "focus": [
-        "checkup",
-        "stock_pt",
-        "bond_pt"
-       ],
-       "ms": 7000
-      },
-      {
-       "say": "That is the payoff. The same stocks look too scary to a monthly checker and worth holding to a yearly one. Losses weighing about twice as much as gains, plus a look once a year, are enough to explain the historical equity premium.",
-       "focus": [
-        "lam",
-        "months",
-        "gap"
-       ],
+       "say": "The paper ran this with real 1926–1990 returns. The premium consistent with each period fell from 6.5% at one year to 4.65% at two years, 3% at five, 2% at ten and 1.4% at twenty.",
+       "focus": "stock_curve",
        "ms": 6500
+      },
+      {
+       "say": "For a 20-year investor, checking yearly costs about 5.1% a year (6.5% minus 1.4%): the paper's price of excessive vigilance. Back at a yearly check here, 3.4% makes stocks feel worse than the sure 1%.",
+       "set": {
+        "months": 12
+       },
+       "focus": [
+        "stock_point",
+        "year_marker"
+       ],
+       "ms": 7500
+      },
+      {
+       "say": "Put in the real premium, about 6.5%. In this toy, a yearly checker with λ ≈ 2.35 is indifferent; the paper's full model matched it with 2.25. Yearly looks plus λ near 2 can explain a ~6% premium.",
+       "set": {
+        "prem": 6.5,
+        "lam": 2.35
+       },
+       "focus": [
+        "stock_point",
+        "gap"
+       ],
+       "ms": 9000
       }
      ]
     },
-    "explanation": "The less often you count your gains and losses, the less often stocks show a loss, so they need to pay less extra to feel as good as bonds. Benartzi and Thaler simulated investors with Tversky and Kahneman's prospect-theory parameters (λ = 2.25) using US returns from 1926–1990. They found that the historical equity premium of about 6.5% a year is exactly what a one-year evaluation period requires. With 2-, 5-, 10- and 20-year evaluation periods the required premium falls to 4.65%, 3.0%, 2.0% and 1.4%. For a 20-year investor who looks every year, that leaves roughly 5.1% a year, which the authors call 'the price of excessive vigilance'. A later meta-analysis (Brown and colleagues) puts the average λ near 1.96 rather than 2.25. That is still about 2, though any shift in λ would move these numbers somewhat. The authors stress that this shows their explanation is plausible, not proven. Their figures depend on the specific model, its parameters and one country's history. The toy model here reproduces only the shape of their curve, not its values.",
+    "explanation": "Turn the earlier question around. Instead of asking whether stocks feel worth it, ask how big the equity premium must be to make a loss-averse person indifferent. The answer shrinks fast as the evaluation period grows, because rare looks rarely show a loss. Benartzi and Thaler simulated this with real 1926–1990 US returns on stocks and 5-year bonds, using prospect theory's previously estimated parameters rather than ones selected to fit the data best. They found the observed 6.5% premium consistent with a one-year evaluation period, and found it would fall to 1.4% for a 20-year one. That 5.1% gap is what they call the 'price of excessive vigilance'. The match is suggestive, not proof: the authors note there is no way of demonstrating that one particular explanation is correct. The numbers also depend on the details. Their simple two-slope version with true probabilities needed λ = 2.77 for a 12-month period, while a later meta-analysis puts average λ near 1.96 (about 1.74 after correcting for possible publication bias).",
     "quote": "With the parameters we have been using, the actual equity premium in our data (6.5 percent per year) is consistent with an evaluation period of one year. If the evaluation period were 2 years, the equity premium would fall to 4.65 percent. For 5, 10, and 20 year evaluation periods, the corresponding figures are 3.0 percent, 2.0 percent, and 1.4 percent.",
     "quote_where": "Section 5, Myopia and the Magnitude of the Equity Premium",
-    "source_id": "s4"
+    "source_id": "s4",
+    "source_ids": [
+     "s4",
+     "s2"
+    ]
    },
    "connect": {
     "equation": [
@@ -2328,78 +2464,67 @@
       "text": "V_{stocks}("
      },
      {
-      "text": "n",
+      "text": "T",
       "link": "months"
      },
      {
       "text": ", "
      },
      {
-      "text": "π",
+      "text": "premium",
       "link": "prem"
      },
      {
-      "text": ") = V_{bonds}("
-     },
-     {
-      "text": "n",
-      "link": "months"
-     },
-     {
-      "text": "),   with V = E[R] + ("
+      "text": ") = V_{safe}(T),   where V = Σ p_{i}·v(x_{i}) and v(x) = x if x ≥ 0, "
      },
      {
       "text": "λ",
       "link": "lam"
      },
      {
-      "text": " − 1)·E[R; R < 0]  →  "
-     },
-     {
-      "text": "V_{stocks} − V_{bonds} = 0",
-      "link": "gap"
+      "text": "·x if x < 0"
      }
     ],
-    "caption": "This is the model's rule, not a formula printed in the paper; the paper finds the premium by simulation with full prospect theory. Each asset's value V is its average return plus (λ − 1) times its losing part, the gains-once, losses-λ-times variant the paper also tried. The break-even premium π makes stocks and bonds equal for evaluation period n, where 'Stocks minus bonds' reads zero. n is the months slider, λ the loss sensitivity, π the extra-return slider."
+    "caption": "The paper seeks the premium at which the prospect value of stocks over an evaluation period T equals that of bonds. V(G) = Σ π_{i} v(x_{i}); its simple check uses v(x) = x for gains and 2.25x for losses with true probabilities. T is the checking slider, the premium is the new slider, and λ is the loss-aversion slider. The model plots V per year as the 'Stocks' curve. The full version adds curvature (x^{0.88}) and decision weights π_{i}."
    },
-   "recap": "The rarer the check-ups, the smaller the premium stocks need. Loss aversion of about 2 plus a yearly look fits the 6.5% stocks have paid over bonds, while 20-year looks would need only about 1.4%.",
-   "builds_on": "evaluation_period",
+   "recap": "The extra return stocks must pay falls steeply as you check less often; a yearly check with λ near 2 fits the real ~6.5% equity premium, the price of looking too often.",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
     },
     {
      "id": "goal_1",
      "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
      "i": 1
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
     },
     {
-     "id": "connect",
+     "id": "eq",
      "kind": "connect"
     }
-   ]
+   ],
+   "builds_on": "how_often_you_look"
   }
  ],
  "omitted": [],
@@ -2433,6 +2558,315 @@
    "year": 1995
   }
  ],
+ "activity_plans": [
+  {
+   "concept": "losses_loom_larger",
+   "chosen": "p2",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "compare",
+     "goal",
+     "predict",
+     "reveal",
+     "connect"
+    ],
+    "why": "Compare λ = 1 (no loss aversion) with λ = 2.25 (the 1992 estimate) side by side before practising, which anchors what the number means."
+   },
+   "confidence": 0.58,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "Tour the curve, watch λ steepen the loss side, then set λ so that a $100 loss feels as bad as a $200 gain feels good, and predict a new case."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "compare",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "Compare λ = 1 (no loss aversion) with λ = 2.25 (the 1992 estimate) side by side before practising, which anchors what the number means."
+    }
+   ]
+  },
+  {
+   "concept": "rejecting_a_good_bet",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "connect"
+    ],
+    "why": "With Samuelson's $200 win fixed, slide the loss and λ to find the largest loss a person would still accept, then predict for a new λ."
+   },
+   "confidence": 0.77,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "With Samuelson's $200 win fixed, slide the loss and λ to find the largest loss a person would still accept, then predict for a new λ."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "worked",
+      "explain",
+      "goal",
+      "predict",
+      "reveal"
+     ],
+     "why": "A worked calculation of Samuelson's colleague's reasoning ('I would feel the $100 loss more than the $200 gain') before hands-on practice."
+    }
+   ]
+  },
+  {
+   "concept": "pooling_many_estimates",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "check",
+     "connect"
+    ],
+    "why": "Shrink an extreme λ = 5 toward the mean by raising its standard error, then predict what happens when studies are very similar. The check targets the belief that big estimates are simply 'wrong'."
+   },
+   "confidence": 0.59,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "check",
+      "connect"
+     ],
+     "why": "Shrink an extreme λ = 5 toward the mean by raising its standard error, then predict what happens when studies are very similar. The check targets the belief that big estimates are simply 'wrong'."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "compare",
+      "goal",
+      "estimate",
+      "check",
+      "connect"
+     ],
+     "why": "Compare a precise and an imprecise study with the same reported value, then estimate the meta-analysis mean against 2.25."
+    }
+   ]
+  },
+  {
+   "concept": "is_loss_aversion_real",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "explain",
+     "stages",
+     "sort",
+     "choice"
+    ],
+    "why": "Reveal the evidence in stages (meta-analysis, replication, publication-bias correction, critiques), sort findings into 'supports', 'challenges' and 'refines', then judge an interpretive question."
+   },
+   "confidence": 0.91,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "explain",
+      "stages",
+      "sort",
+      "choice"
+     ],
+     "why": "Reveal the evidence in stages (meta-analysis, replication, publication-bias correction, critiques), sort findings into 'supports', 'challenges' and 'refines', then judge an interpretive question."
+    },
+    {
+     "blocks": [
+      "explain",
+      "compare",
+      "passage",
+      "choice"
+     ],
+     "why": "Compare the loss aversion and loss attention accounts side by side, then find the passage that separates them."
+    }
+   ]
+  },
+  {
+   "concept": "bundling_bets",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "check",
+     "connect"
+    ],
+    "why": "Raise the number of bundled bets until the felt value turns positive under λ = 2.5, predict what happens if each flip is watched one by one, then answer a check on the 'same bet, same answer' misconception."
+   },
+   "confidence": 0.82,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "check",
+      "connect"
+     ],
+     "why": "Raise the number of bundled bets until the felt value turns positive under λ = 2.5, predict what happens if each flip is watched one by one, then answer a check on the 'same bet, same answer' misconception."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "worked",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "check"
+     ],
+     "why": "A worked tally of the two-bet outcomes {$400, ¼; $100, ½; −$200, ¼} before the learner explores larger bundles."
+    }
+   ]
+  },
+  {
+   "concept": "how_often_you_look",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "connect"
+    ],
+    "why": "Find the shortest evaluation period at which stocks beat the safe asset for λ = 2.25, then predict how a more loss-averse investor's crossover shifts."
+   },
+   "confidence": 0.33,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "Find the shortest evaluation period at which stocks beat the safe asset for λ = 2.25, then predict how a more loss-averse investor's crossover shifts."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "compare",
+      "goal",
+      "predict",
+      "reveal"
+     ],
+     "why": "Compare a quarterly checker with a yearly checker who has the same preferences and investments, then practise."
+    }
+   ]
+  },
+  {
+   "concept": "price_of_vigilance",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "connect"
+    ],
+    "why": "Set the premium that makes stocks and bonds equal for a yearly checker, then for a 20-year checker, and predict how the meta-analysis's lower λ would change the answer."
+   },
+   "confidence": 0.66,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "Set the premium that makes stocks and bonds equal for a yearly checker, then for a 20-year checker, and predict how the meta-analysis's lower λ would change the answer."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "estimate",
+      "choice",
+      "connect"
+     ],
+     "why": "After practising, estimate the paper's 20-year premium (1.4%), then weigh whether a fitting simulation proves the explanation."
+    }
+   ]
+  }
+ ],
  "category": {
   "primary": {
    "id": "economics",
@@ -2440,17 +2874,17 @@
   },
   "secondary": null,
   "probabilities": {
-   "economics": 0.98,
-   "psychology": 0.02
+   "economics": 0.97,
+   "psychology": 0.03
   },
-  "confidence": 0.98,
+  "confidence": 0.97,
   "model": "jev-1.13.0"
  },
  "generation": {
   "provider": "claude",
   "model": "claude-opus-5-5",
   "pipeline": "lemma.generate.make_outline + build_lesson",
-  "source_chars": 302091,
+  "source_chars": 309487,
   "omitted": 0
  }
 }

@@ -2,7 +2,7 @@
  {
   "slug": "attention-2017",
   "field": "Machine learning",
-  "cover": "positional_encoding",
+  "cover": "sequential_bottleneck",
   "source_file": "sources/attention-2017.txt"
  },
  {
@@ -20,16 +20,13 @@
  {
   "slug": "opinion-dynamics-2002",
   "field": "Social science",
-  "cover": "splits_lock_in",
-  "cover_values": {
-   "conf": 0.22
-  },
+  "cover": "averaging_to_consensus",
   "source_file": "sources/opinion-dynamics-2002.txt"
  },
  {
   "slug": "gettier-1963",
   "field": "Philosophy",
-  "cover": "three_conditions",
+  "cover": "case_one_coins",
   "source_file": "sources/gettier-1963.txt"
  },
  {
@@ -41,31 +38,31 @@
  {
   "slug": "turner-1893",
   "field": "History",
-  "cover": "waves_of_settlement",
+  "cover": "frontier_as_moving_edge",
   "source_file": "sources/turner-1893.txt"
  },
  {
   "slug": "aquinas-senses",
   "field": "Theology",
-  "cover": "same_conclusion_different_route",
+  "cover": "why_revelation_is_needed",
   "source_file": "sources/aquinas-senses.txt"
  },
  {
   "slug": "mendel-1866",
   "field": "Biology",
-  "cover": "dominance_masks",
+  "cover": "three_to_one_return",
   "source_file": "sources/mendel-1866.txt"
  },
  {
   "slug": "brown-1954",
   "field": "Law",
-  "cover": "separate_but_equal_test",
+  "cover": "separate_but_equal",
   "source_file": "sources/brown-1954.txt"
  },
  {
   "slug": "poe-red-death",
   "field": "Literature",
-  "cover": "contagion_spreads",
+  "cover": "sealed_abbey",
   "source_file": "sources/poe-red-death.txt"
  },
  {
@@ -77,19 +74,19 @@
  {
   "slug": "wave-interference",
   "field": "Physics",
-  "cover": "superposition_phase",
+  "cover": "waves_add",
   "source_file": "sources/wave-interference.txt"
  },
  {
   "slug": "schelling-segregation",
   "field": "Urban studies",
-  "cover": "neighbour_rule",
+  "cover": "one_household_rule",
   "source_file": "sources/schelling-segregation.txt"
  },
  {
   "slug": "information-cascades",
   "field": "Social learning",
-  "cover": "weighing_clues",
+  "cover": "clues_add_up",
   "source_file": "sources/information-cascades.txt"
  },
  {
@@ -101,7 +98,7 @@
  {
   "slug": "externalities-pigou",
   "field": "Economics",
-  "cover": "private_vs_social_cost",
+  "cover": "external_cost_gap",
   "source_file": "sources/externalities-pigou.txt"
  },
  {

@@ -18,22 +18,38 @@ PILOT_IDS = {"attention-2017": 1, "ioannidis-2005": 21, "wuhan-2020": 25,
 HEADER = "VERIFIED QUOTATION EXCERPTS — not the complete source."
 
 
+def quoted_blocks(node):
+    """Every object in the lesson that carries a quote: primer pages, explanations and activity passages alike."""
+    if isinstance(node, dict):
+        if isinstance(node.get("quote"), str) and node["quote"]:
+            yield node
+        for value in node.values():
+            yield from quoted_blocks(value)
+    elif isinstance(node, list):
+        for value in node:
+            yield from quoted_blocks(value)
+
+
 def quotation_excerpts(lesson, source=None):
     """The lesson's quotes with where they come from. A multi-source lesson keeps its source bundle, each source
-    holding only the quotes attributed to it, so attribution is still checked."""
-    blocks = [*(lesson.get("primer") or []), *(c["understand"] for c in lesson["concepts"])]
+    holding only the quotes found in it, so attribution is still checked."""
+    blocks = list(quoted_blocks(lesson))
     sources = L.source_map(source)
     if not sources:
         parts = [HEADER, lesson["source"]["title"], lesson["source"]["url"]]
         for block in blocks:
-            if block.get("quote"):
-                parts.extend((block.get("quote_where", ""), block["quote"]))
+            parts.extend((block.get("quote_where", ""), block["quote"]))
         return "\n\n".join(parts) + "\n"
+    texts = {sid: L.normalize_for_match(s["text"]) for sid, s in sources.items()}
+
+    def home(block):  # an unattributed quote goes with the first source that contains it
+        sid = block.get("source_id")
+        return sid if sid in sources else next((k for k, t in texts.items() if L.quote_in_source(block["quote"], t)), None)
     bundle = []
     for sid, s in sources.items():
         parts = [HEADER, s["title"], s["url"]]
         for block in blocks:
-            if block.get("quote") and block.get("source_id") == sid:
+            if home(block) == sid:
                 parts.extend((block.get("quote_where", ""), block["quote"]))
         bundle.append({**s, "text": "\n\n".join(parts) + "\n"})
     return json.dumps({"lemma_sources": bundle}, ensure_ascii=False) + "\n"  # unindented: how source_map recognises a bundle

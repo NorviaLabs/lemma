@@ -11,6 +11,7 @@ from lemma import export, factcheck, lesson as L, server
 import fakejev  # noqa: E402,F401  Jev is essential, so every search and build asks this stand-in
 
 ROOT = Path(__file__).resolve().parents[1]
+EXAMPLE = json.loads((ROOT / "lemma/examples/gallery/galton-1886.json").read_text())
 
 
 class GalleryActivitiesTests(unittest.TestCase):
@@ -159,12 +160,12 @@ class GalleryActivitiesTests(unittest.TestCase):
                 self.assertTrue(L.check_concept(bad, norm))
 
     def test_compare_values_and_construction_steps_follow_their_ranges(self):
-        lesson, _ = server.load_gallery("poe-red-death")
-        c = next(x for x in lesson["concepts"] if x["id"] == "double_edged_wall")
-        c["activities"].insert(3, {"id": "gates", "kind": "compare", "prompt": "Open or welded?",
-                                   "cases": [{"label": "Open", "values": {"weld": 0}}, {"label": "Welded", "values": {"weld": 1}}], "takeaway": "Both risks change."})
-        self.assertEqual([p for p in L.check_concept(c, None) if "gates" in p or "activities[3]" in p], [])
-        c["activities"][3]["cases"][1]["values"] = {"weld": 5}
+        c = copy.deepcopy(EXAMPLE["concepts"][0])
+        k = next(x for x in c["model"]["controls"] if x.get("type", "slider") == "slider")
+        c["activities"].insert(1, {"id": "gates", "kind": "compare", "prompt": "Low or high?",
+                                   "cases": [{"label": "Low", "values": {k["id"]: k["min"]}}, {"label": "High", "values": {k["id"]: k["max"]}}], "takeaway": "Both change."})
+        self.assertEqual([p for p in L.check_concept(c, None) if "gates" in p or "activities[1]" in p], [])
+        c["activities"][1]["cases"][1]["values"] = {k["id"]: k["max"] + abs(k["max"] - k["min"]) + 1}
         self.assertTrue(any("within its control's range" in p for p in L.check_concept(c, None)))
         steps = {"id": "build", "kind": "construction", "title": "Bisect", "prompt": "Build it.", "takeaway": "Done.",
                  "steps": [{"label": "Circle", "note": "Radius AB.", "shapes": [{"type": "circle", "x": 30, "y": 50, "r": 40}]},
@@ -241,8 +242,12 @@ class GalleryActivitiesTests(unittest.TestCase):
             lesson, _ = server.load_gallery(card["slug"])
             entry = next(e for e in server.gallery_index() if e["slug"] == card["slug"])
             cover = next(c for c in lesson["concepts"] if c["id"] == entry["cover"])
-            self.assertEqual(card["cover"]["model"], cover["model"])
-            self.assertTrue(card["cover"]["model"]["visual"])
+            self.assertEqual(card["cover"]["model"], cover.get("model"))
+            if cover.get("model"):
+                self.assertTrue(card["cover"]["model"]["visual"])
+            else:  # a lesson taught without models shows a hands-on activity, or its idea, on its card
+                hands_on = [a for a in cover["activities"] if a["kind"] in ("sort", "construction", "inheritance")]
+                self.assertEqual(card["cover"]["activity"], hands_on[0] if hands_on else None)
             if lesson.get("generation"):
                 self.assertEqual(lesson["generation"]["model"], "claude-opus-5-5")
                 self.assertEqual(lesson["generation"]["omitted"], len(lesson["omitted"]))

@@ -24,18 +24,18 @@ Proposition 1, the proof
 
 Now, since the point A is the center of the circle CDB, therefore AC equals AB. Again, since the point B is the center of the circle CAE, therefore BC equals BA.
 
-Proposition 1, proof
+Proposition 1, the proof
 
 Now, since the point A is the center of the circle CDB, therefore AC equals AB. Again, since the point B is the center of the circle CAE, therefore BC equals BA.
 
-Critiques of the proof: 'Why does ABC contain an equilateral triangle?'
+Guide, 'Marginal references to postulates, definitions, etc.'
+
+The abbreviations in the right column refer to postulates, definitions, common notions, and previously proved propositions. Each indicates a justification of a construction or conclusion in a sentence to its left.
+
+Critiques of the proof: Why does ABC contain an equilateral triangle?
 
 Zeno of Sidon criticized the proof because it was not shown that the sides do not meet before they reach the vertices. Suppose AC and BC meet at E before they reach C, that is, the straight lines AEC and BEC have a common segment EC. Then they would contain a triangle ABE which is not equilateral, but isosceles.
 
-Guide, Critiques of the proof: Why does the point C exist?
+Critiques of the proof: Why does the point C exist?
 
 Indeed, some postulate is needed for that conclusion, such as “If the sum of the radii of two circles is greater than the line joining their centers, then the two circles intersect.”
-
-Critiques of the proof: 'Why does the point C exist?'
-
-There are models of geometry in which the circles do not intersect. Thus, other postulates not mentioned by Euclid are required.

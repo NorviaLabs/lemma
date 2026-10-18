@@ -1,53 +1,55 @@
 {
  "version": 1,
  "id": "gallery-turner-1893",
- "title": "The Escape Hatch: How Free Land Shaped American Democracy, and What Happened When It Ran Out",
+ "title": "How Free Land Made, and Then Unmade, the American Pioneer's Democracy",
  "audience": "A curious adult with no background in this field",
- "created": "2026-10-18T14:00:40",
+ "created": "2026-10-19T02:40:25",
  "source": {
   "title": "The Frontier in American History",
   "authors": "Frederick Jackson Turner",
   "year": 1920,
-  "venue": "Henry Holt and Company (essay collection; the title essay was first read to the American Historical Association in 1893)",
+  "venue": "Henry Holt and Company (collected essays, 1893–1918)",
   "url": "https://www.gutenberg.org/files/22994/22994-h/22994-h.htm"
  },
  "intro": {
-  "summary": "Turner asks what made American society and politics different from Europe's. His answer is that the line of 'free land' moving steadily west is the key. Each new frontier reset society to simple conditions. Cheap land gave ordinary people a way out of poor wages and unequal politics in the East, and that pressure pushed the whole country toward democracy. In later essays he argues that once the frontier closed around 1890, the same competitive individualism produced giant monopolies, and democrats turned to government regulation as a substitute for free land. The work is interpretive history built from census maps, letters, debates and travellers' accounts, not a tested causal study. It also largely ignores, or describes in the prejudiced language of its time, the Native peoples whose land this 'free land' was, as well as enslaved people and women. Later historians have challenged many of its claims, especially the 'safety valve' idea.",
+  "summary": "Turner asks what made American society and politics different from Europe's. In 13 essays written between 1893 and 1918, he traces how settlement moved west, drawing on census reports, colonial records, debates and travellers' accounts. He argues that a moving edge of cheap, unclaimed land kept rebuilding society from simple beginnings. That process bred individualism, equality and democracy, and once the free land ran out around 1890, Americans began turning to government to protect the democracy that land had once guaranteed. This is one historian's interpretation, not a tested measurement. He drew on selected evidence, described Native peoples as 'savagery' from the settlers' side, and himself called his first essay a call for investigation rather than a finished case.",
   "background": [
-   "Through the 1800s the US government sold or gave away vast western lands cheaply. The Homestead Act of 1862 gave farms to settlers almost free.",
-   "The 1890 census office announced that there was no longer a continuous 'frontier line' of settlement to map.",
-   "In the late 1800s farmers' movements such as the Grangers and Populists demanded railroad regulation, cheaper credit and other government action.",
-   "Turner wrote these essays between 1893 and 1918. They are arguments about causes, not experiments, and historians still debate them."
+   "Through the 1700s and 1800s, settlers of European descent moved west across North America, taking land from Native nations, often by war and treaty.",
+   "The US Census mapped a 'frontier line' each decade. In 1890 it announced that no such line could be drawn any more.",
+   "In the 1890s, farmers in the West and South formed the Populist movement, demanding government action against railroads, banks and big corporations.",
+   "Before Turner, many historians explained American institutions mainly as inheritances from England and older 'Germanic' traditions."
   ],
   "known": [],
-  "aha": "Turner argues that the same frontier that made Americans fiercely individualistic also kept them equal, but only while land was plentiful. Once it ran out, free competition bred monopoly, and the pioneers' heirs turned to government regulation to save democracy."
+  "aha": "The same free land that made pioneers fiercely individualistic also made them democrats, so when the land ran out, the anti-government pioneer's heirs turned to government regulation to save the democracy that open land had once protected for free."
  },
  "primer": [
   {
    "heading": "The question",
-   "body": "Most historians of Turner's day explained American institutions as English or 'Germanic' ideas carried across the Atlantic. Turner thought this missed the main story. He asked what America itself did to the people and ideas that arrived. He opens with a census bulletin declaring that the frontier line was gone, and he treats that as the end of an era.",
+   "body": "In 1893 a young historian read a line in a census bulletin: the country no longer had a frontier line. He thought this quietly marked the end of an era. Most historians looked east, to European roots and the Constitution, to explain America. Turner proposed looking west instead.",
    "quote": "The existence of an area of free land, its continuous recession, and the advance of American settlement westward, explain American development.",
    "quote_where": "Chapter I, The Significance of the Frontier in American History"
   },
   {
    "heading": "What he did",
-   "body": "Turner read census maps decade by decade and traced how settlement crept west. He gathered emigrant guides, travellers' reports, colonial petitions, convention debates and voting patterns. From these he described a repeating sequence on each frontier: trader, then cattle-raiser, then pioneer farmer, then denser farming, then towns and factories. He then looked for the political effects this sequence had back East."
+   "body": "Turner followed the edge of settlement from the Atlantic coast in the 1600s to the Great Plains in the 1880s. He used census maps, colonial laws, petitions from frontier towns, debates in Congress and state conventions, and travellers' descriptions. He looked for patterns that repeated at each new edge: who arrived first, how land was handed out, and how frontier regions voted and quarrelled with the older coast."
   },
   {
    "heading": "What he found",
-   "body": "He argues that society kept 'beginning over again' at each new edge, and that cheap land gave Easterners an exit. Workers would not accept low wages, and states could not keep narrow voting rules, while people could simply leave for free land. In his telling, frontier regions led the fights for wider suffrage, fairer representation and religious freedom.",
-   "quote": "American social development has been continually beginning over again on the frontier.",
-   "quote_where": "Chapter I"
+   "body": "At every frontier, society started over in simple form. Traders came first, then cattle raisers, then pioneer farmers, then towns. Cheap land meant a worker who was badly treated could leave and start a farm, so rigid classes struggled to form. Frontier regions pushed for wider voting rights, fought coastal elites over fair representation, and sent leaders like Jackson and Lincoln to power. Turner concluded that democracy grew out of these conditions, not out of a written plan.",
+   "quote": "American democracy was born of no theorist's dream; it was not carried in the Susan Constant to Virginia, nor in the Mayflower to Plymouth. It came out of the American forest, and it gained new strength each time it touched a new frontier.",
+   "quote_where": "Chapter XI, The West and American Ideals"
   },
   {
    "heading": "The twist",
-   "body": "In the later essays Turner notices a problem. The frontier fostered two ideals: freedom to compete for resources, and democracy. While land was abundant they worked together. As land ran out, open competition let the strongest gather railroads, mines and timber into huge combinations. Turner concludes that Americans began using laws and regulation to protect democracy, because free land could no longer do it.",
+   "body": "The pioneer held two ideals: every person free to compete for the land's riches, and rule by the people. While land seemed endless, the two fit together. Once it ran out, free competition produced giant corporations and trusts. Western farmers then gave up some of their dislike of government and demanded regulation, railway control and new forms of popular voting.",
    "quote": "Legislation is taking the place of the free lands as the means of preserving the ideal of democracy.",
    "quote_where": "Chapter XI, The West and American Ideals"
   },
   {
    "heading": "Why it matters, and its limits",
-   "body": "This 'frontier thesis' shaped how Americans saw themselves for generations, and it still frames debates about opportunity, inequality and regulation. But it is an interpretation, not a measured result. Showing that two things happened together does not prove that one caused the other. Later research found that few poor Eastern workers actually moved west to farm. And Turner's 'free land' was land taken from Native nations, whom he often describes only as obstacles."
+   "body": "Turner's 'frontier thesis' shaped how Americans told their own story for generations, and it still frames debates about inequality and opportunity. It is an argument built from selected cases, not a controlled test. Later historians challenged it for leaving out Native peoples' experience, women, and the role of cities and the East. Turner himself framed his first essay modestly.",
+   "quote": "This paper will make no attempt to treat the subject exhaustively; its aim is simply to call attention to the frontier as a fertile field for investigation, and to suggest some of the problems which arise in connection with it.",
+   "quote_where": "Chapter I, The Significance of the Frontier in American History"
   }
  ],
  "provider": {
@@ -56,498 +58,56 @@
  },
  "concepts": [
   {
-   "id": "waves_of_settlement",
-   "title": "Frontiers that move at different speeds",
-   "idea": "Each kind of frontier (trader, rancher, farmer) advances west at its own pace, so the same spot passes through a sequence of societies, simple first and complex later.",
+   "id": "frontier_as_moving_edge",
+   "title": "A frontier is the edge of free land, not a wall",
+   "idea": "The American frontier was the moving outer edge of settlement, which the census drew where population density fell below about two people per square mile, and it vanished once settlement became too scattered to draw a single line.",
    "role": "prerequisite",
    "predict": {
-    "question": "Turner notes that the frontier reached by the Pacific Railroad 'moves forward at a swifter pace' than one reached by canoe or pack horse. Suppose the railroad lets farmers push west almost as fast as traders. What happens to the sequence of stages at a far-western place?",
+    "question": "Suppose the census had drawn its line at six people per square mile instead of two. In the same year, where would the frontier line fall?",
     "options": [
-     "The stages squeeze together: the place goes from trading post to farms within a few years",
-     "The gaps still widen with distance, just as much as before",
-     "The order flips: farmers now arrive before traders",
-     "Nothing changes, because only the trader's speed sets the gaps"
+     "Further east, closer to the crowded zone",
+     "Further west, deeper into empty land",
+     "In exactly the same place",
+     "Nowhere, because only a wall or fort can mark a frontier"
     ],
     "answer": 0,
     "why": [
-     "Right: the gap at a place is its distance times the difference in slowness of the two lines. Close that difference and even a far place gets traders and farmers almost together, so the long ranching stage nearly vanishes.",
-     "Tempting, since the gaps widened in the model. But they widened only because the lines had different speeds. Make the speeds nearly equal and distance adds almost no gap.",
-     "Farmers moving almost as fast as traders still start no earlier and move no faster, so they cannot overtake. The order stays the same and only the spacing shrinks.",
-     "The farmer's speed matters just as much. In the model, slowing the farmer stretched the gap to centuries. Speeding the farmer up shrinks it."
+     "Right. Moving west, the curve falls from crowded to empty. It reaches six people per square mile before it reaches two, so a stricter cut-off is met sooner, further east.",
+     "You might expect a stricter rule to push the line outward. But a higher threshold is reached earlier on the way down the curve, so the line moves east, not west.",
+     "The line is not a physical object that stays put. It is defined by the threshold, so changing the threshold moves it.",
+     "That is the European idea of a frontier, a fortified boundary. Turner stresses that the American frontier was an edge of thinning settlement, measured by how many people lived on the land."
     ]
    },
    "terms": [
     {
-     "term": "frontier",
-     "means": "The moving outer edge of one kind of settlement, such as the traders' edge or the farmers' edge, as opposed to a fixed, fortified border"
+     "term": "population density",
+     "means": "How many people live on each square mile of land"
     },
     {
-     "term": "palimpsest",
-     "means": "A page written over several times. Turner's word for a place whose history holds the layers of every stage that passed through it"
+     "term": "frontier line",
+     "means": "The census's line where settlement thinned to fewer than two people per square mile"
     }
    ],
    "model": {
-    "title": "How far west each kind of settler has pushed, year by year",
-    "note": "Teaching model: each kind of settlement moves west at one steady speed from a common start at the coast. The rancher line is fixed at 12 miles a year, and the miner and the uneven 'tongues' of real settlement are left out. Turner reports no speeds, so all numbers are illustrative, not the paper's data.",
+    "title": "How crowded the land is, travelling west from the Atlantic",
+    "note": "Teaching model: one straight westward path across the continent. A crowded settled zone thins smoothly westward, and three fixed far-western pockets of settlement grow between 1840 and 1880. Only the cut-off of two people per square mile comes from the paper, which takes it from the census reports. Distances, speeds, crowding levels and pocket sizes are illustrative, not census data.",
     "controls": [
-     {
-      "id": "vt",
-      "label": "Trader speed",
-      "kind": "slider",
-      "min": 14,
-      "max": 40,
-      "step": 2,
-      "default": 20,
-      "unit": " mi/yr",
-      "color": 0
-     },
-     {
-      "id": "vf",
-      "label": "Farmer speed",
-      "kind": "slider",
-      "min": 2,
-      "max": 10,
-      "step": 1,
-      "default": 6,
-      "unit": " mi/yr",
-      "color": 2
-     },
-     {
-      "id": "dist",
-      "label": "Your place: miles west of the coast",
-      "kind": "slider",
-      "min": 100,
-      "max": 1800,
-      "step": 100,
-      "default": 300,
-      "unit": " mi",
-      "color": 3
-     },
      {
       "id": "year",
-      "label": "Your year (years after start)",
+      "label": "Year",
       "kind": "slider",
-      "min": 0,
-      "max": 300,
+      "min": 1790,
+      "max": 1890,
       "step": 10,
-      "default": 30,
-      "unit": "",
-      "color": 4
-     }
-    ],
-    "outputs": [
-     {
-      "id": "t_trader",
-      "label": "Traders arrive in year",
-      "expr": "dist / vt",
-      "unit": "",
-      "decimals": 0,
-      "color": 0
-     },
-     {
-      "id": "t_rancher",
-      "label": "Ranchers arrive in year",
-      "expr": "dist / 12",
-      "unit": "",
-      "decimals": 0,
-      "color": 1
-     },
-     {
-      "id": "t_farmer",
-      "label": "Farmers arrive in year",
-      "expr": "dist / vf",
-      "unit": "",
-      "decimals": 0,
-      "color": 2
-     },
-     {
-      "id": "gap",
-      "label": "Years from traders to farmers",
-      "expr": "t_farmer - t_trader",
-      "unit": " yrs",
-      "decimals": 0,
-      "color": 5
-     },
-     {
-      "id": "ranch_years",
-      "label": "Years the place spends as cattle range",
-      "expr": "t_farmer - t_rancher",
-      "unit": " yrs",
-      "decimals": 0,
-      "color": 1
-     },
-     {
-      "id": "stage",
-      "label": "Stage in your year (0 wild, 1 traders, 2 ranchers, 3 farmers)",
-      "expr": "year < t_trader ? 0 : (year < t_rancher ? 1 : (year < t_farmer ? 2 : 3))",
-      "unit": "",
-      "decimals": 0,
-      "color": 4
-     }
-    ],
-    "visual": {
-     "type": "curves",
-     "x": {
-      "label": "Years after settlers reach the coast",
-      "min": 0,
-      "max": 300
-     },
-     "y": {
-      "label": "Miles west of the coast",
-      "min": 0,
-      "max": 2000
-     },
-     "series": [
-      {
-       "id": "trader",
-       "label": "Trader line",
-       "expr": "vt * x",
-       "color": 0
-      },
-      {
-       "id": "rancher",
-       "label": "Rancher line",
-       "expr": "12 * x",
-       "color": 1
-      },
-      {
-       "id": "farmer",
-       "label": "Farmer line",
-       "expr": "vf * x",
-       "color": 2
-      }
-     ],
-     "markers": [
-      {
-       "id": "year_marker",
-       "x": "year",
-       "label": "Your year",
-       "color": 4
-      }
-     ],
-     "hlines": [
-      {
-       "id": "place_line",
-       "y": "dist",
-       "label": "Your place"
-      }
-     ],
-     "points": [
-      {
-       "id": "p_trader",
-       "x": "t_trader",
-       "y": "dist",
-       "label": "Traders arrive"
-      },
-      {
-       "id": "p_rancher",
-       "x": "t_rancher",
-       "y": "dist",
-       "label": "Ranchers arrive"
-      },
-      {
-       "id": "p_farmer",
-       "x": "t_farmer",
-       "y": "dist",
-       "label": "Farmers arrive"
-      }
-     ]
-    }
-   },
-   "animation": {
-    "steps": [
-     {
-      "say": "Time runs left to right, in years after settlers first reach the Atlantic coast. Height shows how far west they have pushed, in miles.",
-      "focus": "trader",
-      "ms": 3500
-     },
-     {
-      "say": "Each line is the edge of one kind of settlement moving west. Fur traders go first, then cattle ranchers, then farmers.",
-      "focus": [
-       "trader",
-       "rancher",
-       "farmer"
-      ],
-      "ms": 3800
-     },
-     {
-      "say": "This slider sets how fast the traders push west. A steeper line means a faster advance.",
-      "set": {
-       "vt": 28
-      },
-      "focus": "vt",
-      "ms": 3200
-     },
-     {
-      "say": "This one sets the farmers' speed. Farmers clear forest and build towns, so they move slowly.",
-      "set": {
-       "vt": 20,
-       "vf": 4
-      },
-      "focus": "vf",
-      "ms": 3200
-     },
-     {
-      "say": "The flat line is a place you pick and the upright line is a year. Where they meet tells you who is living there at that time.",
-      "set": {
-       "vf": 6
-      },
-      "focus": [
-       "place_line",
-       "year_marker"
-      ],
-      "ms": 4000
-     }
-    ]
-   },
-   "explore": {
-    "prompt": "Move your place and your year around and watch how the procession of traders, ranchers and farmers spreads out.",
-    "goals": [
-     {
-      "text": "Keep the speeds as they are. Find a place where traders and farmers arrive more than a century apart, yet farmers still get there before year 200.",
-      "when": "gap > 100 && t_farmer < 200",
-      "solution": {
-       "dist": 1000
-      },
-      "hints": [
-       "The gap grows the further west you go, but so does the farmers' arrival year. You need a place that is far, but not too far.",
-       "Move your place west and keep an eye on two boxes together: 'Years from traders to farmers' and 'Farmers arrive in year'.",
-       "The gap passes 100 years somewhere past 800 miles, and farmers pass year 200 at 1200 miles. Look in between."
-      ]
-     },
-     {
-      "text": "Catch your place in the middle of its cattle-ranching stage, at a place far enough west that ranching lasts more than 40 years.",
-      "when": "stage > 1.5 && stage < 2.5 && ranch_years > 40",
-      "solution": {
-       "dist": 600,
-       "year": 70
-      },
-      "hints": [
-       "Ranching lasts from the moment ranchers arrive until farmers arrive. Which control stretches that stretch of time?",
-       "Push your place west until 'Years the place spends as cattle range' passes 40. Then slide your year between the ranchers' and the farmers' arrival years.",
-       "At the default speeds, a place a few hundred miles west is enough. Then put the year line between the rancher point and the farmer point."
-      ]
-     }
-    ]
-   },
-   "understand": {
-    "feedback": {
-     "correct": "Yes. The gaps come from the difference in speed, not from distance alone. Bring the farmers' speed close to the traders' and the stages arrive almost together, even far west.",
-     "incorrect": "The gaps widened in the model only because each kind of settlement moved at a different speed, so the leaders gained ground every year. Change those speeds and the spacing changes with them. Make them nearly equal and the stages crowd together."
-    },
-    "walkthrough": {
-     "steps": [
-      {
-       "say": "Start with a place 300 miles inland. Traders reach it in year 15, ranchers in year 25 and farmers in year 50.",
-       "set": {
-        "vt": 20,
-        "vf": 6,
-        "dist": 300,
-        "year": 30
-       },
-       "focus": [
-        "p_trader",
-        "p_rancher",
-        "p_farmer"
-       ],
-       "ms": 4000
-      },
-      {
-       "say": "Turner calls each of these moving edges a frontier: the trader's frontier, the rancher's frontier and the farmer's frontier. Each one advances at its own pace.",
-       "focus": [
-        "trader",
-        "rancher",
-        "farmer"
-       ],
-       "ms": 4200
-      },
-      {
-       "say": "Slide the year forward. The same spot goes from wild land to trading post, then to cattle range, then to farms. The stage number climbs from 0 to 3.",
-       "set": {
-        "year": 60
-       },
-       "focus": "stage",
-       "ms": 4200
-      },
-      {
-       "say": "Now pick a place 900 miles west. The order is the same, but traders arrive in year 45 and farmers not until year 150.",
-       "set": {
-        "dist": 900,
-        "year": 60
-       },
-       "focus": "gap",
-       "ms": 4200
-      },
-      {
-       "say": "At 1500 miles the gap is 175 years. The faster lines gain ground every single year, so the further west you look, the wider the spacing.",
-       "set": {
-        "dist": 1500,
-        "year": 100
-       },
-       "focus": "gap",
-       "ms": 4500
-      },
-      {
-       "say": "Back east, a place has already been through every stage, and its history holds each layer. Turner calls such a place a palimpsest: a page written over again and again.",
-       "set": {
-        "dist": 300,
-        "year": 100
-       },
-       "focus": "stage",
-       "ms": 4500
-      },
-      {
-       "say": "Finally, slow the farmers and look far west in year 200. Traders came long ago, ranchers hold the range, and farmers are still about 175 years away. The ranching stage lasts 250 years.",
-       "set": {
-        "dist": 1500,
-        "vf": 4,
-        "year": 200
-       },
-       "focus": [
-        "ranch_years",
-        "stage"
-       ],
-       "ms": 5000
-      }
-     ]
-    },
-    "explanation": "Turner saw the westward movement as several frontiers, not one. Fur traders, cattle ranchers and farmers each pushed west at their own speed, so any one place met them in the same order: traders first, ranchers next, farmers last. Because the faster groups kept gaining ground, the spacing between stages grew the further west the procession went. Each place moved from a simple society toward a more complex one. Turner built this picture from census maps, from travellers' accounts such as Peck's 1837 description of 'waves' of settlers, and from the layered histories of states like Wisconsin. It is an interpretation, not a measured result: real advance was uneven, with tongues of settlement and pockets of wilderness, and the speeds in this model are made up for illustration.",
-    "quote": "Stand at South Pass in the Rockies a century later and see the same procession with wider intervals between. The unequal rate of advance compels us to distinguish the frontier into the trader's frontier, the rancher's frontier, or the miner's frontier, and the farmer's frontier.",
-    "quote_where": "Chapter I, The Significance of the Frontier in American History"
-   },
-   "connect": {
-    "equation": [
-     {
-      "text": "gap",
-      "link": "gap"
-     },
-     {
-      "text": " = "
-     },
-     {
-      "text": "D",
-      "link": "dist"
-     },
-     {
-      "text": " × (1/"
-     },
-     {
-      "text": "v_{farmer}",
-      "link": "vf"
-     },
-     {
-      "text": " − 1/"
-     },
-     {
-      "text": "v_{trader}",
-      "link": "vt"
-     },
-     {
-      "text": ")"
-     }
-    ],
-    "caption": "This is the model's rule, not an equation from Turner, who gives none. Each group reaches a place D miles west after D ÷ its speed years. The years between traders and farmers therefore grow in step with the distance D (your place slider), and they also grow when the farmers' speed (green) and the traders' speed (blue) are further apart."
-   },
-   "recap": "Different kinds of settlers moved west at different speeds, so every place passed through the same sequence of stages, and the stages spread further apart the further west you look.",
-   "activities": [
-    {
-     "id": "watch",
-     "kind": "watch"
-    },
-    {
-     "id": "walk",
-     "kind": "walk"
-    },
-    {
-     "id": "explain",
-     "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
-    },
-    {
-     "id": "goal_1",
-     "kind": "goal",
-     "i": 1
-    },
-    {
-     "id": "predict",
-     "kind": "predict"
-    },
-    {
-     "id": "reveal",
-     "kind": "reveal"
-    },
-    {
-     "id": "connect",
-     "kind": "connect"
-    }
-   ]
-  },
-  {
-   "id": "exit_option",
-   "title": "The gate of escape: cheap land props up Eastern wages",
-   "idea": "When people can cheaply leave for free land, employers and rulers in the East must offer at least what the frontier offers, so cheap land puts a floor under wages and conditions.",
-   "role": "core",
-   "predict": {
-    "question": "Picture a new railroad that makes reaching western farmland much cheaper. In the same year, the factory owners of an Eastern city privately agree to hold wages down to the bare minimum. Following Turner's idea, what happens to wages in that city?",
-    "options": [
-     "Wages fall to the bare minimum the owners agreed on",
-     "Wages stay near what a worker could clear by going west, so the agreement mostly fails",
-     "Wages rise far above what a family could earn on the frontier",
-     "Nothing changes, because railroads carry goods, not workers"
-    ],
-    "answer": 1,
-    "why": [
-     "Tempting if you think owners set wages freely. But a worker who can cheaply leave will not stay for less than leaving is worth, so the agreement cannot push wages that low.",
-     "Right. The cheaper trip raises what walking away is worth. Owners who offer less lose their workers to the West, so the outside option, not the agreement, sets the lower limit.",
-     "The escape only guarantees that the wage stays at or above what leaving is worth. It gives workers no reason to demand far more than the frontier itself pays.",
-     "Turner's point is exactly that cheaper routes west moved people. That is why Eastern employers and states feared cheap land."
-    ]
-   },
-   "terms": [
-    {
-     "term": "wage floor",
-     "means": "The lowest wage an employer can pay and still keep workers, set here by what a worker could get by leaving"
-    },
-    {
-     "term": "safety valve",
-     "means": "A metaphor used in Turner's era for free land: it let discontented or underpaid people drain away westward instead of building pressure in the East"
-    }
-   ],
-   "model": {
-    "title": "What an Eastern employer must pay when workers can head west",
-    "note": "Teaching model: one Eastern labor market. Employers would pay a bare minimum of 3 if no one could leave. A worker leaves if frontier earnings minus the cost of getting there beat the offered wage, so the wage is the larger of the two. Real migration also depended on savings, family ties, credit and information, which are left out. Numbers are illustrative wage units, not the paper's data. Turner gives no wage figures.",
-    "controls": [
-     {
-      "id": "c",
-      "label": "Cost of getting west and starting a farm",
-      "kind": "slider",
-      "min": 0,
-      "max": 10,
-      "step": 0.5,
-      "default": 6,
+      "default": 1790,
       "unit": "",
       "color": 0
      },
      {
-      "id": "frontier_pay",
-      "label": "What a family earns on free western land",
-      "kind": "slider",
-      "min": 4,
-      "max": 14,
-      "step": 1,
-      "default": 10,
-      "unit": "",
-      "color": 1
-     },
-     {
-      "id": "open",
-      "label": "Free land still open",
+      "id": "scatter",
+      "label": "Scattered settlements far west",
       "kind": "toggle",
-      "default": 1,
+      "default": 0,
       "color": 2,
       "min": 0,
       "max": 1,
@@ -556,79 +116,65 @@
     ],
     "outputs": [
      {
-      "id": "leave_value",
-      "label": "What leaving is worth",
-      "expr": "open ? frontier_pay - c : 0",
-      "unit": "",
-      "decimals": 1,
-      "color": 1
-     },
-     {
-      "id": "wage",
-      "label": "Eastern wage",
-      "expr": "open ? max(3, frontier_pay - c) : 3",
-      "unit": "",
-      "decimals": 1,
+      "id": "frontier_mi",
+      "label": "Where settlement thins out",
+      "expr": "100 + (year - 1790) * 12 + 150 * ln(5)",
+      "unit": " miles west",
+      "decimals": 0,
       "color": 3
      },
      {
-      "id": "lift",
-      "label": "Lift above the bare minimum",
-      "expr": "wage - 3",
+      "id": "areas",
+      "label": "Separate settled areas",
+      "expr": "1 + ((12 / (1 + exp((2100 - (100 + (year - 1790) * 12)) / 150)) + scatter * clamp((year - 1840) / 40, 0, 1) * 5) >= 2 ? 1 : 0) + ((12 / (1 + exp((2450 - (100 + (year - 1790) * 12)) / 150)) + scatter * clamp((year - 1840) / 40, 0, 1) * 4.5) >= 2 ? 1 : 0) + ((12 / (1 + exp((2800 - (100 + (year - 1790) * 12)) / 150)) + scatter * clamp((year - 1840) / 40, 0, 1) * 7) >= 2 ? 1 : 0)",
       "unit": "",
-      "decimals": 1,
-      "color": 4
+      "decimals": 0,
+      "color": 2
      }
     ],
     "visual": {
      "type": "curves",
      "x": {
-      "label": "Cost of getting west",
+      "label": "Miles west of the Atlantic coast",
       "min": 0,
-      "max": 10
+      "max": 3000
      },
      "y": {
-      "label": "Wage units",
+      "label": "People per square mile",
       "min": 0,
-      "max": 15
+      "max": 14
      },
      "series": [
       {
-       "id": "wage_line",
-       "label": "Eastern wage",
-       "expr": "open ? max(3, frontier_pay - x) : 3",
-       "color": 3,
+       "id": "density",
+       "label": "Settlement",
+       "expr": "12 / (1 + exp((x - (100 + (year - 1790) * 12)) / 150)) + scatter * clamp((year - 1840) / 40, 0, 1) * (5 * exp(-pow((x - 2100) / 70, 2)) + 4.5 * exp(-pow((x - 2450) / 70, 2)) + 7 * exp(-pow((x - 2800) / 70, 2)))",
+       "color": 0,
        "dashed": false
-      },
-      {
-       "id": "value_line",
-       "label": "What leaving is worth",
-       "expr": "open ? max(0, frontier_pay - x) : 0",
-       "color": 1,
-       "dashed": true
       }
      ],
-     "hlines": [
+     "fills": [
       {
-       "id": "minimum",
-       "y": 3,
-       "label": "Bare minimum with no way out"
+       "series": 0,
+       "from": 0,
+       "to": "frontier_mi",
+       "label": "Settled zone",
+       "color": 0
       }
      ],
      "markers": [
       {
-       "id": "cost_marker",
-       "x": "c",
-       "label": "Cost of getting west",
-       "color": 0
+       "id": "edge_marker",
+       "x": "frontier_mi",
+       "label": "Edge of settlement",
+       "color": 3
       }
      ],
-     "points": [
+     "hlines": [
       {
-       "id": "today",
-       "x": "c",
-       "y": "wage",
-       "label": "Today's wage"
+       "id": "threshold",
+       "y": 2,
+       "label": "Two people per square mile"
       }
      ]
     }
@@ -636,1382 +182,1337 @@
    "animation": {
     "steps": [
      {
-      "say": "This is one Eastern city's job market. Moving right, it gets costlier for a worker to go west and start a farm.",
-      "focus": "cost_marker",
-      "ms": 3200
+      "say": "This curve shows how many people live on each square mile as you travel west from the Atlantic coast.",
+      "focus": "density",
+      "ms": 3500
      },
      {
-      "say": "The solid line is the wage employers have to pay. The flat gray line is what they would pay if nobody could leave.",
-      "focus": [
-       "wage_line",
-       "minimum"
-      ],
-      "ms": 3400
+      "say": "The flat line marks two people per square mile. Keep an eye on where the curve drops below it.",
+      "focus": "threshold",
+      "ms": 3000
      },
      {
-      "say": "This slider sets the cost of getting west. Watch the dot, today's wage, slide along the line.",
+      "say": "This slider sets the year. Watch the crowded part spread west.",
       "set": {
-       "c": 4
+       "year": 1850
       },
-      "focus": "c",
-      "ms": 3200
+      "focus": "year",
+      "ms": 3500
      },
      {
-      "say": "This one sets what a family can earn on free land out west. The dashed line shows what leaving is worth.",
+      "say": "This switch adds small pockets of settlement far out west, ahead of the main body.",
       "set": {
-       "frontier_pay": 12
+       "scatter": 1
       },
-      "focus": [
-       "frontier_pay",
-       "value_line"
-      ],
-      "ms": 3400
+      "focus": "scatter",
+      "ms": 3000
      },
      {
-      "say": "And this switch opens or closes the supply of free land.",
-      "focus": "open",
-      "ms": 2800
+      "say": "These boxes report where settlement thins out and how many separate settled areas there are.",
+      "focus": [
+       "frontier_mi",
+       "areas"
+      ],
+      "ms": 3500
      }
     ]
    },
    "explore": {
-    "prompt": "Play the worker's choice from both sides. Use the cost of the journey and the switch to see when the way out props up Eastern wages, and when it stops mattering.",
+    "prompt": "Travel through the century. Find a moment when the edge has gone a long way west but can still be drawn as one line. Then find a moment when no single line can be drawn at all.",
     "goals": [
      {
-      "text": "Get the Eastern wage to 8 or more without changing what the frontier pays, with free land still open.",
-      "when": "wage >= 8 && frontier_pay == 10 && open == 1",
+      "text": "With the far-western settlements switched on, put the edge of settlement more than 1,000 miles west while there is still only one settled area.",
+      "when": "scatter == 1 && areas == 1 && frontier_mi > 1000",
       "solution": {
-       "c": 2
+       "year": 1850,
+       "scatter": 1
       },
       "hints": [
-       "Leave frontier earnings alone. Which other slider changes what leaving the East is worth?",
-       "A cheaper journey raises the dashed line. Once it is above the gray line, the wage follows it.",
-       "What leaving is worth equals frontier earnings minus the journey's cost. Work backward from the wage you want."
+       "You need two things at once: a lot of distance, and still a single settled area.",
+       "Both the main edge and the far-western pockets grow as time passes. You need the edge far enough west before the pockets rise above the two-per-mile line.",
+       "Look around the middle of the century and check both boxes as you step one decade at a time."
       ]
      },
      {
-      "text": "Keep free land open and frontier earnings unchanged, but make the escape so costly that it no longer lifts the Eastern wage at all.",
-      "when": "open == 1 && frontier_pay == 10 && lift < 0.01",
+      "text": "Recreate the census finding that ends the book's story: settlement broken into so many pieces that there are at least three separate settled areas above the two-per-mile line.",
+      "when": "areas >= 3",
       "solution": {
-       "c": 7.5
+       "year": 1890,
+       "scatter": 1
       },
       "hints": [
-       "Look at the solid line. Where does it go flat?",
-       "The lift disappears once what leaving is worth falls to the gray line or below it.",
-       "That happens when the journey's cost eats up all of frontier earnings except the bare minimum."
+       "Which control adds settlement beyond the main edge?",
+       "Switch the scattered settlements on, then slide time forward while you watch the 'Separate settled areas' box.",
+       "The pockets need most of the late century to grow past the line."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. The owners' agreement can only push wages down to the point where leaving becomes the better deal. A cheaper railroad raises that point, so workers walk away from any offer below it.",
-     "incorrect": "The trap is thinking wages are set only inside the city. In Turner's argument, an open and cheap road west means every Eastern offer is compared with the frontier. An offer below what leaving is worth simply loses its workers."
+     "correct": "Yes. The frontier line is wherever the thinning curve meets the chosen cut-off. A higher cut-off is reached sooner on the way west, so the line moves east. The frontier is a measurement on a gradient, not a built wall.",
+     "incorrect": "It helps to picture the frontier as a fixed boundary, but in this account it is the point where settlement thins to a chosen level. Moving west, the curve falls through six people per square mile before it falls to two. So a stricter cut-off puts the line further east."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start here. Getting west costs 6 and the frontier pays 10, so leaving is worth 10 − 6 = 4. An employer offering less than 4 loses workers, so the wage sits at 4.",
+       "say": "Start in 1790. Settlement is thick near the coast and fades to almost nothing a few hundred miles inland.",
        "set": {
-        "c": 6,
-        "frontier_pay": 10,
-        "open": 1
+        "year": 1790,
+        "scatter": 0
        },
-       "focus": "wage",
+       "focus": "density",
+       "ms": 3200
+      },
+      {
+       "say": "The census measured this as population density: people per square mile. Where the curve falls below two per square mile, it drew the frontier line. Here that is about 340 miles in.",
+       "focus": "edge_marker",
        "ms": 4200
       },
       {
-       "say": "Make the journey costly. Leaving is now worth only 1, below the bare minimum of 3. The way out exists, but nobody can afford to use it, so it does nothing for wages.",
+       "say": "Jump to 1820. No wall moved. The whole thinning edge slid west, and the frontier line slid with it.",
        "set": {
-        "c": 9
+        "year": 1820
        },
-       "focus": [
-        "value_line",
-        "minimum"
-       ],
+       "focus": "frontier_mi",
+       "ms": 3600
+      },
+      {
+       "say": "By 1860 the edge is more than 1,000 miles in. Each census could still draw one frontier line, because settlement thins out only once.",
+       "set": {
+        "year": 1860
+       },
+       "focus": "frontier_mi",
+       "ms": 3800
+      },
+      {
+       "say": "Now add the far-western pockets: gold camps and coastal settlements that leapt ahead of the main edge. The curve now rises back above the line in separate places.",
+       "set": {
+        "scatter": 1
+       },
+       "focus": "areas",
        "ms": 4200
       },
       {
-       "say": "Now make it cheap, as canals, railroads and nearly free government land did. Leaving is worth 7, and the Eastern wage climbs to 7 with it.",
+       "say": "By 1890 the pockets stand well above two per square mile, with empty land between them. The curve crosses the threshold again and again.",
        "set": {
-        "c": 3
+        "year": 1890
        },
-       "focus": "today",
+       "focus": "density",
        "ms": 4000
       },
       {
-       "say": "That lower limit, set by what a worker could get by walking away, is a wage floor. Employers can't go below it and still keep their workers.",
-       "focus": "value_line",
-       "ms": 4000
-      },
-      {
-       "say": "Richer western land raises the floor further. At a frontier income of 13, leaving is worth 10, and Eastern employers must match it.",
-       "set": {
-        "frontier_pay": 13
-       },
-       "focus": [
-        "frontier_pay",
-        "wage"
-       ],
-       "ms": 4000
-      },
-      {
-       "say": "Writers of Turner's time called this a safety valve. Pressure in the East, from low pay or unfair rule, could escape westward instead of building up.",
-       "focus": "lift",
-       "ms": 4000
-      },
-      {
-       "say": "Now close the frontier, as the 1890 census announced. However cheap the journey, the wage falls to the bare minimum. The floor was only ever held up by the open land.",
-       "set": {
-        "open": 0
-       },
-       "focus": "wage_line",
-       "ms": 4600
+       "say": "With several settled areas there is no single place to draw the line. This is what the census superintendent announced in 1890: there can hardly be said to be a frontier line.",
+       "focus": "areas",
+       "ms": 4400
       }
      ]
     },
-    "explanation": "A worker in the East always had a second offer in the background: go west, take free land, and earn what the frontier paid, minus the cost of getting there. Employers who offered less than that lost their workers, so cheap, reachable land put a floor under Eastern wages. Turner applies the same logic to rulers: harsh laws or unfair political control drove people out, which pushed Eastern states to ease their terms. He supports this with contemporary voices rather than wage data. These include an early Congressman's remark that blocking western land sales would force some class to 'serve the others for such wages as they please to give', and New England manufacturers who opposed cheap land because migration meant higher wages for those who stayed. It is an interpretation, not a measured result. As the model shows, the effect depends on people actually being able to afford the journey, and it vanishes when free land runs out.",
-    "quote": "Whenever social conditions tended to crystallize in the East, whenever capital tended to press upon labor or political restraints to impede the freedom of the mass, there was this gate of escape to the free conditions of the frontier. These free lands promoted individualism, economic equality, freedom to rise, democracy. Men would not accept inferior wages and a permanent position of social subordination when this promised land of freedom and equality was theirs for the taking.",
-    "quote_where": "Chapter IX, Contributions of the West to American Democracy"
+    "explanation": "Turner's American frontier is not a fortified border between two crowded countries. It is the place where settlement thins out into land that is open for the taking. He adopts the census rule: the frontier is the margin where population density falls to about two people per square mile. Decade by decade that margin moved west, past the fall line, the Alleghanies, the Mississippi and the Missouri. The book opens with the 1890 census bulletin, which said isolated pockets of settlement had broken up the unsettled area so much that no single frontier line could be drawn. Turner himself calls the term elastic and widens it to include Indian country. The 'free land' he describes was land taken from Native peoples, as his own references to repeated Indian wars show.",
+    "quote": "The American frontier is sharply distinguished from the European frontier—a fortified boundary line running through dense populations. The most significant thing about the American frontier is, that it lies at the hither edge of free land. In the census reports it is treated as the margin of that settlement which has a density of two or more to the square mile.",
+    "quote_where": "Chapter I, The Significance of the Frontier in American History"
    },
    "connect": {
     "equation": [
      {
-      "text": "Eastern wage",
-      "link": "wage"
+      "text": "x_{frontier}",
+      "link": "frontier_mi"
      },
      {
-      "text": " = max( 3, "
+      "text": " = the distance x where d(x) falls to 2 people per mi², with d(x) = 12 / (1 + e^{(x − edge)/150}) and the edge moving west with the "
      },
      {
-      "text": "F",
-      "link": "frontier_pay"
-     },
-     {
-      "text": " − "
-     },
-     {
-      "text": "c",
-      "link": "c"
-     },
-     {
-      "text": " )  while "
-     },
-     {
-      "text": "free land is open",
-      "link": "open"
-     },
-     {
-      "text": ";  otherwise 3"
+      "text": "year",
+      "link": "year"
      }
     ],
-    "caption": "This is the teaching model's rule, not an equation from Turner, who argues in words. F (blue) is what a family earns on free western land and c (dark) is the cost of getting there, so F − c is what leaving is worth. The red wage can never fall below it while the frontier is open. The 3 is the bare minimum employers would pay if no one could leave."
+    "caption": "The paper gives no equation. The cut-off of two people per square mile is the census rule Turner quotes. The curve d(x) is this model's own illustrative crowding profile. The orange part is the frontier output, and the blue part is the year slider that slides the edge west."
    },
-   "recap": "A cheap, open road to free land meant every Eastern employer and ruler had to beat the frontier's offer. That floor lasted only as long as the land did.",
+   "recap": "The frontier was a moving line where settlement thinned below two people per square mile. When settlement scattered into separate pockets, no single line could be drawn.",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
     },
     {
      "id": "goal_1",
      "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
      "i": 1
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
     },
     {
-     "id": "connect",
+     "id": "eq",
      "kind": "connect"
     }
    ]
   },
   {
-   "id": "competing_for_settlers",
-   "title": "States competing for people",
-   "idea": "New frontier states offered broad voting rights, and older states that kept property qualifications or unfair apportionment lost people to them until they liberalized too.",
+   "id": "beginning_over_again",
+   "title": "Society starts over at every edge",
+   "idea": "At each new frontier the same sequence repeated, from trader to rancher to pioneer farmer to settled farmer to town, so American society kept being rebuilt from simple beginnings.",
+   "role": "core",
+   "terms": [
+    {
+     "term": "palimpsest",
+     "means": "A page written over again and again, with the older writing still faintly visible underneath. Turner's image for an old region whose earlier frontier stages still show."
+    },
+    {
+     "term": "trader's frontier",
+     "means": "Turner's name for the edge pushed west by fur traders. He also named the rancher's, miner's and farmer's frontiers, each advancing at its own speed."
+    }
+   ],
+   "recap": "Each frontier returned to simple conditions and climbed the same ladder: trader, herder, pioneer farmer, settled farmer, town. American society was rebuilt again and again.",
+   "understand": {
+    "explanation": "Turner asks you to stand at Cumberland Gap and watch a procession march west in single file: the buffalo heading for the salt springs, the Indian, the fur-trader and hunter, the cattle-raiser, the pioneer farmer. A century later, at South Pass in the Rockies, the same procession went by again, with wider gaps between its members. Because these types advanced at different speeds, Turner named separate edges: the trader's frontier, the rancher's frontier, the miner's frontier and the farmer's frontier. A settlers' guide from 1837 that he quotes splits the farmer's stage itself into waves: a rough pioneer, then a buyer who clears fields and builds mills and schools, then men of capital who build towns. Each new region went back to simple conditions and rebuilt itself, so an older region's history is a palimpsest, with each earlier stage still showing beneath the present one. This is Turner's interpretation, drawn from travellers' accounts, census maps and local histories, not a measured law. He admits the stages often blurred, overlapped or were skipped, and his scheme treats Indian societies as a primitive 'starting point' rather than as societies with their own histories.",
+    "quote": "Thus American development has exhibited not merely advance along a single line, but a return to primitive conditions on a continually advancing frontier line, and a new development for that area. American social development has been continually beginning over again on the frontier.",
+    "quote_where": "Chapter I, 'The Significance of the Frontier in American History'"
+   },
+   "activities": [
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "ex",
+     "kind": "worked",
+     "title": "Reading Wisconsin as a palimpsest",
+     "steps": [
+      {
+       "text": "Start with the oldest layer. Before farmers came, Wisconsin's settlements were fur-trading posts at Green Bay, Prairie du Chien and Milwaukee. French boatmen paddled the rivers to trade with Indian communities, and British influence stayed strong until after the War of 1812.",
+       "result": "Trader's frontier"
+      },
+      {
+       "text": "Next came the lead mines in the southwest corner of the state, which drew miners from Illinois and the South. Turner's account of Wisconsin shows no large cattle-herding stage. Here a miner's frontier fills the place that ranchers took elsewhere, a reminder that the sequence was not identical everywhere.",
+       "result": "Miner's frontier stands in for the herder"
+      },
+      {
+       "text": "After 1832, soldiers who had followed Black Hawk's trail reported rich soil. Settlers from New York and New England came in through Milwaukee and spread across the prairie counties. Turner says Wisconsin was then 'given over to almost exclusive grain-raising.'",
+       "result": "Pioneer farmers growing a single crop"
+      },
+      {
+       "text": "As the soil wore down and land values rose, many native farmers sold or rented their farms, often to German newcomers, and moved into villages. They organised creameries and turned the state toward dairying and mixed farming.",
+       "result": "Settled, varied farming"
+      },
+      {
+       "text": "Milwaukee grew from a trading post into a city, and by Turner's day Wisconsin was 'now developing manufacture.' Each of these stages sat on top of the one before.",
+       "result": "Town and factory"
+      },
+      {
+       "text": "Turner adds that in his own time North Dakota was at the grain-raising stage Wisconsin had already left behind. The same sequence was running again farther west, starting from simple conditions once more.",
+       "result": "The process begins over again"
+      }
+     ],
+     "takeaway": "Read from the top layer down, one state holds the whole procession: trade, extraction, single-crop pioneering, settled farming, then city and industry. Meanwhile the next frontier west was starting the same climb. The stages were real but rough, and Wisconsin had mining where other regions had ranching."
+    },
+    {
+     "id": "s",
+     "kind": "sort",
+     "title": "Who is this in the procession?",
+     "prompt": "Each card describes someone Turner, or the 1837 guide he quotes, places on the frontier. Sort each one into its stage.",
+     "groups": [
+      {
+       "id": "trader",
+       "label": "Trader"
+      },
+      {
+       "id": "rancher",
+       "label": "Rancher"
+      },
+      {
+       "id": "pioneer",
+       "label": "Pioneer farmer"
+      },
+      {
+       "id": "settled",
+       "label": "Settled farmer"
+      }
+     ],
+     "cards": [
+      {
+       "id": "c1",
+       "text": "Follows Indian trails up the river valleys, trading goods and guns for furs, often years ahead of anyone who farms.",
+       "group": "trader",
+       "feedback": "Trader. Turner says the trader crossed the continent fastest because Indian communities wanted his guns. He reached each region long before the pioneer farmer."
+      },
+      {
+       "id": "c2",
+       "text": "His trading post, set on the site of an Indian village where waterways meet, later grows into a city such as Albany, Detroit or Chicago.",
+       "group": "trader",
+       "feedback": "Trader. The post comes first. Turner traces many later cities to these sites, which shows how the first stage set the pattern for what followed."
+      },
+      {
+       "id": "c3",
+       "text": "Drives his herd from range to range and walks it to Charleston to sell, because in a country without roads his product can carry itself to market.",
+       "group": "rancher",
+       "feedback": "Rancher. Turner explains that ranching spread fast in remote country because cattle could be driven to market when crops could not be hauled."
+      },
+      {
+       "id": "c4",
+       "text": "Keeps 'cow-pens' among the canebrakes and peavine pastures, beyond the edge of the plantations.",
+       "group": "rancher",
+       "feedback": "Rancher. Cow-pens beyond the line of plantations are Turner's example of the herder's frontier, which moved ahead of the farmers."
+      },
+      {
+       "id": "c5",
+       "text": "Lives in a log cabin beside a dozen acres of girdled trees and corn, does not care whether he ever owns the soil, and moves on when neighbours crowd too close.",
+       "group": "pioneer",
+       "feedback": "Pioneer farmer. This is the guide's first wave. He farms, but barely, and sells his clearing to the next arrivals before heading west to 'work the same process over.'"
+      },
+      {
+       "id": "c6",
+       "text": "Feeds his family mainly from the open range and from hunting, using rough farm tools he made himself.",
+       "group": "pioneer",
+       "feedback": "Pioneer farmer. He still lives off wild resources as much as off crops. That near-primitive way of living is what Turner means by a 'return to primitive conditions.'"
+      },
+      {
+       "id": "c7",
+       "text": "Buys the land, adds field to field, builds a hewn-log house with glass windows, and helps put up mills, schools and court-houses.",
+       "group": "settled",
+       "feedback": "Settled farmer. This is the guide's second wave. He buys rather than squats, and he builds the institutions of 'plain, frugal, civilized life.'"
+      },
+      {
+       "id": "c8",
+       "text": "Facing worn-out soil and cheap land farther west, he stays put, gives up single-cropping and turns to intensive, varied farming.",
+       "group": "settled",
+       "feedback": "Settled farmer. Turner says exhausted soil left farmers two choices: move west and keep pioneering, or farm intensively. Staying marks the settled stage, and towns and factories tend to follow."
+      }
+     ],
+     "takeaway": "The stages differ in how much each person depends on wild resources and how much he builds to stay. They run from trading with Indian communities, to grazing open land, to rough clearing, to buying and improving. The same ladder was climbed again at every new edge.",
+     "hints": [
+      "Ask what the person lives off: trade goods, herds, rough crops and hunting, or improved fields.",
+      "Pioneer and settled farmers both farm. What separates them is whether he plans to stay and build."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gate_of_escape",
+   "title": "Free land as a gate of escape",
+   "idea": "Because cheap land lay just west, workers could refuse low wages and subordination by leaving, which kept rigid classes from hardening and pushed society toward equality.",
+   "role": "core",
+   "terms": [
+    {
+     "term": "gate of escape",
+     "means": "Turner's phrase for the open frontier: a way out for anyone pressed by low pay, debt or social rank in the settled East"
+    },
+    {
+     "term": "safety valve",
+     "means": "A release that lets pressure out before it builds into an explosion. Here it means the West drawing off discontented people from the East"
+    },
+    {
+     "term": "exit option",
+     "means": "A modern label, not Turner's, for the power to walk away from a bad deal. Having it strengthens your bargaining hand"
+    }
+   ],
+   "recap": "While cheap land lay west, workers could leave low pay and low rank, so employers bid for labor and no servant class hardened. Turner argues this from testimony, not measurement.",
+   "understand": {
+    "explanation": "Picture a worker in an eastern town who is offered low pay and told to know his place. If cheap land lies a few hundred miles west, he can leave and farm for himself, so an employer who wants to keep him must pay more and treat him nearly as an equal. Turner calls this open frontier a 'gate of escape'. Others called it a safety valve, and today we might call it an exit option. Because the gate stayed open generation after generation, no fixed class of servants could set hard, and economic equality fed political equality. Turner builds this argument from period testimony, such as Gallatin and the 1796 land debates. He does not use wage records, and the paper never counts how many workers actually left, so the strength of the effect remains his interpretation.",
+    "quote": "Whenever social conditions tended to crystallize in the East, whenever capital tended to press upon labor or political restraints to impede the freedom of the mass, there was this gate of escape to the free conditions of the frontier. These free lands promoted individualism, economic equality, freedom to rise, democracy. Men would not accept inferior wages and a permanent position of social subordination when this promised land of freedom and equality was theirs for the taking.",
+    "quote_where": "Chapter IX, 'Contributions of the West to American Democracy'"
+   },
+   "activities": [
+    {
+     "id": "first_guess",
+     "kind": "choice",
+     "mode": "opening",
+     "question": "Visitors to the early United States often noticed that ordinary workers were paid better and bowed less to their employers than workers in Europe did. Before reading on, what is your best guess about why?",
+     "options": [
+      {
+       "text": "Plenty of cheap land lay to the west, so workers had somewhere else to go.",
+       "feedback": "Keep this guess in mind. The next screens test how far Turner would agree with it and what evidence he offers."
+      },
+      {
+       "text": "The U.S. Constitution guaranteed equal rights, so employers could not push workers around.",
+       "feedback": "Many Americans believed this. Turner pushes back: he says the founders' laws mattered less than the conditions people lived in. Watch for that argument."
+      },
+      {
+       "text": "American workers had strong trade unions that bargained for them.",
+       "feedback": "Unions grew mostly later. Turner discusses organized labor as a response to conditions after cheap land began to run out, not as the early cause."
+      },
+      {
+       "text": "Factories were rare, so there was little demand for wage labor at all.",
+       "feedback": "Factories were fewer than in later decades, but that alone doesn't explain why the workers who did take wages had a strong hand. Something had to make them hard to replace."
+      }
+     ]
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "three_situations",
+     "kind": "compare",
+     "prompt": "The same worker faces a stingy employer in three different settings. All three come from the paper's own sources. In each case, what can the worker do?",
+     "cases": [
+      {
+       "label": "Eastern town, land open to the west",
+       "text": "The employer offers low pay. The worker can pack up, buy cheap land on the frontier and farm for himself. Turner: men 'would not accept inferior wages and a permanent position of social subordination' when land was 'theirs for the taking'. The employer has to raise pay or lose him, and the paper notes that the migration of labor to free lands 'meant that higher wages must be paid to those who remained.'"
+      },
+      {
+       "label": "Old World village, no open land",
+       "text": "Turner describes the peasant and artisan of Europe as 'bound by the chains of social class'. There is nowhere cheap to go, so the worker must take the terms offered. Rank passes down from parent to child, and a fixed lower class persists."
+      },
+      {
+       "label": "The 1796 proposal to limit western land sales",
+       "text": "In Congress, some Easterners feared cheap land would drain away their labor supply, and they proposed restricting sales. A representative answered that such a law would be 'tantamount to saying that there is some class which must remain here, and by law be obliged to serve the others for such wages as they please to give.' Closing the gate would have recreated the Old World situation by law."
+      }
+     ],
+     "takeaway": "What differs between the cases is not the worker's skill or the law of contracts. It is whether he can leave. The open land gives him bargaining power even if he never uses it, and Turner argues this is what kept a permanent servant class from forming."
+    },
+    {
+     "id": "trace_chain",
+     "kind": "trace",
+     "prompt": "Trace Turner's chain of causes from cheap western land to democracy. Click the steps in order along the arrows. Two boxes are tempting detours, so leave them out.",
+     "nodes": [
+      {
+       "id": "land",
+       "label": "Cheap land lies just west",
+       "x": 8,
+       "y": 50
+      },
+      {
+       "id": "exit",
+       "label": "Workers can leave to farm",
+       "x": 26,
+       "y": 50
+      },
+      {
+       "id": "wages",
+       "label": "Employers must raise pay",
+       "x": 44,
+       "y": 50
+      },
+      {
+       "id": "noclass",
+       "label": "No permanent servant class",
+       "x": 62,
+       "y": 50
+      },
+      {
+       "id": "equality",
+       "label": "Rough economic equality",
+       "x": 78,
+       "y": 50
+      },
+      {
+       "id": "democracy",
+       "label": "Political equality, democracy",
+       "x": 93,
+       "y": 50
+      },
+      {
+       "id": "collapse",
+       "label": "Eastern industry starved of labor",
+       "x": 52,
+       "y": 85
+      },
+      {
+       "id": "constitution",
+       "label": "A wisely written Constitution",
+       "x": 78,
+       "y": 15
+      }
+     ],
+     "edges": [
+      {
+       "from": "land",
+       "to": "exit"
+      },
+      {
+       "from": "exit",
+       "to": "wages"
+      },
+      {
+       "from": "wages",
+       "to": "noclass"
+      },
+      {
+       "from": "wages",
+       "to": "collapse"
+      },
+      {
+       "from": "noclass",
+       "to": "equality"
+      },
+      {
+       "from": "equality",
+       "to": "democracy"
+      },
+      {
+       "from": "constitution",
+       "to": "democracy"
+      }
+     ],
+     "answer": [
+      "land",
+      "exit",
+      "wages",
+      "noclass",
+      "equality",
+      "democracy"
+     ],
+     "path": true,
+     "hints": [
+      "Start where Turner starts: with the land itself, not with any law.",
+      "After the worker can leave, ask what the employer is forced to do, and what that does to class lines over generations.",
+      "'Eastern industry starved of labor' was a fear raised in the 1796 debates, not Turner's outcome. The Constitution box is the explanation Turner argues against."
+     ],
+     "explanation": "Turner's chain runs: cheap land, then an exit for workers, then higher pay, then no fixed servant class, then economic equality, then political democracy. In his words, 'Economic equality fostered political equality.' The detour to 'Eastern industry starved of labor' records an Eastern fear from the 1796 debates, which the paper reports but does not endorse. The Constitution route is the popular explanation Turner rejects: 'Not the constitution, but free land and an abundance of natural resources open to a fit people, made the democratic type of society in America.' Remember that this is his reasoning from testimony. Each arrow is an argued link, not a measured one."
+    },
+    {
+     "id": "revisit_guess",
+     "kind": "choice",
+     "mode": "determinate",
+     "revisits": "first_guess",
+     "question": "Return to your first guess. In Turner's account, what mainly kept American workers' pay up and stopped rigid classes from forming?",
+     "options": [
+      {
+       "text": "The option to leave for cheap western land, which forced employers to compete for workers.",
+       "feedback": "Yes. This is the 'gate of escape'. Gallatin made the same point in 1796, tracing the country's happiness 'as much from the great plenty of land in proportion to the inhabitants' as from its institutions. Keep the caveat: Turner argues this from testimony and does not measure how many workers actually went west."
+      },
+      {
+       "text": "The equal rights written into the Constitution.",
+       "feedback": "Turner says the reverse. He thinks Americans gave too much credit to a 'glorious Constitution' and that free land did more of the work. Gallatin, writing earlier, gave land at least equal weight with 'the wisdom of their political institutions.'"
+      },
+      {
+       "text": "Strong trade unions that bargained for higher wages.",
+       "feedback": "In the paper, labor unions rise later, as cheap land is running out, partly to do what the open land had done. Turner treats them as a substitute for the gate, not as its early cause."
+      },
+      {
+       "text": "A shortage of factories, so few people worked for wages.",
+       "feedback": "This doesn't explain the bargaining power of those who did work for wages. In Turner's account, that power came from the outside option of free land, not from how many factories existed."
+      }
+     ],
+     "answer": 0
+    }
+   ]
+  },
+  {
+   "id": "west_gains_weight",
+   "title": "The West grows until it can outvote the coast",
+   "idea": "As the Mississippi Valley's share of the population rose from about one-fortieth in 1790 to over one-third by 1840, frontier states with broad voting rights gained the weight to force democratic reforms on the older states.",
    "role": "core",
    "predict": {
-    "question": "Two old eastern states have the same narrow voting rules. One borders a growing frontier state that lets every man vote, with an easy river route west. The other is walled off by mountains, so moving west is slow and costly. Which state feels more pressure to widen its vote soon?",
+    "question": "By the 1820s the western parts of New York and Virginia had filled with settlers, while the coast still held the old power. When those two states met to rewrite their constitutions (New York in 1821, Virginia in 1829–30), which way did their voting rules move?",
     "options": [
-     "The one with the easy route west",
-     "The walled-off one, because its voteless men are more frustrated",
-     "Both equally, because their rules are the same",
-     "Neither, because voting rules don't make people move"
+     "Toward more voters, under pressure from their western counties",
+     "Toward fewer voters, to protect the coast's property owners",
+     "No change, because the federal Constitution fixed who could vote",
+     "Voting was handed over to Congress to settle"
     ],
     "answer": 0,
     "why": [
-     "Correct: the pressure comes from people actually leaving. Where moving is easy, the same voting gap drains people fast, and that drain pushes the state to reform.",
-     "Frustration alone costs the state nothing. If its people can't easily leave, the old rulers can keep narrow rules longer. Turner's mechanism runs through the exit, not the grievance.",
-     "Same rules mean the same gap. But the drain is the gap times how easily people move, so the state with the easy exit loses people much faster.",
-     "Turner argues the opposite: older states were forced to loosen voting limits 'unless they were to lose their people to the freer life of the West'."
+     "This holds. Turner says western New York forced a wider suffrage in 1821 and western Virginia a more liberal one in 1830, pushed by interior numbers and the threat of losing people west. Virginia's reform was partial: seats stayed unequal.",
+     "The coast did try to protect property. Virginia's tidewater argued for exactly that in 1829–30. But the interior's numbers were too large to ignore, so the rules widened, even though the coast kept some advantages.",
+     "It is natural to assume a national rule. The 1787 convention actually left House suffrage to each state, which is why every old state had to fight its own reform battle.",
+     "Congress never took over state voting rules in this period. The change came inside each state's own convention, driven by its western counties."
     ]
    },
    "terms": [
     {
-     "term": "manhood suffrage",
-     "means": "Every adult man may vote, whether or not he owns property"
-    },
-    {
-     "term": "property qualification",
-     "means": "A rule that only men who own enough land or pay enough tax may vote"
-    },
-    {
      "term": "apportionment",
-     "means": "How seats in the legislature are divided among regions. When it is unfair, some regions' votes count for less"
+     "means": "Handing out seats in a legislature according to how many people live in each place"
     },
     {
-     "term": "franchise",
-     "means": "The right to vote, and the set of people who hold it"
+     "term": "manhood suffrage",
+     "means": "Every adult man may vote, with no test of property or tax paid"
+    },
+    {
+     "term": "balance of power",
+     "means": "A group big enough that whichever side it joins wins"
     }
    ],
    "model": {
-    "title": "An old state and a frontier state, 40 years on",
-    "note": "Teaching model: two states over a fixed 40 years, with no births, deaths or arrivals from abroad. Each decade, a fixed share of the men who would gain a vote by moving actually leave. Voting rights stand in for the whole package of frontier freedom; Turner treats cheap land as the deeper pull. An unfair split of legislative seats is folded into the 'share who can vote'. Once the old state reforms, it matches the frontier's rules and the drain stops. Numbers (thousands of people) are illustrative, not the paper's data.",
+    "title": "How much of the nation lived in the Mississippi Valley?",
+    "note": "Teaching model: four census snapshots only. The shares are the fractions Turner reports in Chapter VI: 1/40 in 1790, 1/7 in 1810, 'over one-fourth' in 1830 and 'more than one-third' in 1840. The last two are drawn at those lower bounds, so the true shares were a little higher. The book gives no figures for 1800 or 1820, so none are shown. Seats and votes are not computed; the step from people to political power is described in words.",
     "controls": [
      {
-      "id": "old_vote",
-      "label": "Old state: share of men who can vote",
+      "id": "s",
+      "label": "Census year (step through)",
       "kind": "slider",
       "min": 0,
-      "max": 100,
-      "step": 5,
-      "default": 40,
-      "unit": "%",
+      "max": 3,
+      "step": 1,
+      "default": 0,
+      "unit": "",
       "color": 0
-     },
-     {
-      "id": "frontier_vote",
-      "label": "Frontier state: share of men who can vote",
-      "kind": "slider",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "default": 100,
-      "unit": "%",
-      "color": 1
-     },
-     {
-      "id": "move",
-      "label": "Share of left-out men who move west each decade",
-      "kind": "slider",
-      "min": 0,
-      "max": 50,
-      "step": 5,
-      "default": 30,
-      "unit": "%",
-      "color": 3
-     },
-     {
-      "id": "reform",
-      "label": "Years until the old state opens its vote (40 = never)",
-      "kind": "slider",
-      "min": 0,
-      "max": 40,
-      "step": 5,
-      "default": 40,
-      "unit": " yr",
-      "color": 4
      }
     ],
     "outputs": [
      {
-      "id": "gap",
-      "label": "Voting gap between the states",
-      "expr": "max(0, frontier_vote - old_vote) / 100",
-      "unit": "%",
-      "scale": 100,
+      "id": "year",
+      "label": "Census year",
+      "expr": "s < 0.5 ? 1790 : (s < 1.5 ? 1810 : (s < 2.5 ? 1830 : 1840))",
+      "unit": "",
       "decimals": 0,
-      "color": 5
+      "color": 4
      },
      {
-      "id": "old_pop",
-      "label": "Old state after 40 years",
-      "expr": "100 * pow(1 - move / 100 * gap, reform / 10)",
-      "unit": "k",
+      "id": "share",
+      "label": "Valley's share of the nation",
+      "expr": "s < 0.5 ? 1/40 : (s < 1.5 ? 1/7 : (s < 2.5 ? 1/4 : 1/3))",
+      "unit": "%",
+      "scale": 100,
       "decimals": 1,
       "color": 0
      },
      {
-      "id": "old_never_pop",
-      "label": "Old state if it never reforms",
-      "expr": "100 * pow(1 - move / 100 * gap, 4)",
-      "unit": "k",
-      "decimals": 1,
+      "id": "people",
+      "label": "People living in the Valley",
+      "expr": "s < 0.5 ? 0.1 : (s < 1.5 ? 1 : (s < 2.5 ? 3.67 : 6))",
+      "unit": " million",
+      "decimals": 2,
       "color": 2
      },
      {
-      "id": "frontier_pop",
-      "label": "Frontier state after 40 years",
-      "expr": "20 + 100 - old_pop",
-      "unit": "k",
-      "decimals": 1,
-      "color": 1
-     },
-     {
-      "id": "lost",
-      "label": "People the old state lost",
-      "expr": "100 - old_pop",
-      "unit": "k",
+      "id": "growth",
+      "label": "Share compared with 1790",
+      "expr": "share / (1/40)",
+      "unit": "×",
       "decimals": 1,
       "color": 3
-     },
-     {
-      "id": "saved",
-      "label": "People kept by reforming (vs never)",
-      "expr": "old_pop - old_never_pop",
-      "unit": "k",
-      "decimals": 1,
-      "color": 4
      }
     ],
     "visual": {
      "type": "bars",
      "bars": [
       {
-       "id": "old_bar",
-       "label": "Old state",
-       "value": "old_pop",
+       "id": "valley_bar",
+       "label": "Mississippi Valley",
+       "value": "share * 100",
        "color": 0
       },
       {
-       "id": "old_never",
-       "label": "Old state, never reforms",
-       "value": "old_never_pop",
-       "color": 2
+       "id": "rest_bar",
+       "label": "Rest of the nation",
+       "value": "100 - share * 100",
+       "color": 1
       },
       {
-       "id": "frontier_bar",
-       "label": "Frontier state",
-       "value": "frontier_pop",
-       "color": 1
+       "id": "quarter_bar",
+       "label": "One quarter (reference)",
+       "value": 25,
+       "color": 7
       }
      ],
      "min": 0,
-     "max": 120,
-     "unit": "k",
-     "decimals": 0
+     "max": 100,
+     "unit": "%",
+     "decimals": 1
     }
    },
    "animation": {
     "steps": [
      {
-      "say": "This bar is an old eastern state: how many people it has after 40 years. It starts with 100 thousand.",
-      "focus": "old_bar",
+      "say": "These bars split the young United States in two. The first bar is the Mississippi Valley, all the land west of the mountains. The second is everyone else.",
+      "set": {
+       "s": 0
+      },
+      "focus": "valley_bar",
+      "ms": 4200
+     },
+     {
+      "say": "The grey bar never moves. It marks one quarter of the nation, a yardstick to measure against.",
+      "focus": "quarter_bar",
       "ms": 3200
      },
      {
-      "say": "This is a young frontier state to the west. It starts with just 20 thousand.",
-      "focus": "frontier_bar",
-      "ms": 2800
+      "say": "This slider steps through four census years that the book reports. Watch the Valley bar as it moves.",
+      "set": {
+       "s": 1
+      },
+      "focus": "s",
+      "ms": 4200
      },
      {
-      "say": "These two sliders set what share of men each state lets vote.",
+      "say": "These boxes give the year, the Valley's share, how many people lived there, and how its share compares with 1790.",
+      "set": {
+       "s": 0
+      },
       "focus": [
-       "old_vote",
-       "frontier_vote"
+       "year",
+       "share",
+       "people",
+       "growth"
       ],
-      "ms": 3000
-     },
-     {
-      "say": "This one sets how readily men who are shut out pack up and head west.",
-      "focus": "move",
-      "ms": 2800
-     },
-     {
-      "say": "This one sets when the old state finally opens its vote. The grey bar always shows it never doing so, for comparison.",
-      "focus": [
-       "reform",
-       "old_never"
-      ],
-      "ms": 3800
+      "ms": 4200
      }
     ]
    },
    "explore": {
-    "prompt": "You run the old state. Your people can walk west to a state where every man votes. Try to hold on to them.",
+    "prompt": "Step through the census years and watch when the Valley stops being a sideshow.",
     "goals": [
      {
-      "text": "Leave both states' voting rules exactly as they start, and still end the 40 years with the old state bigger than the frontier state.",
-      "when": "old_pop > frontier_pop && old_vote == 40 && frontier_vote == 100",
+      "text": "Find the first census at which the Valley's share of the nation passes one quarter",
+      "when": "share >= 0.25 && year < 1835",
       "solution": {
-       "reform": 20
+       "s": 2
       },
       "hints": [
-       "The rules can't change, but when the old state gives way can.",
-       "People only leave while the gap is open. Watch the old bar as you move the reform-year slider.",
-       "The old state needs more than 60 thousand left. That happens if it reforms well before the halfway mark of the 40 years."
-      ]
-     },
-     {
-      "text": "Without touching how readily people move, and with the old state never reforming, cut its 40-year loss below 10 thousand.",
-      "when": "move == 30 && reform == 40 && lost < 10",
-      "solution": {
-       "old_vote": 95
-      },
-      "hints": [
-       "What pushes people out is the difference between the two states, not the old state's rule on its own.",
-       "Watch the 'Voting gap' number. The drain each decade is that gap times the moving rate.",
-       "Even a small gap leaks people for four decades. The gap has to be tiny, just a step or so from none."
+       "Which two bars do you need to compare?",
+       "Step forward and compare the Valley bar with the grey quarter bar.",
+       "It happens before the last year on the slider. Stop at the first year it reaches the grey bar."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Right. The drain is the voting gap times how easily people can leave. With the same gap, the state with the easy exit loses people faster, and losing people is what forced older states to reform.",
-     "incorrect": "The model and Turner both put the pressure on the exit. A grievance costs a state nothing unless people can act on it by leaving. The same gap drains a state much faster when moving west is easy, and that loss is what pushed older states to widen the vote."
+     "correct": "Right. The same pressure that worked on the nation worked inside each old state. Western New York forced a wider suffrage in 1821, and western Virginia compelled a more liberal one in 1830. In Turner's account the old states widened the vote so they would not lose their people to the West.",
+     "incorrect": "You may have expected the coast to hold on because it held the power. Turner's point is that numbers plus an exit changed that. The interior counties outgrew the coast, and their people could leave for western states with freer voting rules. New York (1821) and Virginia (1830) both widened the vote, though Virginia still kept unequal seats."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start with both states letting every man vote. This is manhood suffrage. Nobody gains a vote by moving, so the old state keeps all 100 thousand.",
+       "say": "1790. About a hundred thousand people live in the Valley, one-fortieth of the nation. The bar barely shows. Nearly every vote sits on the Atlantic side.",
        "set": {
-        "old_vote": 100,
-        "frontier_vote": 100,
-        "move": 30,
-        "reform": 40
+        "s": 0
        },
-       "focus": "old_bar",
+       "focus": "share",
        "ms": 4200
       },
       {
-       "say": "Now the old state lets only 40% of men vote. Many did this with a property qualification: no land, no vote. Watch the old bar drain and the frontier bar fill.",
+       "say": "1810. Over a million people, one-seventh of the nation. The Valley's share is already almost six times what it was in 1790.",
        "set": {
-        "old_vote": 40
+        "s": 1
        },
-       "focus": [
-        "old_bar",
-        "frontier_bar"
-       ],
-       "ms": 4800
-      },
-      {
-       "say": "Unfair apportionment worked the same way. Coastal elites gave back-country districts too few seats, so a western man's vote counted for less. Here we fold that into a smaller share with a real vote.",
-       "focus": "gap",
-       "ms": 4800
-      },
-      {
-       "say": "Make moving easier and the same gap empties the old state faster. The exit is what gives the gap teeth.",
-       "set": {
-        "move": 50
-       },
-       "focus": "lost",
-       "ms": 4000
-      },
-      {
-       "say": "Back to a normal pace. Now the old state widens its franchise after 30 years. The drain stops then, so the old bar ends a bit above the grey 'never' bar.",
-       "set": {
-        "move": 30,
-        "reform": 30
-       },
-       "focus": [
-        "old_bar",
-        "old_never"
-       ],
-       "ms": 4800
-      },
-      {
-       "say": "This is the story Turner tells. Western New York forced a wider vote in 1821, and western Virginia did the same in 1830.",
-       "focus": "saved",
+       "focus": "growth",
        "ms": 4200
       },
       {
-       "say": "Reform after only 10 years and most people stay. The old bar towers over the grey one: giving way early is what keeps the state's people.",
+       "say": "Seats in the House of Representatives are handed out by head count. That rule is called apportionment: more people, more seats. So this bar is also a rough picture of the Valley's voice in Congress.",
+       "focus": "valley_bar",
+       "ms": 5200
+      },
+      {
+       "say": "1830. The Valley reaches a quarter of the nation, with 3.67 million people. In the next decade Illinois alone gained 318,000 people, while Virginia and the two Carolinas together gained 60,000.",
        "set": {
-        "reform": 10
+        "s": 2
        },
        "focus": [
-        "old_bar",
-        "saved"
+        "valley_bar",
+        "quarter_bar"
        ],
-       "ms": 4800
+       "ms": 5200
+      },
+      {
+       "say": "And who voted in those new states? The frontier states entered the Union letting every adult man vote, with no property test. That rule is manhood suffrage. Each new western seat answered to a broad electorate.",
+       "focus": "people",
+       "ms": 5200
+      },
+      {
+       "say": "1840. Over six million people, more than one-third of the nation. Turner says the Valley now outweighed New England and the South combined in the House and held the balance of power: whichever side it joined won.",
+       "set": {
+        "s": 3
+       },
+       "focus": "valley_bar",
+       "ms": 5600
+      },
+      {
+       "say": "So the old states faced a choice. Their own people could move west to freer rules. To keep them, they rewrote their constitutions and widened the vote. Growth on the frontier became reform on the coast.",
+       "focus": "share",
+       "ms": 5200
       }
      ]
     },
-    "explanation": "When people can leave for a state that treats them better, a state that shuts most men out of voting starts losing its people. Turner argues that the new frontier states entered the Union with voting open to all men, while older states kept property qualifications and seat divisions that favoured the coast. As settlers drained west, those older states had to widen voting to stop the loss. He points to western New York forcing a wider vote in 1821 and western Virginia in 1830. This is a historian's argument from political events, not a measured study of who moved and why. Cheap land, Revolutionary ideas and city workers' demands all pushed the same way, so the model's single 'voting gap' is a simplification.",
-    "quote": "Not only did they add new recruits, but by their competitive pressure for population they forced the older States to break down their historic restraints upon the right of voting, unless they were to lose their people to the freer life of the West.",
+    "explanation": "The Mississippi Valley's share of the population grew from about one-fortieth in 1790 to over one-third by 1840, using census figures Turner quotes in Chapter VI. Because seats are handed out by population, that growth turned into votes: by 1840 the Valley held the balance of power in the House. The new western states let every adult man vote, so their weight pushed national politics toward democracy, for example in the rise of Jacksonian democracy. They also squeezed the older states, which widened voting to avoid losing people westward; New York in 1821 and Virginia in 1830 are Turner's examples. This is Turner's interpretation built from census numbers and convention debates, not a measured cause-and-effect test. He also credits Revolutionary ideas and city workers, and some reforms stayed partial: Virginia's coast kept unequal seats.",
+    "quote": "Ohio Valley States, which sprang out of the democracy of the backwoods, and which entered the Union one after the other with manhood suffrage, greatly recruited the effective forces of democracy in the Union. Not only did they add new recruits, but by their competitive pressure for population they forced the older States to break down their historic restraints upon the right of voting, unless they were to lose their people to the freer life of the West.",
     "quote_where": "Chapter V, The Ohio Valley in American History"
    },
    "connect": {
     "equation": [
      {
-      "text": "P_{old} = 100 × (1 − "
+      "text": "Valley share",
+      "link": "share"
      },
      {
-      "text": "m",
-      "link": "move"
+      "text": " = "
      },
      {
-      "text": " × ("
+      "text": "people in the Valley",
+      "link": "people"
      },
      {
-      "text": "V_{front}",
-      "link": "frontier_vote"
-     },
-     {
-      "text": " − "
-     },
-     {
-      "text": "V_{old}",
-      "link": "old_vote"
-     },
-     {
-      "text": "))^{"
-     },
-     {
-      "text": "T",
-      "link": "reform"
-     },
-     {
-      "text": "/10}"
+      "text": " ÷ people in the whole nation"
      }
     ],
-    "caption": "This is the teaching model's rule; Turner gives no equation. P_{old} is the old state's population in thousands after 40 years. m is the share of left-out men who move west each decade. V_{front} and V_{old} are the shares of men who can vote in each state, written as fractions; the gap counts as zero if the old state is the more open one. T is the number of years before the old state reforms. The frontier state gains whatever the old state loses."
+    "caption": "The book has no equation, so this is the model's rule. The blue term is the Valley's share, the length of the first bar. The green term is the Valley's population from Turner's census figures. Because seats follow population, a bigger share means a bigger voice in the House."
    },
-   "recap": "A state that kept most men from voting lost people to frontier states that let all men vote, and that loss pushed it to widen the vote.",
+   "recap": "The Valley grew from one-fortieth to over one-third of the nation, and those numbers, voting under broad rules, gave the frontier the weight to push the old states toward democracy.",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
     },
     {
      "id": "goal_1",
      "kind": "goal",
-     "i": 1
+     "i": 0
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
     },
     {
-     "id": "connect",
+     "id": "eq",
      "kind": "connect"
     }
    ]
   },
   {
-   "id": "competition_abundance_scarcity",
-   "title": "Same rules, opposite outcomes",
-   "idea": "Free competition for resources leaves people roughly equal while unclaimed resources remain, but as they run out, the same competition concentrates ownership in a few hands.",
+   "id": "two_ideals_collide",
+   "title": "Two pioneer ideals that could not both survive",
+   "idea": "The pioneer's ideal of unrestricted individual competition for resources and his ideal of democracy fit together only while land was abundant. When it ran out, free competition produced trusts and monopoly that threatened equality.",
    "role": "core",
-   "predict": {
-    "question": "A mining district in the Rockies opens. At first there are far more unclaimed creek beds than prospectors. Years later every bed is staked. The rules for staking a claim never change, and some prospectors stay better funded than others the whole time. What happens to how unequally claims are held?",
-    "options": [
-     "It stays roughly equal, because the rules were fair the whole time",
-     "It stays low while beds are free, then climbs as the last beds are staked",
-     "It becomes more equal, because the weakest prospectors give up and leave",
-     "It is set from day one by the funding gap, whether or not beds remain"
-    ],
-    "answer": 1,
-    "why": [
-     "Fair rules feel like they should give fair outcomes. In Turner's argument the rules stay fixed while free land runs out, and that alone changes the outcome.",
-     "Correct. While beds are free, anyone squeezed out can stake a new one, so advantages hardly show. Once none are left, being outbid means losing out for good, and the better funded buy up the rest.",
-     "Leaving only evens things out if there is somewhere free to go. Once every bed is staked, the claims of those who leave pass to whoever can buy them, which concentrates ownership.",
-     "The funding gap matters, but in the model a big head start barely moves the curve while land is free. It only bites as the land runs out."
-    ]
-   },
    "terms": [
     {
-     "term": "concentration of ownership",
-     "means": "How much of the total a small group holds. Here it is the share owned by the richest tenth, against an equal-shares line at one tenth."
+     "term": "squatter ideal",
+     "means": "Turner's name for the pioneer belief that each person should be free to compete, without limits, for the land, timber and minerals of the continent"
     },
     {
-     "term": "consolidation",
-     "means": "Turner's word for competitors merging or buying each other out until a few large owners remain."
+     "term": "trust",
+     "means": "A combination of companies brought under one control, large enough to dominate a whole industry"
+    },
+    {
+     "term": "monopoly",
+     "means": "Control of a resource or an industry by one firm or a small group, so others cannot compete on equal terms"
     }
    ],
-   "model": {
-    "title": "Who owns what as the land fills up",
-    "note": "Teaching model: a whole frontier economy is shrunk to one curve. The richest tenth's share is an invented function of how much land is already claimed and how big a head start the strongest have. Turner gives no formula and no such figures. The shape follows his argument: near-equal while land is plentiful, rising faster and faster as it runs out. Numbers are illustrative, not the paper's data.",
-    "controls": [
-     {
-      "id": "taken",
-      "label": "Share of the land already claimed",
-      "kind": "slider",
-      "min": 0,
-      "max": 1,
-      "step": 0.05,
-      "default": 0.6,
-      "unit": "",
-      "color": 1
-     },
-     {
-      "id": "edge",
-      "label": "Head start of the strongest",
-      "kind": "slider",
-      "min": 0.5,
-      "max": 3,
-      "step": 0.25,
-      "default": 1,
-      "unit": "",
-      "color": 2
-     }
-    ],
-    "outputs": [
-     {
-      "id": "top_share",
-      "label": "Owned by the richest tenth",
-      "expr": "0.1 + 0.85 * (1 - exp(-edge)) * pow(taken, 3)",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 0,
-      "color": 0
-     },
-     {
-      "id": "times_fair",
-      "label": "Times an equal share",
-      "expr": "top_share / 0.1",
-      "unit": "×",
-      "decimals": 1,
-      "color": 0
-     },
-     {
-      "id": "left",
-      "label": "Land still free",
-      "expr": "1 - taken",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 0,
-      "color": 1
-     }
-    ],
-    "visual": {
-     "type": "curves",
-     "x": {
-      "label": "Share of the land already claimed",
-      "min": 0,
-      "max": 1
-     },
-     "y": {
-      "label": "Share owned by the richest tenth",
-      "min": 0,
-      "max": 1
-     },
-     "series": [
-      {
-       "id": "owned",
-       "label": "Richest tenth's share",
-       "expr": "0.1 + 0.85 * (1 - exp(-edge)) * pow(x, 3)",
-       "color": 0,
-       "dashed": false
-      }
-     ],
-     "markers": [
-      {
-       "id": "now",
-       "x": "taken",
-       "label": "Now",
-       "color": 1
-      }
-     ],
-     "hlines": [
-      {
-       "id": "equal",
-       "y": 0.1,
-       "label": "Equal shares"
-      }
-     ],
-     "points": [
-      {
-       "id": "here",
-       "x": "taken",
-       "y": "top_share",
-       "label": "",
-       "color": 0
-      }
-     ]
-    }
-   },
-   "animation": {
-    "steps": [
-     {
-      "say": "This curve shows how much of everything the richest tenth of settlers owns. Land gets claimed as you read from left to right.",
-      "focus": "owned",
-      "ms": 4200
-     },
-     {
-      "say": "The flat line marks perfect equality: the richest tenth owning just one tenth.",
-      "focus": "equal",
-      "ms": 3600
-     },
-     {
-      "say": "This slider moves you along in time. It sets how much of the land has already been claimed.",
-      "set": {
-       "taken": 0.85
-      },
-      "focus": "taken",
-      "ms": 4000
-     },
-     {
-      "say": "This one sets how big a head start the strongest have: more money, skill or luck.",
-      "set": {
-       "edge": 2
-      },
-      "focus": "edge",
-      "ms": 4000
-     },
-     {
-      "say": "This box reads the richest tenth's share at the current moment.",
-      "set": {
-       "taken": 0.6,
-       "edge": 1
-      },
-      "focus": "top_share",
-      "ms": 3600
-     }
-    ]
-   },
-   "explore": {
-    "prompt": "Try to make a big head start harmless, then make a small one matter. Watch where on the curve each becomes possible.",
-    "goals": [
-     {
-      "text": "Give the strongest at least double their starting head start, yet keep the richest tenth holding under 15% of everything.",
-      "when": "edge >= 2 && top_share < 0.15",
-      "solution": {
-       "edge": 2.5,
-       "taken": 0.3
-      },
-      "hints": [
-       "A big head start only turns into ownership if the losers have nowhere else to go.",
-       "Raise the head start, then move back to a time when most of the land was still free.",
-       "With a large head start, the share stays under 15% only while well under half the land is claimed."
-      ]
-     },
-     {
-      "text": "Keep the head start smaller than where it starts, and still leave the richest tenth with more than 35% of everything.",
-      "when": "edge < 1 && top_share > 0.35",
-      "solution": {
-       "edge": 0.75,
-       "taken": 0.9
-      },
-      "hints": [
-       "If a small edge can't push the curve up, what else can?",
-       "Lower the head start, then let the land run out.",
-       "With a small head start, the share passes 35% only in the last stretch, when less than a fifth of the land is still free."
-      ]
-     }
-    ]
-   },
+   "recap": "Free competition and democracy were partners only while free land let losers start over. Once the land was gone, competition turned into trusts and monopoly, and the two ideals pulled apart.",
    "understand": {
-    "feedback": {
-     "correct": "Right. The staking rules never changed. What changed was whether a prospector who lost out could simply stake a fresh bed. Once none were left, the same competition sorted claims into fewer hands.",
-     "incorrect": "It is natural to think fair rules give fair outcomes, or that the head start alone decides things. In Turner's argument the rules and the edge can stay the same while the outcome flips. What flips it is free land running out, which closes the escape route."
-    },
-    "walkthrough": {
-     "steps": [
-      {
-       "say": "Start early, with only a tenth of the land claimed. The richest tenth owns about 10%, sitting right on the equality line.",
-       "set": {
-        "taken": 0.1,
-        "edge": 1
-       },
-       "focus": "top_share",
-       "ms": 4200
-      },
-      {
-       "say": "Now hand the strongest a huge head start. The share barely moves. Anyone outbid just walks west to free land: the gate of escape from before.",
-       "set": {
-        "edge": 3
-       },
-       "focus": "edge",
-       "ms": 4800
-      },
-      {
-       "say": "Let half the land be claimed. Same rules, same head start, and the richest tenth now holds about a fifth.",
-       "set": {
-        "taken": 0.5
-       },
-       "focus": "here",
-       "ms": 4200
-      },
-      {
-       "say": "Near the end the curve leaps. With a tenth of the land left, the richest tenth owns more than two-thirds.",
-       "set": {
-        "taken": 0.9
-       },
-       "focus": "owned",
-       "ms": 4400
-      },
-      {
-       "say": "With nothing left to claim, they hold about nine-tenths. This is concentration of ownership. Turner calls the process consolidation: competitors absorbed until a few remain.",
-       "set": {
-        "taken": 1
-       },
-       "focus": "top_share",
-       "ms": 5200
-      },
-      {
-       "say": "Shrink the head start to its smallest. The richest tenth still ends with over four times an equal share. Even a small edge compounds once there is no escape.",
-       "set": {
-        "edge": 0.5
-       },
-       "focus": "times_fair",
-       "ms": 4800
-      },
-      {
-       "say": "Look along the whole curve: flat while land is plentiful, steep as it runs out. The rules never changed. Only the free land did.",
-       "set": {
-        "edge": 1.5,
-        "taken": 0.95
-       },
-       "focus": [
-        "owned",
-        "left"
-       ],
-       "ms": 5000
-      }
-     ]
-    },
-    "explanation": "While unclaimed land is plentiful, losing a contest costs little, because you can move on and claim more. So even large advantages barely show up in who owns what. As the land runs out, that escape closes. The same competition then lets the strongest buy out or absorb the rest, and ownership concentrates. Turner argues this from the record of his own lifetime. He traces pioneer individualism into the panics of 1873, 1893 and 1907, which brought corporations, then pools and trusts, and he points to Lake Superior iron coming under a single steel corporation. This is an interpretive historian's argument built on examples, not a measured relationship, and other causes such as railroads, steam power and new finance were at work at the same time.",
-    "quote": "In almost exact ratio to the diminution of the supply of unpossessed resources, combinations of capital have increased in magnitude and in efficiency of conquest. The solitary backwoodsman wielding his ax at the edge of a measureless forest is replaced by companies capitalized at millions, operating railroads, sawmills, and all the enginery of modern machinery to harvest the remaining trees.",
-    "quote_where": "Chapter X, Pioneer Ideals and the State University"
+    "explanation": "Turner says pioneers held two ideals at once. One was the freedom of each person to compete without limits for land, timber and minerals; he calls this the squatter ideal. The other was democracy: equality, rule by the people, and a hatred of monopoly and special privilege. While free land lay to the west, the two fit together, because whoever lost the race for the best plot could move on and start again, so no winner could lock in a lead. Once the land was taken, the same free competition let the strongest combine into a trust, many companies brought under one control, which could dominate a whole industry and threaten equality. This is Turner's interpretation, set out in essays written between 1893 and 1918, not a statistical test, and he also credits worldwide forces such as steam power and large-scale industry.",
+    "quote": "But American democracy was based on an abundance of free lands; these were the very conditions that shaped its growth and its fundamental traits. Thus time has revealed that these two ideals of pioneer democracy had elements of mutual hostility and contained the seeds of its dissolution.",
+    "quote_where": "Chapter XII, \"Social Forces in American History\" (1910 address)"
    },
-   "check": {
-    "kind": "model",
-    "task": "Set the head start to 1.5. Then find the moment when the richest tenth owns about a quarter of everything (between 22% and 28%).",
-    "when": "abs(edge - 1.5) < 0.01 && top_share > 0.22 && top_share < 0.28",
-    "solution": {
-     "edge": 1.5,
-     "taken": 0.6
-    },
-    "hint": "The curve stays flat for a long time and only bends up late. A quarter of the ownership comes well after a quarter of the land is claimed.",
-    "misconception": "That concentration grows in step with the land claimed, so a quarter of the ownership would arrive when a quarter of the land is gone. While land is plentiful, the escape route keeps shares close to equal."
-   },
-   "connect": {
-    "equation": [
-     {
-      "text": "C",
-      "link": "top_share"
-     },
-     {
-      "text": " = 0.10 + 0.85(1 − e^{−"
-     },
-     {
-      "text": "a",
-      "link": "edge"
-     },
-     {
-      "text": "}) × "
-     },
-     {
-      "text": "L",
-      "link": "taken"
-     },
-     {
-      "text": "^{3}"
-     }
-    ],
-    "caption": "This is the model's own rule. Turner gives no equation. C is the richest tenth's share and 0.10 is the equal-shares floor. a is the head start, which sets how high the curve can finally climb. L is the share of land already claimed. Cubing L keeps C near the floor while land is plentiful, so the head start barely matters there, and then makes it climb steeply as L nears 1."
-   },
-   "recap": "The same free competition that keeps people near-equal while land is plentiful hands ownership to a few once the land runs out.",
    "activities": [
     {
-     "id": "watch",
-     "kind": "watch"
-    },
-    {
-     "id": "walk",
-     "kind": "walk"
-    },
-    {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
     },
     {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
+     "id": "ev",
+     "kind": "stages",
+     "prompt": "Follow the conflict as it comes into view, one stage at a time. Watch what happens to free competition once the land runs out.",
+     "stages": [
+      {
+       "label": "1. Land beyond the horizon (before about 1880)",
+       "text": "Pioneers competed hard for the best bottom lands, timber tracts, salt springs and ore beds. Turner says the West was so free and so vast that the pioneer was hardly conscious any danger to equality could come from this competition. In 1852 Delegate Sibley of Minnesota told Congress that laws punishing lumbermen for cutting government timber should be 'expunged as a disgrace.' Competing freely and being equal seemed to be the same thing."
+      },
+      {
+       "label": "2. The line disappears (1890)",
+       "text": "The Superintendent of the Census announced that the frontier line could no longer be drawn. Most of the land that was left was mountain or arid. Turner notes it could only be won with irrigation works, joint effort and capital beyond the reach of a small farmer. The safety valve was closing."
+      },
+      {
+       "label": "3. Competition becomes combination (1873–1907)",
+       "text": "Turner traces a chain of business panics. After 1873, separate businesses merged into corporations. After 1893 came pools and trusts, combinations of companies under one control. By the panic of 1907, he writes, it 'seemed not impossible' that free competition would end in monopoly of the most important resources by a small group of men."
+      },
+      {
+       "label": "4. The giants",
+       "text": "The United States Steel Corporation was organized with stocks and bonds totalling $1,400,000,000 (Turner's figure) and came to dominate iron mining and steel making. E. H. Harriman drew the railroads into a few great groups and, before he died, hoped to bring them all under his control. Turner's summary: in almost exact proportion as unclaimed resources shrank, combinations of capital grew."
+      },
+      {
+       "label": "5. Turner's verdict",
+       "text": "The freedom to compete that once spread opportunity now concentrated it. Turner concludes that the two pioneer ideals had always held 'elements of mutual hostility', and free land had been hiding the conflict. He adds a caveat: these changes were partly the work of worldwide forces of steam and large-scale industry, not only of the closing frontier."
+      }
+     ],
+     "takeaway": "Free land kept unlimited competition from producing lasting winners. Once the land was gone, competition produced trusts and monopoly, the very thing the pioneer's democratic ideal opposed."
     },
     {
-     "id": "goal_1",
-     "kind": "goal",
-     "i": 1
+     "id": "s",
+     "kind": "sort",
+     "title": "Which ideal is speaking?",
+     "prompt": "Each card is a pioneer-era claim or practice drawn from Turner's essays. Sort it under the ideal it expresses.",
+     "groups": [
+      {
+       "id": "freedom",
+       "label": "Individual freedom to compete (the squatter ideal)"
+      },
+      {
+       "id": "democracy",
+       "label": "Democracy and equality"
+      }
+     ],
+     "cards": [
+      {
+       "id": "c1",
+       "text": "Laws punishing lumbermen for cutting public timber should be wiped off the books (Sibley, 1852).",
+       "group": "freedom",
+       "feedback": "This puts the individual's right to take resources ahead of any public limit. That is the squatter ideal in its purest form."
+      },
+      {
+       "id": "c2",
+       "text": "Among the pioneers, one man was as good as his neighbor.",
+       "group": "democracy",
+       "feedback": "This is about equal standing, not about winning a race for resources. It belongs to democracy."
+      },
+      {
+       "id": "c3",
+       "text": "A passionate hatred for aristocracy, monopoly and special privilege.",
+       "group": "democracy",
+       "feedback": "This is the democratic ideal. Note the word monopoly: it is exactly what unlimited competition later produced, which is where the clash shows."
+      },
+      {
+       "id": "c4",
+       "text": "It was 'every one for himself'; honor went to the man whose grasp was strongest.",
+       "group": "freedom",
+       "feedback": "This celebrates winning the competition, not equal standing. It is the competitive ideal."
+      },
+      {
+       "id": "c5",
+       "text": "New frontier states entered the Union with voting rights for all adult men.",
+       "group": "democracy",
+       "feedback": "Broad voting rights are about everyone sharing in government. That is democracy, as the previous concept showed."
+      },
+      {
+       "id": "c6",
+       "text": "Restrictive law that prohibits speculation will produce a 'moribund and conservative people' (Harriman).",
+       "group": "freedom",
+       "feedback": "Harriman defends unlimited competition and speculation against regulation. He is speaking for the squatter ideal, even as a railroad magnate."
+      },
+      {
+       "id": "c7",
+       "text": "The self-made man was the Western ideal, the kind of man anyone might become.",
+       "group": "freedom",
+       "feedback": "This is tricky, because 'anyone might become' sounds equal. The self-made man rises by beating others in open competition, so Turner ties it to freedom to rise. It only stays democratic while there is room for everyone to try."
+      },
+      {
+       "id": "c8",
+       "text": "Government of the people, by the people and for the people.",
+       "group": "democracy",
+       "feedback": "Turner uses Lincoln's phrase as his name for the democratic ideal itself."
+      }
+     ],
+     "takeaway": "Both lists were sincerely pioneer. Hold them side by side and the clash appears: the freedom cards allow someone to win big and keep winning, while the democracy cards forbid monopoly and privilege.",
+     "hints": [
+      "Ask whether the claim is about winning a race for resources or about people standing as equals.",
+      "Watch for the word 'monopoly' and for anything that pushes back against limits on taking or speculating."
+     ]
     },
     {
-     "id": "predict",
-     "kind": "predict"
+     "id": "q1",
+     "kind": "choice",
+     "mode": "determinate",
+     "question": "According to Turner, why did these two ideals seem to live together peacefully for most of the pioneer era?",
+     "options": [
+      {
+       "text": "Free land kept opening to the west, so whoever lost out could move on and compete again, and no winner could lock in a permanent lead.",
+       "feedback": "Correct. Abundant land was the hidden condition that made unlimited competition compatible with equality. Turner says the pioneer thought democracy came from political institutions and 'failed to see that it was primarily the result of the free lands'."
+      },
+      {
+       "text": "Government regulation kept the competition fair.",
+       "feedback": "Not supported. Turner says that 'to the pioneer government was an evil', and pioneers like Sibley resisted even the land laws. Fair play came from the land supply, not from regulation."
+      },
+      {
+       "text": "The pioneers were all equally poor, so competition could never make anyone richer than anyone else.",
+       "feedback": "Not quite. Pioneers did compete, and some won the best bottom lands, mill sites and town sites. Inequality could appear, but it could not harden while fresh land waited further west."
+      },
+      {
+       "text": "The two ideals never really conflicted; trusts arose for unrelated reasons.",
+       "feedback": "This contradicts Turner, who says the ideals 'had elements of mutual hostility'. He does admit worldwide forces of steam and industry played a part, but he ties the timing of the trusts to the shrinking supply of unclaimed resources."
+      }
+     ],
+     "answer": 0,
+     "hints": [
+      "Think back to the 'gate of escape' from the earlier concept.",
+      "What happened to a pioneer who lost the race for the best land in 1840, and what changed after 1890?"
+     ]
     },
     {
-     "id": "reveal",
-     "kind": "reveal"
-    },
-    {
-     "id": "check",
-     "kind": "check"
-    },
-    {
-     "id": "connect",
-     "kind": "connect"
+     "id": "q2",
+     "kind": "choice",
+     "mode": "interpretive",
+     "question": "Harriman said the country was built by 'magnificent pioneers' and that the trust-builders were carrying on their work. How should we read the captains of industry in Turner's argument?",
+     "options": [
+      {
+       "text": "As heirs of the pioneers: they carried on the squatter ideal of free competition for resources.",
+       "feedback": "Well supported in part. Turner says the masters of industry 'regard themselves as pioneers under changed conditions', that many rose from pioneer society, and that they applied 'squatter doctrines' to industry. The limit: this reading sees only one of the two ideals and leaves out what their success did to equality."
+      },
+      {
+       "text": "As betrayers of the pioneers: monopoly was exactly what pioneer democracy hated.",
+       "feedback": "Partly supported. Pioneers had 'a passionate hatred for aristocracy, monopoly and special privilege', and Turner calls the new concentration a threat to democracy. The limit: Turner does not paint them as villains. He notes Carnegie's democratic ideals and calls them 'the product of these democratic conditions'."
+      },
+      {
+       "text": "As both at once: faithful heirs of the competitive ideal, and for that very reason a threat to the democratic one.",
+       "feedback": "This is closest to how Turner frames the conflict. The same freedom that made them is what endangered equality once land was gone. The limit: it is Turner's interpretation, and he left the outcome open. He wrote that it was 'still to be determined' whether they were a menace or 'the most efficient factor' for adapting democratic control."
+      }
+     ],
+     "hints": [
+      "Ask which of the two ideals each reading keeps in view.",
+      "Does Turner judge these men, or does he describe a conflict between ideals that they embody?"
+     ]
     }
    ]
   },
   {
    "id": "legislation_replaces_land",
-   "title": "When the frontier closes, law steps in",
-   "idea": "Free land had protected equality and democracy, so when it was gone, Turner argues, democrats turned to government regulation as a substitute path to the same goal.",
+   "title": "When the land ran out, the pioneer turned to government",
+   "idea": "Having lost free land as democracy's safeguard, Western farmers dropped their old suspicion of government and demanded regulation, income taxes, railway control and direct popular voting as substitutes.",
    "role": "contribution",
-   "predict": {
-    "question": "Picture the 1830s, with cheap land still plentiful in the West. A reformer proposes heavy government regulation of business to protect equality. By Turner's argument, what would it have done?",
-    "options": [
-     "Added little: free land was already keeping people roughly equal, and pioneers distrusted government restraint",
-     "Added a lot: regulation protects democracy just as strongly whatever the land situation",
-     "Caused ownership to pile up in a few hands",
-     "Closed the frontier faster"
-    ],
-    "answer": 0,
-    "why": [
-     "Correct. Regulation is a substitute route. While the escape to free land works, it is already doing the job, and Turner says the pioneer then saw government as \"a necessary evil\" at best.",
-     "Tempting if you see regulation as a fixed good. In Turner's account it mattered once the free-land route was cut. In the model, regulation adds almost nothing when free land is high.",
-     "Some fear rules would favour the powerful. In this argument regulation pushes against concentration. What drives concentration is free competition once land runs out.",
-     "Regulation and land supply are separate causes here. The frontier closed because the land was taken up, not because of laws on business."
-    ]
-   },
    "terms": [
     {
-     "term": "safety valve",
-     "means": "Turner's name for free land as an outlet: discontented people could leave, which eased pressure in the East"
-    },
-    {
-     "term": "monopoly",
-     "means": "Control of a key resource or industry by one firm or a small group"
-    },
-    {
-     "term": "social control",
-     "means": "Steering the economy through laws and regulation rather than leaving everything to individual competition"
+     "term": "Grangers",
+     "means": "An organized movement of Western farmers after the Civil War that attacked railway rates and pushed for government regulation of them"
     },
     {
      "term": "Populists",
-     "means": "Farmer-led reformers of the 1890s who demanded government action on railways, money and credit"
+     "means": "The 1890s farmers' party, strongest on the prairies, that asked government to own railroads, tax incomes and give voters direct power"
+    },
+    {
+     "term": "initiative, referendum and recall",
+     "means": "Tools of direct voting: citizens propose laws, approve or reject laws, and remove officials, without waiting for legislators"
+    },
+    {
+     "term": "social control",
+     "means": "Turner's phrase for society steering economic life through laws and regulation, instead of leaving each person to compete alone"
     }
    ],
-   "model": {
-    "title": "Two routes to equality: free land, or regulation",
-    "note": "Teaching model: Turner gives no equations. This turns his qualitative argument into one simple rule. Free competition always runs, and it concentrates ownership in proportion to how much land is gone. Regulation can cancel up to 80% of that concentration, and each unit of regulation trims room for individual initiative by 0.4. Democracy is scored as 1 minus concentration. All numbers are illustrative, not the paper's data. Real history involved many more causes, such as immigration, cities and industry.",
-    "controls": [
-     {
-      "id": "land",
-      "label": "Free land left",
-      "kind": "slider",
-      "min": 0,
-      "max": 1,
-      "step": 0.05,
-      "default": 1,
-      "unit": "",
-      "color": 0
-     },
-     {
-      "id": "reg",
-      "label": "Government regulation",
-      "kind": "slider",
-      "min": 0,
-      "max": 1,
-      "step": 0.05,
-      "default": 0,
-      "unit": "",
-      "color": 2
-     }
-    ],
-    "outputs": [
-     {
-      "id": "concentration",
-      "label": "Ownership in few hands",
-      "expr": "(1 - land) * (1 - 0.8 * reg)",
-      "unit": "",
-      "decimals": 2,
-      "color": 3
-     },
-     {
-      "id": "democracy",
-      "label": "Equality & democracy",
-      "expr": "1 - concentration",
-      "unit": "",
-      "decimals": 2,
-      "color": 1
-     },
-     {
-      "id": "from_land",
-      "label": "…supplied by free land",
-      "expr": "land",
-      "unit": "",
-      "decimals": 2,
-      "color": 0
-     },
-     {
-      "id": "from_reg",
-      "label": "…supplied by regulation",
-      "expr": "0.8 * reg * (1 - land)",
-      "unit": "",
-      "decimals": 2,
-      "color": 2
-     },
-     {
-      "id": "freedom",
-      "label": "Room for individual initiative",
-      "expr": "1 - 0.4 * reg",
-      "unit": "",
-      "decimals": 2,
-      "color": 4
-     }
-    ],
-    "visual": {
-     "type": "causal",
-     "nodes": [
-      {
-       "id": "land_node",
-       "label": "Free land left",
-       "x": 15,
-       "y": 15,
-       "value": "land"
-      },
-      {
-       "id": "reg_node",
-       "label": "Government regulation",
-       "x": 50,
-       "y": 15,
-       "value": "reg"
-      },
-      {
-       "id": "comp_node",
-       "label": "Free competition",
-       "x": 15,
-       "y": 75,
-       "value": "1"
-      },
-      {
-       "id": "conc_node",
-       "label": "Ownership in few hands",
-       "x": 50,
-       "y": 75,
-       "value": "concentration"
-      },
-      {
-       "id": "dem_node",
-       "label": "Equality & democracy",
-       "x": 85,
-       "y": 40,
-       "value": "democracy"
-      },
-      {
-       "id": "indiv_node",
-       "label": "Room for individual initiative",
-       "x": 85,
-       "y": 88,
-       "value": "freedom"
-      }
-     ],
-     "edges": [
-      {
-       "from": "land_node",
-       "to": "dem_node",
-       "strength": "land",
-       "label": "escape route"
-      },
-      {
-       "from": "comp_node",
-       "to": "conc_node",
-       "strength": "1 - land",
-       "label": "piles up as land runs out"
-      },
-      {
-       "from": "conc_node",
-       "to": "dem_node",
-       "strength": "-concentration",
-       "label": "erodes"
-      },
-      {
-       "from": "reg_node",
-       "to": "conc_node",
-       "strength": "-0.8 * reg",
-       "label": "curbs"
-      },
-      {
-       "from": "reg_node",
-       "to": "indiv_node",
-       "strength": "-0.4 * reg",
-       "label": "restrains"
-      }
-     ]
-    }
-   },
-   "animation": {
-    "steps": [
-     {
-      "say": "This diagram shows causes and effects in Turner's story. Arrows carry influence: thicker means stronger, and negative arrows push down.",
-      "focus": "dem_node",
-      "ms": 3000
-     },
-     {
-      "say": "This slider is the free land left in the West. Right now it is all still open, feeding equality and democracy directly.",
-      "set": {
-       "land": 1
-      },
-      "focus": "land",
-      "ms": 3000
-     },
-     {
-      "say": "Free competition is always running at the bottom. How much it piles up ownership depends on how much land is gone.",
-      "focus": "comp_node",
-      "ms": 3000
-     },
-     {
-      "say": "This slider sets government regulation. Watch it press down on ownership in few hands, and also trim room for individual initiative.",
-      "set": {
-       "reg": 0.5
-      },
-      "focus": "reg",
-      "ms": 3400
-     },
-     {
-      "say": "These numbers show the level of equality and democracy, and how much of it each route supplies.",
-      "set": {
-       "reg": 0
-      },
-      "focus": [
-       "democracy",
-       "from_land",
-       "from_reg"
-      ],
-      "ms": 3000
-     }
-    ]
-   },
-   "explore": {
-    "prompt": "You are a reformer in 1900, and the frontier is gone. Can you rebuild equality by a different road, and what does it cost?",
-    "goals": [
-     {
-      "text": "Close the frontier, leaving almost no free land, and still lift equality and democracy to 0.7 or more",
-      "when": "land <= 0.1 && democracy >= 0.7",
-      "solution": {
-       "land": 0,
-       "reg": 0.9
-      },
-      "hints": [
-       "Once the free-land arrow is cut, which other arrow can reach ownership in few hands?",
-       "Raise government regulation and watch the 'curbs' arrow push concentration down.",
-       "A little regulation is not enough here: you need most of the slider's range."
-      ]
-     },
-     {
-      "text": "With the frontier closed, protect democracy without overdoing it: keep equality and democracy at 0.59 or more while room for individual initiative stays at 0.69 or more",
-      "when": "land <= 0.1 && democracy >= 0.59 && freedom >= 0.69",
-      "solution": {
-       "land": 0,
-       "reg": 0.75
-      },
-      "hints": [
-       "Regulation raises one of these numbers and lowers the other, so you need a middle setting.",
-       "Step regulation up one notch at a time. Stop as soon as democracy clears its bar, then check initiative.",
-       "Only one notch of the regulation slider fits both bars, and it sits in the upper half."
-      ]
-     }
-    ]
-   },
+   "recap": "Free land had protected pioneer democracy for free; once it was gone, the pioneer's heirs made law do the protecting.",
    "understand": {
-    "feedback": {
-     "correct": "Right. Regulation is a substitute route: it does its work where the free-land route has been cut. With land plentiful, equality was already secured, and pioneers saw government restraint as a threat to their freedom.",
-     "incorrect": "You may have pictured regulation as helping equally in every era. In Turner's argument, democrats turned to law because the land was gone. While cheap land remained, it was already keeping people roughly equal, so regulation had little to add."
-    },
-    "walkthrough": {
-     "steps": [
-      {
-       "say": "Start on the open frontier with no regulation. Democracy is at its top, and all of it comes from free land. This is the escape route from earlier: Turner calls it a safety valve.",
-       "set": {
-        "land": 1,
-        "reg": 0
-       },
-       "focus": [
-        "democracy",
-        "from_land"
-       ],
-       "ms": 4200
-      },
-      {
-       "say": "Now half the land is taken. The rules haven't changed, and competition is just as free. But with fewer places to escape to, ownership starts to pile up, as you saw in the last concept.",
-       "set": {
-        "land": 0.5
-       },
-       "focus": "conc_node",
-       "ms": 4200
-      },
-      {
-       "say": "The frontier closes, as the 1890 census announced. Free competition now ends in monopoly: ownership sits almost entirely in few hands, and democracy collapses in this model.",
-       "set": {
-        "land": 0
-       },
-       "focus": [
-        "concentration",
-        "democracy"
-       ],
-       "ms": 4400
-      },
-      {
-       "say": "Here come the Populists, and later Bryan and Roosevelt, demanding social control: laws on railways, trusts and money. Regulation at half strength already rebuilds some equality.",
-       "set": {
-        "reg": 0.5
-       },
-       "focus": [
-        "from_reg",
-        "reg"
-       ],
-       "ms": 4400
-      },
-      {
-       "say": "Push regulation to full. Democracy is back up to 0.8, nearly all supplied by the new route. But notice the price: room for individual initiative has dropped.",
-       "set": {
-        "reg": 1
-       },
-       "focus": [
-        "democracy",
-        "freedom"
-       ],
-       "ms": 4400
-      },
-      {
-       "say": "Now reopen the frontier while keeping full regulation. The regulation share falls to zero: it is a substitute that matters only once the land route is gone.",
-       "set": {
-        "land": 1,
-        "reg": 1
-       },
-       "focus": "from_reg",
-       "ms": 4200
-      },
-      {
-       "say": "Here is the whole argument. The frontier made Americans individualists and kept them equal while land lasted. Once it ran out, competition bred monopoly, and the pioneers' heirs turned to law to save democracy.",
-       "set": {
-        "land": 0,
-        "reg": 1
-       },
-       "focus": [
-        "democracy",
-        "freedom",
-        "reg_node"
-       ],
-       "ms": 6500
-      }
-     ]
-    },
-    "explanation": "Turner's frontier did two jobs at once. It let people compete freely, and because cheap land was always available, competition left them roughly equal. When the free land was gone, the same competition concentrated ownership in a few hands: trusts, railway combines, a steel giant. Turner argues that Western reformers, from the Grangers and Populists to Bryan and Roosevelt, responded by turning to government regulation, a new route to the old goal of democracy. He also warns of the cost: regulation restrains the competitive individualism that was the frontier's other ideal. This is an interpretive argument built from election patterns, party platforms and census figures. It is not a measured causal estimate, and other forces such as immigration and industrialisation were changing at the same time.",
-    "quote": "Legislation is taking the place of the free lands as the means of preserving the ideal of democracy. But at the same time it is endangering the other pioneer ideal of creative and competitive individualism.",
-    "quote_where": "Chapter XI, The West and American Ideals"
+    "explanation": "Turner ends on a reversal. The pioneer had treated government as a nuisance: whenever conditions in the East pinched, he could leave for free land in the West, so the land itself protected his equality. Once the 1890 census found no frontier line, his heirs on the prairies faced mortgages, railway rates and trusts with nowhere left to move, so they asked government to do what open land used to do. The Grangers, an organized farmers' movement, pressed for regulation of railway rates. The Populists went further and demanded government-owned railroads, an income tax, and direct voting through the initiative, referendum and recall, which let voters propose laws, approve or reject laws, and remove officials. Turner calls this a shift from individualism to 'social control through regulation by law', made to keep the older ideal of democracy alive. This is his interpretation of party platforms, speeches and voting patterns, not a measured cause, and he names the cost himself: laws that protect democracy also limit the creative, competitive individualism the pioneer prized.",
+    "quote": "In brief, the defenses of the pioneer democrat began to shift, from free land to legislation, from the ideal of individualism to the ideal of social control through regulation by law.",
+    "quote_where": "Chapter X, Pioneer Ideals and the State University"
    },
-   "check": {
-    "kind": "model",
-    "task": "Put the model at the moment just before the crisis: no regulation at all, free land still keeping equality and democracy at 0.6 or more, yet free competition has already put at least 0.3 of ownership in few hands.",
-    "when": "reg < 0.05 && democracy >= 0.6 && concentration >= 0.3",
-    "solution": {
-     "land": 0.65,
-     "reg": 0
-    },
-    "hint": "Concentration grows gradually as free land shrinks. With no regulation, democracy and concentration trade off one for one, so look for a partly used-up frontier.",
-    "misconception": "That ownership piles up only after the frontier has fully closed, rather than gradually as the land runs out."
-   },
-   "connect": {
-    "equation": [
-     {
-      "text": "democracy",
-      "link": "democracy"
-     },
-     {
-      "text": " = 1 − (1 − "
-     },
-     {
-      "text": "L",
-      "link": "land"
-     },
-     {
-      "text": ") × (1 − 0.8 × "
-     },
-     {
-      "text": "R",
-      "link": "reg"
-     },
-     {
-      "text": ")"
-     }
-    ],
-    "caption": "This is the model's rule, not an equation from Turner, who argued in words. L (free land left) and R (government regulation) are the two sliders. (1 − L) is how much competition concentrates ownership once land is gone, and (1 − 0.8 × R) is how much of that concentration regulation fails to cancel. Expanded, democracy = L + 0.8 × R × (1 − L): the free-land route plus a regulation route that only counts where land is gone."
-   },
-   "recap": "Free land kept competitive Americans equal. When it ran out, competition bred monopoly, and democrats turned to law as the substitute route to equality, at some cost to individualism.",
    "activities": [
     {
-     "id": "watch",
-     "kind": "watch"
-    },
-    {
-     "id": "walk",
-     "kind": "walk"
-    },
-    {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
     },
     {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
+     "id": "cmp",
+     "kind": "compare",
+     "prompt": "Turner sums up the turn in one sentence: 'The individualism of the Kentucky pioneer of 1796 was giving way to the Populism of the Kansas pioneer of 1896.' Set the two types side by side. Look for what changed, and also for what stayed the same.",
+     "cases": [
+      {
+       "label": "Kentucky pioneer, 1796",
+       "text": "He clears his farm with ax and rifle and often squats on land before any title is settled. He sees the tax-gatherer as 'a representative of oppression', and his neighbours' petitions for statehood say that 'a fool can sometimes put on his clothes better than a wise man can do it for him.' He wants government small and local. If the East presses on him, more free land lies just west, and that open land keeps him equal."
+      },
+      {
+       "label": "Kansas Populist, 1896",
+       "text": "He was usually born in Ohio, Indiana or Illinois, a son of that westward-moving stock. He has pushed onto the dry plains, borrowed Eastern capital and mortgaged his farm, and he depends on railroads to reach a market. Dry seasons and falling prices hit him, and no free land remains to escape to. He demands free silver, government ownership of railroads, an income tax, postal savings banks, farm credit, primary elections, direct election of senators, and the initiative, referendum and recall."
+      }
+     ],
+     "takeaway": "The tools flipped, from keeping government away to calling it in. The goal stayed the same: both men wanted a society of equal chances for the common man. The first got it from open land. The second, with the land gone, tried to get it through law."
     },
     {
-     "id": "goal_1",
-     "kind": "goal",
-     "i": 1
+     "id": "o",
+     "kind": "order",
+     "prompt": "Turner says the West's demands on government 'have taken increasing proportions in each region of Western Advance.' Put these steps in the order they rose, from earliest to latest.",
+     "items": [
+      "Pioneers of the early 1800s ask Congress for national aid to roads and canals",
+      "After the Civil War, Grangers attack railway rates and seek regulation, while Greenbackers press for more paper money",
+      "In the early 1890s, Populists win seats (Kansas, 1891) and demand government ownership of the railroads",
+      "In 1896 the Democrats under Bryan take up many Populist principles at the Chicago convention",
+      "Around 1910, Roosevelt's 'New Nationalism' demands more federal power to curb monopolies and conserve resources"
+     ],
+     "explanation": "Turner traces one line of effort that grows at each step. Early pioneers wanted government help: roads and canals to reach markets. On the prairies the Grangers went further and wanted rules over private railways, and the Greenback movement, by his account, 'grew into' the money demands of the Populists. The Populists then asked government to own the railroads outright and to put power directly into voters' hands. In 1896 a major party adopted much of that program. By 1910 the 'insurgent West' was asking the federal government itself to rein in the trusts. Each step asks more of government, and each comes as free land shrinks.",
+     "hints": [
+      "At each step, ask how much the farmers want government to do: help, regulate, own, or police whole industries.",
+      "Turner places national aid to roads and canals in 'the first third of the century', long before the prairies were settled.",
+      "Bryan's 1896 campaign adopted ideas the Populists had already raised, so the Populists come before Bryan."
+     ]
     },
     {
-     "id": "predict",
-     "kind": "predict"
-    },
-    {
-     "id": "reveal",
-     "kind": "reveal"
-    },
-    {
-     "id": "check",
-     "kind": "check"
-    },
-    {
-     "id": "connect",
-     "kind": "connect"
+     "id": "q",
+     "kind": "choice",
+     "mode": "determinate",
+     "question": "Turner's pioneers distrusted government, yet their heirs asked for much more of it. What, in his account, explains the reversal?",
+     "options": [
+      {
+       "text": "They gave up on democracy and turned to socialism instead.",
+       "feedback": "Turner says the opposite. The pioneer democrat 'had no sympathy with a radical reconstruction of society by the revolution of socialism', and his alliances with organized labor were 'only half-hearted.' The goal stayed democracy. Only the means changed."
+      },
+      {
+       "text": "Their goal never changed. Free land had protected equality automatically, and once it was gone they used law to do that protecting.",
+       "feedback": "Yes, and this is the lesson's central point. The same free land that made pioneers fiercely individualistic also made them democrats, because anyone pushed down could leave and start over. When the land ran out, free competition produced trusts, and the anti-government pioneer's heirs turned to regulation to save the democracy that open land had once protected for free. In Turner's words, the Western radical 'must sacrifice his ideal of individualism and free competition in order to maintain his ideal of democracy.'"
+      },
+      {
+       "text": "European immigrants brought a taste for strong government that replaced the pioneer outlook.",
+       "feedback": "Turner does mention this as a contributing influence: Populist settlers 'mingled in new lands with foreign immigrants accustomed to the vigorous authority of European national governments.' But he finds the movement's leaders mostly among native-born men from the Old Northwest, and his main cause is the end of free land."
+      },
+      {
+       "text": "The East had built a strong government, and the West simply copied it.",
+       "feedback": "This reverses Turner's picture. He says these pioneer ideals, 'phrased in the new language of national power, did not meet with the assent of the East.' The push for regulation came from the West against Eastern capital, not in imitation of it."
+      }
+     ],
+     "answer": 1,
+     "hints": [
+      "Ask whether the pioneers' goal changed, or only their tool for reaching it.",
+      "Think back to the 'gate of escape': what did free land do for equality when times were hard?"
+     ]
     }
    ]
   }
  ],
  "omitted": [],
+ "activity_plans": [
+  {
+   "concept": "frontier_as_moving_edge",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "connect"
+    ],
+    "why": "The learner slides time forward to watch the edge move west, then toggles scattered settlement and sees the single crossing point disappear. This is the 1890 announcement the book opens with."
+   },
+   "confidence": 0.25,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner slides time forward to watch the edge move west, then toggles scattered settlement and sees the single crossing point disappear. This is the 1890 announcement the book opens with."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "compare",
+      "goal",
+      "predict",
+      "reveal"
+     ],
+     "why": "Comparing a European fortified border with the American moving edge of free land, set beside the model, makes the distinction concrete before the learner moves the line themselves."
+    }
+   ]
+  },
+  {
+   "concept": "beginning_over_again",
+   "chosen": "p2",
+   "plan": {
+    "blocks": [
+     "explain",
+     "worked",
+     "sort"
+    ],
+    "why": "A worked example traces one region, such as Wisconsin, through its stages. The learner then sorts descriptions into trader, rancher, pioneer farmer and settled farmer."
+   },
+   "confidence": 0.61,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "explain",
+      "stages",
+      "order",
+      "choice"
+     ],
+     "why": "Stages reveal Peck's three 'waves' of settlers. The learner then orders the procession of frontier types and decides what the repetition means for American society."
+    },
+    {
+     "blocks": [
+      "explain",
+      "worked",
+      "sort"
+     ],
+     "why": "A worked example traces one region, such as Wisconsin, through its stages. The learner then sorts descriptions into trader, rancher, pioneer farmer and settled farmer."
+    }
+   ]
+  },
+  {
+   "concept": "gate_of_escape",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "choice",
+     "explain",
+     "compare",
+     "trace",
+     "choice"
+    ],
+    "why": "An opening guess about why American wages were high is followed by the explanation and a comparison of East and frontier. The learner then traces the chain from free land to exit option to equality to democracy, and revisits the guess."
+   },
+   "confidence": 0.91,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "choice",
+      "explain",
+      "compare",
+      "trace",
+      "choice"
+     ],
+     "why": "An opening guess about why American wages were high is followed by the explanation and a comparison of East and frontier. The learner then traces the chain from free land to exit option to equality to democracy, and revisits the guess."
+    },
+    {
+     "blocks": [
+      "explain",
+      "passage",
+      "trace"
+     ],
+     "why": "The learner picks which period quotation supports the escape argument, then builds the causal route themselves."
+    }
+   ]
+  },
+  {
+   "concept": "west_gains_weight",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "connect"
+    ],
+    "why": "The learner steps through the census years and finds when the Valley passed a quarter of the nation. They then predict which way voting-rights reforms in old states like New York and Virginia would go."
+   },
+   "confidence": 0.67,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner steps through the census years and finds when the Valley passed a quarter of the nation. They then predict which way voting-rights reforms in old states like New York and Virginia would go."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "passage",
+      "goal"
+     ],
+     "why": "After the walkthrough, the learner matches the rising bar to a passage on western New York forcing an extension of suffrage, then sets the year where the Valley outweighs the old sections."
+    }
+   ]
+  },
+  {
+   "concept": "two_ideals_collide",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "explain",
+     "stages",
+     "sort",
+     "choice"
+    ],
+    "why": "Stages move from abundant land to the closing of the frontier to the rise of the trusts. The learner sorts pioneer claims under 'individual freedom' or 'democracy' and judges where they clash."
+   },
+   "confidence": 0.97,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "explain",
+      "stages",
+      "sort",
+      "choice"
+     ],
+     "why": "Stages move from abundant land to the closing of the frontier to the rise of the trusts. The learner sorts pioneer claims under 'individual freedom' or 'democracy' and judges where they clash."
+    },
+    {
+     "blocks": [
+      "explain",
+      "compare",
+      "match"
+     ],
+     "why": "Comparing Lincoln-era homesteading with the arid West's need for capital and irrigation shows the shift. The learner matches each era to its outcome."
+    }
+   ]
+  },
+  {
+   "concept": "legislation_replaces_land",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "explain",
+     "compare",
+     "order",
+     "choice"
+    ],
+    "why": "Comparing the individualist Kentucky pioneer of 1796 with the Kansas Populist of 1896 sets up the turn. The learner orders the Granger, Greenback, Populist and Progressive movements, then explains the reversal."
+   },
+   "confidence": 0.41,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "explain",
+      "compare",
+      "order",
+      "choice"
+     ],
+     "why": "Comparing the individualist Kentucky pioneer of 1796 with the Kansas Populist of 1896 sets up the turn. The learner orders the Granger, Greenback, Populist and Progressive movements, then explains the reversal."
+    },
+    {
+     "blocks": [
+      "explain",
+      "passage",
+      "trace"
+     ],
+     "why": "The learner finds the passage where legislation replaces free land, then traces the route from closed frontier to concentration to alarm to regulation."
+    }
+   ]
+  }
+ ],
+ "category": {
+  "primary": {
+   "id": "history_archaeology",
+   "name": "History & archaeology"
+  },
+  "secondary": null,
+  "probabilities": {
+   "history_archaeology": 1.0
+  },
+  "confidence": 1.0,
+  "model": "jev-1.13.0"
+ },
  "generation": {
   "provider": "claude",
   "model": "claude-opus-5-5",

@@ -1,70 +1,78 @@
 {
  "version": 1,
  "id": "gallery-wave-interference",
- "title": "Waves That Cancel: From Ripples to the Double-Slit Mystery",
+ "title": "One Particle, Two Slits: How Waves Add, Cancel and Paint Stripes",
  "audience": "A curious adult with no background in this field",
- "created": "2026-10-18T20:23:12",
+ "created": "2026-10-19T02:40:05",
  "source": {
   "title": "Wave interference; 4.7.3: Wave Interference- Standing Waves and Beats; Double-slit experiment; 25.1: The Double-slit Experiment",
-  "authors": "Not stated (Wikipedia contributors and LibreTexts authors)",
+  "authors": "Wikipedia contributors (s1, s3); LibreTexts authors (s2, s4)",
   "year": null,
-  "venue": "Wikipedia and LibreTexts (educational reference pages)",
+  "venue": "Wikipedia and LibreTexts (encyclopedia and textbook pages)",
   "url": ""
  },
  "intro": {
-  "summary": "These four reference pages ask what happens when two waves meet, and why that matters so much in quantum physics. They explain superposition: overlapping waves add, so they can reinforce or cancel depending on how their crests line up. They then follow the idea into the double-slit experiment, where light, electrons and even large molecules make bright and dark bands. Those bands appear even when particles arrive one at a time, and they disappear when you detect which slit each particle used. The sources are textbook and encyclopedia summaries, not original research. What these results mean is still debated, and the pages describe several competing interpretations without settling on one. This lesson leaves out beats, standing waves, coherence of light sources, thin-film colours, the quantum eraser and weak measurement. Each of these would make a good follow-up.",
+  "summary": "These four sources ask what happens when waves overlap, and why that leads to the most puzzling experiment in quantum physics. They show that overlapping waves simply add, so crests meeting crests reinforce and crests meeting troughs cancel. Light sent through two slits makes bright and dark stripes, which is evidence that light behaves like a wave. Even when electrons or photons arrive one at a time, as single dots, the same stripes build up. If you detect which slit each particle used, the stripes disappear. The sources are encyclopedia and textbook summaries, not original research. How to interpret these results is still disputed: Copenhagen, many-worlds, de Broglie–Bohm and relational views all predict the same observations but describe them very differently. This lesson leaves out standing waves, beats, thin films, coherence and interferometry. Good follow-up topics are the quantum eraser, weak measurement, Feynman's path integral and the Mach–Zehnder interferometer.",
   "background": [
-   "A wave is a repeating disturbance: crests (high points) and troughs (low points) that travel through water, air, or an electric field.",
-   "The wavelength is the distance from one crest to the next, and the amplitude is how high a crest rises above the resting level.",
-   "Detectors for light cannot follow its rapid wiggles. They measure brightness, or intensity, which grows with the square of the amplitude.",
-   "In quantum physics, light and matter arrive at a detector as single dots, yet where those dots land is governed by a wave."
+   "A wave is a repeating disturbance, like a ripple, with crests (high points) and troughs (low points).",
+   "The wavelength is the distance from one crest to the next, and the amplitude is how tall the crests are.",
+   "For light, what our eyes and detectors register is brightness (intensity), which goes with the square of the amplitude.",
+   "In quantum physics, a particle such as an electron is described by a wave whose squared size gives the chance of finding the particle at each place."
   ],
   "known": [],
-  "aha": "Fire particles through two slits one at a time and each lands as a single dot, yet together they paint bright and dark bands. Learn which slit each one used, and the bands disappear."
+  "aha": "Particles fired one at a time each land as a single dot, yet together they build a striped pattern that only waves passing through both slits can make, and finding out which slit each one used wipes the stripes away."
  },
  "primer": [
   {
    "heading": "The question",
-   "body": "Drop two stones in a pond and their ripples cross. At some spots the water heaves twice as high. At others it barely moves. Why? And what happens when the 'waves' are made of light, or of electrons? These sources start from that everyday puzzle and follow it to one of the strangest experiments in physics.",
-   "quote": "If a crest of a wave meets a crest of another wave of the same frequency at the same point, then the amplitude is the sum of the individual amplitudes—this is constructive interference.",
-   "quote_where": "Wave interference, Mechanisms",
-   "source_id": "s1",
+   "body": "Is light a stream of tiny particles or a wave? The question was argued over for centuries. Around 1801 Thomas Young suggested a test: let light pass through two narrow slits and see what lands on a screen behind them. Later, physicists asked the same question about electrons, atoms and even large molecules.",
+   "quote": "In modern physics, the double-slit experiment demonstrates that light and matter can exhibit behavior associated with both classical particles and classical waves.",
+   "quote_where": "Double-slit experiment, introduction",
+   "source_ids": [
+    "s3"
+   ],
+   "source_id": "s3"
+  },
+  {
+   "heading": "The rule behind it: waves add",
+   "body": "When two waves meet at a point, their disturbances simply add up. If crest meets crest, the result is twice as tall. If crest meets trough, they cancel. The energy is not destroyed: it moves away from the dark spots and into the bright ones.",
+   "quote": "If the two beams are of equal intensity, the maxima are four times as bright as the individual beams, and the minima have zero intensity.",
+   "quote_where": "Wave interference, Optical wave interference",
    "source_ids": [
     "s1",
     "s2"
-   ]
+   ],
+   "source_id": "s1"
   },
   {
    "heading": "What was done",
-   "body": "The rule is simple. When waves overlap, their disturbances add. Crest on crest makes a bigger crest, and crest on trough cancels. In the double-slit experiment, light passes through two narrow slits and lands on a screen. The two waves travel slightly different distances to each point, so they arrive more or less in step, and the screen shows alternating bright and dark bands. Thomas Young described this around 1801–1803. Historians are not sure he actually performed the two-slit version himself. Since then the experiment has been repeated with electrons, atoms, and molecules of up to 2000 atoms.",
+   "body": "Light from a laser passes through two slits. At each spot on the screen, light from one slit has travelled a little farther than light from the other, so the two waves arrive more or less in step. Later versions sent electrons, atoms and molecules, sometimes so faintly that only one particle was in the apparatus at a time. Other versions placed detectors at the slits to find out which slit each particle used.",
    "source_ids": [
-    "s1",
     "s3",
     "s4"
    ]
   },
   {
    "heading": "What was found",
-   "body": "In dim light, or with an electron gun firing one electron at a time, each particle lands as a single dot. Yet after thousands of dots, the familiar bands appear, as if each particle had gone through both slits. Then comes the second twist. Put a detector at the slits to learn which one each particle used, and the bands vanish. You get only two overlapping single-slit blobs. A 1987 experiment showed a middle ground: partial knowledge of the path blurs the bands without erasing them completely.",
-   "quote": "Remarkably, however, an interference pattern emerges when these particles are allowed to build up one by one",
-   "quote_where": "Double-slit experiment, Interference from individual particles",
-   "source_id": "s3",
+   "body": "Two slits give alternating bright and dark stripes, which only waves can explain. Each particle still lands as a single dot at one random spot. Yet thousands of dots together trace out the stripes. When detectors reveal which slit each particle went through, the stripes vanish.",
+   "quote": "The resulting pattern on the screen is the same as if each individual particle had passed through both slits.",
+   "quote_where": "25.1, The individual particles experiment",
    "source_ids": [
     "s3",
     "s4"
-   ]
+   ],
+   "source_id": "s4"
   },
   {
-   "heading": "Why it matters, and what is still open",
-   "body": "Interference is used everywhere: to define the metre, to test lenses, to link radio telescopes, and to tune pianos. The double-slit result also shows that quantum objects behave like neither ordinary particles nor ordinary waves. The maths predicts the patterns extremely well. What it means is disputed. Copenhagen, many-worlds, de Broglie–Bohm and relational views all tell different stories about what happens at the slits, and these sources do not pick a winner.",
-   "quote": "The interpretation of quantum mechanics is still an unsolved problem in modern physics",
-   "quote_where": "25.1 The Double-slit Experiment, \"Which way\" experiment",
-   "source_id": "s4",
+   "heading": "Why it matters, and what is unsettled",
+   "body": "This experiment shows wave–particle duality: matter is detected as particles but spreads and interferes like a wave. The same physics underlies electron microscopes and precise length measurement. The predictions are not in doubt. What the experiment says about reality is still argued over, and the main interpretations disagree on whether a particle 'really' goes through one slit.",
+   "quote": "The interpretation of quantum mechanics is still an unsolved problem in modern physics (luckily, it does not prevent us from using quantum mechanics in chemistry).",
+   "quote_where": "25.1, “Which way” experiment",
    "source_ids": [
-    "s1",
-    "s3",
-    "s4"
-   ]
+    "s4",
+    "s3"
+   ],
+   "source_id": "s4"
   }
  ],
  "provider": {
@@ -73,123 +81,148 @@
  },
  "concepts": [
   {
-   "id": "superposition_phase",
-   "title": "Two waves add: in step they grow, out of step they cancel",
-   "idea": "When two equal waves overlap, the combined wave's height depends on how far one is shifted relative to the other, from double height when in step to nothing when half a cycle apart.",
+   "id": "waves_add",
+   "title": "When waves meet, they add",
+   "idea": "Two overlapping waves add point by point, so their phase difference decides whether they reinforce (crest on crest) or cancel (crest on trough).",
    "role": "prerequisite",
    "predict": {
-    "question": "New case: wave 2 is now only half as tall as wave 1. They meet exactly half a cycle apart, so every crest of one meets a trough of the other. How tall is the combined wave?",
+    "question": "Two identical loudspeakers play the same steady note. At your seat, the sound from one speaker arrives exactly one and a half cycles behind the sound from the other. In the ideal case, with no echoes, what do you hear of that note?",
     "options": [
-     "Zero, because half a cycle apart always cancels",
-     "Half as tall as wave 1",
-     "One and a half times as tall as wave 1",
-     "Exactly as tall as wave 1"
+     "Twice as loud as one speaker",
+     "Very quiet: the two waves cancel",
+     "Exactly as loud as one speaker",
+     "No way to tell, because the shift is more than one full cycle"
     ],
     "answer": 1,
     "why": [
-     "Tempting, because half a cycle wiped out the sum in the model. But full cancellation needed two equal waves. Here the small trough can only take away half of the big crest.",
-     "Right. Crest meets trough, so the heights subtract: 1 − 0.5 = 0.5. The source puts it this way: the amplitude is 'the difference in the individual amplitudes'.",
-     "That is what happens when the waves are in step and their heights add (1 + 0.5). Half a cycle apart, they work against each other instead.",
-     "That would mean the second wave has no effect at all. It still pulls every crest down by half."
+     "Two speakers sound as if they should be louder than one. But extra sound only adds up when crests meet crests, and a one-and-a-half-cycle delay puts each crest on a trough.",
+     "Right. A delay of one full cycle changes nothing, so one and a half cycles acts like half a cycle. Every crest lands on a trough, and equal waves cancel. In a real room, echoes keep it from being perfectly silent.",
+     "The sum equals one wave only at in-between shifts, such as a third of a cycle. One and a half cycles is the full crest-on-trough case, not an in-between one.",
+     "The slider stops at one cycle, but waves repeat every cycle. Take away the whole cycles and half a cycle is left, which is the crest-on-trough case."
     ]
    },
    "terms": [
     {
      "term": "superposition",
-     "means": "Overlapping waves simply add: at each point the combined height is one wave's height plus the other's"
+     "means": "The rule that overlapping waves combine by adding their heights at each point"
     },
     {
      "term": "phase difference",
-     "means": "How far one wave is shifted relative to the other, measured as part of a cycle (360° is one full cycle)"
+     "means": "How far one wave is shifted relative to the other, measured as a fraction of a full cycle (360° or 2π)"
     },
     {
      "term": "constructive interference",
-     "means": "Waves in step, crest on crest, so they build a taller wave"
+     "means": "Waves lined up crest on crest, adding to a taller wave"
     },
     {
      "term": "destructive interference",
-     "means": "Waves half a cycle apart, crest on trough, so they cancel"
+     "means": "Waves lined up crest on trough, cancelling each other"
     }
    ],
    "model": {
-    "title": "Two identical waves and their sum",
-    "note": "Teaching model: two identical waves of the same frequency and height 1, frozen at one instant along a single line. Real waves can differ in height and frequency and are rarely perfectly aligned. Heights are in units of one wave's height. The curves follow the source's formula. They are not measured data.",
+    "title": "Two waves on the same stretch of water, and the wave you would actually see",
+    "note": "Teaching model: a frozen snapshot of two waves with the same wavelength and the same height, drawn along a line. The slider shifts wave 2 by an angle in degrees (360° is one full cycle, 2π in the paper's notation). Real waves move, can differ in height and spread in two or three dimensions. Numbers are illustrative, not measured data.",
     "controls": [
      {
       "id": "phi",
-      "label": "Slide wave 2 along by",
+      "label": "Shift of wave 2",
       "kind": "slider",
       "min": 0,
-      "max": 720,
+      "max": 360,
       "step": 15,
-      "default": 90,
+      "default": 0,
       "unit": "°",
       "color": 1
+     },
+     {
+      "id": "amp",
+      "label": "Height of each wave",
+      "kind": "slider",
+      "min": 0.5,
+      "max": 1.5,
+      "step": 0.25,
+      "default": 1,
+      "unit": "",
+      "color": 0
      }
     ],
     "outputs": [
      {
-      "id": "amp",
+      "id": "amp_sum",
       "label": "Height of the combined wave",
-      "expr": "2 * abs(cos(phi * pi / 360))",
+      "expr": "2 * amp * abs(cos(phi * pi / 360))",
       "unit": "",
       "decimals": 2,
       "color": 2
      },
      {
-      "id": "cycles",
-      "label": "Slide in full cycles",
-      "expr": "phi / 360",
-      "unit": "",
+      "id": "ratio",
+      "label": "Combined ÷ one wave",
+      "expr": "amp_sum / amp",
+      "unit": "×",
       "decimals": 2,
-      "color": 1
+      "color": 2
      }
     ],
     "visual": {
      "type": "curves",
      "x": {
-      "label": "Position along the line (in wave lengths)",
+      "label": "Position along the water (in wave lengths)",
       "min": 0,
       "max": 2
      },
      "y": {
-      "label": "Height",
-      "min": -2.3,
-      "max": 2.3
+      "label": "Height of the water",
+      "min": -3.2,
+      "max": 3.2
      },
      "series": [
       {
        "id": "wave1",
        "label": "Wave 1",
-       "expr": "cos(2 * pi * x)",
+       "expr": "amp * cos(2 * pi * x)",
        "color": 0,
        "dashed": true
       },
       {
        "id": "wave2",
        "label": "Wave 2",
-       "expr": "cos(2 * pi * x + phi * pi / 180)",
+       "expr": "amp * cos(2 * pi * x + phi * pi / 180)",
        "color": 1,
        "dashed": true
       },
       {
        "id": "sum",
-       "label": "Wave 1 + Wave 2",
-       "expr": "cos(2 * pi * x) + cos(2 * pi * x + phi * pi / 180)",
+       "label": "Both together",
+       "expr": "amp * cos(2 * pi * x) + amp * cos(2 * pi * x + phi * pi / 180)",
        "color": 2,
        "dashed": false
       }
      ],
      "hlines": [
       {
-       "id": "double",
-       "y": 2,
-       "label": "Double height"
+       "id": "flat",
+       "y": 0,
+       "label": "Flat water"
       },
       {
-       "id": "single",
-       "y": 1,
-       "label": "One wave's height"
+       "id": "double",
+       "y": "2 * amp",
+       "label": "Twice one wave"
+      }
+     ],
+     "points": [
+      {
+       "id": "crest1",
+       "x": 1,
+       "y": "amp",
+       "label": "Wave 1 crest"
+      },
+      {
+       "id": "crest2",
+       "x": "1 - phi / 360",
+       "y": "amp",
+       "label": "Wave 2 crest"
       }
      ]
     }
@@ -197,129 +230,155 @@
    "animation": {
     "steps": [
      {
-      "say": "This dashed curve is a wave: crests and troughs repeating along a line.",
+      "say": "Picture two ripples crossing the same stretch of water. This dashed curve is wave 1.",
       "focus": "wave1",
-      "ms": 3200
+      "ms": 3000
      },
      {
-      "say": "This second dashed curve is an identical wave, the same size and the same spacing.",
+      "say": "This dashed curve is wave 2. It is the same size and the same length as wave 1.",
       "focus": "wave2",
+      "ms": 2800
+     },
+     {
+      "say": "The solid curve is what you would actually see: the water with both waves present at once.",
+      "focus": "sum",
       "ms": 3200
      },
      {
-      "say": "The solid curve adds them up. At every point, its height is wave 1's height plus wave 2's.",
-      "focus": "sum",
-      "ms": 3800
-     },
-     {
-      "say": "This slider slides wave 2 along the line. Every 360° moves it one full cycle.",
+      "say": "This slider slides wave 2 along the water. Watch the solid curve change shape.",
       "set": {
-       "phi": 45
+       "phi": 90
       },
       "focus": "phi",
-      "ms": 3600
+      "ms": 3400
      },
      {
-      "say": "This box reads how tall the crests of the solid curve are.",
+      "say": "This slider makes both waves taller or shorter together.",
+      "set": {
+       "amp": 1.25
+      },
       "focus": "amp",
-      "ms": 3200
+      "ms": 2800
+     },
+     {
+      "say": "This box tells you how tall the combined wave gets.",
+      "focus": "amp_sum",
+      "ms": 2600
      }
     ]
    },
    "explore": {
-    "prompt": "Slide wave 2 around and watch the solid curve grow and shrink. Can you predict where it will be tall and where it will be flat before you get there?",
+    "prompt": "You have seen the two extremes. Now look for the shifts in between, and use both sliders.",
     "goals": [
      {
-      "text": "Wipe out the combined wave completely, using a slide of more than one full cycle",
-      "when": "amp < 0.05 && phi > 360",
+      "text": "Make the combined wave exactly as tall as one wave on its own.",
+      "when": "abs(ratio - 1) < 0.03",
       "solution": {
-       "phi": 540
+       "phi": 120
       },
       "hints": [
-       "After wave 2 slides one whole cycle, does it look any different from where it started?",
-       "Past one full cycle the waves are back in step, so everything you saw in the first cycle happens again.",
-       "Search between one and two full cycles, at the point that matches where the first cycle went flat."
+       "Lined up gives double height. Crest on trough gives nothing. You want something in between.",
+       "Slide wave 2 slowly between lined up and crest on trough, and watch the 'Combined ÷ one wave' box.",
+       "The spot is past a quarter of a cycle but before half a cycle."
       ]
      },
      {
-      "text": "Make the combined wave exactly as tall as a single wave, with wave 2 slid more than half a cycle",
-      "when": "abs(amp - 1) < 0.05 && phi > 180",
+      "text": "Make each single wave taller than 1, yet keep the combined wave only 1.5 high.",
+      "when": "amp > 1 && abs(amp_sum - 1.5) < 0.05",
       "solution": {
-       "phi": 240
+       "amp": 1.5,
+       "phi": 120
       },
       "hints": [
-       "The sum shrinks smoothly from double height to nothing, then grows back again.",
-       "On the way back up from cancelling, the sum passes through every height a second time.",
-       "Search between half a cycle and one full cycle. It mirrors the one-wave-tall point you saw in the walkthrough."
+       "Tall waves that line up add to more than 1.5. Something has to take height away.",
+       "Shift wave 2 so its crests partly meet wave 1's troughs, then adjust the height.",
+       "With both waves at their tallest, you need the sum to be as tall as one wave. That is the same shift as in the first goal."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. Crest on trough means the heights subtract. Two equal waves subtract to zero, but a big wave minus a half-size wave still leaves half a wave.",
-     "incorrect": "You may have taken 'half a cycle apart' to mean 'always cancels'. Cancellation is complete only when the two waves are equally tall. Otherwise crest meets trough and you are left with the difference in their heights."
+     "correct": "Yes. Waves repeat every cycle, so a delay of one and a half cycles works like a delay of half a cycle. Crest meets trough, and two equal waves cancel. Real rooms add echoes, so the quiet spot is not perfectly silent.",
+     "incorrect": "What matters is where the crests land, not the total delay. Take away the whole cycles from one and a half and half a cycle is left. That puts every crest on a trough, so equal waves cancel. Echoes in a real room keep the silence from being perfect."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Line wave 2 up exactly with wave 1. Crest sits on crest and trough on trough, so the solid sum reaches 2: double height.",
+       "say": "Start with the crests lined up. Each crest of wave 1 sits exactly on a crest of wave 2.",
        "set": {
-        "phi": 0
+        "phi": 0,
+        "amp": 1
        },
-       "focus": "amp",
+       "focus": [
+        "crest1",
+        "crest2"
+       ],
        "ms": 3800
       },
       {
-       "say": "This adding-up, point by point, is called superposition. When waves in step build a taller wave, that is constructive interference.",
-       "focus": "double",
-       "ms": 3800
+       "say": "At every point, the water's height is wave 1's height plus wave 2's height. This point-by-point adding is called superposition.",
+       "focus": "sum",
+       "ms": 4200
       },
       {
-       "say": "Now slide wave 2 a quarter cycle. How far one wave is shifted relative to the other is called the phase difference. The sum shrinks to about 1.41. Notice its crests keep the same spacing: only the height changes.",
+       "say": "Crest plus crest gives a crest twice as tall: the combined wave reaches the 'twice one wave' line. This reinforcing is called constructive interference.",
+       "focus": [
+        "double",
+        "amp_sum"
+       ],
+       "ms": 4400
+      },
+      {
+       "say": "Now slide wave 2 a quarter of a cycle. How far one wave is shifted against the other is the phase difference. The crests now miss each other, and the sum is only about 1.41 tall.",
        "set": {
         "phi": 90
        },
-       "focus": "phi",
-       "ms": 4600
+       "focus": [
+        "phi",
+        "amp_sum"
+       ],
+       "ms": 4800
       },
       {
-       "say": "At a third of a cycle, the sum is exactly as tall as one wave on its own.",
-       "set": {
-        "phi": 120
-       },
-       "focus": "single",
-       "ms": 3600
-      },
-      {
-       "say": "Keep going to three-quarters of a cycle and the sum is growing again. Height depends only on the shift.",
-       "set": {
-        "phi": 270
-       },
-       "focus": "amp",
-       "ms": 3600
-      },
-      {
-       "say": "At one full cycle, wave 2 is back in step and we have double height again. The pattern repeats every cycle.",
-       "set": {
-        "phi": 360
-       },
-       "focus": "sum",
-       "ms": 3600
-      },
-      {
-       "say": "Now the key moment: half a cycle. Every crest lands on a trough, and the two waves cancel everywhere. The sum is a flat line. That is destructive interference.",
+       "say": "Slide it to half a cycle. Every crest of wave 2 now lands on a trough of wave 1. Up plus down gives zero everywhere, so the water is flat. This is destructive interference.",
        "set": {
         "phi": 180
        },
-       "focus": "sum",
+       "focus": [
+        "crest2",
+        "flat"
+       ],
        "ms": 5000
+      },
+      {
+       "say": "Keep going to a full cycle. Crest is back on crest, and the height is double again. Shifting by a whole cycle is the same as not shifting at all.",
+       "set": {
+        "phi": 360
+       },
+       "focus": [
+        "sum",
+        "amp_sum"
+       ],
+       "ms": 4400
+      },
+      {
+       "say": "Back to half a cycle, with both waves made taller. The water is still flat. Equal waves that meet crest on trough cancel, whatever their size.",
+       "set": {
+        "phi": 180,
+        "amp": 1.5
+       },
+       "focus": [
+        "flat",
+        "amp_sum"
+       ],
+       "ms": 4800
       }
      ]
     },
-    "explanation": "Overlapping waves simply add: at each point, the combined height is one wave's height plus the other's. With two equal waves, the result depends only on the shift between them. In step, crests stack to double height. Half a cycle apart, every crest meets a trough and they cancel to nothing. In between, you get a height somewhere between those two extremes. The source shows this with the formula W₁ + W₂ = 2A cos(φ/2) cos(kx − ωt + φ/2): the sum is a wave with the same spacing, and its height is set by the shift φ. The textbook source adds a caveat: pure doubling or pure cancelling needs precisely aligned identical waves. Most real overlaps are a mix that varies from place to place.",
-    "quote": "Constructive interference occurs when the phase difference between the waves is an even multiple of π (180°), whereas destructive interference occurs when the difference is an odd multiple of π. If the difference between the phases is intermediate between these two extremes, then the magnitude of the displacement of the summed waves lies between the minimum and maximum values.",
-    "quote_where": "Wave interference (Wikipedia), Mechanisms section",
+    "explanation": "When two waves overlap, the water or air simply adds their heights at each point. So the result depends on how the waves are lined up. Crest on crest gives a wave as tall as the two added together. Crest on trough gives the difference between their heights, which is zero for equal waves. Shifts in between give in-between heights. A shift of a whole cycle (2π) changes nothing, so any whole number of cycles reinforces and any odd number of half-cycles cancels. The sources work this out by adding two cosine waves with a trigonometric rule. They also point to everyday cases, such as loud and quiet spots near a stereo and the throbbing hum of twin jet engines. Cancelling at one spot does not destroy energy: the sources note that it moves to other places.",
+    "quote": "If a crest of a wave meets a crest of another wave of the same frequency at the same point, then the amplitude is the sum of the individual amplitudes—this is constructive interference. If a crest of one wave meets a trough of another wave, then the amplitude is equal to the difference in the individual amplitudes—this is known as destructive interference.",
+    "quote_where": "Wave interference, Mechanisms",
     "source_id": "s1",
     "source_ids": [
      "s1",
@@ -329,14 +388,21 @@
    "connect": {
     "equation": [
      {
-      "text": "W_{1} + W_{2} = "
+      "text": "W_{1} + W_{2} = 2"
      },
      {
-      "text": "2A cos(φ/2)",
+      "text": "A",
       "link": "amp"
      },
      {
-      "text": " cos(kx − ωt + "
+      "text": " cos("
+     },
+     {
+      "text": "φ",
+      "link": "phi"
+     },
+     {
+      "text": "/2) · cos(kx − ωt + "
      },
      {
       "text": "φ",
@@ -346,187 +412,221 @@
       "text": "/2)"
      }
     ],
-    "caption": "φ (orange) is the slide of wave 2, the phase difference. The source writes it in radians: 360° on the slider equals 2π. The green part 2A cos(φ/2) is the height of the combined wave (the box shows its size, with A = 1). The last cosine is a wave with the original spacing, which is why the sum's crests never change spacing."
+    "caption": "This is the paper's formula for the sum of two equal waves (Wave interference, Real-valued wave functions). A is the height of each wave, set by the height slider. φ is the shift of wave 2, set by the shift slider; 360° on the slider equals 2π here. The factor 2A·|cos(φ/2)| is the height of the combined wave shown in the box. It is 2A when φ is 0 or 2π, and 0 when φ is π. The second cosine is the shape of the wave itself. The model freezes time t to draw a snapshot."
    },
-   "recap": "Equal waves add point by point: in step they double, half a cycle apart they cancel, and every shift in between gives a height in between.",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
     },
     {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
+     "id": "cmp",
+     "kind": "compare",
+     "prompt": "The same two waves at two different shifts. Compare the solid combined wave in each.",
+     "cases": [
+      {
+       "label": "Crest on crest",
+       "values": {
+        "phi": 0,
+        "amp": 1
+       }
+      },
+      {
+       "label": "Crest on trough",
+       "values": {
+        "phi": 180,
+        "amp": 1
+       }
+      }
+     ],
+     "takeaway": "Nothing about the waves themselves changed, only how they are lined up. That alone swings the result from double height to completely flat."
     },
     {
      "id": "goal_1",
      "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
      "i": 1
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
-    },
-    {
-     "id": "connect",
-     "kind": "connect"
     }
-   ]
+   ],
+   "recap": "Overlapping waves add point by point. Lined up crest on crest they double, crest on trough they cancel, and in-between shifts give in-between heights."
   },
   {
-   "id": "intensity_redistribution",
-   "title": "Brightness: four times as bright here, dark there",
-   "idea": "Brightness grows with the square of the combined height, so two equal beams in step give four times one beam's brightness and out of step give zero. The energy is moved around, not created or lost.",
-   "role": "core",
+   "id": "brightness_is_squared",
+   "title": "Brightness: four times as bright, or completely dark",
+   "idea": "Detectors see intensity, the square of the summed wave, so two equal beams give I₁ + I₂ + 2√(I₁I₂)cos(φ): up to four times one beam's brightness where they agree and zero where they cancel, with energy moved rather than lost.",
+   "role": "prerequisite",
    "predict": {
-    "question": "Two ordinary lamps light the same patch of wall. Their waves are not locked together: the shift between them jumps around randomly, far faster than any eye or camera can follow. How bright is the wall compared with one lamp?",
+    "question": "Three equal beams of light all arrive perfectly in step at one spot. Each beam alone would make that spot 1 unit bright. How bright is the spot now?",
     "options": [
-     "About twice as bright everywhere, with no dark stripes",
-     "About four times as bright everywhere",
-     "Stripes that swing between four times and zero",
-     "About as bright as one lamp, because the waves cancel on average"
+     "3 units",
+     "6 units",
+     "9 units",
+     "It goes dark"
     ],
-    "answer": 0,
+    "answer": 2,
     "why": [
-     "Correct: each spot sees every shift in quick succession, so it gets the curve's average. The extras and shortfalls cancel, leaving the plain sum of the two lamps.",
-     "Tempting, because in step the brightness is 4×. That needs a steady in-step shift. With a random shift the spot spends as much time near the dips as near the peaks.",
-     "Stripes need a shift that stays fixed at each spot. Here the shift keeps jumping, so the peaks and dips blur together within each spot.",
-     "Cancelling only happens at one shift. Averaged over all shifts the missing light is exactly made up by the extra light, so the total is the sum, not one lamp."
+     "Tempting if you add brightnesses directly. But brightness only adds that way for beams that ignore each other. Here the wave heights add first, to three times one beam's height.",
+     "Tempting if you double the plain sum, the way two beams gave 4 instead of 2. The rule is not 'double it': brightness is the square of the total height, and that height is three times one beam's.",
+     "Right. In step, the three heights add to 3A, and brightness is the square: (3A)² = 9A², nine times one beam. The extra light comes from darker spots elsewhere in the pattern.",
+     "Tempting if you remember that waves can cancel. But cancelling needs crests meeting troughs. Here every crest meets a crest, so the waves reinforce."
     ]
    },
    "terms": [
     {
      "term": "intensity",
-     "means": "The physicist's word for brightness: how much light energy arrives at a spot. It grows with the square of the wave's height."
+     "means": "How bright light is where it lands: the square of the wave's height, averaged over time"
     },
     {
      "term": "interference term",
-     "means": "The extra (or missing) brightness you get on top of simply adding the two beams. It depends on the shift between them and averages to zero."
+     "means": "The extra part, 2√(I₁I₂)cos φ, that makes the total brighter or dimmer than the plain sum; averaged over a full cycle it is zero"
     }
    ],
    "model": {
-    "title": "How bright a spot gets when two overlapping beams are shifted",
-    "note": "Teaching model: two light waves of the same frequency and polarization with a steady shift between them. The first beam has height 1. Brightness is measured in units of one beam alone and follows the reference formula I = I1 + I2 + 2√(I1·I2)·cos(phase difference). The 4× and 0 for equal beams are what the source states. Other numbers are illustrative, not measured data.",
+    "title": "Brightness where two beams meet",
+    "note": "Teaching model: two ideal beams of one colour with the same polarization and a fixed phase difference. Brightness is in arbitrary units, where 1 means one beam glowing alone. Phase difference is measured in multiples of π. The curve follows the sources' formula exactly; slider values are illustrative, not measured data.",
     "controls": [
      {
-      "id": "shift",
-      "label": "Shift between the waves",
+      "id": "b1",
+      "label": "Beam 1 brightness alone",
       "kind": "slider",
       "min": 0,
       "max": 2,
-      "step": 0.05,
-      "default": 0.25,
-      "unit": " cycles",
-      "color": 4
-     },
-     {
-      "id": "b2",
-      "label": "Second beam's height (first beam = 1)",
-      "kind": "slider",
-      "min": 0,
-      "max": 1,
       "step": 0.1,
       "default": 1,
       "unit": "",
-      "color": 5
+      "color": 0
+     },
+     {
+      "id": "b2",
+      "label": "Beam 2 brightness alone",
+      "kind": "slider",
+      "min": 0,
+      "max": 2,
+      "step": 0.1,
+      "default": 1,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "phi",
+      "label": "Phase difference at the marker",
+      "kind": "slider",
+      "min": 0,
+      "max": 4,
+      "step": 0.05,
+      "default": 0,
+      "unit": "π",
+      "color": 3
      }
     ],
     "outputs": [
      {
-      "id": "height",
-      "label": "Combined height (one wave = 1)",
-      "expr": "sqrt(max(0, 1 + b2^2 + 2 * b2 * cos(2 * pi * shift)))",
+      "id": "here",
+      "label": "Brightness at the marker",
+      "expr": "max(0, b1 + b2 + 2 * sqrt(b1 * b2) * cos(pi * phi))",
       "unit": "",
       "decimals": 2,
-      "color": 0
+      "color": 3
      },
      {
-      "id": "bright",
-      "label": "Brightness here (one beam = 1)",
-      "expr": "height^2",
-      "unit": "×",
-      "decimals": 2,
-      "color": 1
-     },
-     {
-      "id": "plain",
-      "label": "Two beams' brightness simply added",
-      "expr": "1 + b2^2",
-      "unit": "×",
+      "id": "peak",
+      "label": "Brightest spot",
+      "expr": "b1 + b2 + 2 * sqrt(b1 * b2)",
+      "unit": "",
       "decimals": 2,
       "color": 2
      },
      {
-      "id": "gain",
-      "label": "Extra (+) or missing (−) brightness",
-      "expr": "bright - plain",
-      "unit": "×",
+      "id": "dip",
+      "label": "Darkest spot",
+      "expr": "max(0, b1 + b2 - 2 * sqrt(b1 * b2))",
+      "unit": "",
       "decimals": 2,
-      "color": 3
+      "color": 5
+     },
+     {
+      "id": "avg",
+      "label": "Average across the stripes",
+      "expr": "b1 + b2",
+      "unit": "",
+      "decimals": 2,
+      "color": 4
      }
     ],
     "visual": {
      "type": "curves",
      "x": {
-      "label": "Shift between the waves (cycles)",
+      "label": "Phase difference (multiples of π)",
       "min": 0,
-      "max": 2
+      "max": 4
      },
      "y": {
-      "label": "Brightness (one beam = 1)",
+      "label": "Brightness on the screen",
       "min": 0,
-      "max": 4.4
+      "max": 8
      },
      "series": [
       {
-       "id": "together",
-       "label": "Brightness of the two beams together",
-       "expr": "1 + b2^2 + 2 * b2 * cos(2 * pi * x)",
-       "color": 1,
+       "id": "total",
+       "label": "Both beams together",
+       "expr": "max(0, b1 + b2 + 2 * sqrt(b1 * b2) * cos(pi * x))",
+       "color": 2,
        "dashed": false
       },
       {
-       "id": "simple_sum",
-       "label": "Just adding the two brightnesses (also the curve's average)",
-       "expr": "1 + b2^2",
-       "color": 2,
+       "id": "plain_sum",
+       "label": "Plain sum (beams ignoring each other)",
+       "expr": "b1 + b2",
+       "color": 4,
        "dashed": true
       }
      ],
      "hlines": [
       {
-       "id": "one_beam",
-       "y": 1,
-       "label": "One beam alone"
+       "id": "beam1_line",
+       "y": "b1",
+       "label": "Beam 1 alone"
+      },
+      {
+       "id": "beam2_line",
+       "y": "b2",
+       "label": "Beam 2 alone"
       }
      ],
      "markers": [
       {
-       "id": "here",
-       "x": "shift",
-       "label": "You are here",
-       "color": 4
+       "id": "phase_marker",
+       "x": "phi",
+       "label": "Marker",
+       "color": 3
       }
      ],
      "points": [
       {
-       "id": "now",
-       "x": "shift",
-       "y": "bright",
-       "label": "Brightness here"
+       "id": "here_point",
+       "x": "phi",
+       "y": "here",
+       "label": ""
       }
      ]
     }
@@ -534,168 +634,139 @@
    "animation": {
     "steps": [
      {
-      "say": "Two light beams overlap on one spot. This curve shows how bright that spot gets for every possible shift between their waves.",
-      "focus": "together",
-      "set": {
-       "shift": 0.25,
-       "b2": 1
-      },
+      "say": "This curve shows how bright the screen is where two beams of light meet. Each point along the bottom is a different phase difference.",
+      "focus": "total",
+      "ms": 4000
+     },
+     {
+      "say": "These two sliders set how bright each beam would be on its own. The thin lines mark those single-beam levels.",
+      "focus": [
+       "b1",
+       "b2"
+      ],
+      "ms": 4000
+     },
+     {
+      "say": "The dashed line is the plain sum: what you'd see if the two beams simply ignored each other.",
+      "focus": "plain_sum",
       "ms": 3800
      },
      {
-      "say": "Across the bottom is the shift, in cycles, just like last time. The upright line marks the shift you're looking at.",
-      "focus": "here",
-      "ms": 3400
-     },
-     {
-      "say": "This slider moves that line. The dot rides along the curve, and this box reads off the brightness there.",
+      "say": "This slider moves the marker to one phase difference, and this box reads the brightness there.",
       "set": {
-       "shift": 0.1
+       "phi": 0.5
       },
       "focus": [
-       "shift",
-       "now",
-       "bright"
+       "phi",
+       "here"
       ],
-      "ms": 3800
-     },
-     {
-      "say": "This slider sets how tall the second beam's wave is compared with the first.",
-      "set": {
-       "b2": 0.6
-      },
-      "focus": "b2",
-      "ms": 3200
-     },
-     {
-      "say": "The dashed line is what you'd expect if brightness simply added: one beam plus the other. Keep an eye on it.",
-      "set": {
-       "b2": 1,
-       "shift": 0.25
-      },
-      "focus": "simple_sum",
-      "ms": 3600
+      "ms": 4200
      }
     ]
    },
    "explore": {
-    "prompt": "Hunt for the brightest and darkest spots along the shift. Remember that being in step, or out of step, repeats every cycle.",
+    "prompt": "Now steer the stripes yourself. Use the beam sliders to shape how bright and how dark the pattern gets.",
     "goals": [
      {
-      "text": "Find a shift past the first cycle's start where the spot is again four times as bright as one beam",
-      "when": "bright > 3.95 && shift > 0.5",
+      "text": "Make the brightest spot exactly 2 units while the darkest spot still goes completely dark",
+      "when": "abs(peak - 2) < 0.05 && dip < 0.01",
       "solution": {
-       "shift": 1
+       "b1": 0.5,
+       "b2": 0.5
       },
       "hints": [
-       "Four times one beam needs both beams at full strength and perfectly in step.",
-       "Being in step repeats. Which shift brings the crests back into line after you leave the start?",
-       "Look for the next tall peak of the curve after the left edge."
+       "For a spot to go completely dark, what has to be true about the two beams?",
+       "Equal beams make the brightest spot four times one beam alone. Work backwards from the 2 you want.",
+       "Both beams must match, and each must be well below 1. The brightest spot equals 4 × one beam."
       ]
      },
      {
-      "text": "Find a completely dark spot somewhere beyond one full cycle of shift",
-      "when": "bright < 0.01 && shift > 1",
+      "text": "Keep both beams switched on, but make even the darkest stripes glow at least a quarter as bright as the brighter beam alone",
+      "when": "dip >= 0.25 * max(b1, b2) && min(b1, b2) > 0.05",
       "solution": {
-       "shift": 1.5
+       "b2": 0.2
       },
       "hints": [
-       "Total darkness needs the two heights to cancel exactly. Check the second beam's strength first.",
-       "Cancelling happens when one wave's crest lands on the other's trough.",
-       "Look for the curve's lowest dip in the right half of the plot."
+       "Dark spots need the two waves to cancel. When can't they cancel completely?",
+       "Leave beam 1 where it is and make beam 2 much dimmer. Watch the darkest-spot box.",
+       "Try beam 2 at a quarter of beam 1's brightness or less, but not zero."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Right. Brightness depends on the shift only while the shift stays steady. When it wanders randomly, each spot averages over all shifts, and that average is just the two lamps added together.",
-     "incorrect": "You may have carried over the 4× or the zero from the steady case. Those only appear while the shift holds still. Averaged over every shift, the extra light at the peaks exactly makes up for the missing light at the dips, so the wall is about twice as bright as one lamp, with no stripes."
+     "correct": "Yes. In step, the three wave heights add to three times one height. Brightness is the square of the height, so the spot is 3² = 9 times as bright. The light comes from darker spots nearby, so the total is conserved.",
+     "incorrect": "The trap is adding brightnesses directly. Waves add their heights first, and only then does the detector square the total. Three equal heights in step make 3A, and (3A)² is nine times one beam. That extra light is borrowed from darker places in the pattern."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start with two equal beams perfectly in step. From the last lesson you know the heights add: 1 + 1 = 2.",
+       "say": "Start with two equal beams, each 1 unit bright on its own, meeting crest on crest. You might expect the screen to read 2. It reads 4.",
        "set": {
-        "shift": 0,
-        "b2": 1
+        "b1": 1,
+        "b2": 1,
+        "phi": 0
        },
-       "focus": "height",
-       "ms": 4000
+       "focus": "here",
+       "ms": 4500
       },
       {
-       "say": "Brightness isn't height, though. It grows with the square of the height: 2 × 2 = 4. Four times one beam, not two! Physicists call brightness intensity.",
-       "focus": [
-        "bright",
-        "now"
-       ],
-       "ms": 4800
+       "say": "Why 4? Detectors can't follow light's fast wiggle. They record the square of the wave's height, averaged over time: this is called intensity. Crest on crest doubles the height, and squaring that gives four times the brightness.",
+       "focus": "total",
+       "ms": 6000
       },
       {
-       "say": "Compare the dashed line: simply adding the beams would give 2. Here we get 2 extra.",
-       "focus": [
-        "simple_sum",
-        "gain"
-       ],
-       "ms": 4000
-      },
-      {
-       "say": "Slide to a quarter cycle. The height is about 1.41, and its square is 2: exactly the plain sum. Nothing extra here.",
+       "say": "Now slide a quarter cycle out of step. The screen reads 2, exactly the plain sum, as if the beams were ignoring each other.",
        "set": {
-        "shift": 0.25
+        "phi": 0.5
+       },
+       "focus": "here",
+       "ms": 4500
+      },
+      {
+       "say": "Half a cycle out of step, crest meets trough. The heights cancel and the screen goes completely dark.",
+       "set": {
+        "phi": 1
        },
        "focus": [
-        "height",
-        "bright"
+        "here",
+        "dip"
        ],
-       "ms": 4400
+       "ms": 4500
       },
       {
-       "say": "At half a cycle the crests meet troughs, the heights cancel, and the spot goes completely dark. Two beams of light, zero light.",
+       "say": "Is light destroyed? No. The curve rises above the dashed plain sum as far as it dips below it, so the average stays 2. That swing is the interference term, 2√(I₁I₂)cos φ: it moves light from dark spots to bright ones.",
+       "focus": [
+        "plain_sum",
+        "avg"
+       ],
+       "ms": 6500
+      },
+      {
+       "say": "Now dim beam 2 and watch the dark spot. A weaker wave can't fully cancel a stronger one, so even the darkest place still glows.",
        "set": {
-        "shift": 0.5
+        "b2": 0.3,
+        "phi": 1
        },
-       "focus": [
-        "now",
-        "bright"
-       ],
-       "ms": 4400
-      },
-      {
-       "say": "The gap between the curve and the dashed line is the interference term. It's +2 at the peaks and −2 at the dips.",
-       "focus": [
-        "gain",
-        "together"
-       ],
-       "ms": 4400
-      },
-      {
-       "say": "Look along a full cycle. The bumps above the dashed line exactly fill the hollows below it, so the average stays at 2. The light missing from dark spots shows up at bright spots. Energy is moved, not made or lost.",
-       "set": {
-        "shift": 1
-       },
-       "focus": [
-        "together",
-        "simple_sum"
-       ],
-       "ms": 5600
-      },
-      {
-       "say": "Now weaken the second beam. The peaks shrink, the dips no longer reach zero, and the average drops to the new plain sum. Unequal beams can never cancel completely.",
-       "set": {
-        "b2": 0.7,
-        "shift": 0.5
-       },
-       "focus": [
-        "now",
-        "simple_sum",
-        "b2"
-       ],
+       "focus": "dip",
        "ms": 5000
+      },
+      {
+       "say": "With unequal beams, the brightest stripes fall short of four times and the darkest never reach zero. The stripes turn paler, while the average stays at the plain sum.",
+       "set": {
+        "phi": 0
+       },
+       "focus": [
+        "peak",
+        "dip",
+        "avg"
+       ],
+       "ms": 5500
       }
      ]
     },
-    "explanation": "Light waves wiggle about 10^14 times a second, far too fast for any detector, so what we actually see is brightness (intensity). It grows with the square of the combined height. Two equal beams in step stack to height 2, so the spot is 2² = 4 times as bright as one beam, not twice. Half a cycle apart the heights cancel and the spot is dark. Averaged over all shifts, the extra and missing brightness balance out at the plain sum of the two beams: the reference text says that at points of destructive interference the energy is redistributed to other areas, not destroyed. This is standard wave optics as summarised in an encyclopedia article and a textbook, not one new experiment. It also assumes the beams keep a steady shift and share the same polarization. Without that, no fringes form and the brightnesses simply add.",
+    "explanation": "Light wiggles far too fast for any detector to follow, so what we actually see is intensity: the square of the wave's height, averaged over time. Because of that squaring, two equal beams meeting in step are not twice as bright as one beam but four times, and half a cycle out of step they give zero. The sources write the rule as I = I₁ + I₂ + 2√(I₁I₂)cos(φ). They note that energy is not lost at dark spots but redistributed to other areas, so averaged across the pattern the brightness equals the plain sum. When the beams are unequal, the extra term can never cancel the whole plain sum, so dark stripes stay faintly lit. All of this assumes ideal, steady waves with the same polarization; the sources stress that mismatched polarizations, or ordinary light sources that mix many frequencies, wash the stripes out.",
     "quote": "Thus, the interference pattern maps out the difference in phase between the two waves, with maxima occurring when the phase difference is a multiple of 2π. If the two beams are of equal intensity, the maxima are four times as bright as the individual beams, and the minima have zero intensity.",
     "quote_where": "Wave interference, section 'Optical wave interference'",
     "source_id": "s1",
@@ -704,141 +775,171 @@
      "s2"
     ]
    },
-   "check": {
-    "kind": "model",
-    "task": "Choose a strength for the second beam so that its darkest spots still glow, at exactly one quarter of a single beam's brightness. Then move to one of those darkest spots.",
-    "when": "abs(b2 - 0.5) < 0.01 && abs(bright - 0.25) < 0.02",
-    "solution": {
-     "b2": 0.5,
-     "shift": 0.5
-    },
-    "hint": "At the darkest shift the heights subtract: 1 minus the second beam's height. Brightness is that leftover height squared. Which leftover height, squared, gives one quarter?",
-    "misconception": "That brightnesses subtract directly, or that a weaker beam still cancels fully. In fact the heights subtract and the leftover is squared, so a beam of height 0.5 leaves (1 − 0.5)² = 0.25 at the dark spots."
-   },
    "connect": {
     "equation": [
      {
       "text": "I",
-      "link": "bright"
+      "link": "here"
      },
      {
-      "text": " = I_{1} + "
+      "text": " = "
+     },
+     {
+      "text": "I_{1}",
+      "link": "b1"
+     },
+     {
+      "text": " + "
      },
      {
       "text": "I_{2}",
       "link": "b2"
      },
      {
-      "text": " + "
+      "text": " + 2√("
      },
      {
-      "text": "2√(I_{1}I_{2}) cos[φ_{1} − φ_{2}]",
-      "link": "gain"
+      "text": "I_{1}",
+      "link": "b1"
+     },
+     {
+      "text": "I_{2}",
+      "link": "b2"
+     },
+     {
+      "text": ") cos("
+     },
+     {
+      "text": "φ",
+      "link": "phi"
+     },
+     {
+      "text": ")"
      }
     ],
-    "caption": "This is the reference text's formula for the brightness where two waves meet. I is the brightness readout. I₁ = 1 is the first beam alone. I₂ is the second beam's brightness: the square of the height slider. The last part is the interference term, shown as 'Extra or missing brightness'. Its phase difference φ₁ − φ₂ equals 2π × the shift slider in cycles. Because cos averages to zero over a cycle, the average brightness is just I₁ + I₂."
+    "caption": "I is the brightness at the marker. I₁ and I₂ are each beam's brightness alone, set by the two beam sliders. φ is the phase difference, which the source writes as φ₁(r) − φ₂(r); the model measures it in multiples of π. The first two terms make the dashed plain sum. The last term is the interference term, which swings between +2√(I₁I₂) and −2√(I₁I₂)."
    },
-   "recap": "Brightness is height squared: equal beams in step give 4×, out of step 0. On average it's still the plain sum, as light moves from dark spots to bright ones.",
+   "recap": "Detectors see the square of the combined wave, so equal beams in step are four times as bright as one and out of step are dark; the light is moved around, not lost.",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
     },
     {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
+     "id": "ex",
+     "kind": "worked",
+     "title": "From double the height to four times the brightness",
+     "steps": [
+      {
+       "text": "One beam alone has wave height A. Its brightness is the square of that height. Call it 1 unit.",
+       "result": "I₁ = A² = 1"
+      },
+      {
+       "text": "A second, equal beam arrives exactly in step, crest on crest. The heights add.",
+       "result": "Total height = 2A"
+      },
+      {
+       "text": "The detector squares the total height, not each beam separately.",
+       "result": "(2A)² = 4A² = 4 units"
+      },
+      {
+       "text": "Shift one beam half a cycle, so crest meets trough. The heights cancel.",
+       "result": "(A − A)² = 0"
+      },
+      {
+       "text": "Averaged over every phase difference, the cos φ part is zero. Only the two beams' own brightness remains.",
+       "result": "Average = A² + A² = 2 units"
+      }
+     ],
+     "takeaway": "Squaring turns 'twice the height' into 'four times the brightness'. The extra light in the bright spots is exactly the light missing from the dark ones."
     },
     {
      "id": "goal_1",
      "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
      "i": 1
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
-    },
-    {
-     "id": "check",
-     "kind": "check"
-    },
-    {
-     "id": "connect",
-     "kind": "connect"
     }
    ]
   },
   {
-   "id": "double_slit_fringes",
-   "title": "Two slits paint stripes on a screen",
-   "idea": "Light from two slits travels different distances to each point on a screen, so the shift between the waves changes across the screen and makes bright and dark bands spaced by wavelength × distance ÷ slit separation.",
+   "id": "two_slit_fringes",
+   "title": "Two slits paint stripes",
+   "idea": "At each spot on the screen the waves from the two slits have travelled different distances, so their phase difference changes across the screen and makes evenly spaced bright and dark fringes, spaced about w = zλ/d.",
    "role": "core",
    "predict": {
-    "question": "You shine red light and blue light through the same two slits at the same time. Blue light has the shorter wavelength. Where can you be sure to find a bright band of both colours in the same place?",
+    "question": "In the source's worked example, slits 0.5 mm apart lit by 0.6 μm light make bright stripes 1.2 mm apart on a screen 1 m away. Someone moves the slits closer, to 0.25 mm apart, and keeps the same light and screen. How far apart are the bright stripes now?",
     "options": [
-     "Only at the very centre of the screen",
-     "Everywhere: the red and blue bands line up all across the screen",
-     "Nowhere: the two colours cancel each other out",
-     "Only near the edges of the screen"
+     "0.6 mm",
+     "1.2 mm, unchanged",
+     "2.4 mm",
+     "The stripes disappear"
     ],
-    "answer": 0,
+    "answer": 2,
     "why": [
-     "Correct. At the centre both slits are equally far away for every colour, so every colour arrives in step there. Away from the centre, blue bands are spaced more tightly than red ones, so the two sets of bands drift apart.",
-     "Tempting if you picture one pattern for all light. The spacing is wavelength × distance ÷ slit gap, so a shorter wavelength gives narrower spacing and the bands soon stop matching.",
-     "Cancelling needs two waves of the same colour meeting half a cycle apart. Red and blue each make their own pattern, and each pattern is bright at the centre.",
-     "Far from the centre, the extra distance adds up to many wavelengths, and red and blue fall out of step with each other. The edges are where the colours mix and blur, not where you can count on both being bright."
+     "It feels natural that closer slits mean closer stripes. In fact closer slits make the extra distance grow more slowly across the screen, so the stripes spread out rather than crowding in.",
+     "The light and the screen did not change, but the slit gap is the d in w = zλ/d. Changing it changes the spacing.",
+     "Right: halving d doubles w. The extra distance now builds up half as fast, so you must go twice as far along the screen to gain one more wave: 2 × 1.2 mm = 2.4 mm.",
+     "The two waves still overlap and still have a steadily changing extra distance, so stripes still form. They are just wider apart."
     ]
    },
    "terms": [
     {
      "term": "path difference",
-     "means": "How much farther light from one slit travels than light from the other to reach a given spot"
+     "means": "How much farther the wave from one slit travels than the wave from the other to reach the same spot"
     },
     {
      "term": "fringes",
-     "means": "The alternating bright and dark bands that interference paints on the screen"
+     "means": "The alternating bright and dark stripes that interference paints on the screen"
     },
     {
      "term": "fringe spacing",
-     "means": "The distance on the screen from one bright band to the next: wavelength × screen distance ÷ slit gap"
+     "means": "The distance between neighbouring bright stripes, about w = zλ/d"
     }
    ],
    "model": {
-    "title": "Brightness across a screen behind two slits",
-    "note": "Teaching model: two very narrow slits and two equal beams of a single pure colour. The screen is far away compared with the slit gap, so the source's small-angle rule d·sinθ ≈ d·θ holds. The extra spreading from each slit's own width (the source's sinc factor) is left out. Brightness is measured in units of one beam on its own. The default settings (0.5 mm slit gap, 0.6 μm light, 1 m to the screen) are the worked example in the double-slit source. Other settings are illustrative.",
+    "title": "Brightness across the screen behind two slits",
+    "note": "Teaching model: the far-field, small-angle version with very narrow slits, so the slower brightness envelope from each slit's width is left out. It uses two equal beams of a single wavelength, and brightness is shown in units of one slit alone. The default settings are the source's worked example (0.5 mm, 0.6 μm, 1 m giving 1.2 mm). Other settings are illustrative.",
     "controls": [
      {
-      "id": "lam",
-      "label": "Wavelength of the light (colour)",
+      "id": "lambda",
+      "label": "Wavelength of the light",
       "kind": "slider",
       "min": 0.4,
       "max": 0.7,
-      "step": 0.05,
+      "step": 0.01,
       "default": 0.6,
-      "unit": " μm",
+      "unit": "μm",
       "color": 0
      },
      {
       "id": "d",
-      "label": "Gap between the two slits",
+      "label": "Distance between the two slits",
       "kind": "slider",
-      "min": 0.2,
-      "max": 1.0,
+      "min": 0.1,
+      "max": 0.8,
       "step": 0.05,
       "default": 0.5,
-      "unit": " mm",
+      "unit": "mm",
       "color": 1
      },
      {
@@ -847,45 +948,34 @@
       "kind": "slider",
       "min": 0.5,
       "max": 2,
-      "step": 0.25,
-      "default": 1,
-      "unit": " m",
-      "color": 2
-     },
-     {
-      "id": "p",
-      "label": "Probe position on the screen",
-      "kind": "slider",
-      "min": -6,
-      "max": 6,
       "step": 0.1,
-      "default": 0,
-      "unit": " mm",
-      "color": 3
+      "default": 1,
+      "unit": "m",
+      "color": 2
      }
     ],
     "outputs": [
      {
-      "id": "shift",
-      "label": "Extra distance at the probe, in wavelengths",
-      "expr": "d * p / (z * lam)",
-      "unit": "",
-      "decimals": 2,
-      "color": 3
-     },
-     {
-      "id": "bright_here",
-      "label": "Brightness at the probe (one beam = 1)",
-      "expr": "4 * cos(pi * d * p / (z * lam))^2",
-      "unit": "",
-      "decimals": 2,
-      "color": 3
-     },
-     {
       "id": "spacing",
-      "label": "Gap between neighbouring bright bands",
-      "expr": "z * lam / d",
-      "unit": " mm",
+      "label": "Gap between bright stripes",
+      "expr": "z * lambda / d",
+      "unit": "mm",
+      "decimals": 2,
+      "color": 3
+     },
+     {
+      "id": "probe_waves",
+      "label": "Extra distance at the marked spot",
+      "expr": "d * 3 / (z * lambda)",
+      "unit": "waves",
+      "decimals": 2,
+      "color": 4
+     },
+     {
+      "id": "probe_bright",
+      "label": "Brightness at the marked spot",
+      "expr": "4 * cos(pi * d * 3 / (z * lambda))^2",
+      "unit": "× one slit",
       "decimals": 2,
       "color": 5
      }
@@ -893,52 +983,57 @@
     "visual": {
      "type": "curves",
      "x": {
-      "label": "Position on the screen (mm from the centre)",
+      "label": "Position on screen (mm from centre)",
       "min": -6,
       "max": 6
      },
      "y": {
-      "label": "Brightness (one beam alone = 1)",
+      "label": "Brightness (× one slit alone)",
       "min": 0,
-      "max": 4.4
+      "max": 4.5
      },
      "series": [
       {
-       "id": "bright",
-       "label": "Brightness on the screen",
-       "expr": "4 * cos(pi * d * x / (z * lam))^2",
-       "color": 4,
+       "id": "brightness",
+       "label": "Both slits open",
+       "expr": "4 * cos(pi * d * x / (z * lambda))^2",
+       "color": 7,
        "dashed": false
       }
      ],
      "hlines": [
       {
-       "id": "one_beam",
+       "id": "one_slit",
        "y": 1,
-       "label": "One beam alone"
+       "label": "One slit alone"
       }
      ],
      "markers": [
       {
-       "id": "probe",
-       "x": "p",
-       "label": "Probe",
-       "color": 3
+       "id": "centre",
+       "x": 0,
+       "label": "Centre",
+       "color": 6
       },
       {
        "id": "next_bright",
-       "x": "z * lam / d",
-       "label": "Next bright band",
-       "color": 5
+       "x": "z * lambda / d",
+       "label": "Next bright stripe",
+       "color": 3
+      },
+      {
+       "id": "probe",
+       "x": 3,
+       "label": "Marked spot",
+       "color": 4
       }
      ],
      "points": [
       {
-       "id": "probe_pt",
-       "x": "p",
-       "y": "4 * cos(pi * d * p / (z * lam))^2",
-       "label": "Here",
-       "color": 3
+       "id": "probe_point",
+       "x": 3,
+       "y": "probe_bright",
+       "label": "Marked spot"
       }
      ]
     }
@@ -946,171 +1041,161 @@
    "animation": {
     "steps": [
      {
-      "say": "Light passes through two narrow slits and lands on a screen. This curve shows how bright each spot on the screen is, out to 6 mm either side of the centre.",
-      "focus": "bright",
-      "ms": 3600
+      "say": "Light passes through two narrow slits and lands on a screen. This curve shows how bright each spot on the screen is.",
+      "focus": "brightness",
+      "ms": 3200
      },
      {
-      "say": "The flat line marks how bright one beam would be on its own, for comparison.",
-      "focus": "one_beam",
-      "ms": 2600
+      "say": "The flat line is how bright the screen would be with only one slit open.",
+      "focus": "one_slit",
+      "ms": 2800
      },
      {
-      "say": "This slider moves a probe across the screen. Its readout shows how much farther light from one slit travels than light from the other to reach that spot.",
+      "say": "This slider sets the wavelength of the light. Watch the stripes change.",
       "set": {
-       "p": 1.2
+       "lambda": 0.7
+      },
+      "focus": "lambda",
+      "ms": 3200
+     },
+     {
+      "say": "This one sets how far apart the two slits are.",
+      "set": {
+       "d": 0.3
+      },
+      "focus": "d",
+      "ms": 3000
+     },
+     {
+      "say": "This one moves the screen nearer or farther. The box reports the gap between bright stripes.",
+      "set": {
+       "z": 1.5
       },
       "focus": [
-       "p",
-       "shift"
-      ],
-      "ms": 3800
-     },
-     {
-      "say": "These three sliders set the light's wavelength, the gap between the slits and how far away the screen is.",
-      "focus": [
-       "lam",
-       "d",
-       "z"
-      ],
-      "ms": 3400
-     },
-     {
-      "say": "This box reports the gap between neighbouring bright bands. The orange line marks the next bright band out from the centre.",
-      "set": {
-       "p": 0
-      },
-      "focus": [
-       "spacing",
-       "next_bright"
+       "z",
+       "spacing"
       ],
       "ms": 3400
      }
     ]
    },
    "explore": {
-    "prompt": "Now steer the stripes yourself. Change the slits, the screen and the colour, and use the probe to test what any spot is doing.",
+    "prompt": "You are the experimenter now. Tune the light and the slits to paint the stripes you want.",
     "goals": [
      {
-      "text": "Make the bright bands sit twice as far apart as they do now, without changing the colour of the light.",
-      "when": "spacing > 2.3 && spacing < 2.5 && abs(lam - 0.6) < 0.01",
+      "text": "Without moving the screen, spread the bright stripes so they sit about 2 mm apart (between 1.9 and 2.1 mm).",
+      "when": "spacing >= 1.9 && spacing <= 2.1 && abs(z - 1) < 0.01",
       "solution": {
-       "d": 0.25
+       "d": 0.3
       },
       "hints": [
-       "The colour is off limits, so which two settings are left that change the band gap?",
-       "The gap is wavelength × screen distance ÷ slit gap. One of the remaining settings sits on top of the fraction and one sits underneath.",
-       "Doubling the band gap means changing one setting by a factor of two: making the slits closer together or moving the screen farther away."
+       "Leave the screen distance alone. Which other two sliders change the gap between stripes?",
+       "Longer waves spread the stripes, and so do slits that sit closer together. You need about 1.7 times the current gap.",
+       "Even the reddest light here cannot spread the stripes enough on its own. Keep the colour and bring the slits closer than they are now."
       ]
      },
      {
-      "text": "Slide the probe to 1.5 mm from the centre, then change the setup so that this exact spot goes dark (brightness below 0.1).",
-      "when": "abs(p - 1.5) < 0.05 && bright_here < 0.1",
+      "text": "The marked spot starts out dark. Make it a bright stripe by changing only the distance between the slits.",
+      "when": "probe_bright > 3.8 && abs(lambda - 0.6) < 0.001 && abs(z - 1) < 0.01",
       "solution": {
-       "p": 1.5,
-       "d": 0.6
+       "d": 0.4
       },
       "hints": [
-       "A spot goes dark when one wave arrives half a cycle behind the other.",
-       "Watch the extra-distance readout. You want it to land on a half: 0.5, 1.5, 2.5 and so on.",
-       "Leave the probe where it is and nudge the slit gap or the colour until that readout hits a half. More than one setting works."
+       "The spot is dark because the extra distance there is a half-number of waves, so crest meets trough.",
+       "Change the slit gap and watch the extra-distance box. A bright spot needs a whole number of waves.",
+       "Narrowing the gap a little shrinks the extra distance. Aim for the whole number just below where it starts."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Right. Every colour arrives in step at the centre, because both slits are equally far away there. Away from the centre, each colour's band spacing is set by its own wavelength, so the red and blue bands drift apart. This is why white light gives a white centre with coloured bands beside it.",
-     "incorrect": "The key is that band spacing depends on wavelength. Only the centre has zero extra distance for every colour at once, so only there are all colours guaranteed to be bright together. Farther out, red and blue bands fall out of line."
+     "correct": "Yes. The spacing is w = zλ/d, so halving the slit gap doubles it, from 1.2 mm to 2.4 mm. With the slits closer, the extra distance grows more slowly across the screen.",
+     "incorrect": "It is tempting to think closer slits give closer stripes. But the stripe spacing depends on how fast the extra distance builds up along the screen. Closer slits build it up more slowly, so w = zλ/d gets bigger: 2.4 mm."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start at the centre. Both slits are equally far away, so the extra distance is zero. The waves arrive in step: four times as bright as one beam. That extra distance is called the path difference.",
+       "say": "Start with the source's own example: slits 0.5 mm apart, 0.6 μm light, screen 1 m away. At the centre, both slits are equally far away, so their waves arrive in step. The result is bright, four times one slit alone.",
        "set": {
-        "lam": 0.6,
+        "lambda": 0.6,
         "d": 0.5,
-        "z": 1,
-        "p": 0
+        "z": 1
+       },
+       "focus": "centre",
+       "ms": 4200
+      },
+      {
+       "say": "Now look 3 mm out. The far slit's wave has travelled 2.5 wavelengths farther, so crest meets trough and the spot is dark. That extra travel is the path difference.",
+       "focus": [
+        "probe",
+        "probe_waves"
+       ],
+       "ms": 4400
+      },
+      {
+       "say": "Moving along the screen, the path difference grows steadily. It passes a whole number of waves (bright), then a half number (dark), again and again. These stripes are fringes.",
+       "focus": "brightness",
+       "ms": 4200
+      },
+      {
+       "say": "The distance from one bright fringe to the next is the fringe spacing. Here it is 1.2 mm, the same number the source works out.",
+       "focus": [
+        "next_bright",
+        "spacing"
+       ],
+       "ms": 3800
+      },
+      {
+       "say": "Make the waves longer. You now have to go farther out before the path difference reaches one whole wave, so the fringes spread apart.",
+       "set": {
+        "lambda": 0.7
        },
        "focus": [
-        "shift",
-        "bright_here"
+        "lambda",
+        "spacing"
        ],
-       "ms": 5200
+       "ms": 3800
       },
       {
-       "say": "Slide 0.6 mm to one side. Now light from the farther slit travels half a wavelength more, so the path difference is 0.5. Crest meets trough and the spot goes dark.",
+       "say": "Back to 0.6 μm, but now push the slits wider apart. The path difference grows faster across the screen, so the fringes crowd together.",
        "set": {
-        "p": 0.6
-       },
-       "focus": [
-        "probe_pt",
-        "shift"
-       ],
-       "ms": 4800
-      },
-      {
-       "say": "At 1.2 mm the path difference is one whole wavelength. The waves are back in step, so the spot is bright again. These alternating bright and dark bands are called fringes.",
-       "set": {
-        "p": 1.2
-       },
-       "focus": [
-        "probe_pt",
-        "bright"
-       ],
-       "ms": 4800
-      },
-      {
-       "say": "The pattern repeats each time the path difference grows by one wavelength. The gap between bright bands is the fringe spacing: wavelength × distance ÷ slit gap = 0.6 μm × 1 m ÷ 0.5 mm = 1.2 mm, the source's worked example.",
-       "focus": [
-        "spacing",
-        "next_bright"
-       ],
-       "ms": 6200
-      },
-      {
-       "say": "Double the slit gap. Now the path difference builds up twice as fast as you move across the screen, so the fringes squeeze to half the spacing.",
-       "set": {
-        "d": 1.0,
-        "p": 0
+        "lambda": 0.6,
+        "d": 0.8
        },
        "focus": [
         "d",
         "spacing"
        ],
-       "ms": 4800
+       "ms": 4000
       },
       {
-       "say": "Put the gap back and switch to bluer light with a shorter wavelength. Fewer millimetres are needed to add up one wavelength of path difference, so the bands crowd together again.",
+       "say": "Return the slits to 0.5 mm and move the screen twice as far away. The same angles now cover more screen, so the spacing doubles to 2.4 mm.",
        "set": {
         "d": 0.5,
-        "lam": 0.4
-       },
-       "focus": [
-        "lam",
-        "spacing"
-       ],
-       "ms": 5000
-      },
-      {
-       "say": "Back to the original colour, and move the screen twice as far away. The same angles now land farther apart, and the fringes spread to 2.4 mm. Slit gap, colour and distance together set the whole striped pattern.",
-       "set": {
-        "lam": 0.6,
         "z": 2
        },
        "focus": [
         "z",
-        "bright",
-        "next_bright"
+        "spacing"
        ],
-       "ms": 5600
+       "ms": 4000
+      },
+      {
+       "say": "Put it all together: red light, slits close together, a far screen. The fringes become broad bands several millimetres wide. All three effects follow one rule: w = zλ/d.",
+       "set": {
+        "lambda": 0.7,
+        "d": 0.2,
+        "z": 2
+       },
+       "focus": "brightness",
+       "ms": 4400
       }
      ]
     },
-    "explanation": "Light from each slit travels to every spot on the screen, but usually not the same distance. At the centre the two trips are equal, so the waves arrive in step and the spot is bright. Moving outward, one trip grows longer. Each time the extra distance reaches half a wavelength, the spot goes dark, and each whole wavelength makes it bright again. That repeating pattern is the set of stripes, with spacing of wavelength × screen distance ÷ slit gap. Young first described this kind of experiment around 1801 to argue that light is a wave, though historians question whether he actually ran a two-slit version himself. The spacing rule shown here is the classical far-field approximation: it assumes very narrow slits and a screen far away compared with the slit gap.",
+    "explanation": "Behind two narrow slits, every spot on the screen receives one wave from each slit. Away from the centre, one slit is a little farther away. That path difference sets the phase difference between the two waves. Where the path difference is a whole number of wavelengths, the waves add and the spot is bright. Where it is a half number, they cancel and the spot is dark. Because the path difference grows steadily along the screen, the fringes repeat evenly, about w = zλ/d apart: longer waves or a farther screen spread them, and wider-spaced slits crowd them. This is the source's far-field, small-angle formula. It gives 1.2 mm for 0.5 mm slits, 0.6 μm light and a 1 m screen. Real slits also have a width, which adds a slower brightness envelope that this model leaves out. Thomas Young described this kind of experiment in 1801 as part of his case for light being a wave.",
     "quote": "When the two waves are in phase, i.e. the path difference is equal to an integral number of wavelengths, the summed amplitude, and therefore the summed intensity is maximum, and when they are in anti-phase, i.e. the path difference is equal to half a wavelength, one and a half wavelengths, etc., then the two waves cancel and the summed intensity is zero.",
-    "quote_where": "Double-slit experiment, section 'Classical wave-optics formulation'",
+    "quote_where": "Classical wave-optics formulation",
     "source_id": "s3",
     "source_ids": [
      "s3",
@@ -1135,7 +1220,7 @@
      },
      {
       "text": "λ",
-      "link": "lam"
+      "link": "lambda"
      },
      {
       "text": " / "
@@ -1145,457 +1230,1085 @@
       "link": "d"
      }
     ],
-    "caption": "This is the source's fringe-spacing rule, w = zλ/d. Here w is the gap between bright bands (the spacing box), z is the slit-to-screen distance, λ is the wavelength of the light, and d is the distance between the slits. It comes from the far-field condition that bright bands appear wherever d·θ equals a whole number of wavelengths."
+    "caption": "The source's fringe-spacing formula, w = zλ/d. Here w is the gap between bright stripes (the output box), z is the slit-to-screen distance, λ is the wavelength and d is the distance between the slits. With z in metres, λ in micrometres and d in millimetres, w comes out in millimetres. The formula holds when the screen is far away compared with the slit gap."
    },
-   "recap": "Across the screen, the extra distance from one slit grows steadily. Every whole wavelength gives a bright band and every half gives a dark one, so the bands sit wavelength × distance ÷ slit gap apart.",
+   "recap": "The extra distance from the two slits grows steadily across the screen, painting evenly spaced bright and dark stripes about w = zλ/d apart.",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
     },
     {
      "id": "goal_1",
      "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
      "i": 1
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
     },
     {
-     "id": "connect",
+     "id": "eq",
      "kind": "connect"
     }
    ]
   },
   {
-   "id": "one_particle_at_a_time",
-   "title": "Dot by dot, the stripes appear",
-   "idea": "Each particle lands at a single random spot, but the chance of landing at each spot follows the wave's brightness pattern, so stripes appear only after many dots pile up.",
-   "role": "core",
+   "id": "dot_by_dot",
+   "title": "One particle at a time, the stripes still appear",
+   "idea": "Each particle lands at a single random spot whose chance follows the two-slit brightness pattern, so the stripes are invisible after a few hits and emerge only as many dots pile up.",
+   "role": "contribution",
    "predict": {
-    "question": "A source is turned so far down that only one particle per minute reaches the two slits, so no two particles are ever in the apparatus together. After a week, what has built up on the screen?",
+    "question": "A lab can only afford short runs: it sends 10 particles through the two slits, records where they land, and repeats this 100 times on different days. Then it stacks all 100 screens on top of each other. What does the stacked picture show?",
     "options": [
-     "Two bright blobs, one behind each slit, because a lone particle has nothing to interfere with",
-     "The same bright and dark stripes, once enough dots have piled up",
-     "An even smear of dots across the whole screen",
-     "Stripes only in the rare moments when two particles happened to arrive together"
+     "Still a blur, because each run of 10 was too small to show stripes",
+     "Clear stripes, just like a single run of 1,000 particles",
+     "Stripes, but blurrier than a single run of 1,000, because the runs were separate",
+     "A single smooth hump, as if each particle used only one slit"
     ],
     "answer": 1,
     "why": [
-     "It seems natural that stripes need two things to clash. But the chance of landing follows the two-slit wave pattern for every single particle, so the stripes still build up.",
-     "Right. Each particle lands at one random spot, but the odds follow the bright and dark bands. Arrival rate does not change the odds, so a week of single arrivals adds up to the same stripes.",
-     "One random dot at a time might suggest no pattern at all. But the dots are not equally likely everywhere: they never land in the dark bands, so a smear cannot form.",
-     "This assumes particles interfere with each other. Taylor's very dim light and the single-electron experiments show the pattern still builds up when particles arrive alone."
+     "Tempting, because each run on its own really is a blur. But the dots do not belong to a run: stacked together they are 1,000 independent landings, and 1,000 is enough to show the stripes.",
+     "Right. Each particle lands on its own, with the same two-slit odds every time. So 100 runs of 10 give the same statistics as one run of 1,000, and the stripes stand out.",
+     "It seems natural that separate runs should add extra blur. But nothing links one particle to the next: each landing follows the same odds whether it came on Monday or Friday, so the stacked pile is as sharp as one long run.",
+     "Sending particles one at a time does not close a slit. With both slits open, each particle's landing chance still follows the striped two-slit pattern, not a single-slit hump."
     ]
    },
    "terms": [
     {
-     "term": "photon",
-     "means": "A single particle of light. With a very dim source, light reaches the screen one photon at a time."
+     "term": "probability",
+     "means": "How likely an outcome is; here, how likely a particle is to land in each part of the screen"
+    },
+    {
+     "term": "statistical pattern",
+     "means": "A pattern that exists only in the counts of many random events, not in any single one"
     },
     {
      "term": "wave–particle duality",
-     "means": "Each arrival is one dot at one spot, like a particle, yet where the dots pile up follows a wave's bright and dark bands."
+     "means": "The finding that light and matter show both wave and particle properties: they arrive as single dots, but where they land follows a wave pattern"
     }
    ],
    "model": {
-    "title": "Dots piling up in strips across the screen",
-    "note": "Teaching model: the screen is cut into 11 strips. The chance of a dot landing in each strip follows the two-slit brightness bands (cos² stripes under a gentle fade), and the dark strips are treated as perfectly dark. Each strip's count is its expected count plus a fixed pseudo-random wobble. This is a normal approximation to random arrivals, so the wobble shrinks relative to the count as dots pile up. Strips are counted separately, so the bars may not add up exactly to the dot total. Numbers are illustrative, not data from any experiment.",
+    "title": "Where single particles land behind two slits",
+    "note": "Teaching model: the two-slit curve from the previous concept (very narrow slits, far field, one wavelength), with every particle landing independently of the others. The screen is cut into 0.2 mm patches, and a brightest patch collects about 1/30 of all hits. This is approximate: it assumes roughly whole stripes fit on the 12 mm screen. Counts are rescaled so the average pile has the same height as the brightness curve. The dashed band is the average count plus or minus two typical random deviations. That is a bell-curve approximation to counting noise, and it is rough when there are only a few hits. Particle counts and bands are illustrative, not data from any experiment.",
     "controls": [
      {
-      "id": "n",
-      "label": "Dots that have arrived",
+      "id": "lambda",
+      "label": "Wavelength of the light",
       "kind": "slider",
-      "min": 10,
-      "max": 10000,
-      "step": 10,
-      "default": 20,
-      "unit": "",
+      "min": 0.4,
+      "max": 0.7,
+      "step": 0.01,
+      "default": 0.6,
+      "unit": "μm",
+      "color": 0
+     },
+     {
+      "id": "d",
+      "label": "Distance between the two slits",
+      "kind": "slider",
+      "min": 0.1,
+      "max": 0.8,
+      "step": 0.05,
+      "default": 0.5,
+      "unit": "mm",
+      "color": 1
+     },
+     {
+      "id": "z",
+      "label": "Distance from slits to screen",
+      "kind": "slider",
+      "min": 0.5,
+      "max": 2,
+      "step": 0.1,
+      "default": 1,
+      "unit": "m",
       "color": 2
      },
      {
-      "id": "s",
-      "label": "Run of the experiment (fresh luck)",
+      "id": "n_particles",
+      "label": "Number of particles sent",
       "kind": "slider",
-      "min": 1,
-      "max": 8,
-      "step": 1,
-      "default": 1,
+      "min": 10,
+      "max": 5000,
+      "step": 10,
+      "default": 10,
       "unit": "",
-      "color": 5
-     },
-     {
-      "id": "show_pred",
-      "label": "Show the waves' smooth prediction instead of dots",
-      "kind": "toggle",
-      "default": 0,
-      "color": 6,
-      "min": 0,
-      "max": 1,
-      "step": 1
+      "color": 4
      }
     ],
     "outputs": [
      {
-      "id": "mid",
-      "label": "Dots in the centre strip",
-      "expr": "max(0, round(n*0.20516 + norminv(clamp(3.708204 + 0.754878*s - floor(3.708204 + 0.754878*s), 0.03, 0.97), 0, 1)*sqrt(n*0.20516*0.79484), 0))",
-      "unit": "",
-      "decimals": 0,
-      "color": 0
-     },
-     {
-      "id": "beside",
-      "label": "Dots in the strip just right of centre",
-      "expr": "max(0, round(n*0.10055 + norminv(clamp(4.326238 + 0.754878*s - floor(4.326238 + 0.754878*s), 0.03, 0.97), 0, 1)*sqrt(n*0.10055*0.89945), 0))",
-      "unit": "",
-      "decimals": 0,
-      "color": 1
-     },
-     {
-      "id": "beside_l",
-      "label": "Dots in the strip just left of centre",
-      "expr": "max(0, round(n*0.10055 + norminv(clamp(3.09017 + 0.754878*s - floor(3.09017 + 0.754878*s), 0.03, 0.97), 0, 1)*sqrt(n*0.10055*0.89945), 0))",
-      "unit": "",
-      "decimals": 0,
-      "color": 1
-     },
-     {
-      "id": "dark",
-      "label": "Dots in the dark strip right of centre",
-      "expr": "0 * n",
-      "unit": "",
-      "decimals": 0,
+      "id": "spacing",
+      "label": "Gap between bright stripes",
+      "expr": "z * lambda / d",
+      "unit": "mm",
+      "decimals": 2,
       "color": 3
      },
      {
-      "id": "mismatch",
-      "label": "Centre three strips: off from the waves' prediction",
-      "expr": "(abs(mid - n*0.20516) + abs(beside - n*0.10055) + abs(beside_l - n*0.10055)) / (n*0.40626)",
+      "id": "expected_peak",
+      "label": "Average hits in a brightest 0.2 mm patch",
+      "expr": "n_particles / 30",
+      "unit": "hits",
+      "decimals": 1,
+      "color": 4
+     },
+     {
+      "id": "empty_chance",
+      "label": "Chance a brightest patch gets no hits at all",
+      "expr": "exp(-n_particles / 30)",
       "unit": "%",
       "scale": 100,
-      "decimals": 1,
+      "decimals": 0,
+      "color": 6
+     },
+     {
+      "id": "bright_low",
+      "label": "Lowest likely reading at a bright stripe",
+      "expr": "max(0, 4 - 2 * sqrt(480 / n_particles))",
+      "unit": "× one slit",
+      "decimals": 2,
+      "color": 5
+     },
+     {
+      "id": "scatter_share",
+      "label": "Typical scatter at a bright stripe (share of its height)",
+      "expr": "sqrt(30 / n_particles)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
       "color": 4
      }
     ],
     "visual": {
-     "type": "bars",
-     "bars": [
+     "type": "curves",
+     "x": {
+      "label": "Position on screen (mm from centre)",
+      "min": -6,
+      "max": 6
+     },
+     "y": {
+      "label": "Pile of hits (× one slit alone)",
+      "min": 0,
+      "max": 8
+     },
+     "series": [
       {
-       "id": "strip_m5",
-       "label": "−5",
-       "value": "show_pred > 0.5 ? n*0.06222 : max(0, round(n*0.06222 + norminv(clamp(0.618034 + 0.754878*s - floor(0.618034 + 0.754878*s), 0.03, 0.97), 0, 1)*sqrt(n*0.06222*0.93778), 0))",
-       "color": 7
+       "id": "expected",
+       "label": "Where hits pile up on average",
+       "expr": "4 * cos(pi * d * x / (z * lambda))^2",
+       "color": 7,
+       "dashed": false
       },
       {
-       "id": "strip_m4",
-       "label": "−4",
-       "value": "show_pred > 0.5 ? n*0.14898 : max(0, round(n*0.14898 + norminv(clamp(1.236068 + 0.754878*s - floor(1.236068 + 0.754878*s), 0.03, 0.97), 0, 1)*sqrt(n*0.14898*0.85102), 0))",
-       "color": 7
+       "id": "band_high",
+       "label": "Upper edge of usual scatter",
+       "expr": "4 * cos(pi * d * x / (z * lambda))^2 + 2 * sqrt(480 * cos(pi * d * x / (z * lambda))^2 / n_particles)",
+       "color": 4,
+       "dashed": true
       },
       {
-       "id": "strip_m3",
-       "label": "−3",
-       "value": "show_pred > 0.5 ? n*0.08568 : max(0, round(n*0.08568 + norminv(clamp(1.854102 + 0.754878*s - floor(1.854102 + 0.754878*s), 0.03, 0.97), 0, 1)*sqrt(n*0.08568*0.91432), 0))",
-       "color": 7
-      },
-      {
-       "id": "strip_m2",
-       "label": "−2",
-       "value": "0 * n",
-       "color": 3
-      },
-      {
-       "id": "strip_m1",
-       "label": "−1",
-       "value": "show_pred > 0.5 ? n*0.10055 : beside_l",
-       "color": 1
-      },
-      {
-       "id": "strip_0",
-       "label": "0",
-       "value": "show_pred > 0.5 ? n*0.20516 : mid",
-       "color": 0
-      },
-      {
-       "id": "strip_p1",
-       "label": "+1",
-       "value": "show_pred > 0.5 ? n*0.10055 : beside",
-       "color": 1
-      },
-      {
-       "id": "strip_p2",
-       "label": "+2",
-       "value": "dark",
-       "color": 3
-      },
-      {
-       "id": "strip_p3",
-       "label": "+3",
-       "value": "show_pred > 0.5 ? n*0.08568 : max(0, round(n*0.08568 + norminv(clamp(5.562306 + 0.754878*s - floor(5.562306 + 0.754878*s), 0.03, 0.97), 0, 1)*sqrt(n*0.08568*0.91432), 0))",
-       "color": 7
-      },
-      {
-       "id": "strip_p4",
-       "label": "+4",
-       "value": "show_pred > 0.5 ? n*0.14898 : max(0, round(n*0.14898 + norminv(clamp(6.18034 + 0.754878*s - floor(6.18034 + 0.754878*s), 0.03, 0.97), 0, 1)*sqrt(n*0.14898*0.85102), 0))",
-       "color": 7
-      },
-      {
-       "id": "strip_p5",
-       "label": "+5",
-       "value": "show_pred > 0.5 ? n*0.06222 : max(0, round(n*0.06222 + norminv(clamp(6.798374 + 0.754878*s - floor(6.798374 + 0.754878*s), 0.03, 0.97), 0, 1)*sqrt(n*0.06222*0.93778), 0))",
-       "color": 7
+       "id": "band_low",
+       "label": "Lower edge of usual scatter",
+       "expr": "max(0, 4 * cos(pi * d * x / (z * lambda))^2 - 2 * sqrt(480 * cos(pi * d * x / (z * lambda))^2 / n_particles))",
+       "color": 4,
+       "dashed": true
       }
      ],
-     "min": 0,
-     "max": "max(6, n*0.24 + 3*sqrt(n*0.21))",
-     "unit": "",
-     "decimals": 0
+     "hlines": [
+      {
+       "id": "one_slit",
+       "y": 1,
+       "label": "One slit alone"
+      },
+      {
+       "id": "average",
+       "y": 2,
+       "label": "Average over the screen"
+      }
+     ],
+     "markers": [
+      {
+       "id": "centre",
+       "x": 0,
+       "label": "Centre",
+       "color": 6
+      },
+      {
+       "id": "next_bright",
+       "x": "z * lambda / d",
+       "label": "Next bright stripe",
+       "color": 3
+      }
+     ]
     }
    },
    "animation": {
     "steps": [
      {
-      "say": "Picture a very dim light behind two slits. Particles reach the screen one at a time, and each leaves a single dot. We've cut the screen into 11 narrow strips.",
-      "set": {
-       "n": 20,
-       "s": 1,
-       "show_pred": 0
-      },
-      "focus": "strip_0",
-      "ms": 4000
+      "say": "Same screen, same two slits, same three sliders. The solid curve is the stripe pattern you already know. Now we read it as where particles pile up on average.",
+      "focus": "expected",
+      "ms": 6000
      },
      {
-      "say": "Each bar counts the dots that have landed in its strip. Strip 0 is the middle of the screen, and the numbers count outward from it.",
+      "say": "New slider: how many particles we send, one at a time. Each one lands as a single dot somewhere on the screen.",
+      "set": {
+       "n_particles": 10
+      },
+      "focus": "n_particles",
+      "ms": 5500
+     },
+     {
+      "say": "The dashed lines mark how far a real run's pile usually strays from the average. Watch how wide that band is right now.",
       "focus": [
-       "strip_m5",
-       "strip_0",
-       "strip_p5"
+       "band_high",
+       "band_low"
       ],
-      "ms": 3500
-     },
-     {
-      "say": "This slider sets how many dots have arrived so far. Watch the bars fill in.",
-      "set": {
-       "n": 300
-      },
-      "focus": "n",
-      "ms": 3500
-     },
-     {
-      "say": "This one starts a fresh run: same setup, new luck about where each dot lands.",
-      "set": {
-       "s": 4
-      },
-      "focus": "s",
-      "ms": 3200
-     },
-     {
-      "say": "And this switch swaps the dots for the smooth pattern the waves predict.",
-      "set": {
-       "show_pred": 1
-      },
-      "focus": "show_pred",
-      "ms": 3200
+      "ms": 6000
      }
     ]
    },
    "explore": {
-    "prompt": "Play with the luck of the draw. See how badly a few dots can mislead you, then how many dots it takes before the waves' pattern shows through.",
+    "prompt": "Play with the number of particles. Find where the bright stripes stop being drowned by randomness and start to stand out on their own.",
     "goals": [
      {
-      "text": "With 50 dots or fewer, find a run where a dim strip right beside the centre has caught more dots than the bright centre strip.",
-      "when": "(beside > mid || beside_l > mid) && n <= 50",
+      "text": "Find the smallest particle count, to within about 100, at which even the lowest likely reading at a bright stripe clears the average line.",
+      "when": "bright_low > 2 && n_particles <= 600",
       "solution": {
-       "n": 10,
-       "s": 2
+       "n_particles": 500
       },
       "hints": [
-       "With only a few dots, luck matters a lot. Keep the dot count low.",
-       "Now step through different runs and watch strips −1, 0 and +1.",
-       "Drop the dots to the very bottom of the slider, then try the first few runs one by one."
+       "More particles shrink the dashed band. You want the point where it first clears the line, not the far end of the slider.",
+       "Watch the 'Lowest likely reading at a bright stripe' box and the 'Average over the screen' line. Move in big steps first, then small ones.",
+       "It happens past a few hundred particles but well before a thousand."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "source_ids": [
+     "s3",
+     "s4"
+    ],
+    "feedback": {
+     "correct": "Yes. Every particle lands independently, with the same two-slit odds. Stacking 100 runs of 10 gives 1,000 landings with exactly the statistics of one run of 1,000, so the stripes show just as clearly.",
+     "incorrect": "You probably pictured the stripes as something each run builds for itself. In fact the stripes live only in the odds for each landing. Nothing links one particle to the next, so it doesn't matter whether 1,000 dots come in one run or in a hundred: the pile looks the same."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Ten particles. A brightest patch expects only a third of a hit, so about 72% of the time it gets nothing at all, exactly like a dark patch.",
+       "set": {
+        "n_particles": 10,
+        "d": 0.5,
+        "lambda": 0.6,
+        "z": 1
+       },
+       "focus": "empty_chance",
+       "ms": 4200
+      },
+      {
+       "say": "The dashed band runs from zero to off the top of the chart. A run this small could look like almost anything. Ten dots cannot tell you where the bright stripes are.",
+       "focus": [
+        "band_high",
+        "band_low"
+       ],
+       "ms": 4200
+      },
+      {
+       "say": "A hundred particles. A bright patch now expects about three hits, but the band still touches zero at the bright stripes. Some bright patches will still come up nearly empty.",
+       "set": {
+        "n_particles": 100
+       },
+       "focus": "bright_low",
+       "ms": 4400
+      },
+      {
+       "say": "Five hundred. Now even an unlucky bright stripe should pile up above the screen's average. The stripes become readable from the dots alone.",
+       "set": {
+        "n_particles": 500
+       },
+       "focus": [
+        "bright_low",
+        "average"
+       ],
+       "ms": 4400
+      },
+      {
+       "say": "Two thousand: four times as many particles, and the scatter has only halved. Random noise shrinks with the square root of the count.",
+       "set": {
+        "n_particles": 2000
+       },
+       "focus": "scatter_share",
+       "ms": 4400
+      },
+      {
+       "say": "Five thousand. The band hugs the curve. No single dot was predictable, but each one's probability of landing follows the brightness curve. The stripes are a statistical pattern.",
+       "set": {
+        "n_particles": 5000
+       },
+       "focus": "expected",
+       "ms": 5000
+      },
+      {
+       "say": "Now bring the slits closer. The pile spreads into wider stripes. Each lone particle's odds depend on how far apart both slits are: this is wave–particle duality, dots that pile up into a wave pattern.",
+       "set": {
+        "d": 0.25
+       },
+       "focus": [
+        "d",
+        "next_bright"
+       ],
+       "ms": 5200
+      }
+     ]
+    },
+    "explanation": "When particles are sent one at a time, each lands as a single dot at one spot, and you cannot predict which. What you can predict is the chance of each spot, and that chance follows the two-slit brightness curve. With a few dots, randomness swamps the stripes. Only as many dots pile up do the bright and dark bands emerge, and the noise shrinks slowly, with the square root of the count. This has been seen directly: G. I. Taylor dimmed light until photons arrived mostly one at a time (1909). Merli, Missiroli and Pozzi (1974) and later Frabboni's group (2012) watched single electrons build the pattern dot by dot. The same holds for atoms and molecules of up to 2,000 atoms. These experiments show what happens, but not why each dot lands where it does. That question is still debated.",
+    "quote": "This demonstrates the wave–particle duality, which states that all matter exhibits both wave and particle properties: The particle is measured as a single pulse at a single position, while the modulus squared of the wave describes the probability of detecting the particle at a specific place on the screen giving a statistical interference pattern.",
+    "quote_where": "Double-slit experiment, 'Interference from individual particles'",
+    "source_id": "s3"
+   },
+   "check": {
+    "kind": "model",
+    "task": "At 500 particles, read the typical scatter at a bright stripe. Now find a particle count that cuts that scatter to less than half, using no more than about 2,100 particles.",
+    "when": "scatter_share < 0.1224 && n_particles <= 2100",
+    "solution": {
+     "n_particles": 2050
+    },
+    "hint": "Random scatter shrinks with the square root of the count. Ask how many times more particles you need to halve it.",
+    "misconception": "Doubling the number of particles halves the scatter. In fact halving the scatter takes about four times as many particles."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "expected hits in a patch = "
+     },
+     {
+      "text": "N",
+      "link": "n_particles"
+     },
+     {
+      "text": " × P(patch),   P(patch) = ∫|Ψ|² dx ∝ cos²(π "
+     },
+     {
+      "text": "d",
+      "link": "d"
+     },
+     {
+      "text": " x / ("
+     },
+     {
+      "text": "z",
+      "link": "z"
+     },
+     {
+      "text": " "
+     },
+     {
+      "text": "λ",
+      "link": "lambda"
+     },
+     {
+      "text": "));   scatter ≈ √(expected hits)"
+     }
+    ],
+    "caption": "The middle part is the source's rule: the chance of finding a particle in a stretch of screen is the integral of |Ψ|², the squared wave (s1). For two narrow slits it has the cos² stripe shape set by d, z and λ, the sliders from before. N, the new slider, multiplies that chance to give the average pile per patch. The last part, scatter ≈ √(expected hits), is the model's counting-noise rule, not the sources'."
+   },
+   "recap": "Each particle lands at one unpredictable spot. Its odds follow the two-slit stripes, so the stripes appear only in the pile of many dots.",
+   "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "use",
+     "kind": "predict"
+    },
+    {
+     "id": "why",
+     "kind": "reveal"
+    },
+    {
+     "id": "test",
+     "kind": "check"
+    },
+    {
+     "id": "eq",
+     "kind": "connect"
+    }
+   ],
+   "builds_on": "two_slit_fringes"
+  },
+  {
+   "id": "which_way_erases",
+   "title": "Knowing the path wipes out the stripes",
+   "idea": "The stripes come from the interference term between the two slits' waves. Gaining which-slit information shrinks that term, and full information leaves only the plain sum of two single-slit patterns.",
+   "role": "contribution",
+   "predict": {
+    "question": "No detector this time. Each slit gets a polarizing filter, with the two turned at right angles, so the light itself records which slit it left. Nobody ever measures that record. What happens to the stripes?",
+    "options": [
+     "They stay, because nobody reads the polarization",
+     "They fade away, leaving the plain sum of the two slits",
+     "They keep full contrast but shift sideways",
+     "The whole screen dims, but the stripes keep full contrast"
+    ],
+    "answer": 1,
+    "why": [
+     "It feels as if a person must look. But what matters is whether the set-up records which slit was used. The source says the standard account is independent of any conscious observer.",
+     "Right. The polarization holds full which-slit information, so the interference term vanishes. The source reports that crossed polarizers before the slits eliminate the pattern.",
+     "A sideways shift would come from changing the path difference between the slits. A record of the path does not shift the stripes. It shrinks the term that makes them.",
+     "Contrast is exactly what the record removes. The total light stays at the plain sum, while the up-and-down swing around it disappears."
+    ]
+   },
+   "terms": [
+    {
+     "term": "interference term",
+     "means": "The part of the brightness that swings above and below the plain sum of the two slits, set by the waves' phase difference"
+    },
+    {
+     "term": "which-path information",
+     "means": "How well something in the set-up records which slit a particle went through, from none to complete"
+    },
+    {
+     "term": "visibility",
+     "means": "Stripe contrast: (brightest − darkest) ÷ (brightest + darkest). It is 1 for perfect stripes and 0 for none"
+    }
+   ],
+   "model": {
+    "title": "Brightness across the screen behind two slits, with a detector at the slits",
+    "note": "Teaching model: the far-field, small-angle version with very narrow slits, so each slit alone gives a flat brightness of 1 and the 'plain sum of two single-slit patterns' is a flat line at 2. In real experiments each slit's own pattern is a broad diffraction hump. Stripe contrast falls as √(1 − info²), the textbook best case of the visibility–distinguishability trade-off inequality the source mentions. The source names that inequality but does not give its formula, and real detectors can wash the stripes out faster. Default distances are the source's worked example (0.5 mm, 0.6 μm, 1 m); everything else is illustrative, not measured data.",
+    "controls": [
+     {
+      "id": "lambda",
+      "label": "Wavelength of the light",
+      "kind": "slider",
+      "min": 0.4,
+      "max": 0.7,
+      "step": 0.01,
+      "default": 0.6,
+      "unit": "μm",
+      "color": 0
+     },
+     {
+      "id": "d",
+      "label": "Distance between the two slits",
+      "kind": "slider",
+      "min": 0.1,
+      "max": 0.8,
+      "step": 0.05,
+      "default": 0.5,
+      "unit": "mm",
+      "color": 1
+     },
+     {
+      "id": "z",
+      "label": "Distance from slits to screen",
+      "kind": "slider",
+      "min": 0.5,
+      "max": 2,
+      "step": 0.1,
+      "default": 1,
+      "unit": "m",
+      "color": 2
+     },
+     {
+      "id": "info",
+      "label": "How much the detector reveals about the slit used",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0,
+      "unit": "",
+      "color": 4
+     }
+    ],
+    "outputs": [
+     {
+      "id": "spacing",
+      "label": "Gap between bright stripes",
+      "expr": "z * lambda / d",
+      "unit": "mm",
+      "decimals": 2,
+      "color": 3
+     },
+     {
+      "id": "vis",
+      "label": "Stripe contrast",
+      "expr": "sqrt(max(0, 1 - info^2))",
+      "unit": "",
+      "decimals": 2,
+      "color": 5
+     },
+     {
+      "id": "brightest",
+      "label": "Brightest stripes",
+      "expr": "2 + 2 * vis",
+      "unit": "× one slit",
+      "decimals": 2,
+      "color": 7
+     },
+     {
+      "id": "darkest",
+      "label": "Darkest stripes",
+      "expr": "2 - 2 * vis",
+      "unit": "× one slit",
+      "decimals": 2,
+      "color": 6
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Position on screen (mm from centre)",
+      "min": -6,
+      "max": 6
+     },
+     "y": {
+      "label": "Brightness (× one slit alone)",
+      "min": 0,
+      "max": 4.5
+     },
+     "series": [
+      {
+       "id": "brightness",
+       "label": "Both slits open",
+       "expr": "2 + 2 * sqrt(max(0, 1 - info^2)) * cos(2 * pi * d * x / (z * lambda))",
+       "color": 7,
+       "dashed": false
+      },
+      {
+       "id": "plain_sum",
+       "label": "Plain sum of two slits (no stripes)",
+       "expr": "2",
+       "color": 4,
+       "dashed": true
+      }
+     ],
+     "hlines": [
+      {
+       "id": "one_slit",
+       "y": 1,
+       "label": "One slit alone"
+      }
+     ],
+     "markers": [
+      {
+       "id": "centre",
+       "x": 0,
+       "label": "Centre",
+       "color": 6
+      },
+      {
+       "id": "next_bright",
+       "x": "z * lambda / d",
+       "label": "Next bright stripe",
+       "color": 3
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This is the same screen as before: brightness across the screen behind two open slits, with stripes peaking at four times one slit's light.",
+      "focus": "brightness",
+      "ms": 5000
+     },
+     {
+      "say": "New: a detector sits at the slits. This slider sets how much it reveals about which slit each particle went through, from nothing to everything.",
+      "set": {
+       "info": 0.6
+      },
+      "focus": "info",
+      "ms": 5500
+     },
+     {
+      "say": "The dashed line is what you would get by simply adding the light from each slit. Watch the stripes as the detector reveals more.",
+      "set": {
+       "info": 1
+      },
+      "focus": "plain_sum",
+      "ms": 5500
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with the detector. Find out how much path knowledge it takes to dim the stripes, and how little it costs at first.",
+    "goals": [
+     {
+      "text": "Make the brightest stripes about three times as bright as one slit alone",
+      "when": "abs(brightest - 3) < 0.1",
+      "solution": {
+       "info": 0.85
+      },
+      "hints": [
+       "The brightest stripe is the plain sum plus the stripes' swing above it. How big must that swing be?",
+       "The swing is twice the stripe contrast, so you need the contrast to fall to about one half. Watch the contrast box.",
+       "Contrast falls slowly at first, so the detector has to reveal well over half before it gets there."
       ]
      },
      {
-      "text": "In the run you're on, collect enough dots that the three centre strips sit within 5% of the waves' prediction.",
-      "when": "mismatch < 0.05",
+      "text": "Let the detector reveal as much as you can while the stripe contrast stays above 90%",
+      "when": "vis > 0.9 && info > 0.35",
       "solution": {
-       "n": 2000
+       "info": 0.4
       },
       "hints": [
-       "What makes random wobbles average out?",
-       "Keep an eye on the 'off from the waves' prediction' number as you add dots.",
-       "In most runs you'll need well over a thousand dots."
+       "Start from no detector and slide up slowly, watching the contrast box.",
+       "Contrast barely drops at first. A detector that reveals a fair amount still leaves strong stripes.",
+       "The contrast crosses 90% somewhere between a third and a half on the detector slider."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. The stripes come from the odds each single particle carries, not from particles meeting each other. Slow the arrivals right down and the same stripes still build up, just more slowly.",
-     "incorrect": "You probably pictured interference as particles bumping into each other. The model says otherwise: each particle's chance of landing already follows the bright and dark bands. A week of lone arrivals piles up into the same stripes. Taylor's very dim light and the single-electron experiments showed exactly this."
+     "correct": "Yes. What wipes out the stripes is that the set-up records which slit was used, not that a person looks. Crossed polarizers carry full which-path information, so the interference term vanishes and only the plain sum of the two slits remains.",
+     "incorrect": "The stripes do not depend on someone reading the record, and a record does not shift or dim them uniformly. Which-path information shrinks the interference term itself. Full information, like crossed polarizers, removes it and leaves only the plain sum."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start over with just a handful of dots. Is there a pattern? Strip −4 has more dots than the centre strip, even though the waves say the centre should be brightest.",
+       "say": "Start with no detector. The stripes swing all the way from 4 down to 0 times one slit's light.",
        "set": {
-        "n": 10,
-        "s": 1,
-        "show_pred": 0
+        "info": 0,
+        "lambda": 0.6,
+        "d": 0.5,
+        "z": 1
        },
-       "focus": [
-        "strip_m4",
-        "strip_0"
-       ],
-       "ms": 4200
-      },
-      {
-       "say": "The experiment isn't broken. Each dot lands at a random spot, so a handful of dots is mostly luck.",
-       "focus": "strip_0",
+       "focus": "brightness",
        "ms": 3200
       },
       {
-       "say": "Let 100 dots arrive. A pattern of tall and short bars starts to show, but luck still pushes the bars around a lot.",
+       "say": "The dashed line at 2 is the plain sum of the two slits. Everything above and below it is the interference term, the 2√(I₁I₂)cos φ part you met earlier.",
+       "focus": "plain_sum",
+       "ms": 4200
+      },
+      {
+       "say": "Now let the detector reveal a little about which slit each particle used. That record is called which-path information. The stripes get only slightly shallower.",
        "set": {
-        "n": 100
+        "info": 0.5
        },
        "focus": [
-        "strip_m4",
-        "strip_0",
-        "strip_p4"
+        "info",
+        "brightness"
        ],
-       "ms": 3800
+       "ms": 4000
       },
       {
-       "say": "At 1,000 dots the stripes are plain: the tallest bar in the middle, empty gaps, then bright bands further out.",
+       "say": "The contrast box measures how deep the stripes are: (brightest − darkest) ÷ (brightest + darkest). This is the visibility. At half the information it is still about 0.87.",
+       "focus": "vis",
+       "ms": 4200
+      },
+      {
+       "say": "Reveal much more. The visibility drops below one half, and even the darkest stripes now get more light than one slit alone.",
        "set": {
-        "n": 1000
+        "info": 0.9
        },
        "focus": [
-        "strip_0",
-        "strip_p2",
-        "strip_p4"
+        "darkest",
+        "one_slit"
        ],
-       "ms": 3800
+       "ms": 4000
       },
       {
-       "say": "Look at strips −2 and +2. Hundreds of dots land on both sides of them, yet none land inside. The waves cancel there, so the chance of landing there is zero.",
+       "say": "Full which-path information: the interference term is gone. The curve sits flat on the dashed line, the plain sum of two single slits.",
+       "set": {
+        "info": 1
+       },
+       "focus": "brightness",
+       "ms": 4000
+      },
+      {
+       "say": "Notice what did not happen. The light did not vanish, and the stripes did not shift. The average stays at 2. Knowing the path removed only the swing that made the stripes.",
        "focus": [
-        "strip_m2",
-        "strip_p2",
-        "dark"
+        "plain_sum",
+        "brightest",
+        "darkest"
        ],
-       "ms": 4400
-      },
-      {
-       "say": "Flip to the waves' prediction. It has the same shape. The chance of a dot landing in a strip follows the brightness there. For light, each dot is one photon, a single particle of light.",
-       "set": {
-        "show_pred": 1
-       },
-       "focus": "show_pred",
-       "ms": 4400
-      },
-      {
-       "say": "Back to dots, now 10,000 of them. The three centre strips are within about 2% of the prediction. Each dot arrives like a particle, but the pile of dots follows a wave. That pairing is called wave–particle duality.",
-       "set": {
-        "show_pred": 0,
-        "n": 10000
-       },
-       "focus": "mismatch",
-       "ms": 5000
+       "ms": 4500
       }
      ]
     },
-    "explanation": "Each particle arrives whole, as one dot at one spot, and where it lands is a matter of chance. The chance is not even, though. It follows the brightness pattern of the two overlapping waves: high in the bright bands and zero in the dark ones. With few dots, luck dominates and no stripes show. As dots pile up, the random wobbles shrink compared with the counts, and the stripes emerge. Experiments showed this directly. G. I. Taylor dimmed light until photons arrived mostly one at a time (1909). Later teams sent single electrons through slits and watched the pattern build up dot by dot (1974, 2012). The result looks as if each particle passed through both slits. No theory predicts where any single dot will land, only the odds. What that randomness means is still debated among interpretations of quantum mechanics.",
-    "quote": "The particle is measured as a single pulse at a single position, while the modulus squared of the wave describes the probability of detecting the particle at a specific place on the screen giving a statistical interference pattern.",
-    "quote_where": "Double-slit experiment, 'Interference from individual particles'",
+    "explanation": "The stripes are the interference term riding on top of the plain sum of the two slits' light. A detector that records which slit a particle used shrinks that term. Partial knowledge gives fainter stripes, and complete knowledge removes them, leaving just the sum of two single-slit patterns. Experiments with detectors at the slits find exactly this. A 1987 experiment showed that partial path information can be gained without destroying the interference altogether, a trade-off written as an inequality between fringe visibility and how distinguishable the paths are. The exact shape of the trade-off in this model is the textbook best case, not a measured curve. The source also stresses that the standard account does not need a conscious observer: what matters is whether the set-up physically records the path.",
+    "quote": "However, such experiments demonstrate that particles do not form the double-slit interference pattern if one detects which slit they pass through; the pattern instead becomes the sum of two single-slit interference patterns.",
+    "quote_where": "Double-slit experiment, introduction",
     "source_id": "s3",
     "source_ids": [
      "s3",
-     "s4",
-     "s1"
+     "s1",
+     "s4"
     ]
+   },
+   "check": {
+    "kind": "model",
+    "task": "Set up a screen where the bright stripes sit 2.4 mm apart and are still visible, but the darkest spots get about as much light as one slit alone.",
+    "when": "abs(darkest - 1) < 0.15 && abs(spacing - 2.4) < 0.05",
+    "solution": {
+     "info": 0.85,
+     "d": 0.25
+    },
+    "hint": "Two different things are asked for. One slider sets how far apart the stripes are; a different one sets how faded they are.",
+    "misconception": "That path information spreads out or shifts the stripes. It leaves their spacing alone and only shrinks their contrast, while spacing still depends on wavelength and distances."
    },
    "connect": {
     "equation": [
      {
-      "text": "dots in strip [a,b] ≈ "
+      "text": "I = "
      },
      {
-      "text": "n",
-      "link": "n"
+      "text": "I_{1} + I_{2}"
      },
      {
-      "text": " × P([a,b]),   P([a,b]) = ∫_{a}^{b} |Ψ(x,t)|^{2} dx"
+      "text": " + "
+     },
+     {
+      "text": "V",
+      "link": "vis"
+     },
+     {
+      "text": " × 2√(I_{1}I_{2}) cos[φ_{1} − φ_{2}]"
      }
     ],
-    "caption": "n is the 'dots that have arrived' slider. P([a,b]) is the chance that one particle lands in the strip from a to b. Source s1 (Quantum interference) gives it as the area under |Ψ|², the quantum stand-in for brightness. The model fills |Ψ|² with the two-slit bands and adds random wobble around n × P. The ≈ is that wobble, which shrinks relative to the count as n grows."
+    "caption": "This is the source's two-beam brightness equation with one addition from the model: the factor V (stripe contrast, or visibility) on the interference term. With no detector V = 1, which gives the source's original equation. As the detector reveals more, V shrinks. At full information V = 0, and only I₁ + I₂, the plain sum, is left."
    },
-   "recap": "One particle gives one random dot. The odds follow the wave's bright and dark bands, so stripes only appear once many dots pile up.",
+   "recap": "Which-path information shrinks the interference term: partial knowledge fades the stripes, full knowledge leaves only the plain sum of two slits.",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
     },
     {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
+     "id": "cmp",
+     "kind": "compare",
+     "prompt": "Three detectors at the same two slits. Compare the stripe contrast and the darkest stripes.",
+     "cases": [
+      {
+       "label": "No detector: full stripes",
+       "values": {
+        "info": 0
+       }
+      },
+      {
+       "label": "Partial detector: fainter stripes",
+       "values": {
+        "info": 0.6
+       }
+      },
+      {
+       "label": "Full detector: plain sum, no stripes",
+       "values": {
+        "info": 1
+       }
+      }
+     ],
+     "takeaway": "The trade-off is gradual, not a switch. More path knowledge means a smaller interference term, until full knowledge leaves only the plain sum."
     },
     {
      "id": "goal_1",
      "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
      "i": 1
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
     },
     {
-     "id": "connect",
-     "kind": "connect"
+     "id": "test",
+     "kind": "check"
+    }
+   ],
+   "builds_on": "two_slit_fringes"
+  },
+  {
+   "id": "what_it_means",
+   "title": "Same results, rival stories",
+   "idea": "The main interpretations of quantum mechanics agree on every observed result of the double-slit experiment but disagree about what happens between the source and the screen, so the meaning remains an open question.",
+   "role": "core",
+   "terms": [
+    {
+     "term": "interpretation",
+     "means": "A story about what is really going on behind the mathematics. Rival interpretations predict the same results."
+    },
+    {
+     "term": "Copenhagen interpretation",
+     "means": "A family of views from Bohr, Heisenberg, Born and others. Outcomes are truly random, and an experiment shows wave behaviour or particle behaviour, never both at once."
+    },
+    {
+     "term": "many-worlds interpretation",
+     "means": "The view that the wavefunction never collapses, so reality branches into parallel versions that interact only through interference."
+    },
+    {
+     "term": "pilot wave",
+     "means": "In de Broglie–Bohm theory, a real wave that passes through both slits and steers a particle that has a definite position."
+    }
+   ],
+   "recap": "Every interpretation agrees on the dots, the stripes and the vanishing stripes. They disagree about what the particle does in between, and that question is still open.",
+   "understand": {
+    "explanation": "Every serious account of the double-slit experiment agrees on what the screen shows. Each particle lands as a single dot. Many dots pile up into stripes that only waves passing through both slits can make. Finding out which slit each particle used wipes the stripes away. An interpretation is a story about what happens in between, and here the stories split. In the Copenhagen interpretation, asking 'which slit?' has no meaning without a detector. In de Broglie–Bohm theory, the particle takes one slit, steered by a pilot wave that goes through both. In the many-worlds interpretation, nothing ever collapses and branches of reality interfere. In the relational interpretation, a result describes the interaction between a device and the particle, not a property the particle has on its own. These stories reproduce the same observed patterns (de Broglie–Bohm only under an extra assumption about how starting positions are spread), so this experiment alone cannot pick a winner. The sources call interpretation an unsolved problem, though it does not stop anyone from using the theory.",
+    "quote": "The interpretation of quantum mechanics is still an unsolved problem in modern physics (luckily, it does not prevent us from using quantum mechanics in chemistry).",
+    "quote_where": "25.1: The Double-slit Experiment, \"Which way\" experiment section",
+    "source_id": "s4",
+    "source_ids": [
+     "s3",
+     "s4"
+    ]
+   },
+   "activities": [
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "cmp_one_slit_or_none",
+     "kind": "compare",
+     "prompt": "One electron leaves the source with both slits open and no detectors, and it lands as a dot on the screen. Here are two stories about its journey.",
+     "cases": [
+      {
+       "label": "Copenhagen interpretation",
+       "text": "Quantum mechanics is random at its core. Probabilities come from the square of the wave (the Born rule). An experiment can show particle behaviour (a definite slit) or wave behaviour (stripes), but not both at once. With no detector, 'which slit did it go through?' is a question with no meaning. Caveat: the name covers a collection of views, and there is no single definitive statement of it."
+      },
+      {
+       "label": "de Broglie–Bohm theory (pilot wave)",
+       "text": "The electron always has a precise position, so it really goes through one slit. A pilot wave goes through both slits and guides it, and that is where the stripes come from. The theory is deterministic, yet it gives the same statistics as standard quantum mechanics if the starting positions are spread according to the wave's squared size. It does not fit easily with special relativity."
+      }
+     ],
+     "takeaway": "Same dot, same stripes. One story says the path question has no answer. The other says there is a definite path we simply don't know."
+    },
+    {
+     "id": "cmp_branches_or_relations",
+     "kind": "compare",
+     "prompt": "Two more stories, each telling a different tale about the same unseen journey.",
+     "cases": [
+      {
+       "label": "Many-worlds interpretation",
+       "text": "Reality is the wavefunction, and it never collapses. There are many parallel branches that interact only through interference. David Deutsch says that in each branch the particle goes through one slit, and interference with its counterparts in other branches makes the stripes. Another advocate, David Wallace, disagrees: in the ordinary double-slit setup the two paths are not separated enough for talk of parallel universes to make sense. Supporters argue among themselves too."
+      },
+      {
+       "label": "Relational interpretation (Carlo Rovelli)",
+       "text": "A result is not an absolute property of the electron. It comes from the interaction between the electron and whatever measures it. A detector at a slit gains position information, which constrains where the electron can land. If the only interaction happens at the screen, there is no path information, and the landing spots follow the full two-slit pattern."
+      }
+     ],
+     "takeaway": "None of these views needs a conscious mind: the 'observer' is any measuring device. And none of them changes what the screen shows."
+    },
+    {
+     "id": "match_views",
+     "kind": "match",
+     "prompt": "Match each interpretation to its story about the particle between the source and the screen.",
+     "pairs": [
+      {
+       "id": "p_copenhagen",
+       "text": "Copenhagen interpretation",
+       "target": "Without a detector, 'which slit?' has no meaning; an experiment shows wave or particle behaviour, never both at once.",
+       "feedback": "Copenhagen-type views rest on complementarity: a set-up reveals one face or the other. They treat the path question as meaningless when nothing records the path."
+      },
+      {
+       "id": "p_many_worlds",
+       "text": "Many-worlds interpretation",
+       "target": "The wavefunction never collapses; the stripes come from interference between branches of reality.",
+       "feedback": "The common thread in many-worlds is a wavefunction that always evolves smoothly, with no collapse. Parallel branches interact only through interference."
+      },
+      {
+       "id": "p_bohm",
+       "text": "de Broglie–Bohm theory",
+       "target": "The particle always has a precise position and goes through one slit; a wave through both slits steers it.",
+       "feedback": "This is the pilot-wave picture. The particle is real and located at every moment, and the guiding wave carries the two-slit information."
+      },
+      {
+       "id": "p_relational",
+       "text": "Relational interpretation",
+       "target": "A result describes an interaction between a measuring device and the particle, not a property the particle has on its own.",
+       "feedback": "Rovelli's view moves the facts into relations. What a device finds depends on how it interacted with the particle."
+      }
+     ],
+     "hints": [
+      "Look for the one view where the particle has a definite path all along.",
+      "The view that rejects collapse entirely is the one with branches."
+     ],
+     "takeaway": "Four stories about the same trip. They differ only where no detector is looking."
+    },
+    {
+     "id": "sort_observation_story",
+     "kind": "sort",
+     "title": "Observation or interpretation?",
+     "prompt": "Sort each statement. Is it something every view accepts because experiments show it, or is it one view's story about what happens unseen?",
+     "groups": [
+      {
+       "id": "observed",
+       "label": "Observed result (all views agree)"
+      },
+      {
+       "id": "story",
+       "label": "Interpretation (views disagree)"
+      }
+     ],
+     "cards": [
+      {
+       "id": "c_dot",
+       "text": "Each particle is detected as a single dot at one place on the screen.",
+       "group": "observed",
+       "feedback": "Observed. Light and electrons are always absorbed at discrete points, and every interpretation must reproduce this."
+      },
+      {
+       "id": "c_buildup",
+       "text": "Dots sent one at a time slowly build up a striped pattern.",
+       "group": "observed",
+       "feedback": "Observed. It has been seen with photons, electrons, atoms and molecules. Every view accepts it and tries to explain it."
+      },
+      {
+       "id": "c_whichway",
+       "text": "When detectors record which slit each particle used, the stripes disappear.",
+       "group": "observed",
+       "feedback": "Observed. With which-slit information, the pattern becomes the sum of two single-slit patterns. The views differ only on why."
+      },
+      {
+       "id": "c_random",
+       "text": "Running the same set-up again, single dots land in different places; only the overall pattern repeats.",
+       "group": "observed",
+       "feedback": "Observed. The disagreement is about the cause: Copenhagen says the randomness is fundamental, while de Broglie–Bohm says it reflects starting positions we do not know."
+      },
+      {
+       "id": "c_pilot",
+       "text": "The particle went through exactly one slit, guided by a wave that went through both.",
+       "group": "story",
+       "feedback": "Interpretation. This is de Broglie–Bohm theory. Copenhagen-type views would call the path question meaningless here."
+      },
+      {
+       "id": "c_nomeaning",
+       "text": "With no detector, asking which slit the particle used has no meaning.",
+       "group": "story",
+       "feedback": "Interpretation. This is a Copenhagen-type claim. de Broglie–Bohm theory flatly denies it."
+      },
+      {
+       "id": "c_universes",
+       "text": "The stripes come from interference with versions of the particle in parallel universes.",
+       "group": "story",
+       "feedback": "Interpretation. This is Deutsch's many-worlds reading, and even fellow many-worlds advocate Wallace doubts it fits this set-up."
+      },
+      {
+       "id": "c_collapse",
+       "text": "The detector at the slit makes the wave function collapse to one position.",
+       "group": "story",
+       "feedback": "Interpretation. One source calls this the simplest reading, but many-worlds says nothing ever collapses."
+      }
+     ],
+     "hints": [
+      "Ask: could a camera record this, or is it about what happens where nothing is recording?",
+      "Anything about collapse, parallel universes, hidden paths or 'meaningless questions' is a story, not a reading on a screen."
+     ],
+     "takeaway": "The left pile is the shared ground any theory must reproduce. The right pile is where the debate lives."
+    },
+    {
+     "id": "choice_your_reading",
+     "kind": "choice",
+     "mode": "interpretive",
+     "question": "Which story about the particle's unseen journey seems most reasonable to you? There is no marked answer; each choice has support and costs.",
+     "options": [
+      {
+       "text": "Copenhagen: without a detector, the path question has no answer.",
+       "feedback": "Support: it stays close to what is measured and builds in complementarity, which matches the vanishing stripes. Limit: it is a loose family of views with no single definitive statement, and it treats measurement as special without fully saying why."
+      },
+      {
+       "text": "de Broglie–Bohm: one slit, steered by a pilot wave.",
+       "feedback": "Support: particles have real positions at all times, and the theory reproduces the standard statistics. Limits: it needs the 'quantum equilibrium' assumption about starting positions, and it does not fit easily with special relativity."
+      },
+      {
+       "text": "Many-worlds: no collapse, interfering branches.",
+       "feedback": "Support: it keeps one simple rule, a smoothly evolving wavefunction, with no special collapse step. Limit: it asks you to accept many parallel branches, and its own advocates disagree about how to apply it to the ordinary double slit."
+      },
+      {
+       "text": "Relational: results belong to interactions, not to the particle alone.",
+       "feedback": "Support: it explains why a slit detector changes the pattern, because the interaction itself carries path information. Limit: you give up the idea that the particle has properties independent of anything it interacts with."
+      },
+      {
+       "text": "I'd rather not pick: the sources say it's unsolved.",
+       "feedback": "That is a defensible stance. The sources call interpretation an unsolved problem that does not stop practical use of the theory. Remember that these views also go beyond what this one experiment can test."
+      }
+     ]
+    },
+    {
+     "id": "choice_friend_claim",
+     "kind": "choice",
+     "mode": "determinate",
+     "hypothetical": true,
+     "question": "A friend says: \"The double-slit experiment proves that each particle literally goes through both slits.\" What is the best reply?",
+     "options": [
+      {
+       "text": "Right: the stripes prove it went through both slits.",
+       "feedback": "The stripes are real, but de Broglie–Bohm theory gets the same stripes with the particle going through only one slit. The experiment shows a two-slit pattern; it does not settle what the particle 'literally' did."
+      },
+      {
+       "text": "The stripes and their disappearance are agreed facts, but whether the particle 'really' passes through both slits depends on the interpretation, and the experiment alone doesn't settle it.",
+       "feedback": "Yes. Every view agrees on what the screen shows. Particles sent one at a time each land as a single dot, yet together they build stripes that only waves passing through both slits can make, and learning which slit each one used wipes the stripes away. What lies behind that pattern is the open question."
+      },
+      {
+       "text": "Wrong: detectors show each particle goes through one slit, so the stripes are an illusion.",
+       "feedback": "Adding slit detectors changes the experiment, and then the stripes vanish. Without detectors, the stripes are a real, repeatable pattern of hits that every view must explain."
+      },
+      {
+       "text": "Wrong: it shows that a conscious observer creates the result.",
+       "feedback": "None of these views needs a mind. The standard reading is described as independent of any conscious observer, and in the relational view the 'observer' is the measuring device."
+      }
+     ],
+     "answer": 1,
+     "hints": [
+      "Separate what the screen shows from what someone says happened before the screen.",
+      "Is there any interpretation that gets the stripes with only one slit used?"
+     ]
     }
    ]
   }
  ],
- "omitted": [
-  {
-   "title": "Watching the slits wipes out the stripes",
-   "reason": "concept.model: builds on 'double_slit_fringes', so it must keep its control 'z'"
-  }
- ],
+ "omitted": [],
  "sources": [
   {
    "id": "s1",
@@ -1626,11 +2339,289 @@
    "year": null
   }
  ],
+ "activity_plans": [
+  {
+   "concept": "waves_add",
+   "chosen": "p2",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "compare",
+     "goal",
+     "predict",
+     "reveal"
+    ],
+    "why": "Side-by-side in-phase and out-of-phase states make the two extremes concrete before free play."
+   },
+   "confidence": 0.34,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner slides the phase shift to make the sum double or vanish, then predicts the result for a half-way shift."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "compare",
+      "goal",
+      "predict",
+      "reveal"
+     ],
+     "why": "Side-by-side in-phase and out-of-phase states make the two extremes concrete before free play."
+    }
+   ]
+  },
+  {
+   "concept": "brightness_is_squared",
+   "chosen": "p2",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "worked",
+     "goal",
+     "predict",
+     "reveal"
+    ],
+    "why": "A worked step from amplitude 2A to brightness 4A² explains the 'four times' before the learner tests unequal beams."
+   },
+   "confidence": 0.37,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner makes the minimum reach zero (only possible with equal beams) and pushes the peak to four times a single beam."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "worked",
+      "goal",
+      "predict",
+      "reveal"
+     ],
+     "why": "A worked step from amplitude 2A to brightness 4A² explains the 'four times' before the learner tests unequal beams."
+    }
+   ]
+  },
+  {
+   "concept": "two_slit_fringes",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "connect"
+    ],
+    "why": "The learner tunes wavelength and slit gap to hit a target fringe spacing, then predicts the effect of moving the slits closer."
+   },
+   "confidence": 0.74,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner tunes wavelength and slit gap to hit a target fringe spacing, then predicts the effect of moving the slits closer."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "worked",
+      "goal",
+      "estimate",
+      "connect"
+     ],
+     "why": "The sources' worked example (0.5 mm slits, 0.6 μm light, 1 m away gives 1.2 mm fringes) anchors the formula in a real calculation."
+    }
+   ]
+  },
+  {
+   "concept": "dot_by_dot",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "check",
+     "connect"
+    ],
+    "why": "The learner raises the particle count until dark and bright regions can be told apart, which shows the pattern is statistical."
+   },
+   "confidence": 0.95,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "check",
+      "connect"
+     ],
+     "why": "The learner raises the particle count until dark and bright regions can be told apart, which shows the pattern is statistical."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "stages",
+      "goal",
+      "predict",
+      "reveal",
+      "check"
+     ],
+     "why": "Staged history (Taylor 1909, Merli–Missiroli–Pozzi 1974, Frabboni 2012) grounds the model in real single-particle experiments."
+    }
+   ]
+  },
+  {
+   "concept": "which_way_erases",
+   "chosen": "p2",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "compare",
+     "goal",
+     "predict",
+     "reveal",
+     "check"
+    ],
+    "why": "Comparing no detector, a partial detector and a full detector side by side makes the continuous trade-off visible before testing it."
+   },
+   "confidence": 0.48,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "check",
+      "connect"
+     ],
+     "why": "The learner slides from no path information to full information, sees the stripes fade, and then must keep partial stripes with partial information."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "compare",
+      "goal",
+      "predict",
+      "reveal",
+      "check"
+     ],
+     "why": "Comparing no detector, a partial detector and a full detector side by side makes the continuous trade-off visible before testing it."
+    }
+   ]
+  },
+  {
+   "concept": "what_it_means",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "explain",
+     "compare",
+     "match",
+     "sort",
+     "choice"
+    ],
+    "why": "After reading the views, the learner matches Copenhagen, many-worlds, de Broglie–Bohm and relational accounts to their claims, then sorts statements into observation and interpretation."
+   },
+   "confidence": 0.7,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "explain",
+      "compare",
+      "match",
+      "sort",
+      "choice"
+     ],
+     "why": "After reading the views, the learner matches Copenhagen, many-worlds, de Broglie–Bohm and relational accounts to their claims, then sorts statements into observation and interpretation."
+    },
+    {
+     "blocks": [
+      "choice",
+      "explain",
+      "passage",
+      "sort",
+      "choice"
+     ],
+     "why": "An opening judgment ('does the particle go through one slit?') is revisited after the learner identifies which source passages state facts and which state interpretations."
+    }
+   ]
+  }
+ ],
+ "category": {
+  "primary": {
+   "id": "physics_astronomy",
+   "name": "Physics & astronomy"
+  },
+  "secondary": null,
+  "probabilities": {
+   "physics_astronomy": 1.0
+  },
+  "confidence": 1.0,
+  "model": "jev-1.13.0"
+ },
  "generation": {
   "provider": "claude",
   "model": "claude-opus-5-5",
   "pipeline": "lemma.generate.make_outline + build_lesson",
-  "source_chars": 120934,
-  "omitted": 1
+  "source_chars": 127012,
+  "omitted": 0
  }
 }

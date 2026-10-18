@@ -1,9 +1,9 @@
 {
  "version": 1,
  "id": "gallery-externalities-pigou",
- "title": "Who Really Invented the Pollution Tax? Prices, Commons and a Borrowed Name",
+ "title": "Who Pays for the Smoke? Pricing Pollution and the Surprising Story of Where the Idea Came From",
  "audience": "A curious adult with no background in this field",
- "created": "2026-10-18T20:50:36",
+ "created": "2026-10-19T02:40:25",
  "source": {
   "title": "A History of Pricing Pollution (Or, Why Pigouvian Taxes are not Necessarily Pigouvian)",
   "authors": "H. Spencer Banzhaf",
@@ -12,21 +12,51 @@
   "url": ""
  },
  "intro": {
-  "summary": "Textbooks say charging polluters, the 'Pigouvian tax', applies A.C. Pigou's 1920s theory of externalities. Banzhaf asks why, if so, there was a 30-year gap in such applications, and why the 1960s pioneers of pollution pricing (Kneese on effluent charges, Crocker and Dales on tradable pollution rights) almost never cited Pigou. From their writings and citation counts he argues their ideas grew from American agricultural and natural-resource economics: overuse of commonly held resources and spillover gains from developing rivers and land. The 'Pigouvian' label came around 1970. The lesson builds the standard economics from the textbook and encyclopedia sources, then delivers this twist. Limits: it is an unrefereed working paper, and absent citations could mean Pigou's ideas were simply taken for granted, as the author admits. Historians also disagree on how 'Coasean' cap-and-trade is, and the Wikipedia sources carry warnings about possibly AI-generated or one-sided text. Follow-ups not covered in depth: the Coase theorem, the difficulty of measuring harm to set the 'right' tax, the double-dividend debate, and ecological economists' critique of the externality framing.",
+  "summary": "This lesson draws on four sources: two Wikipedia articles (on externalities and on Pigouvian taxes), an OpenStax textbook reading on pollution, and H. Spencer Banzhaf's 2020 NBER working paper on the history of pollution pricing. Together they teach the standard economics: when production harms bystanders, markets overproduce, and a charge equal to the harm (a 'Pigouvian tax') or a cap on tradable permits can fix that. They also cover alternatives such as private bargaining (Coase) and the problem of unowned 'commons'. Banzhaf asks where 1960s pollution-pricing proposals actually came from. He examines who cited whom and how the arguments were built, and finds that the pioneers barely mentioned Pigou. Their roots lay in American traditions of land, water and common-property economics, and the 'Pigouvian' label was applied around 1970. Limits: Banzhaf's paper is an unrefereed working paper whose evidence is partly citation counts and interpretive reading. The externality Wikipedia article carries warnings about possible AI-generated and one-sided content. Economists still disagree about whether such taxes can be measured and set correctly. Deeper follow-ups not covered here include positive externalities and subsidies, the 'double dividend' debate over recycling tax revenue, the measurement critique (Baumol, Buchanan), and ecological economists' rejection of the externality framing.",
   "background": [
-   "An externality is a cost or benefit that lands on someone who was not part of a deal, like smoke from a factory reaching its neighbours.",
-   "Economists draw markets as supply and demand curves; where they cross, the market settles on a price and a quantity.",
-   "Two broad ways to price pollution exist: charge a fee per ton (a tax), or cap the total and let firms trade permits (cap-and-trade).",
-   "History of economics studies where ideas came from, often by reading old texts and counting who cited whom."
+   "Economists picture a market as a demand curve (what buyers will pay for each extra unit) meeting a supply curve (what it costs sellers to make each extra unit).",
+   "'Marginal' means 'for one more unit': marginal cost is the cost of producing the next item.",
+   "Arthur Pigou was a Cambridge economist whose 1920 book The Economics of Welfare discussed gaps between private and social costs; Ronald Coase was a later economist known for arguing that people can sometimes bargain their way out of such problems.",
+   "A 'working paper' is circulated for comment before peer review, so its claims are still open to scholarly challenge."
   ],
   "known": [],
-  "aha": "The pollution tax every textbook calls 'Pigouvian' was worked out in the 1960s by economists who almost never cited Pigou: they were thinking about overused commons like fisheries and groundwater, and Pigou's name was attached afterwards, around 1970."
+  "aha": "The famous 'Pigouvian' pollution tax was mostly not built from Pigou's ideas: its 1960s inventors barely cited him, and the name was attached years later to work that grew out of American thinking about farmland, rivers and unowned commons."
  },
  "primer": [
   {
    "heading": "The question",
-   "body": "Today almost every economist calls a fee on pollution a 'Pigouvian tax', after the Cambridge economist Arthur Pigou. The usual story is a straight line: Pigou wrote the theory around 1920, and in the 1960s environmental economists picked it up and applied it. Banzhaf noticed that this story has holes, and he asks what really happened.",
-   "quote": "However, the historical literature has noted problems with this narrative, including a 30-year gap in discussions of such applications and few actual citations to Pigou.",
+   "body": "A factory that dumps waste into a river does not pay for the damage downstream, so its prices are too low and it makes too much. Economists call this kind of spillover an externality. The textbook answer is to charge the polluter for the harm, a remedy named after Arthur Pigou. Historian-economist H. Spencer Banzhaf asked a simple question: did the people who first designed pollution charges in the 1960s really get the idea from Pigou?",
+   "quote": "In economics, an externality is a cost or benefit to an uninvolved third party that arises as an effect of another party's (or parties') activity.",
+   "quote_where": "Externality (Wikipedia), opening paragraph",
+   "source_id": "s1",
+   "source_ids": [
+    "s1",
+    "s4"
+   ]
+  },
+  {
+   "heading": "The standard tool",
+   "body": "In the textbook story, the harm adds an extra cost on top of what the firm pays. If the firm had to pay that extra cost per unit, prices would rise and output and pollution would fall to the level where benefits match full costs. The OpenStax reading works through a refrigerator example with a $100 per-unit pollution cost: the market moves from 45,000 to 40,000 refrigerators. Alternatives include capping pollution with tradable permits, or letting affected parties bargain.",
+   "quote": "If firms were required to pay the social costs of pollution, they would create less pollution but produce less of the product and charge a higher price.",
+   "quote_where": "OpenStax reading, 'Pollution as a Negative Externality'",
+   "source_id": "s3",
+   "source_ids": [
+    "s3",
+    "s2",
+    "s1"
+   ]
+  },
+  {
+   "heading": "What Banzhaf did",
+   "body": "Banzhaf reread the founding 1960s works on pollution pricing: Allen Kneese's 'effluent charges' and the tradable pollution rights of Thomas Crocker and John Dales. He traced whom they cited and how they argued, and he counted how often the phrase 'Pigouvian tax' appeared over time. He then compared those arguments with older American work on farmland, water rights, fisheries and resource development.",
+   "source_ids": [
+    "s4"
+   ]
+  },
+  {
+   "heading": "What he found",
+   "body": "The pioneers hardly cited Pigou at all. The phrase 'Pigouvian tax' appeared only about a dozen times in JSTOR in the 1960s, and it spread after Baumol and Oates called Kneese's work part of a 'Pigouvian tradition' around 1971. The arguments themselves came from American thinking about common property ('everybody's property is nobody's property') and the gains from developing rivers and land. The label came later and was attached to work already done.",
+   "quote": "This paper offers a simple explanation for this puzzle: Namely, pollution pricing is not (necessarily) Pigouvian.",
    "quote_where": "Abstract",
    "source_id": "s4",
    "source_ids": [
@@ -34,37 +64,8 @@
    ]
   },
   {
-   "heading": "The economics in one picture",
-   "body": "When a factory pollutes for free, its own costs are lower than the true cost to society. So it produces more, and sells more cheaply, than it would if it paid for the harm. Charging it the cost of the harm per unit pushes output back down to the level society would choose. That is the textbook logic of a pollution charge. The alternative is to cap total pollution and let firms trade the right to pollute.",
-   "quote": "If firms were required to pay the social costs of pollution, they would create less pollution but produce less of the product and charge a higher price.",
-   "quote_where": "Pollution as a Negative Externality",
-   "source_id": "s3",
-   "source_ids": [
-    "s3",
-    "s1",
-    "s2"
-   ]
-  },
-  {
-   "heading": "What he did",
-   "body": "Banzhaf read the key 1960s works on pricing pollution: Allen Kneese's 'effluent charges' on river pollution, and Thomas Crocker's and John Dales's tradable pollution rights. He checked whom they cited and how they argued. He also counted mentions in JSTOR and Google Scholar. Finally, he traced older American writing on farmland, irrigation, fisheries and conservation that these economists had been trained in.",
-   "source_ids": [
-    "s4"
-   ]
-  },
-  {
-   "heading": "What he found",
-   "body": "The pioneers hardly mentioned Pigou. Between 1962 and 1972, Google Scholar shows 982 works citing Kneese without Pigou, against only 65 citing both. Kneese talked more about Coase's bargaining ideas, and he later framed pollution as the mismanagement of resources held in common, like a fishery or an overgrazed pasture. The 'Pigouvian' name spread only from about 1970.",
-   "quote": "Though the moniker \"Pigouvian\" was adopted around 1970, the name should not be confused with hereditary lineage.",
-   "quote_where": "Section 1, Introduction",
-   "source_id": "s4",
-   "source_ids": [
-    "s4"
-   ]
-  },
-  {
    "heading": "Why it matters, and its limits",
-   "body": "How we tell the history shapes how we think about policy. Seeing pollution as overuse of a shared resource, rather than as a rare side effect between two parties, makes it look pervasive and ties it to property rights and institutions. But this is a working paper that has not been peer-reviewed. Missing citations are suggestive, not proof: Pigou's ideas may simply have been taken for granted, and the author acknowledges this. Debates also continue on how to measure harm well enough to set a 'correct' tax, and on whether taxes or permits work better.",
+   "body": "How we tell a tool's history shapes how we see it. Pollution pricing then looks less like a tax correcting a rare market glitch and more like a way to manage shared resources such as rivers and air. Banzhaf's case rests partly on citation counts and partly on interpretation, and the paper had not been peer reviewed. Economists also still debate the tool itself: whether harm can be measured well enough to set the right charge, and whether bargaining or regulation sometimes works better.",
    "quote": "This paper has argued that the early literature on pollution pricing was rooted in questions about common property resources and the increasing returns from developing natural resources.",
    "quote_where": "Section 6, Conclusion",
    "source_id": "s4",
@@ -80,54 +81,54 @@
  },
  "concepts": [
   {
-   "id": "private_vs_social_cost",
-   "title": "When the price leaves out the smoke",
-   "idea": "A per-unit pollution harm that the firm does not pay lifts the true (social) cost of production above the firm's own (private) cost by exactly that amount.",
+   "id": "external_cost_gap",
+   "title": "The hidden cost: private cost versus social cost",
+   "idea": "When making a product harms bystanders, the true cost to society of each unit is the producer's own cost plus that external harm, so the full-cost supply curve sits above the one the market sees.",
    "role": "prerequisite",
    "predict": {
-    "question": "A bakery's ovens send out smoke that does $0.50 of harm to neighbours for every loaf. The bakery switches to cheaper flour, which cuts its own cost by $0.20 a loaf. The smoke stays the same. What happens to the gap between the bakery's own cost and the true cost of a loaf?",
+    "question": "A paper mill's own cost to make one more tonne of paper is $400. Its wastewater forces a downstream town to spend $60 per tonne cleaning its drinking water. It also kills fish worth $40 per tonne to local fishers. Where does the full-cost line sit for that tonne?",
     "options": [
-     "It stays at $0.50",
-     "It shrinks to $0.30",
-     "It grows to $0.70",
-     "It disappears, because the bakery is now more efficient"
+     "$400",
+     "$460",
+     "$500",
+     "$100"
     ],
-    "answer": 0,
+    "answer": 2,
     "why": [
-     "Right: the gap is the unpaid harm per loaf. Cheaper flour moves both lines down by $0.20 together, but the smoke, and so the gap, is unchanged.",
-     "Tempting if you subtract the saving from the harm, but the saving lowers the bakery's cost and the true cost alike. The gap only tracks the harm.",
-     "This adds the saving to the harm. A lower private cost does not create extra harm. Only more smoke per loaf would widen the gap.",
-     "Efficiency in flour says nothing about smoke. The gap closes only if the harm per loaf falls to zero."
+     "Tempting, because $400 is all the mill pays. That is the lower line the market sees. The full cost adds what others pay.",
+     "This counts the town's cleaning bill but forgets the fishers. Every bystander's harm goes into the gap, not just the most visible one.",
+     "Correct: own cost $400 plus $60 for the town plus $40 for the fishers. The full-cost line sits $100 above the mill's own line at this tonne.",
+     "This is only the gap, the harm to others. The full cost per tonne includes the mill's own $400 as well."
     ]
    },
    "terms": [
     {
-     "term": "private cost",
-     "means": "What one more unit costs the producer itself: labour, materials, energy"
-    },
-    {
-     "term": "social cost",
-     "means": "The full cost of one more unit to everyone: the private cost plus any harm done to others"
+     "term": "marginal private cost",
+     "means": "What the producer itself pays to make one more unit"
     },
     {
      "term": "external cost",
-     "means": "The harm per unit that falls on people outside the sale and that no one pays for. It is the gap between social and private cost"
+     "means": "Harm from one more unit that falls on people outside the sale, who are not paid for it"
+    },
+    {
+     "term": "marginal social cost",
+     "means": "The full cost of one more unit to everyone: the producer's own cost plus the external cost"
     },
     {
      "term": "negative externality",
-     "means": "An unpriced cost imposed on a third party who was not part of the deal, such as pollution"
+     "means": "A cost an activity imposes on uninvolved third parties that the market price leaves out"
     }
    ],
    "model": {
-    "title": "What one more refrigerator costs the firm, and what it costs everyone",
-    "note": "Teaching model: straight cost lines and a harm that is the same for every refrigerator made. The starting numbers (firm's cost of $200 + $10 per thousand units, $100 of harm per refrigerator) follow the illustrative refrigerator example in the OpenStax reading (source s3). They are a textbook illustration, not measured data. Real harms are rarely constant per unit and are hard to measure.",
+    "title": "Two cost lines for making fridges",
+    "note": "Teaching model: straight cost lines and the same harm for every fridge. The lines are built from the refrigerator example in source s3: the factory's line passes $600 at 40,000 fridges and $650 at 45,000, and the harm is $100 per fridge. In reality the harm can change with output, and putting a dollar value on it is hard. Harm values other than $100 are illustrative.",
     "controls": [
      {
-      "id": "h",
-      "label": "Harm per refrigerator",
+      "id": "ext",
+      "label": "Harm to bystanders per fridge ($)",
       "kind": "slider",
       "min": 0,
-      "max": 400,
+      "max": 300,
       "step": 10,
       "default": 100,
       "unit": "$",
@@ -135,97 +136,90 @@
      },
      {
       "id": "q",
-      "label": "Refrigerators made",
+      "label": "Fridge to inspect (thousands made)",
       "kind": "slider",
       "min": 10,
       "max": 70,
-      "step": 1,
+      "step": 5,
       "default": 45,
-      "unit": " thousand",
+      "unit": "k",
       "color": 3
      }
     ],
     "outputs": [
      {
-      "id": "private",
-      "label": "Firm's own cost (one more unit)",
+      "id": "own_cost",
+      "label": "Factory's own cost of this fridge ($)",
       "expr": "200 + 10 * q",
-      "unit": "$",
+      "unit": "",
       "decimals": 0,
       "color": 0
      },
      {
-      "id": "harm",
-      "label": "Unpaid harm per unit",
-      "expr": "h",
-      "unit": "$",
-      "decimals": 0,
-      "color": 2
-     },
-     {
-      "id": "social",
-      "label": "True cost to everyone (one more unit)",
-      "expr": "private + h",
-      "unit": "$",
+      "id": "full_cost",
+      "label": "Full cost to everyone of this fridge ($)",
+      "expr": "own_cost + ext",
+      "unit": "",
       "decimals": 0,
       "color": 1
      },
      {
-      "id": "total_harm",
-      "label": "Unpaid harm, all units ($ millions)",
-      "expr": "h * q / 1000",
-      "unit": "",
-      "decimals": 1,
-      "color": 2
+      "id": "share",
+      "label": "Share of the full cost the factory pays",
+      "expr": "own_cost / full_cost",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 4
      }
     ],
     "visual": {
      "type": "curves",
      "x": {
-      "label": "Refrigerators made (thousands)",
+      "label": "Fridges made (thousands)",
       "min": 0,
       "max": 80
      },
      "y": {
-      "label": "Cost of one more refrigerator ($)",
+      "label": "Cost of one more fridge ($)",
       "min": 0,
       "max": 1400
      },
      "series": [
       {
        "id": "private_line",
-       "label": "Firm's own cost",
+       "label": "Factory's own cost per extra fridge",
        "expr": "200 + 10 * x",
        "color": 0,
        "dashed": false
       },
       {
-       "id": "social_line",
-       "label": "True cost to everyone",
-       "expr": "200 + 10 * x + h",
+       "id": "full_line",
+       "label": "Full cost to everyone per extra fridge",
+       "expr": "200 + 10 * x + ext",
        "color": 1,
-       "dashed": true
+       "dashed": false
       }
      ],
      "markers": [
       {
-       "id": "q_marker",
+       "id": "look_marker",
        "x": "q",
-       "label": "Output chosen",
+       "label": "Fridge you're inspecting",
        "color": 3
       }
      ],
      "points": [
       {
-       "id": "private_point",
+       "id": "own_point",
        "x": "q",
-       "y": "private",
-       "label": "Firm pays"
+       "y": "own_cost",
+       "label": "Factory pays"
       },
       {
-       "id": "social_point",
+       "id": "full_point",
        "x": "q",
-       "y": "social",
+       "y": "full_cost",
        "label": "Everyone pays"
       }
      ]
@@ -234,259 +228,275 @@
    "animation": {
     "steps": [
      {
-      "say": "Picture a factory making refrigerators. Left to right is how many it makes, in thousands.",
-      "focus": "q_marker",
-      "ms": 2800
-     },
-     {
-      "say": "The solid line is what one more refrigerator costs the firm itself: workers, metal, energy.",
-      "focus": "private_line",
-      "ms": 3000
-     },
-     {
-      "say": "Making it also sends out pollution that hurts the neighbours. The dashed line adds that harm on top.",
-      "focus": "social_line",
-      "ms": 3200
-     },
-     {
-      "say": "This slider sets how much harm each refrigerator does. Watch the dashed line move.",
+      "say": "This picture is about making fridges. Left to right is how many get made. Up is what one more fridge costs.",
       "set": {
-       "h": 200
+       "ext": 100,
+       "q": 45
       },
-      "focus": "h",
-      "ms": 3000
+      "focus": "private_line",
+      "ms": 3800
      },
      {
-      "say": "This slider picks an output level. The two dots read off both costs there.",
+      "say": "The lower line is what the factory itself pays for one more fridge: labour, metal, energy. It climbs as output grows.",
+      "focus": "private_line",
+      "ms": 3800
+     },
+     {
+      "say": "The upper line adds the damage the factory's pollution does to people nearby: their health, their property, local wildlife.",
+      "focus": "full_line",
+      "ms": 3800
+     },
+     {
+      "say": "This slider sets that damage for each fridge. Watch the upper line lift.",
       "set": {
-       "q": 60
+       "ext": 200
+      },
+      "focus": "ext",
+      "ms": 3400
+     },
+     {
+      "say": "This slider picks one fridge to inspect. The boxes show what it costs the factory and what it costs everyone.",
+      "set": {
+       "q": 60,
+       "ext": 100
       },
       "focus": [
        "q",
-       "private_point",
-       "social_point"
+       "own_cost",
+       "full_cost"
       ],
-      "ms": 3000
+      "ms": 4000
      }
     ]
    },
    "explore": {
-    "prompt": "Play with the harm and the output. See what moves the gap between the lines and what only slides both lines along together.",
+    "prompt": "Play with the harm and the fridge you inspect. Watch how far the full-cost line floats above the factory's line.",
     "goals": [
      {
-      "text": "Make a refrigerator's true cost to everyone $900 while the firm's own cost stays at $650.",
-      "when": "abs(social - 900) < 1 && abs(private - 650) < 1",
+      "text": "Make the factory pay less than 80% of the true cost of the fridge you're inspecting.",
+      "when": "share < 0.8",
       "solution": {
-       "h": 250
+       "ext": 200
       },
       "hints": [
-       "Which of the two costs does the harm slider leave untouched?",
-       "The firm's own cost already reads $650 at the starting output. Only the gap between the lines needs to change.",
-       "The gap must make up the whole difference between the two target numbers."
+       "The share box compares the factory's own cost with the full cost. What would make the unpaid part bigger?",
+       "Raising the harm widens the gap. Inspecting a cheaper fridge also works, because the same harm is then a bigger slice of the total.",
+       "If you keep the inspected fridge where it starts, the harm has to go well above $150."
       ]
      },
      {
-      "text": "Make the true cost of one more refrigerator exactly twice what the firm itself pays for it.",
-      "when": "abs(social - 2 * private) < 5",
+      "text": "Recreate a case where the factory's own cost for a fridge is $600 but its full cost to everyone is $800.",
+      "when": "abs(own_cost - 600) < 1 && abs(full_cost - 800) < 1",
       "solution": {
-       "q": 10,
-       "h": 300
+       "q": 40,
+       "ext": 200
       },
       "hints": [
-       "For the true cost to be double, the gap has to be as big as the firm's own cost.",
-       "The harm slider has a ceiling, so you need a firm's cost small enough for the harm to match it. Which slider makes the firm's cost smaller?",
-       "Go to the smallest outputs, read the firm's own cost in its box, and set the harm equal to it."
+       "You need to match two things: which fridge you inspect, and how big the harm is.",
+       "First slide the inspected fridge until the factory's own cost box reads 600.",
+       "Then set the harm to make up the difference between the two costs you want."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. The gap between the two costs is the unpaid harm per unit and nothing else. Changing the producer's own cost slides both lines together and leaves the gap alone.",
-     "incorrect": "It is easy to mix the firm's savings into the harm. But the true cost is the firm's own cost plus the harm, so anything that changes only the firm's cost moves both lines equally. The gap changes only when the harm per unit changes."
+     "correct": "Right. The full cost of a unit is the producer's own cost plus every bystander's harm from that unit: $400 + $60 + $40 = $500. The full-cost line sits above the private one by the whole external cost.",
+     "incorrect": "The full-cost line is not the price the producer pays, and it is not the harm alone. It is the producer's own cost plus all the harm that falls on others. Add every bystander's loss to the mill's $400."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start with no pollution at all. The two lines sit on top of each other: what the firm pays is the whole cost.",
+       "say": "Start with no harm at all. The two lines sit on top of each other: what the factory pays is the whole cost.",
        "set": {
-        "h": 0,
+        "ext": 0,
         "q": 45
        },
-       "focus": "private_line",
+       "focus": "full_line",
        "ms": 3200
       },
       {
-       "say": "Now say each refrigerator does $100 of harm to health, property and wildlife, and the firm never pays it. The dashed line jumps up by $100.",
+       "say": "Now say each fridge's pollution does $100 of damage to people nearby. That is the figure in the textbook example. The upper line jumps up by exactly $100.",
        "set": {
-        "h": 100
+        "ext": 100
        },
-       "focus": "social_line",
+       "focus": "ext",
        "ms": 3600
       },
       {
-       "say": "These have names. The firm's own cost is the private cost. The cost including the harm is the social cost. The harm in between is an external cost, also called a negative externality.",
+       "say": "Economists name these lines. The lower one is the marginal private cost: what the maker pays for one more fridge. The upper one is the marginal social cost: that cost plus the harm to everyone else.",
        "focus": [
-        "private",
-        "social",
-        "harm"
+        "private_line",
+        "full_line"
        ],
        "ms": 4400
       },
       {
-       "say": "Slide output down. Both costs fall together, but the gap stays $100.",
+       "say": "The vertical gap between them is the external cost. People outside the sale pay it, and nobody pays them back. A cost like that is called a negative externality.",
+       "focus": [
+        "own_point",
+        "full_point"
+       ],
+       "ms": 4200
+      },
+      {
+       "say": "Slide along the output. In this model the gap stays $100 everywhere, because every fridge adds the same harm.",
        "set": {
         "q": 20
        },
-       "focus": [
-        "private_point",
-        "social_point"
-       ],
-       "ms": 3200
+       "focus": "full_point",
+       "ms": 3000
       },
       {
-       "say": "Slide it up. The gap is still $100. A harm that is the same per unit lifts the whole line. It does not tilt it.",
+       "say": "Still $100 at 70,000 fridges.",
        "set": {
         "q": 70
        },
-       "focus": "harm",
+       "focus": "full_point",
+       "ms": 2600
+      },
+      {
+       "say": "At 40,000 fridges the factory's own cost is $600, but the cost to society is $700. Those are the textbook's numbers.",
+       "set": {
+        "q": 40
+       },
+       "focus": [
+        "own_cost",
+        "full_cost"
+       ],
        "ms": 3600
       },
       {
-       "say": "Raise the harm to $250 and the gap widens by exactly as much. Gap equals harm, every time.",
+       "say": "Make the harm bigger and the gap grows with it. At $250 of harm per fridge, the factory pays only about 71% of what this fridge really costs.",
        "set": {
-        "h": 250
+        "ext": 250
        },
-       "focus": "social_line",
-       "ms": 3400
-      },
-      {
-       "say": "Back to the textbook case: at 45,000 refrigerators the firm's cost is $650, but the true cost is $750. Across all those units, $4.5 million of harm shows up in no price.",
-       "set": {
-        "h": 100,
-        "q": 45
-       },
-       "focus": "total_harm",
-       "ms": 4400
+       "focus": "share",
+       "ms": 4000
       }
      ]
     },
-    "explanation": "A firm decides what to make by looking at its own costs: labour, materials, energy. If its pollution harms neighbours and nobody charges the firm for that, the harm never enters its sums. The true cost of each extra unit is then the firm's cost plus the harm. On a graph, that true-cost line sits above the firm's line by a vertical gap equal to the unpaid harm per unit. Textbooks show this with the standard supply diagram: the OpenStax reading uses $100 of harm per refrigerator, and the encyclopedia account describes the gap as the vertical distance between two supply curves. Pigou made the same point in the 1920s about factory smoke, which he said inflicts 'a heavy uncharged loss on the community'. Two caveats. Real harms are rarely a fixed amount per unit, and they are hard to put a money value on, so the clean gap is an idealisation. This step also says nothing yet about how much the market ends up producing. That comes next.",
+    "explanation": "Some costs of making a product fall on people who never bought or sold it, such as neighbours breathing a factory's smoke. So each extra unit has two costs: what the producer pays, and the producer's cost plus the harm to bystanders. On a chart this gives two supply lines, and the external cost is the vertical gap between them. The OpenStax textbook shows this with refrigerators. If pollution does $100 of damage per fridge and the firm had to pay it, its whole supply curve would shift up by $100: a firm that needed $600 to make 40,000 fridges would need $700. This model keeps the harm fixed per unit for clarity. Real harms can vary with output, and critics such as Baumol stress that putting a dollar figure on them is very hard.",
     "quote": "The marginal private cost is less than the marginal social or public cost by the amount of the external cost, i.e., the cost of air pollution and water pollution. This is represented by the vertical distance between the two supply curves.",
-    "quote_where": "Externality (Wikipedia), section 'Supply and demand diagram: External costs'",
+    "quote_where": "Externality (Wikipedia), section 'Supply and demand diagram', subsection 'External costs'",
+    "quote_source_id": "s1",
     "source_id": "s1",
     "source_ids": [
      "s1",
      "s3",
-     "s4"
+     "s2"
     ]
    },
    "connect": {
     "equation": [
      {
       "text": "MSC",
-      "link": "social"
+      "link": "full_cost"
      },
      {
       "text": " = "
      },
      {
       "text": "MPC",
-      "link": "private"
+      "link": "own_cost"
      },
      {
       "text": " + "
      },
      {
       "text": "MEC",
-      "link": "h"
+      "link": "ext"
      }
     ],
-    "caption": "Marginal social cost (MSC, dashed line) equals marginal private cost (MPC, solid line, here $200 + $10 per thousand units, following the s3 example) plus marginal external cost (MEC, the harm slider). This is the standard textbook relationship described in s1 and s2. MEC is the vertical gap between the lines."
+    "caption": "This is the standard accounting the sources describe in words, not an equation printed in them. The full cost to society of one more unit (MSC, marginal social cost, in blue-green) equals the producer's own cost (MPC, marginal private cost) plus the marginal external cost (MEC), which is the harm slider. In the model, MPC = 200 + 10 × (thousands of fridges), fitted to the OpenStax refrigerator table. MEC is constant, so the two lines stay parallel."
    },
-   "recap": "When a firm doesn't pay for the harm it causes, the true cost of each unit sits above its own cost by exactly that unpaid harm.",
+   "recap": "Each unit's true cost is the producer's own cost plus the harm it does to others. That harm is the vertical gap lifting the full-cost supply line above the one the market sees.",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
     },
     {
      "id": "goal_1",
      "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
      "i": 1
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
     },
     {
-     "id": "connect",
+     "id": "eq",
      "kind": "connect"
     }
    ]
   },
   {
-   "id": "overproduction",
-   "title": "Why the free market makes too much",
-   "idea": "Because buyers and sellers meet where the private cost line crosses demand, the market settles at a larger quantity than where social cost crosses demand, and the extra units cost society more than they are worth.",
+   "id": "market_overshoots",
+   "title": "Why the market makes too much",
+   "idea": "Because buyers and sellers respond only to private cost, the market settles where demand meets private supply, which produces more than the quantity where benefit equals full social cost.",
    "role": "core",
    "predict": {
-    "question": "Flip the case. Each vaccination also protects other people, a benefit the buyer does not count when deciding. There is no unpaid harm. Compared with the best amount for everyone, where does a free market settle?",
+    "question": "A new filter makes the fridge factory's waste completely harmless, so the harm to bystanders per fridge drops to zero. What happens to the gap between what the market makes and the amount where buyer value equals full cost?",
     "options": [
-     "Too many vaccinations",
-     "Too few vaccinations",
-     "Exactly the best amount",
-     "No vaccinations at all"
+     "The gap disappears: the market now makes exactly the right amount",
+     "The market makes fewer fridges than before",
+     "The market still overshoots by 5,000 fridges",
+     "The market now makes too few fridges"
     ],
-    "answer": 1,
+    "answer": 0,
     "why": [
-     "You might carry over 'markets overshoot' from the smoke case. That came from an uncounted cost. An uncounted benefit pushes the other way.",
-     "Correct. Buyers stop where their own benefit meets the cost. The true benefit to everyone is higher, so the best crossing lies further right and the market stops short. The source's vaccine example says people buy 'too few vaccinations'.",
-     "That would hold only if nothing were left out of the deal. Here part of the benefit goes to bystanders, so the two crossings come apart.",
-     "Buyers still get their own protection, so some will pay for it. The market makes a positive amount, just less than is best."
+     "Correct. With no harm, the full-cost line sits on top of the factory's line, so the two crossings with the buyers' line are the same point. The overshoot came only from the unseen harm.",
+     "It is tempting to think a cleaner factory changes output, but the factory's own costs did not move. The market's point stays at 45,000. Only the efficient point moves, and it moves up to meet the market's point.",
+     "The market's point does stay at 45,000. But the efficient point no longer sits 5,000 fridges below it. The gap was caused by the harm, and that harm is now zero.",
+     "The market would make too little only if buyers or makers were ignoring a benefit to others. Here nothing is left unpriced, so the market neither overshoots nor undershoots."
     ]
    },
    "terms": [
     {
+     "term": "demand curve",
+     "means": "The line showing the most buyers would pay for one more unit at each quantity"
+    },
+    {
      "term": "market equilibrium",
-     "means": "The quantity and price where what buyers will pay for one more unit meets what it costs the firm to make it"
+     "means": "Where the demand curve meets the producer's own cost line: the price and amount a free market settles on"
     },
     {
      "term": "efficient quantity",
-     "means": "The output where what buyers value one more unit at equals its true cost to everyone"
+     "means": "The amount where what buyers will pay for one more unit equals its full cost to everyone, harm included"
     },
     {
      "term": "market failure",
-     "means": "A case where a free market, left alone, settles at a quantity that leaves society worse off than it could be"
+     "means": "When a free market's outcome leaves society worse off than another achievable outcome, for example because some costs go unpriced"
     }
    ],
    "model": {
-    "title": "Where buyers and the firm meet, and where they should meet",
-    "note": "Teaching model: straight lines, a competitive market, and a harm that is the same for every refrigerator made. The demand line (buyers will pay $1100 − $10 per thousand units) is chosen to reproduce the illustrative refrigerator table in the OpenStax reading (source s3): the market settles at $650 and 45,000 units, and with $100 of harm per unit the best point is $700 and 40,000 units. These are a textbook illustration, not measured data. Real harms are rarely constant and are hard to measure.",
+    "title": "Where fridge buyers meet each cost line",
+    "note": "Teaching model: straight lines and the same harm for every fridge. The buyers' line and the factory's cost line are built from the refrigerator table in source s3. Buyers take 50,000 fridges at $600, 45,000 at $650 and 40,000 at $700. The market settles at $650 and 45,000. With $100 of harm per fridge counted, it settles at $700 and 40,000. Harm values other than $100 are illustrative. The model assumes bystanders get no benefits from the fridges. Real harms can change with output and are hard to put in dollars.",
     "controls": [
      {
-      "id": "h",
-      "label": "Harm per refrigerator",
+      "id": "ext",
+      "label": "Harm to bystanders per fridge ($)",
       "kind": "slider",
       "min": 0,
-      "max": 400,
+      "max": 300,
       "step": 10,
       "default": 100,
       "unit": "$",
@@ -494,155 +504,151 @@
      },
      {
       "id": "q",
-      "label": "Refrigerators made",
+      "label": "Fridge to inspect (thousands made)",
       "kind": "slider",
       "min": 10,
       "max": 70,
-      "step": 1,
+      "step": 5,
       "default": 45,
-      "unit": " thousand",
+      "unit": "k",
       "color": 3
      }
     ],
     "outputs": [
      {
-      "id": "market_q",
-      "label": "Where the market settles",
-      "expr": "(1100 - 200) / 20",
-      "unit": " thousand",
+      "id": "buyer_value",
+      "label": "Most a buyer would pay for this fridge ($)",
+      "expr": "1100 - 10 * q",
+      "unit": "",
       "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "full_cost",
+      "label": "Full cost to everyone of this fridge ($)",
+      "expr": "200 + 10 * q + ext",
+      "unit": "",
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "gap_here",
+      "label": "Full cost minus buyer's top price ($)",
+      "expr": "full_cost - buyer_value",
+      "unit": "",
+      "decimals": 0,
+      "color": 6
+     },
+     {
+      "id": "market_q",
+      "label": "Fridges the market makes (thousands)",
+      "expr": "(1100 - 200) / 20",
+      "unit": "k",
+      "decimals": 1,
       "color": 0
      },
      {
-      "id": "best_q",
-      "label": "Best output for everyone",
-      "expr": "(900 - h) / 20",
-      "unit": " thousand",
+      "id": "eff_q",
+      "label": "Fridges where buyer value = full cost (thousands)",
+      "expr": "(1100 - 200 - ext) / 20",
+      "unit": "k",
       "decimals": 1,
       "color": 1
      },
      {
       "id": "extra",
-      "label": "Extra refrigerators made",
-      "expr": "market_q - best_q",
-      "unit": " thousand",
+      "label": "Extra fridges made (thousands)",
+      "expr": "market_q - eff_q",
+      "unit": "k",
       "decimals": 1,
-      "color": 5
-     },
-     {
-      "id": "value",
-      "label": "What a buyer values one more at",
-      "expr": "1100 - 10 * q",
-      "unit": "$",
-      "decimals": 0,
-      "color": 4
-     },
-     {
-      "id": "social",
-      "label": "True cost to everyone (one more unit)",
-      "expr": "200 + 10 * q + h",
-      "unit": "$",
-      "decimals": 0,
-      "color": 1
-     },
-     {
-      "id": "loss",
-      "label": "Net loss from the extra units ($ millions)",
-      "expr": "h * h / 40000",
-      "unit": "",
-      "decimals": 2,
-      "color": 5
+      "color": 7
      }
     ],
     "visual": {
      "type": "curves",
      "x": {
-      "label": "Refrigerators made (thousands)",
+      "label": "Fridges made (thousands)",
       "min": 0,
       "max": 80
      },
      "y": {
-      "label": "Cost of one more refrigerator ($)",
+      "label": "Cost of one more fridge ($)",
       "min": 0,
       "max": 1400
      },
      "series": [
       {
        "id": "private_line",
-       "label": "Firm's own cost",
+       "label": "Factory's own cost per extra fridge",
        "expr": "200 + 10 * x",
        "color": 0,
        "dashed": false
       },
       {
-       "id": "social_line",
-       "label": "True cost to everyone",
-       "expr": "200 + 10 * x + h",
+       "id": "full_line",
+       "label": "Full cost to everyone per extra fridge",
+       "expr": "200 + 10 * x + ext",
        "color": 1,
-       "dashed": true
+       "dashed": false
       },
       {
        "id": "demand_line",
-       "label": "What buyers will pay for one more",
+       "label": "Most a buyer would pay for one more fridge",
        "expr": "1100 - 10 * x",
-       "color": 4,
-       "dashed": false
-      }
-     ],
-     "fills": [
-      {
-       "series": 1,
-       "from": "best_q",
-       "to": "market_q",
-       "label": "True cost of the extra units",
-       "color": 1
-      },
-      {
-       "series": 2,
-       "from": "best_q",
-       "to": "market_q",
-       "label": "What buyers value the extra units at",
-       "color": 4
+       "color": 5,
+       "dashed": true
       }
      ],
      "markers": [
       {
+       "id": "look_marker",
+       "x": "q",
+       "label": "Fridge you're inspecting",
+       "color": 3
+      },
+      {
        "id": "market_marker",
        "x": "market_q",
-       "label": "Market settles",
+       "label": "Market's amount",
        "color": 0
       },
       {
-       "id": "best_marker",
-       "x": "best_q",
-       "label": "Best for everyone",
+       "id": "eff_marker",
+       "x": "eff_q",
+       "label": "Value = full cost",
        "color": 1
-      },
-      {
-       "id": "q_marker",
-       "x": "q",
-       "label": "Output chosen",
-       "color": 3
       }
      ],
      "points": [
       {
-       "id": "private_point",
+       "id": "own_point",
        "x": "q",
        "y": "200 + 10 * q",
-       "label": "Firm pays"
+       "label": "Factory pays"
       },
       {
-       "id": "social_point",
+       "id": "full_point",
        "x": "q",
-       "y": "social",
+       "y": "full_cost",
        "label": "Everyone pays"
       },
       {
-       "id": "demand_point",
+       "id": "buyer_point",
        "x": "q",
-       "y": "value",
-       "label": "Buyer values"
+       "y": "buyer_value",
+       "label": "Buyer would pay"
+      },
+      {
+       "id": "market_point",
+       "x": "market_q",
+       "y": "200 + 10 * market_q",
+       "label": "Where the market settles"
+      },
+      {
+       "id": "eff_point",
+       "x": "eff_q",
+       "y": "1100 - 10 * eff_q",
+       "label": "Where value = full cost"
       }
      ]
     }
@@ -650,132 +656,1052 @@
    "animation": {
     "steps": [
      {
-      "say": "Same picture as before. The solid line is the firm's own cost of one more refrigerator. The dashed line sits higher by the unpaid harm: the true cost to everyone.",
-      "set": {
-       "h": 100,
-       "q": 45
-      },
+      "say": "Same picture as before: the factory's own cost line, and the full-cost line sitting $100 above it because of the harm to bystanders.",
       "focus": [
        "private_line",
-       "social_line"
+       "full_line"
       ],
-      "ms": 6000
+      "ms": 5000
      },
      {
-      "say": "New: this falling line shows what buyers will pay for one more refrigerator. The first few are worth a lot to someone. Each extra one is worth a bit less.",
+      "say": "New: this falling dashed line shows the most a buyer would pay for one more fridge. The first fridges go to keen buyers. Later ones go to buyers who care less, so the line slopes down.",
       "focus": "demand_line",
       "ms": 6000
      },
      {
-      "say": "Two new markers show where the falling line crosses each cost line. The shaded strip between them is what this lesson is about.",
+      "say": "Two dots mark where the buyers' line crosses each cost line. The harm slider still lifts the full-cost line. Watch which dot it moves.",
+      "set": {
+       "ext": 150
+      },
       "focus": [
-       "market_marker",
-       "best_marker"
+       "market_point",
+       "eff_point",
+       "ext"
       ],
-      "ms": 6000
+      "ms": 5500
      }
     ]
    },
    "explore": {
-    "prompt": "Use the output slider to probe single refrigerators, and the harm slider to see how far the market overshoots.",
+    "prompt": "Play with the harm and the fridge you inspect. Watch which dot moves, which stays put, and when a fridge costs everyone more than it is worth to its buyer.",
     "goals": [
      {
-      "text": "Find an output where one more refrigerator is worth more to its buyer than the firm pays to make it, yet costs everyone more than it is worth.",
-      "when": "value > 200 + 10 * q && value < social",
+      "text": "Make the market overshoot the efficient quantity by exactly 6,000 fridges.",
+      "when": "abs(extra - 6) < 0.01",
       "solution": {
-       "q": 42
+       "ext": 120
       },
       "hints": [
-       "Compare the three dots on the output marker: what the buyer values, what the firm pays, what everyone pays.",
-       "A unit like this is one the market makes but shouldn't. So it sits between the two crossing markers.",
-       "Move the output slider a little left of where the market settles, but stay to the right of the best-output marker."
+       "Only one slider changes the size of the overshoot. Which line does it shift?",
+       "The market's dot never moves, so the efficient dot has to slide. Watch the 'Extra fridges made' box as you change the harm.",
+       "You need a bit more harm than the reading's $100, but well under $200."
       ]
      },
      {
-      "text": "Make the market overshoot the best output by 15 thousand refrigerators.",
-      "when": "abs(extra - 15) < 0.25",
+      "text": "Find a fridge the market still makes whose full cost beats the most a buyer would pay by more than $150.",
+      "when": "q <= market_q && gap_here > 150",
       "solution": {
-       "h": 300
+       "q": 45,
+       "ext": 160
       },
       "hints": [
-       "The market's own crossing never moves. Only the best output does. Which slider moves it?",
-       "Raise the harm and watch the 'Extra refrigerators made' box. Every equal step of harm adds the same amount of overshoot.",
-       "At the start, $100 of harm gives 5 thousand extra. Scale up from there."
+       "Only fridges up to the market's dot get made. Of those, which one has the biggest loss?",
+       "Inspect the last fridge the market makes. Its loss is the full cost minus the buyer's top price, and each extra dollar of harm adds a dollar to it.",
+       "Keep the inspector on the market's dot, then raise the harm a little past the halfway mark of its slider."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Right. Leaving a benefit out of the deal is the mirror image of leaving a cost out. Buyers count only their own benefit, so they stop before the point where the true benefit to everyone meets the cost.",
-     "incorrect": "The lesson is not 'markets always make too much'. It is that the market stops where the counted costs and benefits meet. Leave out a cost and it overshoots. Leave out a benefit, as with vaccines that protect neighbours, and it stops short."
+     "correct": "Right. The overshoot exists only because harm is left out of the price. With zero harm the full-cost line falls onto the factory's line, so the market's crossing is also the efficient one.",
+     "incorrect": "The market's point never depended on the harm, because buyers and the factory never saw it. The harm only set where the efficient point sat. Remove the harm and that point rises to meet the market's point, so the gap closes."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start with no harm. The two cost lines lie on top of each other, and both cross the buyers' line at 45 thousand refrigerators and $650.",
+       "say": "Start with no harm at all. The two cost lines lie on top of each other. The buyers' line, called the demand curve, crosses them at one spot: 45,000 fridges at $650.",
        "set": {
-        "h": 0,
+        "ext": 0,
         "q": 45
        },
-       "focus": "market_marker",
+       "focus": [
+        "demand_line",
+        "market_point"
+       ],
+       "ms": 4500
+      },
+      {
+       "say": "Now add the reading's $100 of harm per fridge. The full-cost line lifts. Buyers and the factory still trade on the factory's own cost, so the market still settles at 45,000 fridges and $650. That spot is the market equilibrium.",
+       "set": {
+        "ext": 100
+       },
+       "focus": [
+        "market_point",
+        "market_q"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "The demand curve meets the full-cost line earlier, at 40,000 fridges and $700. This is the efficient quantity. Up to here, every fridge is worth at least its full cost to the person who buys it.",
+       "focus": [
+        "eff_point",
+        "eff_q"
+       ],
        "ms": 5000
       },
       {
-       "say": "Now add $100 of harm per refrigerator. Buyers and the firm still trade until the firm's own cost meets what buyers will pay: 45 thousand, at $650. That meeting point is the market equilibrium.",
+       "say": "Inspect a fridge before that point, number 35,000. A buyer would pay up to $750, and its full cost is $650. Making it leaves everyone better off.",
        "set": {
-        "h": 100
-       },
-       "focus": "market_q",
-       "ms": 6500
-      },
-      {
-       "say": "The dashed true-cost line crosses the buyers' line earlier, at 40 thousand and $700. Past that point each refrigerator costs everyone more than buyers value it. This is the efficient quantity.",
-       "focus": "best_q",
-       "ms": 6500
-      },
-      {
-       "say": "Pick one unit inside the gap, at 42 thousand. A buyer values it at $680. The firm pays only $620, so the sale happens. But it really costs everyone $720.",
-       "set": {
-        "q": 42
+        "q": 35
        },
        "focus": [
-        "value",
-        "social"
+        "buyer_value",
+        "full_cost"
        ],
-       "ms": 7000
+       "ms": 5000
       },
       {
-       "say": "Every unit in the shaded strip is like that: the blue cost area pokes above the buyers' area. Add up those small losses and society is $0.25 million worse off.",
+       "say": "Now inspect the 45,000th fridge, the last one the market makes. A buyer would pay $650, but its full cost is $750. Society loses $100 on it, yet it is still made, because the bystanders who bear that $100 have no say in the deal.",
        "set": {
         "q": 45
        },
-       "focus": "loss",
-       "ms": 6500
-      },
-      {
-       "say": "This is a market failure. Nobody did anything irrational. The harm simply never entered the deal. Now triple the harm to $300.",
-       "set": {
-        "h": 300
-       },
-       "focus": "extra",
+       "focus": [
+        "buyer_point",
+        "full_point",
+        "gap_here"
+       ],
        "ms": 6000
       },
       {
-       "say": "The overshoot grows to 15 thousand units and the loss to $2.25 million. Note that the best output is still 30 thousand, not zero. The problem is the extra units, not making refrigerators at all.",
+       "say": "Double the harm to $200. The market's dot does not budge. The efficient dot slides back to 35,000, so the overshoot doubles to 10,000 fridges.",
+       "set": {
+        "ext": 200
+       },
        "focus": [
-        "best_marker",
-        "loss"
+        "eff_marker",
+        "extra"
        ],
-       "ms": 7000
+       "ms": 5000
+      },
+      {
+       "say": "At $300 of harm the market makes 15,000 fridges too many. Nobody is cheating: the price just never carries the harm. Economists call this a market failure.",
+       "set": {
+        "ext": 300
+       },
+       "focus": [
+        "market_marker",
+        "eff_marker",
+        "extra"
+       ],
+       "ms": 5500
       }
      ]
     },
-    "explanation": "Buyers and the firm only weigh the costs and benefits they themselves face. So the market settles where the firm's own cost meets what buyers will pay, and the unpaid harm plays no part. The best output for everyone is where the true cost meets what buyers will pay, and with a harm that crossing comes earlier. The units in between get made even though each costs society more than it is worth, which is why economists call this a market failure. In this model the overshoot grows in step with the harm per unit, and the total loss grows faster still. The sources show this with textbook diagrams and an illustrative refrigerator table, not with measured data. The argument also assumes the harm can be put in dollars, which critics note is very hard in practice.",
-    "quote": "The result is that a free market is inefficient since at the quantity Qp, the social benefit is less than the social cost, so society as a whole would be better off if the goods between Qp and Qs had not been produced.",
-    "quote_where": "Externality (Wikipedia), section 'Supply and demand diagram — External costs'",
-    "source_id": "s1",
+    "explanation": "Buyers and the factory weigh only the factory's own cost, so trading stops where the demand curve crosses that line: the market equilibrium. The efficient quantity lies further left, where what a buyer will pay for one more fridge equals its full cost, harm included. Every fridge between the two points costs society more than it is worth to its buyer. Each one is still made, because the people deciding do not pay the difference. The textbook reading (s3) shows this with its refrigerator table: $650 and 45,000 fridges when pollution is free, and $700 and 40,000 once the $100 harm counts. The encyclopedia's steel example (s1) makes the same argument. In this straight-line model the overshoot grows in step with the harm. Real harms are hard to value, and the picture assumes no benefits to bystanders.",
+    "quote": "In the case of pollution, at the market output, social costs of production exceed social benefits to consumers, and the market produces too much of the product.",
+    "quote_where": "Pollution as a Negative Externality (OpenStax reading)",
+    "source_id": "s3",
     "source_ids": [
+     "s3",
+     "s1"
+    ]
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "Q_{market} − Q_{efficient} = "
+     },
+     {
+      "text": "MEC",
+      "link": "ext"
+     },
+     {
+      "text": " ÷ (10 + 10) = "
+     },
+     {
+      "text": "extra fridges",
+      "link": "extra"
+     }
+    ],
+    "caption": "This is the model's own rule. The sources give the condition behind it: efficiency is where marginal social benefit equals marginal social cost. MEC (orange, the harm slider) is the harm per fridge. 10 + 10 is how steep the buyers' line and the factory's line are, $10 per thousand fridges each. Harm divided by that total gives the overshoot in thousands of fridges (the 'Extra fridges made' box). It holds only for straight lines."
+   },
+   "recap": "The market settles where buyers meet the factory's own cost, so when harm goes unpriced it makes more than the amount where value equals full cost, and the overshoot grows with the harm.",
+   "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "use",
+     "kind": "predict"
+    },
+    {
+     "id": "why",
+     "kind": "reveal"
+    },
+    {
+     "id": "eq",
+     "kind": "connect"
+    }
+   ],
+   "builds_on": "external_cost_gap"
+  },
+  {
+   "id": "pigouvian_tax",
+   "title": "A charge equal to the harm",
+   "idea": "A per-unit charge equal to the marginal external cost lifts the private supply curve onto the social one, so the market itself picks the efficient quantity, which is lower but not zero.",
+   "role": "core",
+   "predict": {
+    "question": "Regulators can't measure the harm well. The true harm is $100 per fridge, but they guess $250 and charge that much on every fridge. Compared with the efficient amount, what will the market do?",
+    "options": [
+     "Make too few fridges: some fridges worth more to buyers than their full cost never get made",
+     "Make exactly the efficient amount, because a bigger charge is just the safe side",
+     "Stop making fridges altogether",
+     "Still make too many fridges, because buyers simply pay the charge"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. The charged line now sits above the full-cost line, so the market stops short. In this model it makes about 32,500 fridges instead of 40,000. The fridges in between were worth more to buyers than everything they cost society.",
+     "It is tempting to think that more caution can't hurt. The efficient amount is where buyer value equals full cost, though. A charge above the harm pushes the market past that point in the other direction.",
+     "A charge raises the cost of each fridge but doesn't forbid them. Buyers still value the first fridges far above even $250 plus the factory's cost, so production falls but goes on.",
+     "Buyers do pay part of the charge through a higher price, and that is exactly why they buy fewer. A charge larger than the harm cuts production below the efficient amount. It doesn't leave it too high."
+    ]
+   },
+   "terms": [
+    {
+     "term": "marginal external cost",
+     "means": "The harm one more unit of a product does to bystanders: here, the harm per extra fridge"
+    },
+    {
+     "term": "Pigouvian tax",
+     "means": "A charge per unit set equal to the marginal external cost, so the producer pays for the harm it causes"
+    },
+    {
+     "term": "internalizing a cost",
+     "means": "Making the decision-maker pay a cost that used to fall on others, so their own sums now include it"
+    }
+   ],
+   "model": {
+    "title": "Charging the fridge factory for the harm",
+    "note": "Teaching model: straight lines and the same harm for every fridge. The buyers' line and the factory's cost line are built from the refrigerator table in source s3. With no charge the market settles at $650 and 45,000 fridges. With $100 of harm charged per fridge it settles at $700 and 40,000, which matches s3. Other harm and charge values are illustrative. The charge here is levied per fridge. Source s2 notes that a charge on the emissions themselves could also reward cleaner processes, which this model can't show, because each fridge's harm is fixed. The model assumes bystanders get no benefit from the fridges. It also assumes the regulator knows the harm, which real regulators rarely do.",
+    "controls": [
+     {
+      "id": "ext",
+      "label": "Harm to bystanders per fridge ($)",
+      "kind": "slider",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "default": 100,
+      "unit": "$",
+      "color": 2
+     },
+     {
+      "id": "q",
+      "label": "Fridge to inspect (thousands made)",
+      "kind": "slider",
+      "min": 10,
+      "max": 70,
+      "step": 5,
+      "default": 45,
+      "unit": "k",
+      "color": 3
+     },
+     {
+      "id": "tax",
+      "label": "Charge on the factory per fridge ($)",
+      "kind": "slider",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "default": 0,
+      "unit": "$",
+      "color": 4
+     }
+    ],
+    "outputs": [
+     {
+      "id": "market_q",
+      "label": "Fridges the market makes (thousands)",
+      "expr": "(1100 - 200 - tax) / 20",
+      "unit": "k",
+      "decimals": 1,
+      "color": 0
+     },
+     {
+      "id": "eff_q",
+      "label": "Fridges where buyer value = full cost (thousands)",
+      "expr": "(1100 - 200 - ext) / 20",
+      "unit": "k",
+      "decimals": 1,
+      "color": 1
+     },
+     {
+      "id": "extra",
+      "label": "Market's amount minus that amount (thousands)",
+      "expr": "market_q - eff_q",
+      "unit": "k",
+      "decimals": 1,
+      "color": 7
+     },
+     {
+      "id": "price_paid",
+      "label": "Price buyers pay ($)",
+      "expr": "1100 - 10 * market_q",
+      "unit": "",
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "tax_gap",
+      "label": "Charge minus harm per fridge ($)",
+      "expr": "tax - ext",
+      "unit": "",
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "gap_here",
+      "label": "Inspected fridge: full cost minus buyer's top price ($)",
+      "expr": "(200 + 10 * q + ext) - (1100 - 10 * q)",
+      "unit": "",
+      "decimals": 0,
+      "color": 6
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Fridges made (thousands)",
+      "min": 0,
+      "max": 80
+     },
+     "y": {
+      "label": "Cost of one more fridge ($)",
+      "min": 0,
+      "max": 1400
+     },
+     "series": [
+      {
+       "id": "private_line",
+       "label": "Factory's own cost per extra fridge",
+       "expr": "200 + 10 * x",
+       "color": 0,
+       "dashed": false
+      },
+      {
+       "id": "taxed_line",
+       "label": "Factory's cost plus the charge",
+       "expr": "200 + 10 * x + tax",
+       "color": 4,
+       "dashed": false
+      },
+      {
+       "id": "full_line",
+       "label": "Full cost to everyone per extra fridge",
+       "expr": "200 + 10 * x + ext",
+       "color": 1,
+       "dashed": false
+      },
+      {
+       "id": "demand_line",
+       "label": "Most a buyer would pay for one more fridge",
+       "expr": "1100 - 10 * x",
+       "color": 5,
+       "dashed": true
+      }
+     ],
+     "markers": [
+      {
+       "id": "look_marker",
+       "x": "q",
+       "label": "Fridge you're inspecting",
+       "color": 3
+      },
+      {
+       "id": "market_marker",
+       "x": "market_q",
+       "label": "Market's amount",
+       "color": 0
+      },
+      {
+       "id": "eff_marker",
+       "x": "eff_q",
+       "label": "Value = full cost",
+       "color": 1
+      }
+     ],
+     "points": [
+      {
+       "id": "full_point",
+       "x": "q",
+       "y": "200 + 10 * q + ext",
+       "label": "Everyone pays"
+      },
+      {
+       "id": "buyer_point",
+       "x": "q",
+       "y": "1100 - 10 * q",
+       "label": "Buyer would pay"
+      },
+      {
+       "id": "market_point",
+       "x": "market_q",
+       "y": "1100 - 10 * market_q",
+       "label": "Where the market settles"
+      },
+      {
+       "id": "eff_point",
+       "x": "eff_q",
+       "y": "1100 - 10 * eff_q",
+       "label": "Where value = full cost"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Same fridge market as before. Here is the buyers' line, the factory's own cost line, and the full-cost line that adds $100 of harm to bystanders per fridge.",
+      "focus": [
+       "demand_line",
+       "private_line",
+       "full_line"
+      ],
+      "ms": 4200
+     },
+     {
+      "say": "New: this slider makes the factory pay a charge on every fridge it makes. The new line shows its own cost plus that charge.",
+      "set": {
+       "tax": 60
+      },
+      "focus": [
+       "tax",
+       "taxed_line"
+      ],
+      "ms": 4400
+     },
+     {
+      "say": "The market now settles where buyers meet that charged line. Watch the market's marker slide left as the charge grows.",
+      "set": {
+       "tax": 120
+      },
+      "focus": "market_marker",
+      "ms": 4200
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "You are the regulator now. Make the harm bigger or smaller, then try to tune the charge so the market itself lands exactly where buyer value meets full cost. Then see what happens when you overshoot.",
+    "goals": [
+     {
+      "text": "Make each fridge do more harm than it does at the start, then pick a charge that makes the market produce exactly the efficient amount.",
+      "when": "ext > 100 && abs(market_q - eff_q) < 0.01",
+      "solution": {
+       "ext": 150,
+       "tax": 150
+      },
+      "hints": [
+       "Which line has to land on top of which other line?",
+       "The charged line must sit exactly on the full-cost line, so the charge has to fill the whole gap between the factory's line and the full-cost line.",
+       "That gap is set by the harm slider. Compare the charge with the harm until the two markers meet."
+      ]
+     },
+     {
+      "text": "Keep the harm where it started and pick a charge that leaves the market 2,500 fridges short of the efficient amount.",
+      "when": "abs(ext - 100) < 0.01 && abs(extra + 2.5) < 0.01",
+      "solution": {
+       "tax": 150
+      },
+      "hints": [
+       "Falling short means the market's marker sits to the left of the efficient marker. What kind of charge does that?",
+       "Start from the charge that hits the efficient point exactly, then raise it further.",
+       "Each extra $20 of charge moves the market's amount left by 1,000 fridges. Work out how much more you need."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "source_ids": [
+     "s2",
+     "s3",
+     "s1"
+    ],
+    "feedback": {
+     "correct": "Yes. The right charge equals the true harm. A charge built on a guess of $250 lifts the charged line above the full-cost line, so the market stops at about 32,500 fridges. The fridges between there and 40,000 were each worth more to buyers than their full cost, and society loses them. A badly measured charge misses in either direction.",
+     "incorrect": "The goal is not as little production as possible. It is the amount where buyer value equals full cost. A charge bigger than the harm overshoots that point, so the market makes too few fridges, though it doesn't make zero. This is why critics in source s2 stress that the harm is hard to measure."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with no charge and $100 of harm per fridge. The market makes 45,000 fridges, but buyer value equals full cost at 40,000: 5,000 too many.",
+       "set": {
+        "tax": 0,
+        "ext": 100,
+        "q": 45
+       },
+       "focus": [
+        "market_marker",
+        "eff_marker",
+        "extra"
+       ],
+       "ms": 4200
+      },
+      {
+       "say": "Charge the factory $50 per fridge. Its cost line rises by $50, and buyers meet it at 42,500 fridges. That is closer, but still too many.",
+       "set": {
+        "tax": 50
+       },
+       "focus": [
+        "taxed_line",
+        "market_marker"
+       ],
+       "ms": 4200
+      },
+      {
+       "say": "Now charge $100, exactly the harm each extra fridge does. The charged line lands right on the full-cost line, and the market settles at 40,000 fridges and $700. That matches the textbook table in source s3.",
+       "set": {
+        "tax": 100
+       },
+       "focus": [
+        "taxed_line",
+        "full_line",
+        "market_point"
+       ],
+       "ms": 5200
+      },
+      {
+       "say": "Economists call the harm from one more unit the marginal external cost. A charge equal to it is a Pigouvian tax. Nobody told the market 40,000. Buyers and the factory found that amount on their own once the factory paid for the harm.",
+       "focus": [
+        "tax_gap",
+        "eff_point"
+       ],
+       "ms": 5200
+      },
+      {
+       "say": "Notice it is not zero. Forty thousand fridges are still made, because buyers value each of them at least as much as its full cost. The aim is the right amount of production, not none.",
+       "focus": "market_q",
+       "ms": 4400
+      },
+      {
+       "say": "Overshoot to $200. The market drops to 35,000, now 5,000 short. Those lost fridges were worth more to buyers than everything they cost society.",
+       "set": {
+        "tax": 200
+       },
+       "focus": [
+        "market_marker",
+        "extra"
+       ],
+       "ms": 4600
+      },
+      {
+       "say": "So the right charge isn't a fixed number: it follows the harm. Raise the harm to $200 too, and the lines match again. This is called internalizing a cost: the factory now pays the harm it used to push onto bystanders.",
+       "set": {
+        "ext": 200
+       },
+       "focus": [
+        "taxed_line",
+        "full_line",
+        "eff_point"
+       ],
+       "ms": 5200
+      }
+     ]
+    },
+    "explanation": "The market overproduced because the factory's sums left out the harm to bystanders. Charging the factory that harm on every unit lifts its cost line by exactly the gap, onto the full-cost line. Economists call this internalizing a cost. Buyers and sellers then settle by themselves at the efficient amount. Production is lower, but not zero, because buyers still value those fridges at least as much as their full cost. A charge below the harm still leaves too much, and one above it leaves too little. The textbook in source s3 shows this with refrigerators: a $100 charge per fridge moves the market from $650 and 45,000 to $700 and 40,000. Source s2 states the general rule and its main weakness. The charge must equal the true harm per unit, and Pigou himself, along with Baumol and others, warned that this harm is very hard to measure.",
+    "quote": "A tax shifts the marginal private cost curve up by the amount of the externality. If the tax is placed on the quantity of emissions from the factory, the producers have an incentive to reduce output to the socially optimum level.",
+    "quote_where": "Pigouvian tax, section 'Working of the Pigouvian tax'",
+    "source_id": "s2"
+   },
+   "check": {
+    "kind": "model",
+    "task": "Suppose each fridge does so much harm that fewer than 35,000 fridges are worth making. Set the harm to fit that, then choose the charge that gets the market to the right amount: not too many, not too few.",
+    "when": "ext > 100 && abs(market_q - eff_q) < 0.01 && eff_q < 35",
+    "solution": {
+     "ext": 250,
+     "tax": 250
+    },
+    "hint": "First raise the harm until the efficient marker sits left of 35. Then tune the charge until the market's marker sits exactly on it, without going past it.",
+    "misconception": "That a bigger charge is always better, or that the aim is to stop production. The right charge equals the harm per unit: anything larger pushes output below the efficient amount."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "MPC + "
+     },
+     {
+      "text": "t",
+      "link": "tax"
+     },
+     {
+      "text": " = MSC = MPC + "
+     },
+     {
+      "text": "MEC",
+      "link": "ext"
+     },
+     {
+      "text": "   ⇒   "
+     },
+     {
+      "text": "t",
+      "link": "tax"
+     },
+     {
+      "text": " = "
+     },
+     {
+      "text": "MEC",
+      "link": "ext"
+     }
+    ],
+    "caption": "The model's rule in standard notation, not an equation printed in the sources. MPC is the factory's own cost line. The charge t (the new slider) lifts it. MSC, the full-cost line, is MPC plus MEC, the harm per fridge (the harm slider). The market hits the efficient amount only when t = MEC. Source s2 says it in words: 'Ideally, the tax is set equal to the external marginal cost.'"
+   },
+   "recap": "Charge the producer exactly the harm each extra unit does, and the market itself stops at the efficient amount: fewer units, not none. Charging too little or too much misses.",
+   "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "use",
+     "kind": "predict"
+    },
+    {
+     "id": "why",
+     "kind": "reveal"
+    },
+    {
+     "id": "test",
+     "kind": "check"
+    },
+    {
+     "id": "eq",
+     "kind": "connect"
+    }
+   ],
+   "builds_on": "market_overshoots"
+  },
+  {
+   "id": "price_vs_cap",
+   "title": "Set the price or set the quantity",
+   "idea": "Instead of setting a charge and letting quantity adjust, a regulator can cap total pollution with tradable permits and let the permit price adjust; aiming at the same target gives the same price.",
+   "role": "core",
+   "predict": {
+    "question": "A town limits fridge pollution with tradable permits, set at the efficient amount. Then a new process cuts the factory's own cost of every fridge by $50, while the harm per fridge stays the same. With the permit limit unchanged, what happens?",
+    "options": [
+     "The number of fridges stays at the limit, and the permit price rises by about $50",
+     "The factory makes more fridges, and the permit price stays the same",
+     "Both the number of fridges and the permit price rise",
+     "The permit price falls, because making fridges got cheaper"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. The limit fixes the quantity, so only the price can move. At the limit, buyers still pay the same top price, but the factory's own cost is $50 lower. The gap a permit fills is therefore $50 wider.",
+     "That is what a fixed charge would do: with the price of polluting fixed, cheaper production means more fridges. Under a permit limit, nobody can make a fridge without a permit, so the quantity cannot grow.",
+     "Rising output would need more permits, and the limit doesn't change. All of the adjustment goes into the price.",
+     "Cheaper production makes each permit more valuable, not less. A permit is worth the buyer's top price minus the factory's cost at the limit, and that cost just fell."
+    ]
+   },
+   "terms": [
+    {
+     "term": "cap-and-trade",
+     "means": "Fixing the total amount of pollution allowed by issuing permits, then letting firms buy and sell those permits"
+    },
+    {
+     "term": "effluent charge",
+     "means": "A fee per unit of pollution released; the 1960s name for what is now often called a Pigouvian tax"
+    },
+    {
+     "term": "duality",
+     "means": "Price and quantity are two sides of one choice: fix either one and the market sets the other"
+    }
+   ],
+   "model": {
+    "title": "Limit the permits or charge the factory",
+    "note": "Teaching model: straight lines and the same harm for every fridge. Each permit covers the pollution from one fridge, so limiting pollution means limiting fridges. The buyers' line and the factory's cost line are built from the refrigerator table in source s3. With no charge the market settles at $650 and 45,000 fridges. With $100 charged per fridge it settles at $700 and 40,000. Permit counts, permit prices and other harm values are illustrative and come from no source. The model assumes everyone knows costs and demand exactly, which is why a charge and a limit aimed at the same target give identical results. Under real uncertainty they differ: source s1 notes that cap-and-trade reduces uncertainty about the final pollution level, and Dales argued that a charge needs trial and error to find the right price (s4). The model does not show who receives the permit money (permits sold or handed out free; see s2). It also does not show trading among firms with different clean-up costs. It assumes bystanders get no benefit from the fridges and that the regulator knows the harm.",
+    "controls": [
+     {
+      "id": "ext",
+      "label": "Harm to bystanders per fridge ($)",
+      "kind": "slider",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "default": 100,
+      "unit": "$",
+      "color": 2
+     },
+     {
+      "id": "q",
+      "label": "Fridge to inspect (thousands made)",
+      "kind": "slider",
+      "min": 10,
+      "max": 70,
+      "step": 5,
+      "default": 45,
+      "unit": "k",
+      "color": 3
+     },
+     {
+      "id": "tax",
+      "label": "Charge on the factory per fridge ($)",
+      "kind": "slider",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "default": 0,
+      "unit": "$",
+      "color": 4
+     },
+     {
+      "id": "cap",
+      "label": "Pollution permits issued (thousands of fridges' worth)",
+      "kind": "slider",
+      "min": 10,
+      "max": 80,
+      "step": 2.5,
+      "default": 80,
+      "unit": "k",
+      "color": 6
+     }
+    ],
+    "outputs": [
+     {
+      "id": "market_q",
+      "label": "Fridges the market makes (thousands)",
+      "expr": "min((900 - tax) / 20, cap)",
+      "unit": "k",
+      "decimals": 1,
+      "color": 0
+     },
+     {
+      "id": "permit_price",
+      "label": "Price one permit trades at ($)",
+      "expr": "900 - 20 * market_q - tax",
+      "unit": "",
+      "decimals": 0,
+      "color": 7
+     },
+     {
+      "id": "eff_q",
+      "label": "Fridges where buyer value = full cost (thousands)",
+      "expr": "(1100 - 200 - ext) / 20",
+      "unit": "k",
+      "decimals": 1,
+      "color": 1
+     },
+     {
+      "id": "price_paid",
+      "label": "Price buyers pay ($)",
+      "expr": "1100 - 10 * market_q",
+      "unit": "",
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "tax_gap",
+      "label": "Charge minus harm per fridge ($)",
+      "expr": "tax - ext",
+      "unit": "",
+      "decimals": 0,
+      "color": 4
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Fridges made (thousands)",
+      "min": 0,
+      "max": 80
+     },
+     "y": {
+      "label": "Cost of one more fridge ($)",
+      "min": 0,
+      "max": 1400
+     },
+     "series": [
+      {
+       "id": "private_line",
+       "label": "Factory's own cost per extra fridge",
+       "expr": "200 + 10 * x",
+       "color": 0,
+       "dashed": false
+      },
+      {
+       "id": "taxed_line",
+       "label": "Factory's cost plus the charge",
+       "expr": "200 + 10 * x + tax",
+       "color": 4,
+       "dashed": false
+      },
+      {
+       "id": "permit_line",
+       "label": "Factory's cost plus charge plus the permit's price",
+       "expr": "200 + 10 * x + tax + permit_price",
+       "color": 7,
+       "dashed": true
+      },
+      {
+       "id": "full_line",
+       "label": "Full cost to everyone per extra fridge",
+       "expr": "200 + 10 * x + ext",
+       "color": 1,
+       "dashed": false
+      },
+      {
+       "id": "demand_line",
+       "label": "Most a buyer would pay for one more fridge",
+       "expr": "1100 - 10 * x",
+       "color": 5,
+       "dashed": true
+      }
+     ],
+     "markers": [
+      {
+       "id": "look_marker",
+       "x": "q",
+       "label": "Fridge you're inspecting",
+       "color": 3
+      },
+      {
+       "id": "cap_marker",
+       "x": "cap",
+       "label": "Permit limit",
+       "color": 6
+      },
+      {
+       "id": "market_marker",
+       "x": "market_q",
+       "label": "Market's amount",
+       "color": 0
+      },
+      {
+       "id": "eff_marker",
+       "x": "eff_q",
+       "label": "Value = full cost",
+       "color": 1
+      }
+     ],
+     "points": [
+      {
+       "id": "full_point",
+       "x": "q",
+       "y": "200 + 10 * q + ext",
+       "label": "Everyone pays"
+      },
+      {
+       "id": "buyer_point",
+       "x": "q",
+       "y": "1100 - 10 * q",
+       "label": "Buyer would pay"
+      },
+      {
+       "id": "market_point",
+       "x": "market_q",
+       "y": "1100 - 10 * market_q",
+       "label": "Where the market settles"
+      },
+      {
+       "id": "eff_point",
+       "x": "eff_q",
+       "y": "1100 - 10 * eff_q",
+       "label": "Where value = full cost"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "It's the same fridge market as before. The dashed line is what buyers would pay. The solid lines are the factory's own cost and the full cost including the harm to bystanders.",
+      "focus": [
+       "demand_line",
+       "private_line",
+       "full_line"
+      ],
+      "ms": 4500
+     },
+     {
+      "say": "Here's the new slider. Instead of charging a fee, the town can hand out a limited number of pollution permits. Each one covers the pollution from one fridge, so no permit means no fridge. The new marker shows where the permits run out.",
+      "set": {
+       "cap": 60
+      },
+      "focus": [
+       "cap",
+       "cap_marker"
+      ],
+      "ms": 6000
+     },
+     {
+      "say": "Permits can be bought and sold. This box shows what one trades for. While permits are plentiful, nobody pays anything for them.",
+      "set": {
+       "cap": 80
+      },
+      "focus": "permit_price",
+      "ms": 4500
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "You're the regulator. First hit the best amount using permits alone. Then hit a different amount using the charge alone.",
+    "goals": [
+     {
+      "text": "With no charge on the factory, issue just enough permits that the market makes the amount where buyer value equals full cost.",
+      "when": "tax < 5 && permit_price > 0 && abs(market_q - eff_q) < 0.3",
+      "solution": {
+       "cap": 40
+      },
+      "hints": [
+       "The charge stays at zero. Only the number of permits should do the work.",
+       "Find the green marker where buyer value equals full cost, and slide the permit limit onto it.",
+       "When you're there, the permit price should come out equal to the harm per fridge."
+      ]
+     },
+     {
+      "text": "Using the charge alone, get the market to make 37,500 fridges, while permits stay so plentiful they trade for nothing.",
+      "when": "abs(market_q - 37.5) < 0.3 && permit_price < 1",
+      "solution": {
+       "tax": 150
+      },
+      "hints": [
+       "A charge works like a permit price that the regulator sets directly.",
+       "Use the permit slider as a scout. Limit the permits to 37,500 and read the price they trade at.",
+       "Then raise the permit limit back up so permits are worthless again, and set the charge to the price you read."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. A permit limit pins the quantity, so any change in costs or demand shows up in the permit price. A fixed charge would do the opposite: the price of polluting stays put and the quantity moves.",
+     "incorrect": "You may have reasoned as if the price of polluting were fixed, which is how a charge works. With a permit limit, the number of fridges can't change, so the adjustment must come through the permit price. That price is the buyer's top price minus the factory's cost at the limit."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Let the harm be $200 a fridge. With no charge and permits to spare, the market makes 45,000 fridges. But buyer value only equals full cost at 35,000.",
+       "set": {
+        "ext": 200,
+        "tax": 0,
+        "cap": 80
+       },
+       "focus": [
+        "market_marker",
+        "eff_marker"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "Issue permits for 60,000 fridges. Nothing happens. The market only wants 45,000, so permits aren't scarce and trade at $0.",
+       "set": {
+        "cap": 60
+       },
+       "focus": [
+        "cap_marker",
+        "permit_price"
+       ],
+       "ms": 4500
+      },
+      {
+       "say": "Now issue permits for only 40,000. The factory would like to make more than that, so producers bid for the scarce permits. The price climbs until nobody wants more than 40,000.",
+       "set": {
+        "cap": 40
+       },
+       "focus": [
+        "cap_marker",
+        "permit_line",
+        "permit_price"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "The permit price is the gap at the limit. A buyer would pay $700 for fridge number 40,000, and the factory's own cost is $600. Holding a permit is worth that $100 difference.",
+       "focus": [
+        "market_point",
+        "permit_price"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "This is cap-and-trade: fix the total and let trading set the price. Limit the permits to 35,000, where value equals full cost, and the permit price lands at $200. That is exactly the harm per fridge.",
+       "set": {
+        "cap": 35
+       },
+       "focus": [
+        "permit_price",
+        "eff_marker",
+        "permit_line"
+       ],
+       "ms": 6000
+      },
+      {
+       "say": "Now flip it. Remove the limit and charge $200 a fridge instead. In the 1960s this was called an effluent charge. The market makes 35,000 again, and permits fall back to $0.",
+       "set": {
+        "cap": 80,
+        "tax": 200
+       },
+       "focus": [
+        "taxed_line",
+        "market_marker",
+        "market_q"
+       ],
+       "ms": 6000
+      },
+      {
+       "say": "Two routes reach one point. A $200 charge gives 35,000 fridges, and 35,000 permits give a $200 price. This is duality: choose the price and the quantity follows, or choose the quantity and the price follows.",
+       "focus": [
+        "market_point",
+        "taxed_line",
+        "full_line"
+       ],
+       "ms": 6500
+      }
+     ]
+    },
+    "explanation": "A charge fixes the price of polluting and lets the market choose how much gets made. A permit limit fixes how much gets made and lets trading choose the price. When permits are scarce, producers bid until a permit costs the gap between what buyers would pay and the factory's own cost at the limit. So a limit set at the efficient amount yields a permit price equal to the harm, the same number a correct charge would use. Banzhaf (s4) traces how Kneese proposed effluent charges in 1964, Crocker (1966) and Dales (1968) then proposed tradable pollution rights, and later work highlighted the duality between Kneese's prices and their quotas. The match is exact only when costs are known, as in this model. Under uncertainty, a charge leaves the amount of pollution uncertain and a limit leaves its price uncertain, which is one reason Dales preferred permits for their certainty over environmental quality.",
+    "quote": "Whereas effluent charges or pollution taxes set a price on pollution, allowing the market to determine the quantity demanded at that price, tradable permits set an upper bound on the quantity of pollution, allowing the market to determine the price at that quantity supplied.",
+    "quote_where": "Section 4 (Pollution Permits: Thomas Crocker and John Dales)",
+    "source_id": "s4",
+    "source_ids": [
+     "s4",
      "s1",
      "s3"
     ]
@@ -783,1018 +1709,316 @@
    "connect": {
     "equation": [
      {
-      "text": "Extra units = "
+      "text": "p",
+      "link": "permit_price"
      },
      {
-      "text": "Q_{market}",
+      "text": " = (1100 − 10 × "
+     },
+     {
+      "text": "Q",
       "link": "market_q"
      },
      {
-      "text": " − "
+      "text": ") − (200 + 10 × "
      },
      {
-      "text": "Q_{best}",
-      "link": "best_q"
+      "text": "Q",
+      "link": "market_q"
      },
      {
-      "text": " = "
-     },
-     {
-      "text": "h",
-      "link": "h"
-     },
-     {
-      "text": " ÷ 20 (thousand)"
-     }
-    ],
-    "caption": "This is the model's own rule, not an equation from the sources. The market settles where the firm's cost meets the buyers' line (1100 − 10Q = 200 + 10Q), giving Q_{market} = 45. The best output is where the true cost meets it (1100 − 10Q = 200 + 10Q + h). Their gap is the harm h divided by 20, the combined steepness of the two lines. In the sources, these two quantities are called Qp and Qs."
-   },
-   "recap": "When a harm is left out of the price, the market keeps producing past the point where the true cost meets what buyers will pay. The extra units cost society more than they are worth.",
-   "builds_on": "private_vs_social_cost",
-   "activities": [
-    {
-     "id": "watch",
-     "kind": "watch"
-    },
-    {
-     "id": "walk",
-     "kind": "walk"
-    },
-    {
-     "id": "explain",
-     "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
-    },
-    {
-     "id": "goal_1",
-     "kind": "goal",
-     "i": 1
-    },
-    {
-     "id": "predict",
-     "kind": "predict"
-    },
-    {
-     "id": "reveal",
-     "kind": "reveal"
-    },
-    {
-     "id": "connect",
-     "kind": "connect"
-    }
-   ]
-  },
-  {
-   "id": "corrective_charge",
-   "title": "A charge equal to the harm",
-   "idea": "A per-unit charge on the polluter equal to the marginal external cost shifts its cost line up onto the social cost line, so the market lands on the efficient quantity by itself.",
-   "role": "core",
-   "predict": {
-    "question": "The harm is $100 per refrigerator. Regulators are unsure of that figure, so they set a cautious charge of $50. Compared with having no charge at all, what happens to society's net loss from the extra refrigerators?",
-    "options": [
-     "It disappears, because any charge fixes the problem",
-     "It falls by half, because the charge covers half the harm",
-     "It falls to about a quarter",
-     "It stays the same, because only a full charge changes anything"
-    ],
-    "answer": 2,
-    "why": [
-     "Tempting if you think the charge works like an on/off switch. But the market only lands on the best output when the charge matches the harm. At $50 it still makes 2,500 too many refrigerators.",
-     "Half the charge does halve the number of extra refrigerators, from 5,000 to 2,500. But each remaining extra unit is also less harmful on net, so the loss triangle shrinks in both height and width.",
-     "Right. Halving the gap between charge and harm halves both the number of extra units and the net loss on the worst of them. The triangle of loss falls to one quarter, from $0.25 million to about $0.06 million in this model.",
-     "Tempting if you think a partial charge is wasted. But every dollar of charge lifts the firm's line and pulls output toward the best point. A partial charge helps, just not completely."
-    ]
-   },
-   "terms": [
-    {
-     "term": "marginal external cost",
-     "means": "The harm to outsiders from making one more unit, here the $ per refrigerator that the firm does not pay"
-    },
-    {
-     "term": "Pigouvian tax",
-     "means": "A charge per unit on the activity that causes harm, set equal to the marginal external cost (named after the economist Arthur Pigou)"
-    },
-    {
-     "term": "internalize",
-     "means": "To make whoever causes a harm count it in their own costs, so their choices take it into account"
-    }
-   ],
-   "model": {
-    "title": "A charge on each refrigerator, and where the market lands",
-    "note": "Teaching model: straight lines, a competitive market, and a harm that is the same for every refrigerator made. The demand line (buyers will pay $1100 − $10 per thousand units) reproduces the illustrative refrigerator table in the OpenStax reading (source s3): with no charge the market settles at $650 and 45,000 units, and with the firm paying $100 per unit it settles at $700 and 40,000 units. These are textbook illustrations, not measured data. The model assumes the regulator knows the harm exactly. It also ignores other taxes already in the economy and any effects on other markets, which the sources say can change the best charge.",
-    "controls": [
-     {
-      "id": "h",
-      "label": "Harm per refrigerator",
-      "kind": "slider",
-      "min": 0,
-      "max": 400,
-      "step": 10,
-      "default": 100,
-      "unit": "$",
-      "color": 2
-     },
-     {
-      "id": "q",
-      "label": "Refrigerators made",
-      "kind": "slider",
-      "min": 10,
-      "max": 70,
-      "step": 1,
-      "default": 45,
-      "unit": " thousand",
-      "color": 3
-     },
-     {
-      "id": "t",
-      "label": "Charge per refrigerator",
-      "kind": "slider",
-      "min": 0,
-      "max": 400,
-      "step": 10,
-      "default": 0,
-      "unit": "$",
-      "color": 6
-     }
-    ],
-    "outputs": [
-     {
-      "id": "market_q",
-      "label": "Where the market settles",
-      "expr": "(900 - t) / 20",
-      "unit": " thousand",
-      "decimals": 1,
-      "color": 0
-     },
-     {
-      "id": "best_q",
-      "label": "Best output for everyone",
-      "expr": "(900 - h) / 20",
-      "unit": " thousand",
-      "decimals": 1,
-      "color": 1
-     },
-     {
-      "id": "extra",
-      "label": "Extra refrigerators made (negative = too few)",
-      "expr": "market_q - best_q",
-      "unit": " thousand",
-      "decimals": 1,
-      "color": 5
-     },
-     {
-      "id": "loss",
-      "label": "Net loss to society ($ millions)",
-      "expr": "(h - t) * (h - t) / 40000",
-      "unit": "",
-      "decimals": 2,
-      "color": 5
-     },
-     {
-      "id": "price",
-      "label": "Price buyers pay",
-      "expr": "1100 - 10 * market_q",
-      "unit": "$",
-      "decimals": 0,
-      "color": 4
-     },
-     {
-      "id": "revenue",
-      "label": "Charge collected ($ millions)",
-      "expr": "t * market_q / 1000",
-      "unit": "",
-      "decimals": 1,
-      "color": 6
-     }
-    ],
-    "visual": {
-     "type": "curves",
-     "x": {
-      "label": "Refrigerators made (thousands)",
-      "min": 0,
-      "max": 80
-     },
-     "y": {
-      "label": "Cost of one more refrigerator ($)",
-      "min": 0,
-      "max": 1400
-     },
-     "series": [
-      {
-       "id": "private_line",
-       "label": "Firm's own cost",
-       "expr": "200 + 10 * x",
-       "color": 0,
-       "dashed": false
-      },
-      {
-       "id": "taxed_line",
-       "label": "Firm's cost plus the charge",
-       "expr": "200 + 10 * x + t",
-       "color": 6,
-       "dashed": false
-      },
-      {
-       "id": "social_line",
-       "label": "True cost to everyone",
-       "expr": "200 + 10 * x + h",
-       "color": 1,
-       "dashed": true
-      },
-      {
-       "id": "demand_line",
-       "label": "What buyers will pay for one more",
-       "expr": "1100 - 10 * x",
-       "color": 4,
-       "dashed": false
-      }
-     ],
-     "fills": [
-      {
-       "series": 2,
-       "from": "min(best_q, market_q)",
-       "to": "max(best_q, market_q)",
-       "label": "True cost of the units between the two points",
-       "color": 1
-      },
-      {
-       "series": 3,
-       "from": "min(best_q, market_q)",
-       "to": "max(best_q, market_q)",
-       "label": "What buyers value those units at",
-       "color": 4
-      }
-     ],
-     "markers": [
-      {
-       "id": "market_marker",
-       "x": "market_q",
-       "label": "Market settles",
-       "color": 0
-      },
-      {
-       "id": "best_marker",
-       "x": "best_q",
-       "label": "Best for everyone",
-       "color": 1
-      },
-      {
-       "id": "q_marker",
-       "x": "q",
-       "label": "Output chosen",
-       "color": 3
-      }
-     ],
-     "points": [
-      {
-       "id": "meet_point",
-       "x": "market_q",
-       "y": "price",
-       "label": "Buyers and charged firm meet"
-      },
-      {
-       "id": "private_point",
-       "x": "q",
-       "y": "200 + 10 * q",
-       "label": "Firm pays"
-      },
-      {
-       "id": "social_point",
-       "x": "q",
-       "y": "200 + 10 * q + h",
-       "label": "Everyone pays"
-      },
-      {
-       "id": "demand_point",
-       "x": "q",
-       "y": "1100 - 10 * q",
-       "label": "Buyer values"
-      }
-     ]
-    }
-   },
-   "animation": {
-    "steps": [
-     {
-      "say": "Same refrigerator market as before: the firm's own cost, the dashed true cost to everyone, and what buyers will pay for one more.",
-      "set": {
-       "h": 100,
-       "t": 0,
-       "q": 45
-      },
-      "focus": [
-       "private_line",
-       "social_line",
-       "demand_line"
-      ],
-      "ms": 5000
-     },
-     {
-      "say": "One new slider: a charge the firm must pay on every refrigerator it makes. This new line shows the firm's cost once that charge is added.",
-      "focus": [
-       "t",
-       "taxed_line"
-      ],
-      "ms": 5000
-     },
-     {
-      "say": "Watch what raising the charge does. The firm's line lifts, and the point where the market settles slides to the left.",
-      "set": {
-       "t": 60
-      },
-      "focus": [
-       "taxed_line",
-       "market_marker"
-      ],
-      "ms": 5500
-     }
-    ]
-   },
-   "explore": {
-    "prompt": "You are the regulator. Try different harms and charges and watch where the market lands. Then try to land it exactly where it should be, or deliberately miss in the other direction.",
-    "goals": [
-     {
-      "text": "Make the harm per refrigerator bigger than $250, then get the market to settle exactly at the best output for everyone.",
-      "when": "h > 250 && abs(extra) < 0.01",
-      "solution": {
-       "h": 300,
-       "t": 300
-      },
-      "hints": [
-       "Raise the harm first, and notice where the dashed line moves. That is the line the market needs to follow.",
-       "The market lands on the best point when the firm's charged line sits exactly on top of the dashed line.",
-       "The charge has to match the harm dollar for dollar. Read your harm value and set the charge to that same number."
-      ]
-     },
-     {
-      "text": "Leave the harm at $100. Set a charge that makes the market produce too few refrigerators, while keeping society's net loss below $0.1 million.",
-      "when": "abs(h - 100) < 0.5 && extra < 0 && loss < 0.1",
-      "solution": {
-       "t": 150
-      },
-      "hints": [
-       "Too few refrigerators means the charged line must sit above the dashed true-cost line.",
-       "The net loss grows quickly as the charge moves away from the harm, whichever side it overshoots on. Overshoot a little, not a lot.",
-       "Try charges just above the harm, one step at a time, and stop once the loss box reads under 0.10 while the extra box is negative."
-      ]
-     }
-    ]
-   },
-   "understand": {
-    "feedback": {
-     "correct": "Yes. Halving the mismatch between charge and harm halves both the number of extra units and the net loss on the worst of them, so the loss falls to about a quarter. Getting the charge roughly right captures most of the gain.",
-     "incorrect": "The charge is not an on/off switch, and its effect is not simply proportional. Each dollar of charge pulls output toward the best point. The leftover loss is a triangle whose width and height both shrink as the charge approaches the harm, so a half-sized charge leaves only about a quarter of the loss."
-    },
-    "walkthrough": {
-     "steps": [
-      {
-       "say": "Start where the last lesson ended. The harm is $100 per refrigerator and there is no charge. The market settles at 45 thousand, 5 thousand more than is best, and society loses about $0.25 million on those extra units.",
-       "set": {
-        "h": 100,
-        "t": 0,
-        "q": 45
-       },
-       "focus": [
-        "extra",
-        "loss"
-       ],
-       "ms": 5000
-      },
-      {
-       "say": "Now charge the firm $50 on every refrigerator. Its cost line lifts by exactly $50, so it meets the buyers' line further left, at 42.5 thousand. The shaded loss shrinks.",
-       "set": {
-        "t": 50
-       },
-       "focus": [
-        "taxed_line",
-        "market_marker"
-       ],
-       "ms": 5000
-      },
-      {
-       "say": "Raise the charge to $100, the same as the harm. The firm's charged line lands exactly on the dashed true-cost line. The market settles at 40 thousand, the best output, and the net loss is zero.",
-       "set": {
-        "t": 100,
-        "q": 40
-       },
-       "focus": [
-        "taxed_line",
-        "social_line",
-        "loss"
-       ],
-       "ms": 5500
-      },
-      {
-       "say": "The harm from one more unit is the marginal external cost; a charge equal to it is a Pigouvian tax. No one set output: the firm and buyers found 40 thousand because the firm must internalize the harm, counting it as its own cost.",
-       "focus": [
-        "meet_point",
-        "best_marker"
-       ],
-       "ms": 6500
-      },
-      {
-       "say": "Look at the points at 40 thousand. What the buyer values the last refrigerator at ($700) now equals its true cost to everyone ($700). Buyers pay $700, and the government collects about $4 million from the charge.",
-       "focus": [
-        "demand_point",
-        "social_point",
-        "revenue"
-       ],
-       "ms": 5500
-      },
-      {
-       "say": "Overshoot on purpose: charge $200. Now the market makes only 35 thousand, too few. Refrigerators that were worth more than their true cost go unmade, and a loss appears again.",
-       "set": {
-        "t": 200,
-        "q": 35
-       },
-       "focus": [
-        "extra",
-        "loss"
-       ],
-       "ms": 5000
-      },
-      {
-       "say": "Here is the catch. Put the charge back to $100, but suppose the true harm is really $200. The charge is now too low and the market overshoots again. The charge only works if someone knows the harm.",
-       "set": {
-        "t": 100,
-        "h": 200,
-        "q": 40
-       },
-       "focus": [
-        "social_line",
-        "extra"
-       ],
-       "ms": 5500
-      },
-      {
-       "say": "Match them once more: harm $200, charge $200. The lines coincide, the market lands on the new best point at 35 thousand, and the loss vanishes. The rule is always the same: charge equals harm.",
-       "set": {
-        "t": 200,
-        "q": 35
-       },
-       "focus": [
-        "taxed_line",
-        "social_line",
-        "best_marker"
-       ],
-       "ms": 6000
-      }
-     ]
-    },
-    "explanation": "A per-unit charge raises the firm's cost of each refrigerator by exactly the amount of the charge, so its cost line moves straight up. When the charge equals the harm per unit (the marginal external cost), the firm's line sits on the true-cost line. The ordinary meeting of buyers and sellers then lands on the efficient quantity, with no one dictating output. A charge that is too low leaves too much output, and one that is too high leaves too little. Both waste value. The Pigouvian tax article (s2) states this mechanism, and the OpenStax reading (s3) shows it with a $100 shift that moves the market from 45,000 to 40,000 refrigerators. The big caveat is that the charge must match a harm that is hard to measure. Pigou himself admitted 'we seldom know enough', and Baumol called measuring social cost almost impossible. Some economists (Bovenberg and de Mooij) argue that when other distorting taxes already exist, the best charge is below the harm, though that claim is disputed. Coase questioned whether the polluter alone should bear the cost. Kneese (s4) wanted effluent charges set at marginal damages, but accepted that these could not yet be estimated, so he proposed charges aimed at a water-quality standard instead.",
-    "quote": "To deal with over-production, Pigou recommends a tax placed on the offending producer. If the government can accurately gauge the social cost, the tax could equalize the marginal private cost and the marginal social cost.",
-    "quote_where": "Pigouvian tax, section 'Pigou's original argument'",
-    "source_id": "s2",
-    "source_ids": [
-     "s2",
-     "s3",
-     "s1",
-     "s4"
-    ]
-   },
-   "connect": {
-    "equation": [
-     {
-      "text": "200 + 10Q + "
+      "text": " + "
      },
      {
       "text": "t",
-      "link": "t"
+      "link": "tax"
      },
      {
-      "text": " = 1100 − 10Q  ⇒  Q = (900 − "
-     },
-     {
-      "text": "t",
-      "link": "t"
-     },
-     {
-      "text": ")/20;   best Q = (900 − "
-     },
-     {
-      "text": "h",
-      "link": "h"
-     },
-     {
-      "text": ")/20;   they match when "
+      "text": "),   where Q = min((900 − "
      },
      {
       "text": "t",
-      "link": "t"
+      "link": "tax"
      },
      {
-      "text": " = "
+      "text": ") / 20, "
      },
      {
-      "text": "h",
-      "link": "h"
-     }
-    ],
-    "caption": "This is the model's own rule, built on the textbook refrigerator numbers. The left side is the firm's own cost plus the charge t (the charge slider). The right side is what buyers will pay. Where they meet gives the market quantity. The best quantity uses the harm h (the harm slider) in place of t. In the sources' general terms: marginal private cost + tax = marginal social cost exactly when the tax equals the marginal external cost."
-   },
-   "recap": "Charge the polluter exactly the harm of each unit, and the ordinary market finds the efficient quantity by itself. Charge too little or too much, and value is lost either way.",
-   "builds_on": "overproduction",
-   "activities": [
-    {
-     "id": "watch",
-     "kind": "watch"
-    },
-    {
-     "id": "walk",
-     "kind": "walk"
-    },
-    {
-     "id": "explain",
-     "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
-    },
-    {
-     "id": "goal_1",
-     "kind": "goal",
-     "i": 1
-    },
-    {
-     "id": "predict",
-     "kind": "predict"
-    },
-    {
-     "id": "reveal",
-     "kind": "reveal"
-    },
-    {
-     "id": "connect",
-     "kind": "connect"
-    }
-   ]
-  },
-  {
-   "id": "price_vs_quantity",
-   "title": "Set the price or set the cap",
-   "idea": "A pollution charge fixes the price and lets firms choose how much to cut; a cap with tradable permits fixes the amount and lets the market find the price. Both reach a target at least cost, but differ in which is certain.",
-   "role": "core",
-   "predict": {
-    "question": "Five years after a cap is set, a cheap new filter halves the cost of cutting every ton. The cap is not changed. What happens?",
-    "options": [
-     "Pollution stays at the cap; permits get cheaper",
-     "Pollution falls below the cap; the permit price stays the same",
-     "Pollution and the permit price both stay the same",
-     "Pollution falls and permits get dearer"
-    ],
-    "answer": 0,
-    "why": [
-     "Right: the cap fixes the amount. Cheaper cutting flattens the cost line, so the same required cut is now reached at a lower price, and permits trade for less.",
-     "This is what a charge would do: a fixed price with cheaper cutting buys more cuts. Under a cap, the amount is set by the number of permits, so the price is what moves.",
-     "Something has to give when costs change. The cap holds the amount fixed, but the price is read off the cost line, and that line has dropped.",
-     "Cheaper cutting pushes the price down, not up. And with the cap unchanged, the total amount emitted does not move."
-    ]
-   },
-   "terms": [
-    {
-     "term": "abatement",
-     "means": "Cutting pollution. The abatement cost is what that cutting costs."
-    },
-    {
-     "term": "marginal abatement cost curve",
-     "means": "The line showing what it costs to cut one more ton, with the cheapest tons cut first"
-    },
-    {
-     "term": "effluent charge",
-     "means": "A fee for each unit of waste released. It was Allen Kneese's 1960s name for a pollution tax."
-    },
-    {
-     "term": "cap-and-trade",
-     "means": "A fixed total of tradable permits, each allowing one ton of pollution. Buying and selling sets their price."
-    }
-   ],
-   "model": {
-    "title": "One cost line, read two ways: a charge picks the price, a cap picks the amount",
-    "note": "Teaching model: a single straight line stands for the whole industry's cost of cutting one more ton, cheapest tons first. Uncontrolled pollution is 100 tons. There is no banking of permits, no trading friction and no cost of monitoring. Numbers are illustrative, not the paper's data: the paper is a history of ideas and reports no such figures.",
-    "controls": [
-     {
-      "id": "t",
-      "label": "Charge per ton emitted",
-      "kind": "slider",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "default": 40,
-      "unit": "$",
-      "color": 0
-     },
-     {
-      "id": "cap",
-      "label": "Tons allowed (cap)",
-      "kind": "slider",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "default": 70,
-      "unit": " tons",
-      "color": 1
-     },
-     {
-      "id": "k",
-      "label": "How costly cutting really is (1 = as planned)",
-      "kind": "slider",
-      "min": 0.5,
-      "max": 2,
-      "step": 0.1,
-      "default": 1,
-      "unit": "×",
-      "color": 2
-     }
-    ],
-    "outputs": [
-     {
-      "id": "cut_charge",
-      "label": "Tons cut under the charge",
-      "expr": "clamp(t / k, 0, 100)",
-      "unit": " tons",
-      "decimals": 0,
-      "color": 0
-     },
-     {
-      "id": "cut_cap",
-      "label": "Tons cut under the cap",
-      "expr": "100 - cap",
-      "unit": " tons",
-      "decimals": 0,
-      "color": 1
-     },
-     {
-      "id": "price_cap",
-      "label": "Price of a permit under the cap",
-      "expr": "k * (100 - cap)",
-      "unit": " $/ton",
-      "decimals": 0,
-      "color": 1
-     }
-    ],
-    "visual": {
-     "type": "curves",
-     "x": {
-      "label": "Tons of pollution cut",
-      "min": 0,
-      "max": 100
-     },
-     "y": {
-      "label": "Dollars per ton",
-      "min": 0,
-      "max": 150
-     },
-     "series": [
-      {
-       "id": "cost_curve",
-       "label": "Cost of cutting one more ton (actual)",
-       "expr": "k * x",
-       "color": 2,
-       "dashed": false
-      },
-      {
-       "id": "planned_curve",
-       "label": "Cost of cutting one more ton (as planned)",
-       "expr": "x",
-       "color": 7,
-       "dashed": true
-      }
-     ],
-     "hlines": [
-      {
-       "id": "charge_line",
-       "y": "t",
-       "label": "Charge per ton",
-       "color": 0
-      }
-     ],
-     "markers": [
-      {
-       "id": "cap_marker",
-       "x": "100 - cap",
-       "label": "Cut the cap forces",
-       "color": 1
-      }
-     ],
-     "points": [
-      {
-       "id": "charge_point",
-       "x": "clamp(t / k, 0, 100)",
-       "y": "t",
-       "label": "Where the charge lands"
-      },
-      {
-       "id": "cap_point",
-       "x": "100 - cap",
-       "y": "k * (100 - cap)",
-       "label": "Permit price under the cap"
-      }
-     ]
-    }
-   },
-   "animation": {
-    "steps": [
-     {
-      "say": "Here a whole industry can cut up to 100 tons of pollution. The rising line shows what cutting one more ton costs. The first tons are cheap and later ones are dearer.",
-      "focus": "cost_curve",
-      "ms": 3600
-     },
-     {
-      "say": "This slider is a charge: firms pay this much for every ton they still emit. Watch the dot slide along the line.",
-      "set": {
-       "t": 60
-      },
-      "focus": "t",
-      "ms": 3400
-     },
-     {
-      "say": "This slider is a cap: the total tons firms are allowed to emit. The vertical line shows how much cutting it forces.",
-      "set": {
-       "cap": 50
-      },
-      "focus": "cap",
-      "ms": 3400
-     },
-     {
-      "say": "This slider says how costly cutting really turns out to be. The dashed line is what the regulator expected.",
-      "set": {
-       "k": 1.5
-      },
-      "focus": [
-       "k",
-       "planned_curve"
-      ],
-      "ms": 3400
-     },
-     {
-      "say": "Keep an eye on the boxes: the tons cut each way, and the price a permit fetches.",
-      "set": {
-       "t": 40,
-       "cap": 70,
-       "k": 1
-      },
-      "focus": [
-       "cut_charge",
-       "cut_cap",
-       "price_cap"
-      ],
-      "ms": 3000
-     }
-    ]
-   },
-   "explore": {
-    "prompt": "Play with both tools on the same cost line. First make them match, then let costs surprise you and see which promise survives.",
-    "goals": [
-     {
-      "text": "Make cutting at least 15% cheaper than planned. Then find a cap whose permits trade at exactly the charge.",
-      "when": "k <= 0.85 && abs(price_cap - t) < 0.5",
-      "solution": {
-       "k": 0.8,
-       "cap": 50
-      },
-      "hints": [
-       "Cheaper cutting means each ton costs less. To push the permit price up to the charge, should the cap allow more pollution or less?",
-       "Lower the cost slider first. Then tighten the cap (fewer tons allowed) and watch the permit price box.",
-       "The charge's dot sits where the charge line meets the cost line. Slide the cap's vertical line until it passes through that same dot."
-      ]
-     },
-     {
-      "text": "Use the cap to promise a 40-ton cut. Then let costs rise until the charge falls short of that promise by at least 10 tons.",
-      "when": "abs(cut_cap - 40) < 0.5 && 40 - cut_charge >= 10",
-      "solution": {
-       "cap": 60,
-       "k": 1.4
-      },
-      "hints": [
-       "The cap counts tons allowed, not tons cut, out of 100.",
-       "Once the cap is right, raise the cost slider and watch the charge's dot slide left along the steeper line.",
-       "The charge falls short once each ton costs so much that the $40 charge buys only 30 tons of cutting. Find the cost level where that first happens."
-      ]
-     }
-    ]
-   },
-   "understand": {
-    "feedback": {
-     "correct": "Yes. A cap fixes the amount, so when a new filter makes cutting cheaper, the required cut is reached at a lower price. Pollution stays put and permits get cheaper.",
-     "incorrect": "You probably carried over how a charge behaves. A charge fixes the price, so cheaper cutting would bring more cuts. A cap fixes the amount, so a change in costs shows up in the permit price instead."
-    },
-    "walkthrough": {
-     "steps": [
-      {
-       "say": "Start with a charge of $40 a ton. A firm cuts a ton whenever cutting is cheaper than paying, and stops where the line reaches $40. The industry cuts 40 tons. Allen Kneese called this kind of fee an effluent charge.",
-       "set": {
-        "t": 40,
-        "cap": 70,
-        "k": 1
-       },
-       "focus": "charge_point",
-       "ms": 4200
-      },
-      {
-       "say": "The rising line is the marginal abatement cost curve. 'Abatement' just means cutting pollution. Every firm stops at the same price, so the cheapest tons anywhere get cut first. That is why one price reaches its cut at least cost.",
-       "focus": "cost_curve",
-       "ms": 4600
-      },
-      {
-       "say": "Now the cap. Allow 70 of the 100 tons, and the industry must cut 30. Firms buy and sell permits for the tons they still emit. That is cap-and-trade. The permit price settles where the required cut meets the line: $30.",
-       "focus": [
-        "cap_marker",
-        "cap_point"
-       ],
-       "ms": 4600
-      },
-      {
-       "say": "Tighten the cap to 60 tons allowed. The required cut becomes 40, and the permit price climbs to $40, the same as the charge. It is the same line, read from the other axis.",
-       "set": {
-        "cap": 60
-       },
-       "focus": [
-        "cap_point",
-        "charge_point"
-       ],
-       "ms": 4200
-      },
-      {
-       "say": "With costs known, a $40 charge and a 60-ton cap are twins. Now suppose cutting turns out 30% cheaper than the regulator planned.",
-       "set": {
-        "k": 0.7
-       },
-       "focus": "k",
-       "ms": 3600
-      },
-      {
-       "say": "The cap still delivers exactly 40 tons, and permits fall to $28. The charge stays at $40, so firms keep cutting while it pays and cut about 57 tons. That is more than intended.",
-       "focus": [
-        "cut_cap",
-        "price_cap",
-        "cut_charge"
-       ],
-       "ms": 4400
-      },
-      {
-       "say": "Now flip the surprise: cutting turns out 50% dearer than planned. The cap still delivers 40 tons, but permits jump to $60. The charge still costs $40, but firms now cut only about 27 tons.",
-       "set": {
-        "k": 1.5
-       },
-       "focus": [
-        "cut_cap",
-        "price_cap",
-        "cut_charge"
-       ],
-       "ms": 4600
-      },
-      {
-       "say": "That is the trade-off. A charge makes the price certain and leaves the amount uncertain. A cap makes the amount certain and leaves the price uncertain. Under either, firms do the cutting the cheapest way.",
-       "focus": [
-        "charge_point",
-        "cap_point"
-       ],
-       "ms": 4400
-      }
-     ]
-    },
-    "explanation": "A charge and a cap use the same cost line, read from opposite ends. A charge sets the price, and firms decide how many tons to cut. A cap sets the number of tons, and trading in permits discovers the price. Either way, every firm faces the same price for one more ton, so the cheapest cuts get made first. The paper (Banzhaf, a history of these ideas) traces both tools to the 1960s. Kneese proposed effluent charges in 1964, and he expected to adjust them by trial and error until a water-quality target was met. Crocker (1966) and Dales (1968) proposed tradable pollution rights, partly because a cap gives more certainty about the final pollution level. Baumol and Oates (1971) later proved that a charge reaches any chosen target at least cost. This model shows only which quantity stays fixed when costs surprise the regulator. Which tool is better under uncertainty also depends on how fast the harm grows, a question the paper only mentions through Weitzman's 1974 'Prices vs. Quantities'. This lesson does not settle it.",
-    "quote": "Whereas effluent charges or pollution taxes set a price on pollution, allowing the market to determine the quantity demanded at that price, tradable permits set an upper bound on the quantity of pollution, allowing the market to determine the price at that quantity supplied.",
-    "quote_where": "Section 4 (Pollution Permits: Thomas Crocker and John Dales)",
-    "source_id": "s4",
-    "source_ids": [
-     "s4",
-     "s1"
-    ]
-   },
-   "check": {
-    "kind": "model",
-    "task": "Costs turned out 50% higher than planned. Keep using the charge, not the cap, and still get a 50-ton cut.",
-    "when": "abs(k - 1.5) < 0.05 && abs(cut_charge - 50) < 0.5",
-    "solution": {
-     "k": 1.5,
-     "t": 75
-    },
-    "hint": "With a steeper line, the same price buys fewer tons. What price meets the actual line at 50 tons cut?",
-    "misconception": "That a charge locks in how much pollution gets cut. It locks in only the price. To hit a set amount, the regulator must know the true costs or adjust the charge by trial and error, as Kneese proposed."
-   },
-   "connect": {
-    "equation": [
-     {
-      "text": "charge: cut = "
-     },
-     {
-      "text": "t",
-      "link": "t"
-     },
-     {
-      "text": " ÷ "
-     },
-     {
-      "text": "k",
-      "link": "k"
-     },
-     {
-      "text": "     cap: price = "
-     },
-     {
-      "text": "k",
-      "link": "k"
-     },
-     {
-      "text": " × (100 − "
-     },
-     {
-      "text": "cap",
+      "text": "Q̄",
       "link": "cap"
      },
      {
       "text": ")"
      }
     ],
-    "caption": "This is the model's rule, not an equation from the paper, which is a history and gives none. The cost of cutting one more ton rises as k × tons cut. A charge t is read across to a cut (t ÷ k). A cap is read up to a price, k times the forced cut (100 − cap). Change k and only the uncontrolled quantity moves: the cut under a charge, the price under a cap."
+    "caption": "This is the model's rule; Banzhaf's history gives no equation. Q is the number of fridges made (thousands). It is whichever is smaller: the amount the market wants given the charge t, or the permit limit Q̄. The permit price p is the buyer's top price at Q minus the factory's cost plus charge at Q. When the limit doesn't bind, p is 0. When it binds, p plus t equals the gap, so a charge of p alone would produce the same Q."
    },
-   "recap": "A charge fixes the price and lets the cut float; a cap fixes the cut and lets the price float. It is the same cost line read from opposite axes, and each tool reaches its result at least cost.",
+   "recap": "A charge fixes the price and lets the amount adjust; a permit limit fixes the amount and lets the price adjust. Aimed at the same target, they meet at the same point.",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
     },
     {
      "id": "goal_1",
      "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
      "i": 1
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
     },
     {
-     "id": "check",
-     "kind": "check"
+     "id": "eq",
+     "kind": "connect"
+    }
+   ],
+   "builds_on": "pigouvian_tax"
+  },
+  {
+   "id": "coase_bargaining",
+   "title": "Could the neighbours just make a deal?",
+   "idea": "If rights are clear and bargaining is cheap, the polluter and the harmed party can trade their way to an efficient outcome without a tax, but when many people are harmed, bargaining costs make this fail.",
+   "role": "core",
+   "terms": [
+    {
+     "term": "property rights",
+     "means": "Who the law says holds the right in a dispute, such as the right to let cattle roam or the right to undamaged crops"
     },
     {
-     "id": "connect",
-     "kind": "connect"
+     "term": "transaction costs",
+     "means": "The costs of striking a deal: finding the other side, negotiating, and checking and enforcing the agreement"
+    },
+    {
+     "term": "Coase theorem",
+     "means": "The claim that with clear rights and cheap bargaining, the parties reach the efficient outcome, whichever side holds the right"
+    },
+    {
+     "term": "free rider",
+     "means": "Someone who enjoys a benefit without paying their share, hoping others will pay"
+    }
+   ],
+   "recap": "Clear rights and cheap bargaining let two parties fix a spillover themselves; the rights only decide who pays. With many harmed people, bargaining costs swamp the gains and the deal fails.",
+   "understand": {
+    "explanation": "The earlier concept showed that a market overproduces because the producer ignores the harm to bystanders. The economist Ronald Coase asked whether the two sides could simply bargain the problem away without a tax: if the law makes clear who holds the right (the property rights), the side that cares more can pay the other, so the harm gets cut back whenever cutting it costs less than the damage. This idea, now called the Coase theorem, adds that the efficient result is the same whichever side holds the right. Only who pays whom changes. It needs strong conditions: clear rights, rational parties, complete information and low transaction costs, meaning the costs of finding each other, negotiating and enforcing a deal. When a factory's smoke harms thousands of people, those costs explode and each person is tempted to be a free rider who lets others pay. So bargaining usually fails there, and Spencer Banzhaf's 2020 history notes that Allen Kneese judged Coase's result unlikely to matter for water pollution for exactly this reason.",
+    "quote": "Economist Ronald Coase argued that individuals can come to an agreement with an efficient result without the need for a third party when transaction costs are low.",
+    "quote_where": "Pigouvian tax, 'Alternatives: No intervention (direct negotiation between parties)'",
+    "source_id": "s2",
+    "source_ids": [
+     "s1",
+     "s2",
+     "s4"
+    ]
+   },
+   "activities": [
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "ex",
+     "kind": "worked",
+     "hypothetical": true,
+     "title": "The farmer and the rancher (made-up numbers)",
+     "steps": [
+      {
+       "text": "A rancher's cattle wander into a neighbouring farmer's field and trample crops worth $300 a year. The rancher could pen the cattle for $100 a year.",
+       "result": "Penning is the cheapest fix. It avoids $300 of damage for $100, a $200 gain."
+      },
+      {
+       "text": "Rights version 1: the law gives the farmer the right to undamaged crops. The rancher must either pay $300 in damages or spend $100 on a pen.",
+       "result": "The rancher pens the cattle and pays $100."
+      },
+      {
+       "text": "Rights version 2: the law gives the rancher the right to let cattle roam. The farmer would lose $300, so the farmer offers the rancher, say, $150 to pen them. The rancher gains $50 and the farmer saves $150.",
+       "result": "The cattle are penned and the farmer pays $150."
+      },
+      {
+       "text": "Compare the two versions. In both the pen gets built, the efficient outcome. Moving the right only changed who pays.",
+       "result": "This is the Coase theorem: with clear rights and cheap bargaining, the outcome does not depend on who holds the right."
+      },
+      {
+       "text": "Now add transaction costs. Suppose lawyers, meetings and checking that the pen stays shut cost $250 a year. In version 2 the whole gain from the deal is only $200.",
+       "result": "No deal is worth making. The cattle roam and $300 of crops are lost each year."
+      }
+     ],
+     "takeaway": "Bargaining fixes the spillover only when the gain from the deal is bigger than the cost of making it. Rights decide who pays, not whether the pen is built."
+    },
+    {
+     "id": "s",
+     "kind": "sort",
+     "title": "Could bargaining work here?",
+     "prompt": "Each case comes from the sources. Sort it by whether private bargaining could plausibly reach an efficient deal without a tax or a rule.",
+     "groups": [
+      {
+       "id": "works",
+       "label": "Bargaining could plausibly work"
+      },
+      {
+       "id": "fails",
+       "label": "Bargaining likely fails"
+      }
+     ],
+     "cards": [
+      {
+       "id": "c1",
+       "text": "A rancher's cattle damage one farmer's crops.",
+       "group": "works",
+       "feedback": "There are two parties, the harm is visible and the rights can be settled. One of them can pay the other to fence or pen the cattle. This is Coase's own example in the encyclopedia account."
+      },
+      {
+       "id": "c2",
+       "text": "A logger who owns a forest plans to clear-cut it, which would hurt a nearby resort.",
+       "group": "works",
+       "feedback": "The rights are clear and there are only two sides. The resort owner could pay the logger not to clear-cut, or buy the forest. The source calls this a case where the Coase theorem is relevant."
+      },
+      {
+       "id": "c3",
+       "text": "Two neighbours disagree about a fence, noise or smoke.",
+       "group": "works",
+       "feedback": "Coase argued it is cheaper for two neighbours to agree on these things than to bring in a third party. Transaction costs are low."
+      },
+      {
+       "id": "c4",
+       "text": "A steel factory's smoke harms the lungs of a large number of people.",
+       "group": "fails",
+       "feedback": "No single person can practically negotiate with the plant, and organising thousands of people creates large transaction costs. The source says regulation is the more common approach."
+      },
+      {
+       "id": "c5",
+       "text": "Vaccination protects everyone, so people would need to pay each other to get vaccinated.",
+       "group": "fails",
+       "feedback": "The whole population would have to self-organise to pay each other, and each person is tempted to free-ride. The source says such an organisation would be indistinguishable from government action."
+      },
+      {
+       "id": "c6",
+       "text": "A logger wants to clear-cut a forest next to a resort, but the forest belongs to no one.",
+       "group": "fails",
+       "feedback": "Without well-defined, enforceable property rights there is nobody to strike a deal with and nothing to trade. The source calls this the most problematic situation from Coase's perspective."
+      }
+     ],
+     "takeaway": "Bargaining has a chance when few parties face each other over clear rights. It breaks down when the harmed are many or when no one owns the thing being harmed.",
+     "hints": [
+      "Count how many people would have to sit at the table.",
+      "Then ask whether anyone clearly owns the right being traded."
+     ]
+    },
+    {
+     "id": "q_rights",
+     "kind": "choice",
+     "mode": "determinate",
+     "hypothetical": true,
+     "question": "In the farmer-and-rancher example, a court moves the right from the farmer to the rancher. Bargaining is still cheap. What changes?",
+     "options": [
+      {
+       "text": "Who pays for the pen changes, but the cattle still get penned.",
+       "feedback": "Correct. Penning saves $200 either way, so a deal happens either way. Only the payment flips, from the rancher paying to the farmer paying."
+      },
+      {
+       "text": "The cattle stop being penned, because the rancher no longer has to.",
+       "feedback": "The rancher no longer has to, but the farmer will pay the rancher to pen them, since that is cheaper than losing $300 of crops. With cheap bargaining the efficient pen still gets built."
+      },
+      {
+       "text": "Nothing changes at all.",
+       "feedback": "The outcome stays the same, but the money does not. Holding the right is worth something, so the side without it ends up paying."
+      },
+      {
+       "text": "The rancher must now pay the farmer even more.",
+       "feedback": "It is the other way round. Once the rancher holds the right, the farmer is the one who pays."
+      }
+     ],
+     "answer": 0,
+     "hints": [
+      "Look back at rights versions 1 and 2 in the worked example."
+     ]
+    },
+    {
+     "id": "q_many",
+     "kind": "choice",
+     "mode": "determinate",
+     "hypothetical": true,
+     "question": "One power plant's fumes reach 200,000 residents of a city. A friend says: 'No tax needed. The residents and the plant can just negotiate.' Which condition for a Coase-style deal fails most plainly?",
+     "options": [
+      {
+       "text": "Bargaining would be far too costly: 200,000 people would have to find each other, agree on terms, share the bill and enforce the deal.",
+       "feedback": "Correct. This is the steel-plant case in the sources. Transaction costs swamp the gains, and many residents would free-ride, hoping others pay."
+      },
+      {
+       "text": "The plant's owners would behave irrationally.",
+       "feedback": "Nothing in the case suggests this. The plant may act very sensibly. The obstacle is the cost of organising the other side."
+      },
+      {
+       "text": "There is no harm to bargain over.",
+       "feedback": "The fumes do harm people, so there is something to trade. The problem is that trading it is impractical."
+      },
+      {
+       "text": "The efficient result would depend on whether the plant or the residents hold the right.",
+       "feedback": "The Coase theorem says the opposite when its conditions hold: the efficient result is the same either way. Here the conditions do not hold, mainly because bargaining is so costly."
+      }
+     ],
+     "answer": 0,
+     "hints": [
+      "Compare this case with the steel factory card you sorted.",
+      "Think about what it costs just to get everyone to the table."
+     ]
     }
    ]
   },
   {
    "id": "open_access_commons",
    "title": "Everybody's property is nobody's property",
-   "idea": "When a resource like a fishery or a river is open to all, each user adds effort until their own return is used up, so total effort overshoots the level that would maximise the resource's value.",
+   "idea": "When nobody owns a resource like a fishery or a river, users keep crowding in until its value is used up, so putting a price on access is a way to manage the shared resource.",
    "role": "core",
    "predict": {
-    "question": "A river is open to every factory for dumping waste, free of charge. Each extra load saves a factory money but makes the water worse for everyone downstream, including other factories. Using the fishery logic, what happens?",
+    "question": "A river authority starts charging every boat a yearly fee to fish. The fee is set at a well-chosen level, and anyone who pays may still come in. What happens to the fishery?",
     "options": [
-     "Factories stop at the level that keeps the river most valuable, since they share in that value",
-     "Each factory keeps dumping while one more load still saves it money, so total dumping goes far past the river's best level",
-     "Dumping stays modest because each factory pays the full damage its waste causes",
-     "Nobody dumps, because nobody owns a right to dump"
+     "Fewer boats join. The fleet settles nearer the best size, and much of the value once burned up on extra boats is now collected as fees",
+     "The fleet stays the same size and fishers simply earn less",
+     "Every boat leaves and the fishery shuts down",
+     "More boats join, because each one must catch more fish to cover the fee"
     ],
-    "answer": 1,
+    "answer": 0,
     "why": [
-     "Tempting, since factories also lose when the river is fouled. But each bears only a small slice of the harm from its own load, as each boat bears little of the thinning it causes, so each keeps going past the best level.",
-     "Right. Like boats joining while each still profits, each factory adds loads until its own saving from one more is gone. Harm to others never enters its choice, so dumping overshoots, the way Kneese read pollution of a shared river.",
-     "This is the opposite of open access. With no charge, most of the damage falls on others. Only a rule or a price would make a factory face that cost.",
-     "Open access means the reverse: with no owner to say no, anyone can dump. Missing ownership is what lets the overuse happen."
+     "Right: newcomers now stop joining when profit per boat minus the fee hits zero, which happens sooner. A well-set fee holds the fleet near the best size. The leftover value then shows up as fee revenue instead of being eaten by surplus boats.",
+     "Tempting if you picture the fee as a pure transfer of money. But entry is driven by profit per boat. Once the fee cuts that profit below zero at the old fleet size, some boats stop coming, so the fleet shrinks.",
+     "A fee that is far too high could do this. A well-chosen fee only removes the extra boats whose catch merely comes out of other boats' catch. The best fleet still earns enough to cover its costs and the fee.",
+     "This mixes up one boat's effort with the number of boats. In this model each boat's catch depends on how crowded the water is, not on how badly its owner needs money. A fee lowers profit per boat, so fewer boats join."
     ]
    },
    "terms": [
     {
      "term": "open access",
-     "means": "A resource anyone can use and no one can shut others out of, like unregulated fishing grounds or a river with no dumping rules"
+     "means": "A resource that anyone can use without asking permission or paying, because nobody owns or controls entry to it"
     },
     {
      "term": "resource rent",
-     "means": "What a resource is worth over and above the costs of using it: here, the season's catch value minus the cost of the boats"
+     "means": "The money a resource yields after paying all the costs of using it: here, the catch value minus the cost of the boats"
     },
     {
-     "term": "common-property resource",
-     "means": "A resource held in common rather than owned by anyone, such as a fishery, a river or the air"
+     "term": "common property resource",
+     "means": "A resource such as a fishery, a river or the air that is shared, so one user's use reduces what is left for others"
     }
    ],
    "model": {
-    "title": "A shared fishing ground: season's catch and boat costs as the fleet grows",
-    "note": "Teaching model: a one-season fishery where n boats land a catch worth 10n − 0.1n² (thousand $), every boat is equally good and each costs the same fixed amount to run. It ignores how fish stocks change from year to year, changes in fish prices and differences between boats. In this simple version, boats stop joining at exactly twice the most valuable fleet size. Real fisheries need not show that exact ratio. Numbers are illustrative, not data from Gordon (1954) or any of the sources.",
+    "title": "A shared fishery: value of the catch as more boats join",
+    "note": "Teaching model: a simple fishery in the style of Gordon (1954). Boats are identical and the fish price is fixed. The yearly catch value rises and then falls as boats crowd a shared fish stock, following value = 4N − 0.04N² in $ thousands, where N is the number of boats. It leaves out how fish numbers change over time, differences between boats and moving prices. All numbers are illustrative, not data from the paper or from Gordon.",
     "controls": [
      {
       "id": "boats",
@@ -1803,82 +2027,98 @@
       "min": 0,
       "max": 100,
       "step": 1,
-      "default": 20,
-      "unit": "",
+      "default": 10,
+      "unit": " boats",
       "color": 6
      },
      {
       "id": "c",
-      "label": "Cost to run one boat for a season",
+      "label": "Yearly cost of running one boat",
       "kind": "slider",
-      "min": 1,
-      "max": 8,
-      "step": 0.5,
-      "default": 4,
-      "unit": " k$",
+      "min": 0.5,
+      "max": 3.5,
+      "step": 0.1,
+      "default": 1.6,
+      "unit": " $k",
       "color": 1
      }
     ],
     "outputs": [
      {
       "id": "catch_value",
-      "label": "Total catch value",
-      "expr": "10 * boats - 0.1 * boats^2",
-      "unit": " k$",
+      "label": "Value of the whole catch",
+      "expr": "4*boats - 0.04*boats^2",
+      "unit": " $k",
       "decimals": 0,
       "color": 0
      },
      {
-      "id": "cost_total",
-      "label": "Total boat costs",
-      "expr": "c * boats",
-      "unit": " k$",
+      "id": "boat_costs",
+      "label": "Cost of all boats",
+      "expr": "c*boats",
+      "unit": " $k",
       "decimals": 0,
       "color": 1
      },
      {
-      "id": "net",
-      "label": "Value of the fishery (catch minus costs)",
-      "expr": "catch_value - cost_total",
-      "unit": " k$",
-      "decimals": 1,
+      "id": "surplus",
+      "label": "Money left over after costs",
+      "expr": "catch_value - boat_costs",
+      "unit": " $k",
+      "decimals": 0,
       "color": 2
      },
      {
-      "id": "per_boat",
-      "label": "Profit for each boat",
-      "expr": "10 - 0.1 * boats - c",
-      "unit": " k$",
+      "id": "per_boat_profit",
+      "label": "Profit per boat (what a newcomer can expect)",
+      "expr": "4 - 0.04*boats - c",
+      "unit": " $k",
       "decimals": 1,
       "color": 3
+     },
+     {
+      "id": "oa_boats",
+      "label": "Fleet where newcomers stop joining",
+      "expr": "clamp(25*(4 - c), 0, 100)",
+      "unit": " boats",
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "best_boats",
+      "label": "Fleet with the most money left over",
+      "expr": "clamp(12.5*(4 - c), 0, 100)",
+      "unit": " boats",
+      "decimals": 1,
+      "color": 5
      }
     ],
     "visual": {
      "type": "curves",
      "x": {
-      "label": "Number of boats",
+      "label": "Number of boats fishing",
       "min": 0,
       "max": 100
      },
      "y": {
-      "label": "Value per season (thousand $)",
+      "label": "$ thousands per year",
       "min": 0,
-      "max": 300
+      "max": 120
      },
      "series": [
       {
-       "id": "catch_curve",
-       "label": "Total catch value",
-       "expr": "10 * x - 0.1 * x^2",
+       "id": "revenue",
+       "label": "Value of the whole catch",
+       "expr": "4*x - 0.04*x^2",
        "color": 0,
        "dashed": false
       },
       {
        "id": "cost_line",
-       "label": "Total boat costs",
-       "expr": "c * x",
+       "label": "Cost of all boats",
+       "expr": "c*x",
        "color": 1,
-       "dashed": true
+       "dashed": false
       }
      ],
      "markers": [
@@ -1887,13 +2127,25 @@
        "x": "boats",
        "label": "Your fleet",
        "color": 6
+      },
+      {
+       "id": "oa_marker",
+       "x": "clamp(25*(4 - c), 0, 100)",
+       "label": "Newcomers stop joining",
+       "color": 4
+      },
+      {
+       "id": "best_marker",
+       "x": "clamp(12.5*(4 - c), 0, 100)",
+       "label": "Most money left over",
+       "color": 5
       }
      ],
      "points": [
       {
-       "id": "fleet_point",
+       "id": "catch_point",
        "x": "boats",
-       "y": "catch_value",
+       "y": "4*boats - 0.04*boats^2",
        "label": "Catch now"
       }
      ]
@@ -1902,135 +2154,137 @@
    "animation": {
     "steps": [
      {
-      "say": "This curve is the value of a whole season's catch. More boats catch more, but not forever: the fish start to run short, so the curve bends over.",
-      "focus": "catch_curve",
-      "ms": 3200
+      "say": "This curve is the yearly value of all the fish caught, for each number of boats. It rises at first, but crowded boats thin out the fish, so it peaks and then falls.",
+      "focus": "revenue",
+      "ms": 4200
      },
      {
-      "say": "This dashed line is what all the boats cost to run: fuel, crew and gear. It grows steadily with every boat.",
+      "say": "The straight line is what all the boats together cost to run.",
       "focus": "cost_line",
-      "ms": 2800
+      "ms": 3000
      },
      {
-      "say": "This slider sets how many boats are fishing. The dot rides along the catch curve.",
+      "say": "This slider adds or removes boats. The line marked 'Your fleet' follows it.",
       "set": {
        "boats": 40
       },
       "focus": "boats",
-      "ms": 2800
+      "ms": 3500
      },
      {
-      "say": "This slider sets what one boat costs per season. Dearer boats make the cost line steeper.",
+      "say": "This slider sets the yearly cost of one boat. Watch the cost line tilt.",
       "set": {
-       "c": 5
+       "c": 2.4
       },
       "focus": "c",
-      "ms": 2800
+      "ms": 3500
      },
      {
-      "say": "These boxes track the total catch, the total cost, what is left over for the fishery as a whole, and each single boat's profit.",
+      "say": "Two markers matter: where new boats stop joining, and where the money left over is largest.",
       "focus": [
-       "catch_value",
-       "net",
-       "per_boat"
+       "oa_marker",
+       "best_marker"
       ],
-      "ms": 3200
+      "ms": 3800
      }
     ]
    },
    "explore": {
-    "prompt": "You are the fishing ground. Boats arrive whenever a boat can still make money. Try different fleets and costs and watch the whole fishery's value against each boat's profit.",
+    "prompt": "Now you run the fishery. Move the boats and the cost per boat. Find where crowding stops and where the shared value peaks.",
     "goals": [
      {
-      "text": "Boats keep arriving while each one still makes a profit. At the usual boat cost, find the fleet size where the newest boat only just breaks even, so arrivals stop.",
-      "when": "abs(per_boat) < 0.25 && abs(c - 4) < 0.01",
+      "text": "Put the fleet exactly where newcomers stop joining, and arrange things so that this stopping point falls at the very top of the catch curve.",
+      "when": "abs(boats - 50) <= 1 && abs(per_boat_profit) < 0.05",
       "solution": {
-       "boats": 60
+       "boats": 50,
+       "c": 2.0
       },
       "hints": [
-       "Which box tells you whether one more boat would still want to come?",
-       "Add boats and watch 'Profit for each boat' shrink toward zero.",
-       "On the chart, it happens where the catch curve meets the dashed cost line."
+       "Newcomers stop joining when profit per boat reaches zero. You need that to happen at the peak of the catch curve.",
+       "First park the fleet at the top of the catch curve. Then change the cost per boat until profit per boat is zero.",
+       "At the peak, the cost that stops entry equals the catch value there divided by the number of boats there."
       ]
      },
      {
-      "text": "Suppose boats become much cheaper to run than they are now, at most a little over half today's cost. Then find the fleet size that makes the fishery as valuable as it can be.",
-      "when": "c <= 2.5 && net >= 2.5 * (10 - c)^2 - 1",
+      "text": "Make running a boat cheaper than it is now. Then find the fleet size that leaves the most money over after paying for the boats.",
+      "when": "c < 1.55 && abs(boats - best_boats) <= 1",
       "solution": {
-       "c": 2,
-       "boats": 40
+       "c": 1.0,
+       "boats": 37
       },
       "hints": [
-       "First lower the boat cost. Then look for the peak of 'Value of the fishery', not the point where boats break even.",
-       "The best fleet is where one more boat adds only as much catch as it costs to run. On the chart, that is where the gap between the curve and the dashed line is widest.",
-       "In this model the best fleet is half the fleet at which boats would stop arriving at that cost."
+       "Lower the cost first. The best fleet is not the place where newcomers stop joining.",
+       "Watch the 'Money left over' box as you add boats one at a time. Stop where it is highest: there, one more boat adds only as much catch value as it costs.",
+       "With this simple catch curve, the best fleet is half the size of the fleet where newcomers stop, at the same cost."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. A river open for dumping works like an open fishery. Each user stops only when its own gain from one more unit is used up. The harm spread over everyone else never enters that choice, so use overshoots the level that makes the resource most valuable.",
-     "incorrect": "You may have assumed that sharing in the damage keeps users in check, or that no owner means no use. In open access each user bears only a sliver of the harm it causes and no one can say no. So use keeps growing until each user's own gain is gone, well past the resource's best level."
+     "correct": "Yes. A fee raises the bar for joining: boats now stop coming when profit per boat minus the fee reaches zero. Set near the right level, the fee holds the fleet close to the best size. The value that crowding used to burn up is collected as fee revenue instead. This is the logic behind treating access to rivers and air as something to price.",
+     "incorrect": "The key is that the number of boats responds to profit per boat. Under free access, boats keep coming until that profit is zero. A fee lowers profit per boat at every fleet size, so entry stops sooner. A sensible fee shrinks the fleet toward the best size without emptying the fishery, and the leftover value goes to the fee collector instead of to surplus boats."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start with 10 boats at the usual cost. Each boat's share of the catch is far above its running cost, so each makes a healthy profit. Word gets around.",
+       "say": "Start with an empty fishery: no boats, no catch. A boat costs 1.6 thousand dollars a year to run.",
        "set": {
-        "c": 4,
-        "boats": 10
+        "boats": 0,
+        "c": 1.6
        },
-       "focus": "per_boat",
+       "focus": "revenue",
+       "ms": 2800
+      },
+      {
+       "say": "Add 20 boats. Each one earns 1.6 thousand more than it costs, so word spreads and more boats want in.",
+       "set": {
+        "boats": 20
+       },
+       "focus": "per_boat_profit",
        "ms": 3200
       },
       {
-       "say": "At 30 boats the fishery's leftover value peaks. Past here, one more boat adds less catch than it costs. That leftover value is the resource rent, and a single owner would stop the fleet right here.",
-       "set": {
-        "boats": 30
-       },
-       "focus": "net",
-       "ms": 4200
-      },
-      {
-       "say": "But these waters are a common-property resource: no one owns them. Each boat still turns a profit, so more boats come. Each newcomer thins the fish for everyone else, and that cost lands on the other boats, not on the newcomer.",
-       "set": {
-        "boats": 45
-       },
-       "focus": "per_boat",
-       "ms": 4400
-      },
-      {
-       "say": "Watch the fishery's value: it is falling, even though every boat is still in profit. Private gains and the shared value now point in opposite directions.",
-       "focus": "net",
-       "ms": 3400
-      },
-      {
-       "say": "At 60 boats the catch curve meets the cost line. The newest boat just breaks even, so arrivals finally stop. This is open access at rest, and the fishery's value is zero: everything the fish were worth has been spent on extra boats.",
+       "say": "Nobody owns this water, so nobody can turn a boat away. Economists call this open access. Boats keep arriving until profit per boat hits zero, here at 60 boats.",
        "set": {
         "boats": 60
        },
-       "focus": [
-        "cost_line",
-        "net"
-       ],
-       "ms": 4800
+       "focus": "oa_marker",
+       "ms": 3800
       },
       {
-       "say": "Make boats dearer. Both points move left, but the pattern holds. Boats stop arriving at 40, twice the most valuable fleet of 20 in this model, and again the fishery's value is used up.",
+       "say": "Look at the money left over: zero. The catch is worth 96 thousand and the boats cost 96 thousand. All the fishery's value has gone into running extra boats.",
+       "focus": "surplus",
+       "ms": 3600
+      },
+      {
+       "say": "Pull back to 30 boats. The catch is a little smaller, 84, but costs fall much more, to 48, leaving 36 thousand over. This leftover is the resource rent, and 30 boats is where it peaks.",
        "set": {
-        "c": 6,
-        "boats": 40
+        "boats": 30
+       },
+       "focus": "best_marker",
+       "ms": 4200
+      },
+      {
+       "say": "So why doesn't the crowd stop at 30? A newcomer there still expects 1.2 thousand profit, so it joins. Its catch partly comes out of everyone else's nets, a cost it doesn't pay. The fishery is a common property resource.",
+       "focus": "per_boat_profit",
+       "ms": 4400
+      },
+      {
+       "say": "Now make boats cheaper. Entry runs even further, to 75 boats: past the peak, where more boats catch less fish in total. The money left over is zero again.",
+       "set": {
+        "c": 1.0,
+        "boats": 75
        },
        "focus": [
-        "per_boat",
-        "net"
+        "catch_point",
+        "surplus"
        ],
        "ms": 4400
       }
      ]
     },
-    "explanation": "When anyone can use a resource and no one can keep others out, each newcomer asks only whether it will profit itself. Each boat ignores the fish it takes from everyone else, so boats keep arriving until the last one just breaks even. By then the extra boats have eaten up the whole value the fishery could have earned. Scott Gordon (1954) and Anthony Scott (1955) showed this formally for fisheries. Banzhaf argues that 1960s pollution-pricing pioneers such as Kneese, Crocker and Dales reasoned the same way about rivers and air: polluters use up a shared resource that others need downstream. This model is a simplified one-season picture, and 'open access' is not the only way to hold things in common. Community rules, quotas and permits can limit use, and the Wikipedia source notes that framing externalities mainly as a property-rights problem is contested.",
+    "explanation": "When nobody owns a fishery, nobody can turn a boat away. Boats keep joining as long as one more boat expects to earn more than it costs. Each newcomer thins the fish for everyone else, a cost it does not pay. So entry runs past the fleet that leaves the most money over, and stops only when the leftover value, the resource rent, has been used up. Gordon (1954) and Scott (1955) showed this formally for fisheries. The paper argues that Kneese, Crocker and Dales reasoned from the same logic: rivers and air are shared resources treated as free, so a public price on using them, such as effluent charges or tradable rights, can close off free access. This is a teaching model: real fisheries have changing fish stocks, different boats and moving prices. A fee only helps if it is set near the right level, which is hard to know. Quotas, permits and community management are other ways to manage a commons.",
     "quote": "Both recognized the wisdom in the popular aphorism that \"everybody's property is nobody's property,\" but demonstrated formally how under open access competition would deplete the value of resources.",
     "quote_where": "Section 5, 'Property Rights and Land Tenancy' (on Gordon 1954 and Scott 1955)",
     "source_id": "s4",
@@ -2042,17 +2296,17 @@
    "connect": {
     "equation": [
      {
-      "text": "boats stop joining:  C("
+      "text": "Newcomers stop when  "
      },
      {
-      "text": "n",
-      "link": "boats"
+      "text": "R(N)",
+      "link": "catch_value"
      },
      {
-      "text": ") ÷ "
+      "text": " ÷ "
      },
      {
-      "text": "n",
+      "text": "N",
       "link": "boats"
      },
      {
@@ -2063,418 +2317,224 @@
       "link": "c"
      },
      {
-      "text": "     most valuable fleet:  extra catch from one more boat = "
+      "text": "     Most left over when one more boat adds  ΔR = "
      },
      {
       "text": "c",
       "link": "c"
-     },
-     {
-      "text": "     where C(n) = 10n − 0.1n²"
      }
     ],
-    "caption": "This is the teaching model's rule, in the style of Gordon's fishery analysis, not an equation printed in the sources. n is the number of boats (the boats slider) and c is the cost of one boat (the cost slider). Under open access, boats keep coming until each boat's average catch, C(n) ÷ n, falls to its cost, which is where the curve meets the dashed line. The fishery is worth most where one more boat adds only c of extra catch, at the widest gap between curve and line."
+    "caption": "This is the teaching model's rule, in the style of Gordon (1954); the paper itself prints no equation. R(N) is the value of the whole catch with N boats, and c is the yearly cost of one boat. Under free access, boats join until the average catch per boat just covers c. The best fleet is smaller: it stops where one more boat adds only c to the total catch. With this catch curve, the best fleet is half the free-access fleet."
    },
-   "recap": "With no one able to say no, users keep piling in until their own profit is gone, and by then the shared resource's value has been spent away.",
+   "recap": "Under free access, users crowd in until the resource's surplus is gone; putting a price on access can hold use near the best level.",
    "activities": [
     {
-     "id": "watch",
+     "id": "tour",
      "kind": "watch"
     },
     {
-     "id": "walk",
+     "id": "how",
      "kind": "walk"
     },
     {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
-    },
-    {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
     },
     {
      "id": "goal_1",
      "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
      "i": 1
     },
     {
-     "id": "predict",
+     "id": "use",
      "kind": "predict"
     },
     {
-     "id": "reveal",
+     "id": "why",
      "kind": "reveal"
     },
     {
-     "id": "connect",
+     "id": "eq",
      "kind": "connect"
     }
    ]
   },
   {
-   "id": "borrowed_name",
-   "title": "The tax that was named after the fact",
-   "idea": "Citation counts show that 1960s pollution-pricing work grew up citing Kneese, Coase and commons writers rather than Pigou, and the 'Pigouvian' label was attached only around 1970.",
+   "id": "not_necessarily_pigouvian",
+   "title": "The tax that wasn't named for its source",
+   "idea": "Evidence from citations and arguments shows that 1960s pollution pricing grew from American common-property and resource-development traditions, and the 'Pigouvian' label was attached around 1970.",
    "role": "contribution",
-   "predict": {
-    "question": "Suppose a new search finds that after 1975 most papers on pollution fees do cite Pigou. Does that overturn the history you just saw?",
-    "options": [
-     "Yes: if most papers cite Pigou, he must have been the source all along",
-     "No: citations after about 1970 follow the new label, not where the 1960s ideas grew",
-     "It proves Kneese copied Pigou without giving credit",
-     "It means the 1962–1972 counts must have been wrong"
-    ],
-    "answer": 1,
-    "why": [
-     "It feels natural to read citations as a family tree. But the paper's point is that the name was attached around 1970, so later citations show the label spreading, not where the idea came from.",
-     "Right. Once Baumol and Oates described Kneese's work as part of a 'Pigouvian tradition', references to Pigou increased rapidly. That does not change what the 1960s designers were actually drawing on.",
-     "Copying would need evidence that Kneese built on Pigou's text. The paper links his arguments to property rights, common-property resources and resource-development economics instead.",
-     "Both records can be true at once. The paper notes that references to Pigou increased rapidly after the turn of the decade, which is exactly the relabelling."
-    ]
-   },
    "terms": [
     {
      "term": "effluent charge",
-     "means": "Kneese's 1960s name for a fee on waste discharged into waterways: the tool later called a Pigouvian tax"
+     "means": "A fee for each unit of waste a firm releases into a river or the air. It was the 1960s name for what is now called a Pigouvian tax."
     },
     {
-     "term": "citation record",
-     "means": "Counts of which earlier authors a body of papers mentions, used by historians as rough evidence of who influenced whom"
+     "term": "common-property resource",
+     "means": "Something many people use but nobody owns, such as a fishery, a river or the air."
+    },
+    {
+     "term": "working paper",
+     "means": "A research paper circulated for discussion before it has been peer-reviewed."
     }
    ],
-   "model": {
-    "title": "Who did 1962–1972 papers name: Kneese, Pigou, or both?",
-    "note": "Teaching model: only the three record bars (65, 982 and 2,110) are the paper's numbers. They are its Google Scholar counts for 1962–1972 (Section 3; search run May 28, 2020, excluding hits where Kneese was author or editor). The total of 1,047 Kneese papers and the share of about 6.2% are our own arithmetic from those counts; the paper does not state them. The 'your guess' bars are hypothetical. Search hits are a rough stand-in for influence and miss ideas passed on without citation.",
-    "controls": [
-     {
-      "id": "guess",
-      "label": "Your guess: share of Kneese papers that also name Pigou",
-      "kind": "slider",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "default": 50,
-      "unit": "%",
-      "color": 0
-     },
-     {
-      "id": "show_pigou",
-      "label": "Show papers naming Pigou but not Kneese",
-      "kind": "toggle",
-      "default": 0,
-      "color": 4,
-      "min": 0,
-      "max": 1,
-      "step": 1
-     }
-    ],
-    "outputs": [
-     {
-      "id": "actual_share",
-      "label": "Share of Kneese papers that also name Pigou (our arithmetic from the record)",
-      "expr": "65 / (65 + 982)",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 1,
-      "color": 2
-     },
-     {
-      "id": "expected_both",
-      "label": "Papers naming both, if your guess were right",
-      "expr": "guess / 100 * 1047",
-      "unit": "",
-      "decimals": 0,
-      "color": 0
-     },
-     {
-      "id": "gap",
-      "label": "Your guess minus the record",
-      "expr": "guess / 100 - actual_share",
-      "unit": " points",
-      "scale": 100,
-      "decimals": 1,
-      "color": 3
-     }
-    ],
-    "visual": {
-     "type": "bars",
-     "bars": [
-      {
-       "id": "guess_both",
-       "label": "Your guess: name both",
-       "value": "guess / 100 * 1047",
-       "color": 0
-      },
-      {
-       "id": "real_both",
-       "label": "Record: name both",
-       "value": 65,
-       "color": 2
-      },
-      {
-       "id": "guess_kneese_only",
-       "label": "Your guess: Kneese, not Pigou",
-       "value": "(1 - guess / 100) * 1047",
-       "color": 0
-      },
-      {
-       "id": "real_kneese_only",
-       "label": "Record: Kneese, not Pigou",
-       "value": 982,
-       "color": 2
-      },
-      {
-       "id": "pigou_only",
-       "label": "Record: Pigou, not Kneese",
-       "value": "show_pigou ? 2110 : 0",
-       "color": 4
-      }
-     ],
-     "min": 0,
-     "max": "show_pigou ? 2200 : 1100",
-     "unit": "",
-     "decimals": 0
-    }
-   },
-   "animation": {
-    "steps": [
-     {
-      "say": "Each bar counts papers from 1962 to 1972. Allen Kneese was the widely acknowledged leader on pricing pollution in the 1960s. The bars count papers naming him, A.C. Pigou, or both.",
-      "focus": "real_both",
-      "ms": 3600
-     },
-     {
-      "say": "These green bars are the real record, from a Google Scholar search reported in the paper.",
-      "focus": [
-       "real_both",
-       "real_kneese_only"
-      ],
-      "ms": 3000
-     },
-     {
-      "say": "The bars beside them are your guess. This slider sets what share of Kneese papers you expect to name Pigou too.",
-      "set": {
-       "guess": 80
-      },
-      "focus": "guess",
-      "ms": 3400
-     },
-     {
-      "say": "This switch reveals a third group: papers that name Pigou but never Kneese.",
-      "set": {
-       "show_pigou": 1
-      },
-      "focus": "pigou_only",
-      "ms": 3200
-     },
-     {
-      "say": "This box turns the record into one share you can compare with your guess.",
-      "set": {
-       "show_pigou": 0,
-       "guess": 50
-      },
-      "focus": "actual_share",
-      "ms": 3000
-     }
-    ]
-   },
-   "explore": {
-    "prompt": "You've seen the record. Now rebuild it yourself, then reveal the evidence that Pigou was not simply forgotten.",
-    "goals": [
-     {
-      "text": "Make your guessed bars match the record.",
-      "when": "abs(gap) < 0.02",
-      "solution": {
-       "guess": 6
-      },
-      "hints": [
-       "Your bars should be as tall as the record bars standing next to them.",
-       "The real share is 65 papers out of the 65 + 982 that name Kneese.",
-       "That is well under one in ten: somewhere between 5% and 8%."
-      ]
-     },
-     {
-      "text": "Show the evidence that Pigou was widely cited at the time but rarely named alongside Kneese, with your guess still matching the record.",
-      "when": "show_pigou == 1 && abs(gap) < 0.02",
-      "solution": {
-       "guess": 6,
-       "show_pigou": 1
-      },
-      "hints": [
-       "Pigou was cited a lot, just not alongside Kneese. Which bar holds those papers?",
-       "Flip the switch that reveals papers naming Pigou but not Kneese.",
-       "If your bars no longer match the record, bring the guess back under one in ten."
-      ]
-     }
-    ]
-   },
+   "recap": "1960s pollution pricing grew from American thinking about commons, rivers and resource development; Pigou's name was attached around 1970. That is an argued case, not settled fact.",
    "understand": {
-    "feedback": {
-     "correct": "Exactly. Citations record who people named, and the naming changed around 1970. Later papers citing Pigou show the label spreading. They don't show where Kneese, Crocker and Dales got their ideas in the 1960s.",
-     "incorrect": "It's tempting to treat any citation as proof of origin. But the paper argues that the 'Pigouvian' label was attached around 1970, after the ideas already existed. Citations after that date tell you about the name, not the roots."
-    },
-    "walkthrough": {
-     "steps": [
-      {
-       "say": "Start with the conventional story: Kneese's pollution fee was Pigou's tax applied to rivers. If so, you might expect most papers building on Kneese to name Pigou too. Take an illustrative 9 in 10.",
-       "set": {
-        "guess": 90,
-        "show_pigou": 0
-       },
-       "focus": "guess_both",
-       "ms": 4200
-      },
-      {
-       "say": "Now compare the record. Only 65 papers name both, while 982 name Kneese without mentioning Pigou. Your guess towers over reality.",
-       "focus": [
-        "real_both",
-        "real_kneese_only"
-       ],
-       "ms": 4000
-      },
-      {
-       "say": "Slide the guess down until the bars line up. By our own arithmetic on the paper's counts, they match near 6%: roughly 1 Kneese paper in 16 also named Pigou. This citation record is the paper's evidence.",
-       "set": {
-        "guess": 6
-       },
-       "focus": "actual_share",
-       "ms": 4600
-      },
-      {
-       "say": "Kneese called his fee an effluent charge, without connecting it to Pigou. The paper reports that on JSTOR, 'Pigouvian tax' or close variants appear only 12 times in the whole 1960s.",
-       "focus": "real_kneese_only",
-       "ms": 4600
-      },
-      {
-       "say": "Was Pigou simply forgotten? No. Reveal the third group: 2,110 papers named Pigou but not Kneese. The paper says the two literatures were operating in quite distinct spheres.",
-       "set": {
-        "show_pigou": 1
-       },
-       "focus": "pigou_only",
-       "ms": 4400
-      },
-      {
-       "say": "So whom did the pioneers name? Kneese discussed Coase. Dales cited Coase, Kneese and Scott Gordon's work on the common-property fishery, the commons problem you met earlier. Crocker drew on groundwater law.",
-       "focus": "real_kneese_only",
-       "ms": 4800
-      },
-      {
-       "say": "Baumol and Oates, in 1971, formally proved Kneese's argument: a fee can induce the least-cost way to meet an environmental goal. They described his work as part of a 'Pigouvian tradition', and references to Pigou then increased rapidly.",
-       "focus": "pigou_only",
-       "ms": 4600
-      },
-      {
-       "say": "So the tax every textbook calls Pigouvian was worked out in the 1960s by economists who almost never cited Pigou. They were thinking about overused commons like fisheries and groundwater. Pigou's name was attached afterwards, around 1970.",
-       "focus": [
-        "real_both",
-        "pigou_only"
-       ],
-       "ms": 5200
-      }
-     ]
-    },
-    "explanation": "Encyclopedia entries present the pollution tax as named after Pigou. The conventional history says 1960s economists picked up his tools for environmental problems. Banzhaf checks this against the citation record: from 1962 to 1972, only 65 papers mentioned both Kneese and Pigou, against 982 citing Kneese alone. So the two literatures barely touched. He argues that early pollution pricing was rooted in questions about common-property resources and the increasing returns from developing natural resources. Those were American agricultural and resource-economics traditions, with Coase as one further touchpoint. Kneese later described his approach as 'the management of common property resources approach'. The paper suggests the 'Pigouvian' framing may have been a reinterpretation first made by Coase and Buchanan, then consolidated by Baumol and Oates. Caveats: a missing citation can mean an idea was so familiar it went uncited, a possibility the paper itself raises. Medema explains the gap differently, saying Pigou's revised theory was 'grafted into' the new field. And this is one historian's working paper, not peer-reviewed.",
-    "quote": "Until about 1972, others working on similar topics or commenting on policy proposals to levy fees on pollution—from Nobel laureates to applied practitioners—cited Kneese without mentioning Pigou, apparently treating his work as original. A Google Scholar search yielded only 65 hits mentioning Kneese and Pigou between 1962 and 1972, 982 hits mentioning Kneese but not Pigou, and 2,110 mentioning Pigou but not Kneese.",
-    "quote_where": "Section 3, 'Effluent Fees and Pigouvian Taxes'",
-    "quote_source_id": "s4",
+    "explanation": "The pollution charge from the earlier concepts is now called a 'Pigouvian tax', after Arthur Pigou, whose 1920 book described costs that fall on bystanders. In a 2020 working paper (circulated for comment, not peer-reviewed), the historian Spencer Banzhaf argues that the name hides the real family tree. In 1964 Allen Kneese proposed an effluent charge, a fee per unit of waste dumped into rivers, and in 1966–68 Thomas Crocker and John Dales proposed tradable pollution rights. None of them cited Pigou in that work: a Google Scholar search for 1962–72 found 982 works mentioning Kneese without Pigou and only 65 mentioning both. Instead they drew on Coase and on American resource economics, such as Scott Gordon's 1954 study of a fishery as a common-property resource that everyone uses and nobody owns, groundwater law, and the spillovers of dams and irrigation. The 'Pigouvian' label spread only around 1971, when Baumol and Oates placed Kneese in a 'Pigouvian tradition'. So the famous tax was mostly not built from Pigou: his name was attached later to work rooted in American thinking about farmland, rivers and unowned commons. This is an argued reading, not a settled consensus.",
+    "quote": "This paper has argued that the early literature on pollution pricing was rooted in questions about common property resources and the increasing returns from developing natural resources. Both topics were treated by broad literatures by the 1960s, including distinctly American traditions not particularly associated with Pigou.",
+    "quote_where": "Section 6 (Conclusion)",
     "source_id": "s4",
     "source_ids": [
      "s4",
+     "s1",
      "s2"
     ]
    },
-   "check": {
-    "kind": "choice",
-    "question": "The record for 1962–1972 is 65 papers naming both Kneese and Pigou, 982 naming Kneese only, and 2,110 naming Pigou only. Which conclusion does it best support?",
-    "options": [
-     {
-      "text": "The pollution-fee literature and the Pigou literature ran largely in separate spheres, and the 'Pigouvian' label was linked to the fee later",
-      "correct": true,
-      "why": "This is the paper's reading. Pigou was widely cited, but rarely by the people building pollution pricing, and the link was drawn around 1970."
-     },
-     {
-      "text": "Nobody in the 1960s had read Pigou",
-      "correct": false,
-      "why": "2,110 papers named Pigou without Kneese, so Pigou was well known. He just wasn't cited in this particular conversation."
-     },
-     {
-      "text": "Pigou had no influence at all on pollution pricing",
-      "correct": false,
-      "why": "Too strong. The paper says Pigou's importance to environmental economics cannot be denied, and it considers an uncited 'oral tradition'. The claim is about lineage, not zero influence."
-     },
-     {
-      "text": "Kneese deliberately hid that he copied Pigou",
-      "correct": false,
-      "why": "The citation counts say nothing about intent. The paper links Kneese's arguments to property rights, common-property resources and resource-development economics instead."
-     }
-    ],
-    "multi": false,
-    "hint": "Look at how big the Pigou-only group is, and remember the paper's own caveat about ideas being taken for granted.",
-    "misconception": "That a missing citation proves an idea had no influence, or that a later citation proves where an idea came from."
-   },
-   "connect": {
-    "equation": [
-     {
-      "text": "real share = 65 / (65 + 982) ≈ "
-     },
-     {
-      "text": "6.2%",
-      "link": "actual_share"
-     },
-     {
-      "text": "     your expected 'both' = "
-     },
-     {
-      "text": "guess",
-      "link": "guess"
-     },
-     {
-      "text": " × 1,047"
-     }
-    ],
-    "caption": "This is the model's rule; the paper gives no equation. The 65 and 982 are the paper's counts. The 1,047 total and the 6.2% share are our arithmetic from them. The green real share divides the papers naming both by all papers naming Kneese. Your blue guess multiplies the same total by your expected share. The gap between them is the paper's evidence."
-   },
-   "recap": "The 'Pigouvian' pollution tax was worked out in the 1960s by economists citing Kneese, Coase and commons writers, not Pigou. His name was attached around 1970.",
    "activities": [
     {
-     "id": "watch",
-     "kind": "watch"
-    },
-    {
-     "id": "walk",
-     "kind": "walk"
-    },
-    {
-     "id": "explain",
+     "id": "idea",
      "kind": "explain"
     },
     {
-     "id": "goal_0",
-     "kind": "goal",
-     "i": 0
+     "id": "timeline",
+     "kind": "order",
+     "prompt": "Put these events in the order they happened, from earliest to latest.",
+     "items": [
+      "Pigou's The Economics of Welfare describes costs and benefits that fall on bystanders",
+      "Scott Gordon analyses the fishery as a resource everyone uses and nobody owns",
+      "Kneese proposes effluent charges on river pollution, without citing Pigou",
+      "Crocker and Dales propose tradable pollution rights, with no reference to Pigou",
+      "Baumol and Oates describe Kneese's work as part of a 'Pigouvian tradition'",
+      "Textbooks and literature reviews make the 'Pigouvian' label standard"
+     ],
+     "explanation": "Pigou's book appeared in 1920, with a 4th edition in 1932. Gordon's common-property paper followed in 1954. Kneese's effluent charges came in 1964, and Crocker's and Dales's tradable rights in 1966 and 1968. Only in 1971 did Baumol and Oates place Kneese in a 'Pigouvian tradition', and textbooks such as Baumol and Oates (1975) then made it standard. The gap matters: the tools existed for years before anyone named them after Pigou, and Gordon's work on the commons sits right before them.",
+     "hints": [
+      "Banzhaf's evidence is that the inventors came first and the name came after.",
+      "The two proposals by the 1960s pioneers come before anything that uses the word 'Pigouvian'.",
+      "Gordon's fishery paper was one of the few references Crocker and Dales gave, so it must come before them."
+     ]
     },
     {
-     "id": "goal_1",
-     "kind": "goal",
-     "i": 1
+     "id": "which_passage",
+     "kind": "passage",
+     "question": "Which passage best supports the claim that the 'Pigouvian' name was attached to pollution pricing later, rather than inherited from its origins?",
+     "options": [
+      {
+       "quote": "Though the moniker \"Pigouvian\" was adopted around 1970, the name should not be confused with hereditary lineage.",
+       "source_id": "s4",
+       "feedback": "Yes. This passage dates the label to around 1970 and says directly that the name is not evidence of descent from Pigou. That is the core of Banzhaf's claim."
+      },
+      {
+       "quote": "Pigou's discussion seems like a natural source for economic thinking about environmental problems.",
+       "source_id": "s4",
+       "feedback": "Banzhaf writes this, but only to set up the conventional story he then questions. On its own it says Pigou looks like a natural source, which is the opposite of what we need."
+      },
+      {
+       "quote": "Because of high transactions costs, Kneese thought that Coase's negotiation result was unlikely to be relevant to water pollution problems.",
+       "source_id": "s4",
+       "feedback": "This passage is about Kneese's view of Coasean bargaining (the 'make a deal' idea from an earlier concept). It shows he engaged with Coase, but it says nothing about when the Pigouvian label appeared."
+      },
+      {
+       "quote": "Pigouvian taxes are named after the English economist Arthur Cecil Pigou (1877–1959), who developed the concept of economic externalities.",
+       "source_id": "s2",
+       "feedback": "This passage, from the encyclopedia article, tells you whom the tax is named after. It does not say when the name arrived or whether the people who designed pollution charges actually drew on Pigou. It reflects the conventional story Banzhaf is challenging."
+      }
+     ],
+     "answer": 0,
+     "hints": [
+      "Look for a passage that mentions a date for the name.",
+      "The right passage separates what something is called from where it came from."
+     ]
     },
     {
-     "id": "predict",
-     "kind": "predict"
+     "id": "influences",
+     "kind": "sort",
+     "title": "What the pioneers actually drew on",
+     "prompt": "For each item, decide whether it shows up as an influence in the 1960s pioneers' work or is missing from it, according to Banzhaf.",
+     "groups": [
+      {
+       "id": "present",
+       "label": "Shows up as an influence"
+      },
+      {
+       "id": "absent",
+       "label": "Missing from their 1960s work"
+      }
+     ],
+     "cards": [
+      {
+       "id": "c1",
+       "text": "Kneese: Coase's bargaining idea and his theory of the firm",
+       "group": "present",
+       "feedback": "Present. Kneese introduced Coasean bargaining early in his 1964 book and used a 'basin-wide firm', drawn from Coase's 1937 paper, as an organising idea."
+      },
+      {
+       "id": "c2",
+       "text": "Kneese: spillovers from water projects, like irrigation recharging neighbours' wells",
+       "group": "present",
+       "feedback": "Present. Before turning to pollution, Kneese studied external economies of water development, which came from resource-development economics."
+      },
+      {
+       "id": "c3",
+       "text": "Kneese: Pigou, when discussing effluent charges in the 1960s",
+       "group": "absent",
+       "feedback": "Missing. After a 1960 paper on welfare economics, Kneese did not cite or mention Pigou until the end of the decade."
+      },
+      {
+       "id": "c4",
+       "text": "Dales: Scott Gordon's 1954 paper on the fishery as a common-property resource",
+       "group": "present",
+       "feedback": "Present. Dales named Gordon among his intellectual debts, and Crocker later discussed Gordon's model of the commons too."
+      },
+      {
+       "id": "c5",
+       "text": "Dales: Coase's 'The Problem of Social Cost'",
+       "group": "present",
+       "feedback": "Present. Dales acknowledged 'owing much' to it, though Banzhaf says this was more for its general link between law and economics."
+      },
+      {
+       "id": "c6",
+       "text": "Crocker: the old doctrine of absolute ownership of groundwater",
+       "group": "present",
+       "feedback": "Present. Crocker had helped his advisor Mason Gaffney on western water law, and he compared rights to air with that groundwater doctrine."
+      },
+      {
+       "id": "c7",
+       "text": "Crocker and Dales: Pigou",
+       "group": "absent",
+       "feedback": "Missing. Banzhaf finds 'absolutely no reference' to Pigou in either Crocker's or Dales's work."
+      }
+     ],
+     "takeaway": "The pioneers' references point to Coase and to American traditions on commons, water law and resource development, not to Pigou. That positive evidence is what lifts Banzhaf's case beyond a mere absence of citations."
     },
     {
-     "id": "reveal",
-     "kind": "reveal"
-    },
-    {
-     "id": "check",
-     "kind": "check"
-    },
-    {
-     "id": "connect",
-     "kind": "connect"
+     "id": "limits",
+     "kind": "choice",
+     "mode": "interpretive",
+     "question": "How much weight should you put on Banzhaf's conclusion?",
+     "options": [
+      {
+       "text": "A lot: the citation counts and the pioneers' own references point the same way.",
+       "feedback": "There is real support for this. Several independent kinds of evidence line up: the JSTOR count (only 12 uses of 'Pigouvian tax' in the 1960s), the Google Scholar split, and the references to Gordon, Coase and water law. The limit is that citation searches are rough tools, and the argument rests on one author's reading of a limited set of texts, mostly American ones."
+      },
+      {
+       "text": "Some caution: missing citations might just mean Pigou's ideas were so standard that nobody bothered to cite them.",
+       "feedback": "This is a fair worry, and Banzhaf raises it himself. He even notes Kneese's line that economists 'have long held' that spillovers can be taxed, which hints at an unwritten tradition. His reply is that the pioneers' arguments and actual references point to other sources. That narrows the worry, but it cannot fully rule out an unwritten influence."
+      },
+      {
+       "text": "Treat it as a well-argued case still awaiting scrutiny, because it is an unrefereed working paper.",
+       "feedback": "This is supported by the paper itself, which states that NBER working papers 'have not been peer-reviewed'. Other historians, such as Medema, have raised related doubts about a Pigovian lineage, which adds some support. The encyclopedia articles still tell the conventional Pigou story, so this remains an open debate rather than a consensus."
+      },
+      {
+       "text": "It proves Pigou had no influence at all on pollution pricing.",
+       "feedback": "This goes beyond what the paper says. Banzhaf calls the Pigouvian approach 'undeniably an important source' but 'one of many'. His claim is that the lineage was overstated and that whole traditions were overlooked. He does not claim Pigou was irrelevant, and he does not question the economics of the tax itself."
+      }
+     ]
     }
    ]
   }
@@ -2510,16 +2570,298 @@
    "year": 2020
   }
  ],
- "flags": [
+ "activity_plans": [
   {
-   "concept": "borrowed_name",
-   "kind": "wrong_claim",
-   "certainty": 0.78
+   "concept": "external_cost_gap",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "connect"
+    ],
+    "why": "The learner drags the external-cost slider and sees the full-cost supply line lift away from the private one, then predicts the gap for a new polluter."
+   },
+   "confidence": 0.55,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner drags the external-cost slider and sees the full-cost supply line lift away from the private one, then predicts the gap for a new polluter."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "sort",
+      "connect"
+     ],
+     "why": "After manipulating the gap, the learner sorts everyday cases (noisy music, factory smoke, a neighbour's flowers) into cost-to-others versus no spillover."
+    }
+   ]
   },
   {
-   "concept": "borrowed_name",
-   "kind": "fabricated_finding",
-   "certainty": 0.79
+   "concept": "market_overshoots",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "connect"
+    ],
+    "why": "The learner widens the external cost and watches the gap between market and efficient quantity grow, then predicts what happens when harm is zero."
+   },
+   "confidence": 0.91,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner widens the external cost and watches the gap between market and efficient quantity grow, then predicts what happens when harm is zero."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "worked",
+      "goal",
+      "predict",
+      "reveal"
+     ],
+     "why": "A worked reading of the trumpet-song table from the textbook anchors the model before the learner hits a target overproduction gap."
+    }
+   ]
+  },
+  {
+   "concept": "pigouvian_tax",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "check",
+     "connect"
+    ],
+    "why": "The learner tunes the tax to hit the efficient quantity, then predicts what an over-sized tax does. The check targets the belief that a bigger tax is always better or that the goal is zero pollution."
+   },
+   "confidence": 0.79,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "check",
+      "connect"
+     ],
+     "why": "The learner tunes the tax to hit the efficient quantity, then predicts what an over-sized tax does. The check targets the belief that a bigger tax is always better or that the goal is zero pollution."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "compare",
+      "check",
+      "connect"
+     ],
+     "why": "Side-by-side states (no tax, right tax, double tax) make the 'just right' logic visible before the check, followed by the measurement caveat."
+    }
+   ]
+  },
+  {
+   "concept": "price_vs_cap",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "connect"
+    ],
+    "why": "The learner sets a cap and reads off the permit price it creates, then matches it to the tax that would produce the same quantity."
+   },
+   "confidence": 0.73,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner sets a cap and reads off the permit price it creates, then matches it to the tax that would produce the same quantity."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "match",
+      "connect"
+     ],
+     "why": "After using the model, the learner matches each instrument (effluent charge, cap-and-trade, command-and-control) to what it fixes and what it leaves to the market."
+    }
+   ]
+  },
+  {
+   "concept": "coase_bargaining",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "explain",
+     "worked",
+     "sort",
+     "choice"
+    ],
+    "why": "A worked farmer-and-rancher deal teaches the logic. The learner then sorts cases (logger vs resort, steel plant vs a city's lungs, vaccination) by whether bargaining could work."
+   },
+   "confidence": 0.73,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "explain",
+      "worked",
+      "sort",
+      "choice"
+     ],
+     "why": "A worked farmer-and-rancher deal teaches the logic. The learner then sorts cases (logger vs resort, steel plant vs a city's lungs, vaccination) by whether bargaining could work."
+    },
+    {
+     "blocks": [
+      "explain",
+      "compare",
+      "stages",
+      "choice"
+     ],
+     "why": "Comparing the two-party deal with Kneese's crowded river, then staging why he judged transaction costs too high, leads to an interpretive question on when government is needed."
+    }
+   ]
+  },
+  {
+   "concept": "open_access_commons",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "connect"
+    ],
+    "why": "The learner moves fishing effort and the cost per boat, finds where open access stops versus where total value peaks, and then predicts how an access fee changes the outcome."
+   },
+   "confidence": 0.69,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner moves fishing effort and the cost per boat, finds where open access stops versus where total value peaks, and then predicts how an access fee changes the outcome."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "compare",
+      "choice"
+     ],
+     "why": "Comparing open access with a fee or sole owner shows the same pricing logic as the effluent charge, reframed as managing a commons."
+    }
+   ]
+  },
+  {
+   "concept": "not_necessarily_pigouvian",
+   "chosen": "p2",
+   "plan": {
+    "blocks": [
+     "explain",
+     "order",
+     "passage",
+     "sort",
+     "choice"
+    ],
+    "why": "The learner orders the timeline from Pigou 1920 to the 1970s textbooks, picks the passage that supports the claim, sorts each pioneer's actual influences, and ends with an interpretive question on the paper's limits as an unrefereed working paper."
+   },
+   "confidence": 0.34,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "choice",
+      "explain",
+      "stages",
+      "sort",
+      "choice"
+     ],
+     "why": "An opening guess about where the idea came from, then staged evidence (Kneese's silence on Pigou, about 12 JSTOR hits in the 1960s, 65 vs 982 Google Scholar hits, Baumol and Oates 1971), then sorting claims into evidence vs interpretation, and a revisit of the opening guess."
+    },
+    {
+     "blocks": [
+      "explain",
+      "order",
+      "passage",
+      "sort",
+      "choice"
+     ],
+     "why": "The learner orders the timeline from Pigou 1920 to the 1970s textbooks, picks the passage that supports the claim, sorts each pioneer's actual influences, and ends with an interpretive question on the paper's limits as an unrefereed working paper."
+    }
+   ]
   }
  ],
  "category": {
@@ -2538,7 +2880,7 @@
   "provider": "claude",
   "model": "claude-opus-5-5",
   "pipeline": "lemma.generate.make_outline + build_lesson",
-  "source_chars": 268926,
+  "source_chars": 276065,
   "omitted": 0
  }
 }

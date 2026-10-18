@@ -4,9 +4,9 @@ Early Transmission Dynamics in Wuhan, China, of Novel Coronavirus–Infected Pne
 
 https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7121484/fullTextXML
 
-Introduction
+Abstract
 
-Here, we provide an analysis of data on the first 425 laboratory-confirmed cases in Wuhan to describe the epidemiologic characteristics and transmission dynamics of NCIP.
+We analyzed data on the first 425 confirmed cases in Wuhan to determine the epidemiologic characteristics of NCIP.
 
 Abstract
 
@@ -16,6 +16,10 @@ Discussion
 
 Our estimate was based on information from 10 cases and is somewhat imprecise; it would be important for further studies to provide more information on this distribution.
 
+Discussion
+
+Although the majority of the earliest cases were linked to the Huanan Seafood Wholesale Market and the patients could have been infected through zoonotic or environmental exposures, it is now clear that human-to-human transmission has been occurring and that the epidemic has been gradually growing in recent weeks.
+
 Results
 
 In the epidemic curve up to January 4, 2020, the epidemic growth rate was 0.10 per day (95% CI, 0.050 to 0.16) and the doubling time was 7.4 days (95% CI, 4.2 to 14).
@@ -24,9 +28,9 @@ Results
 
 The development of the epidemic follows an exponential growth in cases, and a decline in the most recent days is likely to be due to under-ascertainment of cases with recent onset and delayed identification and reporting rather than a true turning point in incidence (Figure 1).
 
-Methods, Statistical Analysis
+Results
 
-We fitted a gamma distribution to data from cluster investigations to estimate the serial interval distribution, defined as the delay between illness onset dates in successive cases in chains of transmission.
+On the basis of the dates of illness onset of 6 pairs of cases in these clusters, we estimated that the serial interval distribution had a mean (±SD) of 7.5±3.4 days (95% CI, 5.3 to 19) (Figure 2B).
 
 Discussion
 

@@ -1,37 +1,101 @@
 VERIFIED QUOTATION EXCERPTS — not the complete source.
 
-Brown v. Board of Education of Topeka, 347 U.S. 483 (1954)
+Brown v. Board of Education (1954)
 
 https://www.archives.gov/milestone-documents/brown-v-board-of-education
 
 Opinion of the Court
 
-Does segregation of children in public schools solely on the basis of race, even though the physical facilities and other "tangible" factors may be equal, deprive the children of the minority group of equal educational opportunities? We believe that it does.
-
-Opinion of the Court
-
-Our decision, therefore, cannot turn on merely a comparison of these tangible factors in the Negro and white schools involved in each of the cases. We must look instead to the effect of segregation itself on public education.
+We come then to the question presented: Does segregation of children in public schools solely on the basis of race, even though the physical facilities and other "tangible" factors may be equal, deprive the children of the minority group of equal educational opportunities? We believe that it does.
 
 Opinion of the Court
 
 We conclude that, in the field of public education, the doctrine of "separate but equal" has no place. Separate educational facilities are inherently unequal.
 
-Opinion of the Court (Chief Justice Warren), describing Plessy v. Ferguson
+Opinion of the Court (Chief Justice Warren), second paragraph
 
 Under that doctrine, equality of treatment is accorded when the races are provided substantially equal facilities, even though these facilities be separate.
 
-Opinion of the Court (Warren, C.J.), discussion of the earlier 'separate but equal' cases
+Opinion of the Court, discussion of earlier 'separate but equal' cases
 
-Here, unlike Sweatt v. Painter, there are findings below that the Negro and white schools involved have been equalized, or are being equalized, with respect to buildings, curricula, qualifications and salaries of teachers, and other "tangible" factors. Our decision, therefore, cannot turn on merely a comparison of these tangible factors in the Negro and white schools involved in each of the cases. We must look instead to the effect of segregation itself on public education.
+In more recent cases, all on the graduate school level, inequality was found in that specific benefits enjoyed by white students were denied to Negro students of the same educational qualifications. Missouri ex rel. Gaines v. Canada, 305 U.S. 337; Sipuel v. Oklahoma, 332 U.S. 631; Sweatt v. Painter, 339 U.S. 629; McLaurin v. Oklahoma State Regents, 339 U.S. 637. In none of these cases was it necessary to reexamine the doctrine to grant relief to the Negro plaintiff.
+
+
+
+And in Sweatt v. Painter, supra, the Court expressly reserved decision on the question whether Plessy v. Ferguson should be held inapplicable to public education.
+
+
+
+In Cumming v. County Board of Education, 175 U.S. 528, and Gong Lum v. Rice, 275 U.S. 78, the validity of the doctrine itself was not challenged.
+
+
+
+The doctrine of "separate but equal" did not make its appearance in this Court until 1896 in the case of Plessy v. Ferguson, supra, involving not education but transportation.
+
+
+
+In the instant cases, that question is directly presented.
 
 Opinion of the Court (Chief Justice Warren)
 
-In McLaurin v. Oklahoma State Regents, supra, the Court, in requiring that a Negro admitted to a white graduate school be treated like all other students, again resorted to intangible considerations: ". . . his ability to study, to engage in discussions and exchange views with other students, and, in general, to learn his profession." Such considerations apply with added force to children in grade and high schools.
+In approaching this problem, we cannot turn the clock back to 1868, when the Amendment was adopted, or even to 1896, when Plessy v. Ferguson was written. We must consider public education in the light of its full development and its present place in American life throughout the Nation.
 
-Opinion of the Court, quoting the finding of the Kansas district court
 
-The impact is greater when it has the sanction of the law, for the policy of separating the races is usually interpreted as denoting the inferiority of the negro group. A sense of inferiority affects the motivation of a child to learn.
 
-Opinion of the Court (Chief Justice Warren), concluding paragraphs
+An additional reason for the inconclusive nature of the Amendment's history with respect to segregated schools is the status of public education at that time.
+
+
+
+What others in Congress and the state legislatures had in mind cannot be determined with any degree of certainty.
+
+
+
+Today, education is perhaps the most important function of state and local governments.
+
+
+
+The doctrine of "separate but equal" did not make its appearance in this Court until 1896 in the case of Plessy v. Ferguson, supra, involving not education but transportation.
+
+Opinion of the Court (Chief Justice Warren)
+
+In these days, it is doubtful that any child may reasonably be expected to succeed in life if he is denied the opportunity of an education. Such an opportunity, where the state has undertaken to provide it, is a right which must be made available to all on equal terms.
+
+Opinion of the Court (Chief Justice Warren)
+
+Here, unlike Sweatt v. Painter, there are findings below that the Negro and white schools involved have been equalized, or are being equalized, with respect to buildings, curricula, qualifications and salaries of teachers, and other "tangible" factors. Our decision, therefore, cannot turn on merely a comparison of these tangible factors in the Negro and white schools involved in each of the cases. We must look instead to the effect of segregation itself on public education.
+
+
+
+Our decision, therefore, cannot turn on merely a comparison of these tangible factors in the Negro and white schools involved in each of the cases. We must look instead to the effect of segregation itself on public education.
+
+
+
+In none of these cases was it necessary to reexamine the doctrine to grant relief to the Negro plaintiff.
+
+
+
+Such an opportunity, where the state has undertaken to provide it, is a right which must be made available to all on equal terms.
+
+
+
+The history of the Fourteenth Amendment is inconclusive as to its intended effect on public education.
+
+Opinion of the Court (Chief Justice Warren), final paragraphs
 
 We conclude that, in the field of public education, the doctrine of "separate but equal" has no place. Separate educational facilities are inherently unequal.
+
+
+
+The impact is greater when it has the sanction of the law, for the policy of separating the races is usually interpreted as denoting the inferiority of the negro group.
+
+
+
+Our decision, therefore, cannot turn on merely a comparison of these tangible factors in the Negro and white schools involved in each of the cases.
+
+
+
+Under that doctrine, equality of treatment is accorded when the races are provided substantially equal facilities, even though these facilities be separate.
+
+
+
+This disposition makes unnecessary any discussion whether such segregation also violates the Due Process Clause of the Fourteenth Amendment.

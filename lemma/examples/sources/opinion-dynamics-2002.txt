@@ -8,42 +8,46 @@ Abstract
 
 When does opinion formation within an interacting group lead to consensus, polarization or fragmentation?
 
-Introduction (quoting Abelson 1964)
-
-Since universal ultimate agreement is an ubiquitous outcome of a very broad class of mathematical models, we are naturally led to inquire what on earth one must assume in order to generate the bimodal outcome of community cleavage studies.
-
-Introduction
-
-For that reason we carry out the analysis of the above nonlinear model to a large extent by simulations on the computer.
-
 Section 4.1
 
-As the homogeneous and symmetric confidence interval increases we transit from phase to phase. More exactly, we step from fragmentation (plurality) over polarisation (polarity) to consensus (conformity).
-
-Section 4.3
-
-At least under bounded confidence locality of interactions may prevent societies from sharp polarisation.
-
-Section 2
-
-Intuitively, one may expect that this process of repeatedly averaging opinions will bring newly formed opinions of different agents closer to each other until they flow into a consensus among all agents.
-
-Section 2
-
-An agent i takes only those agents j into account whose opinions differ from his own not more than a certain confidence level
-
-Section 4.1
-
-As the homogeneous and symmetric confidence interval increases we transit from phase to phase. More exactly, we step from fragmentation (plurality) over polarisation (polarity) to consensus (conformity).
-
-Section 4.1 (Symmetric confidence), discussion of Figure 5
-
-Figure 5 makes clear that opinion changes start at the extremes and are there (at the start!) most extreme for the most extreme opinions.
+More exactly, we step from fragmentation (plurality) over polarisation (polarity) to consensus (conformity).
 
 Section 4.2.2
 
-The principle cause for all these effects is that with an increasing m those at the extremes become less and less affected by opinions more in the centre of the opinion space.
+Thus, instead of a drive direction centre the opinion based bias generates a drift to the extremes.
 
-Section 4.1 (Symmetric confidence)
+Section 3A, Result 1 (the classical model)
+
+If any two agents put jointly a positive weight on a third one then for every initial opinion profile a consensus will be approached (which consensus, of course, depends on the initial profile).
+
+Section 4.1
+
+Summing up and generalising what we see in Figure 3 one might say: As the homogeneous and symmetric confidence interval increases we transit from phase to phase. More exactly, we step from fragmentation (plurality) over polarisation (polarity) to consensus (conformity)
+
+Section 4.1 (discussion of Figure 5)
+
+From period 0 to 1 nothing changes more in the middle of the opinion space. But as times goes by changes work through the opinion space direction centre. The opinions directly in the centre are the last to be affected.
+
+Section 4.3, Main Results
+
+In the symmetric case the major causes for polarisation are splits in the opinion profiles. They are caused by shrinking and condensing at the extremes, condensing induced by condensing, and condensing induced by density fluctuations in randomly generated start profiles.
+
+
 
 Under simultaneous updating cracked profiles can never get connected again. Agents/opinions outside ones own sub profile are ‘out of range/reach’ in a quite severe sense: They are not only outside ones own confidence interval, but also outside the confidence intervals of all others one takes seriously, outside the confidence intervals of all others which those others take seriously etc.
+
+
+
+Extreme opinions are under a one sided influence and move direction centre. As a consequence the range of the profile shrinks.
+
+
+
+What irregularity adds are density fluctuations in the initial distribution of opinions. They are additional causes for splits and induce opinion changes deep inside the start–profile without any delay right at the beginning of the process.
+
+Section 4.3 (Main results)
+
+With asymmetric confidence mean and median move into the favoured direction. This effect is extreme if there is only little confidence in the non favoured direction. The effect becomes milder as the confidence in the non favoured direction increases.
+
+Section 4.2.2
+
+Thus, instead of a drive direction centre the opinion based bias generates a drift to the extremes.
