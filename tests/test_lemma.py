@@ -1657,7 +1657,8 @@ class ExportTests(unittest.TestCase):
         html = export.lesson_html(EXAMPLE)
         style = html.split("<style>")[1].split("</style>")[0]
         self.assertIn("font-src data:", html)
-        self.assertEqual(style.count("data:font/woff2;base64,"), 2)  # every face embedded
+        embedded = style.count("data:font/woff2;base64,") - style.count('data:font/woff2;base64,"')
+        self.assertEqual(embedded, 2)  # every face a lesson uses; the gallery cards' italic is left out empty
         self.assertNotIn('url("fonts/', style)
 
     def test_embedded_json_cannot_break_out(self):
