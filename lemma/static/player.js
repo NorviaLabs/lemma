@@ -176,6 +176,7 @@
         h("article", {},
           h("h1", {}, lesson.title),
           h("p", { class: "source" }, "From ", h("cite", {}, src.url ? h("a", { href: src.url, target: "_blank", rel: "noopener noreferrer" }, src.title) : src.title), citation(src) ? `, ${citation(src)}` : "", src.venue ? `. ${src.venue}` : ""),
+          lesson.category ? h("p", { class: "lesson-tags" }, [lesson.category.primary, lesson.category.secondary].filter(Boolean).map((c) => h("span", { class: "tag" }, c.name))) : null,
           lesson.sources ? h("details", { class: "advanced" }, h("summary", {}, `${lesson.sources.length} lesson sources`), h("ul", {}, lesson.sources.map((s) => h("li", {}, s.url ? h("a", { href: s.url, target: "_blank", rel: "noopener noreferrer" }, s.title) : s.title)))) : null,
           lesson.example ? h("p", { class: "note" }, lesson.gallery && lesson.gallery.slug !== "galton-1886"
             ? `This lesson is from Lemma's gallery. It works without any setup, so you can see how a lesson feels before making one from your own paper.`

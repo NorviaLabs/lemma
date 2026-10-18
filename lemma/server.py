@@ -20,7 +20,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib import resources
 from urllib.parse import parse_qs, quote, urlsplit
 
-from . import __version__, auth, chatgpt, export, generate, ingest, logs, search, store
+from . import __version__, auth, categorize, chatgpt, export, generate, ingest, logs, search, store
 from . import lesson as L
 from .llm import DEFAULT_PROVIDER, PROVIDERS, ProviderError, make_provider
 
@@ -146,6 +146,7 @@ def api_status(_body):
         "hosted": HOSTED,
         "user": getattr(REQUEST, "user", None),
         "sign_in": auth.providers() if HOSTED else [],
+        "categorizes": categorize.available(),  # source text also goes to TypeSafe, which the privacy notes must say
     }
 
 
@@ -353,6 +354,17 @@ def _public_request(record):
     return {k: v for k, v in record.items() if k not in ("paper", "request")}
 
 
+def _categorize(record, paper):
+    """Stores the lesson's category on its build record. A lesson without one is still a whole lesson."""
+    try:
+        record["category"] = categorize.categorize(paper)
+    except categorize.CategorizeError:
+        record["category"] = None
+    except Exception as e:  # never let sorting break a build
+        logs.report("categorize", e)
+        record["category"] = None
+
+
 def _launch_request(record, provider, owner, build=False):
     credential = _credential()[1]
     job = _new_job("request")
@@ -409,14 +421,25 @@ def _launch_request(record, provider, owner, build=False):
             paper = {"text": json.dumps({"lemma_sources": sources}, ensure_ascii=False),
                      "title": record["title"], "url": ""}
             record["paper"] = paper
+        # The category comes from the sources themselves; it is sorted out while the outline is drafted.
+        sorting = None
+        if "category" not in record and categorize.available():
+            sorting = threading.Thread(target=_categorize, args=(record, paper), daemon=True)
+            sorting.start()
         if not build:
             outline = generate.make_outline(j, provider, paper["text"], record["request"]["audience"])
+            if sorting:
+                sorting.join(categorize.TIMEOUT)
             with j.lock:
                 if not j.cancelled.is_set():
                     record["outline"] = outline
                     j.status = "awaiting_outline"
             return outline
         result = generate.build_lesson(j, provider, paper, record["outline"], record["request"]["audience"], j.id)
+        if sorting:
+            sorting.join(categorize.TIMEOUT)
+        if record.get("category"):
+            result["category"] = record["category"]
         j.step("save", "Saving your lesson", "active")
         with _requests_lock:
             if j.cancelled.is_set():
