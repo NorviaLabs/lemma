@@ -5,6 +5,7 @@ build/
 dist/
 .venv/
 .cursor/
+.claude/settings.local.json
 .grok/
 .gemini/
 .codex/
