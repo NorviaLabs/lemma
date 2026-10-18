@@ -1,6 +1,6 @@
 """Build lessons from eval/papers.json, judge them with TypeSafe's Jev, and summarise the results.
 
-    uv run python eval/run.py build   --run R --builder claude:claude-opus-5-5
+    uv run python eval/run.py build   --run R --builder claude-code:claude-opus-5-5
     uv run python eval/run.py judge   --run R
     uv run python eval/run.py plant   --run R --into R-planted
     uv run python eval/run.py rescore --run R   (recombine saved answers after changing thresholds; no Jev calls)
@@ -51,19 +51,23 @@ EVAL = Path(__file__).resolve().parent
 PAPERS = json.loads((EVAL / "papers.json").read_text())
 AUDIENCE = "A curious adult with no background in this field"
 PLANT_KINDS = plant_mod.KINDS
+# Lesson folders the eval never counts: Galton is the hand-made built-in example and the tests' fixture,
+# not a lesson Lemma generated, so it says nothing about the generator.
+EXCLUDED = ("galton_1886", "galton-1886")
 
 
 # ---------------------------------------------------------------- helpers
 
 
 def provider_for(spec: str):
-    """`claude:claude-opus-5-5` -> a provider using LEMMA_EVAL_KEY_CLAUDE."""
+    """`claude:claude-opus-5-5` -> a provider using LEMMA_EVAL_KEY_CLAUDE; `claude-code:claude-opus-5-5` uses
+    the Claude subscription Claude Code is signed in with, and needs no key."""
     pid, _, model = spec.partition(":")
     if pid not in PROVIDERS:
         sys.exit(f"Unknown provider {pid!r}. Choose from: {', '.join(PROVIDERS)}")
     env = "LEMMA_EVAL_KEY_" + pid.upper().replace("-", "_")
     key = os.environ.get(env, "")
-    if not key and pid != "chatgpt":
+    if not key and pid not in ("chatgpt", "claude-code"):
         sys.exit(f"Set {env} to use {pid}.")
     return make_provider(pid, key, model)
 
@@ -239,6 +243,8 @@ def units(run: str, spec: str | None) -> list[tuple[Path, dict]]:
     for d in sorted((base / "papers").glob("*")):
         num = re.match(r"\d+", d.name)
         pid = int(num.group()) if num else None
+        if d.name.startswith(EXCLUDED):
+            continue
         if (d / "lesson.json").exists() and (ids is None or pid in ids):
             out.append((d, next((p for p in PAPERS if p["id"] == pid), {"id": pid or 0, "title": d.name, "field": ""})))
     return out

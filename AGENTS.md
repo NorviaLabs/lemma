@@ -39,6 +39,7 @@ CI runs the unittest discovery command with Node.js 22 installed. Install Node.j
 - Keep the Python and JavaScript expression/simulation engines in sync: `lemma/expr.py` with `lemma/static/expr.js`, and `lemma/kernels.py` with `lemma/static/kernels.js`. Validate parity after changes.
 - Preserve lesson quality gates in `lemma/lesson.py`: source-grounded quotes, finite model outputs, reachable goals on the control grid, complete lesson structure, and explicit teaching-model labels. Do not bypass validation to display a failing lesson.
 - Update relevant tests when behavior changes. Use fake providers and local fixtures for automated tests rather than live model calls.
+- Build lessons locally (manual tests, gallery rebuilds, eval builds) with Lemma's Claude subscription provider (`claude-code`: the Claude Code CLI signed in with `claude auth login`), not Anthropic API credits: choose "Claude subscription" in Settings, or `eval/run.py build --builder claude-code:claude-opus-5-5`. Use an API key only when the user asks for it.
 - Treat `eval/run.py` as a paid external-service workflow. Do not run evaluations unless the user explicitly requests or approves them.
 - Preserve localhost-only defaults, Host/origin checks, and hosted-mode safeguards. Do not expose the server publicly as part of routine development.
 - Keep credentials, auth tokens, and personal lesson data out of source control and logs. Use a temporary `LEMMA_HOME` for manual tests that write user data rather than modifying the user's normal `~/.lemma` directory.
