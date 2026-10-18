@@ -3,7 +3,9 @@
     uv run python eval/run.py build   --run R --builder claude:claude-opus-5-5
     uv run python eval/run.py judge   --run R
     uv run python eval/run.py plant   --run R --into R-planted
+    uv run python eval/run.py rescore --run R   (recombine saved answers after changing thresholds; no Jev calls)
     uv run python eval/run.py summary --run R
+    uv run python eval/run.py compare --run R --against BASELINE
 
 Building uses an AI model, with its key from the environment: LEMMA_EVAL_KEY_CLAUDE, LEMMA_EVAL_KEY_OPENAI or
 LEMMA_EVAL_KEY_OPENCODE_GO. Judging uses Jev with TYPESAFE_API_KEY, and asks the questions in questions.py
@@ -14,7 +16,9 @@ it has already saved, so an interrupted run carries on where it stopped; `--redo
 Everything is written under eval/results/<run>/: run.json (who built and judged, and Lemma's commit) and,
 for each lesson, papers/<id>/ with source.txt, outline.json, lesson.json, build.json and judge-jev.json.
 Judging and summary work on any run folder with lesson.json and source.txt, built here or not. `summary`
-writes summary.json and summary.md.
+writes summary.json and summary.md, starting with the scorecard: Accuracy, Teaching and Coverage, each 0–100, and
+their mean, plus build reliability. `compare` pairs two runs paper by paper and says, for each score, whether the
+change is clear (its 95% interval excludes 0) or not.
 
 The lessons are built exactly as a learner's would be, from the outline the model proposes with no
 review, so "passed without edits" means no concept was left out.
@@ -268,6 +272,24 @@ def judge(args):
     each(units(args.run, args.papers), one, args.parallel)
 
 
+def rescore(args):
+    """Recombine every saved judging with the current rules (thresholds, verdicts, scores), without asking Jev again.
+    Only for answers asked with the current questions; others need judging again."""
+    done = skipped = 0
+    for d, paper in units(args.run, args.papers):
+        out = d / "judge-jev.json"
+        j = load(out) or {}
+        if j.get("status") != "done":
+            continue
+        if j.get("questions_version") != Q.VERSION:
+            skipped += 1
+            continue
+        j["result"] = jev_judge.combine(load(d / "lesson.json"), j)
+        save(out, j)
+        done += 1
+    print(f"Rescored {done} lessons in {args.run}" + (f"; {skipped} were asked with other questions and need judging again" if skipped else ""))
+
+
 def plant_errors(args):
     """Copies of a run's lessons into another run, each with one planted critical error."""
     made = 0
@@ -322,7 +344,9 @@ def pct(part: int, whole: int) -> str:
 
 def summary(args):
     base = Path(args.run) if Path(args.run, "papers").is_dir() else EVAL / "results" / args.run
-    rows, a_all, reviews, catches = [], {i: [] for i in Q.PART_A}, [], []
+    rows, a_all, reviews, catches, versions = [], {i: [] for i in Q.PART_A}, [], [], set()
+    build_flags = left_by_jev = 0
+    build_recorded = False
     built = passed = first_draft = drafted = 0
     original = (load(base / "run.json") or {}).get("planted_from")  # planted copies are scored against their original's flags
     for d, paper in units(args.run, args.papers):
@@ -337,40 +361,70 @@ def summary(args):
                "build": b.get("status", ""), "error": b.get("error", ""), "concepts": len((load(d / "lesson.json") or {}).get("concepts", []))}
         if j.get("status") == "done":
             r = j["result"]
+            versions.add(j.get("questions_version", "unknown"))  # what these answers were asked with, not today's constant
             for k, a in r["items"].items():
                 if a:
-                    a_all[k.rsplit(".", 1)[1]].append(a)
-            row.update(scales=r["scales"], critical=r["critical_errors"], verdict=r["verdict"], top=r["top_problems"])
+                    a_all.setdefault(k.rsplit(".", 1)[1], []).append(a)
+            bc = r.get("build_check") or {}
+            build_recorded = build_recorded or "build_check" in r
+            build_flags += len(bc.get("flags_left_for_review", []))
+            left_by_jev += len(bc.get("left_out_by_jev", []))
+            # Scores only mean something for the questions they were asked with; older results are rescored when they match.
+            sc = r.get("scores") or (jev_judge.scores(j) if j.get("questions_version") == Q.VERSION else None)
+            row.update(scales=r["scales"], critical=r["critical_errors"], verdict=r["verdict"], top=r["top_problems"],
+                       build_flags=len(bc.get("flags_left_for_review", [])), scores=sc,
+                       borderline=sum(1 for c in r["critical_errors"] if c.get("borderline")))
             reviews += [{"unit": d.name, **x} for x in r["needs_review"]]
             if (planted := load(d / "planted.json")):
                 catches.append(caught(planted, r, original, d.name))
+        row["kept"], row["omitted"] = len(b.get("concepts", [])), len(b.get("omitted", []))
         rows.append(row)
 
     judged = [r for r in rows if r.get("verdict")]
+    scorecard = scorecard_for(rows, built, passed, first_draft, drafted)
     targets = {
         "quotes_support (A1 yes, target 90%)": pct(a_all["A1"].count("yes"), len(a_all["A1"])),
-        "models_faithful (A2 yes, target 85%)": pct(a_all["A2"].count("yes"), len(a_all["A2"])),
+        "models_faithful (A2 yes, target 85%; concepts with a model)": pct(a_all["A2"].count("yes"), len(a_all["A2"])),
+        "activities_fit (A7 yes)": pct(a_all.get("A7", []).count("yes"), len(a_all.get("A7", []))),
         "passed_without_edits (target 80%)": pct(passed, built),
         "concepts_passing_first_draft": pct(first_draft, drafted),
         "verdict_ship": pct(sum(r["verdict"] == "ship" for r in judged), len(judged)),
         "verdict_ship_or_fixes": pct(sum(r["verdict"] in ("ship", "ship_with_fixes") for r in judged), len(judged)),
     }
-    per_item = {i: {a: v.count(a) for a in ("yes", "partly", "no")} for i, v in a_all.items()}
+    per_item = {i: {a: v.count(a) for a in ("yes", "partly", "no")} for i, v in a_all.items() if v}
     by_kind = {}
     for c in catches:
         k = by_kind.setdefault(c["kind"], {"planted": 0, "confirmed": 0, "flagged": 0, "same_type": 0})
         k["planted"] += 1
         for f in ("confirmed", "flagged", "same_type"):
             k[f] += c[f]
-    out = {"run": load(base / "run.json"), "targets": targets, "per_item": per_item, "papers": rows, "planted": catches, "catch_rate": by_kind,
-           "needs_review": reviews}
+    run_info = load(base / "run.json") or {}
+    out = {"run": run_info, "questions_versions": sorted(versions), "scorecard": scorecard,
+           "comparable_on": {"questions": sorted(versions), "judge_model": run_info.get("judge", {}).get("model"), "builder": run_info.get("builder"),
+                             "papers": sorted(r["unit"] for r in rows if r.get("scores") and "-" not in r["unit"])},
+           "targets": targets, "per_item": per_item, "papers": rows,
+           "planted": catches, "catch_rate": by_kind, "needs_review": reviews,
+           "build_check": {"flags_left_for_review": build_flags, "concepts_left_out_by_jev": left_by_jev}}
     save(base / "summary.json", out)
 
+    asked = ", ".join(sorted(versions)) or "none yet"
+    mixed = len(versions) > 1 or (versions and versions != {Q.VERSION})
     md = [f"# Evaluation run {Path(args.run).name}", "", f"Judged by Jev ({(out['run'] or {}).get('judge', {}).get('model', jev.MODEL)}), "
-          f"questions {Q.VERSION}. Each question is asked three ways; the majority decides.", "", "## Targets", "", "| Measure | Result |", "|---|---|"]
+          f"questions {asked}. Each question is asked three ways; the majority decides."]
+    if mixed:
+        md += ["", f"**Note:** these answers were not all asked with the current questions ({Q.VERSION}). Re-judge with `--redo` before comparing."]
+    md += ["", "The eval's critical-error questions are its own. Separately, the build's Jev check " +
+           (f"left {build_flags} possible problem(s) for review and left out {left_by_jev} concept(s) it couldn't check." if build_recorded
+            else "wasn't recorded for these results."),
+           "", "## Scorecard", "", "Each score is 0–100, higher is better, averaged over the lessons (planted copies excluded). "
+           "Compare two runs with `eval/run.py compare`.", "", "| Score | Result | What it measures |", "|---|---|---|"]
+    md += [f"| {Q.SCORES[k]['name'] if k in Q.SCORES else 'Overall'} | {scorecard['quality'][k] if scorecard['quality'][k] is not None else 'n/a'} | "
+           f"{Q.SCORES[k]['about'] if k in Q.SCORES else 'Mean of the scores above'} |" for k in scorecard["quality"]]
+    md += [f"| {k.replace('_', ' ').capitalize()} | {v if v is not None else 'n/a'} | Build reliability, not lesson quality |" for k, v in scorecard["build"].items()]
+    md += ["", "## Targets", "", "| Measure | Result |", "|---|---|"]
     md += [f"| {k} | {v} |" for k, v in targets.items()]
     md += ["", "## Part A, by item (majority answers)", "", "| Item | yes | partly | no |", "|---|---|---|---|"]
-    md += [f"| {i} {Q.PART_A[i]['name']} | {c['yes']} | {c['partly']} | {c['no']} |" for i, c in per_item.items()]
+    md += [f"| {i} {Q.PART_A.get(i, {}).get('name', '')} | {c['yes']} | {c['partly']} | {c['no']} |" for i, c in per_item.items()]
     if by_kind:
         md += ["", "## Planted errors caught", "", "Only flags the original lesson didn't already have count. Flagged: a new critical-error flag at the "
                "planted concept reached a person (confirmed, or raised by one lens). Confirmed: most lenses called it critical. "
@@ -381,11 +435,11 @@ def summary(args):
         md += [""] + [f"- Missed: **{c['unit']}** ({c['concept']}): {c['detail']}" + (" (the original was already flagged for this, which hides it)" if c["masked"] else "")
                       for c in missed]
     dims = list(Q.PART_B)
-    md += ["", "## Lessons", "", "| Lesson | Field | Build | Concepts | " + " | ".join(dims) + " | Critical | Verdict | Top problems |",
-           "|---|---|---|---|" + "---|" * len(dims) + "---|---|---|"]
+    md += ["", "## Lessons", "", "| Lesson | Field | Build | Concepts | " + " | ".join(dims) + " | Critical (borderline) | Build flags | Verdict | Top problems |",
+           "|---|---|---|---|" + "---|" * len(dims) + "---|---|---|---|"]
     for r in rows:
-        scales = " | ".join(f"{r['scales'][s]:.0%}" if r.get("scales") else "" for s in dims)
-        md.append(f"| {r['unit']} | {r['field']} | {r['build']} | {r['concepts']} | {scales} | {len(r.get('critical', []))} | {r.get('verdict') or 'not judged'} | "
+        scales = " | ".join(f"{r['scales'][s]:.0%}" if r.get("scales", {}).get(s) is not None else "" for s in dims)
+        md.append(f"| {r['unit']} | {r['field']} | {r['build']} | {r['concepts']} | {scales} | {len(r.get('critical', []))} ({r.get('borderline', 0)}) | {r.get('build_flags', '')} | {r.get('verdict') or 'not judged'} | "
                   + "; ".join(r.get("top", [])).replace("|", "/") + " |")
     failed = [r for r in rows if r["error"]]
     if failed:
@@ -402,10 +456,83 @@ def summary(args):
     print(f"\nWrote {base / 'summary.md'}")
 
 
+def scorecard_for(rows: list[dict], built: int, passed: int, first_draft: int, drafted: int) -> dict:
+    """The run's numbers to compare: mean quality scores over its lessons, and how reliably they were built."""
+    scored = [r["scores"] for r in rows if r.get("scores") and "-" not in r["unit"]]
+    quality = {}
+    for k in [*Q.SCORES, "overall"]:
+        vals = [sc[k] for sc in scored if sc.get(k) is not None]
+        quality[k] = round(sum(vals) / len(vals), 1) if vals else None
+    kept = sum(r.get("kept", 0) for r in rows if "-" not in r["unit"])
+    omitted = sum(r.get("omitted", 0) for r in rows if "-" not in r["unit"])
+    share = lambda a, b: round(100 * a / b, 1) if b else None
+    return {"lessons_scored": len(scored), "quality": quality,
+            "build": {"concepts_kept": share(kept, kept + omitted), "concepts_passing_first_draft": share(first_draft, drafted),
+                      "lessons_without_omissions": share(passed, built)}}
+
+
+def _bootstrap(diffs: list[float], rounds: int = 2000) -> tuple[float, float]:
+    """A 95% interval for the mean paired difference, resampling papers. Seeded, so the same runs give the same interval."""
+    import random
+    rng = random.Random(0)
+    means = sorted(sum(rng.choice(diffs) for _ in diffs) / len(diffs) for _ in range(rounds))
+    return means[int(.025 * rounds)], means[int(.975 * rounds) - 1]
+
+
+def compare(args):
+    """How a run's scores changed against a baseline run, paper by paper, with an interval for each change."""
+    def summary_of(run):
+        base = Path(run) if Path(run, "papers").is_dir() else EVAL / "results" / run
+        out = load(base / "summary.json")
+        if not out or "scorecard" not in out:
+            sys.exit(f"No scorecard for {run}: run `eval/run.py summary --run {run}` first.")
+        return base, out
+    new_dir, new = summary_of(args.run)
+    _, old = summary_of(args.against)
+    for key, what in (("questions", "question versions"), ("judge_model", "Jev models")):
+        if new["comparable_on"].get(key) != old["comparable_on"].get(key):
+            sys.exit(f"Not comparable: the runs were judged with different {what} ({old['comparable_on'].get(key)} vs {new['comparable_on'].get(key)}). "
+                     "Re-judge one of them with --redo.")
+    by_unit = lambda s: {r["unit"]: r["scores"] for r in s["papers"] if r.get("scores") and "-" not in r["unit"]}
+    a, b = by_unit(old), by_unit(new)
+    common = sorted(set(a) & set(b))
+    if len(common) < 2:
+        sys.exit(f"Only {len(common)} paper(s) scored in both runs; at least 2 are needed.")
+    rows = {}
+    for k in [*Q.SCORES, "overall"]:
+        pairs = [(a[u][k], b[u][k]) for u in common if a[u].get(k) is not None and b[u].get(k) is not None]
+        if not pairs:
+            continue
+        diffs = [y - x for x, y in pairs]
+        lo, hi = _bootstrap(diffs)
+        rows[k] = {"before": round(sum(x for x, _ in pairs) / len(pairs), 1), "after": round(sum(y for _, y in pairs) / len(pairs), 1),
+                   "change": round(sum(diffs) / len(diffs), 1), "interval": [round(lo, 1), round(hi, 1)],
+                   "reading": "better" if lo > 0 else "worse" if hi < 0 else "no clear difference", "papers": len(pairs)}
+    out = {"baseline": args.against, "run": args.run, "papers": common, "scores": rows,
+           "build": {"before": old["scorecard"]["build"], "after": new["scorecard"]["build"]},
+           "only_in_baseline": sorted(set(a) - set(b)), "only_in_run": sorted(set(b) - set(a))}
+    name = f"compare-vs-{Path(args.against).name}"
+    save(new_dir / f"{name}.json", out)
+    md = [f"# {Path(args.run).name} compared with {Path(args.against).name}", "",
+          f"Paired over {len(common)} papers scored in both runs, judged with questions {', '.join(new['comparable_on']['questions'])} "
+          f"and Jev {new['comparable_on']['judge_model']}. The interval is a 95% bootstrap interval of the mean change across papers; "
+          "a change whose interval includes 0 is no clear difference. It covers variation between papers, not Jev's own variation "
+          "from one judging to the next.", "",
+          "| Score | Before | After | Change | 95% interval | Reading |", "|---|---|---|---|---|---|"]
+    md += [f"| {Q.SCORES[k]['name'] if k in Q.SCORES else 'Overall'} | {v['before']} | {v['after']} | {v['change']:+} | {v['interval'][0]:+} to {v['interval'][1]:+} | {v['reading']} |"
+           for k, v in rows.items()]
+    md += ["", "| Build reliability | Before | After |", "|---|---|---|"]
+    md += [f"| {k.replace('_', ' ').capitalize()} | {old['scorecard']['build'].get(k)} | {v} |" for k, v in new["scorecard"]["build"].items()]
+    if out["only_in_baseline"] or out["only_in_run"]:
+        md += ["", f"Left out of the comparison: only in the baseline {out['only_in_baseline'] or 'none'}; only in this run {out['only_in_run'] or 'none'}."]
+    (new_dir / f"{name}.md").write_text("\n".join(md) + "\n")
+    print("\n".join(md))
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="eval/run.py", description=__doc__.split("\n\n")[0])
     sub = ap.add_subparsers(dest="step", required=True)
-    for name, fn in (("build", build), ("judge", judge), ("plant", plant_errors), ("summary", summary)):
+    for name, fn in (("build", build), ("judge", judge), ("plant", plant_errors), ("rescore", rescore), ("summary", summary), ("compare", compare)):
         p = sub.add_parser(name)
         p.set_defaults(fn=fn)
         p.add_argument("--run", default=time.strftime("%Y-%m-%d"), help="name of the results folder, or a path to one (default: today's date)")
@@ -415,6 +542,8 @@ def main(argv=None):
             p.add_argument("--redo", action="store_true", help="redo work already saved")
         if name == "build":
             p.add_argument("--builder", required=True, help="provider:model that builds the lessons, such as claude:claude-opus-5-5")
+        if name == "compare":
+            p.add_argument("--against", required=True, help="the baseline run to compare with")
         if name == "plant":
             p.add_argument("--into", required=True, help="the run to write the planted copies into")
             p.add_argument("--kinds", nargs="*", choices=PLANT_KINDS, help=f"which errors to plant (default: all of {', '.join(PLANT_KINDS)})")

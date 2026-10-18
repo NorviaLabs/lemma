@@ -75,8 +75,9 @@ def _behaviour(m: dict) -> list[str]:
     return (["  WHAT THE MODEL DOES (others at their defaults):"] + lines) if lines else []
 
 
-def concept_text(c: dict, n: int) -> str:
-    """One concept in plain text: what a learner reads, plus the model's formulas in readable form."""
+def concept_text(c: dict, n: int, conditions: bool = True) -> str:
+    """One concept in plain text: what a learner reads, plus the model's formulas in readable form. `conditions`
+    shows each goal's and check's success condition, which a learner never sees; judging the teaching leaves it out."""
     out = [f"CONCEPT {n}: {c.get('title', '')}", f"IDEA: {c.get('idea', '')}"]
     out += _model(c.get("model") or {})
     steps = (c.get("animation") or {}).get("steps") or []
@@ -87,10 +88,10 @@ def concept_text(c: dict, n: int) -> str:
     for t in c.get("terms") or []:
         out.append(f"TERM: {t.get('term', '')}: {t.get('definition', t.get('def', ''))}")
     for i, g in enumerate((c.get("explore") or {}).get("goals") or [], 1):
-        out.append(f"GOAL {i}: {g.get('text', '')} (reached when {g.get('when', '')})")
+        out.append(f"GOAL {i}: {g.get('text', '')}" + (f" (reached when {g.get('when', '')})" if conditions else ""))
         out += [f"  hint {j}: {h}" for j, h in enumerate(g.get("hints") or [], 1)]
-    out += _exercise("USE IT", c.get("predict"))
-    out += _exercise("CHECK", c.get("check"))
+    out += _exercise("USE IT", c.get("predict"), conditions)
+    out += _exercise("CHECK", c.get("check"), conditions)
     conn = c.get("connect") or {}
     if conn.get("equation"):
         out.append("EQUATION: " + " ".join(str(p.get("text", "")) for p in conn["equation"]) + (f" ({conn.get('caption', '')})" if conn.get("caption") else ""))
@@ -140,7 +141,7 @@ def _activity(a: dict) -> list[str]:
     return []
 
 
-def _exercise(name: str, x: dict | None) -> list[str]:
+def _exercise(name: str, x: dict | None, conditions: bool = True) -> list[str]:
     if not x:
         return []
     out = [f"{name}: {x.get('question') or x.get('task') or x.get('statement') or ''}"]
@@ -150,7 +151,7 @@ def _exercise(name: str, x: dict | None) -> list[str]:
         out.append(f"  option {i + 1}: {o}{mark}" + (f" (why: {why})" if why else ""))
     if x.get("options") is None and "answer" in x:
         out.append(f"  marked answer: {x['answer']}")
-    if x.get("when"):
+    if x.get("when") and conditions:
         out.append(f"  reached when {x['when']}")
     return out
 
@@ -160,14 +161,14 @@ def has_marked_answer(x: dict | None) -> bool:
     return bool(x) and "answer" in x
 
 
-def lesson_text(lesson: dict) -> str:
+def lesson_text(lesson: dict, conditions: bool = True) -> str:
     intro, primer = lesson.get("intro") or {}, lesson.get("primer") or []
     out = [f"LESSON: {lesson.get('title', '')}", f"AUDIENCE: {lesson.get('audience', '')}", f"SUMMARY: {intro.get('summary', '')}"]
     out += [f"BACKGROUND: {b}" for b in intro.get("background") or []]
     if intro.get("aha"):
         out.append(f"THE BIG SURPRISE: {intro['aha']}")
     out += ["THE PAPER IN BRIEF:"] + [f"  {p.get('heading', '')}: {p.get('body', '')}" + (f" Quote: \"{p['quote']}\"" if p.get("quote") else "") for p in primer]
-    out += [concept_text(c, i) for i, c in enumerate(lesson.get("concepts") or [], 1)]
+    out += [concept_text(c, i, conditions) for i, c in enumerate(lesson.get("concepts") or [], 1)]
     omitted = lesson.get("omitted") or []
     out.append("OMITTED CONCEPTS: " + ("; ".join(str(o.get("title", o) if isinstance(o, dict) else o) for o in omitted) if omitted else "none"))
     return "\n\n".join(out)

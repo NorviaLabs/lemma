@@ -37,7 +37,7 @@ class RequestTests(unittest.TestCase):
         self.tmp.cleanup()
 
     def settled(self, rid):
-        for _ in range(300):
+        for _ in range(1000):  # up to 10 s: a build settles in the background, slower when the whole suite runs
             record = server.api_request(rid)
             if record['status'] != 'running':
                 return record
@@ -120,7 +120,7 @@ class RequestTests(unittest.TestCase):
                 time.sleep(.01)
             self.assertEqual(status['progress']['services']['OpenAlex'], 'searching')  # seen while it runs
             release.set()
-            for _ in range(300):
+            for _ in range(1000):  # up to 10 s: a build settles in the background, slower when the whole suite runs
                 status = server.api_search_status(started['id'])
                 if status['done']:
                     break

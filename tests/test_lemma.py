@@ -1629,6 +1629,7 @@ class CategorizeTests(unittest.TestCase):
 sys.path.insert(0, str(ROOT / "eval"))
 import jev_judge  # noqa: E402
 import plant as eval_plant  # noqa: E402
+import questions as eval_questions  # noqa: E402
 
 
 class JevEvalTests(unittest.TestCase):
@@ -1636,31 +1637,249 @@ class JevEvalTests(unittest.TestCase):
 
     source = (ROOT / "lemma/examples/galton-1886.txt").read_text()
 
-    def judged(self, yes_for=(), split=()):
-        """Judge the example with a fake Jev that says yes to critical-error questions whose key contains any of `yes_for`."""
+    def judged(self, yes_for=(), split=(), lesson=None, failing=(), opposite=(), quote_no=False, p_for=None):
+        """Judge a lesson (the example by default) with a fake Jev that passes every check, except: yes to critical-error
+        questions whose key contains any of `yes_for` (`split`: only one lens says yes), and the Part B checks in `failing` fail."""
+        lesson = lesson or EXAMPLE
+        self.asked = []
+
         def ask(state, questions, timeout):
+            self.asked.append((state, questions))
             out = {"_model": "fake"}
             for k, q in questions.items():
-                if q["type"] == "noul":
+                if q["type"] == "noul" and "|B|" in k:
+                    dim, j = k.split("|")[2].split(".")
+                    wanted = eval_questions.PART_B[dim]["checks"][int(j)].get("passed_when", "yes")
+                    passes = f"{dim}.{j}" not in failing
+                    out[k] = {"type": "noul", "noul": .95 if (wanted == "yes") == passes else .05}
+                elif q["type"] == "noul" and "|N|" in k:  # a number in the paper in brief: reported, unless told otherwise
+                    out[k] = {"type": "noul", "noul": (p_for or {}).get(k.split("|")[2], .95)}
+                elif q["type"] == "noul":
                     hit = any(s in k for s in yes_for) or any(s in k for s in split) and k.endswith("|referee")
-                    out[k] = {"type": "noul", "noul": .9 if hit else (.95 if "|B|" in k else .1)}
+                    out[k] = {"type": "noul", "noul": (p_for or {}).get(k.split("|")[2], .9 if hit else .1)}
+                elif "|D|" in k:  # a direction question: agree with the model unless this source is told to say the opposite
+                    source = k.split("|")[2].split(":")[0]
+                    out[k] = {"type": "choice", "choice": "x", "probabilities": {"opposite": 1} if source in opposite else {"not_said": .6}}
+                elif quote_no and "|A|A1|" in k:
+                    out[k] = {"type": "choice", "choice": "no", "probabilities": {"no": .9}}
+                elif "|A|" in k and eval_questions.PART_A[k.split("|")[2]].get("passed_when") == "no":  # no problem found
+                    out[k] = {"type": "choice", "choice": "no", "probabilities": {"no": .9}}
                 else:
                     out[k] = {"type": "choice", "choice": "yes", "probabilities": {"yes": .9}}
             return out
         with patch.object(jev, "ask", side_effect=ask):
-            judged = jev_judge.judge_lesson(EXAMPLE, self.source)
-        return judged, jev_judge.combine(EXAMPLE, judged)
+            judged = jev_judge.judge_lesson(lesson, self.source)
+        return judged, jev_judge.combine(lesson, judged)
+
+    def lesson_with_tasks(self):
+        """The example with a concept taught without a model: worked example, then scored tasks."""
+        lesson = copy.deepcopy(EXAMPLE)
+        c = lesson["concepts"][0]
+        lesson["concepts"].append({k: c[k] for k in ("title", "idea", "role", "terms", "recap")} | {
+            "id": "procedure", "understand": {k: c["understand"][k] for k in ("explanation", "quote", "quote_where")},
+            "activities": [{"id": "learn", "kind": "explain"},
+                           {"id": "steps", "kind": "worked", "title": "Average two parents", "steps": [{"text": "Scale the mother's height."}, {"text": "Average."}], "takeaway": "One number."},
+                           {"id": "q", "kind": "choice", "mode": "determinate", "question": "Which is averaged?", "answer": 0,
+                            "options": [{"text": "Both parents", "feedback": "Yes."}, {"text": "The father only", "feedback": "No."}]},
+                           {"id": "chain", "kind": "order", "prompt": "Order the steps.", "items": ["Scale", "Average", "Compare"], "explanation": "Scale first."}]})
+        return lesson
 
     def test_every_planted_kind_changes_one_concept_and_leaves_the_original(self):
         before = json.dumps(EXAMPLE, sort_keys=True)
+        self.assertIsNone(eval_plant.plant(EXAMPLE, self.source, "wrong_task_answer"))  # no scored activity blocks to break
+        tasks = self.lesson_with_tasks()
         for kind in eval_plant.KINDS:
-            out = eval_plant.plant(EXAMPLE, self.source, kind)
+            out = eval_plant.plant(tasks if kind == "wrong_task_answer" else EXAMPLE, self.source, kind)
             self.assertIsNotNone(out, kind)
             lesson, where = out
             self.assertEqual(where["kind"], kind)
-            changed = [c["id"] for c, o in zip(lesson["concepts"], EXAMPLE["concepts"]) if c != o]
+            changed = [c["id"] for c, o in zip(lesson["concepts"], (tasks if kind == "wrong_task_answer" else EXAMPLE)["concepts"]) if c != o]
             self.assertEqual(changed, [where["concept"]], kind)
         self.assertEqual(json.dumps(EXAMPLE, sort_keys=True), before)
+
+    def test_the_evals_questions_are_its_own(self):
+        from lemma import factcheck
+        for kind in factcheck.BUILD_KINDS:  # what the build checks, the eval asks in its own words
+            if kind in eval_questions.CRITICAL:
+                self.assertNotEqual(eval_questions.CRITICAL[kind], factcheck.CRITICAL.get(kind), kind)
+        self.assertNotEqual(eval_questions.WRONG_ANSWER, factcheck.WRONG_ANSWER)
+        self.assertFalse(set(eval_questions.LENSES.values()) & set(factcheck.LENSES.values()))
+        for spec in eval_questions.PART_B.values():
+            self.assertTrue(all(set(c) <= {"ask", "passed_when", "when"} and c.get("passed_when", "yes") in ("yes", "no") for c in spec["checks"]))
+        groups = [g for spec in eval_questions.SCORES.values() for g in spec["groups"]]
+        self.assertEqual(len(groups), len(set(groups)))  # each group counts in one score only
+        self.assertTrue(set(eval_questions.PART_A) | set(eval_questions.PART_B) <= set(groups))  # and every item counts somewhere
+
+    def test_the_teaching_is_judged_as_a_learner_sees_it(self):
+        self.judged()
+        for state, questions in self.asked:
+            hidden = all("|A|" in k and not eval_questions.PART_A[k.split("|")[2]]["paper"] or k.startswith("lesson|B|") and not
+                         eval_questions.PART_B[k.split("|")[2].split(".")[0]]["paper"] for k in questions)
+            if hidden:
+                self.assertNotIn("reached when", state)
+        self.assertTrue(any("reached when" in state for state, _ in self.asked))  # the critical-error questions still see the conditions
+
+    def test_concepts_get_only_the_questions_that_apply(self):
+        _, r = self.judged(lesson=self.lesson_with_tasks())
+        asked = {k for _, q in self.asked for k in q if k.startswith("procedure|")}
+        items = {k.split("|")[2] for k in asked if "|A|" in k}
+        # no model, goals, hints, interpretations or other sources
+        self.assertEqual(items, {"A1", "A4", "A6", "A7", "A8", "A12", "A14", "A15", "A17", "A18", "A19"})
+        self.assertNotIn("procedure|C|reversed_model|referee", asked)
+        self.assertEqual({k.split("|")[2] for k in asked if "wrong_answer" in k}, {"wrong_answer:q", "wrong_answer:chain"})
+        self.assertEqual(r["verdict"], "ship")
+        self.assertNotIn("procedure.A2", r["items"])
+
+    def test_a_problem_finding_check_fails_on_yes(self):
+        _, r = self.judged(failing=("B4.1", "B4.2"))  # goal text states the value; an early hint gives it away
+        self.assertLess(r["scales"]["B4"], 1)
+        self.assertEqual(r["verdict"], "ship_with_fixes")
+        self.assertTrue(any("state the value" in p for p in r["top_problems"]))
+
+    def test_the_builds_own_flags_are_reported_apart(self):
+        lesson = copy.deepcopy(EXAMPLE)
+        lesson["flags"] = [{"concept": lesson["concepts"][0]["id"], "kind": "wrong_claim", "certainty": .8}]
+        _, r = self.judged(lesson=lesson)
+        self.assertEqual(len(r["build_check"]["flags_left_for_review"]), 1)
+        self.assertEqual(r["critical_errors"], [])  # the eval's verdict comes from its own questions
+
+    def test_scores_rise_and_fall_with_what_jev_finds(self):
+        clean = self.judged()[1]["scores"]
+        self.assertEqual(set(clean), set(eval_questions.SCORES) | {"overall"})
+        self.assertTrue(all(80 <= v <= 100 for k, v in clean.items() if k not in ("presentation", "overall")), clean)  # Jev's scores
+        data = jev_judge.data_checks(EXAMPLE)  # Presentation comes from the lesson itself, not from Jev
+        groups = [sum(v.values()) / len(v) for k, v in data.items() if v and "M:" + k in eval_questions.SCORES["presentation"]["groups"]]
+        self.assertEqual(clean["presentation"], round(100 * sum(groups) / len(groups), 1))
+        wrong = self.judged(yes_for=("|C|wrong_claim|",))[1]["scores"]
+        self.assertLess(wrong["accuracy"], clean["accuracy"])
+        self.assertEqual({k: v for k, v in wrong.items() if k not in ("accuracy", "overall")},
+                         {k: v for k, v in clean.items() if k not in ("accuracy", "overall")})  # a wrong claim moves Accuracy alone
+        practice = self.judged(failing=("B4.1", "B4.2"))[1]["scores"]
+        self.assertLess(practice["practice"], clean["practice"])
+        self.assertEqual(practice["teaching"], clean["teaching"])
+
+    def test_runs_are_compared_paper_by_paper(self):
+        import contextlib
+        import io
+        import run as eval_run
+        with tempfile.TemporaryDirectory() as tmp:
+            def make(name, overall, version="jev-eval-4"):
+                d = Path(tmp, name, "papers")
+                d.mkdir(parents=True)
+                papers = [{"unit": f"{i:02d}", "scores": {"accuracy": overall[i], "teaching": overall[i], "coverage": overall[i], "overall": overall[i]}}
+                          for i in range(len(overall))]
+                Path(tmp, name, "summary.json").write_text(json.dumps({
+                    "papers": papers, "scorecard": {"build": {"concepts_kept": 100.0}},
+                    "comparable_on": {"questions": [version], "judge_model": "jev-1.13.0"}}))
+                return str(Path(tmp, name))
+            base = make("base", [60, 62, 58, 61, 59])
+            better = make("better", [70, 71, 69, 72, 68])
+            same = make("same", [61, 61, 59, 60, 60])
+            args = lambda run, against: type("A", (), {"run": run, "against": against})()
+            with contextlib.redirect_stdout(io.StringIO()):
+                eval_run.compare(args(better, base))
+                eval_run.compare(args(same, base))
+            up = json.loads(Path(better, "compare-vs-base.json").read_text())["scores"]["overall"]
+            self.assertEqual((up["reading"], up["change"]), ("better", 10.0))
+            self.assertEqual(json.loads(Path(same, "compare-vs-base.json").read_text())["scores"]["overall"]["reading"], "no clear difference")
+            other = make("other", [70, 71, 69, 72, 68], version="jev-eval-3")
+            with self.assertRaises(SystemExit):
+                eval_run.compare(args(other, base))  # different questions: not comparable
+
+    def test_the_direction_check_catches_a_reversed_model(self):
+        clean = self.judged()[1]
+        self.assertTrue(any("|D|" in k for _, q in self.asked for k in q))
+        self.assertFalse([c for c in clean["critical_errors"] if c["type"] == "reversed_model"])
+        # The paper says every pair moves both ways at once, so whatever the model does, it says the opposite too.
+        def ask(state, questions, timeout):
+            out = {"_model": "fake"}
+            for k, q in questions.items():
+                if "|D|dir_paper" in k:
+                    out[k] = {"type": "choice", "choice": "rises", "probabilities": {"rises": .9, "falls": .9}}
+                elif "|A|" in k and eval_questions.PART_A[k.split("|")[2]].get("passed_when") == "no":
+                    out[k] = {"type": "choice", "choice": "no", "probabilities": {"no": .9}}
+                elif q["type"] == "choice":
+                    out[k] = {"type": "choice", "choice": "yes", "probabilities": {"yes": .9}}
+                else:
+                    dim, _, j = k.split("|")[2].partition(".")
+                    passing = "|B|" not in k or eval_questions.PART_B[dim]["checks"][int(j)].get("passed_when", "yes") == "yes"
+                    out[k] = {"type": "noul", "noul": .95 if "|B|" in k and passing else .05}
+            return out
+        with patch.object(jev, "ask", side_effect=ask):
+            judged = jev_judge.judge_lesson(EXAMPLE, self.source)
+        r = jev_judge.combine(EXAMPLE, judged)
+        reversed_ = [c for c in r["critical_errors"] if c["type"] == "reversed_model"]
+        self.assertTrue(reversed_ and all(c["via"] == "dir_paper" and "the paper says" in c["detail"] for c in reversed_))
+        self.assertEqual(r["verdict"], "dont_ship")
+        self.assertLess(r["scores"]["models"], clean["scores"]["models"])
+        self.assertEqual(r["scores"]["teaching"], clean["scores"]["teaching"])
+
+    def test_a_quote_judged_unsupported_is_a_misleading_quote(self):
+        _, r = self.judged(quote_no=True)
+        self.assertTrue(all(c["type"] == "misleading_quote" and c["via"] == "A1" for c in r["critical_errors"]))
+        self.assertEqual(len(r["critical_errors"]), len(EXAMPLE["concepts"]))
+
+    def test_each_kind_has_its_own_threshold(self):
+        _, r = self.judged(p_for={"misleading_quote": .6, "reversed_model": .95})
+        kinds = {c["type"] for c in r["critical_errors"]}
+        self.assertIn("misleading_quote", kinds)  # 0.6 clears the quote threshold of 0.55
+        self.assertNotIn("reversed_model", kinds)  # the general reversed-model question only sends it to a person
+        self.assertTrue(all(c["borderline"] for c in r["critical_errors"]))  # 0.6 is within 0.1 of 0.55
+        self.assertTrue(any(x["what"].endswith("reversed_model") and x["why"].startswith("a possible") for x in r["needs_review"]))
+
+    def test_a_planted_reversal_really_reverses_a_taught_output(self):
+        lesson, where = eval_plant.plant(EXAMPLE, self.source, "reversed_model")
+        c = next(x for x in lesson["concepts"] if x["id"] == where["concept"])
+        before = next(x for x in EXAMPLE["concepts"] if x["id"] == where["concept"])
+        flipped = {(d["control"], d["output"]): d["model"] for d in jev_judge.model_directions(c)}
+        original = {(d["control"], d["output"]): d["model"] for d in jev_judge.model_directions(before)}
+        self.assertTrue(any(flipped.get(k) not in (None, v) for k, v in original.items()), where)
+
+    def test_a_combined_lessons_checks_see_every_source(self):
+        bundle = json.dumps({"lemma_sources": [{"id": f"s{i}", "title": f"Source {i}", "url": "", "text": f"OPENING{i} " + "x " * 40000 + f" CLOSING{i}"}
+                                               for i in (1, 2, 3)]})
+        seen = jev_judge.lesson_evidence({"primer": []}, bundle)
+        for i in (1, 2, 3):
+            self.assertIn(f"OPENING{i}", seen)
+            self.assertIn(f"CLOSING{i}", seen)
+        self.assertLess(len(seen), jev_judge.LESSON_PAPER + 2000)
+
+    def test_checks_that_dont_apply_are_not_asked(self):
+        self.judged()
+        asked = {k.split("|")[2] for _, q in self.asked for k in q if k.startswith("lesson|B|")}
+        omitted_check = next(f"B5.{j}" for j, c in enumerate(eval_questions.PART_B["B5"]["checks"]) if c.get("when") == "omitted")
+        self.assertNotIn(omitted_check, asked)  # the example leaves nothing out
+        lesson = copy.deepcopy(EXAMPLE)
+        lesson["omitted"] = [{"title": "A concept", "reason": "it failed"}]
+        self.judged(lesson=lesson)
+        self.assertIn(omitted_check, {k.split("|")[2] for _, q in self.asked for k in q if k.startswith("lesson|B|")})
+
+    def test_the_paper_in_briefs_numbers_are_checked_one_at_a_time(self):
+        lesson = copy.deepcopy(EXAMPLE)
+        lesson["intro"]["summary"] = "Galton measured 928 adult children. The paper reports 4242 unicorns."
+        items = jev_judge.brief_numbers(lesson, self.source)
+        found = {x["number"]: x for x in items}
+        self.assertIn("928", found["928"]["passage"])  # shown where the paper gives it
+        self.assertIsNone(found["4242"]["passage"])  # the paper never prints this one
+        _, r = self.judged(lesson=lesson, p_for={"num:2": .1})
+        asked = [k for _, q in self.asked for k in q if "|N|" in k]
+        self.assertEqual(len(asked), len(items))
+        self.assertTrue(any(x["what"] == "lesson number 2" for x in r["needs_review"]))
+        clean = self.judged(lesson=lesson)[1]["scores"]
+        self.assertLess(r["scores"]["accuracy"], clean["accuracy"])
+
+    def test_data_checks_measure_the_lesson_itself(self):
+        c = copy.deepcopy(EXAMPLE["concepts"][0])
+        c["animation"]["steps"] = [{"say": "This bar is the father.", "focus": "father", "ms": 2400},
+                                   {"say": "Raise the father's height and watch the bar grow.", "set": {"father": 72}, "ms": 3000},
+                                   {"say": "Now raise the mother too.", "ms": 2400},  # describes a change it doesn't make, points at nothing
+                                   {"say": " ".join(["word"] * 45), "focus": "father"}]  # too long to take in
+        c["understand"]["walkthrough"]["steps"] = []
+        checks = jev_judge.data_checks({"concepts": [c]})
+        self.assertEqual(checks["signaling"][c["id"]], .5)  # 2 of 4 steps point at something
+        self.assertEqual(checks["contiguity"][c["id"]], .5)  # of the 2 steps describing a change, 1 makes it
+        self.assertEqual(checks["apprehension"][c["id"]], .75)  # the 45-word step is too long
+        self.assertEqual(checks["constructive"][c["id"]], 1.0)  # it has a 'Use it' question
 
     def test_jev_sees_the_quote_in_its_paper_context(self):
         quote = EXAMPLE["concepts"][0]["understand"]["quote"]
@@ -1673,13 +1892,16 @@ class JevEvalTests(unittest.TestCase):
         self.assertEqual(r["verdict"], "ship")
         self.assertEqual(r["critical_errors"], [])
         self.assertEqual(r["needs_review"], [])
-        # every concept is asked with the paper and as taught, and the lesson twice more
-        self.assertEqual(len(judged["requests"]), 2 * len(EXAMPLE["concepts"]) + 2)
+        # every concept is asked with the paper and as taught, plus directions from the paper and from its teaching
+        # when its model has an output that moves one way; the lesson twice more; and the paper in brief's numbers
+        with_directions = sum(1 for c in EXAMPLE["concepts"] if jev_judge.model_directions(c))
+        numbers = 1 if jev_judge.brief_numbers(EXAMPLE, self.source) else 0
+        self.assertEqual(len(judged["requests"]), 2 * len(EXAMPLE["concepts"]) + 2 * with_directions + 2 + numbers)
 
     def test_most_lenses_confirm_a_critical_error(self):
-        _, r = self.judged(yes_for=("|C|reversed_model|",))
+        _, r = self.judged(yes_for=("|C|wrong_claim|",))
         self.assertEqual(r["verdict"], "dont_ship")
-        self.assertEqual({c["type"] for c in r["critical_errors"]}, {"reversed_model"})
+        self.assertEqual({c["type"] for c in r["critical_errors"]}, {"wrong_claim"})
         self.assertTrue(all(x["state"] and x["question"] for x in r["needs_review"]))  # a person sees what Jev saw
 
     def test_one_lens_alone_sends_it_to_a_person_without_failing_the_lesson(self):
