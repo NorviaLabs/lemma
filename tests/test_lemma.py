@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TMP_HOME = tempfile.mkdtemp(prefix="lemma-test-")
 os.environ["LEMMA_HOME"] = TMP_HOME
 
-from lemma import auth, categorize, chatgpt, claude, dev, expr, export, generate, ingest, kernels, lesson as L, llm, search, server, store  # noqa: E402
+from lemma import auth, categorize, chatgpt, jev, claude, dev, expr, export, generate, ingest, kernels, lesson as L, llm, search, server, store  # noqa: E402
 from lemma.llm import Provider, Reply  # noqa: E402
 
 EXAMPLE = json.loads((ROOT / "lemma/examples/galton-1886.json").read_text())
@@ -487,6 +487,49 @@ class SearchTests(unittest.TestCase):
         # and so was the one whose title and abstract never mention the search
         self.assertEqual(r["unavailable"], [])
         self.assertTrue(all("query" not in u or "regression" in u for u in self.urls))
+
+    def jev_answers(self, scores, roles=None):
+        """A fake Jev that judges each result by its title: relevance on Jev's 0 to 4 scale, and a role."""
+        def ask(state, questions, timeout):
+            self.jev_state, self.jev_questions = state, questions
+            out = {"_model": "jev-test"}
+            for r in state["results"]:
+                out[f"r{r['n']}_relevance"] = {"score": scores.get(r["title"], 2.0)}
+                out[f"r{r['n']}_role"] = {"choice": (roles or {}).get(r["title"], "study")}
+            return out
+        return [patch.object(jev, "available", return_value=True), patch.object(jev, "ask", side_effect=ask)]
+
+    def test_jev_orders_each_group_and_picks_the_recommendations(self):
+        plain = [x["title"] for x in search._search("regression to the mean")["results"] if x["source"] == "OpenAlex"]
+        self.assertEqual(plain, ["A small but famous paper", "Very relevant, rarely cited"])  # citations lead without Jev
+        for p in self.jev_answers({"A small but famous paper": 1.0, "Very relevant, rarely cited": 3.5}):
+            p.start()
+            self.addCleanup(p.stop)
+        r = search._search("regression to the mean")
+        papers = [x for x in r["results"] if x["source"] == "OpenAlex"]
+        self.assertEqual([x["title"] for x in papers], ["Very relevant, rarely cited", "A small but famous paper"])
+        self.assertEqual(r["results"][0]["source"], "Wikipedia")  # the overview still leads a concept search
+        self.assertTrue(papers[0]["recommended"])
+        self.assertFalse(papers[1]["recommended"])  # 2 of 5: listed, but not recommended
+        self.assertEqual(papers[1]["judged"], {"relevance": 2.0, "role": "study"})
+        self.assertEqual(len(self.jev_questions), 2 * len(self.jev_state["results"]))
+        self.assertEqual(self.jev_state["search"], "regression to the mean")
+
+    def test_an_off_topic_result_is_never_recommended(self):
+        for p in self.jev_answers({"A small but famous paper": 4.0}, {"A small but famous paper": "off_topic"}):
+            p.start()
+            self.addCleanup(p.stop)
+        famous = next(x for x in search._search("regression to the mean")["results"] if x["title"] == "A small but famous paper")
+        self.assertFalse(famous["recommended"])
+
+    def test_without_jev_the_title_match_decides(self):
+        plain = search._search("regression to the mean")
+        with patch.object(jev, "available", return_value=True), patch.object(jev, "ask", side_effect=jev.JevError("Jev answered 529")), \
+                patch.object(search.logs, "report") as report:
+            failed = search._search("regression to the mean")
+        self.assertEqual([(x["title"], x["recommended"]) for x in failed["results"]], [(x["title"], x["recommended"]) for x in plain["results"]])
+        self.assertTrue(all("judged" not in x for x in failed["results"]))
+        report.assert_called_once()
 
     def test_a_service_that_fails_is_reported_not_fatal(self):
         def failing(url, retry=True):
@@ -1336,7 +1379,7 @@ class CategorizeTests(unittest.TestCase):
         self.assertEqual(c["probabilities"]["medicine"], .6)
         auth_header, body = FakeJev.seen[0]
         self.assertEqual(auth_header, "Bearer ts-test")
-        self.assertEqual(body["model"], categorize.MODEL)
+        self.assertEqual(body["model"], jev.MODEL)
         q = body["questions"]["category"]
         self.assertEqual(q["type"], "choice")
         self.assertEqual(set(q["criteria"]), set(categorize.CATEGORIES))

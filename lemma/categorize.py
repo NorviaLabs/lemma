@@ -1,23 +1,14 @@
 """Sorts a lesson into a fixed list of subject categories, read from the start of its sources.
 
-TypeSafe's Jev answers a choice question with a probability for every option. A hosted Lemma pays for it
-with the server's TYPESAFE_API_KEY; without that key, or when Jev fails, a lesson simply has no category.
-Only each source's title and opening text are sent, never the learner's key or who they are.
+Jev (see jev.py) answers a choice question with a probability for every option. Without a TypeSafe key, or
+when Jev fails, a lesson simply has no category. Only each source's title and opening text are sent.
 """
 
 from __future__ import annotations
 
-import json
-import os
-import socket
-import urllib.error
-import urllib.request
-
-from . import __version__
+from . import jev
 from . import lesson as L
 
-ENDPOINT = "https://api.typesafe.ai/v1/systemone"
-MODEL = "jev-1.13.0"  # pinned, so the probability thresholds below keep their meaning
 TIMEOUT = 20
 STATE_CHARS = 60_000  # about 15k tokens of source text, well inside Jev's 32k per question
 SECOND_AT = 0.25  # a runner-up this likely is kept as the lesson's second category
@@ -58,12 +49,8 @@ CATEGORIES = {
 }
 
 
-class CategorizeError(Exception):
-    pass
-
-
-def available() -> bool:
-    return bool(os.environ.get("TYPESAFE_API_KEY"))
+CategorizeError = jev.JevError
+available = jev.available
 
 
 def _state(paper: dict) -> list[dict]:
@@ -73,33 +60,18 @@ def _state(paper: dict) -> list[dict]:
     return [{"title": s.get("title", ""), "text": (s.get("text") or "")[:each]} for s in sources]
 
 
-def _post(body: dict) -> dict:
-    req = urllib.request.Request(os.environ.get("TYPESAFE_URL", ENDPOINT), data=json.dumps(body).encode(), method="POST",
-                                 headers={"Content-Type": "application/json", "Authorization": "Bearer " + os.environ["TYPESAFE_API_KEY"],
-                                          "User-Agent": f"Lemma/{__version__}"})
-    try:
-        with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
-            return json.loads(resp.read())
-    except urllib.error.HTTPError as e:
-        raise CategorizeError(f"Jev answered {e.code}") from None
-    except (urllib.error.URLError, TimeoutError, socket.timeout, ValueError) as e:
-        raise CategorizeError(f"Couldn't use Jev ({e.__class__.__name__})") from None
-
-
 def _named(cid: str) -> dict:
     return {"id": cid, "name": CATEGORIES[cid][0]}
 
 
 def categorize(paper: dict) -> dict:
     """The lesson's category from its sources: a primary, an optional secondary, and Jev's probabilities."""
-    if not available():
-        raise CategorizeError("No TypeSafe key on this server")
-    reply = _post({"model": MODEL, "state": {"sources": _state(paper)}, "questions": {"category": {
+    answers = jev.ask({"sources": _state(paper)}, {"category": {
         "type": "choice",
         "instructions": "Which subject do these sources mainly belong to? Judge by what they explain, not where they were published.",
-        "criteria": {cid: desc for cid, (_, desc) in CATEGORIES.items()}}}})
+        "criteria": {cid: desc for cid, (_, desc) in CATEGORIES.items()}}}, TIMEOUT)
     try:
-        answer = reply["answers"]["category"]
+        answer = answers["category"]
         probs = {k: float(v) for k, v in answer["probabilities"].items() if k in CATEGORIES}
         primary = answer["choice"]
         if primary not in CATEGORIES:
@@ -112,5 +84,5 @@ def categorize(paper: dict) -> dict:
         "secondary": _named(second) if second and probs[second] >= SECOND_AT else None,
         "probabilities": {k: round(v, 3) for k, v in sorted(probs.items(), key=lambda kv: -kv[1]) if v >= .001},
         "confidence": round(float(answer.get("confidence") or 0), 3),
-        "model": reply.get("model") or MODEL,
+        "model": answers["_model"],
     }
