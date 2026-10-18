@@ -5,6 +5,7 @@
 
 /* ---------- type (self-hosted, SIL OFL; see fonts/README.md) */
 @font-face { font-family: "Archivo"; font-style: normal; font-weight: 400 800; font-display: swap; src: url("fonts/archivo-latin-normal.woff2") format("woff2"); }
+@font-face { font-family: "Archivo"; font-style: italic; font-weight: 400 800; font-display: swap; src: url("fonts/archivo-latin-italic.woff2") format("woff2"); }
 @font-face { font-family: "Spline Sans Mono"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("fonts/spline-sans-mono-latin-normal.woff2") format("woff2"); }
 
 :root {
