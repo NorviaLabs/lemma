@@ -40,18 +40,37 @@ class Problems(list):
 # ---------------------------------------------------------------- grounding
 
 
+_LETTER = r"[^\W\d_]"
+_HYPHENS = r"\-\u2010\u2011"
+_MINUSES = _HYPHENS + r"\u2012\u2013\u2212"
+_UNSPACED = r"\u0e00-\u0e7f\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff"  # scripts written without spaces
+_HYPHENATED = re.compile(rf"(?<={_LETTER})[{_HYPHENS}](?:[^\S\n]*\n\s*)?(?={_LETTER})")
+_TOKEN = re.compile(rf"(?<!\w)[+{_MINUSES}]?\d+(?:\.\d+)*(?!\w)|[{_UNSPACED}]|(?:(?![{_UNSPACED}])\w)+")
+_MINUS = re.compile(rf"^[{_MINUSES}]")
+
+
 def normalize_for_match(text: str) -> str:
-    """Reduce text to lowercase letters and digits so PDF spacing, hyphenation,
-    ligatures and curly quotes don't hide a genuine word-for-word quote."""
-    text = unicodedata.normalize("NFKC", text or "")
-    text = text.replace("­", "")  # soft hyphen
-    text = re.sub(r"-\s*\n\s*", "", text)  # word broken across a line
-    return re.sub(r"[^0-9a-z]+", "", text.lower())
+    """Reduce text to its words, space-separated and padded, so a quote matches only on whole words.
+
+    Case, spacing, line breaks, punctuation, curly quotes, dashes, ligatures and soft hyphens don't hide a
+    genuine quote. A hyphen between letters joins them, so a word hyphenated across a line break matches the
+    whole word, and "well-known" matches "well-\\nknown". A number keeps its decimal point and its sign."""
+    text = unicodedata.normalize("NFKC", text or "").casefold().replace("\u00ad", "")
+    text = _HYPHENATED.sub("", text)
+    tokens = (_MINUS.sub("-", t) for t in _TOKEN.findall(text))
+    return " " + " ".join(tokens) + " "
 
 
 def quote_in_source(quote: str, source_norm: str) -> bool:
-    q = normalize_for_match(quote)
-    return bool(q) and q in source_norm
+    """Whether the quote's words run, whole, through ``source_norm`` (from ``normalize_for_match``).
+
+    A source word may be split where the quote's is whole, because scanned text often spaces letters apart
+    ("th e transm ission"); the quote can't split a source word, so "a theist" doesn't match "atheist"."""
+    words = normalize_for_match(quote).split()
+    if not words:
+        return False
+    pattern = " " + " ".join(" ?".join(map(re.escape, w)) for w in words) + " "
+    return re.search(pattern, source_norm) is not None
 
 
 # ---------------------------------------------------------------- models

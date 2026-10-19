@@ -75,6 +75,14 @@ class FaithfulQuotesMatch(unittest.TestCase):
     def test_compound_hyphenated_across_a_line_break(self):
         self.assertTrue(matches("a well-known result", "this is a well-\nknown result"))
 
+    def test_scanned_source_with_letters_spaced_apart(self):
+        source = "M y object is to place beyond doubt th e existence of the hereditary transm ission of tw o-thirds"
+        self.assertTrue(matches("My object is to place beyond doubt the existence", source))
+        self.assertTrue(matches("the hereditary transmission of two-thirds", source))
+
+    def test_quote_cannot_split_a_source_word(self):
+        self.assertFalse(matches("he is a theist by temperament", "he is atheist by temperament"))
+
     def test_trailing_punctuation_in_quote(self):
         self.assertTrue(matches("it isn't the only factor.", self.SOURCE))
 
