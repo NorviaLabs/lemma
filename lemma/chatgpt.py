@@ -144,7 +144,7 @@ def start_sign_in() -> str:
             threading.Thread(target=_stop_listening, daemon=True).start()
 
         def _page(self, status, text):
-            body = f"<!doctype html><meta charset=utf-8><title>Lemma</title><p style='font:18px system-ui;margin:3em'>{text}</p>".encode()
+            body = f"<!doctype html><meta charset=utf-8><title>OpenLemma</title><p style='font:18px system-ui;margin:3em'>{text}</p>".encode()
             self.send_response(status)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.send_header("Content-Length", str(len(body)))

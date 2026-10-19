@@ -1,3 +1,5 @@
+<img src="lemma/static/logo.svg" alt="" width="56" height="56">
+
 # OpenLemma
 
 OpenLemma teaches complex concepts visually. Ask about a concept, or bring a paper, article or chapter, and it builds a short, hands-on lesson: the idea in brief, then for each idea a live model that shows how it works, an explanation with an exact quote from a real source, and then you try it yourself. For a concept, it finds encyclopedias, textbooks and papers to teach from; every quote is checked against its source. It runs at [openlemma.org](https://openlemma.org), or on your own computer. Who it is for and what it promises are in [`PRODUCT.md`](PRODUCT.md), and the visual design system is in [`DESIGN.md`](DESIGN.md). OpenLemma is open source under the [MIT License](LICENSE); the code, package and command are still called `lemma`.

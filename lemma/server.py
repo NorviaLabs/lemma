@@ -952,7 +952,8 @@ class Handler(BaseHTTPRequestHandler):
         avatars = " https://lh3.googleusercontent.com https://avatars.githubusercontent.com" if HOSTED else ""  # account pictures
         # Cloudflare Web Analytics, which Cloudflare adds to a hosted Lemma's pages: cookieless page-view counts.
         beacon, rum = (" https://static.cloudflareinsights.com", " https://cloudflareinsights.com") if HOSTED else ("", "")
-        csp = f"default-src 'self'; script-src 'self'{beacon}; img-src 'self' data:{avatars}; font-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'{rum}; frame-ancestors 'none'; base-uri 'none'"
+        live = " http://localhost:8400" if DEV else ""  # impeccable live mode, only under `lemma --dev`
+        csp = f"default-src 'self'; script-src 'self'{beacon}{live}; img-src 'self' data:{avatars}; font-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'{rum}{live}; frame-ancestors 'none'; base-uri 'none'"
         extra = {"Content-Security-Policy": csp} if name.endswith(".html") else {}
         if name.startswith("fonts/"):
             extra["Cache-Control"] = "public, max-age=31536000, immutable"

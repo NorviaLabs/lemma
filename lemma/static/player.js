@@ -103,6 +103,9 @@
     } catch (e) { /* no audio available */ }
   }
 
+  // The OpenLemma mark (also lemma/static/logo.svg): an open dial with its lemon knob in the gap.
+  const LOGO = '<svg class="logo" viewBox="0 0 28 28" aria-hidden="true"><path d="M21.8 7.6A10 10 0 1 0 24 14" fill="none" stroke="#111318" stroke-width="3.6" stroke-linecap="round"/><circle cx="23.2" cy="9.4" r="3.9" fill="#ffe46b" stroke="#111318" stroke-width="1.8"/><circle cx="14" cy="14" r="2.4" fill="#111318"/></svg>';
+  function logo() { const t = document.createElement("template"); t.innerHTML = LOGO; return t.content.firstChild; }
   function seen(key) { try { return localStorage.getItem("lemma-" + key) === "1"; } catch (e) { return true; } }
   function remember(key) { try { localStorage.setItem("lemma-" + key, "1"); } catch (e) { /* storage unavailable */ } }
 
@@ -318,7 +321,7 @@
           h("header", { class: "lesson-top" },
             h("button", { class: "icon-btn", "aria-label": "Back to the lesson overview", title: "Back to the lesson overview", onclick: () => showIntro() }, icon("close")),
             this.backBtn,
-            h("span", { class: "lt-mark", "aria-hidden": "true" }, h("span", { class: "sq" }), "OpenLemma"),
+            h("span", { class: "lt-mark", "aria-hidden": "true" }, logo(), h("span", { class: "wm-name" }, h("span", { class: "wm-open" }, "Open"), "Lemma")),
             h("span", { class: "lt-paper" }, citation(src) ? citation(src) + " · " : "", src.title ? h("span", { class: "words" }, src.title) : null),
             this.soundBtn = h("button", { class: "icon-btn sound-btn", onclick: () => {
               try { localStorage.setItem("lemma-sound", soundOn() ? "0" : "1"); } catch (e) { /* storage unavailable */ }

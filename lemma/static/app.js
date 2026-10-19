@@ -91,6 +91,7 @@
     search: '<circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5l3.5 3.5"/>',
     out: '<path d="M9.5 2.5h4v4M13.5 2.5L7.5 8.5M11.5 9.5v4h-9v-9h4"/>',
     shuffle: '<path d="M2.5 4.5h3l5 7h3M2.5 11.5h3l5-7h3M12 3l1.5 1.5L12 6M12 10l1.5 1.5L12 13"/>',
+    next: '<path d="M3 8h10M9 4l4 4-4 4"/>',
     doc: '<path d="M9.5 2.5h-6v11h9v-8z"/><path d="M9.5 2.5v3h3M5.5 8.5h5M5.5 11h3.5"/>',
   };
   function icon(name) {
@@ -610,15 +611,21 @@
     const names = String(a || "").split(/,\s*/).filter((n) => n && n !== "et al.");
     return names.length > 2 || /et al/.test(a || "") ? `${names[0]} et al.` : names.join(" and ");
   };
-  function galleryList(level) {
+  // `pick` (slugs, in order) gives the home page's model wall: the model, the field and a short title only.
+  function galleryList(level, pick) {
     const M = window.LemmaModel;
-    const list = h("ul", { class: "gallery", "aria-busy": "true" }, h("li", { class: "muted" }, "Opening the gallery…"));
-    galleryItems().then((items) => {
+    const list = h("ul", { class: "gallery" + (pick ? " gallery-wall" : ""), "aria-busy": "true" }, h("li", { class: "muted" }, "Opening the gallery…"));
+    galleryItems().then((all) => {
       const views = [];
+      const items = pick ? pick.map((slug) => all.find((it) => it.slug === slug)).filter(Boolean) : all;
       list.replaceChildren(...items.map((it) => {
         const plate = h("div", { class: "gal-plate", "aria-hidden": "true" });
         plate.dataset.slug = it.slug;
         views.push([plate, it.cover]);
+        if (pick) return h("li", { class: "gal-item" },
+          plate,
+          h("p", { class: "gal-field" }, it.field),
+          h(level, { class: "gal-title" }, h("a", { href: `#/gallery/${it.slug}`, title: it.title }, it.title.split(":")[0])));
         return h("li", { class: "gal-item" },
           plate,
           h("ol", { class: "gal-bars", "aria-hidden": "true" }, it.concepts.map((_, i) => h("li", { style: `--tab:var(--${TAB_INKS[i % 4]})` }))),
@@ -662,10 +669,14 @@
     return list;
   }
   const GALLERY_LEAD = "Finished visual lessons on complex ideas, from how attention reads every word at once to how ice can lock a planet in the cold. Each is taught from real sources you can check, with no account or key.";
+  const HOME_WALL = ["attention-2017", "wuhan-2020", "wave-interference", "mendel-1866", "ice-albedo-feedback", "opinion-dynamics-2002"];
   function gallerySection() {
+    const all = h("a", { class: "btn gal-all", href: "#/gallery" }, "See all lessons", icon("next"));
+    galleryItems().then((items) => { all.firstChild.textContent = `See all ${items.length} lessons`; }).catch(() => {});
     return h("section", { class: "gallery-sec", "aria-labelledby": "gallery-title" },
-      h("div", { class: "gal-head" }, h("h2", { id: "gallery-title" }, "Concepts to explore"), h("p", { class: "lead" }, GALLERY_LEAD)),
-      galleryList("h3"));
+      h("div", { class: "gal-head" }, h("h2", { id: "gallery-title" }, "Concepts to explore"), h("p", { class: "lead" }, "Finished lessons across subjects. Open one, no account or key needed.")),
+      galleryList("h3", HOME_WALL),
+      h("p", { class: "gal-more" }, all));
   }
   function showGallery() {
     view(h("section", { class: "gallery-sec gallery-page", "aria-labelledby": "gallery-title" },
