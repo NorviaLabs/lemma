@@ -50,16 +50,17 @@ class Quotas(unittest.TestCase):
     none, so a forgotten line in production can't run up the server's bills. Lifting a cap takes an explicit
     `unlimited`, as local.env does for development. The code never asks where it runs."""
 
-    UNSET = {"LEMMA_DAILY_SEARCHES": "", "LEMMA_DAILY_BUILDS": "", "LEMMA_DAILY_READS": ""}
+    UNSET = {"LEMMA_DAILY_SEARCHES": "", "LEMMA_DAILY_BUILDS": "", "LEMMA_DAILY_READS": "", "LEMMA_DAILY_FEEDBACK": ""}
 
     def test_a_missing_cap_falls_back_to_the_safe_default(self):
         with patch.dict(os.environ, self.UNSET):
-            self.assertEqual({k: metrics.limit(k) for k in metrics.QUOTAS}, {"search": 40, "job": 20, "read": 100})
+            self.assertEqual({k: metrics.limit(k) for k in metrics.QUOTAS}, {"search": 40, "job": 20, "read": 100, "feedback": 10})
             with patch.dict(metrics.QUOTAS, {"job": ("LEMMA_DAILY_BUILDS", 2)}):
                 self.assertEqual([metrics.take("quota-default", "job") for _ in range(3)], [True, True, False])
 
     def test_only_an_explicit_unlimited_lifts_a_cap(self):
-        with patch.dict(os.environ, {"LEMMA_DAILY_SEARCHES": "unlimited", "LEMMA_DAILY_BUILDS": " Unlimited ", "LEMMA_DAILY_READS": "unlimited"}):
+        with patch.dict(os.environ, {"LEMMA_DAILY_SEARCHES": "unlimited", "LEMMA_DAILY_BUILDS": " Unlimited ", "LEMMA_DAILY_READS": "unlimited",
+                                     "LEMMA_DAILY_FEEDBACK": "unlimited"}):
             for kind in metrics.QUOTAS:
                 self.assertIsNone(metrics.limit(kind))
                 self.assertTrue(all(metrics.take("quota-free", kind) for _ in range(250)), kind)
@@ -70,11 +71,11 @@ class Quotas(unittest.TestCase):
 
     def test_a_malformed_cap_stops_lemma_from_starting(self):
         # A typo must not quietly change a cap, so nothing starts until it is fixed.
-        for value in ("lots", "-1", "none", "40.5"):
-            with self.subTest(value=value), patch.dict(os.environ, dict(self.UNSET, LEMMA_DAILY_BUILDS=value)):
+        for var, value in [("LEMMA_DAILY_BUILDS", v) for v in ("lots", "-1", "none", "40.5")] + [("LEMMA_DAILY_FEEDBACK", "ten")]:
+            with self.subTest(var=var, value=value), patch.dict(os.environ, dict(self.UNSET, **{var: value})):
                 with self.assertRaises(ValueError) as e:
                     server.make_server(0)
-                self.assertIn("LEMMA_DAILY_BUILDS", str(e.exception))
+                self.assertIn(var, str(e.exception))
                 with self.assertRaises(SystemExit), patch("sys.stderr"):
                     cli.main(["--no-browser"])
 

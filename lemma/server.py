@@ -20,7 +20,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib import resources
 from urllib.parse import parse_qs, quote, urlsplit
 
-from . import __version__, auth, categorize, chatgpt, export, generate, ingest, jev, logs, metrics, search, store
+from . import __version__, auth, categorize, chatgpt, export, feedback, generate, ingest, jev, logs, metrics, search, store
 from . import lesson as L
 from .llm import DEFAULT_PROVIDER, PROVIDERS, ProviderError, make_provider
 
@@ -73,6 +73,18 @@ def _owner() -> str:
     if not user:
         raise ApiError(401, "Sign in to find papers, build lessons and keep a library.")
     return user["id"]
+
+
+def _is_admin() -> bool:
+    """Whether the signed-in account is one of LEMMA_ADMINS (comma-separated emails)."""
+    user = getattr(REQUEST, "user", None)
+    admins = {e.strip().lower() for e in os.environ.get("LEMMA_ADMINS", "").split(",") if e.strip()}
+    return bool(user) and user["email"].lower() in admins
+
+
+def _admin():
+    if not _is_admin():
+        raise ApiError(404, "Not found.")  # the same answer as an unknown address, so admin pages aren't advertised
 
 
 def provider_from_request(pid: str | None = None):
@@ -148,7 +160,7 @@ def api_status(_body):
     except ApiError:  # a saved provider this server doesn't offer: report the default, unconnected, so Settings can offer the rest
         p = make_provider(DEFAULT_PROVIDER)
     ok, msg = p.available()
-    return {
+    status = {
         "version": __version__,
         "provider": {"id": p.id, "name": p.name, "model": p.model, "label": p.label, "ok": ok, "message": msg},
         "providers": [{"id": i.id, "name": i.name, "default_model": i.default_model, "key_url": i.key_url, "sign_in": not i.key_url} for i in providers().values()],
@@ -157,6 +169,9 @@ def api_status(_body):
         "sign_in": auth.providers(),
         "typesafe": jev.available(),  # search results and source text also go to TypeSafe, which the privacy notes must say
     }
+    if _is_admin():
+        status["feedback_new"] = feedback.count_new()
+    return status
 
 
 def api_models(_body):
@@ -631,12 +646,47 @@ def api_event(body):
 
 
 def api_stats(_body):
-    """Daily counts, for the accounts named in LEMMA_ADMINS (comma-separated emails) on a hosted Lemma."""
-    user = getattr(REQUEST, "user", None)
-    admins = {e.strip().lower() for e in os.environ.get("LEMMA_ADMINS", "").split(",") if e.strip()}
-    if not user or user["email"].lower() not in admins:
-        raise ApiError(404, "Not found.")
+    """Daily counts, for the accounts named in LEMMA_ADMINS."""
+    _admin()
     return metrics.report()
+
+
+def api_feedback_create(body):
+    owner = _owner()
+    try:
+        fields = feedback.clean(body)
+    except ValueError as e:
+        raise ApiError(400, str(e)) from None
+    if not metrics.take(owner, "feedback"):
+        raise ApiError(429, f"You've sent today's {metrics.limit('feedback')} feedback messages. They reset at midnight UTC.")
+    user = REQUEST.user
+    return {"id": feedback.add(user, fields), "reply_to": user.get("email") or ""}
+
+
+def api_feedback_list(_body):
+    """Every account's feedback, newest first, for LEMMA_ADMINS; `?status=new` or `done` keeps only those."""
+    _admin()
+    status = (getattr(REQUEST, "query", {}).get("status") or [None])[0]
+    if status is not None and status not in feedback.STATUSES:
+        raise ApiError(400, "Status must be new or done.")
+    return feedback.items(status)
+
+
+def api_feedback_status(fid):
+    _admin()
+    status = REQUEST.body.get("status")
+    if status not in feedback.STATUSES:
+        raise ApiError(400, "Status must be new or done.")
+    if not feedback.set_status(fid, status):
+        raise ApiError(404, "That feedback isn't there anymore.")
+    return {"id": fid, "status": status}
+
+
+def api_feedback_delete(fid):
+    _admin()
+    if not feedback.delete(fid):
+        raise ApiError(404, "That feedback isn't there anymore.")
+    return {"ok": True}
 
 
 def api_example(_body):
@@ -799,6 +849,10 @@ ROUTES = [
     ("POST", r"/api/jobs/([a-f0-9]{12})/cancel", api_job_cancel, True),
     ("POST", r"/api/event", api_event, False),
     ("GET", r"/api/stats", api_stats, False),
+    ("POST", r"/api/feedback", api_feedback_create, False),
+    ("GET", r"/api/feedback", api_feedback_list, False),
+    ("POST", r"/api/feedback/([a-f0-9]{12})/status", api_feedback_status, True),
+    ("DELETE", r"/api/feedback/([a-f0-9]{12})", api_feedback_delete, True),
     ("GET", r"/api/example", api_example, False),
     ("GET", r"/api/gallery", api_gallery, False),
     ("GET", r"/api/gallery/([a-z0-9-]{1,64})", api_gallery_lesson, True),
@@ -880,6 +934,7 @@ class Handler(BaseHTTPRequestHandler):
         REQUEST.user = auth.user_for(REQUEST.token) if REQUEST.token else None
         url = urlsplit(self.path)
         path = url.path
+        REQUEST.query = parse_qs(url.query)
         base = urlsplit(auth.public_url()).path  # e.g. /lemma, when Lemma is served under a path
         if base and path == base:
             self.send_response(301)

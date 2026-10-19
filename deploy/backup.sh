@@ -11,11 +11,11 @@ mkdir -p "$dest"
 ssh "$host" 'cd lemma/deploy && sudo docker compose exec -T lemma python -c "
 import sqlite3, pathlib
 out = pathlib.Path(\"/data/.backup\"); out.mkdir(exist_ok=True)
-for name in (\"accounts.db\", \"metrics.db\"):
+for name in (\"accounts.db\", \"metrics.db\", \"feedback.db\"):
     src = pathlib.Path(\"/data\") / name
     if src.exists():
         with sqlite3.connect(src) as a, sqlite3.connect(out / name) as b:
             a.backup(b)
 "'
-ssh "$host" "sudo docker run --rm -v deploy_lemma-data:/data alpine tar czf - -C /data --exclude ./accounts.db --exclude ./accounts.db-wal --exclude ./accounts.db-shm --exclude ./metrics.db --exclude ./metrics.db-wal --exclude ./metrics.db-shm ." > "$dest/lemma-data-$stamp.tgz"
+ssh "$host" "sudo docker run --rm -v deploy_lemma-data:/data alpine tar czf - -C /data --exclude ./accounts.db --exclude ./accounts.db-wal --exclude ./accounts.db-shm --exclude ./metrics.db --exclude ./metrics.db-wal --exclude ./metrics.db-shm --exclude ./feedback.db --exclude ./feedback.db-wal --exclude ./feedback.db-shm ." > "$dest/lemma-data-$stamp.tgz"
 echo "Saved $dest/lemma-data-$stamp.tgz (libraries, plus consistent copies of the databases in .backup/)."

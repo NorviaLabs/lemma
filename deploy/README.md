@@ -2,7 +2,7 @@
 
 Lemma runs in Docker on a free-tier Google Cloud e2-micro VM (Ubuntu 24.04) in `us-central1`. A Cloudflare Tunnel named `lemma` carries `https://openlemma.org` to it, so the VM opens no ports beyond SSH and Cloudflare handles HTTPS. The domain is registered with Cloudflare Registrar. The tunnel also carries `www.openlemma.org`, which Lemma redirects to `https://openlemma.org`.
 
-Lemma's data (`accounts.db` and each account's library) lives in the `deploy_lemma-data` Docker volume.
+Lemma's data (`accounts.db`, `metrics.db`, `feedback.db` and each account's library) lives in the `deploy_lemma-data` Docker volume.
 
 ## Files
 
@@ -22,12 +22,24 @@ Commit and push directly to `main` before deploying; do not create a pull reques
 
 ## Limits and analytics
 
-- Each account may start 40 searches and 20 outlines or builds a day (UTC), and read 100 links or files on their own, since every one uses the server's TypeSafe key or bandwidth. These are Lemma's safe defaults, which apply whenever a setting is missing; `compose.yaml` also sets them explicitly (`LEMMA_DAILY_SEARCHES`, `LEMMA_DAILY_BUILDS`, `LEMMA_DAILY_READS`). Only the word `unlimited` lifts a cap: never use it here (a test fails if `compose.yaml` does). A value that isn't a whole number or `unlimited` stops Lemma from starting.
+- Each account may start 40 searches and 20 outlines or builds a day (UTC), and read 100 links or files on their own, since every one uses the server's TypeSafe key or bandwidth, and send 10 pieces of feedback. These are Lemma's safe defaults, which apply whenever a setting is missing; `compose.yaml` also sets them explicitly (`LEMMA_DAILY_SEARCHES`, `LEMMA_DAILY_BUILDS`, `LEMMA_DAILY_READS`, `LEMMA_DAILY_FEEDBACK`). Only the word `unlimited` lifts a cap: never use it here (a test fails if `compose.yaml` does). A value that isn't a whole number or `unlimited` stops Lemma from starting.
 - Each visitor address (Cloudflare's `CF-Connecting-IP`) may make 120 requests that change something every 10 minutes; reads such as progress polling aren't limited.
 - Lemma sends HSTS on every response and moves plain-HTTP visits to HTTPS. Container logs are capped at 3 × 10 MB each, the journal at 200 MB, and a weekly timer (`lemma-prune.timer`, installed by `vm-startup.sh`) removes images and build cache unused for a week.
 - Lemma counts anonymous events per day (lessons opened and finished, goals reached alone or with Show me, searches, sign-ins, and outline and build outcomes) in `metrics.db` beside `accounts.db`. Signed in as an account listed in `LEMMA_ADMINS`, open `https://openlemma.org/api/stats` for the last 30 days.
+- Feedback from signed-in accounts (a rating and/or message, the account's name and email for replies, and the page, lesson, error id or build id it was sent from) is kept in `feedback.db` until it is deleted. The accounts in `LEMMA_ADMINS` read it at `https://openlemma.org/api/feedback` (`?status=new` or `?status=done`), and `/api/status` tells them how many items are new.
 - `.github/workflows/uptime.yml` checks the site every 15 minutes; GitHub emails whoever last edited its schedule when a check fails.
 - Page views come from Cloudflare Web Analytics (Cloudflare dashboard → Analytics & Logs → Web Analytics, automatic setup for openlemma.org). Lemma's Content Security Policy allows its script on the hosted site.
+
+## Deleting an account on request
+
+Lemma has no delete button yet; when someone asks by email, find their account id, then remove the account and its sessions, its `users/<id>` folder (library and build requests) and its feedback:
+
+```sh
+ssh "$(cat deploy/host)" 'cd lemma/deploy && sudo docker compose exec -T lemma /app/.venv/bin/python -c "import sqlite3; print(sqlite3.connect(\"/data/accounts.db\").execute(\"SELECT id, provider, name FROM users WHERE email = ?\", (\"PERSON@EXAMPLE.COM\",)).fetchall())"'
+ssh "$(cat deploy/host)" 'cd lemma/deploy && sudo docker compose exec -T lemma /app/.venv/bin/python -c "import shutil, sys; from lemma import auth, feedback, store; uid = sys.argv[1]; auth.delete_user(uid); feedback.delete_for_account(uid); shutil.rmtree(store.home() / \"users\" / uid, ignore_errors=True)" ACCOUNT_ID'
+```
+
+Anonymous daily counts in `metrics.db` name no account; its per-account quota rows are removed after about a week. Backups taken before the deletion still hold the account until they expire (snapshots after 14 days; delete it from local copies by hand).
 
 ## Sign-in apps
 
@@ -47,7 +59,7 @@ A new secret goes into `lemma.env`, followed by `push.sh`.
 All accounts and libraries live on the VM's one disk, so keep two kinds of backup:
 
 - **Disk snapshots, automatically.** In Google Cloud, Compute Engine → Snapshots → Snapshot schedules, create a daily schedule (keep 14 days) in the VM's region and attach it to its boot disk. A snapshot restores the whole VM.
-- **A copy of the data on your own computer.** `deploy/backup.sh` saves `backups/lemma-data-<time>.tgz` (git-ignored): every library, plus `accounts.db` and `metrics.db` copied with SQLite's online backup into `.backup/`, so it is consistent even while people use the site. To restore, unpack it into the `deploy_lemma-data` volume and move the two databases out of `.backup/`.
+- **A copy of the data on your own computer.** `deploy/backup.sh` saves `backups/lemma-data-<time>.tgz` (git-ignored): every library, plus `accounts.db`, `metrics.db` and `feedback.db` copied with SQLite's online backup into `.backup/`, so it is consistent even while people use the site. To restore, unpack it into the `deploy_lemma-data` volume and move the two databases out of `.backup/`.
 
 Restore drills (unpack into a scratch `LEMMA_HOME`, move the databases out of `.backup/`, run `PRAGMA integrity_check`, then read every account's requests and lessons through `server.api_requests`, `api_request` and `api_lessons`):
 

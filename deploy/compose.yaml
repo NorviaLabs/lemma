@@ -13,11 +13,13 @@ services:
     environment:
       LEMMA_PUBLIC_URL: https://openlemma.org
       LEMMA_ALLOWED_HOSTS: openlemma.org,www.openlemma.org
-      # Daily caps per account (UTC). Every search, build and read uses the server's TypeSafe key or bandwidth.
+      # Daily caps per account (UTC). Every search, build and read uses the server's TypeSafe key or bandwidth;
+      # feedback is capped so one account can't flood whoever reads it.
       # These match Lemma's safe defaults, which also apply if a line goes missing; never set them to unlimited here.
       LEMMA_DAILY_SEARCHES: "40"
       LEMMA_DAILY_BUILDS: "20"
       LEMMA_DAILY_READS: "100"
+      LEMMA_DAILY_FEEDBACK: "10"
     volumes:
       - lemma-data:/data
     healthcheck:
