@@ -197,3 +197,21 @@ class ExpressionSizeTests(unittest.TestCase):
                   "try { LemmaExpr.parse(process.argv[2]); console.log('accepted'); } catch (e) { console.log(e instanceof LemmaExpr.ExprError ? 'refused' : 'crashed'); }")
         out = subprocess.run(["node", "-e", script, str(ROOT / "lemma" / "static" / "expr.js"), huge], capture_output=True, text=True, timeout=20).stdout.strip()
         self.assertEqual(out, "refused")
+
+
+class LessonModelSizeTests(unittest.TestCase):
+    def test_a_lesson_with_oversized_models_is_refused_before_the_costly_checks(self):
+        import copy
+        from lemma import lesson as L, server
+        lesson, source = server.load_example()
+        big = copy.deepcopy(lesson)
+        vis = next(c for c in big["concepts"] if c["id"] == "regression_line")["model"]["visual"]
+        unit = "(x+x+x+x+x+x+x+x)"
+        expr_ = "x+0*(" + "+".join([unit] * 200) + ")"
+        for k in range(40):
+            vis["series"].append({"id": f"pad{k}", "label": f"pad {k}", "expr": expr_, "color": 1})
+        started = time.time()
+        problems = L.check_lesson(big, source)
+        self.assertLess(time.time() - started, 0.5)
+        self.assertTrue(any("too large" in str(p) for p in problems), problems)
+        self.assertEqual(list(L.check_lesson(lesson, source)), [])
