@@ -11,6 +11,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 import unittest
 from pathlib import Path
 
@@ -167,3 +168,32 @@ class NonFiniteParityTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ExpressionSizeTests(unittest.TestCase):
+    """An expression a stranger writes can't take the server's time in proportion to its size."""
+
+    def test_a_huge_expression_is_refused_quickly(self):
+        huge = "0*(" + "+".join(["(x+x+x+x+x+x+x+x)"] * 2000) + ")"
+        started = time.time()
+        with self.assertRaises(expr.ExprError):
+            expr.evaluate(huge, {"x": 1.0})
+        self.assertLess(time.time() - started, 0.1)
+
+    def test_a_long_flat_chain_is_an_error_not_a_crash(self):
+        chain = "+".join(["x"] * 1500)
+        with self.assertRaises(expr.ExprError):
+            expr.names(chain)
+
+    def test_a_non_string_expression_is_an_error(self):
+        with self.assertRaises(expr.ExprError):
+            expr.parse(["x"])
+
+    def test_the_browser_engine_refuses_the_same_huge_expression(self):
+        if not shutil.which("node"):
+            self.skipTest("node is not installed")
+        huge = "0*(" + "+".join(["(x+x+x+x+x+x+x+x)"] * 2000) + ")"
+        script = ("global.window=global; require(process.argv[1]);"
+                  "try { LemmaExpr.parse(process.argv[2]); console.log('accepted'); } catch (e) { console.log(e instanceof LemmaExpr.ExprError ? 'refused' : 'crashed'); }")
+        out = subprocess.run(["node", "-e", script, str(ROOT / "lemma" / "static" / "expr.js"), huge], capture_output=True, text=True, timeout=20).stdout.strip()
+        self.assertEqual(out, "refused")
