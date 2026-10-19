@@ -6,10 +6,14 @@ import html
 import http.client
 import io
 import ipaddress
+import json
 import logging
+import os
 import re
 import socket
 import ssl
+import subprocess
+import sys
 import threading
 import time
 import urllib.error
@@ -19,7 +23,13 @@ import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from html.parser import HTMLParser
 
-MAX_BYTES = 40 * 1024 * 1024
+MAX_BYTES = 40 * 1024 * 1024  # a PDF
+MAX_PAGE_BYTES = 10 * 1024 * 1024  # anything else: parsing HTML takes many times its size in memory
+MAX_CHARS = 2_000_000  # text kept from any source, far more than a lesson uses
+MAX_PDF_PAGES = 500
+FETCH_DEADLINE = 60  # seconds for a whole download, however slowly the site sends it
+PDF_DEADLINE = 60  # seconds to read one PDF's text; a small file can expand to hours of work
+READER_WAIT = 30  # seconds to wait for a free PDF reader before giving up
 USER_AGENT = "Lemma/1.0 (local paper reader)"
 FULL_TEXT = 4000  # Shorter pages are usually abstracts, not usable full text.
 # Reading a large PDF can take hundreds of MB, so only a couple are read at once; the rest wait their turn.
@@ -87,15 +97,53 @@ def _clean(text: str) -> str:
     text = text.replace("\r\n", "\n").replace("\r", "\n").replace("\x00", "")
     text = re.sub(r"[ \t\f\v]+", " ", text)
     text = re.sub(r"\n{3,}", "\n\n", text)
-    return text.strip()
+    return text.strip()[:MAX_CHARS]
 
 
 def from_pdf(data: bytes, url: str = "") -> Paper:
-    with _PDF_READERS:
-        return _read_pdf(data, url)
+    if not _PDF_READERS.acquire(timeout=READER_WAIT):
+        raise IngestError("OpenLemma is busy reading other sources. Try again in a minute.")
+    try:
+        found = _read_pdf_in_child(data)
+    finally:
+        _PDF_READERS.release()
+    text = _clean(found["text"])
+    if len(text) < 500:
+        raise IngestError("This PDF has almost no extractable text. It may be a scanned image; try a version with selectable text.")
+    title = found["title"].strip()
+    if not title or len(title) < 6 or title.lower().startswith(("microsoft", "untitled")):
+        title = _guess_title(text)
+    return Paper(text=text, title=title, kind="pdf", url=url, pages=found["pages"])
 
 
-def _read_pdf(data: bytes, url: str) -> Paper:
+def _read_pdf_in_child(data: bytes) -> dict:
+    """Read the PDF in a separate process that is killed at the deadline, since pypdf can't be interrupted."""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    code = "import sys; sys.path.insert(0, sys.argv[1]); from lemma.ingest import _pdf_child; _pdf_child(int(sys.argv[2]), int(sys.argv[3]))"
+    try:
+        done = subprocess.run([sys.executable, "-c", code, root, str(MAX_PDF_PAGES), str(MAX_CHARS)],
+                              input=data, capture_output=True, timeout=PDF_DEADLINE)
+    except subprocess.TimeoutExpired:
+        raise IngestError("This PDF took too long to read. Try another copy of the paper, or its web page.") from None
+    try:
+        found = json.loads(done.stdout)
+    except ValueError:
+        raise IngestError("Couldn't read this PDF.") from None
+    if "error" in found:
+        raise IngestError(found["error"])
+    return found
+
+
+def _pdf_child(max_pages: int, max_chars: int) -> None:
+    """The child process: a PDF on stdin, its text, title and page count as JSON on stdout."""
+    try:
+        found = _read_pdf(sys.stdin.buffer.read(), max_pages, max_chars)
+    except IngestError as e:
+        found = {"error": str(e)}
+    sys.stdout.write(json.dumps(found))
+
+
+def _read_pdf(data: bytes, max_pages: int, max_chars: int) -> dict:
     try:
         from pypdf import PdfReader
     except ImportError as e:  # pragma: no cover - dependency is declared
@@ -107,23 +155,23 @@ def _read_pdf(data: bytes, url: str) -> Paper:
                 reader.decrypt("")
             except Exception:
                 raise IngestError("This PDF is password-protected.") from None
-        pages = [(p.extract_text() or "") for p in reader.pages]
+        pages, size = [], 0
+        for page in reader.pages:
+            if len(pages) == max_pages or size >= max_chars:
+                break
+            pages.append(page.extract_text() or "")
+            size += len(pages[-1])
     except IngestError:
         raise
     except Exception as e:
         raise IngestError(f"Couldn't read this PDF ({e.__class__.__name__}).") from None
-    text = _clean("\n\n".join(pages))
-    if len(text) < 500:
-        raise IngestError("This PDF has almost no extractable text. It may be a scanned image; try a version with selectable text.")
     title = ""
     try:
         meta = reader.metadata
-        title = (meta.title or "").strip() if meta else ""
+        title = (meta.title or "") if meta else ""
     except Exception:
         pass
-    if not title or len(title) < 6 or title.lower().startswith(("microsoft", "untitled")):
-        title = _guess_title(text)
-    return Paper(text=text, title=title, kind="pdf", url=url, pages=len(pages))
+    return {"text": "\n\n".join(pages)[:max_chars], "title": str(title), "pages": len(pages)}
 
 
 class _TextExtractor(HTMLParser):
@@ -245,17 +293,77 @@ def _normalise_url(url: str) -> str:
     return url
 
 
+# One message for unknown and private hosts, so a link can't be used to probe which internal names exist.
+NOT_PUBLIC = "OpenLemma couldn't reach that address. It only fetches public web addresses, so check the link or upload the file instead."
+_NAT64 = ipaddress.ip_network("64:ff9b::/96")
+_IPV4_COMPATIBLE = ipaddress.ip_network("::/96")
+
+
+def _is_public(ip: ipaddress.IPv4Address | ipaddress.IPv6Address) -> bool:
+    """Whether `ip` is a public unicast address. An IPv6 address that carries an IPv4 one is judged by the IPv4 one."""
+    if ip.version == 6:
+        if ip in _IPV4_COMPATIBLE:
+            return False
+        inner = ip.ipv4_mapped or ip.sixtofour or (ipaddress.IPv4Address(int(ip) & 0xFFFFFFFF) if ip in _NAT64 else None)
+        if inner:
+            ip = inner
+    return ip.is_global and not ip.is_multicast
+
+
 def _public_addresses(host: str, port: int) -> list[tuple]:
     """The addresses `host` resolves to, or IngestError if any of them is private, loopback or reserved."""
     try:
         infos = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
     except socket.gaierror:
-        raise IngestError(f"Couldn't find the site {host!r}. Check the link and your connection.") from None
-    for info in infos:
-        ip = ipaddress.ip_address(info[4][0].split("%")[0])
-        if not ip.is_global or ip.is_multicast:
-            raise IngestError("OpenLemma only fetches public web addresses. Upload the file instead.")
+        raise IngestError(NOT_PUBLIC) from None
+    if not all(_is_public(ipaddress.ip_address(info[4][0].split("%")[0])) for info in infos):
+        raise IngestError(NOT_PUBLIC)
     return infos
+
+
+class _Deadline:
+    """Cuts every connection a fetch opens once its time is up, wherever the fetch is blocked: connecting,
+    reading headers or reading the body. A per-read timeout alone lets a site send one byte at a time forever."""
+
+    current = threading.local()
+
+    def __init__(self, seconds: float):
+        self.expired = False
+        self._socks: list[socket.socket] = []
+        self._lock = threading.Lock()
+        self._timer = threading.Timer(seconds, self._expire)
+        self._timer.daemon = True
+
+    def __enter__(self):
+        _Deadline.current.value = self
+        self._timer.start()
+        return self
+
+    def __exit__(self, *exc):
+        self._timer.cancel()
+        _Deadline.current.value = None
+        with self._lock:
+            for s in self._socks:
+                s.close()
+
+    def watch(self, sock: socket.socket) -> None:
+        with self._lock:
+            self._socks.append(sock.dup())  # TLS takes over the original; shutting down a duplicate still cuts the connection
+            if self.expired:
+                self._cut(self._socks[-1])
+
+    def _expire(self) -> None:
+        with self._lock:
+            self.expired = True
+            for s in self._socks:
+                self._cut(s)
+
+    @staticmethod
+    def _cut(sock: socket.socket) -> None:
+        try:
+            sock.shutdown(socket.SHUT_RDWR)
+        except OSError:
+            pass
 
 
 def _connect_public(address, timeout=socket._GLOBAL_DEFAULT_TIMEOUT, source_address=None):
@@ -269,6 +377,9 @@ def _connect_public(address, timeout=socket._GLOBAL_DEFAULT_TIMEOUT, source_addr
             if timeout is not socket._GLOBAL_DEFAULT_TIMEOUT:
                 sock.settimeout(timeout)
             sock.connect(sockaddr)
+            deadline = getattr(_Deadline.current, "value", None)
+            if deadline:
+                deadline.watch(sock)
             return sock
         except OSError as e:
             sock.close()
@@ -307,25 +418,44 @@ class _Redirects(urllib.request.HTTPRedirectHandler):
 _OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}), _PublicHandler, _Redirects)
 
 
-def from_url(url: str, timeout: float = 30) -> Paper:
+def from_url(url: str, timeout: float | None = None) -> Paper:
+    """Download and read a link. `timeout` caps the seconds for the whole download."""
     url = _normalise_url(url)
     if urllib.parse.urlsplit(url).scheme not in ("http", "https"):
         raise IngestError("Only http and https links are supported.")
+    timeout = min(timeout or FETCH_DEADLINE, FETCH_DEADLINE)
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "application/pdf,text/html;q=0.9,application/xml;q=0.8,*/*;q=0.5"})
-    try:
-        with _OPENER.open(req, timeout=timeout) as resp:
-            final = resp.geturl()
-            ctype = resp.headers.get_content_type()
-            data = resp.read(MAX_BYTES + 1)
-    except urllib.error.HTTPError as e:
-        raise IngestError(f"The site answered {e.code} {e.reason}: it blocks automatic downloads or needs a login. Open it in your browser, download the PDF and upload it.") from None
-    except urllib.error.URLError as e:
-        raise IngestError(f"Couldn't reach that link ({e.reason}).") from None
-    except TimeoutError:
-        raise IngestError("The site took too long to respond.") from None
-    if len(data) > MAX_BYTES:
-        raise IngestError("That file is larger than 40 MB.")
+    with _Deadline(timeout) as deadline:
+        try:
+            with _OPENER.open(req, timeout=timeout) as resp:
+                final = resp.geturl()
+                ctype = resp.headers.get_content_type()
+                data = _read_body(resp, pdf=ctype == "application/pdf" or final.lower().endswith(".pdf"))
+        except urllib.error.HTTPError as e:
+            raise IngestError(f"The site answered {e.code} {e.reason}: it blocks automatic downloads or needs a login. Open it in your browser, download the PDF and upload it.") from None
+        except (urllib.error.URLError, OSError, http.client.HTTPException) as e:
+            if deadline.expired or isinstance(e, TimeoutError) or isinstance(getattr(e, "reason", None), TimeoutError):
+                raise IngestError("The site took too long to respond.") from None
+            raise IngestError(f"Couldn't reach that link ({getattr(e, 'reason', e)}).") from None
+        if deadline.expired:  # a cut connection can look like the end of the file
+            raise IngestError("The site took too long to respond.")
     return from_bytes(data, filename=final, content_type=ctype, url=url)
+
+
+def _read_body(resp, pdf: bool) -> bytes:
+    """The response body, refused as soon as it passes the size limit rather than after downloading it all."""
+    limit = MAX_BYTES if pdf else MAX_PAGE_BYTES
+    chunks, size = [], 0
+    while chunk := resp.read1(1 << 16):
+        chunks.append(chunk)
+        size += len(chunk)
+        if size > limit:
+            if limit < MAX_BYTES and b"".join(chunks[:5])[:5] == b"%PDF-":  # a PDF the site didn't label as one
+                limit = MAX_BYTES
+                continue
+            what = "file" if limit == MAX_BYTES else "page"
+            raise IngestError(f"That {what} is larger than {limit // (1024 * 1024)} MB. Download the paper's PDF and upload it instead.")
+    return b"".join(chunks)
 
 
 def from_bytes(data: bytes, filename: str = "", content_type: str = "", url: str = "") -> Paper:
