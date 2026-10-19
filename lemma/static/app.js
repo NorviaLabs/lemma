@@ -109,6 +109,8 @@
     shuffle: '<path d="M2.5 4.5h3l5 7h3M2.5 11.5h3l5-7h3M12 3l1.5 1.5L12 6M12 10l1.5 1.5L12 13"/>',
     next: '<path d="M3 8h10M9 4l4 4-4 4"/>',
     doc: '<path d="M9.5 2.5h-6v11h9v-8z"/><path d="M9.5 2.5v3h3M5.5 8.5h5M5.5 11h3.5"/>',
+    chevron: '<path d="M6 3.5L10.5 8 6 12.5"/>',
+    leave: '<path d="M6.5 2.5h-4v11h4M10 5l3 3-3 3M13 8H6"/>',
   };
   function icon(name) {
     const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -209,7 +211,7 @@
 
   /* Pick a provider, then paste a key or sign in; Lemma checks either by listing the provider's models.
      `compact` (the connect step) picks the provider's default model and keeps the model list folded away. */
-  function keyForm(onSaved, { compact = false } = {}) {
+  function keyForm(onSaved, { compact = false, onCheck = null } = {}) {
     const providers = status.providers || [];
     let selected = providers.some((x) => x.id === cred.provider) ? cred.provider : (providers[0] || {}).id;
     const signins = {};  // sign-in provider id -> its status, e.g. { signed_in, email }
@@ -241,7 +243,9 @@
         note.textContent = `${r.models.length} model${r.models.length === 1 ? "" : "s"} offered by ${p.name}.`;
         modelName.textContent = model.selectedOptions[0] ? model.value : r.current;
       }
-      if (ready(p)) loadModels(Object.assign({}, cred, { provider: p.id })).catch((err) => note.replaceChildren(errorBox(err.message)));
+      // `onCheck` hears whether the saved provider's key still lists models, so the account page can say so.
+      const checked = (ok) => { if (onCheck && p.id === cred.provider) onCheck(ok); };
+      if (ready(p)) loadModels(Object.assign({}, cred, { provider: p.id })).then(() => checked(true), (err) => { note.replaceChildren(errorBox(err.message)); checked(false); });
       const save = h("button", { class: "primary", disabled: p.sign_in && !ready(p), onclick: async () => {
         const next = { provider: p.id, keys: Object.assign({}, cred.keys), models: Object.assign({}, cred.models) };
         if (!p.sign_in) next.keys[p.id] = key.value.trim();
@@ -1397,29 +1401,51 @@
   }
 
 
+  /* Who you're signed in as, then the AI model you build with (the page's main task, its state shown at a
+     glance from the server's status), then Sign out, quiet and apart. */
   async function showAccount(toProvider) {
     if (!status.user) { holdIntent({ route: toProvider ? "#/settings" : "#/account" }); return showSignIn(); }
     const u = status.user;
-    const out = h("button", { class: "ghost", onclick: async () => {
+    const out = h("button", { class: "ghost account-signout", onclick: async () => {
       out.disabled = true;
       try { await api("/api/logout", {}); } catch (e) { /* signed out either way */ }
       status = await api("/api/status").catch(() => Object.assign(status, { user: null }));
       drawAccountLink();
       location.hash = "#/";
-    } }, "Sign out");
-    const provider = h("section", { class: "account-ai", "aria-labelledby": "ai-title" },
-      h("h2", { id: "ai-title", tabindex: "-1" }, "AI provider"),
-      h("p", { class: "muted" }, "A source's text goes only to the provider and model chosen here, and only when you build. The model gets no tools: it can only read what OpenLemma sends and reply with text."),
-      keyForm());
-    view(h("section", { class: "panel account", style: "max-width:720px" },
-      h("div", { class: "account-head" }, avatar(u, 72),
-        h("div", {}, h("h1", {}, u.name || "Your account"), u.email ? h("p", { class: "muted", style: "margin:0" }, u.email) : null)),
+    } }, icon("leave"), "Sign out");
+    const n = status.library_count || 0;
+    const row = (label, value) => h("div", { class: "af-row" }, h("dt", {}, label), h("dd", {}, value));
+    const profile = h("section", { class: "account-card account-profile", "aria-labelledby": "account-title" },
+      h("div", { class: "account-head" }, avatar(u, 64),
+        h("div", { class: "ah-text" }, h("h1", { id: "account-title" }, u.name || "Your account"), u.email ? h("p", {}, u.email) : null)),
       h("dl", { class: "account-facts" },
-        h("dt", {}, "Signed in with"), h("dd", {}, PROVIDER_NAMES[u.provider] || u.provider),
-        h("dt", {}, "Member since"), h("dd", {}, new Date(u.created * 1000).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })),
-        h("dt", {}, "Saved lessons"), h("dd", {}, h("a", { href: "#/library" }, String(status.library_count || 0)))),
-      provider,
-      h("div", { class: "actions account-out" }, out)));
+        h("div", { class: "af-row af-link" }, h("dt", {}, "Library"),
+          h("dd", {}, h("a", { href: "#/library" }, n ? `${n} saved lesson${n === 1 ? "" : "s"}` : "No saved lessons yet"), icon("chevron"))),
+        row("Signed in with", PROVIDER_NAMES[u.provider] || u.provider),
+        row("Member since", new Date(u.created * 1000).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }))));
+    // Connected or not, and with what: read from the server's status, and redrawn whenever the form saves.
+    const state = h("div", { class: "ai-state", role: "status" });
+    let working = true;  // false once the saved key fails its check (listing models)
+    function drawState() {
+      const p = status.provider || {};
+      const broken = p.ok && !working;
+      state.className = "ai-state" + (broken ? " bad" : p.ok ? " on" : "");
+      state.replaceChildren(
+        h("span", { class: "ai-state-mark", "aria-hidden": "true" }, icon(broken ? "cross" : p.ok ? "check" : "plus")),
+        broken
+          ? h("p", {}, h("strong", {}, "Needs attention. "), `Your saved ${p.name} key didn't work just now. The reason is shown below; paste a new key and save.`)
+          : p.ok
+          ? h("p", {}, h("strong", {}, "Connected. "), "Lessons are built with ", h("strong", {}, p.name), p.model ? [" using ", h("span", { class: "ai-model" }, p.model)] : null, ".")
+          : h("p", {}, h("strong", {}, "Not connected yet. "), `Choose a provider below and ${(status.providers || []).some((x) => x.sign_in) ? "add its key or sign in" : "add its key"} to build lessons.`));
+    }
+    drawState();
+    const provider = h("section", { class: "account-card account-ai", "aria-labelledby": "ai-title" },
+      h("h2", { id: "ai-title", tabindex: "-1" }, "AI provider"),
+      state,
+      h("p", { class: "account-ai-note" }, "A source's text goes only to the provider and model chosen here, and only when you build. The model gets no tools: it can only read what OpenLemma sends and reply with text."),
+      keyForm(() => { working = true; drawState(); }, { onCheck: (ok) => { working = ok; drawState(); } }));
+    view(h("div", { class: "account" }, profile, provider,
+      h("div", { class: "account-out" }, h("p", {}, u.email ? `Signed in as ${u.email}` : "Signed in"), out)));
     if (toProvider) { provider.scrollIntoView({ block: "start" }); provider.querySelector("h2").focus({ preventScroll: true }); }
   }
 
