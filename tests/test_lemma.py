@@ -1539,7 +1539,7 @@ class HostedServerTests(unittest.TestCase):
         env = {"LEMMA_PUBLIC_URL": "https://tools.example.com/lemma", "LEMMA_GOOGLE_CLIENT_ID": "gid", "LEMMA_GOOGLE_CLIENT_SECRET": "gsecret"}
         old = {k: os.environ.get(k) for k in env}
         os.environ.update(env)
-        httpd = server.make_server(0, host="0.0.0.0", allowed_hosts=("tools.example.com",))
+        httpd = server.make_server(0, host="0.0.0.0", allowed_hosts=("tools.example.com", "www.example.com"))
         port = httpd.server_address[1]
         threading.Thread(target=httpd.serve_forever, daemon=True).start()
 
@@ -1557,6 +1557,12 @@ class HostedServerTests(unittest.TestCase):
         try:
             # Lemma serves under the public URL's path too, as it does behind Cloudflare Tunnel.
             self.assertEqual(req("GET", "/lemma/api/example")[0], 200)
+            # Its other names send people to the public address, so sign-in starts and ends on one host.
+            c = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
+            c.request("GET", "/lemma/privacy?x=1", headers={"Host": "www.example.com"})
+            r = c.getresponse()
+            self.assertEqual((r.status, r.getheader("Location")), (301, "https://tools.example.com/lemma/privacy?x=1"))
+            c.close()
             s, _, r = req("GET", "/lemma")
             self.assertEqual((s, r.getheader("Location")), (301, "/lemma/"))
             # Signed out: the example works, nothing else does.

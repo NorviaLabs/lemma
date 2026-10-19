@@ -731,10 +731,12 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):  # Lemma keeps no usage logs
         pass
 
-    def _allowed_host(self) -> bool:
+    def _host_name(self) -> str:
         host = (self.headers.get("Host") or "").lower()
-        name = host.rsplit(":", 1)[0] if not host.startswith("[") else host.split("]")[0] + "]"
-        return name in ALLOWED_HOSTS
+        return host.rsplit(":", 1)[0] if not host.startswith("[") else host.split("]")[0] + "]"
+
+    def _allowed_host(self) -> bool:
+        return self._host_name() in ALLOWED_HOSTS
 
     def _same_origin(self) -> bool:
         origin = self.headers.get("Origin")
@@ -763,6 +765,13 @@ class Handler(BaseHTTPRequestHandler):
     def _dispatch(self, method: str):
         if not self._allowed_host():
             return self._send(403, b"Forbidden", "text/plain")
+        home = urlsplit(auth.public_url())
+        if HOSTED and home.hostname and self._host_name() not in (home.hostname, *LOCAL_HOSTS):
+            # Another name it answers, such as www, moves to the public address, so sign-in cookies stay on one host.
+            self.send_response(301)
+            self.send_header("Location", f"{home.scheme}://{home.netloc}{self.path}")
+            self.send_header("Content-Length", "0")
+            return self.end_headers()
         REQUEST.headers = self.headers
         REQUEST.token = self._cookie(auth.SESSION_COOKIE) if HOSTED else None
         REQUEST.user = auth.user_for(REQUEST.token) if REQUEST.token else None

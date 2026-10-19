@@ -4,4 +4,6 @@ credentials-file: /etc/cloudflared/lemma.json
 ingress:
   - hostname: openlemma.org
     service: http://lemma:8765
+  - hostname: www.openlemma.org  # Lemma redirects it to openlemma.org
+    service: http://lemma:8765
   - service: http_status:404

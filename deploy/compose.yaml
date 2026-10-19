@@ -7,7 +7,7 @@ services:
     env_file: lemma.env
     environment:
       LEMMA_PUBLIC_URL: https://openlemma.org
-      LEMMA_ALLOWED_HOSTS: openlemma.org
+      LEMMA_ALLOWED_HOSTS: openlemma.org,www.openlemma.org
     volumes:
       - lemma-data:/data
     healthcheck:
