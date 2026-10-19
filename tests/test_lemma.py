@@ -26,7 +26,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TMP_HOME = tempfile.mkdtemp(prefix="lemma-test-")
 os.environ["LEMMA_HOME"] = TMP_HOME
 
-from lemma import auth, categorize, chatgpt, claudecode, jev, claude, dev, expr, export, generate, ingest, kernels, lesson as L, llm, search, server, store  # noqa: E402
+from lemma import auth, categorize, chatgpt, claudecode, jev, claude, dev, expr, export, generate, ingest, kernels, lesson as L, llm, metrics, search, server, store  # noqa: E402
 from lemma.llm import Provider, Reply  # noqa: E402
 import fakejev  # noqa: E402,F401  Jev is essential, so every search and build asks this stand-in
 
@@ -1610,6 +1610,56 @@ class HostedServerTests(unittest.TestCase):
             self.assertIsNone(json.loads(req("GET", "/api/status", token=ta)[1])["user"])
         finally:
             generate.JOBS.clear()
+            for k, v in old.items():
+                os.environ.pop(k, None) if v is None else os.environ.__setitem__(k, v)
+            httpd.shutdown()
+            httpd.server_close()
+
+    def test_daily_limits_and_anonymous_counts(self):
+        env = {"LEMMA_PUBLIC_URL": "https://tools.example.com", "LEMMA_ADMINS": "ada@example.com", "LEMMA_DAILY_SEARCHES": "1"}
+        old = {k: os.environ.get(k) for k in env}
+        os.environ.update(env)
+        httpd = server.make_server(0, host="0.0.0.0", allowed_hosts=("tools.example.com",))
+        port = httpd.server_address[1]
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+
+        def req(method, path, body=None, token=None):
+            c = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
+            h = {"Host": "tools.example.com", "Origin": "https://tools.example.com"}
+            if token:
+                h["Cookie"] = f"{auth.SESSION_COOKIE}={token}"
+            c.request(method, path, json.dumps(body).encode() if body is not None else None, h)
+            r = c.getresponse()
+            raw = r.read()
+            c.close()
+            return r.status, raw, r
+
+        try:
+            ada = auth.upsert_user("google", "11", "Ada", "ada@example.com", "")
+            bob = auth.upsert_user("github", "12", "Bob", "bob@example.com", "")
+            ta, tb = auth.new_session(ada["id"]), auth.new_session(bob["id"])
+
+            # Anyone, signed in or not, can report a known event; unknown names are dropped.
+            for name in ("lesson_open", "lesson_open", "made_up"):
+                self.assertEqual(req("POST", "/api/event", {"name": name})[0], 200)
+            self.assertEqual(req("GET", "/api/stats", token=tb)[0], 404)  # only the admins see counts
+            today = next(iter(json.loads(req("GET", "/api/stats", token=ta)[1]).values()))
+            self.assertEqual(today.get("lesson_open"), 2)
+            self.assertNotIn("made_up", today)
+
+            # Each account has its own daily allowance.
+            self.assertTrue(metrics.take(bob["id"], "search"))
+            self.assertFalse(metrics.take(bob["id"], "search"))
+            self.assertTrue(metrics.take(ada["id"], "search"))
+            s, raw, _ = req("POST", "/api/search", {"query": "loss aversion"}, tb)
+            self.assertEqual(s, 429)
+            self.assertIn("today's 1 searches", json.loads(raw)["error"])
+
+            s, raw, r = req("GET", "/terms")
+            self.assertEqual(s, 200)
+            self.assertIn(b"Terms of use", raw)
+            self.assertIn("https://static.cloudflareinsights.com", r.getheader("Content-Security-Policy"))
+        finally:
             for k, v in old.items():
                 os.environ.pop(k, None) if v is None else os.environ.__setitem__(k, v)
             httpd.shutdown()

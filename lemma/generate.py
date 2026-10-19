@@ -11,7 +11,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from . import factcheck, jev
 from . import lesson as L
-from . import logs
+from . import logs, metrics
 from .llm import Provider, ProviderError
 
 MAX_REPAIRS = 2
@@ -354,6 +354,7 @@ def start(job: Job, fn, *args):
                 job.status, job.error = "error", f"Unexpected error: {e.__class__.__name__}: {e} (error {logs.report(f'{job.kind} job', e)})"
         finally:
             job.changed()
+            metrics.count(f"{job.kind}_{job.status}")  # e.g. build_done, build_error
 
     threading.Thread(target=run, daemon=True).start()
     return job

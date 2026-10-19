@@ -19,13 +19,15 @@
 <ul>
   <li><strong>Your account.</strong> When you sign in with Google or GitHub, Lemma keeps your name, email address and profile picture link, which provider you used, and when you joined and last signed in. It asks those providers for nothing else.</li>
   <li><strong>A session.</strong> A cookie keeps you signed in for up to 30 days. The server stores only a fingerprint (hash) of it.</li>
+  <li><strong>Daily usage.</strong> How many searches and lesson builds your account started each day, to apply the daily limits. These counts are deleted after seven days.</li>
+  <li><strong>Anonymous counts.</strong> Totals per day of things like lessons opened, goals reached with and without <strong>Show me</strong>, and builds that passed or failed Lemma's checks, to learn whether lessons teach well. Only the day and the kind of event are stored: not who you are, which lesson, or what you searched for.</li>
   <li><strong>Lessons and builds.</strong> Lesson requests, selected source text and progress are saved so you can leave and return. Completed lessons are saved automatically. Interrupted builds can be retried. Only your account can open them; delete stopped builds and lessons from your library to remove them.</li>
 </ul>
 
 <h2>What Lemma doesn't keep</h2>
 <ul>
   <li><strong>Your AI provider key.</strong> It is never saved in Lemma's storage: not with your account, your lessons or your builds. It stays in your browser, which sends it with each request that needs it. The server holds it in memory only while that request or build runs, and never writes it to disk. If a provider's error message repeats the key, Lemma removes it before saving the build. To retry a build, your browser sends the key again.</li>
-  <li><strong>Usage logs.</strong> The server writes no request logs, and the site has no analytics or advertising. When something inside Lemma breaks, it records an error id, the time and which part of Lemma's code failed, but not who you are, what you asked for, your paper or your key.</li>
+  <li><strong>Usage logs.</strong> The server writes no request logs, and the site has no advertising and no tracking cookies. When something inside Lemma breaks, it records an error id, the time and which part of Lemma's code failed, but not who you are, what you asked for, your paper or your key.</li>
 </ul>
 
 <h2>Who else sees your data</h2>
@@ -33,7 +35,7 @@
   <li><strong>Your AI provider</strong> (OpenCode, OpenAI or Anthropic, as you choose) receives the paper's text when you build a lesson, under your own key and their terms.</li>
   <li><strong>TypeSafe</strong> receives the words you search for with each result's title and abstract (or, without an abstract, the start of its text), to rank the results by how well they would teach what you searched for; the title and opening text of each source of a lesson you build, to sort the lesson into a subject such as Medicine or Economics; and each concept the AI model drafts, with the passages of your sources it is about, to check it for errors before you see it. It never receives your key or your account. Lemma pays for it with the server's TypeSafe key, and every search and lesson build uses it.</li>
   <li><strong>Wikipedia, the Stanford Encyclopedia of Philosophy, LibreTexts, OpenAlex, Europe PMC and arXiv</strong> receive the words you search for. Lemma contacts result sites to check readable full text before recommending sources. A link you paste is fetched from its own site.</li>
-  <li><strong>Cloudflare</strong> carries traffic to the site. <strong>Google or GitHub</strong> handle signing in.</li>
+  <li><strong>Cloudflare</strong> carries traffic to the site, and counts page views with Cloudflare Web Analytics, which uses no cookies and doesn't identify you. <strong>Google or GitHub</strong> handle signing in.</li>
 </ul>
 <p>Nothing is sold or shared for advertising.</p>
 

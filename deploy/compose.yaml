@@ -8,6 +8,7 @@ services:
     environment:
       LEMMA_PUBLIC_URL: https://openlemma.org
       LEMMA_ALLOWED_HOSTS: openlemma.org,www.openlemma.org
+      LEMMA_ADMINS: mohitranka@gmail.com  # who may read the daily counts at /api/stats
     volumes:
       - lemma-data:/data
     healthcheck:

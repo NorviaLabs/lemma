@@ -19,6 +19,12 @@ deploy/push.sh ubuntu@34.172.130.18
 
 Commit and push directly to `main` before deploying; do not create a pull request unless explicitly requested. Run the script from `main`, clean and matching `origin/main`; it refuses anything else, so the live site always matches `main`. It copies this checkout to the VM (secrets included), then rebuilds and restarts both containers. Logs: `ssh ubuntu@34.172.130.18 'cd lemma/deploy && sudo docker compose logs -f'`. Lemma's own lines are only error reports (`<time> error <id> in <where>: <type>` and the code it passed through); a learner who quotes an error id can be found with `sudo docker compose logs lemma | grep -A 30 <id>`.
 
+## Limits and analytics
+
+- Each account may start 40 searches and 20 outlines or builds a day (UTC), since every one uses the server's TypeSafe key. Change them with `LEMMA_DAILY_SEARCHES` and `LEMMA_DAILY_BUILDS` in `compose.yaml`.
+- Lemma counts anonymous events per day (lessons opened and finished, goals reached alone or with Show me, searches, sign-ins, and outline and build outcomes) in `metrics.db` beside `accounts.db`. Signed in as an account listed in `LEMMA_ADMINS`, open `https://openlemma.org/api/stats` for the last 30 days.
+- Page views come from Cloudflare Web Analytics (Cloudflare dashboard → Analytics & Logs → Web Analytics, automatic setup for openlemma.org). Lemma's Content Security Policy allows its script on the hosted site.
+
 ## Sign-in apps
 
 - GitHub: OAuth app "Lemma" under github.com/settings/developers, callback `https://openlemma.org/auth/github/callback`.

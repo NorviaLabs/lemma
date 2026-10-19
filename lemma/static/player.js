@@ -110,6 +110,9 @@
   function mount(rootEl, lessonIn, hooks = {}) {
     let lesson = lessonIn;
     const S = { view: "intro", ci: 0, pc: {}, primerPage: 0, primerDone: false };
+    const track = (name) => { if (hooks.onEvent) hooks.onEvent(name); };  // anonymous counts; see metrics.py
+    let finishedOnce = false;
+    track("lesson_open");
     const primer = () => (Array.isArray(lesson.primer) ? lesson.primer : []);
     let cv = null;
 
@@ -248,6 +251,7 @@
 
     function showFinish() {
       S.view = "finish";
+      if (!finishedOnce) { finishedOnce = true; track("lesson_finish"); }
       let goalsSelf = 0, goals = 0, checksFirst = 0, checks = 0;
       for (const c of concepts()) {
         const pc = S.pc[c.id];
@@ -534,7 +538,11 @@
       /* ---------- screens: the rail says what to do, the stage is where you do it */
       go(i) {
         if (i < 0) return;
-        if (i >= this.screens.length) { this.pc.finished = true; return next(); }
+        if (i >= this.screens.length) {
+          if (!this.pc.finished) track("concept_finish");
+          this.pc.finished = true;
+          return next();
+        }
         this.narrationStop = true;
         this.jumpTo = null;
         this.paused = false;
@@ -803,6 +811,7 @@
         const k = this.goalKey(scr.goal);
         if (!this.pc.goals[k] && M.holds(this.model, scr.goal.when, this.pc.values)) {
           this.pc.goals[k] = "self";
+          track("goal_self");
           this.goalBar();
           this.announce("Goal reached!");
           this.celebrate();
@@ -815,6 +824,7 @@
         const target = Object.assign({}, g.solution);
         await this.animateTo(target, 1400);
         this.pc.values = Object.assign({}, this.pc.values, target);
+        if (!this.pc.goals[this.goalKey(g)]) track("goal_shown");
         this.pc.goals[this.goalKey(g)] = this.pc.goals[this.goalKey(g)] || "shown";
         this.setLocked(false);
         if (this.screens[this.pc.screen].goal === g) this.goalBar();
@@ -1004,7 +1014,7 @@
         const doCheck = () => {
           const [ok, extra] = grade();
           if (ok) {
-            if (pc.checkFirstTry === null) pc.checkFirstTry = true;
+            if (pc.checkFirstTry === null) { pc.checkFirstTry = true; track("check_first_try"); }
             pc.checkDone = true;
             disableInputs();
             this.setBar({ state: "good", head: "Correct", body: extra, buttons: [this.continueBtn()] });
@@ -1012,7 +1022,7 @@
             return;
           }
           pc.attempts++;
-          if (pc.checkFirstTry === null) pc.checkFirstTry = false;
+          if (pc.checkFirstTry === null) { pc.checkFirstTry = false; track("check_retry"); }
           const showMe = ck.kind === "model" && pc.attempts >= 2 ? h("button", { class: "ghost", onclick: async () => {
             this.setLocked(true);
             await this.animateTo(ck.solution, 1400);

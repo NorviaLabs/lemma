@@ -20,7 +20,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib import resources
 from urllib.parse import parse_qs, quote, urlsplit
 
-from . import __version__, auth, categorize, chatgpt, claudecode, export, generate, ingest, jev, logs, search, store
+from . import __version__, auth, categorize, chatgpt, claudecode, export, generate, ingest, jev, logs, metrics, search, store
 from . import lesson as L
 from .llm import DEFAULT_PROVIDER, PROVIDERS, ProviderError, make_provider
 
@@ -243,6 +243,10 @@ def api_search(body):
             SEARCHES.pop(sid)
         if sum(s["owner"] == owner and not s["done"] for s in SEARCHES.values()) >= SEARCHES_EACH:
             raise ApiError(429, "Several searches are still running. Wait a moment and try again.")
+    if not metrics.take(owner, "search"):
+        raise ApiError(429, f"You've used today's {metrics.limit('search')} searches. They reset at midnight UTC.")
+    metrics.count("search")
+    with _lock:
         sid = uuid.uuid4().hex[:12]
         record = SEARCHES[sid] = {"owner": owner, "query": query, "done": False, "progress": None, "result": None, "error": "", "created": time.time()}
 
@@ -296,6 +300,8 @@ def _new_job(kind: str) -> generate.Job:
             raise ApiError(429, "You already have lessons building. Wait for one to finish, or cancel it.")
         if len(running) >= MAX_RUNNING:
             raise ApiError(503, "Lemma is busy building other people's lessons. Please try again in a few minutes.")
+    if not metrics.take(owner, "job"):
+        raise ApiError(429, f"You've used today's {metrics.limit('job')} outlines and builds. They reset at midnight UTC.")
     job = generate.Job(kind)
     job.owner = owner
     return job
@@ -557,6 +563,22 @@ def api_request_delete(rid):
         return {"ok": True}
 
 
+def api_event(body):
+    """An anonymous count from the browser, such as a goal reached; only the event's name is kept."""
+    if body.get("name") in metrics.BROWSER_EVENTS:
+        metrics.count(body["name"])
+    return {}
+
+
+def api_stats(_body):
+    """Daily counts, for the accounts named in LEMMA_ADMINS (comma-separated emails) on a hosted Lemma."""
+    user = getattr(REQUEST, "user", None)
+    admins = {e.strip().lower() for e in os.environ.get("LEMMA_ADMINS", "").split(",") if e.strip()}
+    if not HOSTED or not user or user["email"].lower() not in admins:
+        raise ApiError(404, "Not found.")
+    return metrics.report()
+
+
 def api_example(_body):
     lesson, source = load_example()
     require_valid(lesson, source)  # never show a lesson that fails its checks, even ours
@@ -709,6 +731,8 @@ ROUTES = [
     ("POST", r"/api/build", api_build, False),
     ("GET", r"/api/jobs/([a-f0-9]{12})", api_job, True),
     ("POST", r"/api/jobs/([a-f0-9]{12})/cancel", api_job_cancel, True),
+    ("POST", r"/api/event", api_event, False),
+    ("GET", r"/api/stats", api_stats, False),
     ("GET", r"/api/example", api_example, False),
     ("GET", r"/api/gallery", api_gallery, False),
     ("GET", r"/api/gallery/([a-z0-9-]{1,64})", api_gallery_lesson, True),
@@ -867,6 +891,7 @@ class Handler(BaseHTTPRequestHandler):
                 raise auth.AuthError("That sign-in link had expired. Please try again.")
             user = auth.finish_sign_in(pid, (query.get("code") or [""])[0])
             token = auth.new_session(user["id"])
+            metrics.count("sign_in")
             return self._redirect("/#/", [clear_state, self._set_cookie(auth.SESSION_COOKIE, token, auth.SESSION_DAYS * 86400)])
         except auth.AuthError as e:
             return self._redirect("/#/signin?error=" + quote(str(e)), [clear_state])
@@ -910,8 +935,8 @@ class Handler(BaseHTTPRequestHandler):
     def _static(self, path: str):
         if path in ("/", "/index.html"):
             name = "index.html"
-        elif path == "/privacy":
-            name = "privacy.html"
+        elif path in ("/privacy", "/terms"):
+            name = path[1:] + ".html"
         elif path.startswith("/static/"):
             name = path[len("/static/"):]
         else:
@@ -925,7 +950,9 @@ class Handler(BaseHTTPRequestHandler):
         if ctype.startswith("text/") or ctype in ("application/javascript", "text/javascript"):
             ctype += "; charset=utf-8"
         avatars = " https://lh3.googleusercontent.com https://avatars.githubusercontent.com" if HOSTED else ""  # account pictures
-        csp = f"default-src 'self'; img-src 'self' data:{avatars}; font-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'"
+        # Cloudflare Web Analytics, which Cloudflare adds to a hosted Lemma's pages: cookieless page-view counts.
+        beacon, rum = (" https://static.cloudflareinsights.com", " https://cloudflareinsights.com") if HOSTED else ("", "")
+        csp = f"default-src 'self'; script-src 'self'{beacon}; img-src 'self' data:{avatars}; font-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'{rum}; frame-ancestors 'none'; base-uri 'none'"
         extra = {"Content-Security-Policy": csp} if name.endswith(".html") else {}
         if name.startswith("fonts/"):
             extra["Cache-Control"] = "public, max-age=31536000, immutable"
@@ -995,4 +1022,5 @@ def make_server(port: int = 8765, exact: bool = False, host: str = "127.0.0.1", 
     if HOSTED and not allowed_hosts:
         raise ValueError("A hosted Lemma needs --allowed-hosts: the domain names it is reached by.")
     ALLOWED_HOSTS = LOCAL_HOSTS + tuple(h.strip().lower() for h in allowed_hosts if h.strip())
+    metrics.ENABLED = HOSTED
     return Server((host, port if exact or HOSTED else _free_port(port, host)), Handler)  # a host expects its own port
