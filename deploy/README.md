@@ -41,7 +41,7 @@ A new secret from either goes into `lemma.env`, followed by `push.sh`.
 
 ## Backups
 
-```sh
-ssh ubuntu@34.172.130.18 'sudo docker run --rm -v deploy_lemma-data:/data -v $HOME:/out alpine tar czf /out/lemma-data.tgz -C /data .'
-scp ubuntu@34.172.130.18:lemma-data.tgz .
-```
+All accounts and libraries live on the VM's one disk, so keep two kinds of backup:
+
+- **Disk snapshots, automatically.** In Google Cloud, Compute Engine → Snapshots → Snapshot schedules, create a daily schedule (keep 14 days) in `us-central1` and attach it to the `lemma` VM's boot disk. A snapshot restores the whole VM.
+- **A copy of the data on your own computer.** `deploy/backup.sh ubuntu@34.172.130.18` saves `backups/lemma-data-<time>.tgz` (git-ignored): every library, plus `accounts.db` and `metrics.db` copied with SQLite's online backup into `.backup/`, so it is consistent even while people use the site. To restore, unpack it into the `deploy_lemma-data` volume and move the two databases out of `.backup/`.
