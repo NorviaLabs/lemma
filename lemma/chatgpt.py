@@ -90,11 +90,11 @@ def _token_request(fields: dict) -> dict:
         with urllib.request.urlopen(req, timeout=30) as resp:
             tokens = json.loads(resp.read())
     except urllib.error.HTTPError as e:
-        raise ProviderError(f"ChatGPT sign-in failed ({e.code}). Sign in again in Settings.") from None
+        raise ProviderError(f"ChatGPT sign-in failed ({e.code}). Sign in again on your account page.") from None
     except (urllib.error.URLError, TimeoutError, socket.timeout, ValueError) as e:
         raise ProviderError(f"Couldn't reach OpenAI to sign in ({e}).") from None
     if not tokens.get("access_token") or not tokens.get("refresh_token"):
-        raise ProviderError("OpenAI's sign-in reply was missing its tokens. Sign in again in Settings.")
+        raise ProviderError("OpenAI's sign-in reply was missing its tokens. Sign in again on your account page.")
     return tokens
 
 
@@ -103,7 +103,7 @@ def access_token() -> tuple[str, str]:
     with _lock:
         auth = load()
         if not auth:
-            raise ProviderError("Sign in with your ChatGPT account in Settings to build lessons.")
+            raise ProviderError("Sign in with your ChatGPT account on your account page to build lessons.")
         if auth["expires"] - time.time() < 120:
             _save(_token_request({"grant_type": "refresh_token", "refresh_token": auth["refresh"], "client_id": CLIENT_ID}))
             auth = load()
@@ -129,15 +129,15 @@ def start_sign_in() -> str:
             if url.path != "/auth/callback":
                 return self._page(404, "Not found.")
             if q.get("state") != state:
-                return self._page(400, "This sign-in link has expired. Start again from Lemma's Settings.")
+                return self._page(400, "This sign-in link has expired. Start again from your OpenLemma account page.")
             if q.get("error"):
                 _login["error"] = q.get("error_description") or q["error"]
-                self._page(400, "Sign-in was cancelled. You can close this tab and try again from Lemma.")
+                self._page(400, "Sign-in was cancelled. You can close this tab and try again from OpenLemma.")
             else:
                 try:
                     _save(_token_request({"grant_type": "authorization_code", "code": q.get("code", ""), "redirect_uri": REDIRECT_URI,
                                           "client_id": CLIENT_ID, "code_verifier": verifier}))
-                    self._page(200, "Signed in. You can close this tab and go back to Lemma.")
+                    self._page(200, "Signed in. You can close this tab and go back to OpenLemma.")
                 except ProviderError as e:
                     _login["error"] = str(e)
                     self._page(400, str(e))
@@ -193,7 +193,7 @@ class ChatGPTProvider(Provider):
 
     def available(self) -> tuple[bool, str]:
         if not load():
-            return False, "Sign in with your ChatGPT account in Settings to build lessons."
+            return False, "Sign in with your ChatGPT account on your account page to build lessons."
         return True, ""
 
     def request(self, method: str, path: str, body=None, timeout: float = 60, on_line=None):
@@ -228,7 +228,7 @@ class ChatGPTProvider(Provider):
         except (ValueError, AttributeError):
             msg = raw[:300]
         if status in (401, 403):
-            return f"ChatGPT turned down your sign-in. Sign in again in Settings. ({msg or status})"
+            return f"ChatGPT turned down your sign-in. Sign in again on your account page. ({msg or status})"
         if status == 429:
             return f"You've reached your ChatGPT plan's usage limit: {msg or 'try again later'}"
         return f"ChatGPT returned an error ({status}): {msg or 'no details'}"

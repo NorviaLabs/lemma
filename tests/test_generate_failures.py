@@ -245,8 +245,8 @@ class JevChoosesPlans(unittest.TestCase):
         for name, answer in (("unknown option", lambda qs: {k: {"choice": "p9"} for k in qs}), ("missing concept", lambda qs: {})):
             with self.subTest(name):
                 job = self.build_with_plan_answer(answer)
-                self.assertEqual((job.status, job.error), ("error", "Jev sent a choice of activities OpenLemma couldn't read. Retry in a moment."))
-                self.assertEqual({s["id"]: s for s in job.snapshot()["steps"]}["plans"]["detail"], "Jev's reply couldn't be read")
+                self.assertEqual((job.status, job.error), ("error", "Couldn't choose how to teach the concepts just now. Retry in a moment."))
+                self.assertEqual({s["id"]: s for s in job.snapshot()["steps"]}["plans"]["detail"], "The checking service's reply couldn't be read")
 
     def test_none_suitable_lets_the_model_choose(self):
         job = self.build_with_plan_answer(lambda qs: {k: {"choice": "none_suitable", "confidence": 0.8} for k in qs})

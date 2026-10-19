@@ -263,10 +263,10 @@ def judge(query: str, results: list[dict], openings: dict) -> dict:
         answers = jev.ask(state, questions, JEV_TIMEOUT)
         judged = {id(r): (float(answers[f"r{i}_relevance"]["score"]), answers[f"r{i}_role"]["choice"]) for i, r in enumerate(results, 1)}
     except jev.JevError as e:
-        raise SearchError(f"Couldn't rank the results with Jev ({e}). Try again in a moment.") from None
+        raise SearchError(f"Couldn't rank the results just now ({e}). Try again in a moment.") from None
     except (KeyError, TypeError, ValueError) as e:
         logs.report("search ranking", e)  # the error's type and where, never the search
-        raise SearchError("Jev sent a ranking OpenLemma couldn't read. Try again in a moment.") from None
+        raise SearchError("Couldn't rank the results just now. Try again in a moment.") from None
     for r in results:
         relevance, role = judged[id(r)]
         r["judged"] = {"relevance": round(relevance + 1, 2), "role": role}  # on the 1 to 5 scale; not shown to learners

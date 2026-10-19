@@ -31,7 +31,7 @@ class ClaudeProvider(Provider):
 
     def available(self) -> tuple[bool, str]:
         if not self.key:
-            return False, "Add your Claude key in Settings to build lessons."
+            return False, "Add your Claude key on your account page to build lessons."
         return True, ""
 
     def client(self) -> anthropic.Anthropic:
@@ -124,7 +124,7 @@ class ClaudeConversation(Conversation):
                             on_progress("thinking", written)
                 final = stream.get_final_message()
         if final.stop_reason == "refusal":
-            raise ProviderError("Claude declined to write this part of the lesson. Try another model in Settings.")
+            raise ProviderError("Claude declined to write this part of the lesson. Try another model on your account page.")
         reply = "".join(b.text for b in final.content if b.type == "text")
         self.messages = messages + [{"role": "assistant", "content": final.content}]
         return Reply(text=reply, stop_reason="max_tokens" if final.stop_reason == "max_tokens" else "end_turn")
@@ -146,16 +146,16 @@ class errors:
             body = e.body if isinstance(e.body, dict) else {}
             e.message = (body.get("error") or {}).get("message") or e.message  # just the API's own words
         if isinstance(e, anthropic.AuthenticationError):
-            raise ProviderError(f"Claude rejected the key. Check it in Settings. ({e.message})") from None
+            raise ProviderError(f"Claude didn't accept this key. Paste it again on your account page. ({e.message})") from None
         if isinstance(e, anthropic.PermissionDeniedError):
             raise ProviderError(f"This Claude key can't use {self.p.model}. ({e.message})") from None
         if isinstance(e, anthropic.NotFoundError):
-            raise ProviderError(f"Claude doesn't offer {self.p.model}. Choose another model in Settings.") from None
+            raise ProviderError(f"Claude doesn't offer {self.p.model}. Choose another model on your account page.") from None
         if isinstance(e, anthropic.RateLimitError):
             raise ProviderError(f"Claude says you've hit a rate or usage limit: {e.message}") from None
         if isinstance(e, anthropic.BadRequestError):
             if "too long" in e.message.lower() or "context" in e.message.lower():
-                raise ProviderError(f"This paper is too long for {self.p.model}. Choose a model with a larger context in Settings.") from None
+                raise ProviderError(f"This source is too long for {self.p.model}. Choose a model that reads more text at once on your account page.") from None
             raise ProviderError(f"Claude couldn't take this request: {e.message}") from None
         if isinstance(e, anthropic.APIStatusError):
             raise ProviderError(f"Claude returned an error ({e.status_code}): {e.message}") from None

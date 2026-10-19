@@ -76,7 +76,7 @@ def categorize(paper: dict) -> dict:
         if primary not in CATEGORIES:
             raise KeyError(primary)
     except (KeyError, TypeError, ValueError):
-        raise CategorizeError("Jev sent a reply Lemma couldn't read") from None
+        raise CategorizeError("the checking service sent a reply OpenLemma couldn't read") from None
     second = max((k for k in probs if k not in (primary, "other")), key=probs.get, default=None)
     return {
         "primary": _named(primary),

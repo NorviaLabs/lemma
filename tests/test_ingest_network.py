@@ -95,8 +95,7 @@ class Links(unittest.TestCase):
     def test_a_site_that_refuses_says_so_and_suggests_uploading(self):
         with self.assertRaises(ingest.IngestError) as e:
             ingest.from_url(self.base + "/gone")
-        self.assertTrue(str(e.exception).startswith("The site answered 404 Not Found"), e.exception)
-        self.assertIn("upload it", str(e.exception))
+        self.assertEqual(str(e.exception), "This link didn't open. Check it, or open it in your browser, save the PDF, and add it as a file. (Site answered 404.)")
 
     def test_redirects_only_to_web_addresses_are_followed(self):
         with self.assertRaises(ingest.IngestError) as e:
@@ -199,7 +198,7 @@ class Files(unittest.TestCase):
 
     def test_short_pages_texts_and_articles_are_refused(self):
         cases = [(page("Sign in to read this article."), "text/html", "very little text"),
-                 (b"Too short to be a paper.", "text/plain", "too short to be a paper"),
+                 (b"Too short to be a paper.", "text/plain", "too short to teach from"),
                  (b"<article><p>Only an abstract.</p></article>", "application/xml", "almost no text"),
                  (b"<article><p>Unclosed", "application/xml", "Couldn't read this article's XML.")]
         for data, ctype, message in cases:

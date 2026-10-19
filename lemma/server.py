@@ -71,7 +71,7 @@ def _owner() -> str:
     """Whose papers, builds and library this request uses: the signed-in account's."""
     user = getattr(REQUEST, "user", None)
     if not user:
-        raise ApiError(401, "Sign in to find papers, build lessons and keep a library.")
+        raise ApiError(401, "Sign in to find sources, build lessons and keep a library.")
     return user["id"]
 
 
@@ -90,9 +90,9 @@ def _admin():
 def provider_from_request(pid: str | None = None):
     req_pid, key, model = _credential()
     if pid and pid != req_pid:
-        raise ApiError(400, "Save this provider in Settings first.")
+        raise ApiError(400, "Save this provider on your account page first.")
     if req_pid not in PROVIDERS:  # e.g. one OpenLemma used to offer, still saved in the learner's browser
-        raise ApiError(400, "OpenLemma doesn't offer this AI provider. Choose another in Settings.")
+        raise ApiError(400, "OpenLemma doesn't offer this AI provider. Choose another on your account page.")
     if req_pid not in providers():
         raise ApiError(400, "This provider is only available when OpenLemma runs on your own computer.")
     try:
@@ -157,7 +157,7 @@ def require_valid(lesson, source_text: str | None):
 def api_status(_body):
     try:
         p = provider_from_request()
-    except ApiError:  # a saved provider this server doesn't offer: report the default, unconnected, so Settings can offer the rest
+    except ApiError:  # a saved provider this server doesn't offer: report the default, unconnected, so the account page can offer the rest
         p = make_provider(DEFAULT_PROVIDER)
     ok, msg = p.available()
     status = {
@@ -440,7 +440,7 @@ def _categorize(record, paper):
     try:
         record["category"] = categorize.categorize(paper)
     except categorize.CategorizeError as e:
-        raise generate.GenerationError(f"Couldn't sort this lesson into a subject with Jev ({e}). Retry in a moment.") from None
+        raise generate.GenerationError(f"Couldn't sort this lesson into a subject just now ({e}). Retry in a moment.") from None
 
 
 def _launch_request(record, provider, owner, build=False):
@@ -984,7 +984,9 @@ class Handler(BaseHTTPRequestHandler):
             except ApiError as e:
                 return self._json(e.status, {"error": e.message, "problems": e.problems})
             except Exception as e:
-                return self._json(500, {"error": f"Something went wrong inside OpenLemma (error {logs.report(f'{method} {pattern}', e)})."})
+                eid = logs.report(f"{method} {pattern}", e)
+                return self._json(500, {"error": "Something went wrong inside OpenLemma. Try again; if it keeps happening, "
+                                                 f"email contact@openlemma.org with error id {eid}."})
             if isinstance(result, str):
                 return self._send(200, result.encode("utf-8"), "text/html; charset=utf-8", {"Content-Disposition": "attachment; filename=lesson.html"})
             return self._json(200, result)

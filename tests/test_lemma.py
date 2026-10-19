@@ -471,7 +471,7 @@ class GenerationTests(unittest.TestCase):
         with patch.object(factcheck, "check_concept", side_effect=failing):
             job = wait(generate.start(generate.Job("build"), generate.build_lesson, fp, {"text": SOURCE, "title": "", "url": ""}, outline, ""))
         self.assertNotIn("mid_parent", [c["id"] for c in job.result["concepts"]])
-        self.assertIn("Jev couldn't check it", job.result["omitted"][0]["reason"])
+        self.assertIn("the checks couldn't run on it", job.result["omitted"][0]["reason"])
 
     def test_an_unexpected_error_in_one_concept_leaves_only_that_concept_out(self):
         from lemma import factcheck
@@ -508,7 +508,7 @@ class GenerationTests(unittest.TestCase):
         self.assertIn("mid_parent", [c["id"] for c in job.result["concepts"]])
         self.assertEqual(job.result["flags"], [{"concept": "mid_parent", "kind": "fabricated_finding", "certainty": .9}])
         step = next(s for s in job.snapshot()["steps"] if s["id"] == "mid_parent")
-        self.assertIn("left for review", step["detail"])
+        self.assertIn("possible problem it couldn't confirm", step["detail"])
         self.assertEqual(list(L.check_lesson(job.result, SOURCE)), [])
 
     def test_only_hard_concepts_keep_a_check(self):
@@ -579,7 +579,7 @@ class GenerationTests(unittest.TestCase):
         with patch.object(jev, "ask", side_effect=jev.JevError("Jev answered 503")):
             job = wait(generate.start(generate.Job("build"), generate.build_lesson, fp, {"text": SOURCE, "title": "", "url": ""}, outline, ""))
         self.assertEqual(job.status, "error")
-        self.assertIn("Jev", job.error)
+        self.assertIn("Couldn't choose how to teach", job.error)
         self.assertEqual(fp.calls, calls)
 
     def test_a_concept_without_a_model_is_built_from_activities(self):
@@ -781,10 +781,10 @@ class SearchTests(unittest.TestCase):
 
     def test_a_search_jev_cannot_rank_fails(self):
         with patch.object(jev, "ask", side_effect=jev.JevError("Jev answered 529")):
-            with self.assertRaisesRegex(search.SearchError, "Jev"):
+            with self.assertRaisesRegex(search.SearchError, "Couldn't rank the results just now"):
                 search._search("regression to the mean")
         with patch.object(jev, "ask", return_value={"_model": "jev-test"}), patch.object(search.logs, "report"):
-            with self.assertRaisesRegex(search.SearchError, "couldn't read"):  # a reply missing its answers
+            with self.assertRaisesRegex(search.SearchError, "^Couldn't rank the results just now. Try again in a moment.$"):  # a reply missing its answers
                 search._search("regression to the mean")
 
     def test_no_search_runs_without_jev(self):
@@ -1019,7 +1019,7 @@ class HTTPProviderTests(unittest.TestCase):
             conv.send("FAIL please")
         with self.assertRaisesRegex(llm.ProviderError, "too long for gpt-6.1-sol"):
             conv.send("LONG")
-        with self.assertRaisesRegex(llm.ProviderError, "rejected the key"):
+        with self.assertRaisesRegex(llm.ProviderError, "didn.t accept this key"):
             llm.HTTPProvider(self.info, "bad-key").models()
 
     def test_missing_key_or_unknown_provider(self):
@@ -1291,7 +1291,7 @@ class ClaudeTests(unittest.TestCase):
             conv.send("REFUSE")
         with self.assertRaisesRegex(llm.ProviderError, "rate or usage limit"):
             conv.send("LIMIT")
-        with self.assertRaisesRegex(llm.ProviderError, "rejected the key"):
+        with self.assertRaisesRegex(llm.ProviderError, "didn.t accept this key"):
             llm.make_provider("claude", "bad-key").models()
         self.assertFalse(llm.make_provider("claude").available()[0])
         cancelled = threading.Event()
@@ -1367,7 +1367,7 @@ class ServerTests(unittest.TestCase):
         self.assertEqual((s, st["provider"]["id"], st["provider"]["ok"]), (200, llm.DEFAULT_PROVIDER, False))
         self.assertNotIn("claude-code", {p["id"] for p in st["providers"]})
         s, raw = self.req("GET", "/api/models", headers={"X-Lemma-Provider": "claude-code", "X-Lemma-Key": "k"})
-        self.assertEqual((s, json.loads(raw)["error"]), (400, "OpenLemma doesn't offer this AI provider. Choose another in Settings."))
+        self.assertEqual((s, json.loads(raw)["error"]), (400, "OpenLemma doesn't offer this AI provider. Choose another on your account page."))
 
     def test_rejects_foreign_host_and_origin(self):
         self.assertEqual(self.req("GET", "/api/status", headers={"Host": "evil.example"})[0], 403)
@@ -1443,7 +1443,10 @@ class ServerTests(unittest.TestCase):
         with patch.object(server.store, "list_lessons", side_effect=RuntimeError("paper text sk-secret-123")), contextlib.redirect_stderr(err):
             s, raw = self.req("GET", "/api/lessons")
         self.assertEqual(s, 500)
-        eid = re.search(r"error ([0-9a-f]{8})", json.loads(raw)["error"]).group(1)
+        message = json.loads(raw)["error"]
+        eid = re.search(r"error id ([0-9a-f]{8})\.$", message).group(1)
+        self.assertEqual(message, "Something went wrong inside OpenLemma. Try again; if it keeps happening, "
+                                  f"email contact@openlemma.org with error id {eid}.")
         self.assertNotIn(b"sk-secret-123", raw)
         self.assertIn(f"error {eid} in GET /api/lessons: RuntimeError", err.getvalue())
         self.assertIn("server.py", err.getvalue())  # where it broke

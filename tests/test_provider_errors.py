@@ -81,7 +81,7 @@ class KeyedProviders(Loopback):
         self.assertEqual(str(e.exception), message)
 
     def test_no_request_is_sent_without_a_key(self):
-        self.assert_error("Add your OpenAI key in Settings to build lessons.", lambda: self.provider(key=" ").models())
+        self.assert_error("Add your OpenAI key on your account page to build lessons.", lambda: self.provider(key=" ").models())
         self.assertEqual(Scripted.calls, [])
 
     def test_unreachable_slow_and_garbled_apis(self):
@@ -153,7 +153,7 @@ class Jev(Loopback):
     def test_a_slow_jev_is_retried_then_given_up_on(self):
         for _ in range(jev.ATTEMPTS):
             self.then(body={"answers": {}}, delay=1.0)
-        self.assert_error("Couldn't use Jev (TimeoutError)")
+        self.assert_error("couldn't reach the checking service (TimeoutError)")
         self.assertEqual(len(Scripted.calls), jev.ATTEMPTS)
 
     def test_one_slow_answer_then_a_good_one(self):
@@ -163,10 +163,10 @@ class Jev(Loopback):
 
     def test_garbled_replies_are_not_retried(self):
         self.then(body=b"<html>")
-        self.assert_error("Jev sent a reply OpenLemma couldn't read")
+        self.assert_error("the checking service sent a reply OpenLemma couldn't read")
         self.assertEqual(len(Scripted.calls), 1)
         self.then(body={"answers": ["not", "a", "dict"]})
-        self.assert_error("Jev sent a reply OpenLemma couldn't read")
+        self.assert_error("the checking service sent a reply OpenLemma couldn't read")
 
 
 if __name__ == "__main__":

@@ -108,7 +108,7 @@ class HTTPProvider(Provider):
 
     def available(self) -> tuple[bool, str]:
         if not self.key:
-            return False, f"Add your {self.name} key in Settings to build lessons."
+            return False, f"Add your {self.name} key on your account page to build lessons."
         return True, ""
 
     def request(self, method: str, path: str, body=None, timeout: float = 60, on_line=None, headers: dict | None = None):
@@ -144,9 +144,9 @@ class HTTPProvider(Provider):
         except (ValueError, AttributeError):
             msg, code = raw[:300], ""
         if status in (401, 403):
-            return f"{self.name} rejected the key. Check it in Settings. ({msg or status})"
+            return f"{self.name} didn't accept this key. Paste it again on your account page. ({msg or status})"
         if code == "context_length_exceeded":
-            return f"This paper is too long for {self.model}. Choose a model with a larger context in Settings."
+            return f"This source is too long for {self.model}. Choose a model that reads more text at once on your account page."
         if status == 429:
             return f"{self.name} says you've hit a rate or usage limit: {msg or 'try again later'}"
         return f"{self.name} returned an error ({status}): {msg or 'no details'}"

@@ -91,9 +91,9 @@ def first_readable(urls: list[str], timeout: float | None = None, budget: float 
             return paper
         short = True
     if slow and not short:
-        raise IngestError("The sites hosting this one were too slow to answer. Try again later, or download it and upload the PDF.")
+        raise IngestError("The sites hosting this one were too slow to answer. Try again later, or save the PDF and add it as a file.")
     if short or not first:
-        raise IngestError("OpenLemma could only find a short summary of this one, not the full text. Try another result, or download it and upload the PDF.")
+        raise IngestError("OpenLemma could only find a short summary of this one, not the full text. Try another result, or save the PDF and add it as a file.")
     raise first
 
 
@@ -128,7 +128,7 @@ def _read_pdf_in_child(data: bytes) -> dict:
         done = subprocess.run([sys.executable, "-I", "-c", code, root, str(MAX_PDF_PAGES), str(MAX_CHARS), str(PDF_MEMORY)],
                               input=data, capture_output=True, timeout=PDF_DEADLINE, env=_child_env())
     except subprocess.TimeoutExpired:
-        raise IngestError("This PDF took too long to read. Try another copy of the paper, or its web page.") from None
+        raise IngestError("This PDF took too long to read. Try another copy of the source, or its web page.") from None
     try:
         found = json.loads(done.stdout)
     except ValueError:
@@ -156,7 +156,7 @@ def _pdf_child(max_pages: int, max_chars: int, max_memory: int = 0) -> None:
     except IngestError as e:
         found = {"error": str(e)}
     except MemoryError:
-        found = {"error": "This PDF is too complex to read. Try another copy of the paper, or its web page."}
+        found = {"error": "This PDF is too complex to read. Try another copy of the source, or its web page."}
     sys.stdout.write(json.dumps(found))
 
 
@@ -245,7 +245,7 @@ def from_html(data: bytes | str, url: str = "") -> Paper:
     p.feed(data)
     text = _clean(html.unescape("".join(p.parts)))
     if len(text) < 500:
-        raise IngestError("This page has very little text. If the paper is behind a login or loads with JavaScript, download the PDF and upload it instead.")
+        raise IngestError("This page has very little text. If the source is behind a login or loads with JavaScript, save the PDF and add it as a file instead.")
     title = (p.meta_title or p.title or "").strip() or _guess_title(text)
     return Paper(text=text, title=re.sub(r"\s+", " ", title), kind="html", url=url)
 
@@ -287,7 +287,7 @@ def from_text(data: bytes | str, url: str = "") -> Paper:
         data = data.decode("utf-8", errors="replace")
     text = _clean(data)
     if len(text) < 500:
-        raise IngestError("This text is too short to be a paper.")
+        raise IngestError("This text is too short to teach from.")
     return Paper(text=text, title=_guess_title(text), kind="text", url=url)
 
 
@@ -460,7 +460,9 @@ def _download_and_read(url: str, timeout: float) -> Paper:
                 ctype = resp.headers.get_content_type()
                 data = _read_body(resp, pdf=ctype == "application/pdf" or final.lower().endswith(".pdf"))
         except urllib.error.HTTPError as e:
-            raise IngestError(f"The site answered {e.code} {e.reason}: it blocks automatic downloads or needs a login. Open it in your browser, download the PDF and upload it.") from None
+            if e.code in (401, 403):
+                raise IngestError(f"This site blocks automatic downloads or needs a login. Open it in your browser, save the PDF, and add it as a file. (Site answered {e.code}.)") from None
+            raise IngestError(f"This link didn't open. Check it, or open it in your browser, save the PDF, and add it as a file. (Site answered {e.code}.)") from None
         except (urllib.error.URLError, OSError, http.client.HTTPException) as e:
             if deadline.expired or isinstance(e, TimeoutError) or isinstance(getattr(e, "reason", None), TimeoutError):
                 raise IngestError("The site took too long to respond.") from None
@@ -482,7 +484,7 @@ def _read_body(resp, pdf: bool) -> bytes:
                 limit = MAX_BYTES
                 continue
             what = "file" if limit == MAX_BYTES else "page"
-            raise IngestError(f"That {what} is larger than {limit // (1024 * 1024)} MB. Download the paper's PDF and upload it instead.")
+            raise IngestError(f"That {what} is larger than {limit // (1024 * 1024)} MB. Save the source's PDF and add it as a file instead.")
     return b"".join(chunks)
 
 

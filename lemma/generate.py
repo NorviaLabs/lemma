@@ -200,7 +200,7 @@ def choose_plans(job: Job, outline: dict, concepts: list[dict], audience: str) -
     asking = [c for c in concepts if c.get("plans")]
     if not asking:
         return {}
-    job.step("plans", "Choosing how to teach each concept, with Jev", "active")
+    job.step("plans", "Choosing how to teach each concept", "active")
     titles = {c["id"]: c["title"] for c in concepts}
     state = {"audience": audience or "a curious learner with no special background", "lesson": outline.get("summary", ""),
              "concepts": [{"id": c["id"], "title": c["title"], "idea": c["idea"], "role": c.get("role", "core"),
@@ -226,10 +226,10 @@ def choose_plans(job: Job, outline: dict, concepts: list[dict], audience: str) -
             chosen[c["id"]] = {"concept": c["id"], "chosen": pick, "plan": plan, "confidence": answers[c["id"]].get("confidence"), "model": answers.get("_model")}
     except jev.JevError as e:
         job.update("plans", "failed", str(e))
-        raise GenerationError(f"Couldn't choose how to teach the concepts with Jev ({e}). Retry in a moment.") from None
+        raise GenerationError(f"Couldn't choose how to teach the concepts just now ({e}). Retry in a moment.") from None
     except (KeyError, TypeError, ValueError):
-        job.update("plans", "failed", "Jev's reply couldn't be read")
-        raise GenerationError("Jev sent a choice of activities OpenLemma couldn't read. Retry in a moment.") from None
+        job.update("plans", "failed", "The checking service's reply couldn't be read")
+        raise GenerationError("Couldn't choose how to teach the concepts just now. Retry in a moment.") from None
     picked = sum(1 for x in chosen.values() if x["plan"])
     job.update("plans", "done", f"Plans chosen for {picked} of {len(asking)} concepts")
     return chosen
@@ -552,7 +552,7 @@ def require_jev():
 
 def make_outline(job: Job, provider: Provider, paper_text: str, audience: str) -> dict:
     require_jev()  # before anything is paid for: the build that follows can't run without Jev
-    job.step("outline", "Reading the paper, summarising it and proposing a path of concepts", "active")
+    job.step("outline", "Reading your sources and proposing an outline", "active")
     task = OUTLINE_TASK.format(audience=audience or "a curious learner with no special background", n_hint="three to seven")
     if L.source_map(paper_text):
         task += MULTI_SOURCE_TASK
@@ -726,7 +726,7 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audie
         except (ProviderError, GenerationError) as e:
             obj, problems = None, [str(e)]
         except jev.JevError as e:  # a concept Jev couldn't check is never shown unchecked
-            obj, problems, passed_rules[0] = None, [f"Jev couldn't check it for critical errors ({e})"], None
+            obj, problems, passed_rules[0] = None, [f"the checks couldn't run on it ({e})"], None
         except Exception as e:  # a bug met by one concept leaves that concept out, not the whole lesson
             eid = logs.report(f"concept {c['id']}", e)
             obj, problems, passed_rules[0] = None, [f"an unexpected error while checking it ({e.__class__.__name__}, error {eid})"], None
@@ -748,8 +748,10 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audie
         set_plan(c["id"], "ready")
         publish()
         fixes = getattr(job, "repairs", {}).get(c["id"], len(unresolved) and MAX_REPAIRS)
-        flagged = f", with {len(unresolved)} possible problem{'s' * (len(unresolved) != 1)} left for review" if unresolved else ""
-        job.update(c["id"], "done", "Ready" + (f", after {fixes} round{'s' * (fixes != 1)} of fixes" if fixes else "") + flagged, problems=[])
+        flagged = (f" The checker flagged {len(unresolved)} possible problem{'s' * (len(unresolved) != 1)} it couldn't confirm,"
+                   " so read this concept against its source." if unresolved else "")
+        ready_text = "Ready" + (f", after {fixes} round{'s' * (fixes != 1)} of fixes" if fixes else "")
+        job.update(c["id"], "done", ready_text + ("." + flagged if flagged else ""), problems=[])
 
     with ThreadPoolExecutor(max_workers=WORKERS) as pool:
         list(pool.map(build_one, todo))

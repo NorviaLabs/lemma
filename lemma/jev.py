@@ -21,7 +21,7 @@ MODEL = "jev-1.13.0"  # pinned, so the thresholds Lemma applies keep their meani
 ATTEMPTS = 3
 RETRY_WAIT = 1.0  # seconds before the second attempt, doubling after
 RETRY_STATUSES = (429, 500, 502, 503, 504, 529)
-MISSING = "This OpenLemma has no TypeSafe key (TYPESAFE_API_KEY), which search and lesson building need for Jev's checks."
+MISSING = "This OpenLemma has no TypeSafe key (TYPESAFE_API_KEY), which search and lesson building need for their checks."
 
 
 class JevError(Exception):
@@ -53,14 +53,14 @@ def ask(state, questions: dict, timeout: float) -> dict:
             break
         except urllib.error.HTTPError as e:
             if last or e.code not in RETRY_STATUSES:
-                raise JevError(f"Jev answered {e.code}") from None
+                raise JevError(f"the checking service answered {e.code}") from None
         except (urllib.error.URLError, TimeoutError, socket.timeout) as e:
             if last:
-                raise JevError(f"Couldn't use Jev ({e.__class__.__name__})") from None
+                raise JevError(f"couldn't reach the checking service ({e.__class__.__name__})") from None
         except ValueError:
-            raise JevError("Jev sent a reply OpenLemma couldn't read") from None
+            raise JevError("the checking service sent a reply OpenLemma couldn't read") from None
         time.sleep(RETRY_WAIT * 2 ** attempt)
     if not isinstance(reply, dict) or not isinstance(reply.get("answers"), dict):
-        raise JevError("Jev sent a reply OpenLemma couldn't read")
+        raise JevError("the checking service sent a reply OpenLemma couldn't read")
     reply["answers"]["_model"] = reply.get("model") or MODEL
     return reply["answers"]
