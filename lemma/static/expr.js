@@ -65,11 +65,18 @@
     return mu + sd * z;
   }
   function binom(n, k) {
-    n = Math.round(n); k = Math.round(k);
-    if (k < 0 || k > n || n < 0) return 0;
+    n = Math.floor(n + 0.5); k = Math.floor(k + 0.5);
+    if (!Number.isFinite(n) || !Number.isFinite(k)) return NaN;
+    if (k < 0 || k > n) return 0;
+    k = Math.min(k, n - k);
+    if (k > 600) return Infinity; // C(n, k) passes the largest float once min(k, n - k) reaches about 520
     let r = 1;
     for (let i = 1; i <= k; i++) r = (r * (n - k + i)) / i;
-    return Math.round(r);
+    return Math.floor(r + 0.5);
+  }
+  function round(x, dg = 0) {
+    const f = Math.pow(10, Math.trunc(Math.min(Math.max(dg, -308), 308))); // keep in step with expr.py
+    return Math.floor(x * f + 0.5) / f;
   }
 
   const FUNCTIONS = {
@@ -77,7 +84,7 @@
     log: [Math.log, 1, 1], ln: [Math.log, 1, 1], log10: [(x) => Math.log(x) / Math.log(10), 1, 1],
     pow: [Math.pow, 2, 2], min: [Math.min, 1, 16], max: [Math.max, 1, 16],
     floor: [Math.floor, 1, 1], ceil: [Math.ceil, 1, 1],
-    round: [(x, dg = 0) => { const f = Math.pow(10, Math.trunc(dg)); return Math.floor(x * f + 0.5) / f; }, 1, 2],
+    round: [round, 1, 2],
     clamp: [(x, lo, hi) => Math.min(Math.max(x, lo), hi), 3, 3],
     sin: [Math.sin, 1, 1], cos: [Math.cos, 1, 1], tan: [Math.tan, 1, 1], atan: [Math.atan, 1, 1], atan2: [Math.atan2, 2, 2],
     erf: [erf, 1, 1], normpdf: [normpdf, 1, 3], normcdf: [normcdf, 1, 3], norminv: [norminv, 1, 3],

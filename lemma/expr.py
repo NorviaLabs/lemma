@@ -15,8 +15,9 @@ Grammar (lowest to highest precedence)::
     power    := atom ('^' unary)?
     atom     := number | name | name '(' args ')' | '(' ternary ')'
 
-Booleans are numbers: comparisons and logic return 1 or 0. Brackets (calls included) nest at most
-``MAX_NESTING`` deep, so a runaway expression fails as a normal error instead of exhausting the stack.
+Booleans are numbers: comparisons and logic return 1 or 0, and NaN counts as false. Brackets (calls
+included) nest at most ``MAX_NESTING`` deep, so a runaway expression fails as a normal error instead
+of exhausting the stack.
 """
 
 from __future__ import annotations
@@ -72,19 +73,47 @@ def _div(a, b):
 
 
 def _mod(a, b):
-    if b == 0:
+    if b == 0 or math.isinf(a):
         return _nan()
     return math.fmod(a, b)  # JS % keeps the sign of the dividend
 
 
+def _odd(x):
+    return math.isfinite(x) and x == math.floor(x) and math.fmod(x, 2) != 0
+
+
 def _pow(a, b):
+    if b != b or (abs(a) == 1 and math.isinf(b)):
+        return _nan()  # Python gives 1 here; JavaScript gives NaN
     try:
-        r = math.pow(a, b)
+        return math.pow(a, b)
     except OverflowError:
-        return math.inf
+        return -math.inf if a < 0 and _odd(b) else math.inf
     except ValueError:
+        if a == 0:
+            return math.copysign(math.inf, a) if _odd(b) else math.inf
         return _nan()
-    return r
+
+
+# Matching JavaScript down to signed zero keeps 1/floor(-0) and the like equal in both engines.
+def _floor(x):
+    return math.copysign(math.floor(x), x) if math.isfinite(x) else x
+
+
+def _ceil(x):
+    return math.copysign(math.ceil(x), x) if math.isfinite(x) else x
+
+
+def _signed(x):
+    return (x, math.copysign(1, x))  # orders -0 below 0
+
+
+def _min(*xs):
+    return _nan() if any(x != x for x in xs) else min(xs, key=_signed)
+
+
+def _max(*xs):
+    return _nan() if any(x != x for x in xs) else max(xs, key=_signed)
 
 
 def _safe(fn):
@@ -154,19 +183,29 @@ def _norminv(p, mu=0.0, sd=1.0):
 
 def _round(x, digits=0):
     # JS-style rounding: half rounds up (towards +infinity).
-    f = 10 ** int(digits)
-    return math.floor(x * f + 0.5) / f
+    if digits != digits:
+        return _nan()
+    f = math.pow(10, int(max(-308, min(308, digits))))  # 10^±308 is the widest power of ten a float holds
+    return _floor(x * f + 0.5) / f
 
 
 def _binom(n, k):
-    n, k = int(round(n)), int(round(k))
-    if k < 0 or k > n or n < 0:
+    n, k = _floor(n + 0.5), _floor(k + 0.5)
+    if not (math.isfinite(n) and math.isfinite(k)):
+        return _nan()
+    if k < 0 or k > n:
         return 0.0
-    return float(math.comb(n, k))
+    k = min(k, n - k)
+    if k > 600:  # C(n, k) passes the largest float once min(k, n - k) reaches about 520
+        return math.inf
+    r = 1.0
+    for i in range(1, int(k) + 1):
+        r = r * (n - k + i) / i
+    return _floor(r + 0.5)
 
 
 def _clamp(x, lo, hi):
-    return min(max(x, lo), hi)
+    return _min(_max(x, lo), hi)
 
 
 def _logistic(x):
@@ -184,10 +223,10 @@ FUNCTIONS: dict[str, tuple[object, int, int]] = {
     "ln": (_log, 1, 1),
     "log10": (lambda x: _log(x) / math.log(10), 1, 1),
     "pow": (_pow, 2, 2),
-    "min": (min, 1, 16),
-    "max": (max, 1, 16),
-    "floor": (math.floor, 1, 1),
-    "ceil": (math.ceil, 1, 1),
+    "min": (_min, 1, 16),
+    "max": (_max, 1, 16),
+    "floor": (_floor, 1, 1),
+    "ceil": (_ceil, 1, 1),
     "round": (_round, 1, 2),
     "clamp": (_clamp, 3, 3),
     "sin": (math.sin, 1, 1),
@@ -374,6 +413,14 @@ def _b(x) -> float:
     return 1.0 if x else 0.0
 
 
+def _t(x) -> bool:
+    return x == x and x != 0  # NaN is false, as in JavaScript
+
+
+def _close(a, b) -> bool:
+    return abs(a - b) <= 1e-9 * max(1.0, abs(a), abs(b))
+
+
 def _eval(n, env):
     tag = n[0]
     if tag == "num":
@@ -387,17 +434,17 @@ def _eval(n, env):
         fn = FUNCTIONS[n[1]][0]
         return _safe(fn)(*[_eval(a, env) for a in n[2]])
     if tag == "?":
-        return _eval(n[2], env) if _eval(n[1], env) else _eval(n[3], env)
+        return _eval(n[2], env) if _t(_eval(n[1], env)) else _eval(n[3], env)
     if tag == "u-":
         return -_eval(n[1], env)
     if tag == "u+":
         return _eval(n[1], env)
     if tag == "u!":
-        return _b(not _eval(n[1], env))
+        return _b(not _t(_eval(n[1], env)))
     if tag == "&&":
-        return _b(_eval(n[1], env) and _eval(n[2], env))
+        return _b(_t(_eval(n[1], env)) and _t(_eval(n[2], env)))
     if tag == "||":
-        return _b(_eval(n[1], env) or _eval(n[2], env))
+        return _b(_t(_eval(n[1], env)) or _t(_eval(n[2], env)))
     a, b = _eval(n[1], env), _eval(n[2], env)
     if tag == "+":
         return a + b
@@ -420,9 +467,9 @@ def _eval(n, env):
     if tag == ">=":
         return _b(a >= b)
     if tag == "==":
-        return _b(abs(a - b) <= 1e-9 * max(1.0, abs(a), abs(b)))
+        return _b(_close(a, b))
     if tag == "!=":
-        return _b(abs(a - b) > 1e-9 * max(1.0, abs(a), abs(b)))
+        return _b(not _close(a, b))
     raise ExprError(f"bad node {tag}")
 
 

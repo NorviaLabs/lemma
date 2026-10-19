@@ -78,6 +78,11 @@ EXPECTED = {
     "binom(7, 3)": 35,
     "binom(-1, 2)": 0,
     "binom(60, 30)": 118264581564861424,
+    "1 / max(-0, 0)": math.inf,
+    "1 / min(0, -0)": -math.inf,
+    "1 / clamp(-0, 0, 1)": math.inf,
+    "1 / floor(-0)": -math.inf,
+    "1 / ceil(-0.5)": -math.inf,
 }
 
 LARGE_BINOMS = ["binom(1000, 500)", "binom(1030, 515)", "binom(1e15, 2)", "binom(200, 100)"]
