@@ -1,6 +1,6 @@
 """Build lessons from eval/papers.json, judge them with TypeSafe's Jev, and summarise the results.
 
-    uv run python eval/run.py build   --run R --builder claude-code:claude-opus-5-5
+    uv run python eval/run.py build   --run R --builder claude:claude-opus-5-5
     uv run python eval/run.py judge   --run R
     uv run python eval/run.py plant   --run R --into R-planted
     uv run python eval/run.py rescore --run R   (recombine saved answers after changing thresholds; no Jev calls)
@@ -60,14 +60,14 @@ EXCLUDED = ("galton_1886", "galton-1886")
 
 
 def provider_for(spec: str):
-    """`claude:claude-opus-5-5` -> a provider using LEMMA_EVAL_KEY_CLAUDE; `claude-code:claude-opus-5-5` uses
-    the Claude subscription Claude Code is signed in with, and needs no key."""
+    """`claude:claude-opus-5-5` -> a provider using LEMMA_EVAL_KEY_CLAUDE; `chatgpt:...` uses the ChatGPT
+    subscription signed in on this computer, and needs no key."""
     pid, _, model = spec.partition(":")
     if pid not in PROVIDERS:
         sys.exit(f"Unknown provider {pid!r}. Choose from: {', '.join(PROVIDERS)}")
     env = "LEMMA_EVAL_KEY_" + pid.upper().replace("-", "_")
     key = os.environ.get(env, "")
-    if not key and pid not in ("chatgpt", "claude-code"):
+    if not key and pid != "chatgpt":
         sys.exit(f"Set {env} to use {pid}.")
     return make_provider(pid, key, model)
 
