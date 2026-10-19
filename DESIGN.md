@@ -390,7 +390,7 @@ A stepper: inactive steps are plain rows with a circular number mark; done marks
 In the current step, the narrated notes are numbered lines; the line being read gets a lemon-wash fill and an ultramarine mark, read lines get an ink mark. The note's number pins onto each control, readout or drawn mark it names: ultramarine while read, ink once said.
 
 ### Model card
-The live model on a white card with high lift: a sentence-case title and "Teaching model" tag, the chart, readout tiles, then sliders.
+The live model on a white card with high lift: a sentence-case title and "Teaching model" tag, the chart, readout tiles, then sliders. Labels on a chart never sit on each other: a point keeps its label beside it (moving to its other side or below it if it must), and a marker's or reference line's label makes way, a row lower, across its line, or to the plot's other end.
 
 ### Readouts
 Soft canvas tiles (16px corners) with a muted sentence-case label and an 800-weight tabular value. The readout a note names turns lemon wash with a lemon inner ring; once the note is read it goes back to its canvas tile, keeping only its ink pin. On phones they become one-column label/value rows.

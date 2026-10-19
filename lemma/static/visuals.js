@@ -107,6 +107,34 @@
     return f;
   }
   const noAxis = () => Object.assign(() => 0, { ticks: [] });
+
+  /* Labels on a plot never overlap. Each label lists the spots it may take, its usual one first: a point's label above
+     it on either side or below it, a reference line's label above or below its line at either end, a marker's label
+     a row lower or across its line. In order of importance, each takes its first spot inside the plot that doesn't
+     cover a label already placed or a drawn point other than its own; if none is free it takes the spot that
+     covers least. */
+  function placeLabels(labels, box, taken = []) {
+    const rect = (c, w, fs) => ({ x: (c.anchor === "end" ? c.x - w : c.x) - 2, y: c.y - fs * 0.85 - 2, w: w + 4, h: fs + 4 });
+    const hit = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+    const inside = (r) => r.x >= box.x && r.x + r.w <= box.x + box.w && r.y >= box.y && r.y + r.h <= box.y + box.h;
+    const overlap = (a, b) => Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)) * Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
+    for (const L of labels) {
+      const { node, spots, own } = L;  // `own`: the point a label belongs to, which it may touch
+      const cost = (r) => taken.reduce((sum, t) => sum + (t === own ? 0 : overlap(t, r)), 0) + (inside(r) ? 0 : 1e6);
+      // Measured once the chart is on the page; estimated from the text before that.
+      let fs = L.fs, w = 0;
+      if (node.isConnected) { try { fs = parseFloat(getComputedStyle(node).fontSize) || fs; w = node.getComputedTextLength(); } catch (e) { w = 0; } }
+      if (!w) w = node.textContent.length * fs * 0.56;
+      // The first free spot; failing that, the one that covers least.
+      const free = spots.find((c) => { const r = rect(c, w, fs); return inside(r) && !taken.some((t) => t !== own && hit(t, r)); })
+        || spots.reduce((best, c) => (cost(rect(c, w, fs)) < cost(rect(best, w, fs)) ? c : best), spots[0]);
+      node.setAttribute("x", free.x);
+      node.setAttribute("y", free.y);
+      node.setAttribute("text-anchor", free.anchor);
+      taken.push(rect(free, w, fs));
+    }
+    return taken;
+  }
   let clipSeq = 0;
 
   /* ------------------------------------------------------------ renderers */
@@ -148,10 +176,15 @@
       d += `L${xs(pts[pts.length - 1][0])},${base}Z`;
       el("path", { d, class: "fill", style: `fill:${col(f.color ?? s.color)}` }, plot);
     }
+    const labels = { point: [], marker: [], ref: [] }, dots = [];
     for (const h of vis.hlines || []) {
       const y = ys(evalNum(h.y, env));
       el("line", { x1: box.x, x2: box.x + box.w, y1: y, y2: y, class: "refline" }, plot);
-      if (h.label) el("text", { x: box.x + box.w - 6, y: y - 6, "text-anchor": "end", class: "ref-label", text: h.label }, plot);
+      if (h.label) {
+        const L = box.x + 6, R = box.x + box.w - 6, above = y - 6, below = y + 17;
+        labels.ref.push({ fs: 12.5, node: el("text", { class: "ref-label", text: h.label }, plot),
+          spots: [{ x: R, y: above, anchor: "end" }, { x: R, y: below, anchor: "end" }, { x: L, y: above, anchor: "start" }, { x: L, y: below, anchor: "start" }] });
+      }
       if (h.id) ctx.anchor(h.id, box.x + 16, y);
     }
     series.forEach((s, i) => {
@@ -175,17 +208,32 @@
       el("line", { x1: x, x2: x, y1: box.y, y2: box.y + box.h, class: "marker", style: `stroke:${col(m.color ?? 3)}` }, plot);
       // Stagger labels so markers that sit close together stay readable; flip to the left near the right edge.
       const right = x > box.x + box.w * 0.7;
-      if (m.label) el("text", { x: right ? x - 5 : x + 5, y: box.y + 14 + (i % 3) * 15, "text-anchor": right ? "end" : "start", class: "marker-label", style: `fill:${col(m.color ?? 3)}`, text: m.label }, plot);
+      if (m.label) {
+        const rows = [0, 1, 2, 3, 4, 5].sort((a, b) => (a !== i % 3) - (b !== i % 3));  // its own row first
+        const side = (r) => [{ x: right ? x - 5 : x + 5, y: box.y + 14 + r * 15, anchor: right ? "end" : "start" }];
+        const across = (r) => [{ x: right ? x + 5 : x - 5, y: box.y + 14 + r * 15, anchor: right ? "start" : "end" }];
+        labels.marker.push({ fs: 13, node: el("text", { class: "marker-label", style: `fill:${col(m.color ?? 3)}`, text: m.label }, plot),
+          spots: rows.flatMap(side).concat(rows.flatMap(across)) });
+      }
       if (m.id) ctx.anchor(m.id, x, box.y + box.h - 14);
     });
     for (const p of vis.points || []) {
       const x = xs(evalNum(p.x, env)), y = ys(evalNum(p.y, env));
       if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
       el("circle", { cx: x, cy: y, r: 9, class: "point", style: `fill:${col(p.color ?? 0)}` }, plot);
+      const dot = { x: x - 10, y: y - 10, w: 20, h: 20 };
+      dots.push(dot);
       const right = x > box.x + box.w * 0.7;  // like the marker labels, flipped to the left near the right edge
-      if (p.label) el("text", { x: right ? x - 9 : x + 9, y: y - 9, "text-anchor": right ? "end" : "start", class: "point-label", text: p.label }, plot);
+      if (p.label) {
+        const near = right ? -9 : 9, far = -near, a = right ? "end" : "start", b = right ? "start" : "end";
+        labels.point.push({ own: dot, fs: 13.5, node: el("text", { class: "point-label", text: p.label }, plot),
+          spots: [{ x: x + near, y: y - 9, anchor: a }, { x: x + near, y: y + 21, anchor: a }, { x: x + far, y: y - 9, anchor: b }, { x: x + far, y: y + 21, anchor: b },
+            { x: x + near * 1.5, y: y + 5, anchor: a }, { x: x + far * 1.5, y: y + 5, anchor: b }] });
+      }
       if (p.id) ctx.anchor(p.id, x - 15, y - 15);
     }
+    // The learner's points keep their labels in place; markers' and reference lines' labels make way, for them and the points.
+    placeLabels([...labels.point, ...labels.marker, ...labels.ref], box, dots);
     ctx.legend(series.map((s, i) => ({ label: s.label, color: s.color ?? i, dashed: s.dashed })).concat((vis.fills || []).filter((f) => f.label).map((f) => ({ label: f.label, color: f.color ?? series[f.series]?.color, area: true }))));
   };
 
