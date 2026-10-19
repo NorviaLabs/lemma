@@ -189,7 +189,7 @@ input[type=checkbox], input[type=radio] { accent-color: var(--green); }
 
 /* ---------- home: the doorway plate */
 :root { --home-col: minmax(300px, 400px); --home-gap: clamp(28px, 4vw, 56px); }  /* the home page's one two-column grid */
-.home-exhibit { --viz-max-h: max(240px, calc(100svh - 500px)); display: grid; grid-template-columns: var(--home-col) minmax(0, 1fr); grid-template-rows: auto 1fr auto; grid-template-areas: "intro film" "ways film" "try try"; column-gap: var(--home-gap); margin: 0 0 80px; }
+.home-exhibit { --viz-max-h: max(240px, calc(100svh - 500px)); display: grid; grid-template-columns: var(--home-col) minmax(0, 1fr); grid-template-rows: auto 1fr auto auto; grid-template-areas: "intro film" "ways film" "recent recent" "try try"; column-gap: var(--home-gap); margin: 0 0 80px; }
 .he-intro { grid-area: intro; padding: 12px 0 4px; }
 .he-intro h1 { font-size: clamp(36px, 3.6vw, 52px); line-height: 1.05; letter-spacing: -.025em; margin-bottom: 16px; }
 .he-intro .lead { font-size: 18px; line-height: 1.5; color: var(--body); margin-bottom: 26px; }
@@ -215,7 +215,7 @@ input[type=checkbox], input[type=radio] { accent-color: var(--green); }
 .he-stage .model-note { margin-top: 12px; }
 /* From paper to lesson: a still figure by default; .is-live plays it once, on its own clock, when it comes into view. */
 .paper-hall { margin: 0 0 80px; }
-.hall-pin { display: grid; grid-template-columns: var(--home-col) minmax(0, 1fr); gap: var(--home-gap); align-items: center; }
+.hall-pin { display: grid; grid-template-columns: var(--home-col) minmax(0, 1fr); gap: var(--home-gap); align-items: stretch; }  /* the figure card starts level with the heading, like the Try card */
 .hall-copy h2 { font-size: clamp(28px, 2.8vw, 38px); margin-bottom: 22px; }
 .hall-steps { list-style: none; padding: 0; margin: 0; }
 .hs-step { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 14px; padding: 14px 0; border-top: 1px solid var(--rule); transition: opacity 300ms cubic-bezier(.16, 1, .3, 1); }
@@ -257,6 +257,7 @@ input[type=checkbox], input[type=radio] { accent-color: var(--green); }
 .paper-hall.is-live .hs-step.done .plate { background: var(--ink); color: #fff; box-shadow: none; }
 .paper-hall.is-live .hx-card { will-change: transform, opacity; }
 button.hall-replay { margin-top: 14px; color: var(--mute); }
+button.hall-replay.is-waiting { visibility: hidden; }  /* keeps its place while the figure plays */
 button.hall-replay:hover:not(:disabled) { color: var(--ink); }
 .paper-hall.is-live .hall-art:not([data-step="3"]) .hx-card .plate { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--rule-strong); }
 
@@ -684,7 +685,7 @@ body.lesson-mode #main { max-width: none; padding: 0; }
 .ctl[data-pin]::before, .out[data-pin]::before { content: attr(data-pin); position: absolute; top: -9px; left: -9px; z-index: 1; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: var(--green); color: #fff; font: 700 11.5px/1 var(--sans); box-shadow: 0 0 0 2px var(--plate); animation: pin-in .35s cubic-bezier(.16, 1, .3, 1); }
 .out:first-child[data-pin]::before { left: -12px; }
 .ctl[data-pin-state="said"]::before, .out[data-pin-state="said"]::before { background: var(--ink); animation: none; }
-.ctl[data-pin-state="said"], .out[data-pin-state="said"] { background: transparent; }
+.ctl[data-pin-state="said"] { background: transparent; }  /* a readout keeps its tile once its note is read */
 @keyframes pin-in { from { transform: scale(.4); opacity: 0; } }
 .viz .mark-pin circle { fill: var(--green); stroke: var(--plate); stroke-width: 2.5; }
 .viz .mark-pin text { fill: #fff; font: 700 11.5px var(--sans); }
@@ -789,7 +790,7 @@ kbd { display: inline-block; min-width: 22px; padding: 1px 6px; text-align: cent
   .lt-tab { width: auto; max-width: 140px; }
 }
 @media (max-width: 900px) {
-  .home-exhibit { grid-template-columns: minmax(0, 1fr); grid-template-areas: "intro" "film" "ways" "try"; row-gap: 18px; min-height: 0; --viz-max-h: max(220px, 40svh); }
+  .home-exhibit { grid-template-columns: minmax(0, 1fr); grid-template-areas: "intro" "film" "ways" "recent" "try"; row-gap: 18px; min-height: 0; --viz-max-h: max(220px, 40svh); }
   .he-verbs .verb:not(.active) { display: block; }
   .floor { grid-template-columns: minmax(0, 1fr); }
   .rail { border-right: 0; border-bottom: 1px solid var(--rule); padding: 20px 20px 18px; }
@@ -1278,6 +1279,14 @@ kbd { background: var(--surface); border-radius: 6px; }
   .out, .out:first-child { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 14px; }
   .out dd { margin: 0; font-size: 21px; white-space: nowrap; }
 }
+/* On phones the header is always two tidy rows: the wordmark, then the links on a full-width row whose first link lines up
+   with the wordmark and whose "New lesson" pill ends on the right gutter. */
+@media (max-width: 600px) {
+  .site-head { row-gap: 8px; }
+  .site-nav { flex-basis: calc(100% + 9px); gap: 0; margin-left: -9px; }
+  .site-nav a { padding: 8px 9px; font-size: 14px; }
+  .site-nav a[href$="#/make"] { margin-left: auto; }
+}
 @media (prefers-reduced-motion: reduce) { .primary:hover:not(:disabled), .gal-item:hover .gal-plate { transform: none; } }
 
 /* the launch film, embedded in the hero: a poster and a play button until the visitor asks */
@@ -1301,24 +1310,43 @@ kbd { background: var(--surface); border-radius: 6px; }
 /* the live model, now right below the hero */
 .he-try { grid-area: try; display: grid; grid-template-columns: var(--home-col) minmax(0, 1fr); grid-template-rows: auto auto 1fr; grid-template-areas: "title stage" "verbs stage" "foot stage"; column-gap: var(--home-gap); row-gap: 22px; margin-top: 80px; align-items: start; }
 .he-try-title { grid-area: title; margin: 0; font-size: clamp(28px, 2.8vw, 38px); }
+/* A signed-in learner's recent lessons: the heading beside the library's own rows, on the home grid. */
+.he-recent { grid-area: recent; display: grid; grid-template-columns: var(--home-col) minmax(0, 1fr); grid-template-areas: "head list"; column-gap: var(--home-gap); margin-top: 80px; align-items: start; }
+.he-recent-head { grid-area: head; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.he-recent-head h2 { margin: 0; font-size: clamp(28px, 2.8vw, 38px); }
+.he-recent-head .ghost.small { margin-left: -14px; }
+.he-recent .lib-list { grid-area: list; min-width: 0; }
 .he-try-foot { grid-area: foot; align-self: end; display: flex; flex-direction: column; align-items: flex-start; gap: 0; margin: 0; padding-top: 18px; border-top: 1px solid var(--rule); color: var(--mute); }
 /* On wide screens the model card is an instrument panel, the chart beside its readouts and slider,
    so it stands about as tall as the heading and steps beside it rather than leaving a hole under them. */
-@media (min-width: 1100px) {
+@media (min-width: 700px) {
   .he-try .he-stage { --viz-max-h: 320px; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(260px, 1fr); grid-template-rows: auto auto auto 1fr; grid-template-areas: "head head" "viz outputs" "viz controls" "note controls"; column-gap: clamp(20px, 2.4vw, 32px); }
   .he-try .he-stage > .model-head { grid-area: head; }
   .he-try .he-stage > .he-viz { grid-area: viz; align-self: start; }
   .he-try .he-stage > .outputs { grid-area: outputs; grid-template-columns: minmax(0, 1fr); gap: 6px; margin-top: 8px; }
   .he-try .he-stage .out { padding: 8px 14px 9px; }
   .he-try .he-stage .out dd { font-size: 22px; margin-top: 3px; }
-  .he-try .he-stage { position: sticky; top: calc(var(--bar-h, 64px) + 16px); }  /* the model stays in view while the steps grow */
   .he-try .he-stage > .controls { grid-area: controls; margin-top: 14px; }
   .he-try .he-stage .ctl { grid-template-areas: "label label label" "value . play" "range range range"; grid-template-columns: auto minmax(0, 1fr) auto; row-gap: 6px; }
   .he-try .he-stage .ctl-value { font-size: 22px; }
   .he-try .he-stage > .model-note { grid-area: note; margin-top: 8px; }
 }
+@media (min-width: 1100px) {
+  .he-try .he-stage { position: sticky; top: calc(var(--bar-h, 64px) + 16px); }  /* the model stays in view while the steps grow */
+}
+/* Below 1100px the steps can't sit beside a full instrument panel, so the section is one column: heading, model, steps. */
+@media (max-width: 1099px) {
+  .he-try, .he-recent { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .he-try { grid-template-areas: "title" "stage" "verbs" "foot"; }
+  .he-try .he-verbs, .he-try .he-try-foot { max-width: 640px; }
+  .he-recent { grid-template-areas: "head" "list"; row-gap: 18px; }
+}
+@media (hover: hover) {
+  .he-verbs .verb.later:hover { background: var(--plate-2); }  /* an unopened step shows it can be opened */
+}
 @media (prefers-reduced-motion: reduce) { .film-cover:hover .film-disc { transform: none; } }
 @media (max-width: 900px) {
+  .he-recent { margin-top: 62px; }
   .he-try { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-template-areas: "title" "stage" "verbs" "foot"; margin-top: 62px; }  /* 80px with the hero's 18px row gap */
   .he-try-foot { padding-top: 14px; }
   .film-frame { border-radius: 20px; }

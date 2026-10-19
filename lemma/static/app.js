@@ -459,6 +459,28 @@
   let exhibitStep = 0;
   let exampleP = null;
   const exampleLesson = () => (exampleP = exampleP || api("/api/example").catch((e) => { exampleP = null; throw e; }));
+  /* A signed-in learner with saved lessons gets them back on the home page, under the ways in, in the library's own rows.
+     Signed out, or with nothing saved yet, there is no row at all. */
+  function homeRecent() {
+    const sec = h("section", { class: "he-recent", "aria-labelledby": "he-recent-title", hidden: true });
+    if (!status.user || !status.library_count) return sec;
+    api("/api/lessons").then((items) => {
+      if (!items.length || !sec.isConnected) return;
+      sec.replaceChildren(
+        h("div", { class: "he-recent-head" },
+          h("h2", { id: "he-recent-title" }, "Your recent lessons"),
+          h("a", { class: "btn ghost small", href: "#/library" }, "All in your library", icon("next"))),
+        h("ul", { class: "lib-list" }, items.slice(0, 3).map((it) => h("li", { class: "lib-row lib-lesson" },
+          h("div", { class: "lib-text" },
+            h("h3", { class: "lib-title" }, h("a", { class: "lib-open", href: `#/lesson/${it.id}` }, it.title || "Untitled lesson")),
+            it.source ? h("p", { class: "lib-source" }, it.source) : null,
+            h("p", { class: "lib-meta" }, it.category ? h("span", {}, it.category) : null, h("span", { class: "lib-num" }, plural(it.concepts, "concept")), h("span", {}, "Saved ", when(it.saved))))))));
+      sec.hidden = false;
+    }).catch(() => {});
+    return sec;
+  }
+
+  const NOTICED = ["dev", "child_dev"];  // the readouts the home model's Notice step names: parents' and children's distance from average
   function homeExhibit() {
     const M = window.LemmaModel;
     const stage = h("div", { class: "he-stage", "aria-busy": "true" }, h("p", { class: "muted" }, "Setting up the concept…"));
@@ -519,6 +541,7 @@
           h("a", { class: "btn ghost small", href: "#/example" }, icon("play"), "Try the example lesson"),
           h("span", { class: "small" }, "About 10 minutes. No account or key needed."))),
       filmPlayer(),
+      homeRecent(),
       h("div", { class: "he-try" },
         h("h2", { class: "he-try-title" }, "Try it yourself"),
         h("div", { class: "he-verbs" }, verbs),
@@ -528,7 +551,9 @@
     exampleLesson().then((lesson) => {
       const c = lesson.concepts.find((x) => x.id === "regression_line");
       if (!c || !el.isConnected) return;
-      const model = Object.assign({}, c.model, { controls: c.model.controls.filter((k) => k.id === "mp") });
+      // The two numbers the Notice step compares sit side by side, ahead of the expected height.
+      const named = (o) => (NOTICED.includes(o.id) ? NOTICED.indexOf(o.id) : NOTICED.length);
+      const model = Object.assign({}, c.model, { controls: c.model.controls.filter((k) => k.id === "mp"), outputs: [...c.model.outputs].sort((a, b) => named(a) - named(b)) });
       const k = model.controls[0];
       let values = { mp: 72, ratio: SHARE };
       const seen = { above: false, below: false };
@@ -545,9 +570,9 @@
         input.style.setProperty("--fill", `${((values.mp - k.min) / (k.max - k.min)) * 100}%`);
         valueEl.textContent = M.fmt(values.mp, 2, 1, k.unit);
         pin(deck.firstChild, "1", exhibitStep === 0);
-        outs.replaceChildren(...model.outputs.map((o, i) => h("div", { class: "out" + (exhibitStep === 1 && o.id === "child" ? " hl" : ""), style: `--k:var(--model-${(o.color ?? i) % 8})`,
-          "data-pin": exhibitStep >= 1 && o.id === "child" ? "2" : null, "data-pin-state": exhibitStep > 1 && o.id === "child" ? "said" : null },
-          h("dt", {}, h("span", { class: "key", "aria-hidden": "true" }), o.label), h("dd", {}, M.fmt(env[o.id], o.decimals ?? 2, 1, o.unit || "")))));
+        outs.replaceChildren(...model.outputs.map((o, i) => { const noticed = NOTICED.includes(o.id); return h("div", { class: "out" + (exhibitStep === 1 && noticed ? " hl" : ""), style: `--k:var(--model-${(o.color ?? i) % 8})`,
+          "data-pin": exhibitStep >= 1 && noticed ? "2" : null, "data-pin-state": exhibitStep > 1 && noticed ? "said" : null },
+          h("dt", {}, h("span", { class: "key", "aria-hidden": "true" }), o.label), h("dd", {}, M.fmt(env[o.id], o.decimals ?? 2, 1, o.unit || ""))); }));
         if (!user) return;
         const lead = values.mp - MEAN;
         if (lead >= 2) seen.above = true;
@@ -711,24 +736,26 @@
       }
     }
     let raf = 0;
-    const replay = h("button", { type: "button", class: "ghost small hall-replay", hidden: true, onclick: () => play() }, icon("refresh"), "Replay");
+    // Replay keeps its place while the figure plays (hidden, not removed), so the figure's card never changes height.
+    const replay = h("button", { type: "button", class: "ghost small hall-replay is-waiting", onclick: () => play() }, icon("refresh"), "Replay");
+    const waiting = () => replay.classList.contains("is-waiting");
     sec.querySelector(".hall-copy").append(replay);
     function play() {
       cancelAnimationFrame(raf);
-      replay.hidden = true;
+      replay.classList.add("is-waiting");
       measure();
       const t0 = performance.now();
       const tick = (t) => {
         if (!sec.isConnected) return;
         const p = clamp((t - t0) / DURATION);
         show(p);
-        if (p < 1) raf = requestAnimationFrame(tick); else replay.hidden = false;
+        if (p < 1) raf = requestAnimationFrame(tick); else replay.classList.remove("is-waiting");
       };
       raf = requestAnimationFrame(tick);
     }
     show(0);
     const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); play(); } }, { threshold: 0.45 });
-    const onResize = () => { if (replay.hidden && raf) measure(); };
+    const onResize = () => { if (waiting() && raf) measure(); };
     // Attach after view() has mounted the page: it runs the previous screen's cleanups first.
     requestAnimationFrame(() => {
       if (!sec.isConnected) return;
