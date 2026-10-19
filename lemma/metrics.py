@@ -68,14 +68,16 @@ def take(user_id: str | None, kind: str) -> bool:
     if not ENABLED or not user_id:
         return True
     day, cap = _day(), limit(kind)
+    if cap <= 0:
+        return False
     with _tx() as con:
-        row = con.execute("SELECT n FROM usage WHERE user_id = ? AND day = ? AND kind = ?", (user_id, day, kind)).fetchone()
-        if row and row[0] >= cap:
-            return False
-        con.execute("""INSERT INTO usage (user_id, day, kind, n) VALUES (?, ?, ?, 1)
-                       ON CONFLICT (user_id, day, kind) DO UPDATE SET n = n + 1""", (user_id, day, kind))
-        con.execute("DELETE FROM usage WHERE day < ?", (time.strftime("%Y-%m-%d", time.gmtime(time.time() - 7 * 86400)),))
-    return True
+        # One statement checks and spends, so parallel requests can't all read the old count.
+        granted = con.execute("""INSERT INTO usage (user_id, day, kind, n) VALUES (?, ?, ?, 1)
+                                 ON CONFLICT (user_id, day, kind) DO UPDATE SET n = n + 1 WHERE n < ?""",
+                              (user_id, day, kind, cap)).rowcount == 1
+        if granted:
+            con.execute("DELETE FROM usage WHERE day < ?", (time.strftime("%Y-%m-%d", time.gmtime(time.time() - 7 * 86400)),))
+    return granted
 
 
 def count(name: str) -> None:

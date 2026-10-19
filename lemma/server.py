@@ -13,7 +13,7 @@ import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
-from contextlib import nullcontext
+from contextlib import contextmanager, nullcontext
 from http import HTTPStatus
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -24,7 +24,7 @@ from . import __version__, auth, categorize, chatgpt, claudecode, export, genera
 from . import lesson as L
 from .llm import DEFAULT_PROVIDER, PROVIDERS, ProviderError, make_provider
 
-MAX_BODY = 64 * 1024 * 1024
+MAX_BODY = 56 * 1024 * 1024  # a 40 MB file, base64-encoded, plus a little
 STATIC = resources.files("lemma").joinpath("static")
 EXAMPLES = resources.files("lemma").joinpath("examples")
 
@@ -39,6 +39,8 @@ ALLOWED_HOSTS: tuple[str, ...] = LOCAL_HOSTS  # Host header names Lemma answers;
 PAPERS: dict[str, dict] = {}  # paper_id -> {text, title, url, kind, pages, owner}
 SOURCES: dict[tuple, str] = {}  # (owner, lesson id) -> paper text, for lessons built in this session
 KEEP_PAPERS, KEEP_SOURCES = 5, 200  # papers kept per person, and paper texts kept in all
+READING_EACH, READING = 2, 6  # links and uploads being read at once, per account and in all, when hosted
+_reading: dict[str | None, int] = {}
 SOURCE_READERS = 4  # sources of one request read at the same time
 MAX_RUNNING_EACH, MAX_RUNNING = 2, 8  # outlines and builds running at once, per account and in all, when hosted
 MAX_CONNECTIONS = 32  # requests handled at once; more wait to be accepted
@@ -126,6 +128,9 @@ def source_for(lesson_id: str, owner: str | None = None) -> str | None:
         return None
 
 
+NO_SOURCE = "OpenLemma no longer has this lesson's source text, so it can't confirm the quotes. Bring the source again to rebuild it."
+
+
 def require_valid(lesson, source_text: str | None):
     problems = L.check_lesson(lesson, source_text)
     if problems:
@@ -191,8 +196,38 @@ def api_claude_code(_body):
     return claudecode.status(fresh=True)
 
 
+@contextmanager
+def _reading_slot(owner):
+    """Hold one of the account's reading slots while a link or upload is read, so a few slow ones can't use up the server."""
+    with _lock:
+        if HOSTED and _reading.get(owner, 0) >= READING_EACH:
+            raise ApiError(429, "You already have sources being read. Wait for them to finish, then try again.")
+        if HOSTED and sum(_reading.values()) >= READING:
+            raise ApiError(503, "OpenLemma is busy reading other people's sources. Please try again in a minute.")
+        _reading[owner] = _reading.get(owner, 0) + 1
+    try:
+        yield
+    finally:
+        with _lock:
+            _reading[owner] -= 1
+            if not _reading[owner]:
+                del _reading[owner]
+
+
 def api_papers(body):
     owner = _owner()
+    with _reading_slot(owner):
+        paper = _read_paper(body)
+    pid = uuid.uuid4().hex[:12]
+    with _lock:
+        PAPERS[pid] = {"text": paper.text, "title": paper.title, "url": paper.url, "kind": paper.kind, "pages": paper.pages, "owner": owner}
+        mine = [k for k, v in PAPERS.items() if v["owner"] == owner]
+        for k in mine[:-KEEP_PAPERS]:
+            PAPERS.pop(k)
+    return {"paper_id": pid, "title": paper.title, "kind": paper.kind, "pages": paper.pages, "chars": len(paper.text), "url": paper.url}
+
+
+def _read_paper(body) -> ingest.Paper:
     try:
         if isinstance(body.get("urls"), list) and body["urls"]:
             paper = _first_readable([str(u) for u in body["urls"][:5]])
@@ -205,18 +240,14 @@ def api_papers(body):
                 raise ApiError(400, "The uploaded file couldn't be decoded.") from None
             if len(data) > ingest.MAX_BYTES:
                 raise ApiError(413, "That file is larger than 40 MB.")
+            if len(data) > ingest.MAX_PAGE_BYTES and not data.startswith(b"%PDF-"):
+                raise ApiError(413, "That file is larger than 10 MB. Only PDFs can be up to 40 MB.")
             paper = ingest.from_bytes(data, filename=str(body.get("filename", "")), content_type=str(body.get("content_type", "")))
         else:
             raise ApiError(400, "Paste a link or choose a file.")
     except ingest.IngestError as e:
         raise ApiError(422, str(e)) from None
-    pid = uuid.uuid4().hex[:12]
-    with _lock:
-        PAPERS[pid] = {"text": paper.text, "title": paper.title, "url": paper.url, "kind": paper.kind, "pages": paper.pages, "owner": owner}
-        mine = [k for k, v in PAPERS.items() if v["owner"] == owner]
-        for k in mine[:-KEEP_PAPERS]:
-            PAPERS.pop(k)
-    return {"paper_id": pid, "title": paper.title, "kind": paper.kind, "pages": paper.pages, "chars": len(paper.text), "url": paper.url}
+    return paper
 
 
 _first_readable = ingest.first_readable
@@ -243,12 +274,11 @@ def api_search(body):
             SEARCHES.pop(sid)
         if sum(s["owner"] == owner and not s["done"] for s in SEARCHES.values()) >= SEARCHES_EACH:
             raise ApiError(429, "Several searches are still running. Wait a moment and try again.")
-    if not metrics.take(owner, "search"):
-        raise ApiError(429, f"You've used today's {metrics.limit('search')} searches. They reset at midnight UTC.")
-    metrics.count("search")
-    with _lock:
+        if not metrics.take(owner, "search"):
+            raise ApiError(429, f"You've used today's {metrics.limit('search')} searches. They reset at midnight UTC.")
         sid = uuid.uuid4().hex[:12]
         record = SEARCHES[sid] = {"owner": owner, "query": query, "done": False, "progress": None, "result": None, "error": "", "created": time.time()}
+    metrics.count("search")
 
     def progress(snapshot):
         record["progress"] = snapshot
@@ -290,20 +320,25 @@ def _provider():
     return p
 
 
-def _new_job(kind: str) -> generate.Job:
+def _new_job(kind: str, job_id: str | None = None) -> generate.Job:
+    """A job, counted against the running caps and registered in the same step, so parallel requests can't both fit."""
     owner = _owner()
     if not jev.available():  # every outline and build is checked by Jev; without it, nothing is started or paid for
         raise ApiError(503, jev.MISSING)
-    if HOSTED:
-        running = [j for j in list(generate.JOBS.values()) if j.status == "running"]
-        if sum(j.owner == owner for j in running) >= MAX_RUNNING_EACH:
-            raise ApiError(429, "You already have lessons building. Wait for one to finish, or cancel it.")
-        if len(running) >= MAX_RUNNING:
-            raise ApiError(503, "OpenLemma is busy building other people's lessons. Please try again in a few minutes.")
-    if not metrics.take(owner, "job"):
-        raise ApiError(429, f"You've used today's {metrics.limit('job')} outlines and builds. They reset at midnight UTC.")
-    job = generate.Job(kind)
-    job.owner = owner
+    with _lock:
+        if HOSTED:
+            running = [j for j in list(generate.JOBS.values()) if j.status == "running"]
+            if sum(j.owner == owner for j in running) >= MAX_RUNNING_EACH:
+                raise ApiError(429, "You already have lessons building. Wait for one to finish, or cancel it.")
+            if len(running) >= MAX_RUNNING:
+                raise ApiError(503, "OpenLemma is busy building other people's lessons. Please try again in a few minutes.")
+        if not metrics.take(owner, "job"):
+            raise ApiError(429, f"You've used today's {metrics.limit('job')} outlines and builds. They reset at midnight UTC.")
+        job = generate.Job(kind)
+        job.owner = owner
+        if job_id:
+            job.id = job_id
+        generate.JOBS[job.id] = job
     return job
 
 
@@ -314,8 +349,9 @@ def _job(job_id: str) -> generate.Job | None:
 
 def api_outline(body):
     paper = _paper(body)
+    provider = _provider()
     job = _new_job("outline")
-    generate.start(job, generate.make_outline, _provider(), paper["text"], str(body.get("audience", ""))[:300])
+    generate.start(job, generate.make_outline, provider, paper["text"], str(body.get("audience", ""))[:300])
     return {"id": job.id}
 
 
@@ -380,8 +416,7 @@ def _categorize(record, paper):
 
 def _launch_request(record, provider, owner, build=False):
     credential = _credential()[1]
-    job = _new_job("request")
-    job.id = record["id"]
+    job = _new_job("request", record["id"])
     record.update(status="running", error="", result=None, lesson=None, steps=[])
     def persist(j):
         with _requests_lock:
@@ -666,7 +701,7 @@ def api_save(body):
     owner = _owner()
     source = source_for(lid, owner) or None
     if source is None:
-        raise ApiError(409, "OpenLemma no longer has this lesson's source text, so it can't confirm the quotes. Bring the source again to rebuild it.")
+        raise ApiError(409, NO_SOURCE)
     lesson = {k: v for k, v in lesson.items() if k != "plan"}
     require_valid(lesson, source)
     store.save_lesson(lesson, source, owner)
@@ -687,6 +722,9 @@ def api_lesson(lesson_id):
 def api_lesson_delete(lesson_id):
     try:
         with _requests_lock:
+            job = generate.JOBS.get(lesson_id)
+            if job and job.owner == _owner() and job.status == "running":
+                raise ApiError(409, "This lesson is still building. Cancel the build first, then delete it.")
             store.delete_lesson(lesson_id, _owner())
             generate.JOBS.pop(lesson_id, None)
             store.request_path(lesson_id, _owner()).unlink(missing_ok=True)
@@ -696,6 +734,7 @@ def api_lesson_delete(lesson_id):
 
 
 def api_export(body):
+    owner = _owner()
     lesson = body.get("lesson")
     if not isinstance(lesson, dict):
         raise ApiError(400, "No lesson to export.")
@@ -704,7 +743,9 @@ def api_export(body):
     elif lesson.get("example"):
         source = load_example()[1]
     else:
-        source = source_for(str(lesson.get("id", "")), _owner()) or None
+        source = source_for(str(lesson.get("id", "")), owner)
+        if not source:
+            raise ApiError(409, NO_SOURCE)
     lesson = {k: v for k, v in lesson.items() if k != "plan"}
     require_valid(lesson, source)
     return export.lesson_html(lesson)
@@ -1018,8 +1059,9 @@ def make_server(port: int = 8765, exact: bool = False, host: str = "127.0.0.1", 
     Listening on any address but loopback makes this a hosted Lemma: it answers only the
     `allowed_hosts` (the public domain names it is reached by), binds exactly `port` and drops the subscription providers.
     """
-    global HOSTED, ALLOWED_HOSTS
+    global HOSTED, ALLOWED_HOSTS, DEV
     HOSTED = host not in ("127.0.0.1", "localhost", "::1")
+    DEV = DEV and not HOSTED  # dev mode loosens the CSP and adds /api/dev/events, so never on a hosted server
     if HOSTED and not allowed_hosts:
         raise ValueError("A hosted Lemma needs --allowed-hosts: the domain names it is reached by.")
     ALLOWED_HOSTS = LOCAL_HOSTS + tuple(h.strip().lower() for h in allowed_hosts if h.strip())

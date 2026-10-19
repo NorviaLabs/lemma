@@ -1,6 +1,15 @@
 .venv
 .git
 __pycache__
+**/__pycache__
 *.pyc
 tests
 deploy
+eval
+.claude
+.forge
+.impeccable
+.codex
+.cursor
+.gemini
+.pytest_cache

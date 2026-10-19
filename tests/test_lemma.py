@@ -1670,11 +1670,11 @@ class ServerLimitTests(unittest.TestCase):
     """What one account can make a hosted server do at once, and what needs an account at all."""
 
     def setUp(self):
-        self.was = (server.HOSTED, metrics.ENABLED)
+        self.was = (server.HOSTED, metrics.ENABLED, server.ALLOWED_HOSTS, server.DEV)
         server.HOSTED = metrics.ENABLED = True
 
     def tearDown(self):
-        server.HOSTED, metrics.ENABLED = self.was
+        server.HOSTED, metrics.ENABLED, server.ALLOWED_HOSTS, server.DEV = self.was
         server.REQUEST.user = None
         generate.JOBS.clear()
 
@@ -1752,6 +1752,12 @@ class ServerLimitTests(unittest.TestCase):
             release.set()
             for t in first: t.join()
         self.assertEqual(sorted(map(str, results)), ["429", "ok", "ok"])
+
+    def test_dev_mode_is_off_on_a_hosted_server(self):
+        server.DEV = True
+        httpd = server.make_server(0, host="0.0.0.0", allowed_hosts=("tools.example.com",))
+        httpd.server_close()
+        self.assertFalse(server.DEV)
 
     def test_a_large_upload_that_isnt_a_pdf_is_refused(self):
         self.as_user("up1")

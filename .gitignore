@@ -6,6 +6,7 @@ dist/
 .venv/
 .cursor/
 .claude/settings.local.json
+.claude/worktrees/
 .grok/
 .gemini/
 .codex/
