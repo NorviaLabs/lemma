@@ -75,6 +75,14 @@ def delete_lesson(lesson_id: str, owner: str | None = None):
         p.unlink(missing_ok=True)
 
 
+def _category_name(lesson: dict) -> str:
+    """The subject a built lesson was sorted into (see categorize.py), or "" for one saved before categories."""
+    category = lesson.get("category")
+    primary = category.get("primary") if isinstance(category, dict) else None
+    name = primary.get("name") if isinstance(primary, dict) else None
+    return name if isinstance(name, str) else ""
+
+
 def list_lessons(owner: str | None = None) -> list[dict]:
     out = []
     for p in sorted(library(owner).glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True):
@@ -87,6 +95,7 @@ def list_lessons(owner: str | None = None) -> list[dict]:
             "title": l.get("title", ""),
             "source": (l.get("source") or {}).get("title", ""),
             "concepts": len(l.get("concepts") or []),
+            "category": _category_name(l),
             "saved": p.stat().st_mtime,
         })
     return out

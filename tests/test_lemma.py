@@ -1379,6 +1379,12 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(self.req("POST", "/api/lessons", {"lesson": built})[0], 200)
         listing = json.loads(self.req("GET", "/api/lessons")[1])
         self.assertIn("abc123", [x["id"] for x in listing])
+        self.assertEqual(next(x for x in listing if x["id"] == "abc123")["category"], "")  # saved before categories
+        sorted_lesson = dict(built, id="abc124", category={"primary": {"id": "statistics", "name": "Statistics"}})
+        server.store.save_lesson(sorted_lesson, SOURCE, TESTER)
+        listing = json.loads(self.req("GET", "/api/lessons")[1])
+        self.assertEqual(next(x for x in listing if x["id"] == "abc124")["category"], "Statistics")  # the library shows its subject
+        self.assertEqual(self.req("DELETE", "/api/lessons/abc124")[0], 200)
         # An edit that breaks grounding is refused.
         broken = copy.deepcopy(built)
         broken["concepts"][0]["understand"]["quote"] = "This sentence is not in the paper at all, not even close."

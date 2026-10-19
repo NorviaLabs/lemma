@@ -196,7 +196,11 @@
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 2000);
   }
-  const slug = (s) => (s || "lesson").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "lesson";
+  // A file name from a title, cut at a word rather than mid-word when the title is long.
+  const slug = (s) => {
+    const full = fold(s || "lesson").replace(/['’]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    return (full.length > 60 ? full.slice(0, 61).replace(/-[^-]*$/, "") || full.slice(0, 60) : full) || "lesson";
+  };
 
   /* ------------------------------------------------------------ AI provider */
   const TAGLINES = {
@@ -1262,12 +1266,14 @@
     document.body.append(box);
   }
 
+  // The offline file, named after the lesson's title.
+  async function exportLesson(lesson) {
+    const res = await fetch("api/export", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ lesson }) });
+    if (!res.ok) throw new Error((await res.json().catch(() => null))?.error || `Download failed (${res.status}). Try again in a moment.`);
+    download(`${slug(lesson.title)}.html`, await res.text());
+  }
   async function downloadLesson(lesson) {
-    try {
-      const res = await fetch("api/export", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ lesson }) });
-      if (!res.ok) throw new Error((await res.json().catch(() => null))?.error || `Download failed (${res.status}). Try again in a moment.`);
-      download(`${slug(lesson.title)}.html`, await res.text());
-    } catch (err) { alertInline(err.message); }
+    try { await exportLesson(lesson); } catch (err) { alertInline(err.message); }
   }
 
   /* The launch film: embedded in the hero, loaded and played only when the visitor presses play. */
@@ -1298,40 +1304,264 @@
   async function openExample() { try { openLesson(await api("/api/example")); } catch (err) { showHome(err.message); } }
 
   /* ------------------------------------------------------------ library */
-  async function showLibrary() {
-    let items = [], requests = [];
-    try { [items, requests] = await Promise.all([api("/api/lessons"), api("/api/requests")]); } catch (err) { return showHome(err.message); }
-    const list = h("ul", { class: "library" }, items.map((it) => {
-      const del = h("button", { class: "small danger", onclick: async () => {
-        if (del.dataset.armed !== "1") { del.dataset.armed = "1"; del.textContent = "Confirm delete"; return; }
-        await api(`/api/lessons/${it.id}`, undefined, "DELETE");
-        showLibrary();
-      } }, "Delete");
-      return h("li", { class: "lib-item" },
-        h("div", {}, h("h3", {}, it.title), h("p", { class: "muted small", style: "margin:0" }, `${it.source} · ${it.concepts} concept${it.concepts === 1 ? "" : "s"} · saved ${new Date(it.saved * 1000).toLocaleDateString()}`)),
-        h("div", { class: "actions" },
-          h("button", { class: "small primary", onclick: async () => openLesson(await api(`/api/lessons/${it.id}`), { saved: true }) }, "Open"),
-          h("button", { class: "small", onclick: async () => downloadLesson(await api(`/api/lessons/${it.id}`)) }, "Download"),
-          h("button", { class: "small", onclick: async () => showEditor(await api(`/api/lessons/${it.id}`)) }, "Edit"),
-          del));
-    }));
-    view(h("section", {},
-      h("h1", {}, "My library"),
-      requests.some((r) => r.status !== "done") ? h("section", {}, h("h2", {}, "Lesson builds"), h("ul", { class: "library" }, requests.filter((r) => r.status !== "done").map((r) =>
-        h("li", { class: "lib-item" }, h("div", {}, h("h3", {}, r.title || r.topic || "Lesson in progress"), h("p", { class: "muted small" }, r.status.replaceAll("_", " "))),
-          h("div", { class: "actions" }, h("a", { class: "btn small", href: `#/request/${r.id}` }, "View build"), r.status !== "running" ? h("button", { class: "small danger", onclick: async (e) => {
-            const button = e.currentTarget;
-            if (!button.dataset.armed) { button.dataset.armed = "1"; button.textContent = "Confirm delete"; return; }
-            try { await api(`/api/requests/${r.id}`, undefined, "DELETE"); showLibrary(); } catch (err) { alertInline(err.message); }
-          } }, "Delete") : null))))) : null,
-      h("p", { class: "muted", style: "max-width:66ch" }, `Lessons saved ${where()}. Download one to get a single file that works offline and sends nothing anywhere.`),
-      items.length ? list : h("div", { class: "panel empty" },
-        h("h2", {}, "No saved lessons yet"),
-        h("p", {}, `Lessons you save live here, ${where()}. Any of them downloads as a single file you can share, which opens without an internet connection.`),
-        h("p", { class: "muted small" }, "A lesson you build is saved here automatically when it's ready, usually a few minutes after you start it."),
-        h("div", { class: "actions" },
-          h("a", { class: "btn primary", href: "#/make" }, "Make a lesson"),
-          h("a", { class: "btn ghost", href: "#/example" }, icon("play"), "Try the example lesson")))));
+  /* The account's saved lessons, newest first, beside its builds that haven't finished, each build with its next
+     step. Typing finds a lesson once there are enough to look through. Deletes and cancels ask inside the row, and
+     anything the server refuses is said in that row. */
+  const BUILD_STATES = {
+    running: { mark: "running", says: "Building now" },
+    awaiting_outline: { mark: "outline", says: "Outline ready to review" },
+    error: { mark: "failed", says: "Stopped with an error" },
+    interrupted: { mark: "failed", says: "Interrupted when the server stopped" },
+    cancelled: { mark: "stopped", says: "Cancelled" },
+  };
+  const BUILD_ORDER = Object.keys(BUILD_STATES);
+  const LIB_FIND_FROM = 7;  // fewer lessons than this fit on one screen, where a search field would only be in the way
+  let libraryReturn = "";  // the lesson last opened from the library, so Back lands on its row
+  const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
+  function when(sec, withTime) {
+    const d = new Date(sec * 1000), now = new Date();
+    const day = (x) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
+    const ago = Math.round((day(now) - day(d)) / 864e5);
+    const date = ago === 0 ? "today" : ago === 1 ? "yesterday"
+      : d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: d.getFullYear() === now.getFullYear() ? undefined : "numeric" });
+    const time = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+    return h("time", { datetime: d.toISOString() }, withTime && ago < 2 ? `${date} at ${time}` : date);
+  }
+
+  function showLibrary() {
+    const q0 = new URLSearchParams(location.hash.split("?")[1] || "").get("q") || "";
+    const live = h("p", { class: "sr-only", role: "status" });
+    const body = h("div", { class: "lib-body", "aria-busy": "true" });
+    view(h("section", { class: "lib", "aria-labelledby": "lib-title" },
+      h("div", { class: "lib-head" }, h("h1", { id: "lib-title" }, "Library"),
+        h("p", { class: "lead" }, "Every lesson you build is saved here. Download any one as a single file that works offline and sends nothing anywhere.")),
+      body, live));
+    let lessons = [], builds = [], rows = [], countEl = null, noneEl = null;
+    const findIn = h("input", { type: "search", id: "lib-find", value: q0, placeholder: "Title, source or subject", autocomplete: "off", spellcheck: "false", maxlength: 80 });
+    const say = (msg) => { live.textContent = ""; setTimeout(() => { live.textContent = msg; }, 60); };
+
+    async function load() {
+      const [ls, rs] = await Promise.all([api("/api/lessons"), api("/api/requests")]);
+      lessons = ls;
+      builds = rs.filter((r) => BUILD_STATES[r.status])
+        .sort((a, b) => BUILD_ORDER.indexOf(a.status) - BUILD_ORDER.indexOf(b.status) || (b.created || 0) - (a.created || 0));
+    }
+
+    function showMsg(li, text) {
+      const msg = li.querySelector(".lib-msg");
+      msg.replaceChildren(icon("cross"), h("span", {}, text));
+      msg.hidden = false;
+    }
+    // After the server refuses something, show the row as it is now and say why there.
+    async function refuse(key, text) {
+      try { await load(); } catch (e) { /* the row stays as it was */ }
+      draw();
+      const li = body.querySelector(`[data-key="${key}"]`);
+      if (!li) return say(text);
+      showMsg(li, text);
+      (li.querySelector(".lib-acts button, .lib-acts a") || li.querySelector(".lib-open")).focus();
+    }
+    function focusRow(key, fallbackKey) {
+      const li = body.querySelector(`[data-key="${key}"]`) || (fallbackKey && body.querySelector(`[data-key="${fallbackKey}"]`))
+        || body.querySelector(".lib-lessons .lib-row:not([hidden])");
+      const target = li ? li.querySelector(".lib-open") : main.querySelector("h1");
+      target.focus({ preventScroll: !!li });
+      if (li) li.scrollIntoView({ block: "nearest" });
+    }
+
+    /* Ask inside the row: the question, the action in red and a way out. Escape or "Keep" puts the row back. */
+    function ask(li, opener, { question, yes, busy, no, act }) {
+      const acts = li.querySelector(".lib-acts");
+      li.querySelector(".lib-msg").hidden = true;
+      const close = () => { li.classList.remove("is-asking"); box.remove(); acts.hidden = false; opener.focus(); };
+      const yesBtn = h("button", { type: "button", class: "small lib-yes", onclick: async () => {
+        yesBtn.disabled = noBtn.disabled = true;
+        yesBtn.textContent = busy;
+        await act();
+      } }, yes);
+      const noBtn = h("button", { type: "button", class: "small ghost", onclick: close }, no);
+      const qid = `ask-${li.dataset.key.replace(/\W/g, "")}`;
+      const box = h("div", { class: "lib-ask", role: "group", "aria-labelledby": qid, onkeydown: (e) => { if (e.key === "Escape") { e.preventDefault(); close(); } } },
+        h("p", { id: qid }, question), h("div", { class: "lib-ask-btns" }, yesBtn, noBtn));
+      li.classList.add("is-asking");
+      acts.hidden = true;
+      li.append(box);
+      noBtn.focus();
+    }
+
+    function buildRow(r) {
+      const st = BUILD_STATES[r.status], key = `b:${r.id}`, title = r.title || "Lesson in progress";
+      const acts = h("div", { class: "lib-acts" });
+      const li = h("li", { class: `lib-row lib-build is-${st.mark}`, "data-key": key },
+        h("span", { class: "lib-mark", "aria-hidden": "true" }, st.mark === "running" ? null : icon({ outline: "doc", failed: "cross", stopped: "dash" }[st.mark])),
+        h("div", { class: "lib-text" },
+          h("h3", { class: "lib-title" }, h("a", { class: "lib-open", href: `#/request/${r.id}` }, title)),
+          h("p", { class: "lib-meta" }, h("span", { class: "lib-state" }, st.says), r.created ? h("span", {}, "Started ", when(r.created, true)) : null)),
+        acts, h("p", { class: "lib-msg", role: "alert", hidden: true }));
+      const del = () => h("button", { type: "button", class: "small ghost lib-del", "aria-label": `Delete the build “${title}”`, onclick: (e) => ask(li, e.currentTarget, {
+        question: "Delete this build? Its sources and progress go with it.", yes: "Delete build", busy: "Deleting…", no: "Keep it",
+        act: async () => {
+          try { await api(`/api/requests/${r.id}`, undefined, "DELETE"); } catch (err) { return refuse(key, err.message); }
+          const next = li.nextElementSibling?.dataset.key || li.previousElementSibling?.dataset.key;
+          await reload();
+          focusRow(next);
+          say(`Deleted the build “${title}”.`);
+        } }) }, "Delete");
+      if (r.status === "running") {
+        acts.append(h("a", { class: "btn small", href: `#/request/${r.id}` }, "View progress"),
+          h("button", { type: "button", class: "small ghost lib-del", onclick: (e) => ask(li, e.currentTarget, {
+            question: "Cancel this build? Retrying later starts again from reading the sources.", yes: "Cancel build", busy: "Cancelling…", no: "Keep building",
+            act: async () => {
+              try { await api(`/api/requests/${r.id}/cancel`, {}); } catch (err) { return refuse(key, err.message); }
+              await new Promise((ok) => setTimeout(ok, 600));  // the build stops between steps
+              await reload();
+              focusRow(key);
+              say(`Cancelling “${title}”.`);
+            } }) }, "Cancel"));
+      } else if (r.status === "awaiting_outline") {
+        acts.append(h("a", { class: "btn small", href: `#/request/${r.id}` }, "Review outline"), del());
+      } else {
+        const retry = h("button", { type: "button", class: "small", onclick: async () => {
+          const begin = async () => {
+            try { await api(`/api/requests/${r.id}/retry`, {}); showRequest(r.id); }
+            catch (err) { if (body.isConnected) refuse(key, err.message); else alertInline(err.message); }
+          };
+          if (!(status.provider || {}).ok) return showConnect(begin);
+          retry.disabled = true;
+          await begin();
+          retry.disabled = false;
+        } }, icon("refresh"), "Retry");
+        acts.append(retry, del());
+      }
+      return li;
+    }
+
+    function lessonRow(it) {
+      const key = `l:${it.id}`, title = it.title || "Untitled lesson";
+      const fetchLesson = () => api(`/api/lessons/${it.id}`);
+      const dlLabel = h("span", {}, "Download");
+      const li = h("li", { class: "lib-row lib-lesson", "data-key": key },
+        h("div", { class: "lib-text" },
+          h("h3", { class: "lib-title" }, h("a", { class: "lib-open", href: `#/lesson/${it.id}`, onclick: () => { libraryReturn = it.id; } }, title)),
+          it.source ? h("p", { class: "lib-source" }, it.source) : null,
+          h("p", { class: "lib-meta" }, it.category ? h("span", {}, it.category) : null, h("span", { class: "lib-num" }, plural(it.concepts, "concept")), h("span", {}, "Saved ", when(it.saved)))),
+        h("div", { class: "lib-acts" },
+          h("button", { type: "button", class: "small ghost", "aria-label": `Download “${title}” as one offline file`, onclick: async (e) => {
+            const b = e.currentTarget;
+            b.disabled = true; dlLabel.textContent = "Preparing…"; li.querySelector(".lib-msg").hidden = true;
+            try { await exportLesson(await fetchLesson()); say(`Downloaded “${title}”.`); }
+            catch (err) { showMsg(li, err.message); }
+            b.disabled = false; dlLabel.textContent = "Download";
+          } }, icon("down"), dlLabel),
+          h("button", { type: "button", class: "small ghost", "aria-label": `Edit “${title}”`, onclick: async () => {
+            try { showEditor(await fetchLesson()); } catch (err) { showMsg(li, err.message); }
+          } }, "Edit"),
+          h("button", { type: "button", class: "small ghost lib-del", "aria-label": `Delete “${title}”`, onclick: (e) => ask(li, e.currentTarget, {
+            question: "Delete this lesson from your library? This can't be undone.", yes: "Delete lesson", busy: "Deleting…", no: "Keep it",
+            act: async () => {
+              try { await api(`/api/lessons/${it.id}`, undefined, "DELETE"); } catch (err) { return refuse(key, err.message); }
+              const sib = (dir) => { let n = li[dir]; while (n && n.hidden) n = n[dir]; return n?.dataset.key; };
+              const next = sib("nextElementSibling"), prev = sib("previousElementSibling");
+              await reload();
+              focusRow(next, prev);
+              say(`Deleted “${title}”.`);
+            } }) }, "Delete")),
+        h("p", { class: "lib-msg", role: "alert", hidden: true }));
+      li.dataset.find = fold([title, it.source, it.category].join(" "));
+      return li;
+    }
+
+    function apply(keepHash) {
+      const q = findIn.value.trim(), words = fold(q).split(/\s+/).filter(Boolean);
+      let shown = 0;
+      rows.forEach((li) => { const hit = words.every((w) => li.dataset.find.includes(w)); li.hidden = !hit; shown += hit; });
+      if (rows[0]?.parentNode) rows[0].parentNode.hidden = !shown;  // no empty white card above "no match"
+      if (countEl) countEl.textContent = words.length ? `${shown} of ${plural(rows.length, "lesson")}` : plural(rows.length, "lesson");
+      if (noneEl) {
+        noneEl.hidden = !(words.length && !shown);
+        if (!noneEl.hidden) noneEl.replaceChildren(h("p", {}, `No saved lesson matches “${q}”.`),
+          h("button", { type: "button", class: "ghost", onclick: () => { findIn.value = ""; apply(); findIn.focus(); } }, icon("cross"), "Clear the search"));
+      }
+      if (!keepHash) history.replaceState(null, "", q ? `#/library?q=${encodeURIComponent(q)}` : "#/library");
+    }
+    findIn.addEventListener("input", () => apply());
+    findIn.addEventListener("keydown", (e) => { if (e.key === "Escape" && findIn.value) { e.preventDefault(); findIn.value = ""; apply(); } });
+
+    function lessonsSection() {
+      const heading = h("h2", { id: "lib-lessons-title" }, "Saved lessons");
+      rows = lessons.map(lessonRow);
+      countEl = noneEl = null;
+      if (!rows.length) return h("section", { class: "lib-sec lib-lessons", "aria-labelledby": "lib-lessons-title" },
+        h("div", { class: "lib-sec-head" }, heading),
+        h("p", { class: "lib-wait" }, "A lesson appears here as soon as its build finishes."));
+      const many = rows.length >= LIB_FIND_FROM;
+      if (many) {
+        countEl = h("p", { class: "lib-count-line", "aria-live": "polite" });
+        noneEl = h("div", { class: "lib-none", hidden: true });
+      } else findIn.value = "";
+      return h("section", { class: "lib-sec lib-lessons", "aria-labelledby": "lib-lessons-title" },
+        h("div", { class: "lib-sec-head" + (many ? " has-find" : "") }, heading,
+          many ? h("form", { class: "lib-find", role: "search", onsubmit: (e) => { e.preventDefault(); findIn.blur(); } },
+            h("label", { class: "sr-only", for: "lib-find" }, "Find a saved lesson"),
+            h("div", { class: "gal-find-row" }, icon("search"), findIn), countEl) : h("span", { class: "lib-count" }, String(rows.length))),
+        h("ul", { class: "lib-list" }, rows), noneEl);
+    }
+
+    function draw() {
+      // Redrawn in place, so focus stays on the same control of the same row wherever it still exists.
+      const at = document.activeElement, atRow = at?.closest?.("[data-key]");
+      const keep = atRow && body.contains(atRow) ? [atRow.dataset.key, [...atRow.querySelectorAll("a, button")].indexOf(at)] : null;
+      const inFind = at === findIn, caret = inFind ? findIn.selectionStart : 0;
+      body.removeAttribute("aria-busy");
+      if (!lessons.length && !builds.length) {
+        body.replaceChildren(h("div", { class: "lib-empty" },
+          h("h2", {}, "No saved lessons yet"),
+          h("p", {}, "Ask about a concept or bring a source. OpenLemma builds a short lesson with a live model for each idea, usually within a few minutes, and keeps it here."),
+          h("div", { class: "actions" },
+            h("a", { class: "btn primary", href: "#/make" }, "Make a lesson"),
+            h("a", { class: "btn ghost", href: "#/example" }, icon("play"), "Try the example lesson"))));
+      } else {
+        const buildsSec = builds.length ? h("section", { class: "lib-sec lib-builds", "aria-labelledby": "lib-builds-title" },
+          h("div", { class: "lib-sec-head" }, h("h2", { id: "lib-builds-title" }, "Builds"), h("span", { class: "lib-count" }, String(builds.length))),
+          h("ul", { class: "lib-list" }, builds.map(buildRow))) : null;
+        body.replaceChildren(h("div", { class: "lib-grid" + (buildsSec ? "" : " is-solo") }, lessonsSection(), buildsSec));
+        apply(true);
+      }
+      if (keep) {
+        const li = body.querySelector(`[data-key="${keep[0]}"]`);
+        const el = li && ([...li.querySelectorAll("a, button")][keep[1]] || li.querySelector(".lib-open"));
+        if (el) el.focus({ preventScroll: true });
+      } else if (inFind && findIn.isConnected) { findIn.focus({ preventScroll: true }); findIn.setSelectionRange(caret, caret); }
+      stopPolling();
+      if (builds.some((r) => r.status === "running")) pollTimer = setTimeout(poll, 4000);
+    }
+    const reload = async () => { try { await load(); } catch (e) { /* keep what's shown */ } draw(); };
+
+    // While a build runs, check on it, and redraw only when something changed and no question is open.
+    const signature = () => builds.map((r) => r.id + r.status).join() + "|" + lessons.map((l) => l.id).join();
+    async function poll() {
+      if (!body.isConnected) return;
+      const before = signature();
+      try { await load(); } catch (e) { pollTimer = setTimeout(poll, 8000); return; }
+      if (!body.isConnected) return;
+      if (signature() !== before && !body.querySelector(".is-asking")) draw();
+      else pollTimer = setTimeout(poll, 4000);
+    }
+
+    (async function first() {
+      try { await load(); } catch (err) {
+        body.removeAttribute("aria-busy");
+        const again = h("button", { type: "button", onclick: () => { body.setAttribute("aria-busy", "true"); first(); } }, icon("refresh"), "Try again");
+        body.replaceChildren(h("div", { class: "lib-none", role: "alert" }, h("p", {}, `Your library couldn't load. ${err.message}`), again));
+        return;
+      }
+      if (!body.isConnected) return;
+      draw();
+      const back = libraryReturn;
+      libraryReturn = "";
+      const li = back && body.querySelector(`[data-key="l:${back}"]:not([hidden])`);
+      if (li) { li.scrollIntoView({ block: "center" }); li.querySelector(".lib-open").focus({ preventScroll: true }); }
+    })();
   }
 
   /* ------------------------------------------------------------ editor */
@@ -1515,7 +1745,7 @@
       if (player && hash.endsWith("/learn")) return;
       return showRequest(hash.split("/")[2]);
     }
-    if (hash === "#/library") return showLibrary();
+    if (hash === "#/library" || hash.startsWith("#/library?")) return showLibrary();
     if (hash === "#/make") return showMake();
     if (hash === "#/settings") return showAccount(true);  // the AI provider is part of the account page
     if (hash.startsWith("#/signin")) {

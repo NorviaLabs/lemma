@@ -523,12 +523,6 @@ button.hall-replay:hover:not(:disabled) { background: transparent; color: var(--
 .bp-bar::-moz-progress-bar { background: var(--green); }
 .build-progress .build-steps { margin-top: 12px; }
 @keyframes pulse { 50% { box-shadow: inset 0 0 0 2px var(--green), 0 0 0 5px color-mix(in srgb, var(--green) 18%, transparent); } }
-.library { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--rule); }
-.lib-item { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--rule); }
-.lib-item h3 { margin: 0 0 4px; font-size: 19px; }
-.lib-item .actions { margin: 0; }
-.empty { max-width: 640px; }
-.panel.empty { padding: 8px 0 0; }
 fieldset { border: 0; border-top: 1px solid var(--rule); padding: 8px 0 22px; margin: 0 0 12px; }
 legend { padding: 18px 0 0; font: 700 20px var(--sans); color: var(--ink); }
 .advanced summary { cursor: pointer; font: 600 16px var(--sans); color: var(--ink); padding: 8px 0; }
@@ -799,7 +793,7 @@ kbd { display: inline-block; min-width: 22px; padding: 1px 6px; text-align: cent
   .site-head { gap: 12px; }
   .site-nav a { padding: 8px; font-size: 14px; }
   .account-name { display: none; }
-  .panel.yellow, .panel.empty { padding: 20px; }
+  .panel.yellow { padding: 20px; }
   .lt-mark { display: none; }
   .rail { padding: 16px 16px 14px; }
   .rail-head { gap: 10px; margin-bottom: 8px; }
@@ -1136,8 +1130,8 @@ input[type=file]::file-selector-button { border: 0; border-radius: var(--r); bac
 
 /* search results and lists outside the lesson: grouped white cards */
 .search-progress { background: var(--surface); border: 0; border-radius: var(--r-lg); box-shadow: var(--lift); }
-.result-list, .recent-list, .library, .build-steps, .provider-choice, .setup-steps { border-top: 0; background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--lift); padding: 4px 20px; }
-.result:last-child, .recent-list li:last-child, .lib-item:last-child, .build-step:last-child, .provider-option:last-child, .setup-step:last-child { border-bottom: 0; }
+.result-list, .recent-list, .build-steps, .provider-choice, .setup-steps { border-top: 0; background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--lift); padding: 4px 20px; }
+.result:last-child, .recent-list li:last-child, .build-step:last-child, .provider-option:last-child, .setup-step:last-child { border-bottom: 0; }
 .result { border-bottom-color: var(--rule); }
 .result:has(.source-choice input:checked) { border-color: var(--rule); }
 .result:has(.source-choice input:checked) .r-title { color: var(--green-press); }
@@ -1416,3 +1410,115 @@ main.doc { max-width: 808px; padding-top: clamp(24px, 5vw, 56px); }
   .doc-table > div { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   .doc p, .doc dd { font-size: 16px; }
 }
+
+/* the library: saved lessons beside the builds that haven't finished, each row with its next step */
+.lib-head { max-width: 760px; margin-bottom: 36px; }
+.lib-head h1 { margin: 0 0 12px; }
+.lib-head .lead { margin: 0; font-size: 18px; }
+.lib-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 380px); grid-template-areas: "lessons builds"; gap: 40px clamp(28px, 4vw, 56px); align-items: start; }
+.lib-grid.is-solo { grid-template-columns: minmax(0, 1fr); grid-template-areas: "lessons"; }
+.lib-lessons { grid-area: lessons; min-width: 0; }
+.lib-builds { grid-area: builds; min-width: 0; }
+.lib-sec-head { display: flex; align-items: center; gap: 10px; min-height: 52px; margin-bottom: 14px; }
+.lib-sec-head h2 { margin: 0; font-size: clamp(22px, 2vw, 26px); }
+.lib-sec-head h2:focus { outline: none; }
+.lib-count { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 8px; border-radius: 9999px; background: var(--plate-2); font: 600 13px/1 var(--sans); color: var(--body); font-variant-numeric: tabular-nums; }
+.lib-sec-head.has-find { justify-content: space-between; align-items: flex-start; gap: 14px 28px; }
+.lib-sec-head.has-find h2 { padding-top: 12px; }
+.lib-find { width: min(100%, 340px); }
+.lib-find input[type=search] { min-height: 52px; padding-left: 44px; border-color: transparent; box-shadow: var(--lift); }
+.lib-find input[type=search]:hover { border-color: var(--rule-strong); }
+.lib-find input[type=search]:focus-visible { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 22%, transparent); }
+.lib-count-line { min-height: 1.3em; margin: 8px 2px 0; font: 600 14px/1.3 var(--sans); color: var(--mute); font-variant-numeric: tabular-nums; }
+
+/* one grouped white card per list; a row lights up under the pointer and the whole row opens it */
+.lib-list { list-style: none; margin: 0; padding: 6px; background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--lift); }
+.lib-row { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 6px 20px; padding: 16px 14px 16px 18px; border-radius: 16px; transition: background-color var(--ui); }
+.lib-row + .lib-row::before { content: ""; position: absolute; top: 0; left: 18px; right: 14px; border-top: 1px solid var(--rule); }
+.lib-row:hover, .lib-row:has(.lib-open:focus-visible) { background: var(--plate); }
+.lib-row:hover + .lib-row::before, .lib-row:has(.lib-open:focus-visible) + .lib-row::before, .lib-row.is-asking + .lib-row::before { border-color: transparent; }
+.lib-row:has(.lib-open:focus-visible) { outline: 2px solid var(--green); outline-offset: -2px; }
+.lib-text { min-width: 0; }
+.lib-title { margin: 0; font: 700 18px/1.3 var(--sans); letter-spacing: -.01em; text-wrap: pretty; }
+.lib-open { color: var(--ink); text-decoration: none; }
+.lib-open::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+.lib-open:focus-visible { outline: none; }
+.lib-source { margin: 3px 0 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; line-height: 1.4; color: var(--body); }
+.lib-meta { display: flex; flex-wrap: wrap; align-items: center; margin: 5px 0 0; font: 600 14px/1.35 var(--sans); color: var(--mute); font-variant-numeric: tabular-nums; }
+.lib-meta > span + span::before { content: "\00b7"; margin: 0 7px; color: var(--faint); }
+.lib-acts { position: relative; z-index: 1; display: flex; align-items: center; gap: 2px; }
+.lib-acts .btn.small, .lib-acts button.small { min-height: 38px; padding: 0 12px; }
+.lib-acts .ghost { color: var(--body); }
+.lib-acts .ghost:hover:not(:disabled) { color: var(--ink); background: var(--plate-2); }
+.lib-row:hover .lib-acts .ghost:hover:not(:disabled) { background: var(--rule); }
+.lib-acts .icon { width: 16px; height: 16px; }
+.lib-acts .lib-del:hover:not(:disabled) { color: var(--bad); background: var(--bad-bg); }
+.lib-acts button:disabled { background: transparent; color: var(--mute); }
+
+/* what the server refused, said in the row it belongs to */
+.lib-msg { grid-column: 1 / -1; display: flex; align-items: flex-start; gap: 8px; margin: 6px 0 0; padding: 10px 14px; border-radius: var(--r); background: var(--bad-bg); font-size: 15px; line-height: 1.45; color: var(--ink); }
+.lib-msg .icon { width: 16px; height: 16px; margin-top: 2px; color: var(--bad); }
+
+/* the in-row question before anything is deleted or cancelled */
+.lib-row.is-asking { background: var(--bad-bg); }
+.lib-row.is-asking .lib-open::after { display: none; }
+.lib-ask { grid-column: 1 / -1; position: relative; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 18px; }
+.lib-ask p { margin: 0; font: 600 15px/1.4 var(--sans); color: var(--ink); }
+.lib-ask-btns { display: flex; gap: 6px; }
+.lib-ask-btns button.small { min-height: 40px; padding: 0 14px; }
+.lib-ask-btns .ghost:hover:not(:disabled) { background: color-mix(in srgb, var(--bad) 10%, var(--bad-bg)); }
+.lib-yes { background: var(--bad); color: #fff; }
+.lib-yes:hover:not(:disabled) { background: #a82c22; }
+.lib-yes:disabled { background: var(--bad); color: #fff; opacity: .7; }
+
+/* builds: a mark that says the state, then the state in words and its next step */
+.lib-build { grid-template-columns: 30px minmax(0, 1fr); column-gap: 14px; align-items: start; padding-left: 14px; }
+.lib-build .lib-acts { grid-column: 2; margin: 6px 0 0 -12px; }
+.lib-build .lib-msg, .lib-build .lib-ask { grid-column: 2; }
+.lib-build .lib-title { font-size: 17px; }
+.lib-mark { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; margin-top: 1px; background: var(--surface); box-shadow: inset 0 0 0 1.5px var(--rule-strong); color: var(--ink); }
+.lib-mark .icon { width: 15px; height: 15px; }
+.is-running .lib-mark { box-shadow: inset 0 0 0 3px var(--green-soft); }
+.is-running .lib-mark::before { content: ""; width: 30px; height: 30px; border-radius: 50%; border: 3px solid transparent; border-top-color: var(--green); box-sizing: border-box; animation: spin 1.1s linear infinite; }
+.is-running .lib-state { color: var(--green-press); }
+.is-outline .lib-mark { background: var(--ink); color: #fff; box-shadow: none; }
+.is-outline .lib-state { color: var(--ink); }
+.is-failed .lib-mark { background: var(--bad-bg); color: var(--bad); box-shadow: none; }
+.is-failed .lib-state { color: var(--bad); }
+.is-stopped .lib-mark { background: var(--plate-2); color: var(--mute); box-shadow: none; }
+.lib-build .lib-meta > span { display: block; }
+.lib-build .lib-meta > span + span::before { content: none; }
+.lib-build .lib-meta { display: block; font-weight: 500; }
+.lib-build .lib-state { font-weight: 600; }
+
+/* nothing yet, nothing found, a list that couldn't load, and a build that hasn't finished */
+.lib-empty { max-width: 640px; padding: clamp(24px, 3.4vw, 36px); background: var(--surface); border-radius: 28px; box-shadow: var(--lift-hi); }
+.lib-empty h2 { margin: 0 0 10px; font-size: clamp(24px, 2.4vw, 28px); }
+.lib-empty p { margin: 0; max-width: 54ch; color: var(--body); }
+.lib-empty .actions { margin-top: 24px; }
+.lib-none { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 22px; margin-top: 12px; padding: 20px 22px; background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--lift); }
+.lib-none p { margin: 0; color: var(--body); }
+.lib-wait { margin: 0; padding: 20px 22px; border-radius: var(--r-lg); box-shadow: inset 0 0 0 1.5px var(--rule); color: var(--mute); }
+
+@media (max-width: 1000px) {
+  .lib-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: "builds" "lessons"; }
+}
+@media (max-width: 720px) {
+  .lib-head { margin-bottom: 28px; }
+  .lib-head .lead { font-size: 16.5px; }
+  .lib-sec-head.has-find { flex-direction: column; align-items: stretch; }
+  .lib-sec-head.has-find h2 { padding-top: 0; }
+  .lib-find { width: 100%; }
+  .lib-list { padding: 4px; }
+  .lib-row { grid-template-columns: minmax(0, 1fr); padding: 14px 12px 12px 14px; }
+  .lib-row + .lib-row::before { left: 14px; right: 12px; }
+  .lib-lesson .lib-acts { margin: 4px 0 0 -12px; }
+  .lib-build { grid-template-columns: 30px minmax(0, 1fr); }
+  .lib-source { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  .lib-ask { flex-direction: column; align-items: stretch; }
+  .lib-ask-btns button { flex: 1; }
+  .lib-empty { border-radius: 22px; }
+  .lib-empty .actions .btn { width: 100%; }
+  .lib-none button { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .is-running .lib-mark::before { animation: none; border-color: var(--green-soft); border-top-color: var(--green); } }
