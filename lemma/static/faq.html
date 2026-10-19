@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>OpenLemma FAQ</title>
+<meta name="description" content="Plain answers about OpenLemma: what it is, what it costs, your AI key, your sources and your data.">
+<link rel="icon" href="static/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="static/icon-180.png">
+<link rel="stylesheet" href="static/styles.css">
+<script src="static/faq.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <a class="wordmark" href="./" aria-label="OpenLemma home"><svg class="logo" viewBox="0 0 28 28" aria-hidden="true"><path d="M21.8 7.6A10 10 0 1 0 24 14" fill="none" stroke="#111318" stroke-width="3.6" stroke-linecap="round"/><circle cx="23.2" cy="9.4" r="3.9" fill="#ffe46b" stroke="#111318" stroke-width="1.8"/><circle cx="14" cy="14" r="2.4" fill="#111318"/></svg><span class="wm-name"><span class="wm-open">Open</span>Lemma</span></a>
+  <nav class="site-nav" aria-label="Main">
+    <a href="./#/make">New lesson</a>
+    <a href="./#/gallery">Gallery</a>
+  </nav>
+</header>
+<main id="main" class="doc">
+<header class="doc-head">
+  <h1>Questions and answers</h1>
+  <p class="doc-lead">What OpenLemma is, what it costs, and what happens to your key, your sources and your lessons.</p>
+  <p class="doc-meta">Not answered here? Email <a href="mailto:contact@openlemma.org">contact@openlemma.org</a> · <a href="privacy">Privacy</a> · <a href="terms">Terms of use</a></p>
+</header>
+
+<section class="doc-short" aria-labelledby="short">
+  <h2 id="short">In short</h2>
+  <ul>
+    <li>OpenLemma turns a concept or a source into a short lesson with live models you can move.</li>
+    <li>Look around with no account. Sign in with Google to search for sources and build lessons.</li>
+    <li>Searching is free. Lessons are built with your own AI key, which OpenLemma never stores.</li>
+    <li>Every lesson is checked before you see it, but it can still contain errors.</li>
+  </ul>
+</section>
+
+<section aria-labelledby="start">
+  <h2 id="start">Getting started</h2>
+  <div class="faq">
+    <details id="what-is">
+      <summary>What is OpenLemma?</summary>
+      <div class="faq-a">
+        <p>OpenLemma teaches complex ideas by letting you see them work. Ask about a concept, or bring a paper, article or chapter, and it builds a short, hands-on lesson.</p>
+        <p>First comes the idea in brief. Then, for each idea, a live model you can move, an explanation with an exact quote from a real source, and a chance to try it yourself.</p>
+        <p>To see one before you start, open the <a href="./#/example">example lesson</a> or the <a href="./#/gallery">Gallery</a>.</p>
+      </div>
+    </details>
+    <details id="free">
+      <summary>Is it free?</summary>
+      <div class="faq-a">
+        <p>Yes. OpenLemma is a free learning tool, and searching for sources is free.</p>
+        <p>Lessons are built by an AI model using your own key, so your AI provider may charge you for that under its own terms. Those charges are yours.</p>
+      </div>
+    </details>
+    <details id="account">
+      <summary>Do I need an account?</summary>
+      <div class="faq-a">
+        <p>Not to look around. The Gallery and the example lesson work with no account or key.</p>
+        <p>To search for sources, build lessons and keep a library, sign in with Google. OpenLemma keeps your name, email address and picture, and asks Google for nothing else.</p>
+      </div>
+    </details>
+    <details id="build-time">
+      <summary>How long does a lesson take to build?</summary>
+      <div class="faq-a">
+        <p>First, OpenLemma reads your sources and proposes an outline of three to six concepts. You can reorder them, remove them, or mark ones you already know.</p>
+        <p>Building then usually takes 1–3 minutes, and you can start the first concept sooner. Leaving the page doesn't stop the build. The finished lesson is saved to your library.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section aria-labelledby="key-data">
+  <h2 id="key-data">Your key and your data</h2>
+  <div class="faq">
+    <details id="own-key">
+      <summary>Why do I need my own AI key, and which providers work?</summary>
+      <div class="faq-a">
+        <p>Lessons are written by a large AI model of your choice, under your own account with that provider. You connect it once, on your account page.</p>
+        <ul>
+          <li><strong>OpenCode Go</strong>, <strong>OpenAI</strong> or <strong>Claude</strong>, each with an API key from that provider.</li>
+          <li><strong>ChatGPT</strong> Plus or Pro, signed in with no key, but only when OpenLemma runs on your own computer. It isn't offered at openlemma.org.</li>
+        </ul>
+        <p>Long papers fit best with OpenCode Go or Claude, which can read about a million tokens (pieces of words) at once.</p>
+      </div>
+    </details>
+    <details id="key-safe">
+      <summary>Is my AI key safe?</summary>
+      <div class="faq-a">
+        <p>Your key is never saved in OpenLemma's storage: not with your account, your lessons or your builds. Your browser keeps it and sends it only with each request that needs it.</p>
+        <p>The server holds the key in memory only while that request or build runs, and never writes it to disk. If a provider's error message repeats the key, OpenLemma removes it before saving the build.</p>
+        <p>The AI model is called with no tools, so it can only read what OpenLemma sends and reply with text.</p>
+      </div>
+    </details>
+    <details id="who-sees">
+      <summary>Who else sees my data?</summary>
+      <div class="faq-a">
+        <p>Lessons in your library are private to your account. A few services see parts of what you do, only to make OpenLemma work:</p>
+        <ul>
+          <li><strong>Your AI provider</strong> receives your sources' text when you build a lesson, under your own key.</li>
+          <li><strong>TypeSafe</strong> receives your search words and results, the opening of each source, and each drafted concept, to rank results, sort lessons into subjects and check concepts for errors. It never receives your key or your account.</li>
+          <li><strong>Search sources</strong> such as Wikipedia, OpenAlex and arXiv receive the words you search for.</li>
+          <li><strong>Google</strong> hosts OpenLemma and handles signing in. <strong>Cloudflare</strong> carries traffic and counts page views without cookies.</li>
+        </ul>
+        <p>OpenLemma keeps no request logs and no tracking cookies, and nothing is sold or shared for advertising. The <a href="privacy">Privacy</a> page has every detail.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section aria-labelledby="sources-lessons">
+  <h2 id="sources-lessons">Sources and lessons</h2>
+  <div class="faq">
+    <details id="sources">
+      <summary>What can I bring as sources, and how many?</summary>
+      <div class="faq-a">
+        <p>Ask about a concept and OpenLemma suggests sources to teach from, such as encyclopedia articles, textbooks and open papers. You can change the selection.</p>
+        <p>Or bring your own: links (an arXiv link becomes its PDF), PDFs, saved web pages and text files.</p>
+        <ul>
+          <li>One lesson combines up to 10 links and files, and up to 5 of them can be files.</li>
+          <li>PDFs can be up to 40 MB. Other files can be up to 10 MB.</li>
+          <li>Sources need text that can be selected. Scanned PDFs are refused.</li>
+          <li>Everything must fit in what your chosen AI model can read at once.</li>
+        </ul>
+        <p>Only bring sources you're allowed to use.</p>
+      </div>
+    </details>
+    <details id="wrong">
+      <summary>Can a lesson be wrong?</summary>
+      <div class="faq-a">
+        <p>Yes. Lessons are generated by AI and can contain errors, even after OpenLemma's checks. Check what matters against the source, and don't rely on a lesson for medical, legal, financial or other professional decisions.</p>
+        <p>Before you see a lesson, OpenLemma checks that every quote appears in its source, every model gives real numbers across its whole range, and every goal can be reached. A lesson that fails is never shown. A concept that can't be fixed is left out, and the lesson says so.</p>
+        <p>Each model is labelled as a simplified teaching model, with a note on whether its numbers are only illustrative.</p>
+      </div>
+    </details>
+    <details id="quotes">
+      <summary>How are quotes checked?</summary>
+      <div class="faq-a">
+        <p>Every concept quotes a source word for word. OpenLemma checks that each quote really appears in that source, ignoring only the spacing, hyphens and punctuation that reading a PDF can scramble. Each explanation names the source it comes from, so you can look it up.</p>
+        <p>Each drafted concept is also checked by TypeSafe's Jev model against the passages it's about, for claims the source doesn't support, invented findings and wrong answers.</p>
+      </div>
+    </details>
+    <details id="offline">
+      <summary>Can I download a lesson and use it offline?</summary>
+      <div class="faq-a">
+        <p>Yes. Download any lesson as a single file. It opens in a browser with no internet connection, makes no network requests and sends nothing anywhere.</p>
+        <p>A lesson you download is yours to use, subject to the rights in the sources it quotes.</p>
+      </div>
+    </details>
+    <details id="edit">
+      <summary>Can I change a lesson?</summary>
+      <div class="faq-a">
+        <p>Yes, you can edit the lessons in your library. Every save runs the same checks again, so a broken lesson can't be saved or downloaded.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section aria-labelledby="limits-accounts">
+  <h2 id="limits-accounts">Limits and your account</h2>
+  <div class="faq">
+    <details id="limits">
+      <summary>What are the daily limits?</summary>
+      <div class="faq-a">
+        <p>Each account on openlemma.org can, every day:</p>
+        <ul>
+          <li>search for sources 40 times,</li>
+          <li>start 20 outlines or lesson builds,</li>
+          <li>read 100 sources.</li>
+        </ul>
+        <p>The limits reset at midnight UTC, and at most two builds can run at once. They exist because OpenLemma pays for some of the checks behind every search and build.</p>
+      </div>
+    </details>
+    <details id="delete">
+      <summary>How do I delete my lessons or my account?</summary>
+      <div class="faq-a">
+        <p>Delete any lesson, or a stopped build, from your library at any time.</p>
+        <p>To delete your whole account and everything in it, email <a href="mailto:contact@openlemma.org">contact@openlemma.org</a> from the address you signed in with.</p>
+      </div>
+    </details>
+    <details id="contact">
+      <summary>How do I report a problem or contact you?</summary>
+      <div class="faq-a">
+        <p>Email <a href="mailto:contact@openlemma.org">contact@openlemma.org</a>: to report a mistake in a lesson, a lesson or source that infringes your rights, misuse of the site, or anything else.</p>
+        <p>If something broke, the error message shows an id. Include it, so the failure can be found.</p>
+      </div>
+    </details>
+  </div>
+</section>
+</main>
+<footer class="site-foot">
+  <div class="foot-brand">
+    <a class="wordmark" href="./" aria-label="OpenLemma home"><svg class="logo" viewBox="0 0 28 28" aria-hidden="true"><path d="M21.8 7.6A10 10 0 1 0 24 14" fill="none" stroke="#111318" stroke-width="3.6" stroke-linecap="round"/><circle cx="23.2" cy="9.4" r="3.9" fill="#ffe46b" stroke="#111318" stroke-width="1.8"/><circle cx="14" cy="14" r="2.4" fill="#111318"/></svg><span class="wm-name"><span class="wm-open">Open</span>Lemma</span></a>
+    <p class="foot-line">See how complex ideas work.</p>
+    <p class="foot-note">Lessons are generated by AI and can contain errors, so check them against the source.</p>
+  </div>
+  <nav class="foot-nav" aria-label="Footer">
+    <div><h2 class="foot-h">Learn</h2><ul><li><a href="./#/make">New lesson</a></li><li><a href="./#/gallery">Gallery</a></li><li><a href="./#/example">Example lesson</a></li></ul></div>
+    <div><h2 class="foot-h">OpenLemma</h2><ul><li><a href="faq" aria-current="page">FAQ</a></li><li><a href="privacy">Privacy</a></li><li><a href="terms">Terms</a></li><li><a href="mailto:contact@openlemma.org">contact@openlemma.org</a></li></ul></div>
+  </nav>
+</footer>
+</body>
+</html>

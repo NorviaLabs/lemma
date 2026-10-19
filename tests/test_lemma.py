@@ -1340,6 +1340,15 @@ class ServerTests(unittest.TestCase):
         s, raw = self.req("GET", "/privacy")
         self.assertEqual(s, 200)
         self.assertIn(b"never writes it to disk", raw)
+        c = http.client.HTTPConnection("127.0.0.1", self.port, timeout=10)  # the FAQ is a document page like privacy
+        c.request("GET", "/faq", headers={"Host": f"localhost:{self.port}"})
+        r = c.getresponse()
+        raw = r.read()
+        c.close()
+        self.assertEqual(r.status, 200)
+        self.assertIn(b'<details id="key-safe">', raw)
+        self.assertIn("script-src 'self'", r.getheader("Content-Security-Policy"))
+        self.assertEqual(r.getheader("Cache-Control"), "no-store")  # like privacy and terms, never cached
 
     def test_status_follows_the_credential_headers(self):
         s, raw = self.req("GET", "/api/status")

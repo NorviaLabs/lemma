@@ -1030,7 +1030,7 @@ class Handler(BaseHTTPRequestHandler):
     def _static(self, path: str):
         if path in ("/", "/index.html"):
             name = "index.html"
-        elif path in ("/privacy", "/terms"):
+        elif path in ("/privacy", "/terms", "/faq"):
             name = path[1:] + ".html"
         elif path.startswith("/static/"):
             name = path[len("/static/"):]
