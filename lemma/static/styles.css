@@ -385,9 +385,26 @@ button.hall-replay:hover:not(:disabled) { background: transparent; color: var(--
 .connect input[type=password] { max-width: 640px; }
 
 /* account and sign-in */
-.signin { max-width: 560px; }
-.signin-options { display: grid; gap: 10px; margin: 26px 0; max-width: 360px; }
+/* sign-in: one raised card in the middle of the page, the next step said before the button */
+.signin { display: grid; justify-items: center; padding: clamp(8px, 4vh, 48px) 0 24px; }
+.signin-card { width: 100%; max-width: 460px; padding: clamp(28px, 4vw, 44px); background: var(--surface); border-radius: 28px; box-shadow: var(--lift-hi); }
+.signin-card > .logo { display: block; width: 40px; height: 40px; margin-bottom: 22px; }
+.signin-card h1 { margin: 0 0 10px; font-size: clamp(28px, 3vw, 34px); line-height: 1.1; }
+.signin-lead { margin: 0; font-size: 17px; line-height: 1.5; color: var(--body); }
+.signin-ask { margin: 12px 0 0; padding: 14px 18px; border-radius: 16px; background: var(--plate); font: 600 17px/1.4 var(--sans); color: var(--ink); quotes: "\201C" "\201D"; }
+.signin-ask::before { content: open-quote; }
+.signin-ask::after { content: close-quote; }
+.signin-options { display: grid; gap: 10px; margin: 26px 0 28px; }
 .signin-options .btn { min-height: 50px; font-size: 16px; }
+.signin-points { list-style: none; margin: 0; padding: 22px 0 0; border-top: 1px solid var(--rule); display: grid; gap: 12px; font-size: 15px; line-height: 1.45; color: var(--body); }
+.signin-points li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; align-items: start; }
+.signin-tick { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: color-mix(in srgb, var(--green) 12%, transparent); color: var(--green); }
+.signin-tick .icon { width: 13px; height: 13px; }
+.signin-fine { margin: 20px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--mute); }
+.signin-fine a { color: var(--body); }
+.signin-alt { margin: 22px 0 0; font-size: 15px; color: var(--mute); text-align: center; }
+.signin-alt a { color: var(--ink); font-weight: 600; }
+@media (max-width: 560px) { .signin-card { border-radius: 22px; } }
 .account-head { display: flex; align-items: center; gap: 20px; margin-bottom: 28px; }
 .account-head h1 { margin: 0 0 2px; }
 .account-facts { display: grid; grid-template-columns: max-content 1fr; gap: 0 32px; margin: 0 0 24px; border-top: 1px solid var(--rule); }

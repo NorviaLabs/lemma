@@ -1383,30 +1383,40 @@
       h("img", { src: src(2), srcset: [1, 2, 3, 4].map((n) => `${src(n)} ${180 * n}w`).join(", "), sizes: "216px", width: 216, height: 48, alt: "Sign in with Google" }));
   };
 
-  const listOf = (names) => (names.length > 1 ? `${names.slice(0, -1).join(", ")} or ${names[names.length - 1]}` : names[0] || "");
-
   function showSignIn(error, next) {
     if (status.user) { location.hash = "#/account"; return; }
     const options = status.sign_in || [];
     const held = heldIntent(false), ask = next === "build" ? held?.ask : null;
     const back = { "#/library": "your library", "#/account": "your account", "#/settings": "your AI provider settings" }[held?.route];
-    view(h("section", { class: "panel signin" },
-      h("h1", {}, "Sign in to OpenLemma"),
-      h("p", { class: "lead" }, ask
-        ? ["Sign in to find sources for ", h("cite", { class: "words" }, `“${ask}”`), ". You'll go straight to them, and your lessons are saved to your own library."]
-        : back ? `Sign in to open ${back}. You'll go straight back to it.`
-        : next === "build"
-          ? "Sign in to ask about a concept or bring a source and build lessons. Your lessons are saved to your own library."
-          : `Sign in to build lessons from your questions and sources, and keep them in your own library.${held && "route" in held ? " You'll come back to this page." : ""}`),
-      error ? errorBox(error) : null,
-      options.length
-        ? h("div", { class: "signin-options" }, options.map((p) => p.id === "google"
-            ? googleButton()
-            : h("a", { class: "btn" + (p.id === options[0].id ? " primary" : ""), href: `auth/${p.id}/start` }, p.label)))
-        : errorBox("Signing in isn't set up on this server yet."),
-      h("p", { class: "muted small" }, `Searching for sources is free. To build a lesson you connect your own AI model (${listOf((status.providers || []).map((x) => x.name))}); a key stays in this browser. OpenLemma keeps your name, email address and picture so it can show you your own library.`),
-      h("div", { class: "actions" }, h("a", { class: "btn ghost", href: "#/example" }, icon("play"), "Try the example lesson first"))));
+    // What happens after Google, said before anything else: the question they asked, or the page they'll return to.
+    const context = ask
+      ? [h("p", { class: "signin-lead" }, "Sign in, and you'll go straight to sources for"), h("blockquote", { class: "signin-ask" }, ask)]
+      : [h("p", { class: "signin-lead" }, back ? `Sign in to open ${back}. You'll go straight back to it.`
+        : next === "build" ? "Sign in to ask about a concept or bring a source, and build a lesson from it."
+        : `Sign in to build lessons from your questions and sources.${held && "route" in held ? " You'll come back to this page." : ""}`)];
+    const point = (text) => h("li", {}, h("span", { class: "signin-tick", "aria-hidden": "true" }, icon("check")), text);
+    const mark = $(".site-head .logo").cloneNode(true);
+    view(h("section", { class: "signin", "aria-labelledby": "signin-title" },
+      h("div", { class: "signin-card" },
+        mark,
+        h("h1", { id: "signin-title" }, "Sign in to OpenLemma"),
+        ...context,
+        error ? errorBox(error) : null,
+        options.length
+          ? h("div", { class: "signin-options" }, options.map((p) => p.id === "google"
+              ? googleButton()
+              : h("a", { class: "btn" + (p.id === options[0].id ? " primary" : ""), href: `auth/${p.id}/start` }, p.label)))
+          : errorBox("Signing in isn't set up on this server yet."),
+        h("ul", { class: "signin-points" },
+          point("Searching for sources is free."),
+          point("Every lesson you build is saved to your library."),
+          point("Lessons are built with your own AI model, and a key stays in this browser.")),
+        h("p", { class: "signin-fine" }, "OpenLemma keeps your name, email address and picture, and asks Google for nothing else. ",
+          h("a", { href: "privacy" }, "Privacy"))),
+      h("p", { class: "signin-alt" }, "Not ready yet? ",
+        h("a", { href: "#/example" }, "Try the example lesson"), ", with no account or key.")));
   }
+
 
   async function showAccount(toProvider) {
     if (!status.user) { holdIntent({ route: toProvider ? "#/settings" : "#/account" }); return showSignIn(); }
