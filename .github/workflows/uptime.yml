@@ -1,0 +1,15 @@
+name: Uptime
+# Checks the hosted Lemma every 15 minutes; GitHub emails whoever last edited this schedule when a run fails.
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Gallery and example lesson answer
+        run: |
+          for path in /api/example /api/gallery; do
+            curl -fsS --retry 3 --retry-delay 20 --retry-all-errors -m 20 -o /dev/null "https://openlemma.org$path"
+          done

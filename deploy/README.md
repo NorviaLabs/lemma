@@ -23,6 +23,7 @@ Commit and push directly to `main` before deploying; do not create a pull reques
 
 - Each account may start 40 searches and 20 outlines or builds a day (UTC), since every one uses the server's TypeSafe key. Change them with `LEMMA_DAILY_SEARCHES` and `LEMMA_DAILY_BUILDS` in `compose.yaml`.
 - Lemma counts anonymous events per day (lessons opened and finished, goals reached alone or with Show me, searches, sign-ins, and outline and build outcomes) in `metrics.db` beside `accounts.db`. Signed in as an account listed in `LEMMA_ADMINS`, open `https://openlemma.org/api/stats` for the last 30 days.
+- `.github/workflows/uptime.yml` checks the site every 15 minutes; GitHub emails whoever last edited its schedule when a check fails.
 - Page views come from Cloudflare Web Analytics (Cloudflare dashboard → Analytics & Logs → Web Analytics, automatic setup for openlemma.org). Lemma's Content Security Policy allows its script on the hosted site.
 
 ## Sign-in apps
