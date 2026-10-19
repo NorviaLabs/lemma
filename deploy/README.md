@@ -1,6 +1,6 @@
 # Lemma at openlemma.org
 
-Lemma runs in Docker on a free-tier Google Cloud e2-micro VM (`lemma` in project `lemma-511811`, zone `us-central1-a`, Ubuntu 24.04, 34.172.130.18). A Cloudflare Tunnel (`lemma`, b9f37d76-4c40-4ceb-9e02-8988a0755f90) carries `https://openlemma.org` to it, so the VM opens no ports beyond SSH and Cloudflare handles HTTPS. The domain is registered with Cloudflare Registrar. Two Cloudflare redirect rules send `www.openlemma.org` and the old address, `tools.mohitranka.com/lemma/*`, to `https://openlemma.org`.
+Lemma runs in Docker on a free-tier Google Cloud e2-micro VM (`lemma` in project `lemma-511811`, zone `us-central1-a`, Ubuntu 24.04, 34.172.130.18). A Cloudflare Tunnel (`lemma`, b9f37d76-4c40-4ceb-9e02-8988a0755f90) carries `https://openlemma.org` to it, so the VM opens no ports beyond SSH and Cloudflare handles HTTPS. The domain is registered with Cloudflare Registrar. A Cloudflare redirect rule sends `www.openlemma.org` to `https://openlemma.org`.
 
 Lemma's data (`accounts.db` and each account's library) lives in the `deploy_lemma-data` Docker volume.
 
