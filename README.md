@@ -22,7 +22,6 @@ To make your own lessons, OpenLemma needs your own key for an AI provider, and t
 | **OpenAI** | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) | Depends on the model |
 | **Claude** | [platform.claude.com/settings/keys](https://platform.claude.com/settings/keys) | Long papers (about 1M tokens) |
 | **ChatGPT** | No key: sign in with your ChatGPT Plus or Pro account. Only when Lemma runs on your own computer | Depends on the model |
-| **Claude subscription** | No key: your Claude Pro or Max plan, through [Claude Code](https://claude.com/claude-code) signed in where Lemma runs | Depends on the model |
 
 Ask about a concept and choose multiple sources, paste a link, or upload a PDF. Search results suggest an overview and up to two relevant papers only after downloading and checking readable full text; blocked copies are skipped in favor of readable alternatives. Checks are cached for five minutes, so availability can still change. You can change every selection. Lemma creates one combined lesson, attributes its evidence to individual sources, and asks the model to explain meaningful disagreements.
 
@@ -43,12 +42,6 @@ Both providers are called over their OpenAI-compatible chat completions APIs (`h
 ### How Lemma uses Claude
 
 Claude is called through Anthropic's Python SDK with your key, streaming each reply, with adaptive thinking and high effort where the model offers it. The model list shows the models that support adaptive thinking; the default is `claude-opus-5-5`. A repair re-sends the paper, so the request is marked for prompt caching to make that repeat cheap, and Claude's earlier replies go back exactly as it sent them. On models that support it, a request Claude's safety checks decline is retried on the model Anthropic recommends for that case (`fallbacks: "default"`); if it is still declined, that concept is left out and the lesson says so.
-
-For a Claude Pro or Max plan, use **Claude subscription** below instead of a key.
-
-### How Lemma uses your Claude subscription
-
-Anthropic allows a subscription only in its own apps, with sign-in through its own flow, so Lemma doesn't sign in to Claude or hold your tokens. Instead it runs your installed, unmodified Claude Code: sign it in once with `claude auth login` in a terminal, and Settings shows the account it found. Each concept is drafted by one `claude -p` process, started in an empty temporary folder with every tool, setting, plugin and MCP server turned off (`--tools "" --safe-mode --strict-mcp-config`), so the model can only read what Lemma sends and reply with text. The process keeps the conversation, so a repair sends only the list of problems, and `--no-session-persistence` keeps these conversations out of your Claude Code history. `ANTHROPIC_API_KEY` is left out of its environment so lessons count against your plan's usage, not an API account. The default model is `claude-opus-5-5`, with high effort. Sign out with `claude auth logout`. On a hosted Lemma this is the Claude Code signed in on the server, so every account's lessons count against that plan.
 
 ### How Lemma uses your ChatGPT subscription
 

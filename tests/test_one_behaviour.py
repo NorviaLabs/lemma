@@ -81,7 +81,7 @@ class Behaviour(unittest.TestCase):
             ("GET", "/api/lessons", None), ("GET", "/api/requests", None), ("GET", "/api/stats", None),
             ("POST", "/api/event", {"name": "lesson_open"}), ("POST", "/api/papers", upload),
             ("POST", "/api/requests", {"sources": []}), ("GET", "/api/lessons/nope", None),
-            ("GET", "/api/chatgpt", None), ("GET", "/api/claude-code", None), ("GET", "/", None), ("GET", "/privacy", None),
+            ("GET", "/api/chatgpt", None), ("GET", "/", None), ("GET", "/privacy", None),
         ]
         out = {}
         with patch.dict(os.environ, env):

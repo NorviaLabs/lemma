@@ -202,7 +202,6 @@
     openai: "OpenAI's models, billed to your OpenAI API account.",
     claude: "Anthropic's Claude models, billed to your Claude API account. Fits long papers (about 1M tokens).",
     chatgpt: "Your ChatGPT Plus or Pro plan, no key needed. For OpenLemma on your own computer.",
-    "claude-code": "A Claude Pro or Max plan, through the Claude Code signed in where OpenLemma runs. No key needed.",
   };
 
   // Said wherever the key comes up, so it reads the same each time.
@@ -212,7 +211,7 @@
      `compact` (the connect step) picks the provider's default model and keeps the model list folded away. */
   function keyForm(onSaved, { compact = false } = {}) {
     const providers = status.providers || [];
-    let selected = cred.provider || (providers[0] || {}).id;
+    let selected = providers.some((x) => x.id === cred.provider) ? cred.provider : (providers[0] || {}).id;
     const signins = {};  // sign-in provider id -> its status, e.g. { signed_in, email }
     let poll = null;
     const body = h("div");
@@ -272,27 +271,7 @@
         modelPart, msg,
         h("div", { class: "actions" }, save));
     }
-    function signInPart(p) {
-      return p.id === "claude-code" ? claudeCodePart() : chatgptPart();
-    }
-    function claudeCodePart() {
-      const st = signins["claude-code"] || {};
-      if (st.signed_in) {
-        return [h("p", {}, icon("check"), ` Claude Code is signed in${st.email ? ` as ${st.email}` : ""}${st.plan ? ` (${st.plan} plan)` : ""}. `),
-          h("p", { class: "muted small" }, "Lessons count against your plan's usage. To sign out, run ", h("code", {}, "claude auth logout"), " in a terminal.")];
-      }
-      const check = h("button", { class: "primary", onclick: async () => {
-        check.disabled = true;
-        try { signins["claude-code"] = await api("/api/claude-code"); draw(); } catch (err) { msg.replaceChildren(errorBox(err.message)); check.disabled = false; }
-      } }, "Check again");
-      return [h("p", {}, st.installed === false
-          ? ["Install ", h("a", { href: "https://claude.com/claude-code", target: "_blank", rel: "noopener noreferrer" }, "Claude Code"), ", then in a terminal run ", h("code", {}, "claude auth login"), " and sign in with your Claude account."]
-          : ["In a terminal, run ", h("code", {}, "claude auth login"), " and sign in with your Claude account."]),
-        st.error && st.installed !== false ? h("p", { class: "muted small" }, st.error) : null,
-        check,
-        h("p", { class: "muted small" }, "OpenLemma runs your own Claude Code with all its tools turned off and never sees your sign-in.")].filter(Boolean);
-    }
-    function chatgptPart() {
+    function signInPart(p) {  // ChatGPT, the one provider signed in to instead of given a key
       const chatgpt = signins.chatgpt || {};
       if (chatgpt.signed_in) {
         return [h("p", {}, icon("check"), ` Signed in${chatgpt.email ? ` as ${chatgpt.email}` : ""}. `,
@@ -322,7 +301,7 @@
     }
     draw();
     for (const x of providers.filter((x) => x.sign_in)) {
-      api(x.id === "claude-code" ? "/api/claude-code" : "/api/chatgpt").then((r) => { signins[x.id] = r; draw(); }).catch(() => {});
+      api("/api/chatgpt").then((r) => { signins[x.id] = r; draw(); }).catch(() => {});
     }
     return body;
   }
@@ -919,7 +898,7 @@
         status.typesafe ? (m === "search"
           ? "Your search words and each result's title and abstract also go to TypeSafe, to rank the results; the start of each selected source, to sort the lesson into a subject; and each drafted concept with the passages it is about, to check it for errors. "
           : "The start of each source also goes to TypeSafe, to sort the lesson into a subject, and each drafted concept with the passages it is about, to check it for errors. ") : null,
-        // A sign-in provider (ChatGPT or a Claude subscription, on your own computer only) has no key to speak of.
+        // A sign-in provider (ChatGPT, on your own computer only) has no key to speak of.
         (status.providers || []).find((x) => x.id === p.id)?.sign_in
           ? "Build requests, source text and progress are saved so you can return later. OpenLemma keeps no request logs. "
           : "Build requests, source text and progress are saved so you can return later; your AI key is not, and stays in this browser. OpenLemma keeps no request logs. ",
@@ -1479,6 +1458,8 @@
 
   (async function init() {
     try { status = await api("/api/status"); } catch (e) { /* the server will report */ }
+    // A provider saved here that this server doesn't offer (gone, or ChatGPT when hosted) is forgotten, so Settings starts from the rest.
+    if (cred.provider && status.providers && !status.providers.some((x) => x.id === cred.provider)) saveCred(Object.assign({}, cred, { provider: "" }));
     drawAccountLink();
     const held = status.user && heldIntent(true);
     if (held && "route" in held) history.replaceState(null, "", held.route.startsWith("#/signin") ? "#/" : held.route || "#/");
