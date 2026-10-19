@@ -185,6 +185,7 @@ input[type=checkbox], input[type=radio] { accent-color: var(--green); }
 .error.floating { position: fixed; right: 16px; bottom: calc(var(--bar-h) + 16px); max-width: 440px; z-index: 30; background: var(--paper); box-shadow: 0 10px 30px rgba(29, 35, 33, .16), 0 0 0 1px var(--rule); }
 .error.floating button { margin-top: 10px; }
 .ok { color: var(--good); font-weight: 600; }
+.saved-note { display: inline-flex; align-items: center; gap: 6px; margin: 0; color: var(--good); font-weight: 600; }  /* a lesson already in the library, where Save would be */
 
 /* ---------- home: the doorway plate */
 :root { --home-col: minmax(300px, 400px); --home-gap: clamp(28px, 4vw, 56px); }  /* the home page's one two-column grid */
@@ -1494,7 +1495,7 @@ main.doc { max-width: 808px; padding-top: clamp(24px, 5vw, 56px); }
 
 /* builds: a mark that says the state, then the state in words and its next step */
 .lib-build { grid-template-columns: 30px minmax(0, 1fr); column-gap: 14px; align-items: start; padding-left: 14px; }
-.lib-build .lib-acts { grid-column: 2; margin: 6px 0 0 -12px; }
+.lib-build .lib-acts { grid-column: 2; margin: 6px 0 0 -12px; flex-wrap: wrap; }  /* "Retry build", "Delete" and "Report this" wrap on a phone */
 .lib-build .lib-msg, .lib-build .lib-ask { grid-column: 2; }
 .lib-build .lib-title { font-size: 17px; }
 .lib-mark { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; margin-top: 1px; background: var(--surface); box-shadow: inset 0 0 0 1.5px var(--rule-strong); color: var(--ink); }

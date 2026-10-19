@@ -87,10 +87,13 @@
   }
 
   const setHash = (hash) => history.replaceState(null, "", hash || location.pathname + location.search);
+  // Each screen names itself in the tab and history; the home page is just "OpenLemma".
+  const setTitle = (t) => { document.title = t ? `${t} · OpenLemma` : "OpenLemma"; };
   function stopPolling() { clearTimeout(pollTimer); pollTimer = null; }
 
-  // The id an unexpected error carries ("… (error 1a2b3c4d)."), as logs.report writes it; ordinary refusals have none.
-  const ERROR_ID = /\berror ([0-9a-f]{8})\)/;
+  // The id an unexpected error carries, as logs.report writes it: "… (error 1a2b3c4d)." from a build, or "… with error
+  // id 1a2b3c4d." from the server's own 500 answer. Ordinary refusals have none.
+  const ERROR_ID = /\berror (?:id )?([0-9a-f]{8})\b/;
   /* An error, said in place. One that carries an error id, or a build that stopped (`report`), can be reported
      from where it is shown, by a signed-in account. */
   function errorBox(msg, problems, report, page) {
@@ -170,7 +173,7 @@
         report ? null : h("span", { class: "fb-opt" }, " (optional)")),
       report ? h("p", { class: "fb-help", id: `fb-help-${n}` }, ctx.kind === "build" ? "The build's id is sent with your message." : "The error's id is sent with your message.") : null,
       msg,
-      h("div", { class: "fb-foot" }, email ? h("p", { class: "fb-reply" }, "We'll reply to ", h("strong", {}, email), " if you ask something.") : null, count),
+      h("div", { class: "fb-foot" }, email ? h("p", { class: "fb-reply" }, "We'll reply from contact@openlemma.org to ", h("strong", {}, email), " if you ask something.") : null, count),
       errSlot,
       h("div", { class: "fb-acts" }, send, onCancel ? h("button", { type: "button", class: "ghost small", onclick: onCancel }, "Cancel") : null));
     if (report) msg.setAttribute("aria-describedby", `fb-help-${n} fb-count-${n}`);
@@ -203,7 +206,7 @@
         for (const k of ["page", "lesson_id", "lesson_title", "error_id", "request_id"]) if (ctx[k]) body[k] = ctx[k];
         const r = await api("/api/feedback", body);
         const thanks = h("p", { class: "fb-thanks", role: "status", tabindex: "-1" }, h("span", { class: "fb-tick", "aria-hidden": "true" }, icon("check")),
-          h("span", {}, "Thanks — sent to the people who run OpenLemma.", r.reply_to ? [" If you asked something, we'll reply to ", h("strong", {}, r.reply_to), "."] : null));
+          h("span", {}, "Thanks. Sent to the people who run OpenLemma.", r.reply_to ? [" If you asked something, we'll reply from contact@openlemma.org to ", h("strong", {}, r.reply_to), "."] : null));
         form.replaceWith(thanks);
         thanks.focus({ preventScroll: true });
         if (onSent) onSent(thanks);
@@ -234,6 +237,17 @@
     const ctx = { kind: "lesson", page: pageOf(location.hash), lesson_title: String(lesson.title || "").slice(0, 300) };
     if (/^[A-Za-z0-9_-]{1,64}$/.test(lesson.id || "")) ctx.lesson_id = lesson.id;
     return h("section", { class: "fb-lesson", "aria-label": "Feedback on this lesson" }, feedbackForm(ctx, { variant: "lesson" }));
+  }
+
+  // A check's finding starts with the field it is about ("understand.quote: …"); the common ones get a plain name.
+  const FIELD_WORDS = { quote: "Quote", understand: "Explanation", model: "Model", goals: "Goal", explore: "Try it", predict: "Question",
+    check: "Check", connect: "Equation", activities: "Activity", concept: "Concept", recap: "Recap", title: "Title", idea: "Idea" };
+  function checkWords(p) {
+    const m = /^([a-z_]+)((?:\.[a-z_]+|\[\d+\])*): (.*)$/s.exec(String(p));
+    if (!m) return p;
+    const path = (m[1] + m[2]).split(/[.[\]]+/).filter((x) => x && !/^\d+$/.test(x));
+    const word = path.includes("quote") ? FIELD_WORDS.quote : path[0] === "explore" && path.includes("goals") ? FIELD_WORDS.goals : FIELD_WORDS[path[0]];
+    return word ? `${word}: ${m[3]}` : p;
   }
 
   const STATE_MARK = { waiting: "", active: "", done: "check", failed: "cross", skipped: "dash" };
@@ -293,8 +307,8 @@
         else { delete r.time.dataset.since; r.time.hidden = true; }
         const found = s.state === "active" ? s.problems || [] : [];
         r.findings.hidden = !found.length;
-        r.findings.querySelector("summary").textContent = `What the checks found (${found.length})`;
-        r.found.replaceChildren(...found.map((p) => h("li", {}, p)));
+        r.findings.querySelector("summary").textContent = `What the checks found (technical, ${found.length})`;
+        r.found.replaceChildren(...found.map((p) => h("li", {}, checkWords(p))));
         return r.li;
       }));
       tick();
@@ -319,9 +333,9 @@
 
   /* ------------------------------------------------------------ AI provider */
   const TAGLINES = {
-    "opencode-go": "Many models through an OpenCode Go plan. Fits long papers (about 1M tokens).",
+    "opencode-go": "Many models through an OpenCode Go plan. Reads long sources: about 1M tokens, roughly 750,000 words.",
     openai: "OpenAI's models, billed to your OpenAI API account.",
-    claude: "Anthropic's Claude models, billed to your Claude API account. Fits long papers (about 1M tokens).",
+    claude: "Anthropic's Claude models, billed to your Claude API account. Reads long sources: about 1M tokens, roughly 750,000 words.",
     chatgpt: "Your ChatGPT Plus or Pro plan, no key needed. For OpenLemma on your own computer.",
   };
 
@@ -329,8 +343,9 @@
   const KEY_NOTE = "Your key stays in this browser and is never saved in OpenLemma's storage. The server uses it only while a request or build runs.";
 
   /* Pick a provider, then paste a key or sign in; Lemma checks either by listing the provider's models.
-     `compact` (the connect step) picks the provider's default model and keeps the model list folded away. */
-  function keyForm(onSaved, { compact = false, onCheck = null } = {}) {
+     `compact` (the connect step) picks the provider's default model and keeps the model list folded away.
+     `quiet` (the account page, which says where the key lives above the form) leaves out the key note. */
+  function keyForm(onSaved, { compact = false, quiet = false, onCheck = null } = {}) {
     const providers = status.providers || [];
     let selected = providers.some((x) => x.id === cred.provider) ? cred.provider : (providers[0] || {}).id;
     const signins = {};  // sign-in provider id -> its status, e.g. { signed_in, email }
@@ -353,7 +368,7 @@
           h("span", { class: "po-body" },
             h("span", { class: "po-name" }, x.name),
             h("span", { class: "po-tagline" }, TAGLINES[x.id] || "")),
-          ready(x) ? h("span", { class: "po-status ok" }, icon("check"), x.sign_in ? "Signed in" : "Key saved") : null)));
+          ready(x) ? h("span", { class: "po-status ok" }, icon("check"), x.sign_in ? "Signed in" : "Key added") : null)));
       async function loadModels(c) {
         const r = await api("/api/models", undefined, undefined, credHeaders(c));
         model.replaceChildren(...r.models.map((m) => h("option", { value: m.id, selected: m.id === r.current }, `${m.name}${m.context ? ` · ${Math.round(m.context / 1000)}k context` : ""}`)));
@@ -381,7 +396,7 @@
           if (onSaved) onSaved();
         } catch (err) { msg.replaceChildren(errorBox(err.message)); }
         busy(save, false);
-      } }, compact ? "Connect and continue" : "Save");
+      } }, compact ? "Connect and continue" : p.sign_in ? "Check and save" : "Check and save key");
       model.addEventListener("change", () => { modelName.textContent = model.value; });
       const modelPart = compact
         ? h("details", { class: "model-pick" }, h("summary", {}, "Model: ", modelName, h("span", { class: "mp-change" }, "Change")),
@@ -390,7 +405,7 @@
       body.replaceChildren(choice, ...(p.sign_in ? signInPart(p) : [
         h("label", { for: "ai-key" }, `${p.name} key`), key,
         h("p", { class: "muted small" }, ext(p.key_url, `Get ${/^[aeiou]/i.test(p.name) ? "an" : "a"} ${p.name} key`),
-          ". ", KEY_NOTE)]),
+          quiet ? "." : [". ", KEY_NOTE])]),
         modelPart, msg,
         h("div", { class: "actions" }, save));
     }
@@ -414,7 +429,7 @@
     function waitForSignIn() {
       stopPoll();
       poll = setTimeout(async () => {
-        if (!body.isConnected) return;  // the learner left Settings
+        if (!body.isConnected) return;  // the learner left the account page
         let chatgpt;
         try { chatgpt = signins.chatgpt = await api("/api/chatgpt"); } catch (e) { return waitForSignIn(); }
         if (chatgpt.signed_in) { msg.replaceChildren(); return draw(); }
@@ -430,7 +445,7 @@
   }
 
   /* ------------------------------------------------------------ home */
-  // Starting points for "Search a topic"; Surprise me picks one at random.
+  // Starting points for "Ask about a concept"; Surprise me picks one at random.
   const TOPICS = ["Regression to the mean", "The prisoner's dilemma", "Herd immunity", "Simpson's paradox", "Small-world networks",
     "Schelling segregation model", "Statistical power", "Confounding variables", "Bayes' theorem", "Natural selection",
     "Diminishing returns", "Network contagion", "Random walks", "Signal detection theory", "The wisdom of crowds",
@@ -469,7 +484,7 @@
           h("figcaption", {}, "Galton, 1886, page 252")),
         h("p", {}, "Galton called it regression towards mediocrity. Today it's called regression to the mean, and it shows up wherever two measurements are related but not perfectly.")));
     // Sits at the foot of the steps, level with the bottom of the model, so the two columns start and end together.
-    const wholeLesson = h("a", { class: "btn ghost", href: "#/example" }, icon("play"), "Walk the whole lesson");
+    const wholeLesson = h("a", { class: "btn ghost", href: "#/example" }, icon("play"), "Try the example lesson");
     function setStep(n, focus) {
       exhibitStep = Math.max(exhibitStep, n);
       verbEls.forEach((li, i) => {
@@ -501,13 +516,13 @@
           h("span", { class: "he-or-word" }, "or"),
           h("a", { class: "btn", href: "#/make", onclick: () => { session.mode = "bring"; } }, icon("doc"), "Bring a source")),
         h("p", { class: "he-example" },
-          h("a", { class: "btn ghost small", href: "#/example" }, icon("play"), "Walk the example lesson"),
-          h("span", { class: "small" }, "10 minutes, no account or key"))),
+          h("a", { class: "btn ghost small", href: "#/example" }, icon("play"), "Try the example lesson"),
+          h("span", { class: "small" }, "About 10 minutes. No account or key needed."))),
       filmPlayer(),
       h("div", { class: "he-try" },
         h("h2", { class: "he-try-title" }, "Try it yourself"),
         h("div", { class: "he-verbs" }, verbs),
-        h("p", { class: "he-try-foot" }, wholeLesson, h("span", { class: "small" }, "About 10 minutes, no setup")),
+        h("p", { class: "he-try-foot" }, wholeLesson),
         stage));
 
     exampleLesson().then((lesson) => {
@@ -608,7 +623,7 @@
       if (exhibitStep === 0) startDemo();
       cleanups.push(() => { stopDemo(); view.destroy(); });
     }).catch(() => {
-      stage.replaceChildren(h("p", { class: "muted" }, "The example model couldn't load. You can still make a lesson below."));
+      stage.replaceChildren(h("p", { class: "muted" }, "The example model couldn't load. You can still ask about a concept at the top of the page."));
       stage.removeAttribute("aria-busy");
     });
     return el;
@@ -622,7 +637,7 @@
     ["Ask, or bring a source", "A concept you want to understand, or a paper, article or chapter you already have. You say who the lesson is for."],
     ["OpenLemma finds the ideas", "For a concept, it suggests encyclopedias, textbooks and papers to teach from. It reads the sources and drafts an outline you can edit before anything is built."],
     ["Each idea gets a live model", "A model you can move, checked before you see it, with the sources' own words quoted and verified."],
-    ["Learn it, then keep it", "Start while later concepts are still building. Save the lesson to your library, or download one file that works offline."],
+    ["Learn it, then keep it", "Start while later concepts are still building. The finished lesson is saved in your Library, and you can download it as one file that works offline."],
   ];
   const MINI = {
     bars: '<rect x="8" y="30" width="14" height="26"/><rect x="29" y="18" width="14" height="38" class="m1"/><rect x="50" y="24" width="14" height="32" class="m2"/>',
@@ -822,7 +837,7 @@
     const all = h("a", { class: "btn gal-all", href: "#/gallery" }, "See all lessons", icon("next"));
     galleryItems().then((items) => { all.firstChild.textContent = `See all ${items.length} lessons`; }).catch(() => {});
     return h("section", { class: "gallery-sec", "aria-labelledby": "gallery-title" },
-      h("div", { class: "gal-head" }, h("h2", { id: "gallery-title" }, "Concepts to explore"), h("p", { class: "lead" }, "Finished lessons across subjects. Open one, no account or key needed.")),
+      h("div", { class: "gal-head" }, h("h2", { id: "gallery-title" }, "Lessons to explore"), h("p", { class: "lead" }, "Finished lessons across subjects. Open one, no account or key needed.")),
       galleryList("h3", HOME_WALL),
       h("p", { class: "gal-more" }, all));
   }
@@ -856,6 +871,7 @@
     };
     findIn.addEventListener("input", () => apply());
     findIn.addEventListener("keydown", (e) => { if (e.key === "Escape" && findIn.value) { e.preventDefault(); findIn.value = ""; apply(); } });
+    setTitle("Gallery");
     view(h("section", { class: "gallery-sec gallery-page", "aria-labelledby": "gallery-title" },
       h("div", { class: "gal-page-head" },
         h("div", { class: "gal-head" }, h("h1", { id: "gallery-title" }, "Gallery"), h("p", { class: "lead" }, GALLERY_LEAD)),
@@ -934,7 +950,7 @@
         if (seq === searchSeq) { busy(submit, false); submit.textContent = "Find sources"; }
       }
     };
-    const chips = h("div", { class: "chips", role: "group", "aria-label": "Try a topic" },
+    const chips = h("div", { class: "chips", role: "group", "aria-label": "Try a concept" },
       TOPICS.slice(0, 4).map((t) => h("button", { type: "button", class: "chip", onclick: () => runSearch(t) }, t)),
       h("button", { type: "button", class: "chip surprise", onclick: () => runSearch(TOPICS[Math.floor(Math.random() * TOPICS.length)]) }, icon("shuffle"), "Surprise me"));
     function drawResults() {
@@ -950,12 +966,14 @@
         };
         if (!(status.provider || {}).ok) return showConnect(begin);
         await begin();
-      } }, "Create combined lesson");
+      } });
+      const label = () => { make.textContent = `Create lesson from ${selected.size} source${selected.size === 1 ? "" : "s"}`; };
+      label();
       const cards = r.results.map((x, i) => {
         const check = h("input", { type: "checkbox", id: `source-${i}`, checked: selected.has(x), onchange: () => {
           if (check.checked) selected.add(x); else selected.delete(x);
           make.disabled = !selected.size;
-          make.textContent = `Create lesson from ${selected.size} source${selected.size === 1 ? "" : "s"}`;
+          label();
         } });
         const learn = h("label", { class: "source-choice", for: `source-${i}` }, check, "Include this source",
           x.recommended ? h("span", { class: "tag" }, `Recommended · ${x.recommendation}`) : null);
@@ -968,16 +986,16 @@
           h("h3", { class: "r-title" }, x.title),
           meta ? h("p", { class: "r-meta" }, meta) : null,
           x.summary ? h("p", { class: "r-sum" }, x.summary) : null,
-          h("p", { class: "muted small" }, x.available ? "Full text checked. Availability can change." : `Could not verify readable full text: ${x.availability_error || "Try another source."}`),
+          h("p", { class: "muted small" }, x.available ? "Full text checked. Availability can change." : `Couldn't confirm OpenLemma can read the full text: ${x.availability_error || "Try another source."}`),
           h("div", { class: "r-actions" }, learn,
-            ext(x.link || x.url, "Open it")),
+            ext(x.link || x.url, "Open source", h("span", { class: "sr-only" }, `: ${x.title}`))),
           null);
       });
       results.replaceChildren(...[
-        h("h2", { id: "results-title" }, r.results.length ? `Top resources for “${r.query}”` : `Nothing readable found for “${r.query}”`),
+        h("h2", { id: "results-title" }, r.results.length ? `Sources for “${r.query}”` : `Nothing readable found for “${r.query}”`),
         r.results.length ? h("p", { class: "muted" }, r.kind === "paper"
-          ? "Choose sources for one combined lesson. We suggest the papers that best match your search, with an overview for context, as a starting point—not a guarantee of complete coverage. Change any selection before starting."
-          : "Choose sources for one combined lesson. We suggest an overview, an in-depth explanation and a paper for evidence as a starting point—not a guarantee of complete coverage. Change any selection before starting.")
+          ? "OpenLemma suggests the papers that best match your search, with an overview for context. They're a starting point, not full coverage. Change any selection before you start."
+          : "OpenLemma suggests an overview, an in-depth explanation and a paper for evidence. They're a starting point, not full coverage. Change any selection before you start.")
           : h("p", { class: "muted" }, "Try other words, or paste a link to a source you already have."),
         r.unavailable.length ? h("p", { class: "muted small" }, `${r.unavailable.join(" and ")} didn't answer, so ${r.unavailable.length > 1 ? "their" : "its"} results are missing. Search again in a moment to include them.`) : null,
         h("ol", { class: "result-list" }, cards), r.results.length ? make : null].filter(Boolean));
@@ -1058,7 +1076,7 @@
       h("div", { class: "bring-add" }, addLinkBtn, addFileBtn, fileIn),
       bringNote);
     const panes = { search: searchPane, bring: bringPane };
-    const tabs = { search: "Ask a question", bring: "Bring sources" };
+    const tabs = { search: "Ask about a concept", bring: "Bring sources" };
     const tabBtns = Object.fromEntries(Object.entries(tabs).map(([k, label]) => [k, h("button", { type: "button", role: "tab", class: "seg", onclick: () => setMode(k) }, label)]));
     const errSlot = h("div");
     const submit = h("button", { type: "submit", class: "primary" });
@@ -1073,20 +1091,19 @@
       results.hidden = m !== "search";
       submit.textContent = "Find sources";
       if (m === "bring") refreshBring();
-      const to = p.ok ? [h("strong", {}, p.label)] : [signedOut ? "the AI model you connect after signing in" : "the AI model you connect next"];
-      privacy.replaceChildren(...[...(m === "search"
-        ? ["Your search words go to Wikipedia, the Stanford Encyclopedia of Philosophy, LibreTexts, OpenAlex, Europe PMC and arXiv. OpenLemma contacts source sites to check readable full text before recommending sources. Selected text goes to ", ...to, " to build one lesson. "]
-        : ["When you continue, OpenLemma sends your sources' text to ", ...to, " to build the lesson. "]),
-        status.typesafe ? (m === "search"
-          ? "Your search words and each result's title and abstract also go to TypeSafe, to rank the results; the start of each selected source, to sort the lesson into a subject; and each drafted concept with the passages it is about, to check it for errors. "
-          : "The start of each source also goes to TypeSafe, to sort the lesson into a subject, and each drafted concept with the passages it is about, to check it for errors. ") : null,
+      const to = p.ok ? h("strong", {}, p.label) : signedOut ? "the AI provider you connect after signing in" : "the AI provider you connect next";
+      const checks = status.typesafe ? (m === "search" ? "to rank results and check concepts for errors" : "to sort the lesson into a subject and check concepts for errors") : "";
+      privacy.replaceChildren(...[
+        m === "search" ? "Your search goes to Wikipedia, arXiv and four other libraries. The sources you pick go to " : "The sources you add go to ", to,
+        checks ? [" to build the lesson, and parts go to TypeSafe, a checking service OpenLemma pays for, ", checks, ". "] : " to build the lesson. ",
         // A sign-in provider (ChatGPT, on your own computer only) has no key to speak of.
         (status.providers || []).find((x) => x.id === p.id)?.sign_in
-          ? "Build requests, source text and progress are saved so you can return later. OpenLemma keeps no request logs. "
-          : "Build requests, source text and progress are saved so you can return later; your AI key is not, and stays in this browser. OpenLemma keeps no request logs. ",
-        p.ok ? h("a", { href: "#/settings" }, "Change model") : null].filter(Boolean));
+          ? "Your sources and progress are saved so you can come back. "
+          : "Your sources and progress are saved so you can come back; your key isn't. ",
+        h("a", { href: "faq#who-sees" }, "What's shared"),
+        p.ok ? [" · ", h("a", { href: "#/settings" }, "Change AI provider or model")] : null].filter(Boolean));
     }
-    const form = h("form", { class: "panel bring", "aria-label": "Start a lesson", onsubmit: async (e) => {
+    const form = h("form", { class: "panel bring", "aria-label": "New lesson", onsubmit: async (e) => {
       e.preventDefault();
       if (signedOut) return mode === "search" ? runSearch() : toSignIn({ mode });
       errSlot.replaceChildren();
@@ -1130,8 +1147,8 @@
       signedOut
         ? h("div", { class: "actions" },
             h("button", { class: "primary", type: "button", onclick: () => (mode === "search" && qIn.value.trim() ? runSearch() : toSignIn({ mode })) }, "Sign in to build"),
-            h("span", { class: "muted small" }, "Free, and your lessons are saved in your library. The example lesson needs no account."))
-        : h("div", { class: "actions" }, submit, h("span", { class: "muted small" }, "Building usually takes 1–3 minutes. You can start the first concept sooner.")));
+            h("span", { class: "muted small" }, "OpenLemma is free. Building uses your own AI key, which your provider may charge for. Your lessons are saved in your library."))
+        : h("div", { class: "actions" }, submit, h("span", { class: "muted small" }, "Next you'll review a proposed outline. Building then takes a few minutes, and you can start the first concept before it finishes.")));
     const recent = h("section", { class: "recent", hidden: true, "aria-labelledby": "recent-title" });
     addLink(false);
     setMode(mode);
@@ -1156,16 +1173,18 @@
   function showHome(msg) {
     const was = pageOf(location.hash);
     setHash("");
+    setTitle("");
     view(msg ? errorBox(msg, null, null, was) : null, homeExhibit(), hallSection(), gallerySection());
   }
 
   /* A returning learner's fast path: the build panel alone, no intro to scroll past. */
   function showMake() {
     setHash("#/make");
+    setTitle("New lesson");
     const { form, results, recent } = findPanel();
     view(h("section", {},
       h("h1", {}, "What do you want to understand?"),
-      h("p", { class: "lead" }, "Ask about a concept, or bring your own papers, articles or chapters, up to ten links and files. OpenLemma turns them into one short lesson, with a live model for each idea."),
+      h("p", { class: "lead" }, "Ask about a concept, or bring your own papers, articles or chapters, up to 10 links and files. OpenLemma turns them into one short lesson, with a live model for each idea."),
       form, results, recent));
     loadRecent(recent);
   }
@@ -1180,19 +1199,26 @@
   }
 
   /* ------------------------------------------------------------ outline */
-  /* Connect a model: shown the first time an AI step is needed, then the flow carries on. */
+  /* Connect an AI provider: shown the first time an AI step is needed, then the flow carries on. */
   function showConnect(then) {
     const p = session.paper || {};
+    setTitle("Connect an AI provider");
     view(h("section", { class: "panel connect", "aria-labelledby": "connect-title" },
-      h("h1", { id: "connect-title" }, "Connect an AI model"),
+      h("h1", { id: "connect-title" }, "Connect an AI provider"),
       h("p", { class: "lead" }, "OpenLemma reads ", p.title ? h("cite", { class: "words" }, p.title) : "your sources",
-        " with an AI model you choose, using your own key. Pick one, paste its key, and the outline starts straight away."),
+        " with an AI provider you choose, using your own key. Pick one and paste its key. OpenLemma carries on as soon as the key works."),
       keyForm(then, { compact: true }),
       h("div", { class: "actions" }, h("button", { class: "ghost", onclick: () => showMake() }, "Back"))));
   }
 
+  // The outline's tags, in plain words: each concept's role, and how it is shown (lesson.py's OUTLINE_VISUALS).
+  const ROLE_WORDS = { prerequisite: "Background", core: "Core idea", contribution: "Main result" };
+  const VISUAL_WORDS = { curves: "Graph", bars: "Bar chart", table: "Table", agents: "Simulation", network: "Network", causal: "Cause and effect",
+    sampling: "Sampling", geometry: "Diagram", none: "Reading only" };
+
   function showOutline() {
     setHash(session.requestId ? `#/request/${session.requestId}` : "#/outline");
+    setTitle("Review the outline");
     const o = session.outline;
     const list = h("ol", { class: "outline-list" });
     const removedBox = h("div");
@@ -1204,18 +1230,18 @@
       const cs = o.concepts;
       list.replaceChildren(...cs.map((c, i) => h("li", { class: "outline-item" + (c.known ? " known" : "") },
         h("div", {},
-          h("div", { class: "oi-title" }, h("strong", {}, c.title), h("span", { class: "tag" }, c.role || "core"), h("span", { class: "tag" }, c.visual === "none" ? "no model" : c.visual),
-            c.hard ? h("span", { class: "tag" }, "hard: has a check") : null,
-            (() => { const b = cs.findIndex((x) => x.id === c.builds_on); return b >= 0 && b < i ? h("span", { class: "tag" }, `reuses ${b + 1}'s model`) : null; })(),
-            (() => { const n = cs.map((x, j) => (Array.isArray(c.needs) && c.needs.includes(x.id) ? j + 1 : 0)).filter(Boolean); return n.length ? h("span", { class: "tag" }, `after ${n.join(", ")}`) : null; })()),
+          h("div", { class: "oi-title" }, h("strong", {}, c.title), h("span", { class: "tag" }, ROLE_WORDS[c.role || "core"] || c.role), h("span", { class: "tag" }, VISUAL_WORDS[c.visual] || c.visual),
+            c.hard ? h("span", { class: "tag" }, "Has a quiz") : null,
+            (() => { const b = cs.findIndex((x) => x.id === c.builds_on); return b >= 0 && b < i ? h("span", { class: "tag" }, `Uses concept ${b + 1}'s model`) : null; })(),
+            (() => { const n = cs.map((x, j) => (Array.isArray(c.needs) && c.needs.includes(x.id) ? j + 1 : 0)).filter(Boolean); return n.length ? h("span", { class: "tag" }, `Comes after ${n.length > 1 ? `${n.slice(0, -1).join(", ")} and ${n[n.length - 1]}` : n[0]}`) : null; })()),
           h("p", { class: "oi-idea" }, c.idea),
           c.known ? h("p", { class: "muted small" }, "You know this one: it will be skipped.") : null),
         h("div", { class: "oi-btns" },
           h("button", { class: "small", "data-k": `up-${i}`, "aria-label": `Move “${c.title}” up`, disabled: i === 0 || reliesOnAt(c, cs[i - 1]), title: i > 0 && reliesOnAt(c, cs[i - 1]) ? `It relies on “${cs[i - 1].title}”, so it comes after it` : null, onclick: () => { [cs[i - 1], cs[i]] = [cs[i], cs[i - 1]]; draw(`[data-k="up-${i - 1}"]`); } }, icon("up")),
           h("button", { class: "small", "data-k": `down-${i}`, "aria-label": `Move “${c.title}” down`, disabled: i === cs.length - 1 || reliesOnAt(cs[i + 1], c), title: i < cs.length - 1 && reliesOnAt(cs[i + 1], c) ? `“${cs[i + 1].title}” relies on it, so it comes first` : null, onclick: () => { [cs[i + 1], cs[i]] = [cs[i], cs[i + 1]]; draw(`[data-k="down-${i + 1}"]`); } }, icon("down")),
-          h("button", { class: "small", "aria-pressed": c.known ? "true" : "false", onclick: () => { c.known = !c.known; draw(); } }, c.known ? icon("check") : null, "I know this"),
+          h("button", { class: "small", "aria-pressed": c.known ? "true" : "false", "aria-label": `I know “${c.title}”`, onclick: () => { c.known = !c.known; draw(); } }, c.known ? icon("check") : null, "I know this"),
           h("button", { class: "small danger", "aria-label": `Remove “${c.title}”`, onclick: () => { session.removed.push(cs.splice(i, 1)[0]); draw(); } }, "Remove")))));
-      removedBox.replaceChildren(session.removed.length ? h("div", { class: "removed" }, h("h3", {}, "Removed"), h("ul", {}, session.removed.map((c, i) => h("li", {}, c.title, " ", h("button", { class: "small", onclick: () => {
+      removedBox.replaceChildren(session.removed.length ? h("div", { class: "removed" }, h("h3", {}, "Removed"), h("ul", {}, session.removed.map((c, i) => h("li", {}, c.title, " ", h("button", { class: "small", "aria-label": `Restore “${c.title}”`, onclick: () => {
             // Back in before the first concept that relies on it, or at the end.
             const r = session.removed.splice(i, 1)[0], at = o.concepts.findIndex((x) => reliesOnAt(x, r));
             o.concepts.splice(at < 0 ? o.concepts.length : at, 0, r); draw();
@@ -1232,13 +1258,13 @@
       h("p", { class: "muted" }, [o.source?.title, o.source?.authors, o.source?.year ? `(${o.source.year})` : ""].filter(Boolean).join(" · ")),
       h("p", { style: "font-size:19px;max-width:66ch" }, o.summary),
       (o.primer || []).length ? h("details", { class: "advanced" },
-        h("summary", {}, `The idea in brief: ${o.primer.length} pages read before the first concept`),
+        h("summary", {}, `The idea in brief: ${plural(o.primer.length, "page")} read before the first concept`),
         ...o.primer.map((pg) => h("div", {}, h("h3", {}, pg.heading), h("p", { style: "max-width:66ch;white-space:pre-line" }, pg.body)))) : null,
-      h("p", { class: "note" }, "Here's the proposed outline, from background to the main result. Reorder them, remove any, or mark the ones you already know."),
+      h("p", { class: "note" }, "Here's the proposed outline, from background to the main result. Reorder the concepts, remove any, or mark ones you already know."),
       list, removedBox,
       h("div", { class: "actions" }, buildBtn,
-        session.requestId ? h("button", { class: "ghost", onclick: async () => { await api(`/api/requests/${session.requestId}/cancel`, {}); showRequest(session.requestId); } }, "Cancel build") : null,
-        h("a", { class: "btn ghost", href: "#/library" }, "Return later"), h("button", { class: "ghost", onclick: () => showHome() }, "Start over"))));
+        session.requestId ? h("button", { class: "ghost", onclick: async () => { await api(`/api/requests/${session.requestId}/cancel`, {}); showRequest(session.requestId); } }, "Cancel this lesson") : null,
+        h("a", { class: "btn ghost", href: "#/library" }, "Return later"), h("button", { class: "ghost", onclick: () => showHome() }, "Back to home"))));
   }
 
   /* ------------------------------------------------------------ build */
@@ -1256,9 +1282,12 @@
     showBuilding(job.id);
   }
 
+  const STOPPED_TITLES = { error: "This build stopped", interrupted: "This build was interrupted", cancelled: "You cancelled this build" };
+
   function showRequest(id) {
     session.requestId = id;
     setHash(`#/request/${id}`);
+    setTitle("Preparing your lesson");
     const title = h("h1", {}, "Preparing your lesson"), progress = buildProgress(), steps = progress.el, warnings = h("div"), errors = h("div");
     const eta = h("p", { class: "muted", role: "status" }, "Estimating time remaining…");
     const open = h("button", { class: "primary", disabled: true }, "Start the first concept");
@@ -1273,8 +1302,8 @@
       await begin();
     } }, "Retry build");
     view(h("section", { class: "panel" }, title,
-      h("p", { class: "muted" }, "You can leave this page and return using this link or My library. Completed lessons are saved automatically."),
-      eta, steps, warnings, errors, h("div", { class: "actions" }, open, cancel, retry, h("a", { href: "#/library", class: "btn ghost" }, "My library"))));
+      h("p", { class: "muted" }, "You can leave this page and come back with this link or from your Library. Finished lessons are saved automatically."),
+      eta, steps, warnings, errors, h("div", { class: "actions" }, open, cancel, retry, h("a", { href: "#/library", class: "btn ghost" }, "Library"))));
     const poll = async () => {
       if (location.hash !== `#/request/${id}`) return;
       try {
@@ -1283,14 +1312,15 @@
         if (s.status === "awaiting_outline") {
           session.outline = s.outline || s.result; session.requestWarnings = s.warnings || []; session.removed = []; return showOutline();
         }
-        title.textContent = s.status === "running" ? "Building your lesson" : s.status === "done" ? "Your lesson is ready" : `Build ${s.status}`;
+        title.textContent = s.status === "running" ? "Building your lesson" : s.status === "done" ? "Your lesson is ready" : STOPPED_TITLES[s.status] || "This build stopped";
+        setTitle(title.textContent);
         progress.update(s.steps || [], s.now);
         warnings.replaceChildren(...(s.warnings || []).map((w) => h("p", { class: "note" }, typeof w === "string" ? w : JSON.stringify(w))));
         // A build that stopped with an error can be reported from here, with the build's id.
-        errors.replaceChildren(s.error ? errorBox(s.error, null, s.status === "error" && /^[0-9a-f]{12}$/.test(id)
+        errors.replaceChildren(s.error && s.status !== "cancelled" ? errorBox(s.error, null, s.status === "error" && /^[0-9a-f]{12}$/.test(id)
           ? { kind: "build", request_id: id, error_id: (s.error.match(ERROR_ID) || [])[1] } : null) : "");
         eta.textContent = s.status !== "running" ? (s.status === "done" ? "Checked and saved to your library." : "You can retry with the same source selections.")
-          : s.eta_seconds ? `Approximately ${Math.max(1, Math.ceil(s.eta_seconds[0] / 60))}–${Math.max(1, Math.ceil(s.eta_seconds[1] / 60))} minutes left. Repairs or slow providers may take longer.` : "Estimating time remaining…";
+          : s.eta_seconds ? `About ${Math.max(1, Math.ceil(s.eta_seconds[0] / 60))}–${Math.max(1, Math.ceil(s.eta_seconds[1] / 60))} minutes left. Concepts that need fixing can take longer.` : "Estimating time remaining…";
         open.disabled = !s.lesson?.concepts?.length && s.status !== "done";
         open.textContent = s.status === "done" ? "Open lesson" : "Start the first concept";
         open.onclick = () => openLesson(s.status === "done" ? s.result : s.lesson, s.status === "done" ? { saved: true } : { live: id, request: true });
@@ -1306,13 +1336,14 @@
 
   function showBuilding(jobId) {
     setHash("#/building");
+    setTitle("Building your lesson");
     const progress = buildProgress(), stepsBox = progress.el, errSlot = h("div");
     const eta = h("p", { class: "muted" });
     const startBtn = h("button", { class: "primary", disabled: true, onclick: () => openBuilding(jobId) }, "Start the first concept");
     const cancel = h("button", { class: "ghost", onclick: async () => { await api(`/api/jobs/${jobId}/cancel`, {}).catch(() => {}); showHome(); } }, "Cancel");
     view(h("section", { class: "panel" },
       h("h1", {}, "Building your lesson"),
-      h("p", { style: "max-width:66ch" }, "Each concept is drafted, then checked: its quote must appear in the paper, its model must work, and every goal must be reachable. Concepts that fail are fixed or left out, never shown broken."),
+      h("p", { style: "max-width:66ch" }, "Each concept is drafted, then checked: its quote must appear in the source, its model must work, and every goal must be reachable. Concepts that fail are fixed or left out, never shown broken."),
       eta, stepsBox, errSlot,
       h("p", { class: "muted small" }, "You can start the first concept as soon as it's ready. The rest keep building in the background."),
       h("div", { class: "actions" }, startBtn, cancel)));
@@ -1320,7 +1351,7 @@
       let s;
       try { s = await api(`/api/jobs/${jobId}`); } catch (err) { errSlot.replaceChildren(errorBox(err.message)); return; }
       progress.update(s.steps, s.now);
-      eta.textContent = s.status !== "running" ? "" : s.eta_seconds ? `Approximately ${Math.max(1, Math.ceil(s.eta_seconds[0] / 60))}–${Math.max(1, Math.ceil(s.eta_seconds[1] / 60))} minutes left. Repairs or slow providers may take longer.` : "Estimating time remaining…";
+      eta.textContent = s.status !== "running" ? "" : s.eta_seconds ? `About ${Math.max(1, Math.ceil(s.eta_seconds[0] / 60))}–${Math.max(1, Math.ceil(s.eta_seconds[1] / 60))} minutes left. Concepts that need fixing can take longer.` : "Estimating time remaining…";
       startBtn.disabled = !(s.lesson && s.lesson.concepts.length);
       if (s.status === "running") { pollTimer = setTimeout(poll, 1200); return; }
       if (s.status === "done") { session.lesson = s.result; startBtn.disabled = false; startBtn.textContent = "Open the lesson"; startBtn.onclick = () => openLesson(s.result); cancel.textContent = "Back"; }
@@ -1339,11 +1370,14 @@
   function openLesson(lesson, opts = {}) {
     view();
     setHash(opts.request ? `#/request/${opts.live}/learn` : lesson.gallery ? `#/gallery/${lesson.gallery.slug}` : lesson.example ? "#/example" : opts.saved ? `#/lesson/${lesson.id}` : "#/learn");
+    setTitle(lesson.title || "Lesson");
     const host = h("div", { class: "player-host" });
     main.replaceChildren(host);
     player = LemmaPlayer.mount(host, lesson, {
       onExit: () => showHome(),
-      onSave: lesson.example ? null : saveLesson,
+      // Library lessons and finished builds are saved already; a built-in lesson can't be saved at all.
+      onSave: lesson.example || opts.saved || opts.request ? null : saveLesson,
+      saved: !!opts.saved && !opts.preview,
       onDownload: downloadLesson,
       onEdit: lesson.example ? null : (l) => showEditor(l),
       onOwnPaper: lesson.example ? () => showHome() : null,
@@ -1361,7 +1395,7 @@
         else if (s.status === "done") { session.lesson = s.result; player.update(s.result); }
         else if (["error", "cancelled", "interrupted"].includes(s.status)) {
           if (s.lesson) { const l = Object.assign({}, s.lesson); delete l.plan; player.update(l); }
-          alertInline(`Build ${s.status}. Return to My library to retry. ${s.error || ""}`);
+          alertInline(`${STOPPED_TITLES[s.status] || "This build stopped"}. You can retry it from your Library.${s.status !== "cancelled" && s.error ? ` ${s.error}` : ""}`);
         }
       };
       pollTimer = setTimeout(poll, 1500);
@@ -1371,7 +1405,7 @@
   async function saveLesson(lesson, btn) {
     try {
       await api("/api/lessons", { lesson });
-      if (btn) { btn.replaceChildren(icon("check"), "Saved to your library"); btn.disabled = true; }
+      if (btn) { btn.replaceChildren(icon("check"), "Saved in your library"); btn.disabled = true; }
     } catch (err) {
       if (btn) btn.textContent = "Couldn't save";
       alertInline(err.message, err.problems);
@@ -1395,10 +1429,10 @@
     try { await exportLesson(lesson); } catch (err) { alertInline(err.message); }
   }
 
-  /* The launch film: embedded in the hero, loaded and played only when the visitor presses play. */
-  const FILM = { hd: "static/film-v5-1080.mp4", sd: "static/film-v5-720.mp4", poster: "static/film-v5-poster.jpg", length: "0:32" };
+  /* The film: embedded in the hero, loaded and played only when the visitor presses play. */
+  const FILM = { hd: "static/film-v5-1080.mp4", sd: "static/film-v5-720.mp4", poster: "static/film-v5-poster.jpg" };
   function filmPlayer() {
-    const video = h("video", { class: "film-video", preload: "none", poster: FILM.poster, playsinline: true, "aria-label": "OpenLemma launch film, 32 seconds, with music" });
+    const video = h("video", { class: "film-video", preload: "none", poster: FILM.poster, playsinline: true, "aria-label": "OpenLemma film, 32 seconds, with music" });
     const status = h("p", { class: "film-status", role: "status" });
     const start = () => {
       if (!video.src) video.src = matchMedia("(max-width: 900px)").matches ? FILM.sd : FILM.hd;
@@ -1406,7 +1440,7 @@
       cover.hidden = after.hidden = true;
       video.play().catch(() => {});  // some browsers refuse; the native controls are there now
     };
-    const cover = h("button", { type: "button", class: "film-cover", onclick: start, "aria-label": `Play the OpenLemma film, ${FILM.length}, with sound` },
+    const cover = h("button", { type: "button", class: "film-cover", onclick: start, "aria-label": "Play the 32-second OpenLemma film (with music)" },
       h("span", { class: "film-disc", "aria-hidden": "true" }, icon("play")));
     const after = h("div", { class: "film-after", hidden: true },
       h("p", { class: "film-after-title" }, "Now try it on something you want to understand."),
@@ -1471,6 +1505,7 @@
     const q0 = new URLSearchParams(location.hash.split("?")[1] || "").get("q") || "";
     const live = h("p", { class: "sr-only", role: "status" });
     const body = h("div", { class: "lib-body", "aria-busy": "true" });
+    setTitle("Library");
     view(h("section", { class: "lib", "aria-labelledby": "lib-title" },
       h("div", { class: "lib-head" }, h("h1", { id: "lib-title" }, "Library"),
         h("p", { class: "lead" }, "Every lesson you build is saved here. Download any one as a single file that works offline and sends nothing anywhere.")),
@@ -1549,7 +1584,7 @@
           busy(retry, true);
           await begin();
           busy(retry, false);
-        } }, icon("refresh"), "Retry");
+        } }, icon("refresh"), "Retry build");
         acts.append(retry, del());
         if (r.status === "error" && status.user && /^[0-9a-f]{12}$/.test(r.id)) acts.append(reportRow(li, r.id));
       }
@@ -1654,11 +1689,11 @@
           h("h2", {}, "No saved lessons yet"),
           h("p", {}, "Ask about a concept or bring a source. OpenLemma builds a short lesson with a live model for each idea, usually within a few minutes, and keeps it here."),
           h("div", { class: "actions" },
-            h("a", { class: "btn primary", href: "#/make" }, "Make a lesson"),
+            h("a", { class: "btn primary", href: "#/make" }, "New lesson"),
             h("a", { class: "btn ghost", href: "#/example" }, icon("play"), "Try the example lesson"))));
       } else {
         const buildsSec = builds.length ? h("section", { class: "lib-sec lib-builds", "aria-labelledby": "lib-builds-title" },
-          h("div", { class: "lib-sec-head" }, h("h2", { id: "lib-builds-title" }, "Builds"), h("span", { class: "lib-count" }, String(builds.length))),
+          h("div", { class: "lib-sec-head" }, h("h2", { id: "lib-builds-title" }, "In progress"), h("span", { class: "lib-count" }, String(builds.length))),
           h("ul", { class: "lib-list" }, builds.map(buildRow))) : null;
         body.replaceChildren(h("div", { class: "lib-grid" + (buildsSec ? "" : " is-solo") }, lessonsSection(), buildsSec));
         apply(true);
@@ -1703,7 +1738,7 @@
   /* ------------------------------------------------------------ editor */
   const EDIT_FIELDS = [
     ["title", "Title"], ["idea", "Idea"],
-    ["understand.explanation", "In plain words"], ["understand.quote", "Quote (must match the paper word for word)"], ["understand.quote_where", "Where the quote appears"],
+    ["understand.explanation", "In plain words"], ["understand.quote", "Quote (must match the source word for word)"], ["understand.quote_where", "Where the quote appears"],
     ["explore.prompt", "Try-it prompt"], ["predict.question", "Use-it question"],
     ["understand.feedback.correct", "Feedback on a right answer"], ["understand.feedback.incorrect", "Feedback on a wrong answer"],
     ["model.note", "Teaching-model note"], ["check.hint", "Check hint (hard concepts only)"], ["check.misconception", "Common mix-up (hard concepts only)"], ["connect.caption", "Equation caption"], ["recap", "In one line"],
@@ -1713,6 +1748,7 @@
 
   function showEditor(lessonIn) {
     setHash("#/edit");
+    setTitle("Edit lesson");
     const lesson = JSON.parse(JSON.stringify(lessonIn));
     const errSlot = h("div");
     const fields = [];
@@ -1739,22 +1775,20 @@
     } }, "Check and save");
     view(h("section", {},
       h("h1", {}, "Edit lesson"),
-      h("p", { class: "muted", style: "max-width:66ch" }, "Correct anything before sharing. Saving re-runs every quality check against the paper: quotes must still match word for word, and every goal must still be reachable."),
+      h("p", { class: "muted", style: "max-width:66ch" }, "Correct anything before sharing. Saving re-runs every quality check against the sources: quotes must still match word for word, and every goal must still be reachable."),
       h("fieldset", {}, h("legend", {}, "Lesson"), field("Lesson title", lesson, "title"), field("Summary", lesson, "intro.summary", true)),
       Array.isArray(lesson.primer) ? h("fieldset", {}, h("legend", {}, "The idea in brief"),
         ...lesson.primer.flatMap((pg, i) => [field(`Page ${i + 1} heading`, pg, "heading"), field(`Page ${i + 1} text`, pg, "body", true),
-          field(`Page ${i + 1} quote (optional; must match the paper word for word)`, pg, "quote", true)])) : null,
+          field(`Page ${i + 1} quote (optional; must match the source word for word)`, pg, "quote", true)])) : null,
       ...lesson.concepts.map((c, i) => h("fieldset", {}, h("legend", {}, `Concept ${i + 1}: ${c.title}`),
         EDIT_FIELDS.filter(([p]) => !p.startsWith("check.") || c.check).map(([p, label]) => field(label, c, p, /explanation|feedback|quote$|caption|misconception|note|idea|question|prompt/.test(p))))),
       advanced, errSlot,
       h("div", { class: "actions sticky-actions" }, save,
-        h("button", { class: "ghost", onclick: () => openLesson(lesson, { saved: true }) }, "Preview"),
+        h("button", { class: "ghost", onclick: () => openLesson(lesson, { saved: true, preview: true }) }, "Preview"),
         h("a", { class: "btn ghost", href: "#/library" }, "Back to library"))));
   }
 
-  /* ------------------------------------------------------------ settings */
   /* ------------------------------------------------------------ account */
-  const where = () => "in your account";
   const PROVIDER_NAMES = { google: "Google", github: "GitHub" };
 
   function avatar(user, size) {
@@ -1795,7 +1829,7 @@
     if (status.user) { location.hash = "#/account"; return; }
     const options = status.sign_in || [];
     const held = heldIntent(false), ask = next === "build" ? held?.ask : null;
-    const back = { "#/library": "your library", "#/account": "your account", "#/settings": "your AI provider settings", "#/feedback": "the feedback form" }[pageOf(held?.route)];
+    const back = { "#/library": "your library", "#/account": "your account", "#/settings": "your account page", "#/feedback": "the feedback form" }[pageOf(held?.route)];
     // What happens after Google, said before anything else: the question they asked, or the page they'll return to.
     const context = ask
       ? [h("p", { class: "signin-lead" }, "Sign in, and you'll go straight to sources for"), h("blockquote", { class: "signin-ask" }, ask)]
@@ -1804,6 +1838,7 @@
         : `Sign in to build lessons from your questions and sources.${held && "route" in held ? " You'll come back to this page." : ""}`)];
     const point = (text) => h("li", {}, h("span", { class: "signin-tick", "aria-hidden": "true" }, icon("check")), text);
     const mark = $(".site-head .logo").cloneNode(true);
+    setTitle("Sign in");
     view(h("section", { class: "signin", "aria-labelledby": "signin-title" },
       h("div", { class: "signin-card" },
         mark,
@@ -1818,7 +1853,7 @@
         h("ul", { class: "signin-points" },
           point("Searching for sources is free."),
           point("Every lesson you build is saved to your library."),
-          point("Lessons are built with your own AI model, and a key stays in this browser.")),
+          point("Lessons are built with your own AI provider key, which stays in this browser.")),
         h("p", { class: "signin-fine" }, "OpenLemma keeps your name, email address and picture, and asks Google for nothing else. ",
           h("a", { href: "privacy" }, "Privacy"))),
       h("p", { class: "signin-alt" }, "Not ready yet? ",
@@ -1839,6 +1874,7 @@
       location.hash = "#/";
     } }, icon("leave"), "Sign out");
     const n = status.library_count || 0;
+    setTitle("Account");
     const row = (label, value) => h("div", { class: "af-row" }, h("dt", {}, label), h("dd", {}, value));
     const profile = h("section", { class: "account-card account-profile", "aria-labelledby": "account-title" },
       h("div", { class: "account-head" }, avatar(u, 64),
@@ -1870,8 +1906,8 @@
     const provider = h("section", { class: "account-card account-ai", "aria-labelledby": "ai-title" },
       h("h2", { id: "ai-title", tabindex: "-1" }, "AI provider"),
       state,
-      h("p", { class: "account-ai-note" }, "A source's text goes only to the provider and model chosen here, and only when you build. The model gets no tools: it can only read what OpenLemma sends and reply with text."),
-      keyForm(() => { working = true; drawState(); }, { onCheck: (ok) => { working = ok; drawState(); } }));
+      h("p", { class: "account-ai-note" }, "Your key stays in this browser and is never stored by OpenLemma. Your sources go only to the provider chosen here, and only when you build. The model has no tools: it only reads what OpenLemma sends."),
+      keyForm(() => { working = true; drawState(); }, { quiet: true, onCheck: (ok) => { working = ok; drawState(); } }));
     view(h("div", { class: "account" }, profile, provider,
       h("div", { class: "account-out" }, h("p", {}, u.email ? `Signed in as ${u.email}` : "Signed in"), out)));
     if (toProvider) { provider.scrollIntoView({ block: "start" }); provider.querySelector("h2").focus({ preventScroll: true }); }
@@ -1887,6 +1923,7 @@
     from = from.slice(0, 300);
     if (from) setHash(`#/feedback?from=${encodeURIComponent(from)}`);  // kept through the sign-in round trip
     if (!status.user) { holdIntent({ route: location.hash }); return showSignIn(); }
+    setTitle("Feedback");
     view(h("section", { class: "fb-page", "aria-labelledby": "fb-title" },
       h("div", { class: "fb-card" },
         h("h1", { id: "fb-title" }, "Send feedback"),
@@ -1910,6 +1947,7 @@
     const head = h("div", { class: "fbx-head" },
       h("h1", { id: "fbx-title" }, "Feedback"),
       h("div", { class: "fbx-filter" }, h("div", { class: "segmented", role: "tablist", "aria-label": "Show" }, Object.values(tabs)), countEl));
+    setTitle("Feedback inbox");
     view(h("section", { class: "lib fbx", "aria-labelledby": "fbx-title" }, head, body, live));
 
     const ctxLine = (it) => {
@@ -1971,6 +2009,7 @@
       try { items = await api(`/api/feedback${filter === "all" ? "" : `?status=${filter}`}`); }
       catch (err) {
         if (err.status === 404) {  // not an admin: the page isn't there for you
+          setTitle("Not found");
           return view(h("section", { class: "lib-empty fbx-404", "aria-labelledby": "nf-title" },
             h("h1", { id: "nf-title" }, "Not found"), h("p", {}, "There's no page at this address."),
             h("div", { class: "actions" }, h("a", { class: "btn", href: "#/" }, "Go to the home page"))));
@@ -2040,7 +2079,7 @@
 
   (async function init() {
     try { status = await api("/api/status"); } catch (e) { /* the server will report */ }
-    // A provider saved here that this server doesn't offer (gone, or ChatGPT when hosted) is forgotten, so Settings starts from the rest.
+    // A provider saved here that this server doesn't offer (gone, or ChatGPT when hosted) is forgotten, so the account page starts from the rest.
     if (cred.provider && status.providers && !status.providers.some((x) => x.id === cred.provider)) saveCred(Object.assign({}, cred, { provider: "" }));
     drawAccountLink();
     const held = status.user && heldIntent(true);
