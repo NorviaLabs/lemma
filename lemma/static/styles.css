@@ -306,8 +306,6 @@ button.hall-replay:hover:not(:disabled) { background: transparent; color: var(--
 .gal-plate .viz { height: 100%; }
 .gal-plate .legend, .gal-plate .viz-status { display: none; }
 .gal-plate .viz-canvas { max-width: var(--viz-max-h); }
-.gal-bars { display: flex; gap: 4px; list-style: none; padding: 0; margin: 0 0 14px; }
-.gal-bars li { flex: 1; height: 3px; border-radius: 9999px; background: var(--tab); }
 .gal-title { margin: 0 0 8px; font-size: 19px; line-height: 1.25; letter-spacing: -.01em; text-wrap: balance; }
 .gal-title a { color: var(--ink); text-decoration: none; }
 .gal-title a::after { content: ""; position: absolute; inset: -6px; border-radius: calc(var(--r-lg) + 4px); }
@@ -315,10 +313,36 @@ button.hall-replay:hover:not(:disabled) { background: transparent; color: var(--
 .gal-title a:focus-visible::after { outline: 2px solid var(--green); outline-offset: 2px; }
 .gal-item:hover .gal-plate { background: var(--plate-2); }
 .gal-item:hover .gal-title a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-.gal-paper { margin: 0 0 8px; font-size: 15px; line-height: 1.4; color: var(--mute); }
-.gal-paper cite { display: block; margin-bottom: 2px; font: italic 400 16px/1.35 var(--words); color: var(--body); }
-.gal-meta { margin: auto 0 0; font: 600 14px/1.3 var(--sans); color: var(--mute); }
-.gallery > li.muted { grid-column: 1 / -1; }
+.gal-paper { margin: 0 0 14px; font-size: 14px; line-height: 1.4; color: var(--mute); }
+.gal-paper cite { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-bottom: 2px; font: 400 15px/1.4 var(--words); color: var(--body); }
+.gal-paper span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gal-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0; margin: auto 0 0; font: 600 14px/1.3 var(--sans); color: var(--mute); }
+.gal-count { font-variant-numeric: tabular-nums; }
+.gal-count::before { content: "\00b7"; margin: 0 7px; color: var(--faint); }
+.gal-item[hidden] { display: none; }
+/* while the list loads: tiles of the final shape, empty, so nothing jumps when the lessons land */
+.gal-skel .gal-plate { box-shadow: var(--lift); }
+.gal-skel-line { display: block; width: 78%; height: 14px; margin: 4px 0 10px; border-radius: 9999px; background: var(--plate-2); }
+.gal-skel-line.is-mid { width: 56%; }
+.gal-skel-line.is-short { width: 34%; height: 12px; margin-top: 16px; }
+.gallery-wall .gal-skel-line { width: 30%; height: 12px; } .gallery-wall .gal-skel-line.is-mid { width: 70%; height: 16px; }
+.gal-skel:hover .gal-plate { transform: none; box-shadow: var(--lift); }
+.gal-error, .gal-none { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 22px; padding: 22px 24px; background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--lift); }
+.gal-error p, .gal-none p { margin: 0; font-size: 17px; color: var(--body); }
+.gal-none { margin-top: 4px; }
+/* the Gallery page: a find field beside the introduction, then every lesson led by its model */
+.gal-page-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 360px); align-items: end; gap: 22px clamp(28px, 4vw, 56px); margin-bottom: 36px; }
+.gal-page-head .gal-head { margin-bottom: 0; }
+.gal-find label { margin: 0 0 8px; }
+.gal-find-row { position: relative; }
+.gal-find-row .icon { position: absolute; left: 16px; top: 50%; width: 18px; height: 18px; transform: translateY(-50%); color: var(--mute); pointer-events: none; }
+.gal-find input[type=search] { min-height: 52px; padding-left: 44px; border-radius: var(--r); box-shadow: var(--lift); border-color: transparent; }
+.gal-find input[type=search]:hover { border-color: var(--rule-strong); }
+.gal-find input[type=search]:focus-visible { border-color: var(--green); box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 22%, transparent); }
+.gal-count-line { min-height: 1.3em; margin: 10px 0 0; font: 600 14px/1.3 var(--sans); color: var(--mute); font-variant-numeric: tabular-nums; }
+.gallery-page .gallery { row-gap: 44px; }
+.gallery-page .gal-plate { aspect-ratio: 4 / 3; }
+.gallery-page .gal-title { margin-bottom: 6px; }
 /* the home's model wall: the model leads, with only its field and a short title */
 .gallery-wall { row-gap: 32px; }
 .gallery-wall .gal-plate { aspect-ratio: 4 / 3; margin-bottom: 12px; }
@@ -327,7 +351,8 @@ button.hall-replay:hover:not(:disabled) { background: transparent; color: var(--
 .gal-more { margin: 36px 0 0; }
 .gal-all .icon { margin-left: 2px; }
 @media (max-width: 1100px) { .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 640px) { .gallery { grid-template-columns: minmax(0, 1fr); gap: 40px; } }
+@media (max-width: 900px) { .gal-page-head { grid-template-columns: minmax(0, 1fr); align-items: start; margin-bottom: 30px; } }
+@media (max-width: 640px) { .gallery, .gallery-page .gallery { grid-template-columns: minmax(0, 1fr); gap: 36px; } .gal-error .btn, .gal-error button, .gal-none button { width: 100%; } }
 @media (max-width: 640px) { .gallery-wall { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 14px; } .gallery-wall .gal-title { font-size: 16px; } .gallery-wall .gal-field { font-size: 13px; } }
 @media (prefers-reduced-motion: reduce) { .gal-plate { transition: none; } }
 .bring, .setup { max-width: 760px; }
@@ -1094,7 +1119,6 @@ input[type=file]::file-selector-button { border: 0; border-radius: var(--r); bac
 .hx-card { border-top: 0; }
 .gal-plate { transition: box-shadow var(--ui), transform var(--ui); }
 .gal-item:hover .gal-plate { background: var(--surface); transform: translateY(-3px); box-shadow: var(--lift-hi); }
-.gal-bars li { background: color-mix(in srgb, var(--green) 30%, var(--plate-2)); }
 .gal-title { font-weight: 700; }
 /* a lesson taught without a model: its source's own words, set as a poster on an ultramarine ground */
 .gal-plate.gal-quote-plate, .gal-item:hover .gal-plate.gal-quote-plate { padding: 0; align-items: stretch; background: var(--green-soft); }
@@ -1102,6 +1126,9 @@ input[type=file]::file-selector-button { border: 0; border-radius: var(--r); bac
 .gal-mark { display: block; height: .5em; margin: 0 0 10px -.04em; font: 800 clamp(80px, 7.5vw, 112px)/1 var(--sans); color: var(--green); letter-spacing: -.05em; }
 .gal-quote blockquote { margin: 0; font: italic 700 clamp(17px, 1.5vw, 21px)/1.24 var(--sans); letter-spacing: -.02em; color: var(--ink); text-wrap: pretty;
   display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 8; overflow: hidden; }
+.gallery-page .gal-quote { padding: clamp(20px, 2vw, 28px); }
+.gallery-page .gal-mark { font-size: clamp(72px, 6vw, 92px); margin-bottom: 6px; }
+.gallery-page .gal-quote blockquote { font-size: clamp(16px, 1.3vw, 19px); -webkit-line-clamp: 6; }
 .gal-quote.is-short blockquote { font-size: clamp(20px, 1.85vw, 25px); line-height: 1.18; letter-spacing: -.025em; }
 .gal-quote figcaption { margin-top: auto; padding-top: 12px; border-top: 1.5px solid color-mix(in srgb, var(--green) 28%, transparent); font: 600 13px/1.4 var(--sans); color: var(--green-press);
   display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }

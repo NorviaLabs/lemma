@@ -616,10 +616,16 @@
     return names.length > 2 || /et al/.test(a || "") ? `${names[0]} et al.` : names.join(" and ");
   };
   // `pick` (slugs, in order) gives the home page's model wall: the model, the field and a short title only.
-  function galleryList(level, pick) {
+  // Without it, the Gallery page: every lesson, each tile also carrying its source and concept count.
+  // `onTiles` gets the tiles each time they land (again after "Try again"), so the Gallery page can filter them.
+  function galleryList(level, pick, onTiles) {
     const M = window.LemmaModel;
-    const list = h("ul", { class: "gallery" + (pick ? " gallery-wall" : ""), "aria-busy": "true" }, h("li", { class: "muted" }, "Opening the gallery…"));
-    galleryItems().then((all) => {
+    // Until the list arrives, quiet tiles of the same shape hold the space, so nothing jumps when it lands.
+    const skeleton = () => Array.from({ length: pick ? pick.length : 6 }, () => h("li", { class: "gal-item gal-skel", "aria-hidden": "true" },
+      h("div", { class: "gal-plate" }), h("span", { class: "gal-skel-line" }), h("span", { class: "gal-skel-line is-mid" }), pick ? null : h("span", { class: "gal-skel-line is-short" })));
+    const list = h("ul", { class: "gallery" + (pick ? " gallery-wall" : ""), "aria-busy": "true" },
+      h("li", { class: "sr-only" }, "Opening the gallery…"), ...skeleton());
+    const load = () => galleryItems().then((all) => {
       const views = [];
       const items = pick ? pick.map((slug) => all.find((it) => it.slug === slug)).filter(Boolean) : all;
       list.replaceChildren(...items.map((it) => {
@@ -630,15 +636,18 @@
           plate,
           h("p", { class: "gal-field" }, it.field),
           h(level, { class: "gal-title" }, h("a", { href: `#/gallery/${it.slug}`, title: it.title }, it.title.split(":")[0])));
-        return h("li", { class: "gal-item" },
+        const by = [shortAuthors(it.source.authors), it.source.year].filter(Boolean).join(", ");
+        const li = h("li", { class: "gal-item" },
           plate,
-          h("ol", { class: "gal-bars", "aria-hidden": "true" }, it.concepts.map((_, i) => h("li", { style: `--tab:var(--${TAB_INKS[i % 4]})` }))),
           h(level, { class: "gal-title" }, h("a", { href: `#/gallery/${it.slug}` }, it.title)),
-          h("p", { class: "gal-paper" }, h("cite", {}, it.source.title), h("span", {}, [shortAuthors(it.source.authors), it.source.year].filter(Boolean).join(", "))),
-          h("p", { class: "gal-meta" }, `${it.field} · ${it.concepts.length} concepts`));
+          h("p", { class: "gal-paper" }, h("cite", {}, it.source.title), by ? h("span", {}, by) : null),
+          h("p", { class: "gal-meta" }, h("span", {}, it.field), h("span", { class: "gal-count" }, `${it.concepts.length} concepts`)));
+        li.dataset.slug = it.slug;
+        li.dataset.find = fold([it.title, it.field, it.source.title, it.source.authors, it.source.year, ...it.concepts].join(" "));
+        return li;
       }));
       list.removeAttribute("aria-busy");
-      // Draw each model as it comes into view; drawing all six at once would hold up the page.
+      // Draw each model as it comes into view; drawing them all at once would hold up the page.
       const draw = (plate, cover) => {
         if (plate.dataset.drawn) return;
         plate.dataset.drawn = "1";
@@ -646,7 +655,7 @@
           if (cover.quote) {
             plate.classList.add("gal-quote-plate");
             plate.append(h("figure", { class: "gal-quote" + (cover.quote.split(" ").length <= 16 ? " is-short" : "") },
-              h("span", { class: "gal-mark" }, "\u201c"), h("blockquote", {}, cover.quote), cover.quote_author ? h("figcaption", {}, `\u2014 ${cover.quote_author}`) : null));
+              h("span", { class: "gal-mark" }, "“"), h("blockquote", {}, cover.quote), cover.quote_author ? h("figcaption", {}, `— ${cover.quote_author}`) : null));
           } else plate.append(h("div", { class: "gal-reading" }, h("p", {}, cover.title), h("p", { class: "small" }, cover.idea)));
           return;
         }
@@ -656,20 +665,36 @@
         view.trailsOn = false;
         view.update(Object.assign(M.defaults(cover.model), cover.values || {}));
         cleanups.push(() => view.destroy());
+        // A table model taller than its plate is shrunk to fit whole, rather than cut off at the plate's edge.
+        const table = box.querySelector(".table-scroll");
+        if (table && typeof ResizeObserver !== "undefined") {
+          const fit = new ResizeObserver(() => {
+            table.style.zoom = "";
+            const k = box.clientHeight / table.scrollHeight;
+            if (k < 1) table.style.zoom = Math.max(k, 0.5).toFixed(3);
+          });
+          fit.observe(box);
+          cleanups.push(() => fit.disconnect());
+        }
       };
-      if (typeof IntersectionObserver === "undefined") return views.forEach(([pl, c]) => draw(pl, c));
-      const io = new IntersectionObserver((entries) => entries.forEach((e) => {
-        if (!e.isIntersecting) return;
-        io.unobserve(e.target);
-        const v = views.find(([pl]) => pl === e.target);
-        if (v) draw(...v);
-      }), { rootMargin: "200px 0px" });
-      views.forEach(([pl]) => io.observe(pl));
-      cleanups.push(() => io.disconnect());
+      if (typeof IntersectionObserver === "undefined") views.forEach(([pl, c]) => draw(pl, c));
+      else {
+        const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          io.unobserve(e.target);
+          const v = views.find(([pl]) => pl === e.target);
+          if (v) draw(...v);
+        }), { rootMargin: "200px 0px" });
+        views.forEach(([pl]) => io.observe(pl));
+        cleanups.push(() => io.disconnect());
+      }
+      if (onTiles) onTiles([...list.children]);
     }).catch(() => {
       list.removeAttribute("aria-busy");
-      list.replaceChildren(h("li", { class: "muted" }, "The gallery couldn't load. Reload the page to try again."));
+      const again = h("button", { type: "button", onclick: () => { list.setAttribute("aria-busy", "true"); list.replaceChildren(h("li", { class: "sr-only" }, "Opening the gallery…"), ...skeleton()); load(); } }, icon("refresh"), "Try again");
+      list.replaceChildren(h("li", { class: "gal-error", role: "alert" }, h("p", {}, "The gallery couldn't load. Check your connection, then try again."), again));
     });
+    load();
     return list;
   }
   const GALLERY_LEAD = "Finished visual lessons on complex ideas, from how attention reads every word at once to how ice can lock a planet in the cold. Each is taught from real sources you can check, with no account or key.";
@@ -682,12 +707,46 @@
       galleryList("h3", HOME_WALL),
       h("p", { class: "gal-more" }, all));
   }
+  // Lower case without accents, so "poincare" finds "Poincaré".
+  const fold = (s) => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let galleryReturn = "";  // the lesson last opened from the Gallery, so Back lands on its tile
   function showGallery() {
+    const q0 = new URLSearchParams(location.hash.split("?")[1] || "").get("q") || "";
+    const findIn = h("input", { type: "search", id: "gal-find", value: q0, placeholder: "Topic, field, author or year", autocomplete: "off", spellcheck: "false", maxlength: 80 });
+    const count = h("p", { class: "gal-count-line", "aria-live": "polite" });
+    const none = h("div", { class: "gal-none", hidden: "" });
+    let tiles = [];
+    const back = galleryReturn;
+    galleryReturn = "";
+    const list = galleryList("h2", null, (lis) => {
+      tiles = lis.filter((li) => li.dataset.find);
+      apply(true);
+      const tile = back && tiles.find((li) => li.dataset.slug === back && !li.hidden);
+      if (tile) { tile.scrollIntoView({ block: "center" }); tile.querySelector("a").focus({ preventScroll: true }); }
+    });
+    const apply = (keepHash) => {
+      const q = findIn.value.trim();
+      const words = fold(q).split(/\s+/).filter(Boolean);
+      let shown = 0;
+      tiles.forEach((li) => { const hit = words.every((w) => li.dataset.find.includes(w)); li.hidden = !hit; shown += hit; });
+      if (tiles.length) count.textContent = words.length ? `${shown} of ${tiles.length} lessons` : `${tiles.length} lessons`;
+      none.hidden = !(tiles.length && words.length && !shown);
+      if (!none.hidden) none.replaceChildren(h("p", {}, `No lesson matches “${q}”.`),
+        h("button", { type: "button", class: "ghost", onclick: () => { findIn.value = ""; apply(); findIn.focus(); } }, icon("cross"), "Clear the search"));
+      if (!keepHash) history.replaceState(null, "", q ? `#/gallery?q=${encodeURIComponent(q)}` : "#/gallery");
+    };
+    findIn.addEventListener("input", () => apply());
+    findIn.addEventListener("keydown", (e) => { if (e.key === "Escape" && findIn.value) { e.preventDefault(); findIn.value = ""; apply(); } });
     view(h("section", { class: "gallery-sec gallery-page", "aria-labelledby": "gallery-title" },
-      h("div", { class: "gal-head" }, h("h1", { id: "gallery-title" }, "Gallery"), h("p", { class: "lead" }, GALLERY_LEAD)),
-      galleryList("h2")));
+      h("div", { class: "gal-page-head" },
+        h("div", { class: "gal-head" }, h("h1", { id: "gallery-title" }, "Gallery"), h("p", { class: "lead" }, GALLERY_LEAD)),
+        h("form", { class: "gal-find", role: "search", onsubmit: (e) => { e.preventDefault(); findIn.blur(); } },
+          h("label", { for: "gal-find" }, "Find a lesson"),
+          h("div", { class: "gal-find-row" }, icon("search"), findIn),
+          count)),
+      list, none));
   }
-  async function openGallery(slug) { try { openLesson(await api(`/api/gallery/${slug}`)); } catch (err) { showHome(err.message); } }
+  async function openGallery(slug) { galleryReturn = slug; try { openLesson(await api(`/api/gallery/${slug}`)); } catch (err) { showHome(err.message); } }
 
   // What a search is doing while it runs: each library answering, then each source being checked.
   const SERVICE_NAMES = { "Stanford Encyclopedia of Philosophy": "Stanford Encyclopedia" };
@@ -1465,7 +1524,7 @@
     }
     if (hash === "#/account") return showAccount();
     if (hash === "#/example") return player ? null : openExample();
-    if (hash === "#/gallery") return showGallery();
+    if (hash === "#/gallery" || hash.startsWith("#/gallery?")) return showGallery();
     if (hash.startsWith("#/gallery/")) return player ? null : openGallery(hash.slice(10));
     if (hash.startsWith("#/lesson/")) {
       if (player) return;
@@ -1478,7 +1537,7 @@
   }
 
   window.addEventListener("hashchange", () => {
-    if (["#/library", "#/gallery", "#/make", "#/settings", "#/account", "#/signin", "#/", ""].includes(location.hash) && player) { player.destroy(); player = null; }
+    if (["#/library", "#/gallery", "#/make", "#/settings", "#/account", "#/signin", "#/", ""].includes(location.hash.split("?")[0]) && player) { player.destroy(); player = null; }
     route();
   });
 
