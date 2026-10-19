@@ -32,13 +32,13 @@ def main(argv=None):
     # Treat `kill` like Ctrl+C.
     signal.signal(signal.SIGTERM, lambda *_: (_ for _ in ()).throw(KeyboardInterrupt()))
     url = f"http://localhost:{httpd.server_address[1]}/"
-    if server.HOSTED:
+    if not server.ON_THIS_COMPUTER:
         print(f"Lemma is hosted on {args.host}:{httpd.server_address[1]} for {', '.join(allowed)}  (press Ctrl+C to stop)", flush=True)
     elif not args.dev:  # in dev mode the supervisor prints the address
         print(f"Lemma is running at {url}  (only reachable from this computer; press Ctrl+C to stop)")
     if not jev.available():
         print(f"Search and lesson building are off: {jev.MISSING}", flush=True)
-    if not args.no_browser and not server.HOSTED:
+    if not args.no_browser and server.ON_THIS_COMPUTER:
         threading.Timer(0.5, webbrowser.open, args=(url,)).start()
     try:
         httpd.serve_forever()

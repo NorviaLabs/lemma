@@ -8,7 +8,7 @@ Lemma's data (`accounts.db` and each account's library) lives in the `deploy_lem
 
 - `compose.yaml`: Lemma and `cloudflared`.
 - `cloudflared/config.yml`: the tunnel's routes. `cloudflared/lemma.json` holds the tunnel's credentials; it is secret and kept out of git.
-- `lemma.env`: the Google and GitHub OAuth client IDs and secrets; secret and kept out of git. `lemma.env.example` lists its keys.
+- `lemma.env`: the Google OAuth client ID and secret and the TypeSafe key; secret and kept out of git. `lemma.env.example` lists its keys.
 - `push.sh`: deploys this checkout. `vm-startup.sh`: prepares the VM (2 GB of swap and Docker), run by `push.sh`.
 
 ## Deploy, and redeploy after changes
@@ -21,17 +21,19 @@ Commit and push directly to `main` before deploying; do not create a pull reques
 
 ## Limits and analytics
 
-- Each account may start 40 searches and 20 outlines or builds a day (UTC), since every one uses the server's TypeSafe key. Change them with `LEMMA_DAILY_SEARCHES` and `LEMMA_DAILY_BUILDS` in `compose.yaml`.
+- Each account may start 40 searches and 20 outlines or builds a day (UTC), and read 100 links or files on their own, since every one uses the server's TypeSafe key or bandwidth. These are Lemma's safe defaults, which apply whenever a setting is missing; `compose.yaml` also sets them explicitly (`LEMMA_DAILY_SEARCHES`, `LEMMA_DAILY_BUILDS`, `LEMMA_DAILY_READS`). Only the word `unlimited` lifts a cap: never use it here (a test fails if `compose.yaml` does). A value that isn't a whole number or `unlimited` stops Lemma from starting.
+- Each visitor address (Cloudflare's `CF-Connecting-IP`) may make 120 requests that change something every 10 minutes; reads such as progress polling aren't limited.
+- Lemma sends HSTS on every response and moves plain-HTTP visits to HTTPS. Container logs are capped at 3 × 10 MB each, the journal at 200 MB, and a weekly timer (`lemma-prune.timer`, installed by `vm-startup.sh`) removes images and build cache unused for a week.
 - Lemma counts anonymous events per day (lessons opened and finished, goals reached alone or with Show me, searches, sign-ins, and outline and build outcomes) in `metrics.db` beside `accounts.db`. Signed in as an account listed in `LEMMA_ADMINS`, open `https://openlemma.org/api/stats` for the last 30 days.
 - `.github/workflows/uptime.yml` checks the site every 15 minutes; GitHub emails whoever last edited its schedule when a check fails.
 - Page views come from Cloudflare Web Analytics (Cloudflare dashboard → Analytics & Logs → Web Analytics, automatic setup for openlemma.org). Lemma's Content Security Policy allows its script on the hosted site.
 
 ## Sign-in apps
 
-- GitHub: OAuth app "Lemma" under github.com/settings/developers, callback `https://openlemma.org/auth/github/callback`.
 - Google: project `lemma-511811` → Google Auth Platform, External and in production, web client "Lemma web" with callback `https://openlemma.org/auth/google/callback`. Its privacy policy link is `https://openlemma.org/privacy`.
+- GitHub sign-in was turned off on 2026-10-19 (its settings removed from `lemma.env`). Lemma still supports it: to offer it again, create an OAuth app with callback `https://openlemma.org/auth/github/callback` and set `LEMMA_GITHUB_CLIENT_ID` and `LEMMA_GITHUB_CLIENT_SECRET`.
 
-A new secret from either goes into `lemma.env`, followed by `push.sh`.
+A new secret goes into `lemma.env`, followed by `push.sh`.
 
 ## Rebuilding from scratch
 
@@ -45,3 +47,7 @@ All accounts and libraries live on the VM's one disk, so keep two kinds of backu
 
 - **Disk snapshots, automatically.** In Google Cloud, Compute Engine → Snapshots → Snapshot schedules, create a daily schedule (keep 14 days) in `us-central1` and attach it to the `lemma` VM's boot disk. A snapshot restores the whole VM.
 - **A copy of the data on your own computer.** `deploy/backup.sh ubuntu@34.172.130.18` saves `backups/lemma-data-<time>.tgz` (git-ignored): every library, plus `accounts.db` and `metrics.db` copied with SQLite's online backup into `.backup/`, so it is consistent even while people use the site. To restore, unpack it into the `deploy_lemma-data` volume and move the two databases out of `.backup/`.
+
+Restore drills (unpack into a scratch `LEMMA_HOME`, move the databases out of `.backup/`, run `PRAGMA integrity_check`, then read every account's requests and lessons through `server.api_requests`, `api_request` and `api_lessons`):
+
+- 2026-10-19: `lemma-data-2026-10-19T1658Z.tgz` (87 KB). Both databases `ok`; 3 accounts, each with its folder; 3 sessions; 3 build requests opened through the API; no saved lessons yet. The documented steps worked as written.

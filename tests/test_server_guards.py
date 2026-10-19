@@ -8,6 +8,7 @@ from __future__ import annotations
 import base64
 import http.client
 import json
+import os
 import socket
 import threading
 import time
@@ -17,7 +18,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 import hosting  # noqa: F401  a temporary LEMMA_HOME and the Jev stand-in
-from test_lemma import SOURCE, FakeConversation, FakeProvider
+from test_lemma import SOURCE, TESTER, FakeConversation, FakeProvider, reset_server, session_cookie, sign_in
 from lemma import chatgpt, claudecode, generate, ingest, jev, metrics, search, server, store
 from lemma.llm import ProviderError
 
@@ -26,6 +27,7 @@ class LocalServer:
     def __enter__(self):
         self.httpd = server.make_server(0, exact=True)
         self.port = self.httpd.server_address[1]
+        self.cookie = session_cookie()
         threading.Thread(target=self.httpd.serve_forever, kwargs={"poll_interval": 0.05}, daemon=True).start()
         return self
 
@@ -36,7 +38,7 @@ class LocalServer:
     def req(self, method, path, body=None, headers=None):
         """(status, decoded JSON or raw bytes, response). A dict or list body is sent as JSON, bytes as they are."""
         c = http.client.HTTPConnection("127.0.0.1", self.port, timeout=10)
-        h = {"Host": f"localhost:{self.port}"}
+        h = {"Host": f"localhost:{self.port}", "Cookie": self.cookie}
         h.update(headers or {})
         data = body if isinstance(body, bytes) or body is None else json.dumps(body).encode()
         c.request(method, path, data, h)
@@ -265,6 +267,10 @@ class LocalOnlyEndpoints(unittest.TestCase):
 class Searches(unittest.TestCase):
     def setUp(self):
         search._cache.clear()
+        sign_in()
+
+    def tearDown(self):
+        reset_server()
 
     def wait_done(self, sid):
         for _ in range(500):
@@ -299,12 +305,10 @@ class HostedCaps(unittest.TestCase):
     """Limits shared by everyone on a hosted server, and each account's own."""
 
     def setUp(self):
-        self.was = (server.HOSTED, metrics.ENABLED)
-        server.HOSTED = metrics.ENABLED = True
         search._cache.clear()
 
     def tearDown(self):
-        server.HOSTED, metrics.ENABLED = self.was
+        reset_server()
         server.REQUEST.user = None
         generate.JOBS.clear()
 
@@ -318,6 +322,18 @@ class HostedCaps(unittest.TestCase):
         except server.ApiError as e:
             return e.status, e.message
         return 200, ""
+
+    def test_reading_sources_has_a_daily_allowance_per_account(self):
+        # Each link or file read fetches or parses on the server, so it is capped like searches and builds.
+        text = "Regression to the mean, in plain words. " * 40
+        body = {"filename": "notes.txt", "data": base64.b64encode(text.encode()).decode()}
+        with patch.dict(os.environ, {"LEMMA_DAILY_READS": "2"}):
+            self.as_user("quota-a")
+            got = [self.status_of(server.api_papers, body) for _ in range(3)]
+            self.assertEqual([s for s, _ in got], [200, 200, 429], got)
+            self.assertIn("today's 2", self.status_of(server.api_papers, body)[1])
+            self.as_user("quota-b")
+            self.assertEqual(self.status_of(server.api_papers, body)[0], 200)  # another account has its own
 
     def test_the_server_wide_build_cap_turns_away_a_new_account(self):
         with patch.object(server, "MAX_RUNNING", 2):
@@ -398,10 +414,12 @@ class Requests(unittest.TestCase):
     def setUp(self):
         self.provider = patch.object(server, "_provider", return_value=FakeProvider())
         self.provider.start()
+        sign_in()
 
     def tearDown(self):
         self.provider.stop()
         generate.JOBS.clear()
+        reset_server()
 
     def refused(self, call, *args):
         with self.assertRaises(server.ApiError) as e:
@@ -411,7 +429,7 @@ class Requests(unittest.TestCase):
     def saved(self, status, **extra):
         record = {"id": uuid.uuid4().hex[:12], "title": "T", "status": status,
                   "request": {"audience": ""}, "paper": {"text": SOURCE, "title": "Galton", "url": ""}, **extra}
-        store.save_request(record)
+        store.save_request(record, TESTER)
         return record["id"]
 
     def test_sources_must_be_objects(self):
@@ -425,7 +443,7 @@ class Requests(unittest.TestCase):
         self.assertEqual(self.refused(server.api_request_retry, rid), (409, "Only a stopped build can be retried."))
         server.REQUEST.body = {"outline": {}}
         self.assertEqual(self.refused(server.api_request_outline, rid), (409, "This build is not waiting for outline review."))
-        store.request_path(rid).unlink()
+        store.request_path(rid, TESTER).unlink()
 
     def test_a_reviewed_outline_must_still_be_valid(self):
         rid = self.saved("awaiting_outline")
@@ -433,21 +451,21 @@ class Requests(unittest.TestCase):
         status, message = self.refused(server.api_request_outline, rid)
         self.assertEqual(status, 400)
         self.assertTrue(message.startswith("The outline isn't valid: "))
-        self.assertEqual(store.load_request(rid)["status"], "awaiting_outline")
-        store.request_path(rid).unlink()
+        self.assertEqual(store.load_request(rid, TESTER)["status"], "awaiting_outline")
+        store.request_path(rid, TESTER).unlink()
 
     def test_a_running_build_must_be_cancelled_before_it_is_deleted(self):
         rid = self.saved("running")
         job = generate.Job("request")
-        job.id = rid
+        job.id, job.owner = rid, TESTER
         generate.JOBS[rid] = job
         self.assertEqual(self.refused(server.api_request_delete, rid), (409, "Cancel the build before deleting it."))
-        self.assertTrue(store.request_path(rid).exists())
+        self.assertTrue(store.request_path(rid, TESTER).exists())
         job.status = "awaiting_outline"
         server.api_request_cancel(rid)
         self.assertTrue(job.cancelled.is_set())
         self.assertEqual(job.status, "cancelled")
-        store.request_path(rid).unlink()
+        store.request_path(rid, TESTER).unlink()
 
 
 if __name__ == "__main__":

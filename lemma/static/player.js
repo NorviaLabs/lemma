@@ -16,6 +16,7 @@
       if (k === "class") n.className = v;
       else if (k === "text") n.textContent = v;
       else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+      else if ((k === "href" || k === "src") && /^\s*(javascript|vbscript|data):/i.test(v)) continue;  // a lesson's links are data, never script
       else n.setAttribute(k, v === true ? "" : v);
     }
     for (const kid of kids.flat()) if (kid !== null && kid !== undefined && kid !== false) n.append(kid.nodeType ? kid : document.createTextNode(String(kid)));

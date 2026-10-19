@@ -3,13 +3,16 @@
 from __future__ import annotations
 
 import os
+import re
 import sqlite3
 import tempfile
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 import test_lemma  # noqa: F401  a temporary LEMMA_HOME and the Jev stand-in
-from lemma import metrics, store
+from lemma import __main__ as cli
+from lemma import metrics, server, store
 
 
 class Library(unittest.TestCase):
@@ -43,14 +46,49 @@ class Library(unittest.TestCase):
 
 
 class Quotas(unittest.TestCase):
-    def setUp(self):
-        self.was = metrics.ENABLED
-        metrics.ENABLED = True
-        self.addCleanup(setattr, metrics, "ENABLED", self.was)
+    """Daily caps are configuration with safe defaults: a missing setting falls back to the usual caps, never to
+    none, so a forgotten line in production can't run up the server's bills. Lifting a cap takes an explicit
+    `unlimited`, as local.env does for development. The code never asks where it runs."""
 
-    def test_a_malformed_limit_falls_back_to_the_default(self):
-        with patch.dict(os.environ, {"LEMMA_DAILY_BUILDS": "lots"}):
-            self.assertEqual(metrics.limit("job"), metrics.QUOTAS["job"][1])
+    UNSET = {"LEMMA_DAILY_SEARCHES": "", "LEMMA_DAILY_BUILDS": "", "LEMMA_DAILY_READS": ""}
+
+    def test_a_missing_cap_falls_back_to_the_safe_default(self):
+        with patch.dict(os.environ, self.UNSET):
+            self.assertEqual({k: metrics.limit(k) for k in metrics.QUOTAS}, {"search": 40, "job": 20, "read": 100})
+            with patch.dict(metrics.QUOTAS, {"job": ("LEMMA_DAILY_BUILDS", 2)}):
+                self.assertEqual([metrics.take("quota-default", "job") for _ in range(3)], [True, True, False])
+
+    def test_only_an_explicit_unlimited_lifts_a_cap(self):
+        with patch.dict(os.environ, {"LEMMA_DAILY_SEARCHES": "unlimited", "LEMMA_DAILY_BUILDS": " Unlimited ", "LEMMA_DAILY_READS": "unlimited"}):
+            for kind in metrics.QUOTAS:
+                self.assertIsNone(metrics.limit(kind))
+                self.assertTrue(all(metrics.take("quota-free", kind) for _ in range(250)), kind)
+
+    def test_a_set_cap_is_enforced(self):
+        with patch.dict(os.environ, dict(self.UNSET, LEMMA_DAILY_BUILDS="2")):
+            self.assertEqual([metrics.take("quota-two", "job") for _ in range(3)], [True, True, False])
+
+    def test_a_malformed_cap_stops_lemma_from_starting(self):
+        # A typo must not quietly change a cap, so nothing starts until it is fixed.
+        for value in ("lots", "-1", "none", "40.5"):
+            with self.subTest(value=value), patch.dict(os.environ, dict(self.UNSET, LEMMA_DAILY_BUILDS=value)):
+                with self.assertRaises(ValueError) as e:
+                    server.make_server(0)
+                self.assertIn("LEMMA_DAILY_BUILDS", str(e.exception))
+                with self.assertRaises(SystemExit), patch("sys.stderr"):
+                    cli.main(["--no-browser"])
+
+    def test_the_development_config_lifts_every_cap(self):
+        lines = (Path(__file__).resolve().parent.parent / "local.env").read_text().splitlines()
+        config = dict(line.split("=", 1) for line in lines if line.strip() and not line.startswith("#"))
+        self.assertEqual({k: v for k, v in config.items() if k.startswith("LEMMA_DAILY_")},
+                         {var: "unlimited" for var, _ in metrics.QUOTAS.values()})
+
+    def test_production_never_lifts_a_cap(self):
+        compose = (Path(__file__).resolve().parent.parent / "deploy" / "compose.yaml").read_text()
+        caps = dict(re.findall(r"^\s*(LEMMA_DAILY_\w+):\s*\"?([^\"\s#]+)", compose, re.M))
+        self.assertEqual(set(caps), {var for var, _ in metrics.QUOTAS.values()})
+        self.assertTrue(all(v.isdigit() for v in caps.values()), caps)
 
     def test_a_zero_limit_turns_the_feature_off(self):
         with patch.dict(os.environ, {"LEMMA_DAILY_SEARCHES": "0"}):

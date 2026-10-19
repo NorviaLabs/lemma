@@ -30,6 +30,31 @@ from lemma import auth, categorize, chatgpt, claudecode, jev, claude, dev, expr,
 from lemma.llm import Provider, Reply  # noqa: E402
 import fakejev  # noqa: E402,F401  Jev is essential, so every search and build asks this stand-in
 
+
+# Every person signs in, on their own computer as when hosted, so tests act as a signed-in account too. TESTER is
+# the Google account "tester": API calls made straight from a test and HTTP requests that carry session_cookie()
+# act as the same account.
+TESTER = hashlib.sha256(b"google:tester").hexdigest()[:16]
+
+
+def sign_in(uid: str = TESTER) -> dict:
+    """Signs `uid` in for API functions called straight from a test, as a browser session would."""
+    server.REQUEST.user = {"id": uid, "provider": "google", "name": "Tester", "email": f"{uid}@example.com", "avatar": "", "created": 0}
+    return server.REQUEST.user
+
+
+def reset_server():
+    """Puts back what server.make_server sets, as for a server on this computer, and signs nobody in."""
+    server.ON_THIS_COMPUTER, server.ALLOWED_HOSTS = True, server.LOCAL_HOSTS
+    auth.LOCAL_URL = ""
+    server.REQUEST.user = None
+
+
+def session_cookie(name: str = "tester") -> str:
+    """A Cookie header for HTTP requests, from a real session of the Google account `name`."""
+    user = auth.upsert_user("google", name, name, f"{name}@example.com", "")
+    return f"{auth.SESSION_COOKIE}={auth.new_session(user['id'])}"
+
 EXAMPLE = json.loads((ROOT / "lemma/examples/gallery/galton-1886.json").read_text())
 SOURCE = (ROOT / "lemma/examples/galton-1886.txt").read_text()
 NORM = L.normalize_for_match(SOURCE)
@@ -1359,6 +1384,7 @@ class ServerTests(unittest.TestCase):
         cls.httpd = server.make_server(18765)
         cls.port = cls.httpd.server_address[1]
         threading.Thread(target=cls.httpd.serve_forever, daemon=True).start()
+        cls.cookie = session_cookie()
 
     @classmethod
     def tearDownClass(cls):
@@ -1367,7 +1393,7 @@ class ServerTests(unittest.TestCase):
 
     def req(self, method, path, body=None, headers=None):
         c = http.client.HTTPConnection("127.0.0.1", self.port, timeout=10)
-        h = {"Host": f"localhost:{self.port}"}
+        h = {"Host": f"localhost:{self.port}", "Cookie": self.cookie}
         h.update(headers or {})
         data = None
         if body is not None:
@@ -1420,7 +1446,7 @@ class ServerTests(unittest.TestCase):
         # Saving needs the paper text so quotes can be re-checked.
         built = dict(ex, id="abc123", example=False)
         self.assertEqual(self.req("POST", "/api/lessons", {"lesson": built})[0], 409)
-        server.SOURCES[(None, "abc123")] = SOURCE
+        server.SOURCES[(TESTER, "abc123")] = SOURCE
         self.assertEqual(self.req("POST", "/api/lessons", {"lesson": built})[0], 200)
         listing = json.loads(self.req("GET", "/api/lessons")[1])
         self.assertIn("abc123", [x["id"] for x in listing])
@@ -1501,7 +1527,7 @@ class ServerTests(unittest.TestCase):
 
 class HostedServerTests(unittest.TestCase):
     def tearDown(self):
-        server.HOSTED, server.ALLOWED_HOSTS = False, server.LOCAL_HOSTS
+        reset_server()
 
     def test_needs_its_domain_names(self):
         with self.assertRaises(ValueError):
@@ -1524,13 +1550,13 @@ class HostedServerTests(unittest.TestCase):
         try:
             s, raw = req("GET", "/api/status", site)
             self.assertEqual(s, 200)
-            self.assertEqual({"chatgpt", "claude-code"} & {p["id"] for p in json.loads(raw)["providers"]}, set())
+            offered = {p["id"] for p in json.loads(raw)["providers"]}
+            self.assertNotIn("chatgpt", offered)  # the one thing a hosted server leaves out
+            self.assertIn("claude-code", offered)
             self.assertEqual(req("GET", "/api/status", {"Host": "evil.example"})[0], 403)
             self.assertEqual(req("GET", "/api/chatgpt", site)[0], 404)
             self.assertEqual(req("POST", "/api/chatgpt/login", dict(site, Origin="https://tools.example.com"))[0], 404)
             self.assertEqual(req("GET", "/api/models", dict(site, **{"X-Lemma-Provider": "chatgpt"}))[0], 400)
-            self.assertEqual(req("GET", "/api/claude-code", site)[0], 404)
-            self.assertEqual(req("GET", "/api/models", dict(site, **{"X-Lemma-Provider": "claude-code"}))[0], 400)
         finally:
             httpd.shutdown()
             httpd.server_close()
@@ -1570,7 +1596,7 @@ class HostedServerTests(unittest.TestCase):
             for method, path, body in [("GET", "/api/lessons", None), ("POST", "/api/search", {"query": "x"}), ("POST", "/api/papers", {"url": "https://example.com"})]:
                 self.assertEqual(req(method, path, body)[0], 401, path)
             st = json.loads(req("GET", "/api/status")[1])
-            self.assertEqual((st["hosted"], st["user"], st["sign_in"]), (True, None, [{"id": "google", "name": "Google"}]))
+            self.assertEqual((st["user"], st["sign_in"]), (None, [{"id": "google", "name": "Google", "label": "Continue with Google"}]))
 
             # Signing in starts at Google with a state cookie scoped to /lemma/; a wrong state is refused.
             s, _, r = req("GET", "/auth/google/start")
@@ -1670,11 +1696,11 @@ class ServerLimitTests(unittest.TestCase):
     """What one account can make a hosted server do at once, and what needs an account at all."""
 
     def setUp(self):
-        self.was = (server.HOSTED, metrics.ENABLED, server.ALLOWED_HOSTS, server.DEV)
-        server.HOSTED = metrics.ENABLED = True
+        self.was = server.DEV
 
     def tearDown(self):
-        server.HOSTED, metrics.ENABLED, server.ALLOWED_HOSTS, server.DEV = self.was
+        server.DEV = self.was
+        reset_server()
         server.REQUEST.user = None
         generate.JOBS.clear()
 
@@ -1774,7 +1800,6 @@ class ServerLimitTests(unittest.TestCase):
         server._new_job("build")  # the account can still build
 
     def test_a_bad_content_length_is_refused_before_any_body_is_read(self):
-        server.HOSTED = False
         httpd = server.make_server(0)
         threading.Thread(target=httpd.serve_forever, daemon=True).start()
         try:
@@ -1788,11 +1813,10 @@ class ServerLimitTests(unittest.TestCase):
             httpd.server_close()
 
     def test_the_film_streams_in_byte_ranges_and_caches(self):
-        server.HOSTED = False
         httpd = server.make_server(0)
         threading.Thread(target=httpd.serve_forever, daemon=True).start()
-        path = "/static/film-v2-720.mp4"
-        size = (Path(server.STATIC.joinpath("film-v2-720.mp4"))).stat().st_size
+        path = "/static/film-v4-720.mp4"
+        size = (Path(server.STATIC.joinpath("film-v4-720.mp4"))).stat().st_size
         def get(headers):
             c = http.client.HTTPConnection("127.0.0.1", httpd.server_address[1], timeout=5)
             c.request("GET", path, headers=dict({"Host": "localhost"}, **headers))

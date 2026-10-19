@@ -7,8 +7,8 @@ import json
 import os
 import threading
 
-import test_lemma  # noqa: F401  sets a temporary LEMMA_HOME and installs the Jev stand-in
-from lemma import metrics, server
+import test_lemma  # sets a temporary LEMMA_HOME and installs the Jev stand-in
+from lemma import server
 
 SITE = "tools.example.com"
 
@@ -19,7 +19,7 @@ class HostedServer:
 
     def __enter__(self):
         self.old_env = {k: os.environ.get(k) for k in self.env}
-        self.old_globals = (server.HOSTED, server.ALLOWED_HOSTS, server.DEV, metrics.ENABLED)
+        self.old_dev = server.DEV
         os.environ.update(self.env)
         self.httpd = server.make_server(0, host="0.0.0.0", allowed_hosts=self.hosts)
         self.port = self.httpd.server_address[1]
@@ -29,8 +29,8 @@ class HostedServer:
     def __exit__(self, *exc):
         self.httpd.shutdown()
         self.httpd.server_close()
-        server.HOSTED, server.ALLOWED_HOSTS, server.DEV, metrics.ENABLED = self.old_globals
-        server.REQUEST.user = None
+        server.DEV = self.old_dev
+        test_lemma.reset_server()
         for k, v in self.old_env.items():
             if v is None:
                 os.environ.pop(k, None)

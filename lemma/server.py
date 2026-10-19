@@ -1,4 +1,4 @@
-"""Lemma's web server. Locally it listens only on this computer; hosted, it serves signed-in accounts. It keeps no logs."""
+"""Lemma's web server, for signed-in accounts, the same on your own computer as hosted. It keeps no logs."""
 
 from __future__ import annotations
 
@@ -29,15 +29,17 @@ STATIC = resources.files("lemma").joinpath("static")
 EXAMPLES = resources.files("lemma").joinpath("examples")
 
 DEV = False  # set by `lemma --dev`: live-reload script and /api/dev/events
-# Set by `make_server` when Lemma listens beyond this computer. A hosted Lemma serves other people,
-# so it doesn't offer ChatGPT sign-in, which keeps one person's tokens on the server's disk, or the
-# Claude subscription, which runs the Claude Code signed in on this computer.
-HOSTED = False
+# The one difference between running on your own computer and hosting for others: the ChatGPT subscription, offered
+# only by a server bound to this computer, since it keeps one person's ChatGPT tokens on the server's disk. Everything
+# else behaves the same either way, so this is read only by providers(), _chatgpt_only() and make_server (which binds
+# the address and port and allows live reload); tests/test_one_behaviour.py fails if it is read anywhere else.
+ON_THIS_COMPUTER = True
 LOCAL_HOSTS = ("localhost", "127.0.0.1", "[::1]")
 ALLOWED_HOSTS: tuple[str, ...] = LOCAL_HOSTS  # Host header names Lemma answers; `--allowed-hosts` adds more
 
 PAPERS: dict[str, dict] = {}  # paper_id -> {text, title, url, kind, pages, owner}
 SOURCES: dict[tuple, str] = {}  # (owner, lesson id) -> paper text, for lessons built in this session
+RATE_LIMIT, RATE_WINDOW = 120, 600  # API writes per visitor address per 10 minutes, when hosted
 KEEP_PAPERS, KEEP_SOURCES = 5, 200  # papers kept per person, and paper texts kept in all
 READING_EACH, READING = 2, 6  # links and uploads being read at once, per account and in all, when hosted
 _reading: dict[str | None, int] = {}
@@ -65,10 +67,8 @@ def _credential():
     return (headers.get("X-Lemma-Provider") or DEFAULT_PROVIDER, headers.get("X-Lemma-Key") or "", headers.get("X-Lemma-Model") or "")
 
 
-def _owner() -> str | None:
-    """Whose papers, builds and library this request uses: nobody's locally, the signed-in account's when hosted."""
-    if not HOSTED:
-        return None
+def _owner() -> str:
+    """Whose papers, builds and library this request uses: the signed-in account's."""
     user = getattr(REQUEST, "user", None)
     if not user:
         raise ApiError(401, "Sign in to find papers, build lessons and keep a library.")
@@ -79,7 +79,7 @@ def provider_from_request(pid: str | None = None):
     req_pid, key, model = _credential()
     if pid and pid != req_pid:
         raise ApiError(400, "Save this provider in Settings first.")
-    if HOSTED and (req_pid or DEFAULT_PROVIDER) not in providers():
+    if (req_pid or DEFAULT_PROVIDER) not in providers():
         raise ApiError(400, "This provider is only available when OpenLemma runs on your own computer.")
     try:
         return make_provider(req_pid, key, model)
@@ -88,8 +88,8 @@ def provider_from_request(pid: str | None = None):
 
 
 def providers() -> dict:
-    """The providers this server offers: all of them locally, only keyed ones when hosted."""
-    return {i: p for i, p in PROVIDERS.items() if p.key_url or not HOSTED}
+    """The providers this server offers: all of them, except the ChatGPT subscription when hosted for others."""
+    return {i: p for i, p in PROVIDERS.items() if i != "chatgpt" or ON_THIS_COMPUTER}
 
 
 def load_example() -> tuple[dict, str]:
@@ -147,10 +147,9 @@ def api_status(_body):
         "version": __version__,
         "provider": {"id": p.id, "name": p.name, "model": p.model, "label": p.label, "ok": ok, "message": msg},
         "providers": [{"id": i.id, "name": i.name, "default_model": i.default_model, "key_url": i.key_url, "sign_in": not i.key_url} for i in providers().values()],
-        "library_count": len(store.list_lessons(_owner())) if not HOSTED or getattr(REQUEST, "user", None) else 0,
-        "hosted": HOSTED,
+        "library_count": len(store.list_lessons(_owner())) if getattr(REQUEST, "user", None) else 0,
         "user": getattr(REQUEST, "user", None),
-        "sign_in": auth.providers() if HOSTED else [],
+        "sign_in": auth.providers(),
         "typesafe": jev.available(),  # search results and source text also go to TypeSafe, which the privacy notes must say
     }
 
@@ -165,19 +164,19 @@ def api_models(_body):
     return {"provider": p.id, "models": models, "current": p.model}
 
 
-def _local_only():
-    if HOSTED:
+def _chatgpt_only():
+    if not ON_THIS_COMPUTER:
         raise ApiError(404, "Not found.")
 
 
 def api_chatgpt(_body):
-    _local_only()
+    _chatgpt_only()
     return chatgpt.status()
 
 
 def api_chatgpt_login(_body):
     """Starts a ChatGPT sign-in; the browser opens the returned page."""
-    _local_only()
+    _chatgpt_only()
     try:
         return {"url": chatgpt.start_sign_in()}
     except ProviderError as e:
@@ -185,14 +184,13 @@ def api_chatgpt_login(_body):
 
 
 def api_chatgpt_logout(_body):
-    _local_only()
+    _chatgpt_only()
     chatgpt.sign_out()
     return chatgpt.status()
 
 
 def api_claude_code(_body):
-    """Whether this computer's Claude Code is signed in with a Claude subscription. It signs in in a terminal, not here."""
-    _local_only()
+    """Whether the server's Claude Code is signed in with a Claude subscription. It signs in in a terminal, not here."""
     return claudecode.status(fresh=True)
 
 
@@ -200,9 +198,9 @@ def api_claude_code(_body):
 def _reading_slot(owner):
     """Hold one of the account's reading slots while a link or upload is read, so a few slow ones can't use up the server."""
     with _lock:
-        if HOSTED and _reading.get(owner, 0) >= READING_EACH:
+        if _reading.get(owner, 0) >= READING_EACH:
             raise ApiError(429, "You already have sources being read. Wait for them to finish, then try again.")
-        if HOSTED and sum(_reading.values()) >= READING:
+        if sum(_reading.values()) >= READING:
             raise ApiError(503, "OpenLemma is busy reading other people's sources. Please try again in a minute.")
         _reading[owner] = _reading.get(owner, 0) + 1
     try:
@@ -216,6 +214,8 @@ def _reading_slot(owner):
 
 def api_papers(body):
     owner = _owner()
+    if not metrics.take(owner, "read"):
+        raise ApiError(429, f"You've read today's {metrics.limit('read')} sources. They reset at midnight UTC.")
     with _reading_slot(owner):
         paper = _read_paper(body)
     pid = uuid.uuid4().hex[:12]
@@ -326,12 +326,11 @@ def _new_job(kind: str, job_id: str | None = None) -> generate.Job:
     if not jev.available():  # every outline and build is checked by Jev; without it, nothing is started or paid for
         raise ApiError(503, jev.MISSING)
     with _lock:
-        if HOSTED:
-            running = [j for j in list(generate.JOBS.values()) if j.status == "running"]
-            if sum(j.owner == owner for j in running) >= MAX_RUNNING_EACH:
-                raise ApiError(429, "You already have lessons building. Wait for one to finish, or cancel it.")
-            if len(running) >= MAX_RUNNING:
-                raise ApiError(503, "OpenLemma is busy building other people's lessons. Please try again in a few minutes.")
+        running = [j for j in list(generate.JOBS.values()) if j.status == "running"]
+        if sum(j.owner == owner for j in running) >= MAX_RUNNING_EACH:
+            raise ApiError(429, "You already have lessons building. Wait for one to finish, or cancel it.")
+        if len(running) >= MAX_RUNNING:
+            raise ApiError(503, "OpenLemma is busy building other people's lessons. Please try again in a few minutes.")
         if not metrics.take(owner, "job"):
             raise ApiError(429, f"You've used today's {metrics.limit('job')} outlines and builds. They reset at midnight UTC.")
         job = generate.Job(kind)
@@ -463,6 +462,9 @@ def _launch_request(record, provider, owner, build=False):
                 if j.cancelled.is_set():
                     return None
                 j.update(f"s{i}", "active")
+                if source.get("upload"):  # read when it was uploaded, and kept with the request
+                    j.update(f"s{i}", "done", "Full text ready")
+                    return ingest.Paper(**source["upload"])
                 try:
                     fetched = _first_readable(source["urls"])
                 except ingest.IngestError as e:
@@ -531,6 +533,10 @@ def api_request_create(body):
             for s in sources:
                 if not isinstance(s, dict):
                     raise ApiError(400, "Invalid source.")
+                if s.get("paper_id"):
+                    p = _paper(s)
+                    request["sources"].append({"urls": [], "title": p["title"][:300], "upload": {k: p[k] for k in ("text", "title", "kind", "url")}})
+                    continue
                 urls = s.get("urls") or [s.get("url")]
                 if not isinstance(urls, list) or not 1 <= len(urls) <= 5 or any(not isinstance(u, str) or len(u) > 2048 or urlsplit(u).scheme not in ("http", "https") or not urlsplit(u).hostname for u in urls):
                     raise ApiError(400, "Each source needs valid HTTP or HTTPS links.")
@@ -628,7 +634,7 @@ def api_stats(_body):
     """Daily counts, for the accounts named in LEMMA_ADMINS (comma-separated emails) on a hosted Lemma."""
     user = getattr(REQUEST, "user", None)
     admins = {e.strip().lower() for e in os.environ.get("LEMMA_ADMINS", "").split(",") if e.strip()}
-    if not HOSTED or not user or user["email"].lower() not in admins:
+    if not user or user["email"].lower() not in admins:
         raise ApiError(404, "Not found.")
     return metrics.report()
 
@@ -823,11 +829,20 @@ class Handler(BaseHTTPRequestHandler):
     def _allowed_host(self) -> bool:
         return self._host_name() in ALLOWED_HOSTS
 
+    def _visitor(self) -> str:
+        # Cloudflare's tunnel is the only way into a hosted server, and it names the visitor's address.
+        return self.headers.get("CF-Connecting-IP") or self.client_address[0]
+
     def _same_origin(self) -> bool:
         origin = self.headers.get("Origin")
         if not origin:
             return True
         return urlsplit(origin).netloc.lower() == (self.headers.get("Host") or "").lower()
+
+    def end_headers(self):
+        if auth.public_url().startswith("https://"):
+            self.send_header("Strict-Transport-Security", "max-age=31536000")  # on every response, however it was sent
+        super().end_headers()
 
     def _send(self, status: int, body: bytes, ctype: str, extra: dict | None = None):
         self.send_response(status)
@@ -851,14 +866,18 @@ class Handler(BaseHTTPRequestHandler):
         if not self._allowed_host():
             return self._send(403, b"Forbidden", "text/plain")
         home = urlsplit(auth.public_url())
-        if HOSTED and home.hostname and self._host_name() not in (home.hostname, *LOCAL_HOSTS):
-            # Another name it answers, such as www, moves to the public address, so sign-in cookies stay on one host.
+        # Another name it answers, such as www, moves to the public address, so sign-in cookies stay on one host;
+        # so does a plain-HTTP visit, which Cloudflare's tunnel (the only way in) reports.
+        moved = home.hostname and self._host_name() not in (home.hostname, *LOCAL_HOSTS)
+        insecure = home.scheme == "https" and self.headers.get("X-Forwarded-Proto", "").lower() == "http"
+        if moved or insecure:
             self.send_response(301)
-            self.send_header("Location", f"{home.scheme}://{home.netloc}{self.path}")
+            path = self.path if self.path.startswith("/") else "/"  # never a host taken from the request line
+            self.send_header("Location", f"{home.scheme}://{home.netloc}{path}")
             self.send_header("Content-Length", "0")
             return self.end_headers()
         REQUEST.headers = self.headers
-        REQUEST.token = self._cookie(auth.SESSION_COOKIE) if HOSTED else None
+        REQUEST.token = self._cookie(auth.SESSION_COOKIE)
         REQUEST.user = auth.user_for(REQUEST.token) if REQUEST.token else None
         url = urlsplit(self.path)
         path = url.path
@@ -870,7 +889,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.end_headers()
         if base and path.startswith(base + "/"):
             path = path[len(base):]
-        if HOSTED and method == "GET" and path.startswith("/auth/"):
+        if method == "GET" and path.startswith("/auth/"):
             return self._sign_in(path, parse_qs(url.query))
         if DEV and method == "GET" and path == "/api/dev/events":
             return self._dev_events()
@@ -878,7 +897,14 @@ class Handler(BaseHTTPRequestHandler):
             return self._static(path)
         if method != "GET" and not self._same_origin():
             return self._json(403, {"error": "Cross-origin requests are not allowed."})
-        if HOSTED and method == "POST" and path == "/api/logout":
+        if method != "GET" and not self.server.allow(self._visitor()):
+            self.send_response(429)
+            body = json.dumps({"error": "Too many requests from your network. Wait a few minutes and try again."}).encode()
+            for k, v in (("Content-Type", "application/json; charset=utf-8"), ("Content-Length", str(len(body))), ("Retry-After", str(RATE_WINDOW))):
+                self.send_header(k, v)
+            self.end_headers()
+            return self.wfile.write(body)
+        if method == "POST" and path == "/api/logout":
             return self._sign_out()  # not in ROUTES: it clears the session cookie
         n = self._length()
         if n is None:
@@ -956,6 +982,7 @@ class Handler(BaseHTTPRequestHandler):
             if not expected or not secrets.compare_digest(state, expected):
                 raise auth.AuthError("That sign-in link had expired. Please try again.")
             user = auth.finish_sign_in(pid, (query.get("code") or [""])[0])
+            store.adopt_unowned(user["id"])  # lessons saved before accounts existed go to the first account to sign in
             token = auth.new_session(user["id"])
             metrics.count("sign_in")
             return self._redirect("/#/", [clear_state, self._set_cookie(auth.SESSION_COOKIE, token, auth.SESSION_DAYS * 86400)])
@@ -1018,9 +1045,9 @@ class Handler(BaseHTTPRequestHandler):
         ctype = "font/woff2" if name.endswith(".woff2") else mimetypes.guess_type(name)[0] or "application/octet-stream"
         if ctype.startswith("text/") or ctype in ("application/javascript", "text/javascript"):
             ctype += "; charset=utf-8"
-        avatars = " https://lh3.googleusercontent.com https://avatars.githubusercontent.com" if HOSTED else ""  # account pictures
+        avatars = " https://lh3.googleusercontent.com https://avatars.githubusercontent.com"  # account pictures
         # Cloudflare Web Analytics, which Cloudflare adds to a hosted Lemma's pages: cookieless page-view counts.
-        beacon, rum = (" https://static.cloudflareinsights.com", " https://cloudflareinsights.com") if HOSTED else ("", "")
+        beacon, rum = " https://static.cloudflareinsights.com", " https://cloudflareinsights.com"
         live = " http://localhost:8400" if DEV else ""  # impeccable live mode, only under `lemma --dev`
         csp = f"default-src 'self'; script-src 'self'{beacon}{live}; img-src 'self' data:{avatars}; font-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'{rum}{live}; frame-ancestors 'none'; base-uri 'none'"
         extra = {"Content-Security-Policy": csp} if name.endswith(".html") else {}
@@ -1083,7 +1110,22 @@ class Server(ThreadingHTTPServer):
 
     def __init__(self, *args, **kwargs):
         self._slots = threading.BoundedSemaphore(MAX_CONNECTIONS)
+        self._writes: dict[str, list[float]] = {}  # visitor address -> times of recent API writes
+        self._writes_lock = threading.Lock()
         super().__init__(*args, **kwargs)
+
+    def allow(self, visitor: str) -> bool:
+        """Count one API write from `visitor`; False once RATE_LIMIT were made within RATE_WINDOW seconds."""
+        now = time.time()
+        with self._writes_lock:
+            if len(self._writes) > 10_000:  # forget quiet addresses so the table can't grow without end
+                self._writes = {k: v for k, v in self._writes.items() if v and v[-1] > now - RATE_WINDOW}
+            recent = [t for t in self._writes.get(visitor, ()) if t > now - RATE_WINDOW]
+            if len(recent) >= RATE_LIMIT:
+                self._writes[visitor] = recent
+                return False
+            self._writes[visitor] = recent + [now]
+            return True
 
     def process_request(self, request, client_address):
         self._slots.acquire()
@@ -1103,14 +1145,16 @@ class Server(ThreadingHTTPServer):
 def make_server(port: int = 8765, exact: bool = False, host: str = "127.0.0.1", allowed_hosts: tuple[str, ...] = ()) -> Server:
     """`exact` binds the given port or fails; otherwise the next free port is used.
 
-    Listening on any address but loopback makes this a hosted Lemma: it answers only the
-    `allowed_hosts` (the public domain names it is reached by), binds exactly `port` and drops the subscription providers.
+    Listening on any address but loopback hosts Lemma for others: it answers only the `allowed_hosts` (the public
+    domain names it is reached by), binds exactly `port`, and doesn't offer the ChatGPT subscription.
     """
-    global HOSTED, ALLOWED_HOSTS, DEV
-    HOSTED = host not in ("127.0.0.1", "localhost", "::1")
-    DEV = DEV and not HOSTED  # dev mode loosens the CSP and adds /api/dev/events, so never on a hosted server
-    if HOSTED and not allowed_hosts:
+    global ON_THIS_COMPUTER, ALLOWED_HOSTS, DEV
+    ON_THIS_COMPUTER = host in ("127.0.0.1", "localhost", "::1")
+    DEV = DEV and ON_THIS_COMPUTER  # dev mode loosens the CSP and adds /api/dev/events, so only on this computer
+    if not ON_THIS_COMPUTER and not allowed_hosts:
         raise ValueError("A hosted Lemma needs --allowed-hosts: the domain names it is reached by.")
+    metrics.check()  # a mistyped daily cap stops Lemma here, rather than quietly lifting the cap
     ALLOWED_HOSTS = LOCAL_HOSTS + tuple(h.strip().lower() for h in allowed_hosts if h.strip())
-    metrics.ENABLED = HOSTED
-    return Server((host, port if exact or HOSTED else _free_port(port, host)), Handler)  # a host expects its own port
+    httpd = Server((host, port if exact or not ON_THIS_COMPUTER else _free_port(port, host)), Handler)  # a host expects its own port
+    auth.LOCAL_URL = f"http://localhost:{httpd.server_address[1]}" if ON_THIS_COMPUTER else ""  # where sign-ins return
+    return httpd

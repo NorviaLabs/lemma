@@ -56,8 +56,11 @@ OAUTH = {
 }
 
 
+LOCAL_URL = ""  # set by server.make_server: this computer's address, where sign-ins return when LEMMA_PUBLIC_URL isn't set
+
+
 def public_url() -> str:
-    return (os.environ.get("LEMMA_PUBLIC_URL") or "").rstrip("/")
+    return (os.environ.get("LEMMA_PUBLIC_URL") or LOCAL_URL).rstrip("/")
 
 
 def cookie_path() -> str:
@@ -70,10 +73,10 @@ def _client(pid: str) -> tuple[str, str]:
 
 
 def providers() -> list[dict]:
-    """The sign-in providers this server is set up for."""
+    """The sign-in options this server offers, first the one to suggest."""
     if not public_url():
         return []
-    return [{"id": p.id, "name": p.name} for p in OAUTH.values() if all(_client(p.id))]
+    return [{"id": p.id, "name": p.name, "label": f"Continue with {p.name}"} for p in OAUTH.values() if all(_client(p.id))]
 
 
 # ---------------------------------------------------------------- database
@@ -164,9 +167,9 @@ def _callback(pid: str) -> str:
 
 
 def sign_in_url(pid: str, state: str) -> str:
-    p = OAUTH.get(pid)
-    if not p or pid not in [x["id"] for x in providers()]:
+    if pid not in [x["id"] for x in providers()]:
         raise AuthError("That sign-in option isn't available.")
+    p = OAUTH[pid]
     q = {"client_id": _client(pid)[0], "redirect_uri": _callback(pid), "response_type": "code", "scope": p.scope, "state": state}
     if pid == "google":
         q["prompt"] = "select_account"
@@ -207,4 +210,6 @@ def finish_sign_in(pid: str, code: str) -> dict:
         email = next((e["email"] for e in emails if e.get("primary") and e.get("verified")), "") if isinstance(emails, list) else ""
     if not info.get("id"):
         raise AuthError("Signing in didn't finish. Please try again.")
+    if not email:  # GitHub only lets a verified address be public, so either way it is verified
+        raise AuthError("OpenLemma needs a GitHub account with a verified email address.")
     return upsert_user("github", str(info["id"]), info.get("name") or info.get("login") or "", email, info.get("avatar_url") or "")

@@ -18,6 +18,7 @@
       if (k === "class") n.className = v;
       else if (k === "text") n.textContent = v;
       else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+      else if ((k === "href" || k === "src") && /^\s*(javascript|vbscript|data):/i.test(v)) continue;  // a lesson's links are data, never script
       else n.setAttribute(k, v === true ? "" : v);
     }
     for (const kid of kids.flat()) if (kid !== null && kid !== undefined && kid !== false) n.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
@@ -31,6 +32,16 @@
     catch (e) { return { provider: "", models: {}, keys: {} }; }
   }
   let cred = loadCred();
+  // What a signed-out visitor was about to do, kept through the sign-in round trip (same tab) so they carry on from it.
+  const HELD_KEY = "lemma.held";
+  function holdIntent(intent) { try { sessionStorage.setItem(HELD_KEY, JSON.stringify({ ...intent, at: Date.now() })); } catch (e) { /* they start again */ } }
+  function heldIntent(take) {
+    try {
+      const v = JSON.parse(sessionStorage.getItem(HELD_KEY) || "null");
+      if (take) sessionStorage.removeItem(HELD_KEY);
+      return v && Date.now() - v.at < 3600e3 ? v : null;
+    } catch (e) { return null; }
+  }
   function saveCred(next) {
     cred = next;
     try { localStorage.setItem(CRED_KEY, JSON.stringify(next)); } catch (e) { /* kept for this visit only */ }
@@ -51,7 +62,10 @@
     });
     let data = null;
     try { data = await res.json(); } catch (e) { /* not JSON */ }
-    if (res.status === 401 && status.hosted) location.hash = "#/signin";  // a hosted Lemma: signed out, or the session ended
+    if (res.status === 401 && !location.hash.startsWith("#/signin")) {  // signed out, or the session ended
+      if (!heldIntent(false)) holdIntent({ route: location.hash });
+      location.hash = "#/signin";
+    }
     if (!res.ok) {
       const err = new Error((data && data.error) || `Request failed (${res.status})`);
       err.problems = data && data.problems;
@@ -88,6 +102,8 @@
     up: '<path d="M8 13V3M4 7l4-4 4 4"/>',
     down: '<path d="M8 3v10M4 9l4 4 4-4"/>',
     dash: '<path d="M4 8h8"/>',
+    plus: '<path d="M8 3.5v9M3.5 8h9"/>',
+    link: '<path d="M7 9l2-2M6.2 5.3l1.1-1.1a2.6 2.6 0 0 1 3.7 3.7l-1.1 1.1M9.8 10.7l-1.1 1.1a2.6 2.6 0 0 1-3.7-3.7l1.1-1.1"/>',
     search: '<circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5l3.5 3.5"/>',
     out: '<path d="M9.5 2.5h4v4M13.5 2.5L7.5 8.5M11.5 9.5v4h-9v-9h4"/>',
     shuffle: '<path d="M2.5 4.5h3l5 7h3M2.5 11.5h3l5-7h3M12 3l1.5 1.5L12 6M12 10l1.5 1.5L12 13"/>',
@@ -186,7 +202,7 @@
     openai: "OpenAI's models, billed to your OpenAI API account.",
     claude: "Anthropic's Claude models, billed to your Claude API account. Fits long papers (about 1M tokens).",
     chatgpt: "Your ChatGPT Plus or Pro plan, no key needed. For OpenLemma on your own computer.",
-    "claude-code": "Your Claude Pro or Max plan, through Claude Code on this computer. No key needed.",
+    "claude-code": "A Claude Pro or Max plan, through the Claude Code signed in where OpenLemma runs. No key needed.",
   };
 
   // Said wherever the key comes up, so it reads the same each time.
@@ -251,7 +267,7 @@
         : h("div", {}, h("label", { for: "model" }, `${p.name} model`), model, note);
       body.replaceChildren(choice, ...(p.sign_in ? signInPart(p) : [
         h("label", { for: "ai-key" }, `${p.name} key`), key,
-        h("p", { class: "muted small" }, h("a", { href: p.key_url, target: "_blank", rel: "noopener noreferrer" }, `Get a ${p.name} key`),
+        h("p", { class: "muted small" }, h("a", { href: p.key_url, target: "_blank", rel: "noopener noreferrer" }, `Get ${/^[aeiou]/i.test(p.name) ? "an" : "a"} ${p.name} key`),
           ". ", KEY_NOTE)]),
         modelPart, msg,
         h("div", { class: "actions" }, save));
@@ -332,13 +348,14 @@
     const verbEls = [];
     const verb = (n, title, ...body) => {
       const li = h("li", { class: "verb" },
-        h("div", { class: "verb-head" }, h("span", { class: "verb-mark", "aria-hidden": "true" }, String(n)), title, h("span", { class: "sr-only verb-state" })),
+        // Steps open as the visitor plays, and any step can be opened straight away.
+        h("button", { type: "button", class: "verb-head", onclick: () => setStep(n - 1) }, h("span", { class: "verb-mark", "aria-hidden": "true" }, String(n)), title, h("span", { class: "sr-only verb-state" })),
         h("div", { class: "verb-body" }, ...body));
       verbEls.push(li);
       return li;
     };
-    const noticeLine = h("p", { class: "he-live" });
-    const noticeMore = h("p");
+    const noticeLine = h("p", { class: "he-live" }, "Watch two numbers as you drag: how far the parents are from average, and how far their children are.");
+    const noticeMore = h("p", {}, "Try tall parents first, then short ones.");
     const tryText = h("p", {}, "Regression to the mean, taught from Galton's 1886 study of heredity. Drag the parents' height away from the middle and watch where their children land.");
     const whyBtn = h("button", { type: "button", class: "he-skip", onclick: () => setStep(2, true) }, "Tell me why");
     const verbs = h("ol", { class: "verbs", "aria-live": "polite" },
@@ -348,10 +365,9 @@
         h("figure", { class: "he-quote" },
           h("blockquote", {}, "the height-deviate of the offspring is, on the average, two-thirds of the height-deviate of its mid-parentage."),
           h("figcaption", {}, "Galton, 1886, page 252")),
-        h("p", {}, "Galton called it regression towards mediocrity. Today it's called regression to the mean, and it shows up wherever two measurements are related but not perfectly."),
-        h("div", { class: "he-cta" },
-          h("button", { class: "ghost", onclick: openExample }, icon("play"), "Walk the whole lesson"),
-          h("span", { class: "small" }, "About 10 minutes, with no setup."))));
+        h("p", {}, "Galton called it regression towards mediocrity. Today it's called regression to the mean, and it shows up wherever two measurements are related but not perfectly.")));
+    // Sits at the foot of the steps, level with the bottom of the model, so the two columns start and end together.
+    const wholeLesson = h("a", { class: "btn ghost", href: "#/example" }, icon("play"), "Walk the whole lesson");
     function setStep(n, focus) {
       exhibitStep = Math.max(exhibitStep, n);
       verbEls.forEach((li, i) => {
@@ -359,9 +375,10 @@
         li.querySelector(".verb-mark").replaceChildren(i < exhibitStep ? icon("check") : String(i + 1));
         li.querySelector(".verb-state").textContent = i < exhibitStep ? " (done)" : i === exhibitStep ? " (now)" : "";
         li.querySelector(".verb-body").hidden = i > exhibitStep;
+        li.querySelector(".verb-head").setAttribute("aria-expanded", String(i <= exhibitStep));
       });
       whyBtn.hidden = exhibitStep !== 1;
-      if (focus && exhibitStep === 2) verbEls[2].querySelector("button").focus({ preventScroll: true });
+      if (focus && exhibitStep === 2) wholeLesson.focus({ preventScroll: true });
     }
     setStep(exhibitStep);
 
@@ -380,14 +397,15 @@
             ["Herd immunity", "Bayes' theorem", "Random walks"].map((t) => h("button", { type: "button", class: "chip", onclick: () => ask(t) }, t)))),
         h("div", { class: "he-or" },
           h("span", { class: "he-or-word" }, "or"),
-          h("a", { class: "btn", href: "#/make", onclick: () => { session.mode = "link"; } }, icon("doc"), "Bring a source")),
+          h("a", { class: "btn", href: "#/make", onclick: () => { session.mode = "bring"; } }, icon("doc"), "Bring a source")),
         h("p", { class: "he-example" },
-          h("button", { class: "ghost small", onclick: openExample }, icon("play"), "Walk the example lesson"),
+          h("a", { class: "btn ghost small", href: "#/example" }, icon("play"), "Walk the example lesson"),
           h("span", { class: "small" }, "10 minutes, no account or key"))),
       filmPlayer(),
       h("div", { class: "he-try" },
         h("h2", { class: "he-try-title" }, "Try it yourself"),
         h("div", { class: "he-verbs" }, verbs),
+        h("p", { class: "he-try-foot" }, wholeLesson, h("span", { class: "small" }, "About 10 minutes, no setup")),
         stage));
 
     exampleLesson().then((lesson) => {
@@ -720,16 +738,16 @@
   /* The build panel for the #/make page: search a topic, paste a link or upload a paper, then start. */
   function findPanel() {
     const p = status.provider || {};
-    const signedOut = status.hosted && !status.user;  // a hosted Lemma: the example and gallery work, but building needs an account
-    const toSignIn = () => { location.hash = "#/signin?next=build"; };
-    let mode = session.mode || "search";
+    const signedOut = !status.user;  // the example and gallery work signed out, but building needs an account
+    const toSignIn = (intent) => { holdIntent(intent || { mode }); location.hash = "#/signin?next=build"; };
+    let mode = session.mode === "search" || !session.mode ? "search" : "bring";
     const qIn = h("input", { type: "search", id: "topic-q", placeholder: "For example: herd immunity, Simpson's paradox, loss aversion", autocomplete: "off", maxlength: 200 });
     const results = h("section", { class: "results", "aria-live": "polite", "aria-labelledby": "results-title" });
     let searchSeq = 0;  // a newer search (or leaving the page) quietly retires an older one
     const runSearch = async (q) => {
       q = (q ?? qIn.value).trim();
       if (!q) return qIn.focus();
-      if (signedOut) return toSignIn();
+      if (signedOut) return toSignIn({ mode: "search", ask: q });
       qIn.value = q;
       errSlot.replaceChildren();
       const seq = ++searchSeq, current = () => seq === searchSeq && results.isConnected;
@@ -803,8 +821,64 @@
         r.unavailable.length ? h("p", { class: "muted small" }, `${r.unavailable.join(" and ")} didn't answer, so ${r.unavailable.length > 1 ? "their" : "its"} results are missing. Search again in a moment to include them.`) : null,
         h("ol", { class: "result-list" }, cards), r.results.length ? make : null].filter(Boolean));
     }
-    const urlIn = h("input", { type: "url", id: "paper-url", placeholder: "https://arxiv.org/abs/… or any article link", autocomplete: "off" });
-    const fileIn = h("input", { type: "file", id: "paper-file", accept: ".pdf,.html,.htm,.txt,application/pdf,text/html,text/plain" });
+    // Bring sources: any mix of links and files, in the learner's order, for one lesson.
+    const MAX_SOURCES = 10, MAX_FILES = 5;  // the server's limits; it keeps only a person's five newest uploads in memory
+    const picks = [];  // { kind: "link", input } or { kind: "file", file, paperId }, each with its row
+    const bringList = h("ol", { class: "bring-list", "aria-label": "Your sources" });
+    const bringNote = h("p", { class: "bring-note", "aria-live": "polite" });
+    const fileIn = h("input", { type: "file", id: "paper-file", multiple: true, class: "sr-only", tabindex: "-1", accept: ".pdf,.html,.htm,.txt,application/pdf,text/html,text/plain",
+      onchange: () => { addFiles([...fileIn.files]); fileIn.value = ""; } });
+    const addLinkBtn = h("button", { type: "button", class: "small", onclick: () => addLink(true) }, icon("plus"), "Add a link");
+    const addFileBtn = h("button", { type: "button", class: "small", onclick: () => fileIn.click() }, icon("plus"), "Add files");
+    const sizeLabel = (n) => n >= 1048576 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1024))} KB`;
+    const kindLabel = (f) => (/\.pdf$/i.test(f.name) || f.type === "application/pdf" ? "PDF" : /\.html?$/i.test(f.name) ? "Web page" : "Text");
+    function removePick(pick) {
+      const at = picks.indexOf(pick);
+      picks.splice(at, 1);
+      pick.row.remove();
+      if (!picks.length) addLink(false);
+      refreshBring();
+      const next = picks[Math.min(at, picks.length - 1)];
+      (next.input || next.row.querySelector("button")).focus();
+    }
+    function addRow(pick, ...content) {
+      pick.row = h("li", { class: `bring-item ${pick.kind}` }, ...content,
+        h("button", { type: "button", class: "small ghost bring-remove", "aria-label": pick.kind === "file" ? `Remove ${pick.file.name}` : "Remove this link", onclick: () => removePick(pick) }, icon("cross")));
+      picks.push(pick);
+      bringList.append(pick.row);
+    }
+    function addLink(focus) {
+      if (picks.length >= MAX_SOURCES) return;
+      const input = h("input", { type: "url", placeholder: "https://arxiv.org/abs/… or any article link", autocomplete: "off", "aria-label": "Link to a paper, article or chapter", oninput: () => refreshBring() });
+      if (!picks.length) input.id = "paper-url";
+      addRow({ kind: "link", input }, h("span", { class: "bring-mark", "aria-hidden": "true" }, icon("link")), input);
+      refreshBring();
+      if (focus) input.focus();
+    }
+    function addFiles(files) {
+      const refused = [];
+      // A blank link row makes way for the files.
+      picks.filter((x) => x.kind === "link" && !x.input.value.trim()).forEach((x) => { picks.splice(picks.indexOf(x), 1); x.row.remove(); });
+      for (const f of files) {
+        if (f.size > 40 * 1024 * 1024) refused.push(`${f.name} is larger than 40 MB.`);
+        else if (picks.length >= MAX_SOURCES || picks.filter((x) => x.kind === "file").length >= MAX_FILES) refused.push(`${f.name} wasn't added: one lesson takes up to ${MAX_SOURCES} sources, and up to ${MAX_FILES} of them can be files.`);
+        else addRow({ kind: "file", file: f }, h("span", { class: "bring-mark", "aria-hidden": "true" }, icon("doc")),
+          h("span", { class: "bring-file" }, h("span", { class: "bring-name" }, f.name), h("span", { class: "bring-meta" }, `${kindLabel(f)} · ${sizeLabel(f.size)}`)));
+      }
+      if (!picks.length) addLink(false);
+      refreshBring(refused);
+    }
+    function refreshBring(refused = []) {
+      const files = picks.filter((x) => x.kind === "file").length;
+      const ready = picks.filter((x) => x.kind === "file" || x.input.value.trim()).length;  // blank link rows don't count
+      picks.forEach((x) => { x.row.querySelector(".bring-remove").hidden = picks.length === 1 && x.kind === "link"; });
+      addLinkBtn.disabled = picks.length >= MAX_SOURCES;
+      addFileBtn.disabled = picks.length >= MAX_SOURCES || files >= MAX_FILES;
+      bringNote.className = "bring-note" + (refused.length ? " warn" : "");
+      bringNote.replaceChildren(refused.length ? refused.join(" ")
+        : ready > 1 ? `${ready} sources, woven into one lesson. Up to ${MAX_SOURCES}.` : `Add more links or files to combine them into one lesson, up to ${MAX_SOURCES}.`);
+      if (mode === "bring" && !submit.disabled) submit.textContent = ready > 1 ? `Read ${ready} sources` : "Read the source";
+    }
     const audSel = h("select", { id: "aud-select" }, AUDIENCES.map((a) => h("option", { value: a }, a)), h("option", { value: "other" }, "Someone else…"));
     const audOther = h("input", { type: "text", id: "aud-other", placeholder: "For example, a nurse curious about trial design", hidden: true, "aria-label": "Describe who the lesson is for" });
     if (session.audience) {
@@ -813,10 +887,17 @@
     }
     audSel.addEventListener("change", () => { audOther.hidden = audSel.value !== "other"; if (!audOther.hidden) audOther.focus(); });
     const searchPane = h("div", {}, h("label", { for: "topic-q" }, "A concept or question"), qIn, chips);
-    const linkPane = h("div", {}, h("label", { for: "paper-url" }, "Link to a paper, article or chapter"), urlIn);
-    const filePane = h("div", {}, h("label", { for: "paper-file" }, "A PDF, saved web page or text file"), fileIn);
-    const panes = { search: searchPane, link: linkPane, file: filePane };
-    const tabs = { search: "Ask a question", link: "Paste a link", file: "Upload a file" };
+    const bringPane = h("div", { class: "bring-pane",
+        ondragover: (e) => { if ([...e.dataTransfer.types].includes("Files")) { e.preventDefault(); bringPane.classList.add("dropping"); } },
+        ondragleave: (e) => { if (!bringPane.contains(e.relatedTarget)) bringPane.classList.remove("dropping"); },
+        ondrop: (e) => { e.preventDefault(); bringPane.classList.remove("dropping"); addFiles([...e.dataTransfer.files]); } },
+      h("label", { for: "paper-url" }, "Links and files"),
+      h("p", { class: "muted small bring-hint" }, "Papers, articles or chapters: paste links, or add PDFs, saved web pages and text files. You can also drop files here."),
+      bringList,
+      h("div", { class: "bring-add" }, addLinkBtn, addFileBtn, fileIn),
+      bringNote);
+    const panes = { search: searchPane, bring: bringPane };
+    const tabs = { search: "Ask a question", bring: "Bring sources" };
     const tabBtns = Object.fromEntries(Object.entries(tabs).map(([k, label]) => [k, h("button", { type: "button", role: "tab", class: "seg", onclick: () => setMode(k) }, label)]));
     const errSlot = h("div");
     const submit = h("button", { type: "submit", class: "primary" });
@@ -829,14 +910,15 @@
         tabBtns[k].setAttribute("aria-selected", String(k === m));
       }
       results.hidden = m !== "search";
-      submit.textContent = m === "search" ? "Find sources" : "Read the source";
+      submit.textContent = "Find sources";
+      if (m === "bring") refreshBring();
       const to = p.ok ? [h("strong", {}, p.label)] : [signedOut ? "the AI model you connect after signing in" : "the AI model you connect next"];
       privacy.replaceChildren(...[...(m === "search"
         ? ["Your search words go to Wikipedia, the Stanford Encyclopedia of Philosophy, LibreTexts, OpenAlex, Europe PMC and arXiv. OpenLemma contacts source sites to check readable full text before recommending sources. Selected text goes to ", ...to, " to build one lesson. "]
-        : ["When you continue, OpenLemma sends the source's text to ", ...to, " to build the lesson. "]),
+        : ["When you continue, OpenLemma sends your sources' text to ", ...to, " to build the lesson. "]),
         status.typesafe ? (m === "search"
           ? "Your search words and each result's title and abstract also go to TypeSafe, to rank the results; the start of each selected source, to sort the lesson into a subject; and each drafted concept with the passages it is about, to check it for errors. "
-          : "The start of the source also goes to TypeSafe, to sort the lesson into a subject, and each drafted concept with the passages it is about, to check it for errors. ") : null,
+          : "The start of each source also goes to TypeSafe, to sort the lesson into a subject, and each drafted concept with the passages it is about, to check it for errors. ") : null,
         // A sign-in provider (ChatGPT or a Claude subscription, on your own computer only) has no key to speak of.
         (status.providers || []).find((x) => x.id === p.id)?.sign_in
           ? "Build requests, source text and progress are saved so you can return later. OpenLemma keeps no request logs. "
@@ -845,49 +927,52 @@
     }
     const form = h("form", { class: "panel bring", "aria-label": "Start a lesson", onsubmit: async (e) => {
       e.preventDefault();
-      if (signedOut) return toSignIn();
+      if (signedOut) return mode === "search" ? runSearch() : toSignIn({ mode });
       errSlot.replaceChildren();
       session.audience = audSel.value === "other" ? audOther.value.trim() || AUDIENCES[0] : audSel.value;
       if (mode === "search") return runSearch();
-      let body;
-      if (mode === "link") {
-        if (!urlIn.value.trim()) return urlIn.focus();
-        if (submit.disabled) return;
-        submit.disabled = true;
-        const begin = async () => {
-          try { const job = await api("/api/requests", { sources: [{ url: urlIn.value.trim(), title: urlIn.value.trim() }], audience: session.audience }); showRequest(job.id); }
-          catch (e) { errSlot.replaceChildren(errorBox(e.message)); submit.disabled = false; }
-        };
-        if (!(status.provider || {}).ok) return showConnect(begin);
-        return begin();
-      } else {
-        const f = fileIn.files[0];
-        if (!f) return fileIn.focus();
-        if (f.size > 40 * 1024 * 1024) { errSlot.append(errorBox("That file is larger than 40 MB.")); return; }
-        body = { filename: f.name, content_type: f.type, data: await fileToBase64(f) };
-      }
+      const chosen = picks.filter((x) => x.kind === "file" || x.input.value.trim());
+      if (!chosen.length) return picks[0].input?.focus();
+      if (submit.disabled) return;
       submit.disabled = true;
-      submit.textContent = "Reading…";
+      const label = submit.textContent;
+      const sources = [];
       try {
-        session.paper = await api("/api/papers", body);
-        startOutline();
+        for (const x of chosen) {
+          if (x.kind === "link") { sources.push({ url: x.input.value.trim(), title: x.input.value.trim() }); continue; }
+          if (!x.paperId) {  // read once; a retry after another source fails doesn't upload it again
+            submit.textContent = `Reading ${x.file.name}…`;
+            try { x.paperId = (await api("/api/papers", { filename: x.file.name, content_type: x.file.type, data: await fileToBase64(x.file) })).paper_id; }
+            catch (err) { throw new Error(`${x.file.name}: ${err.message}`); }
+          }
+          sources.push({ paper_id: x.paperId });
+        }
       } catch (err) {
         errSlot.append(errorBox(err.message));
         submit.disabled = false;
-        submit.textContent = "Read the source";
+        submit.textContent = label;
+        return;
       }
+      submit.textContent = label;
+      const begin = async () => {
+        try { const job = await api("/api/requests", { sources, audience: session.audience }); showRequest(job.id); }
+        catch (e) { errSlot.replaceChildren(errorBox(e.message)); submit.disabled = false; }
+      };
+      if (!(status.provider || {}).ok) return showConnect(begin);
+      return begin();
     } },
       h("div", { class: "segmented", role: "tablist", "aria-label": "How to find it" }, Object.values(tabBtns)),
-      searchPane, linkPane, filePane,
+      searchPane, bringPane,
       h("label", { for: "aud-select" }, "Who is it for?"), audSel, audOther,
       privacy,
       errSlot,
       signedOut
         ? h("div", { class: "actions" },
-            h("button", { class: "primary", type: "button", onclick: toSignIn }, "Sign in to build"),
+            h("button", { class: "primary", type: "button", onclick: () => (mode === "search" && qIn.value.trim() ? runSearch() : toSignIn({ mode })) }, "Sign in to build"),
             h("span", { class: "muted small" }, "Free, and your lessons are saved in your library. The example lesson needs no account."))
         : h("div", { class: "actions" }, submit, h("span", { class: "muted small" }, "Building usually takes 1–3 minutes. You can start the first concept sooner.")));
     const recent = h("section", { class: "recent", hidden: true, "aria-labelledby": "recent-title" });
+    addLink(false);
     setMode(mode);
     if (session.ask) { const q = session.ask; session.ask = null; runSearch(q); }  // asked on the home page
     else if (session.search) { qIn.value = session.search.query; drawResults(); }
@@ -918,7 +1003,7 @@
     const { form, results, recent } = findPanel();
     view(h("section", {},
       h("h1", {}, "What do you want to understand?"),
-      h("p", { class: "lead" }, "Ask about a concept, paste a link, or upload a paper, article or chapter. OpenLemma turns it into a short lesson, with a live model for each idea."),
+      h("p", { class: "lead" }, "Ask about a concept, or bring your own papers, articles or chapters, up to ten links and files. OpenLemma turns them into one short lesson, with a live model for each idea."),
       form, results, recent));
     loadRecent(recent);
   }
@@ -940,17 +1025,8 @@
       h("h1", { id: "connect-title" }, "Connect an AI model"),
       h("p", { class: "lead" }, "OpenLemma reads ", p.title ? h("cite", { class: "words" }, p.title) : "your sources",
         " with an AI model you choose, using your own key. Pick one, paste its key, and the outline starts straight away."),
-      h("p", { class: "muted small" }, KEY_NOTE),
       keyForm(then, { compact: true }),
-      h("div", { class: "actions" }, h("button", { class: "ghost", onclick: () => showHome() }, "Back"))));
-  }
-
-  async function startOutline() {
-    if (!(status.provider || {}).ok) return showConnect(() => startOutline());
-    try {
-      const job = await api("/api/requests", { paper_id: session.paper.paper_id, audience: session.audience });
-      showRequest(job.id);
-    } catch (err) { showHome(err.message); }
+      h("div", { class: "actions" }, h("button", { class: "ghost", onclick: () => showMake() }, "Back"))));
   }
 
   function showOutline() {
@@ -1107,7 +1183,7 @@
       onDownload: downloadLesson,
       onEdit: lesson.example ? null : (l) => showEditor(l),
       onOwnPaper: lesson.example ? () => showHome() : null,
-      onEvent: (name) => { if (status.hosted) api("/api/event", { name }, "POST", {}).catch(() => {}); },
+      onEvent: (name) => { api("/api/event", { name }, "POST", {}).catch(() => {}); },
     });
     if (opts.live) {
       const jobId = opts.live;
@@ -1153,14 +1229,7 @@
   }
 
   /* The launch film: embedded in the hero, loaded and played only when the visitor presses play. */
-  const FILM = { hd: "static/film-v2-1080.mp4", sd: "static/film-v2-720.mp4", poster: "static/film-v2-poster-move.jpg", length: "0:32" };
-  const FILM_TRANSCRIPT = [
-    "Some ideas are hard to explain. Don't read about it. Watch it move.",
-    "Ask about any concept: the OpenLemma home page, with “How does wave interference work?” typed into the ask box.",
-    "Ideas become models you can move: two waves on the same stretch of water add up, cancel to flat water, then add up again as one is shifted.",
-    "Every quote, checked against its source: a sentence from Wikipedia's “Wave interference” article is highlighted and found word for word.",
-    "Any subject: lessons in physics, biology, epidemiology, machine learning, climate science and social science. Then the OpenLemma logo and openlemma.org.",
-  ];
+  const FILM = { hd: "static/film-v4-1080.mp4", sd: "static/film-v4-720.mp4", poster: "static/film-v4-poster.jpg", length: "0:32" };
   function filmPlayer() {
     const video = h("video", { class: "film-video", preload: "none", poster: FILM.poster, playsinline: true, "aria-label": "OpenLemma launch film, 32 seconds, with music" });
     const status = h("p", { class: "film-status", role: "status" });
@@ -1171,23 +1240,17 @@
       video.play().catch(() => {});  // some browsers refuse; the native controls are there now
     };
     const cover = h("button", { type: "button", class: "film-cover", onclick: start, "aria-label": `Play the OpenLemma film, ${FILM.length}, with sound` },
-      h("span", { class: "film-cover-row", "aria-hidden": "true" },
-        h("span", { class: "film-disc" }, icon("play")),
-        h("span", { class: "film-cover-label" }, "Watch the film", h("span", { class: "film-len" }, FILM.length))));
+      h("span", { class: "film-disc", "aria-hidden": "true" }, icon("play")));
     const after = h("div", { class: "film-after", hidden: true },
       h("p", { class: "film-after-title" }, "Now try it on something you want to understand."),
       h("div", { class: "film-after-actions" },
         h("button", { type: "button", class: "primary", onclick: () => document.getElementById("he-ask")?.focus() }, icon("search"), "Ask about a concept"),
-        h("a", { class: "btn", href: "#/make", onclick: () => { session.mode = "link"; } }, icon("doc"), "Bring a source"),
+        h("a", { class: "btn", href: "#/make", onclick: () => { session.mode = "bring"; } }, icon("doc"), "Bring a source"),
         h("button", { type: "button", class: "ghost", onclick: () => { video.currentTime = 0; start(); } }, icon("refresh"), "Replay")));
     video.addEventListener("ended", () => { after.hidden = false; after.querySelector("button").focus({ preventScroll: true }); });
     video.addEventListener("error", () => status.replaceChildren("The film couldn't load. ", h("a", { href: video.currentSrc || video.src, target: "_blank", rel: "noopener" }, "Open the video file"), "."));
     cleanups.push(() => { video.pause(); video.removeAttribute("src"); video.load(); });
-    return h("figure", { class: "he-film" },
-      h("div", { class: "film-frame" }, video, cover, after),
-      h("figcaption", { class: "film-meta" },
-        h("details", { class: "film-transcript" }, h("summary", {}, "Transcript"), h("ol", {}, FILM_TRANSCRIPT.map((t) => h("li", {}, t)))),
-        status));
+    return h("figure", { class: "he-film" }, h("div", { class: "film-frame" }, video, cover, after), status);
   }
 
   async function openExample() { try { openLesson(await api("/api/example")); } catch (err) { showHome(err.message); } }
@@ -1223,10 +1286,10 @@
       items.length ? list : h("div", { class: "panel empty" },
         h("h2", {}, "No saved lessons yet"),
         h("p", {}, `Lessons you save live here, ${where()}. Any of them downloads as a single file you can share, which opens without an internet connection.`),
-        h("p", { class: "muted small" }, "Finish a lesson you've built and choose “Save to my library” at the end."),
+        h("p", { class: "muted small" }, "A lesson you build is saved here automatically when it's ready, usually a few minutes after you start it."),
         h("div", { class: "actions" },
-          h("a", { class: "btn primary", href: "#/" }, "Make a lesson"),
-          h("button", { class: "ghost", onclick: openExample }, icon("play"), "Try the example lesson")))));
+          h("a", { class: "btn primary", href: "#/make" }, "Make a lesson"),
+          h("a", { class: "btn ghost", href: "#/example" }, icon("play"), "Try the example lesson")))));
   }
 
   /* ------------------------------------------------------------ editor */
@@ -1282,16 +1345,8 @@
   }
 
   /* ------------------------------------------------------------ settings */
-  function showSettings() {
-    view(h("section", { class: "panel", style: "max-width:900px" },
-      h("h1", {}, "Settings"),
-      h("p", { style: "max-width:66ch" }, "OpenLemma builds lessons with your own AI provider key. It sends a source's text only when you build a lesson, and only to the provider and model chosen here. The model gets no tools: it can only read what OpenLemma sends and reply with text."),
-      h("h3", {}, "AI provider"), keyForm(),
-      h("div", { class: "actions" }, h("a", { class: "btn ghost", href: "#/" }, "Back"))));
-  }
-
-  /* ------------------------------------------------------------ account (hosted Lemma only) */
-  const where = () => (status.hosted ? "in your account" : "on this computer");
+  /* ------------------------------------------------------------ account */
+  const where = () => "in your account";
   const PROVIDER_NAMES = { google: "Google", github: "GitHub" };
 
   function avatar(user, size) {
@@ -1304,40 +1359,57 @@
   }
 
   function drawAccountLink() {
-    const a = $("#account-link");
-    a.hidden = !status.hosted;
-    if (!status.hosted) return;
+    const a = $("#account-link"), signedOut = !status.user;
+    $("#library-link").hidden = signedOut;  // signed out, Library would only ask you to sign in
+    a.classList.toggle("signin-link", signedOut);
     if (status.user) {
       a.href = "#/account";
+      a.onclick = null;
       a.replaceChildren(avatar(status.user, 26), h("span", { class: "account-name" }, status.user.name || "Account"));
-      a.setAttribute("aria-label", `Your account: ${status.user.name || status.user.email}`);
+      a.setAttribute("aria-label", `Your account and AI provider: ${status.user.name || status.user.email}`);
     } else {
       a.href = "#/signin";
+      a.onclick = () => { if (!location.hash.startsWith("#/signin")) holdIntent({ route: location.hash }); };  // come back to this page
       a.replaceChildren("Sign in");
       a.removeAttribute("aria-label");
     }
-    $(".site-foot p").replaceChildren("Lessons are generated by AI and can contain errors, so check them against the source. ", h("a", { href: "privacy" }, "Privacy"), " · ", h("a", { href: "terms" }, "Terms"));
   }
+
+  // Google's own pre-approved "Sign in with Google" button (light theme, pill), shown exactly as Google draws it:
+  // their branding guidelines forbid altering the logo, colours, type or spacing, so it is the image, not a restyle.
+  const googleButton = () => {
+    const src = (n) => `static/google-sign-in-${n}x.png`;
+    return h("a", { class: "google-signin", href: "auth/google/start" },
+      h("img", { src: src(2), srcset: [1, 2, 3, 4].map((n) => `${src(n)} ${180 * n}w`).join(", "), sizes: "216px", width: 216, height: 48, alt: "Sign in with Google" }));
+  };
+
+  const listOf = (names) => (names.length > 1 ? `${names.slice(0, -1).join(", ")} or ${names[names.length - 1]}` : names[0] || "");
 
   function showSignIn(error, next) {
     if (status.user) { location.hash = "#/account"; return; }
     const options = status.sign_in || [];
+    const held = heldIntent(false), ask = next === "build" ? held?.ask : null;
+    const back = { "#/library": "your library", "#/account": "your account", "#/settings": "your AI provider settings" }[held?.route];
     view(h("section", { class: "panel signin" },
       h("h1", {}, "Sign in to OpenLemma"),
-      h("p", { class: "lead" }, next === "build"
-        ? "Sign in to ask about a concept or bring a source and build lessons. It's free, and your lessons are saved to your own library."
-        : "Sign in to build lessons from your questions and sources, and keep them in your own library."),
+      h("p", { class: "lead" }, ask
+        ? ["Sign in to find sources for ", h("cite", { class: "words" }, `“${ask}”`), ". You'll go straight to them, and your lessons are saved to your own library."]
+        : back ? `Sign in to open ${back}. You'll go straight back to it.`
+        : next === "build"
+          ? "Sign in to ask about a concept or bring a source and build lessons. Your lessons are saved to your own library."
+          : `Sign in to build lessons from your questions and sources, and keep them in your own library.${held && "route" in held ? " You'll come back to this page." : ""}`),
       error ? errorBox(error) : null,
       options.length
-        ? h("div", { class: "signin-options" }, options.map((p) =>
-            h("a", { class: "btn" + (p.id === options[0].id ? " primary" : ""), href: `auth/${p.id}/start` }, `Continue with ${p.name}`)))
+        ? h("div", { class: "signin-options" }, options.map((p) => p.id === "google"
+            ? googleButton()
+            : h("a", { class: "btn" + (p.id === options[0].id ? " primary" : ""), href: `auth/${p.id}/start` }, p.label)))
         : errorBox("Signing in isn't set up on this server yet."),
-      h("p", { class: "muted small" }, "OpenLemma keeps your name, email address and picture so it can show you your own library. ", KEY_NOTE),
-      h("div", { class: "actions" }, h("button", { class: "ghost", onclick: openExample }, icon("play"), "Try the example lesson first"))));
+      h("p", { class: "muted small" }, `Searching for sources is free. To build a lesson you connect your own AI model (${listOf((status.providers || []).map((x) => x.name))}); a key stays in this browser. OpenLemma keeps your name, email address and picture so it can show you your own library.`),
+      h("div", { class: "actions" }, h("a", { class: "btn ghost", href: "#/example" }, icon("play"), "Try the example lesson first"))));
   }
 
-  async function showAccount() {
-    if (!status.user) return showSignIn();
+  async function showAccount(toProvider) {
+    if (!status.user) { holdIntent({ route: toProvider ? "#/settings" : "#/account" }); return showSignIn(); }
     const u = status.user;
     const out = h("button", { class: "ghost", onclick: async () => {
       out.disabled = true;
@@ -1346,6 +1418,10 @@
       drawAccountLink();
       location.hash = "#/";
     } }, "Sign out");
+    const provider = h("section", { class: "account-ai", "aria-labelledby": "ai-title" },
+      h("h2", { id: "ai-title", tabindex: "-1" }, "AI provider"),
+      h("p", { class: "muted" }, "A source's text goes only to the provider and model chosen here, and only when you build. The model gets no tools: it can only read what OpenLemma sends and reply with text."),
+      keyForm());
     view(h("section", { class: "panel account", style: "max-width:720px" },
       h("div", { class: "account-head" }, avatar(u, 72),
         h("div", {}, h("h1", {}, u.name || "Your account"), u.email ? h("p", { class: "muted", style: "margin:0" }, u.email) : null)),
@@ -1353,7 +1429,9 @@
         h("dt", {}, "Signed in with"), h("dd", {}, PROVIDER_NAMES[u.provider] || u.provider),
         h("dt", {}, "Member since"), h("dd", {}, new Date(u.created * 1000).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })),
         h("dt", {}, "Saved lessons"), h("dd", {}, h("a", { href: "#/library" }, String(status.library_count || 0)))),
-      h("div", { class: "actions" }, h("a", { class: "btn primary", href: "#/settings" }, "AI provider settings"), out)));
+      provider,
+      h("div", { class: "actions account-out" }, out)));
+    if (toProvider) { provider.scrollIntoView({ block: "start" }); provider.querySelector("h2").focus({ preventScroll: true }); }
   }
 
   /* ------------------------------------------------------------ routing */
@@ -1365,7 +1443,7 @@
     }
     if (hash === "#/library") return showLibrary();
     if (hash === "#/make") return showMake();
-    if (hash === "#/settings") return showSettings();
+    if (hash === "#/settings") return showAccount(true);  // the AI provider is part of the account page
     if (hash.startsWith("#/signin")) {
       const params = new URLSearchParams(hash.split("?")[1] || "");
       return showSignIn(params.get("error"), params.get("next"));
@@ -1391,8 +1469,14 @@
 
   (async function init() {
     try { status = await api("/api/status"); } catch (e) { /* the server will report */ }
-    $("#settings-link").hidden = false;
     drawAccountLink();
+    const held = status.user && heldIntent(true);
+    if (held && "route" in held) history.replaceState(null, "", held.route.startsWith("#/signin") ? "#/" : held.route || "#/");
+    else if (held) {
+      session.mode = held.mode;
+      if (held.ask) session.ask = held.ask;
+      history.replaceState(null, "", "#/make");
+    }
     route();
   })();
 })();

@@ -39,7 +39,7 @@ def write_private(path: Path, data: str):
 
 
 def library(owner: str | None = None) -> Path:
-    """A local Lemma has one library; a hosted one keeps one per account (see auth.py)."""
+    """Each account's library (see auth.py). Tools that work outside any account, such as eval/run.py, use `None`."""
     if owner is None:
         return home() / "library"
     if not ID_RE.match(owner):
@@ -90,6 +90,24 @@ def list_lessons(owner: str | None = None) -> list[dict]:
             "saved": p.stat().st_mtime,
         })
     return out
+
+
+def adopt_unowned(owner: str):
+    """Moves lessons and build requests saved before this computer had accounts into its owner's account, once.
+
+    Anything already in the account with the same name wins, so signing in again never overwrites."""
+    for name in ("library", "requests"):
+        old = home() / name
+        if not old.is_dir():
+            continue
+        new = library(owner) if name == "library" else requests(owner)
+        for path in old.iterdir():
+            if path.is_file() and not (new / path.name).exists():
+                path.replace(new / path.name)
+        try:
+            old.rmdir()
+        except OSError:
+            pass  # something stayed behind; it is left where it was
 
 
 def requests(owner: str | None = None) -> Path:

@@ -88,11 +88,12 @@ class InProcess(unittest.TestCase):
     """main() with the listening part replaced, to see what it tells people and what it opens."""
 
     def setUp(self):
-        self.was = (server.HOSTED, server.ALLOWED_HOSTS, server.DEV, metrics.ENABLED, signal.getsignal(signal.SIGTERM))
+        self.was = (server.DEV, signal.getsignal(signal.SIGTERM))
 
     def tearDown(self):
-        server.HOSTED, server.ALLOWED_HOSTS, server.DEV, metrics.ENABLED, sigterm = self.was
+        server.DEV, sigterm = self.was
         signal.signal(signal.SIGTERM, sigterm)
+        test_lemma.reset_server()
 
     def run_main(self, *argv, hosted=False):
         httpd = FakeHTTPD(8999)
@@ -100,7 +101,7 @@ class InProcess(unittest.TestCase):
         urls = []
 
         def fake_make_server(port, exact, host, allowed_hosts):
-            server.HOSTED = hosted
+            server.ON_THIS_COMPUTER = not hosted
             self.made = (port, exact, host, allowed_hosts)
             return httpd
 
@@ -237,6 +238,29 @@ class Supervisor(unittest.TestCase):
             s.listen()
             self.assertFalse(dev._port_free(s.getsockname()[1]))
         self.assertTrue(dev._port_free(free_port()))
+
+
+    def test_dev_mode_keeps_its_port_or_stops_saying_why(self):
+        # Sign-in returns only to the registered address (localhost:8765), so another port would break it quietly.
+        with socket.socket() as s:
+            s.bind(("127.0.0.1", 0))
+            s.listen()
+            taken = s.getsockname()[1]
+            err = io.StringIO()
+            with patch.object(dev, "PORT_WAIT", 0.3), patch.object(dev.subprocess, "Popen") as popen, \
+                    contextlib.redirect_stderr(err), self.assertRaises(SystemExit) as stop:
+                dev.supervise(taken, open_browser=False)
+        self.assertNotEqual(stop.exception.code, 0)
+        self.assertIn(f"Port {taken} is in use", err.getvalue())
+        popen.assert_not_called()
+
+    def test_dev_mode_waits_for_its_port_to_come_free(self):
+        port = free_port()
+        holder = socket.socket()
+        holder.bind(("127.0.0.1", port))
+        holder.listen()
+        threading.Timer(0.3, holder.close).start()  # the previous Lemma finishes stopping
+        self.assertEqual(dev.wait_for_port(port, 3), True)
 
 
 class FrontendChanges(unittest.TestCase):

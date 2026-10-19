@@ -1,10 +1,10 @@
-"""Daily quotas and anonymous counts for a hosted Lemma, in ``$LEMMA_HOME/metrics.db``.
+"""Daily quotas and anonymous counts, in ``$LEMMA_HOME/metrics.db``, the same on your own computer as hosted.
 
-* Quotas cap each account's daily searches and builds, which Lemma pays Jev for with the server's key.
+* Quotas cap each account's daily searches and builds, which Lemma pays Jev for with the server's key, and the
+  sources it reads on the server. They are configuration with safe defaults: a missing setting means the usual
+  cap, never none, and only an explicit `unlimited` lifts one (as local.env does for development).
 * Counts are per day and event name only (lessons opened, goals reached, builds that passed or failed):
   no account, lesson, paper or address is recorded with them.
-
-A local Lemma has neither: ``ENABLED`` is set by ``server.make_server`` when Lemma is hosted.
 """
 
 from __future__ import annotations
@@ -17,12 +17,12 @@ from contextlib import contextmanager
 
 from . import store
 
-ENABLED = False
 # Events the browser may report; the server counts its own (searches, signups, job outcomes) directly.
 BROWSER_EVENTS = frozenset({"lesson_open", "concept_finish", "goal_self", "goal_shown", "check_first_try", "check_retry", "lesson_finish"})
-QUOTAS = {  # kind -> (environment variable, default per account per day)
+QUOTAS = {  # kind -> (environment variable, cap per account per day when it isn't set); "unlimited" lifts it, 0 turns it off
     "search": ("LEMMA_DAILY_SEARCHES", 40),
     "job": ("LEMMA_DAILY_BUILDS", 20),  # outlines and builds both count: a new lesson is usually one of each
+    "read": ("LEMMA_DAILY_READS", 100),  # links and files read on their own, before a lesson is requested
 }
 
 _lock = threading.Lock()
@@ -55,19 +55,32 @@ def _tx():
         con.close()
 
 
-def limit(kind: str) -> int:
+def limit(kind: str) -> int | None:
+    """Today's cap per account for `kind`, or None when it is set to `unlimited`."""
     var, default = QUOTAS[kind]
-    try:
-        return int(os.environ.get(var, default))
-    except ValueError:
-        return default
+    value = os.environ.get(var, "").strip().lower()
+    if not value:
+        return default  # a forgotten setting keeps the safe cap
+    if value == "unlimited":
+        return None
+    if not value.isdigit():
+        raise ValueError(f"{var} must be a whole number of a day's {kind}s per account, or unlimited (it is {value!r}).")
+    return int(value)
+
+
+def check():
+    """Raises ValueError, naming the setting, when a cap is set to something that isn't a whole number."""
+    for kind in QUOTAS:
+        limit(kind)
 
 
 def take(user_id: str | None, kind: str) -> bool:
-    """Use one of the account's daily `kind` allowance; False when today's is spent. Always True locally."""
-    if not ENABLED or not user_id:
+    """Use one of the account's daily `kind` allowance; False when today's is spent."""
+    if not user_id:
         return True
     day, cap = _day(), limit(kind)
+    if cap is None:
+        return True
     if cap <= 0:
         return False
     with _tx() as con:
@@ -81,8 +94,6 @@ def take(user_id: str | None, kind: str) -> bool:
 
 
 def count(name: str) -> None:
-    if not ENABLED:
-        return
     try:
         with _tx() as con:
             con.execute("""INSERT INTO counts (day, name, n) VALUES (?, ?, 1)

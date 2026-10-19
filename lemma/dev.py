@@ -82,10 +82,26 @@ def _port_free(port: int) -> bool:
             return False
 
 
-def supervise(port: int, open_browser: bool):
-    from .server import _free_port
+PORT_WAIT = 10  # seconds to wait for the port, while a Lemma that was just stopped lets it go
 
-    port = _free_port(port)  # pick once; every restart reuses it so the browser can reconnect
+
+def wait_for_port(port: int, seconds: float) -> bool:
+    """True once `port` can be bound on this computer, waiting up to `seconds`."""
+    deadline = time.monotonic() + seconds
+    while not _port_free(port):
+        if time.monotonic() >= deadline:
+            return False
+        time.sleep(0.1)
+    return True
+
+
+def supervise(port: int, open_browser: bool):
+    # Always this port, never the next free one: sign-in returns only to the registered address, and every restart
+    # reuses it so the browser can reconnect.
+    if not wait_for_port(port, PORT_WAIT):
+        print(f"Port {port} is in use, so Lemma can't start in dev mode. Stop the Lemma (or other program) using it, or choose "
+              f"another with --port (sign-in only works on the port its callback is registered for).", file=sys.stderr, flush=True)
+        raise SystemExit(1)
     url = f"http://localhost:{port}/"
     env = dict(os.environ, **{CHILD_ENV: "1"})
     cmd = [sys.executable, "-m", "lemma", "--dev", "--no-browser", "--port", str(port)]

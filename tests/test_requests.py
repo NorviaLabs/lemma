@@ -16,7 +16,7 @@ def _raise(e):
     raise e
 from lemma.llm import ProviderError
 import fakejev  # noqa: E402,F401  Jev is essential, so every search and build asks this stand-in
-from test_lemma import SOURCE, FakeProvider
+from test_lemma import SOURCE, TESTER, FakeProvider, reset_server, session_cookie, sign_in
 from test_multisource import MultiSourceProvider
 
 
@@ -26,14 +26,13 @@ class RequestTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
         self.env = patch.dict(os.environ, {'LEMMA_HOME': self.tmp.name})
         self.env.start()
-        self.hosted = patch.object(server, 'HOSTED', False)
-        self.hosted.start()
+        sign_in()
         self.provider = patch.object(server, '_provider', return_value=MultiSourceProvider())
         self.provider.start()
 
     def tearDown(self):
         self.provider.stop()
-        self.hosted.stop()
+        reset_server()
         self.env.stop()
         self.tmp.cleanup()
 
@@ -60,12 +59,12 @@ class RequestTests(unittest.TestCase):
         server.api_request_outline(rid)
         done = self.settled(rid)
         self.assertEqual(done['status'], 'done', done.get('error'))
-        lesson, source = store.load_lesson(rid)
+        lesson, source = store.load_lesson(rid, TESTER)
         self.assertEqual(lesson['id'], rid)
         self.assertIn('lemma_sources', source)
-        self.assertEqual(store.request_path(rid).stat().st_mode & 0o777, 0o600)
+        self.assertEqual(store.request_path(rid, TESTER).stat().st_mode & 0o777, 0o600)
         server.api_lesson_delete(rid)
-        self.assertFalse(store.request_path(rid).exists())
+        self.assertFalse(store.request_path(rid, TESTER).exists())
 
     def test_without_jev_no_build_is_started_or_saved(self):
         with patch.dict(os.environ, {'TYPESAFE_API_KEY': ''}), patch.object(server, '_first_readable') as read:
@@ -84,7 +83,7 @@ class RequestTests(unittest.TestCase):
         server.api_request_outline(rid)
         done = self.settled(rid)
         self.assertEqual(done['status'], 'done', done.get('error'))
-        self.assertEqual(store.load_lesson(rid)[0]['category']['model'], 'jev-test')
+        self.assertEqual(store.load_lesson(rid, TESTER)[0]['category']['model'], 'jev-test')
 
     def test_sources_are_read_at_the_same_time_and_keep_their_order(self):
         def slow(urls):
@@ -96,7 +95,7 @@ class RequestTests(unittest.TestCase):
             record = self.settled(server.api_request_create({'sources': sources})['id'])
         self.assertLess(time.monotonic() - start, .9)  # one after another would take at least 0.6s of reading alone
         self.assertEqual(record['status'], 'awaiting_outline', record.get('error'))
-        bundle = json.loads(store.load_request(record['id'])['paper']['text'])['lemma_sources']
+        bundle = json.loads(store.load_request(record['id'], TESTER)['paper']['text'])['lemma_sources']
         self.assertEqual([(s['id'], s['url']) for s in bundle], [('s1', 'https://a.example'), ('s2', 'https://b.example'), ('s3', 'https://c.example')])
 
     def test_search_runs_in_the_background_and_reports_progress(self):
@@ -134,6 +133,42 @@ class RequestTests(unittest.TestCase):
         with self.assertRaises(server.ApiError):
             server.api_search_status('0123456789ab')
 
+    def test_uploaded_files_and_links_make_one_lesson_in_the_order_given(self):
+        pid = 'upload1'
+        server.PAPERS[pid] = {'text': SOURCE, 'title': 'My chapter', 'url': '', 'kind': 'pdf', 'pages': 3, 'owner': TESTER}
+        self.addCleanup(server.PAPERS.pop, pid, None)
+        with patch.object(server, '_first_readable', return_value=SimpleNamespace(title='Galton', url='https://b.example', text=SOURCE)) as read:
+            rid = server.api_request_create({'sources': [{'paper_id': pid}, {'url': 'https://b.example', 'title': 'b'}]})['id']
+            record = self.settled(rid)
+        self.assertEqual(record['status'], 'awaiting_outline', record.get('error'))
+        read.assert_called_once_with(['https://b.example'])  # the file is never fetched
+        bundle = json.loads(store.load_request(rid, TESTER)['paper']['text'])['lemma_sources']
+        self.assertEqual([(s['id'], s['title']) for s in bundle], [('s1', 'My chapter'), ('s2', 'Galton')])
+        self.assertEqual(bundle[0]['text'], SOURCE)
+
+    def test_a_retry_still_has_an_uploaded_file_after_memory_lets_it_go(self):
+        server.PAPERS['upload2'] = {'text': SOURCE, 'title': 'Notes', 'url': '', 'kind': 'text', 'pages': 0, 'owner': TESTER}
+        with patch.object(server, '_first_readable', side_effect=ingest.IngestError('blocked')):
+            rid = server.api_request_create({'sources': [{'paper_id': 'upload2'}, {'url': 'https://a.example'}]})['id']
+            server.PAPERS.pop('upload2')
+            self.settled(rid)
+            disk = store.load_request(rid, TESTER)
+            disk['status'], disk['paper'] = 'running', None
+            store.save_request(disk, TESTER)
+            generate.JOBS.pop(rid)
+            server.api_request_retry(rid)
+            record = self.settled(rid)
+        self.assertEqual(record['status'], 'awaiting_outline', record.get('error'))
+        self.assertEqual([s['title'] for s in json.loads(store.load_request(rid, TESTER)['paper']['text'])['lemma_sources']], ['Notes'])
+
+    def test_a_file_someone_else_uploaded_cant_be_a_source(self):
+        server.PAPERS['theirs'] = {'text': SOURCE, 'title': 'Theirs', 'url': '', 'kind': 'pdf', 'pages': 1, 'owner': 'someone-else'}
+        self.addCleanup(server.PAPERS.pop, 'theirs', None)
+        with self.assertRaises(server.ApiError) as raised:
+            server.api_request_create({'sources': [{'paper_id': 'theirs'}]})
+        self.assertEqual(raised.exception.status, 404)
+        self.assertEqual(server.api_requests({}), [])
+
     def test_partial_failure_restart_and_retry(self):
         server._provider.return_value.source_id = 's2'
         with patch.object(server, '_first_readable', side_effect=lambda urls: _raise(ingest.IngestError('blocked')) if 'a.example' in urls[0] else SimpleNamespace(title='Galton', url='', text=SOURCE)):
@@ -141,9 +176,9 @@ class RequestTests(unittest.TestCase):
             record = self.settled(rid)
         self.assertEqual(record['status'], 'awaiting_outline', record.get('error'))
         self.assertIn('Blocked', record['warnings'][0])
-        disk = store.load_request(rid)
+        disk = store.load_request(rid, TESTER)
         disk['status'] = 'running'
-        store.save_request(disk)
+        store.save_request(disk, TESTER)
         generate.JOBS.pop(rid)
         self.assertEqual(server.api_request(rid)['status'], 'interrupted')
         server.api_request_retry(rid)
@@ -151,30 +186,30 @@ class RequestTests(unittest.TestCase):
         server.api_request_cancel(rid)
         self.assertEqual(server.api_request(rid)['status'], 'cancelled')
         server.api_request_delete(rid)
-        self.assertFalse(store.request_path(rid).exists())
+        self.assertFalse(store.request_path(rid, TESTER).exists())
 
     def test_all_failed_validation_and_isolation(self):
         with patch.object(server, '_first_readable', side_effect=ingest.IngestError('unreadable')):
             rid = self.create()
             self.assertEqual(self.settled(rid)['status'], 'error')
-        self.assertNotIn('key', json.dumps(store.load_request(rid)).lower())
+        self.assertNotIn('key', json.dumps(store.load_request(rid, TESTER)).lower())
         with self.assertRaises(server.ApiError):
             server.api_request_create({'sources': []})
         with self.assertRaises(server.ApiError):
             server.api_request_create({'sources': [{'url': 'file:///secret'}]})
-        with patch.object(server, 'HOSTED', True):
-            server.REQUEST.user = {'id': 'different'}
-            with self.assertRaises(server.ApiError):
-                server.api_request(rid)
-            self.assertEqual(server.api_requests({}), [])
+        sign_in('different')
+        with self.assertRaises(server.ApiError):
+            server.api_request(rid)
+        self.assertEqual(server.api_requests({}), [])
 
     def test_http_outline_body_and_credential_free_storage(self):
         httpd = server.make_server(0, exact=True)
+        cookie = session_cookie()
         threading.Thread(target=httpd.serve_forever, daemon=True).start()
         def request(method, path, body=None):
             connection = http.client.HTTPConnection('127.0.0.1', httpd.server_address[1])
             connection.request(method, path, json.dumps(body) if body else None,
-                               {'Content-Type': 'application/json', 'X-Lemma-Key': 'test-secret-never-store'})
+                               {'Content-Type': 'application/json', 'X-Lemma-Key': 'test-secret-never-store', 'Cookie': cookie})
             response = connection.getresponse()
             data = json.loads(response.read())
             connection.close()
@@ -186,7 +221,7 @@ class RequestTests(unittest.TestCase):
                 outline = self.settled(rid)['outline']
             request('POST', f'/api/requests/{rid}/outline', {'outline': outline})
             self.assertEqual(self.settled(rid)['status'], 'done')
-            self.assertNotIn('test-secret-never-store', store.request_path(rid).read_text())
+            self.assertNotIn('test-secret-never-store', store.request_path(rid, TESTER).read_text())
             self.assertEqual(request('GET', f'/api/requests/{rid}')['status'], 'done')
         finally:
             httpd.shutdown()
@@ -198,7 +233,7 @@ class RequestTests(unittest.TestCase):
             with patch.object(server, '_first_readable', return_value=SimpleNamespace(title='Galton', url='', text=SOURCE)), patch.object(generate, 'make_outline', side_effect=ProviderError('Invalid key secret-test-key')):
                 rid = self.create()
                 self.assertEqual(self.settled(rid)['status'], 'error')
-            self.assertNotIn('secret-test-key', store.request_path(rid).read_text())
+            self.assertNotIn('secret-test-key', store.request_path(rid, TESTER).read_text())
             self.assertIn('[redacted]', server.api_request(rid)['error'])
         finally:
             server.REQUEST.headers = {}
@@ -215,7 +250,7 @@ class RequestTests(unittest.TestCase):
             supplied = json.loads(outline.call_args.args[2])['lemma_sources'][0]['text']
             self.assertEqual(supplied, paper.text)
 
-        with patch.object(server, '_paper', return_value={'text': paper.text, 'title': 'Long upload', 'url': '', 'owner': None}), patch.object(generate, 'make_outline', return_value={}) as outline:
+        with patch.object(server, '_paper', return_value={'text': paper.text, 'title': 'Long upload', 'url': '', 'owner': TESTER}), patch.object(generate, 'make_outline', return_value={}) as outline:
             rid = server.api_request_create({'paper_id': 'upload'})['id']
             self.assertEqual(self.settled(rid)['status'], 'awaiting_outline')
             self.assertEqual(outline.call_args.args[2], paper.text)

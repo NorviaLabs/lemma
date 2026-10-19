@@ -1,14 +1,24 @@
 # Hosted Lemma at https://openlemma.org: Lemma plus a Cloudflare Tunnel.
 # Nothing listens on a public port; Cloudflare handles HTTPS and forwards openlemma.org through the tunnel.
+x-logging: &logging  # each container keeps at most 3 x 10 MB of logs, so they can't fill the disk
+  driver: json-file
+  options: {max-size: 10m, max-file: "3"}
+
 services:
   lemma:
     build: ..
     restart: unless-stopped
+    logging: *logging
     env_file: lemma.env
     environment:
       LEMMA_PUBLIC_URL: https://openlemma.org
       LEMMA_ALLOWED_HOSTS: openlemma.org,www.openlemma.org
       LEMMA_ADMINS: mohitranka@gmail.com  # who may read the daily counts at /api/stats
+      # Daily caps per account (UTC). Every search, build and read uses the server's TypeSafe key or bandwidth.
+      # These match Lemma's safe defaults, which also apply if a line goes missing; never set them to unlimited here.
+      LEMMA_DAILY_SEARCHES: "40"
+      LEMMA_DAILY_BUILDS: "20"
+      LEMMA_DAILY_READS: "100"
     volumes:
       - lemma-data:/data
     healthcheck:
@@ -18,6 +28,7 @@ services:
   tunnel:
     image: cloudflare/cloudflared:2026.9.3
     restart: unless-stopped
+    logging: *logging
     command: tunnel --no-autoupdate --config /etc/cloudflared/config.yml run
     volumes:
       - ./cloudflared:/etc/cloudflared:ro  # config.yml (routes) and the tunnel's credentials file

@@ -167,7 +167,17 @@ class SignInFlow(unittest.TestCase):
             self.assertNotIn(auth.SESSION_COOKIE, cookies)
         odd = {GITHUB_TOKEN: {"access_token": "t"}, GITHUB_USER: {"id": 44, "login": "quiet"}, GITHUB_EMAILS: {"message": "Not Found"}}
         with FakeProviders(odd), patch.dict("os.environ", GITHUB_ENV):
-            self.assertEqual(auth.finish_sign_in("github", "code")["email"], "")
+            with self.assertRaises(auth.AuthError):
+                auth.finish_sign_in("github", "code")
+
+    def test_github_accounts_need_a_verified_email(self):
+        # Searches and builds spend OpenLemma's own keys, so an account must be a verified person, as with Google.
+        routes = {GITHUB_TOKEN: {"access_token": "gh-3"}, GITHUB_USER: {"id": 45, "login": "nomail", "email": None},
+                  GITHUB_EMAILS: [{"email": "nomail@example.com", "primary": True, "verified": False}]}
+        with HostedServer(GITHUB_ENV) as site, FakeProviders(routes):
+            s, location, cookies = self.sign_in(site, "github")
+            self.assertIn("verified email address", self.error_shown(location))
+            self.assertNotIn(auth.SESSION_COOKIE, cookies)
 
 
 class Sessions(unittest.TestCase):

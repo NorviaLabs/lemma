@@ -182,7 +182,8 @@
       const x = xs(evalNum(p.x, env)), y = ys(evalNum(p.y, env));
       if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
       el("circle", { cx: x, cy: y, r: 9, class: "point", style: `fill:${col(p.color ?? 0)}` }, plot);
-      if (p.label) el("text", { x: x + 9, y: y - 9, class: "point-label", text: p.label }, plot);
+      const right = x > box.x + box.w * 0.7;  // like the marker labels, flipped to the left near the right edge
+      if (p.label) el("text", { x: right ? x - 9 : x + 9, y: y - 9, "text-anchor": right ? "end" : "start", class: "point-label", text: p.label }, plot);
       if (p.id) ctx.anchor(p.id, x - 15, y - 15);
     }
     ctx.legend(series.map((s, i) => ({ label: s.label, color: s.color ?? i, dashed: s.dashed })).concat((vis.fills || []).filter((f) => f.label).map((f) => ({ label: f.label, color: f.color ?? series[f.series]?.color, area: true }))));
