@@ -1,7 +1,7 @@
 """Daily quotas and anonymous counts, in ``$LEMMA_HOME/metrics.db``, the same on your own computer as hosted.
 
-* Quotas cap each account's daily searches and builds, which Lemma pays Jev for with the server's key, and the
-  sources it reads on the server. They are configuration with safe defaults: a missing setting means the usual
+* Quotas cap each account's daily searches and builds, which Lemma pays Jev for with the server's key, the
+  sources it reads on the server, and the feedback it sends. They are configuration with safe defaults: a missing setting means the usual
   cap, never none, and only an explicit `unlimited` lifts one (as local.env does for development).
 * Counts are per day and event name only (lessons opened, goals reached, builds that passed or failed):
   no account, lesson, paper or address is recorded with them.
@@ -23,6 +23,7 @@ QUOTAS = {  # kind -> (environment variable, cap per account per day when it isn
     "search": ("LEMMA_DAILY_SEARCHES", 40),
     "job": ("LEMMA_DAILY_BUILDS", 20),  # outlines and builds both count: a new lesson is usually one of each
     "read": ("LEMMA_DAILY_READS", 100),  # links and files read on their own, before a lesson is requested
+    "feedback": ("LEMMA_DAILY_FEEDBACK", 10),  # messages to whoever runs Lemma, so one account can't flood them
 }
 
 _lock = threading.Lock()

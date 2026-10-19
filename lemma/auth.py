@@ -159,6 +159,13 @@ def end_session(token: str | None):
             con.execute("DELETE FROM sessions WHERE token_hash = ?", (_hash(token),))
 
 
+def delete_user(user_id: str):
+    """Removes the account and signs it out everywhere (deploy/README.md lists the rest an account deletion removes)."""
+    with _tx() as con:
+        con.execute("DELETE FROM sessions WHERE user_id = ?", (user_id,))  # foreign keys aren't enforced, so not cascaded
+        con.execute("DELETE FROM users WHERE id = ?", (user_id,))
+
+
 # ---------------------------------------------------------------- OAuth
 
 
