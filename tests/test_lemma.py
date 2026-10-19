@@ -1666,6 +1666,101 @@ class HostedServerTests(unittest.TestCase):
             httpd.server_close()
 
 
+class ServerLimitTests(unittest.TestCase):
+    """What one account can make a hosted server do at once, and what needs an account at all."""
+
+    def setUp(self):
+        self.was = (server.HOSTED, metrics.ENABLED)
+        server.HOSTED = metrics.ENABLED = True
+
+    def tearDown(self):
+        server.HOSTED, metrics.ENABLED = self.was
+        server.REQUEST.user = None
+        generate.JOBS.clear()
+
+    @staticmethod
+    def as_user(uid):
+        server.REQUEST.user = {"id": uid, "email": f"{uid}@example.com"}
+
+    def test_exporting_needs_an_account_when_hosted(self):
+        lesson, _ = server.load_example()
+        server.REQUEST.user = None
+        with self.assertRaises(server.ApiError) as e:
+            server.api_export({"lesson": dict(lesson, example=True)})
+        self.assertEqual(e.exception.status, 401)
+
+    def test_exporting_an_unknown_lesson_refuses_rather_than_skipping_the_quote_check(self):
+        lesson, _ = server.load_example()
+        self.as_user("exp1")
+        with self.assertRaises(server.ApiError) as e:
+            server.api_export({"lesson": dict(lesson, id="nosuchlesson", example=False)})
+        self.assertEqual(e.exception.status, 409)
+
+    def test_parallel_requests_cannot_overspend_the_daily_allowance(self):
+        os.environ["LEMMA_DAILY_SEARCHES"] = "3"
+        try:
+            granted, go = [], threading.Barrier(30)
+            def take():
+                go.wait()
+                granted.append(metrics.take("race1", "search"))
+            threads = [threading.Thread(target=take) for _ in range(30)]
+            for t in threads: t.start()
+            for t in threads: t.join()
+            self.assertEqual(granted.count(True), 3)
+        finally:
+            os.environ.pop("LEMMA_DAILY_SEARCHES", None)
+
+    def test_parallel_builds_cannot_pass_the_running_cap(self):
+        results, go = [], threading.Barrier(6)
+        def start():
+            self.as_user("race2")
+            go.wait()
+            try:
+                server._new_job("build"); results.append("ok")
+            except server.ApiError as e:
+                results.append(e.status)
+        threads = [threading.Thread(target=start) for _ in range(6)]
+        for t in threads: t.start()
+        for t in threads: t.join()
+        self.assertEqual(results.count("ok"), server.MAX_RUNNING_EACH)
+
+    def test_a_running_build_cannot_be_deleted_out_of_the_running_count(self):
+        self.as_user("del1")
+        job = server._new_job("request")
+        generate.JOBS[job.id] = job
+        with self.assertRaises(server.ApiError) as e:
+            server.api_lesson_delete(job.id)
+        self.assertEqual(e.exception.status, 409)
+        self.assertIn(job.id, generate.JOBS)
+
+    def test_one_account_can_read_only_two_sources_at_once(self):
+        release, started, results = threading.Event(), threading.Semaphore(0), []
+        def slow(url, **kw):
+            started.release(); release.wait(5)
+            return ingest.Paper(text="x" * 2000, title="T", kind="html", url=url)
+        def read():
+            self.as_user("papers1")
+            try:
+                server.api_papers({"url": "https://example.org/a"}); results.append("ok")
+            except server.ApiError as e:
+                results.append(e.status)
+        with patch.object(ingest, "from_url", slow):
+            first = [threading.Thread(target=read) for _ in range(2)]
+            for t in first: t.start()
+            for _ in first: started.acquire(timeout=5)
+            read()  # a third, while two are still being read
+            release.set()
+            for t in first: t.join()
+        self.assertEqual(sorted(map(str, results)), ["429", "ok", "ok"])
+
+    def test_a_large_upload_that_isnt_a_pdf_is_refused(self):
+        self.as_user("up1")
+        data = base64.b64encode(b"<html>" + b"x" * (ingest.MAX_PAGE_BYTES + 10)).decode()
+        with self.assertRaises(server.ApiError) as e:
+            server.api_papers({"data": data, "filename": "big.html", "content_type": "text/html"})
+        self.assertEqual(e.exception.status, 413)
+
+
 class DevModeTests(unittest.TestCase):
     def test_change_detection(self):
         d = Path(tempfile.mkdtemp(dir=TMP_HOME))
