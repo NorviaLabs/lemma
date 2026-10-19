@@ -79,7 +79,7 @@ def first_readable(urls: list[str], timeout: float | None = None, budget: float 
     if slow and not short:
         raise IngestError("The sites hosting this one were too slow to answer. Try again later, or download it and upload the PDF.")
     if short or not first:
-        raise IngestError("Lemma could only find a short summary of this one, not the full text. Try another result, or download it and upload the PDF.")
+        raise IngestError("OpenLemma could only find a short summary of this one, not the full text. Try another result, or download it and upload the PDF.")
     raise first
 
 
@@ -254,7 +254,7 @@ def _public_addresses(host: str, port: int) -> list[tuple]:
     for info in infos:
         ip = ipaddress.ip_address(info[4][0].split("%")[0])
         if not ip.is_global or ip.is_multicast:
-            raise IngestError("Lemma only fetches public web addresses. Upload the file instead.")
+            raise IngestError("OpenLemma only fetches public web addresses. Upload the file instead.")
     return infos
 
 
@@ -299,7 +299,7 @@ class _PublicHandler(urllib.request.HTTPHandler, urllib.request.HTTPSHandler):
 class _Redirects(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         if urllib.parse.urlsplit(newurl).scheme not in ("http", "https"):
-            raise IngestError("That link redirects somewhere Lemma can't follow.")
+            raise IngestError("That link redirects somewhere OpenLemma can't follow.")
         return super().redirect_request(req, fp, code, msg, headers, newurl)
 
 
@@ -339,5 +339,5 @@ def from_bytes(data: bytes, filename: str = "", content_type: str = "", url: str
     elif content_type.startswith("text/") or name.endswith((".txt", ".md")):
         paper = from_text(data, url)
     else:
-        raise IngestError("Lemma reads PDFs, web pages and plain text files.")
+        raise IngestError("OpenLemma reads PDFs, web pages and plain text files.")
     return paper

@@ -91,6 +91,7 @@
     search: '<circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5l3.5 3.5"/>',
     out: '<path d="M9.5 2.5h4v4M13.5 2.5L7.5 8.5M11.5 9.5v4h-9v-9h4"/>',
     shuffle: '<path d="M2.5 4.5h3l5 7h3M2.5 11.5h3l5-7h3M12 3l1.5 1.5L12 6M12 10l1.5 1.5L12 13"/>',
+    doc: '<path d="M9.5 2.5h-6v11h9v-8z"/><path d="M9.5 2.5v3h3M5.5 8.5h5M5.5 11h3.5"/>',
   };
   function icon(name) {
     const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -183,12 +184,12 @@
     "opencode-go": "Many models through an OpenCode Go plan. Fits long papers (about 1M tokens).",
     openai: "OpenAI's models, billed to your OpenAI API account.",
     claude: "Anthropic's Claude models, billed to your Claude API account. Fits long papers (about 1M tokens).",
-    chatgpt: "Your ChatGPT Plus or Pro plan, no key needed. For Lemma on your own computer.",
+    chatgpt: "Your ChatGPT Plus or Pro plan, no key needed. For OpenLemma on your own computer.",
     "claude-code": "Your Claude Pro or Max plan, through Claude Code on this computer. No key needed.",
   };
 
   // Said wherever the key comes up, so it reads the same each time.
-  const KEY_NOTE = "Your key stays in this browser and is never saved in Lemma's storage. The server uses it only while a request or build runs.";
+  const KEY_NOTE = "Your key stays in this browser and is never saved in OpenLemma's storage. The server uses it only while a request or build runs.";
 
   /* Pick a provider, then paste a key or sign in; Lemma checks either by listing the provider's models.
      `compact` (the connect step) picks the provider's default model and keeps the model list folded away. */
@@ -272,7 +273,7 @@
           : ["In a terminal, run ", h("code", {}, "claude auth login"), " and sign in with your Claude account."]),
         st.error && st.installed !== false ? h("p", { class: "muted small" }, st.error) : null,
         check,
-        h("p", { class: "muted small" }, "Lemma runs your own Claude Code with all its tools turned off and never sees your sign-in.")].filter(Boolean);
+        h("p", { class: "muted small" }, "OpenLemma runs your own Claude Code with all its tools turned off and never sees your sign-in.")].filter(Boolean);
     }
     function chatgptPart() {
       const chatgpt = signins.chatgpt || {};
@@ -285,11 +286,11 @@
         try {
           const r = await api("/api/chatgpt/login", {});
           if (tab) tab.location = r.url; else location.assign(r.url);
-          msg.replaceChildren(h("p", { class: "muted" }, "Finish signing in in the new tab. Lemma will notice when you're done."));
+          msg.replaceChildren(h("p", { class: "muted" }, "Finish signing in in the new tab. OpenLemma will notice when you're done."));
           waitForSignIn();
         } catch (err) { if (tab) tab.close(); msg.replaceChildren(errorBox(err.message)); }
       } }, `Sign in with ${p.name}`);
-      return [start, h("p", { class: "muted small" }, "Lessons count against your plan's usage. Lemma keeps your sign-in on this computer only, in ~/.lemma, and you can sign out at any time.")];
+      return [start, h("p", { class: "muted small" }, "Lessons count against your plan's usage. OpenLemma keeps your sign-in on this computer only, in ~/.lemma, and you can sign out at any time.")];
     }
     function waitForSignIn() {
       stopPoll();
@@ -337,7 +338,7 @@
     };
     const noticeLine = h("p", { class: "he-live" });
     const noticeMore = h("p");
-    const tryText = h("p", {}, "This model comes from Galton's 1886 paper on heredity. Drag the parents' height away from the middle and watch where their children land.");
+    const tryText = h("p", {}, "Regression to the mean, taught from Galton's 1886 study of heredity. Drag the parents' height away from the middle and watch where their children land.");
     const whyBtn = h("button", { type: "button", class: "he-skip", onclick: () => setStep(2, true) }, "Tell me why");
     const verbs = h("ol", { class: "verbs", "aria-live": "polite" },
       verb(1, "Try this", tryText),
@@ -363,20 +364,25 @@
     }
     setStep(exhibitStep);
 
-    // A returning learner gets the build action first; a stranger gets the example first.
-    const returning = !!(status.user || status.library_count || (status.provider || {}).ok);
+    // Two equal ways in: ask about a concept (it opens the build page already searching), or bring a source.
+    const askIn = h("input", { type: "search", id: "he-ask", placeholder: "How do vaccines work?", autocomplete: "off", maxlength: 200 });
+    const ask = (q) => { session.ask = q; session.mode = "search"; location.hash = "#/make"; };
     const el = h("section", { class: "home-exhibit", "aria-labelledby": "home-title" },
       h("div", { class: "he-intro" },
-        h("h1", { id: "home-title" }, "Learn a paper by playing with it"),
-        h("p", { class: "lead" }, "Search any topic or bring a paper, and Lemma turns it into a short lesson with a live model for each idea. You don't need to have read anything: it tells you the paper's story, walks you through a live model of each idea, then lets you try it yourself."),
-        h("div", { class: "he-cta he-start" },
-          returning
-            ? h("a", { class: "btn primary", href: "#/make" }, icon("search"), "Start a new lesson")
-            : h("button", { class: "primary", onclick: openExample }, icon("play"), "Walk the example lesson"),
-          returning
-            ? h("button", { class: "ghost", onclick: openExample }, icon("play"), "Try the example")
-            : h("a", { class: "btn ghost", href: "#/make" }, "Start a new lesson"),
-          h("span", { class: "small" }, returning ? "Search a topic or bring a paper." : "About 10 minutes, no account or key needed"))),
+        h("h1", { id: "home-title" }, "See how complex ideas work"),
+        h("p", { class: "lead" }, "Ask about any concept, or bring a paper or article. OpenLemma teaches each idea on a live model you can move, with every quote checked against its source.")),
+      h("div", { class: "he-ways" },
+        h("form", { class: "he-ask", role: "search", onsubmit: (e) => { e.preventDefault(); const q = askIn.value.trim(); if (q) ask(q); else askIn.focus(); } },
+          h("label", { for: "he-ask" }, "What do you want to understand?"),
+          h("div", { class: "he-ask-row" }, askIn, h("button", { type: "submit", class: "primary" }, "Find sources")),
+          h("div", { class: "chips", role: "group", "aria-label": "Try a concept" },
+            ["Herd immunity", "Bayes' theorem", "Random walks"].map((t) => h("button", { type: "button", class: "chip", onclick: () => ask(t) }, t)))),
+        h("div", { class: "he-or" },
+          h("span", { class: "he-or-word" }, "or"),
+          h("a", { class: "btn", href: "#/make", onclick: () => { session.mode = "link"; } }, icon("doc"), "Bring a source")),
+        h("p", { class: "he-example" },
+          h("button", { class: "ghost small", onclick: openExample }, icon("play"), "Walk the example lesson"),
+          h("span", { class: "small" }, "10 minutes, no account or key"))),
       stage,
       h("div", { class: "he-verbs" }, verbs));
 
@@ -489,9 +495,9 @@
      idea grows out of it into a numbered concept, then the page steps back and the concepts stand.
      Without JavaScript, or with reduced motion, it is a static figure beside the four steps. */
   const HALL_STEPS = [
-    ["Bring a paper", "A topic to search, a link, a PDF or a saved web page. You say who the lesson is for."],
-    ["Lemma finds the ideas", "It reads the paper and drafts an outline of its main ideas. You can review and edit it before anything is built."],
-    ["Each idea gets a live model", "A live model you can play with, checked before you see it, with the paper's own words quoted and verified."],
+    ["Ask, or bring a source", "A concept you want to understand, or a paper, article or chapter you already have. You say who the lesson is for."],
+    ["OpenLemma finds the ideas", "For a concept, it suggests encyclopedias, textbooks and papers to teach from. It reads the sources and drafts an outline you can edit before anything is built."],
+    ["Each idea gets a live model", "A model you can move, checked before you see it, with the sources' own words quoted and verified."],
     ["Learn it, then keep it", "Start while later concepts are still building. Save the lesson to your library, or download one file that works offline."],
   ];
   const MINI = {
@@ -524,7 +530,7 @@
     const sec = h("section", { class: "paper-hall", "aria-labelledby": "hall-title" },
       h("div", { class: "hall-pin" },
         h("div", { class: "hall-copy" },
-          h("h2", { id: "hall-title" }, "From a paper to a lesson"),
+          h("h2", { id: "hall-title" }, "How OpenLemma teaches a concept"),
           h("ol", { class: "hall-steps" }, stepEls)),
         art));
     exampleLesson().then((lesson) => {
@@ -655,10 +661,10 @@
     });
     return list;
   }
-  const GALLERY_LEAD = "Explore lessons across disciplines, from working models to arguments and close reading. You don't need an account or a key.";
+  const GALLERY_LEAD = "Finished visual lessons on complex ideas, from how attention reads every word at once to how ice can lock a planet in the cold. Each is taught from real sources you can check, with no account or key.";
   function gallerySection() {
     return h("section", { class: "gallery-sec", "aria-labelledby": "gallery-title" },
-      h("div", { class: "gal-head" }, h("h2", { id: "gallery-title" }, "Lessons from papers and primary sources"), h("p", { class: "lead" }, GALLERY_LEAD)),
+      h("div", { class: "gal-head" }, h("h2", { id: "gallery-title" }, "Concepts to explore"), h("p", { class: "lead" }, GALLERY_LEAD)),
       galleryList("h3"));
   }
   function showGallery() {
@@ -688,10 +694,10 @@
       if (Object.values(p.services).includes("searching") || !p.to_check) return;
       bar.max = p.to_check;
       bar.value = p.checked;
-      line.textContent = `Checking which ones Lemma can read: ${p.checked} of ${p.to_check} checked, ${p.readable} readable so far`;
+      line.textContent = `Checking which ones OpenLemma can read: ${p.checked} of ${p.to_check} checked, ${p.readable} readable so far`;
       if (phase === "asking") {  // announce the change of phase once, not every tick
         phase = "checking";
-        said.textContent = `Found ${p.to_check} sources. Checking which ones Lemma can read.`;
+        said.textContent = `Found ${p.to_check} sources. Checking which ones OpenLemma can read.`;
       }
     }
     return { el, update };
@@ -700,7 +706,7 @@
   /* The build panel for the #/make page: search a topic, paste a link or upload a paper, then start. */
   function findPanel() {
     const p = status.provider || {};
-    const signedOut = status.hosted && !status.user;  // a hosted Lemma: the example and gallery work, but papers need an account
+    const signedOut = status.hosted && !status.user;  // a hosted Lemma: the example and gallery work, but building needs an account
     const toSignIn = () => { location.hash = "#/signin?next=build"; };
     let mode = session.mode || "search";
     const qIn = h("input", { type: "search", id: "topic-q", placeholder: "For example: herd immunity, Simpson's paradox, loss aversion", autocomplete: "off", maxlength: 200 });
@@ -732,7 +738,7 @@
       } catch (err) {
         if (current()) { results.replaceChildren(); errSlot.append(errorBox(err.message)); }
       } finally {
-        if (seq === searchSeq) { submit.disabled = false; submit.textContent = "Search"; }
+        if (seq === searchSeq) { submit.disabled = false; submit.textContent = "Find sources"; }
       }
     };
     const chips = h("div", { class: "chips", role: "group", "aria-label": "Try a topic" },
@@ -779,11 +785,11 @@
         r.results.length ? h("p", { class: "muted" }, r.kind === "paper"
           ? "Choose sources for one combined lesson. We suggest the papers that best match your search, with an overview for context, as a starting point—not a guarantee of complete coverage. Change any selection before starting."
           : "Choose sources for one combined lesson. We suggest an overview, an in-depth explanation and a paper for evidence as a starting point—not a guarantee of complete coverage. Change any selection before starting.")
-          : h("p", { class: "muted" }, "Try other words, or paste a link to a paper you already have."),
+          : h("p", { class: "muted" }, "Try other words, or paste a link to a source you already have."),
         r.unavailable.length ? h("p", { class: "muted small" }, `${r.unavailable.join(" and ")} didn't answer, so ${r.unavailable.length > 1 ? "their" : "its"} results are missing. Search again in a moment to include them.`) : null,
         h("ol", { class: "result-list" }, cards), r.results.length ? make : null].filter(Boolean));
     }
-    const urlIn = h("input", { type: "url", id: "paper-url", placeholder: "https://arxiv.org/abs/… or any link to a paper", autocomplete: "off" });
+    const urlIn = h("input", { type: "url", id: "paper-url", placeholder: "https://arxiv.org/abs/… or any article link", autocomplete: "off" });
     const fileIn = h("input", { type: "file", id: "paper-file", accept: ".pdf,.html,.htm,.txt,application/pdf,text/html,text/plain" });
     const audSel = h("select", { id: "aud-select" }, AUDIENCES.map((a) => h("option", { value: a }, a)), h("option", { value: "other" }, "Someone else…"));
     const audOther = h("input", { type: "text", id: "aud-other", placeholder: "For example, a nurse curious about trial design", hidden: true, "aria-label": "Describe who the lesson is for" });
@@ -792,11 +798,11 @@
       else { audSel.value = "other"; audOther.hidden = false; audOther.value = session.audience; }
     }
     audSel.addEventListener("change", () => { audOther.hidden = audSel.value !== "other"; if (!audOther.hidden) audOther.focus(); });
-    const searchPane = h("div", {}, h("label", { for: "topic-q" }, "What do you want to learn about?"), qIn, chips);
-    const linkPane = h("div", {}, h("label", { for: "paper-url" }, "Link to the paper"), urlIn);
+    const searchPane = h("div", {}, h("label", { for: "topic-q" }, "A concept or question"), qIn, chips);
+    const linkPane = h("div", {}, h("label", { for: "paper-url" }, "Link to a paper, article or chapter"), urlIn);
     const filePane = h("div", {}, h("label", { for: "paper-file" }, "A PDF, saved web page or text file"), fileIn);
     const panes = { search: searchPane, link: linkPane, file: filePane };
-    const tabs = { search: "Search a topic", link: "Paste a link", file: "Upload a file" };
+    const tabs = { search: "Ask a question", link: "Paste a link", file: "Upload a file" };
     const tabBtns = Object.fromEntries(Object.entries(tabs).map(([k, label]) => [k, h("button", { type: "button", role: "tab", class: "seg", onclick: () => setMode(k) }, label)]));
     const errSlot = h("div");
     const submit = h("button", { type: "submit", class: "primary" });
@@ -809,21 +815,21 @@
         tabBtns[k].setAttribute("aria-selected", String(k === m));
       }
       results.hidden = m !== "search";
-      submit.textContent = m === "search" ? "Search" : "Read the paper";
+      submit.textContent = m === "search" ? "Find sources" : "Read the source";
       const to = p.ok ? [h("strong", {}, p.label)] : [signedOut ? "the AI model you connect after signing in" : "the AI model you connect next"];
       privacy.replaceChildren(...[...(m === "search"
-        ? ["Your search words go to Wikipedia, the Stanford Encyclopedia of Philosophy, LibreTexts, OpenAlex, Europe PMC and arXiv. Lemma contacts source sites to check readable full text before recommending sources. Selected text goes to ", ...to, " to build one lesson. "]
-        : ["When you continue, Lemma sends the paper's text to ", ...to, " to build the lesson. "]),
+        ? ["Your search words go to Wikipedia, the Stanford Encyclopedia of Philosophy, LibreTexts, OpenAlex, Europe PMC and arXiv. OpenLemma contacts source sites to check readable full text before recommending sources. Selected text goes to ", ...to, " to build one lesson. "]
+        : ["When you continue, OpenLemma sends the source's text to ", ...to, " to build the lesson. "]),
         status.typesafe ? (m === "search"
           ? "Your search words and each result's title and abstract also go to TypeSafe, to rank the results; the start of each selected source, to sort the lesson into a subject; and each drafted concept with the passages it is about, to check it for errors. "
-          : "The start of the paper also goes to TypeSafe, to sort the lesson into a subject, and each drafted concept with the passages it is about, to check it for errors. ") : null,
+          : "The start of the source also goes to TypeSafe, to sort the lesson into a subject, and each drafted concept with the passages it is about, to check it for errors. ") : null,
         // A sign-in provider (ChatGPT or a Claude subscription, on your own computer only) has no key to speak of.
         (status.providers || []).find((x) => x.id === p.id)?.sign_in
-          ? "Build requests, source text and progress are saved so you can return later. Lemma keeps no usage logs. "
-          : "Build requests, source text and progress are saved so you can return later; your AI key is not, and stays in this browser. Lemma keeps no usage logs. ",
+          ? "Build requests, source text and progress are saved so you can return later. OpenLemma keeps no request logs. "
+          : "Build requests, source text and progress are saved so you can return later; your AI key is not, and stays in this browser. OpenLemma keeps no request logs. ",
         p.ok ? h("a", { href: "#/settings" }, "Change model") : null].filter(Boolean));
     }
-    const form = h("form", { class: "panel bring", "aria-label": "Find something to learn", onsubmit: async (e) => {
+    const form = h("form", { class: "panel bring", "aria-label": "Start a lesson", onsubmit: async (e) => {
       e.preventDefault();
       if (signedOut) return toSignIn();
       errSlot.replaceChildren();
@@ -854,7 +860,7 @@
       } catch (err) {
         errSlot.append(errorBox(err.message));
         submit.disabled = false;
-        submit.textContent = "Read the paper";
+        submit.textContent = "Read the source";
       }
     } },
       h("div", { class: "segmented", role: "tablist", "aria-label": "How to find it" }, Object.values(tabBtns)),
@@ -869,7 +875,8 @@
         : h("div", { class: "actions" }, submit, h("span", { class: "muted small" }, "Building usually takes 1–3 minutes. You can start the first concept sooner.")));
     const recent = h("section", { class: "recent", hidden: true, "aria-labelledby": "recent-title" });
     setMode(mode);
-    if (session.search) { qIn.value = session.search.query; drawResults(); }
+    if (session.ask) { const q = session.ask; session.ask = null; runSearch(q); }  // asked on the home page
+    else if (session.search) { qIn.value = session.search.query; drawResults(); }
     return { form, results, recent };
   }
 
@@ -896,8 +903,8 @@
     setHash("#/make");
     const { form, results, recent } = findPanel();
     view(h("section", {},
-      h("h1", {}, "Find something to learn"),
-      h("p", { class: "lead" }, "Search a topic, paste a link, or upload a paper. Lemma turns it into a short lesson, with a live model for each idea."),
+      h("h1", {}, "What do you want to understand?"),
+      h("p", { class: "lead" }, "Ask about a concept, paste a link, or upload a paper, article or chapter. OpenLemma turns it into a short lesson, with a live model for each idea."),
       form, results, recent));
     loadRecent(recent);
   }
@@ -917,7 +924,7 @@
     const p = session.paper || {};
     view(h("section", { class: "panel connect", "aria-labelledby": "connect-title" },
       h("h1", { id: "connect-title" }, "Connect an AI model"),
-      h("p", { class: "lead" }, "Lemma reads ", p.title ? h("cite", { class: "words" }, p.title) : "your paper",
+      h("p", { class: "lead" }, "OpenLemma reads ", p.title ? h("cite", { class: "words" }, p.title) : "your sources",
         " with an AI model you choose, using your own key. Pick one, paste its key, and the outline starts straight away."),
       h("p", { class: "muted small" }, KEY_NOTE),
       keyForm(then, { compact: true }),
@@ -973,9 +980,9 @@
       h("p", { class: "muted" }, [o.source?.title, o.source?.authors, o.source?.year ? `(${o.source.year})` : ""].filter(Boolean).join(" · ")),
       h("p", { style: "font-size:19px;max-width:66ch" }, o.summary),
       (o.primer || []).length ? h("details", { class: "advanced" },
-        h("summary", {}, `The paper in brief: ${o.primer.length} pages read before the first concept`),
+        h("summary", {}, `The idea in brief: ${o.primer.length} pages read before the first concept`),
         ...o.primer.map((pg) => h("div", {}, h("h3", {}, pg.heading), h("p", { style: "max-width:66ch;white-space:pre-line" }, pg.body)))) : null,
-      h("p", { class: "note" }, "Here's the proposed outline, from background to the paper's main result. Reorder them, remove any, or mark the ones you already know."),
+      h("p", { class: "note" }, "Here's the proposed outline, from background to the main result. Reorder them, remove any, or mark the ones you already know."),
       list, removedBox,
       h("div", { class: "actions" }, buildBtn,
         session.requestId ? h("button", { class: "ghost", onclick: async () => { await api(`/api/requests/${session.requestId}/cancel`, {}); showRequest(session.requestId); } }, "Cancel build") : null,
@@ -1211,7 +1218,7 @@
       h("h1", {}, "Edit lesson"),
       h("p", { class: "muted", style: "max-width:66ch" }, "Correct anything before sharing. Saving re-runs every quality check against the paper: quotes must still match word for word, and every goal must still be reachable."),
       h("fieldset", {}, h("legend", {}, "Lesson"), field("Lesson title", lesson, "title"), field("Summary", lesson, "intro.summary", true)),
-      Array.isArray(lesson.primer) ? h("fieldset", {}, h("legend", {}, "The paper in brief"),
+      Array.isArray(lesson.primer) ? h("fieldset", {}, h("legend", {}, "The idea in brief"),
         ...lesson.primer.flatMap((pg, i) => [field(`Page ${i + 1} heading`, pg, "heading"), field(`Page ${i + 1} text`, pg, "body", true),
           field(`Page ${i + 1} quote (optional; must match the paper word for word)`, pg, "quote", true)])) : null,
       ...lesson.concepts.map((c, i) => h("fieldset", {}, h("legend", {}, `Concept ${i + 1}: ${c.title}`),
@@ -1226,7 +1233,7 @@
   function showSettings() {
     view(h("section", { class: "panel", style: "max-width:900px" },
       h("h1", {}, "Settings"),
-      h("p", { style: "max-width:66ch" }, "Lemma builds lessons with your own AI provider key. It sends a paper's text only when you build a lesson, and only to the provider and model chosen here. The model gets no tools: it can only read what Lemma sends and reply with text."),
+      h("p", { style: "max-width:66ch" }, "OpenLemma builds lessons with your own AI provider key. It sends a source's text only when you build a lesson, and only to the provider and model chosen here. The model gets no tools: it can only read what OpenLemma sends and reply with text."),
       h("h3", {}, "AI provider"), keyForm(),
       h("div", { class: "actions" }, h("a", { class: "btn ghost", href: "#/" }, "Back"))));
   }
@@ -1264,16 +1271,16 @@
     if (status.user) { location.hash = "#/account"; return; }
     const options = status.sign_in || [];
     view(h("section", { class: "panel signin" },
-      h("h1", {}, "Sign in to Lemma"),
+      h("h1", {}, "Sign in to OpenLemma"),
       h("p", { class: "lead" }, next === "build"
-        ? "Sign in to search for papers and build lessons. It's free, and your lessons are saved to your own library."
-        : "Sign in to turn papers into lessons and keep them in your own library."),
+        ? "Sign in to ask about a concept or bring a source and build lessons. It's free, and your lessons are saved to your own library."
+        : "Sign in to build lessons from your questions and sources, and keep them in your own library."),
       error ? errorBox(error) : null,
       options.length
         ? h("div", { class: "signin-options" }, options.map((p) =>
             h("a", { class: "btn" + (p.id === options[0].id ? " primary" : ""), href: `auth/${p.id}/start` }, `Continue with ${p.name}`)))
         : errorBox("Signing in isn't set up on this server yet."),
-      h("p", { class: "muted small" }, "Lemma keeps your name, email address and picture so it can show you your own library. ", KEY_NOTE),
+      h("p", { class: "muted small" }, "OpenLemma keeps your name, email address and picture so it can show you your own library. ", KEY_NOTE),
       h("div", { class: "actions" }, h("button", { class: "ghost", onclick: openExample }, icon("play"), "Try the example lesson first"))));
   }
 

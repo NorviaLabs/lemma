@@ -229,7 +229,7 @@ def choose_plans(job: Job, outline: dict, concepts: list[dict], audience: str) -
         raise GenerationError(f"Couldn't choose how to teach the concepts with Jev ({e}). Retry in a moment.") from None
     except (KeyError, TypeError, ValueError):
         job.update("plans", "failed", "Jev's reply couldn't be read")
-        raise GenerationError("Jev sent a choice of activities Lemma couldn't read. Retry in a moment.") from None
+        raise GenerationError("Jev sent a choice of activities OpenLemma couldn't read. Retry in a moment.") from None
     picked = sum(1 for x in chosen.values() if x["plan"])
     job.update("plans", "done", f"Plans chosen for {picked} of {len(asking)} concepts")
     return chosen

@@ -170,7 +170,7 @@ input[type=checkbox], input[type=radio] { accent-color: var(--green); }
 .ok { color: var(--good); font-weight: 600; }
 
 /* ---------- home: the doorway plate */
-.home-exhibit { --viz-max-h: max(240px, calc(100svh - 500px)); display: grid; grid-template-columns: minmax(320px, 440px) minmax(0, 1fr); grid-template-rows: auto 1fr; grid-template-areas: "intro stage" "verbs stage"; column-gap: clamp(28px, 4vw, 56px); min-height: min(calc(100svh - 160px), 860px); margin: 0 0 80px; }
+.home-exhibit { --viz-max-h: max(240px, calc(100svh - 500px)); display: grid; grid-template-columns: minmax(320px, 440px) minmax(0, 1fr); grid-template-rows: auto auto 1fr; grid-template-areas: "intro stage" "ways stage" "verbs stage"; column-gap: clamp(28px, 4vw, 56px); min-height: min(calc(100svh - 160px), 860px); margin: 0 0 80px; }
 .he-intro { grid-area: intro; padding: 12px 0 4px; }
 .he-intro h1 { font-size: clamp(36px, 3.6vw, 52px); line-height: 1.05; letter-spacing: -.025em; margin-bottom: 16px; }
 .he-intro .lead { font-size: 18px; line-height: 1.5; color: var(--body); margin-bottom: 26px; }
@@ -187,7 +187,6 @@ input[type=checkbox], input[type=radio] { accent-color: var(--green); }
 .he-quote figcaption { font: 400 14px var(--sans); color: var(--mute); }
 .he-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 6px; }
 .he-cta .small { color: var(--mute); }
-.he-start { margin: 0 0 18px; }
 .he-stage { grid-area: stage; min-width: 0; padding: 22px clamp(18px, 2.6vw, 34px) 22px; background: var(--plate); border-radius: var(--r-lg); display: flex; flex-direction: column; }
 .he-stage > .muted { margin: auto; }
 .he-from { margin: 0 0 4px; font: italic 400 17px/1.35 var(--words); color: var(--ink); }
@@ -675,7 +674,7 @@ kbd { display: inline-block; min-width: 22px; padding: 1px 6px; text-align: cent
   .lt-tab { width: auto; max-width: 140px; }
 }
 @media (max-width: 900px) {
-  .home-exhibit { grid-template-columns: minmax(0, 1fr); grid-template-areas: "intro" "stage" "verbs"; row-gap: 18px; min-height: 0; --viz-max-h: max(220px, 40svh); }
+  .home-exhibit { grid-template-columns: minmax(0, 1fr); grid-template-areas: "intro" "stage" "ways" "verbs"; row-gap: 18px; min-height: 0; --viz-max-h: max(220px, 40svh); }
   .he-verbs .verb:not(.active) { display: block; }
   .floor { grid-template-columns: minmax(0, 1fr); }
   .rail { border-right: 0; border-bottom: 1px solid var(--rule); padding: 20px 20px 18px; }
@@ -729,7 +728,6 @@ kbd { display: inline-block; min-width: 22px; padding: 1px 6px; text-align: cent
   .stat + .stat { border-top: 1px solid var(--rule); }
   .options.inline { grid-template-columns: 1fr 1fr; }
   .he-intro .lead { font-size: 16px; margin-bottom: 4px; }
-  .he-start { margin-top: 14px; }
   .he-stage { padding: 14px; }
   .hall-art { grid-template-columns: minmax(0, 1fr); padding: 14px; gap: 12px; }
   .hall-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
@@ -970,9 +968,26 @@ input[type=file]::file-selector-button { border: 0; border-radius: var(--r); bac
 .he-intro { padding-top: clamp(12px, 4vh, 48px); }
 .he-intro h1 { font-size: clamp(44px, 5vw, 74px); line-height: .98; letter-spacing: -.045em; margin-bottom: 20px; }
 .he-intro .lead { font-size: 19px; color: var(--body); }
-.he-start { margin: 6px 0 28px; }
-.he-start .primary { min-height: 52px; padding: 0 24px; font-size: 17px; }
-.he-start .ghost, .he-start .btn.ghost { min-height: 52px; }
+.wordmark .wm-open { font-weight: 500; letter-spacing: -.02em; }
+.he-ways { grid-area: ways; }
+/* the home's two ways in: ask about a concept, or bring a source */
+.he-ask > label { display: block; margin: 0 0 8px; font: 600 15px/1.3 var(--sans); color: var(--ink); }
+.he-ask-row { display: flex; gap: 8px; }
+.he-ask-row input[type=search] { flex: 1; min-width: 0; min-height: 52px; background: var(--surface); font-size: 17px; box-shadow: 0 1px 2px rgba(17, 19, 24, .05); }
+.he-ask-row .primary { flex-shrink: 0; min-height: 52px; padding: 0 22px; font-size: 17px; }
+.he-ask { margin-bottom: 12px; }
+.he-ask .chips { margin-top: 10px; }
+.he-or { display: flex; align-items: center; gap: 12px; margin: 0 0 14px; }
+.he-or-word { font: 600 15px/1 var(--sans); color: var(--mute); }
+.he-or .btn { flex: 1; justify-content: center; min-height: 52px; font-size: 17px; }
+.he-example { display: flex; flex-wrap: wrap; align-items: center; gap: 0 10px; margin: 0 0 18px; }
+.he-example .ghost { padding-left: 0; }
+.he-example span.small { color: var(--mute); }
+.home-exhibit .he-intro .lead { margin-bottom: 16px; }
+@media (max-width: 420px) {
+  .he-ask-row { flex-wrap: wrap; }
+  .he-ask-row .primary { width: 100%; }
+}
 .he-stage { background: var(--surface); border: 0; border-radius: 28px; box-shadow: var(--lift-hi); padding: clamp(20px, 2.4vw, 32px); }
 .he-stage .he-viz, .stage .viz-box { border-top: 0; padding-top: 4px; margin-top: 6px; }
 .he-from { font: 600 15px/1.35 var(--sans); color: var(--mute); }

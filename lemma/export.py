@@ -48,7 +48,7 @@ def lesson_html(lesson: dict) -> str:
     data = {k: v for k, v in lesson.items() if k not in ("plan",)}
     payload = json.dumps(data, ensure_ascii=False).replace("<", "\\u003c")  # "<" only occurs inside JSON strings
     scripts = "\n".join(f"<script>\n{_script_safe(_static(n))}\n</script>" for n in SCRIPTS)
-    title = html.escape(lesson.get("title") or "Lemma lesson")
+    title = html.escape(lesson.get("title") or "OpenLemma lesson")
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -56,7 +56,7 @@ def lesson_html(lesson: dict) -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <meta http-equiv="Content-Security-Policy" content="{CSP}">
-<meta name="generator" content="Lemma">
+<meta name="generator" content="OpenLemma">
 <title>{title}</title>
 <style>
 {_styles_with_embedded_fonts()}

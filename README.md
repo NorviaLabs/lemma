@@ -1,6 +1,6 @@
-# Lemma
+# OpenLemma
 
-Lemma turns a research paper into a short, hands-on lesson. It starts with the paper in brief. Then, for each idea, a live model shows how it works, the explanation follows with an exact quote from the paper, and then you try it yourself. It works for papers from any field. Who it is for and what it promises are in [`PRODUCT.md`](PRODUCT.md), and the visual design system is in [`DESIGN.md`](DESIGN.md). Lemma is open source under the [MIT License](LICENSE).
+OpenLemma teaches complex concepts visually. Ask about a concept, or bring a paper, article or chapter, and it builds a short, hands-on lesson: the idea in brief, then for each idea a live model that shows how it works, an explanation with an exact quote from a real source, and then you try it yourself. For a concept, it finds encyclopedias, textbooks and papers to teach from; every quote is checked against its source. It runs at [openlemma.org](https://openlemma.org), or on your own computer. Who it is for and what it promises are in [`PRODUCT.md`](PRODUCT.md), and the visual design system is in [`DESIGN.md`](DESIGN.md). OpenLemma is open source under the [MIT License](LICENSE); the code, package and command are still called `lemma`.
 
 ## Quick start
 
@@ -12,7 +12,7 @@ uv run lemma                 # installs what's needed on first run, then opens h
 
 The built-in example lesson (Galton, 1886) works straight away, with no setup.
 
-To make lessons from your own papers, Lemma needs your own key for an AI provider, and the server needs a TypeSafe key (`TYPESAFE_API_KEY`) for Jev's checks (see [Run it](#run-it)). The home page asks for one:
+To make your own lessons, OpenLemma needs your own key for an AI provider, and the server needs a TypeSafe key (`TYPESAFE_API_KEY`) for Jev's checks (see [Run it](#run-it)). The home page asks for one:
 
 | | Get a key | Fits |
 |---|---|---|
@@ -22,7 +22,7 @@ To make lessons from your own papers, Lemma needs your own key for an AI provide
 | **ChatGPT** | No key: sign in with your ChatGPT Plus or Pro account. Only when Lemma runs on your own computer | Depends on the model |
 | **Claude subscription** | No key: your Claude Pro or Max plan, through [Claude Code](https://claude.com/claude-code) signed in on this computer. Only when Lemma runs on your own computer | Depends on the model |
 
-Search a topic and choose multiple sources, paste a link, or upload a PDF. Search results suggest an overview and up to two relevant papers only after downloading and checking readable full text; blocked copies are skipped in favor of readable alternatives. Checks are cached for five minutes, so availability can still change. You can change every selection. Lemma creates one combined lesson, attributes its evidence to individual sources, and asks the model to explain meaningful disagreements.
+Ask about a concept and choose multiple sources, paste a link, or upload a PDF. Search results suggest an overview and up to two relevant papers only after downloading and checking readable full text; blocked copies are skipped in favor of readable alternatives. Checks are cached for five minutes, so availability can still change. You can change every selection. Lemma creates one combined lesson, attributes its evidence to individual sources, and asks the model to explain meaningful disagreements.
 
 Creation runs in the background. Review the proposed outline, then watch concept-by-concept progress and an approximate time range once enough work has completed. You can start checked concepts early, leave the page, and return through the build's link or My library. Completed lessons save automatically. Unreadable sources are listed as warnings; creation fails if none can be read.
 

@@ -78,7 +78,7 @@ def provider_from_request(pid: str | None = None):
     if pid and pid != req_pid:
         raise ApiError(400, "Save this provider in Settings first.")
     if HOSTED and (req_pid or DEFAULT_PROVIDER) not in providers():
-        raise ApiError(400, "This provider is only available when Lemma runs on your own computer.")
+        raise ApiError(400, "This provider is only available when OpenLemma runs on your own computer.")
     try:
         return make_provider(req_pid, key, model)
     except ProviderError as e:
@@ -278,7 +278,7 @@ def api_search_status(sid):
 def _paper(body) -> dict:
     p = PAPERS.get(str(body.get("paper_id", "")))
     if not p or p["owner"] != _owner():
-        raise ApiError(404, "Lemma no longer has that paper in memory. Please bring it again.")
+        raise ApiError(404, "OpenLemma no longer has that source in memory. Please bring it again.")
     return p
 
 
@@ -299,7 +299,7 @@ def _new_job(kind: str) -> generate.Job:
         if sum(j.owner == owner for j in running) >= MAX_RUNNING_EACH:
             raise ApiError(429, "You already have lessons building. Wait for one to finish, or cancel it.")
         if len(running) >= MAX_RUNNING:
-            raise ApiError(503, "Lemma is busy building other people's lessons. Please try again in a few minutes.")
+            raise ApiError(503, "OpenLemma is busy building other people's lessons. Please try again in a few minutes.")
     if not metrics.take(owner, "job"):
         raise ApiError(429, f"You've used today's {metrics.limit('job')} outlines and builds. They reset at midnight UTC.")
     job = generate.Job(kind)
@@ -666,7 +666,7 @@ def api_save(body):
     owner = _owner()
     source = source_for(lid, owner) or None
     if source is None:
-        raise ApiError(409, "Lemma no longer has this lesson's paper text, so it can't confirm the quotes. Bring the paper again to rebuild it.")
+        raise ApiError(409, "OpenLemma no longer has this lesson's source text, so it can't confirm the quotes. Bring the source again to rebuild it.")
     lesson = {k: v for k, v in lesson.items() if k != "plan"}
     require_valid(lesson, source)
     store.save_lesson(lesson, source, owner)
@@ -838,7 +838,7 @@ class Handler(BaseHTTPRequestHandler):
             except ApiError as e:
                 return self._json(e.status, {"error": e.message, "problems": e.problems})
             except Exception as e:
-                return self._json(500, {"error": f"Something went wrong inside Lemma (error {logs.report(f'{method} {pattern}', e)})."})
+                return self._json(500, {"error": f"Something went wrong inside OpenLemma (error {logs.report(f'{method} {pattern}', e)})."})
             if isinstance(result, str):
                 return self._send(200, result.encode("utf-8"), "text/html; charset=utf-8", {"Content-Disposition": "attachment; filename=lesson.html"})
             return self._json(200, result)

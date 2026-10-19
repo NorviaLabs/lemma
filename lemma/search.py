@@ -266,7 +266,7 @@ def judge(query: str, results: list[dict], openings: dict) -> dict:
         raise SearchError(f"Couldn't rank the results with Jev ({e}). Try again in a moment.") from None
     except (KeyError, TypeError, ValueError) as e:
         logs.report("search ranking", e)  # the error's type and where, never the search
-        raise SearchError("Jev sent a ranking Lemma couldn't read. Try again in a moment.") from None
+        raise SearchError("Jev sent a ranking OpenLemma couldn't read. Try again in a moment.") from None
     for r in results:
         relevance, role = judged[id(r)]
         r["judged"] = {"relevance": round(relevance + 1, 2), "role": role}  # on the 1 to 5 scale; not shown to learners

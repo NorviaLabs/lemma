@@ -1,5 +1,5 @@
 ---
-name: Lemma
+name: OpenLemma
 description: A learning app you can touch — every idea a live model on a bright white card, one step at a time, with ink actions, ultramarine live marks and lemon highlights.
 colors:
   canvas: "#f4f5f7"
@@ -207,17 +207,17 @@ components:
     textColor: "{colors.bad}"
 ---
 
-# Design System: Lemma
+# Design System: OpenLemma
 
 ## Overview
 
 **Creative North Star: "The Live Card"**
 
-Lemma is a learning app, not a page. Each idea is a tactile model on a bright white card that floats on a cool off-white canvas, and the learner moves through it one step at a time: a short note, the model, a goal, Continue. The feel is a modern 2026 product: confident type, generous space, soft depth and big touchable controls. It explains rather than decorates, and nothing about it reads as a blog post or a scholarly page.
+OpenLemma is a learning app, not a page. Each idea is a tactile model on a bright white card that floats on a cool off-white canvas, and the learner moves through it one step at a time: a short note, the model, a goal, Continue. The feel is a modern 2026 product: confident type, generous space, soft depth and big touchable controls. It explains rather than decorates, and nothing about it reads as a blog post or a scholarly page.
 
 Colour does three jobs. Ink is the action: buttons are black. Ultramarine marks whatever is live: the slider you can move, the step you are on, the progress you've made, focus. Lemon marks what is being talked about: the current note, the readout a note names, the goal. Everything else is neutral, so the model's data inks stay readable.
 
-This world replaced the earlier ones. The user rejected the cream-and-walnut card catalogue because it "does not look like it's made in 2026", and rejected essay-style explainers (Ciechanowski) as "a normal blog post". Earlier rounds also ruled out generic SaaS, dark and techy, and childish. Brilliant's lesson flow is the reference for the interaction, and Granola or Anthropic for the shell, but Lemma borrows neither brand.
+This world replaced the earlier ones. The user rejected the cream-and-walnut card catalogue because it "does not look like it's made in 2026", and rejected essay-style explainers (Ciechanowski) as "a normal blog post". Earlier rounds also ruled out generic SaaS, dark and techy, and childish. Brilliant's lesson flow is the reference for the interaction, and Granola or Anthropic for the shell, but OpenLemma borrows neither brand. The product was renamed from Lemma to OpenLemma on 2026-10-19 (a concept-first refocus); the rename is brand-only and the Live Card world is unchanged.
 
 **Key Characteristics:**
 - A cool canvas (#f4f5f7) with white cards; cards are separated by soft shadows, not hairline frames.
@@ -288,7 +288,7 @@ The CSS custom properties predate this world, so their names don't match their c
 
 The app sits on the canvas. Outside the lesson, content lives in a 1240px container with 24px side padding (safe areas respected), and reading blocks cap at 760px. The header is a sticky translucent bar across the full width, its content aligned to the container.
 
-**Home:** a two-column hero: the headline, lead, the black "Start a new lesson" button and the step guide on the left (minmax(320px, 460px)); the live model on a raised white card on the right. Below it, "From a paper to a lesson" and the gallery (three columns, two at 1100px, one at 640px).
+**Home:** a two-column first view (left column minmax(320px, 460px); grid areas intro, ways, verbs on the left and the stage spanning them on the right). Left, top to bottom: the display headline "See how complex ideas work"; a three-line lead (18px, 1.5); the ways in; then the step guide. The ways in treat a concept and a source as equal doors: the label "What do you want to understand?" (label style, ink), a white search field beside the screen's one black "Find sources" button (both 52px, 17px), three concept chips below; then an "or" row, the muted word "or" (600, 15px) beside a full-width default "Bring a source" button at the same 52px height with a document icon; then the example line, a small ghost ink "Walk the example lesson" with a play icon and a muted caption "10 minutes, no account or key". Right: the live Galton regression model on the raised white home card. On phones (900px and below) the grid is one column in the order intro, model, ways in, guide, so the live model comes before the ways in; below 420px the "Find sources" button wraps under the field at full width. Below the first view: the hall, "How OpenLemma teaches a concept" (four steps beside the source-to-lesson figure), then the gallery, "Concepts to explore" (three columns, two at 1100px, one at 640px).
 
 **Outline:** title, summary, the folded "paper in brief" card, then one grouped white card holding a row per concept (number dot, title and tags, idea, controls on the right), then the actions.
 
@@ -323,6 +323,9 @@ Soft, friendly corners: 12px on buttons and fields, 16px on readout tiles, optio
 
 ### Navigation
 A sticky translucent bar: the wordmark left; Gallery, Library, Settings as pill-hover links; "New lesson" as a black pill at the end.
+
+### Wordmark
+"OpenLemma" in Archivo at 22px, letter-spacing -0.035em, as one word in two weights: "Open" at 500, "Lemma" at 800, both ink. It sits after the logo: a 22px ink square with 7px corners and a lemon dot (18px with 6px corners in the lesson top bar). The weight change is the only thing that separates the two halves; no colour, space or capital tricks.
 
 ### Cards and grouped lists
 White, 22px corners, the lift shadow, no border. Lists (outline, results, library, build steps, providers) are one grouped card with 1px rule dividers between rows, never a card per row.
@@ -368,6 +371,7 @@ Tags are 26px pills on the fill grey, 600 at 13px, sentence case. Topic chips ar
 - **Do** use sentence case and tabular figures everywhere.
 - **Do** order data inks blue, amber, green, violet, and also vary dash, shape and label.
 - **Do** use the CSS variables; remember the legacy names (`--green` is ultramarine, `--ochre-*` is lemon).
+- **Do** offer a concept and a source as equal ways in where a lesson starts; the concept field carries the one black button and the source door is a default button at the same height.
 
 ### Don't:
 - **Don't** make a screen read like a blog post or an essay page: long ruled prose, a margin column of citations, a hairline-only layout.

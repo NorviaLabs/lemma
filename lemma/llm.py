@@ -137,7 +137,7 @@ class HTTPProvider(Provider):
         except (TimeoutError, socket.timeout):
             raise ProviderError(f"{self.name} took too long to reply.") from None
         except ValueError:
-            raise ProviderError(f"{self.name} sent a reply Lemma couldn't read.") from None
+            raise ProviderError(f"{self.name} sent a reply OpenLemma couldn't read.") from None
 
     def _explain(self, status: int, raw: str) -> str:
         try:

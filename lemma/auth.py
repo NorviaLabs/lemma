@@ -198,7 +198,7 @@ def finish_sign_in(pid: str, code: str) -> dict:
     if pid == "google":
         info = _call("https://openidconnect.googleapis.com/v1/userinfo", token=access)
         if not info.get("sub") or not info.get("email_verified", False):
-            raise AuthError("Lemma needs a Google account with a verified email address.")
+            raise AuthError("OpenLemma needs a Google account with a verified email address.")
         return upsert_user("google", str(info["sub"]), info.get("name") or "", info.get("email") or "", info.get("picture") or "")
     info = _call("https://api.github.com/user", token=access)
     email = info.get("email") or ""
