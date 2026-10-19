@@ -169,7 +169,7 @@ input[type=checkbox], input[type=radio] { accent-color: var(--green); }
 .ok { color: var(--good); font-weight: 600; }
 
 /* ---------- home: the doorway plate */
-.home-exhibit { --viz-max-h: max(240px, calc(100svh - 500px)); display: grid; grid-template-columns: minmax(320px, 440px) minmax(0, 1fr); grid-template-rows: auto auto 1fr; grid-template-areas: "intro stage" "ways stage" "verbs stage"; column-gap: clamp(28px, 4vw, 56px); min-height: min(calc(100svh - 160px), 860px); margin: 0 0 80px; }
+.home-exhibit { --viz-max-h: max(240px, calc(100svh - 500px)); display: grid; grid-template-columns: minmax(320px, 440px) minmax(0, 1fr); grid-template-rows: auto 1fr auto; grid-template-areas: "intro film" "ways film" "try try"; column-gap: clamp(28px, 4vw, 56px); margin: 0 0 80px; }
 .he-intro { grid-area: intro; padding: 12px 0 4px; }
 .he-intro h1 { font-size: clamp(36px, 3.6vw, 52px); line-height: 1.05; letter-spacing: -.025em; margin-bottom: 16px; }
 .he-intro .lead { font-size: 18px; line-height: 1.5; color: var(--body); margin-bottom: 26px; }
@@ -680,7 +680,7 @@ kbd { display: inline-block; min-width: 22px; padding: 1px 6px; text-align: cent
   .lt-tab { width: auto; max-width: 140px; }
 }
 @media (max-width: 900px) {
-  .home-exhibit { grid-template-columns: minmax(0, 1fr); grid-template-areas: "intro" "stage" "ways" "verbs"; row-gap: 18px; min-height: 0; --viz-max-h: max(220px, 40svh); }
+  .home-exhibit { grid-template-columns: minmax(0, 1fr); grid-template-areas: "intro" "film" "ways" "try"; row-gap: 18px; min-height: 0; --viz-max-h: max(220px, 40svh); }
   .he-verbs .verb:not(.active) { display: block; }
   .floor { grid-template-columns: minmax(0, 1fr); }
   .rail { border-right: 0; border-bottom: 1px solid var(--rule); padding: 20px 20px 18px; }
@@ -1195,34 +1195,43 @@ kbd { background: var(--surface); border-radius: 6px; }
 }
 @media (prefers-reduced-motion: reduce) { .primary:hover:not(:disabled), .gal-item:hover .gal-plate { transform: none; } }
 
-/* the launch film: a quiet control under the headline, and a theatre over the page */
-.he-film { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 12px; padding: 5px 14px 5px 5px; min-height: 36px; border: 0; border-radius: 9999px; background: var(--surface); color: var(--ink); font: 600 15px/1 var(--sans); box-shadow: 0 1px 2px rgba(17, 19, 24, .06), 0 4px 14px -6px rgba(17, 19, 24, .18); cursor: pointer; transition: box-shadow var(--ui), transform var(--ui); }
-.he-film:hover { box-shadow: 0 1px 2px rgba(17, 19, 24, .06), 0 8px 22px -8px rgba(17, 19, 24, .28); transform: translateY(-1px); }
-.he-film:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
-.he-film-play { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--surface); }
-.he-film-play .icon { width: 12px; height: 12px; margin-left: 2px; }
-.he-film-len { color: var(--mute); font-weight: 500; font-variant-numeric: tabular-nums; }
-.home-exhibit .he-intro h1 { margin-bottom: 12px; }
-
-.film-dialog { width: min(1280px, calc(100vw - 48px)); max-width: none; max-height: calc(100svh - 48px); padding: 0; border: 0; border-radius: 26px; background: var(--surface); color: var(--ink); box-shadow: 0 30px 90px -20px rgba(17, 19, 24, .45); overflow: hidden; }
-.film-dialog::backdrop { background: rgba(17, 19, 24, .62); backdrop-filter: blur(6px); }
-.film-dialog[open] { animation: film-in .32s cubic-bezier(.16, 1, .3, 1); }
-@keyframes film-in { from { opacity: 0; transform: scale(.965); } }
-.film-frame { position: relative; background: var(--paper); }
-.film-video { display: block; width: 100%; aspect-ratio: 16 / 9; max-height: calc(100svh - 130px); background: var(--paper); }
-.film-after { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 22px; padding: 24px; text-align: center; background: color-mix(in srgb, var(--paper) 98%, transparent); }
+/* the launch film, embedded in the hero: a poster and a play button until the visitor asks */
+.he-film { grid-area: film; align-self: center; min-width: 0; margin: 0; }
+.film-frame { position: relative; overflow: hidden; border-radius: 28px; background: var(--surface); box-shadow: var(--lift-hi); aspect-ratio: 16 / 9; }
+.film-video { display: block; width: 100%; height: 100%; object-fit: cover; background: var(--paper); }
+.film-cover { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: flex-start; gap: 14px; padding: clamp(16px, 2.2vw, 28px); border: 0; border-radius: 0; background: none; color: var(--surface); cursor: pointer; }
+.film-cover[hidden] { display: none; }
+.film-disc { display: grid; place-items: center; width: clamp(52px, 5vw, 68px); height: clamp(52px, 5vw, 68px); border-radius: 50%; background: var(--ink); color: var(--surface); box-shadow: 0 10px 30px -8px rgba(17, 19, 24, .55); transition: transform var(--ui), background var(--ui); }
+.film-disc .icon { width: 38%; height: 38%; margin-left: 6%; }
+.film-cover:hover .film-disc { transform: scale(1.06); }
+.film-cover:focus-visible { outline: none; }
+.film-cover:focus-visible .film-disc { outline: 3px solid var(--green); outline-offset: 4px; }
+.film-cover-row { display: flex; align-items: center; gap: 14px; }
+.film-cover-label { display: inline-flex; gap: 10px; align-items: center; padding: 10px 16px; border-radius: 9999px; background: var(--surface); color: var(--ink); font: 600 16px/1 var(--sans); box-shadow: 0 4px 14px -6px rgba(17, 19, 24, .3); }
+.film-len { color: var(--mute); font-weight: 500; font-variant-numeric: tabular-nums; }
+.film-after { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 18px; padding: 20px; text-align: center; background: color-mix(in srgb, var(--paper) 98%, transparent); }
 .film-after[hidden] { display: none; }
-.film-after-title { margin: 0; font: 800 clamp(26px, 3vw, 40px)/1.1 var(--sans); letter-spacing: -.03em; color: var(--ink); max-width: 20ch; }
+.film-after-title { margin: 0; font: 800 clamp(22px, 2.2vw, 32px)/1.12 var(--sans); letter-spacing: -.03em; color: var(--ink); max-width: 20ch; }
 .film-after-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-.film-bar { display: flex; align-items: center; gap: 16px; padding: 12px 16px 12px 22px; }
+.film-meta { display: flex; align-items: flex-start; gap: 16px; padding: 12px 8px 0; }
 .film-transcript { flex: 1; min-width: 0; font-size: 15px; color: var(--body); }
-.film-transcript summary { cursor: pointer; font-weight: 600; color: var(--ink); width: max-content; }
+.film-transcript summary { cursor: pointer; font-weight: 600; color: var(--mute); width: max-content; }
 .film-transcript ol { margin: 10px 0 4px; padding-left: 20px; max-width: 75ch; }
 .film-transcript li + li { margin-top: 4px; }
 .film-status { margin: 0; font-size: 15px; color: var(--bad); }
 .film-status:empty { display: none; }
-@media (prefers-reduced-motion: reduce) { .film-dialog[open] { animation: none; } .he-film:hover { transform: none; } }
+
+/* the live model, now right below the hero */
+.he-try { grid-area: try; display: grid; grid-template-columns: minmax(320px, 460px) minmax(0, 1fr); grid-template-areas: "title title" "verbs stage"; column-gap: clamp(28px, 4vw, 56px); row-gap: 22px; margin-top: clamp(56px, 7vw, 96px); }
+.he-try-title { grid-area: title; margin: 0; font-size: clamp(28px, 2.8vw, 38px); }
+.he-try .he-verbs { align-self: start; }
+@media (prefers-reduced-motion: reduce) { .film-cover:hover .film-disc { transform: none; } }
+@media (max-width: 900px) {
+  .he-try { grid-template-columns: minmax(0, 1fr); grid-template-areas: "title" "stage" "verbs"; }
+  .film-frame { border-radius: 20px; }
+}
 @media (max-width: 640px) {
-  .film-dialog { width: calc(100vw - 16px); border-radius: 18px; }
-  .film-bar { flex-wrap: wrap; padding: 10px 12px; }
+  .film-cover { padding: 12px; }
+  .film-cover-label { display: none; }
+  .film-disc { width: 44px; height: 44px; }
 }

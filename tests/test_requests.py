@@ -22,7 +22,8 @@ from test_multisource import MultiSourceProvider
 
 class RequestTests(unittest.TestCase):
     def setUp(self):
-        self.tmp = tempfile.TemporaryDirectory()
+        # A build settles before its thread's last progress write, so cleanup can race that write.
+        self.tmp = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
         self.env = patch.dict(os.environ, {'LEMMA_HOME': self.tmp.name})
         self.env.start()
         self.hosted = patch.object(server, 'HOSTED', False)

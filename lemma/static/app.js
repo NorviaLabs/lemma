@@ -371,8 +371,6 @@
     const el = h("section", { class: "home-exhibit", "aria-labelledby": "home-title" },
       h("div", { class: "he-intro" },
         h("h1", { id: "home-title" }, "See how complex ideas work"),
-        h("button", { type: "button", class: "he-film", "aria-haspopup": "dialog", onclick: (e) => openFilm(e.currentTarget) },
-          h("span", { class: "he-film-play", "aria-hidden": "true" }, icon("play")), "Watch the film", h("span", { class: "he-film-len" }, FILM.length)),
         h("p", { class: "lead" }, "Ask about any concept, or bring a paper or article. OpenLemma teaches each idea on a live model you can move, with every quote checked against its source.")),
       h("div", { class: "he-ways" },
         h("form", { class: "he-ask", role: "search", onsubmit: (e) => { e.preventDefault(); const q = askIn.value.trim(); if (q) ask(q); else askIn.focus(); } },
@@ -386,8 +384,11 @@
         h("p", { class: "he-example" },
           h("button", { class: "ghost small", onclick: openExample }, icon("play"), "Walk the example lesson"),
           h("span", { class: "small" }, "10 minutes, no account or key"))),
-      stage,
-      h("div", { class: "he-verbs" }, verbs));
+      filmPlayer(),
+      h("div", { class: "he-try" },
+        h("h2", { class: "he-try-title" }, "Try it yourself"),
+        h("div", { class: "he-verbs" }, verbs),
+        stage));
 
     exampleLesson().then((lesson) => {
       const c = lesson.concepts.find((x) => x.id === "regression_line");
@@ -1151,8 +1152,8 @@
     } catch (err) { alertInline(err.message); }
   }
 
-  /* The launch film: offered under the headline, played only when asked, in a theatre over the page. */
-  const FILM = { hd: "static/film-v2-1080.mp4", sd: "static/film-v2-720.mp4", poster: "static/film-v2-poster.jpg", length: "0:32" };
+  /* The launch film: embedded in the hero, loaded and played only when the visitor presses play. */
+  const FILM = { hd: "static/film-v2-1080.mp4", sd: "static/film-v2-720.mp4", poster: "static/film-v2-poster-move.jpg", length: "0:32" };
   const FILM_TRANSCRIPT = [
     "Some ideas are hard to explain. Don't read about it. Watch it move.",
     "Ask about any concept: the OpenLemma home page, with “How does wave interference work?” typed into the ask box.",
@@ -1160,32 +1161,33 @@
     "Every quote, checked against its source: a sentence from Wikipedia's “Wave interference” article is highlighted and found word for word.",
     "Any subject: lessons in physics, biology, epidemiology, machine learning, climate science and social science. Then the OpenLemma logo and openlemma.org.",
   ];
-  function openFilm(trigger) {
-    const video = h("video", { class: "film-video", controls: true, preload: "auto", poster: FILM.poster, "aria-label": "OpenLemma launch film, 33 seconds, with music" });
-    video.src = matchMedia("(max-width: 900px)").matches ? FILM.sd : FILM.hd;
+  function filmPlayer() {
+    const video = h("video", { class: "film-video", preload: "none", poster: FILM.poster, playsinline: true, "aria-label": "OpenLemma launch film, 32 seconds, with music" });
     const status = h("p", { class: "film-status", role: "status" });
-    const close = () => dialog.close();
+    const start = () => {
+      if (!video.src) video.src = matchMedia("(max-width: 900px)").matches ? FILM.sd : FILM.hd;
+      video.controls = true;
+      cover.hidden = after.hidden = true;
+      video.play().catch(() => {});  // some browsers refuse; the native controls are there now
+    };
+    const cover = h("button", { type: "button", class: "film-cover", onclick: start, "aria-label": `Play the OpenLemma film, ${FILM.length}, with sound` },
+      h("span", { class: "film-cover-row", "aria-hidden": "true" },
+        h("span", { class: "film-disc" }, icon("play")),
+        h("span", { class: "film-cover-label" }, "Watch the film", h("span", { class: "film-len" }, FILM.length))));
     const after = h("div", { class: "film-after", hidden: true },
       h("p", { class: "film-after-title" }, "Now try it on something you want to understand."),
       h("div", { class: "film-after-actions" },
-        h("button", { type: "button", class: "primary", onclick: () => { close(); document.getElementById("he-ask")?.focus(); } }, icon("search"), "Ask about a concept"),
-        h("a", { class: "btn", href: "#/make", onclick: () => { session.mode = "link"; close(); } }, icon("doc"), "Bring a source"),
-        h("button", { type: "button", class: "ghost", onclick: () => { after.hidden = true; video.currentTime = 0; video.play(); } }, icon("refresh"), "Replay")));
-    const dialog = h("dialog", { class: "film-dialog", "aria-label": "The OpenLemma film" },
-      h("div", { class: "film-frame" }, video, after),
-      h("div", { class: "film-bar" },
-        h("details", { class: "film-transcript" }, h("summary", {}, "Transcript"), h("ol", {}, FILM_TRANSCRIPT.map((t) => h("li", {}, t)))),
-        status,
-        h("button", { type: "button", class: "ghost film-close", onclick: close }, icon("cross"), "Close")));
-    video.addEventListener("ended", () => { after.hidden = false; after.querySelector("button").focus(); });
-    video.addEventListener("play", () => { after.hidden = true; });
+        h("button", { type: "button", class: "primary", onclick: () => document.getElementById("he-ask")?.focus() }, icon("search"), "Ask about a concept"),
+        h("a", { class: "btn", href: "#/make", onclick: () => { session.mode = "link"; } }, icon("doc"), "Bring a source"),
+        h("button", { type: "button", class: "ghost", onclick: () => { video.currentTime = 0; start(); } }, icon("refresh"), "Replay")));
+    video.addEventListener("ended", () => { after.hidden = false; after.querySelector("button").focus({ preventScroll: true }); });
     video.addEventListener("error", () => status.replaceChildren("The film couldn't load. ", h("a", { href: video.currentSrc || video.src, target: "_blank", rel: "noopener" }, "Open the video file"), "."));
-    dialog.addEventListener("close", () => { video.pause(); video.removeAttribute("src"); video.load(); dialog.remove(); trigger?.focus(); });
-    dialog.addEventListener("click", (e) => { if (e.target === dialog) close(); });  // a click on the dimmed backdrop
-    document.body.append(dialog);
-    dialog.showModal();
-    video.play().catch(() => {});  // some browsers refuse; the native controls are there
-    cleanups.push(() => dialog.open && dialog.close());
+    cleanups.push(() => { video.pause(); video.removeAttribute("src"); video.load(); });
+    return h("figure", { class: "he-film" },
+      h("div", { class: "film-frame" }, video, cover, after),
+      h("figcaption", { class: "film-meta" },
+        h("details", { class: "film-transcript" }, h("summary", {}, "Transcript"), h("ol", {}, FILM_TRANSCRIPT.map((t) => h("li", {}, t)))),
+        status));
   }
 
   async function openExample() { try { openLesson(await api("/api/example")); } catch (err) { showHome(err.message); } }
