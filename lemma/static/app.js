@@ -371,6 +371,8 @@
     const el = h("section", { class: "home-exhibit", "aria-labelledby": "home-title" },
       h("div", { class: "he-intro" },
         h("h1", { id: "home-title" }, "See how complex ideas work"),
+        h("button", { type: "button", class: "he-film", "aria-haspopup": "dialog", onclick: (e) => openFilm(e.currentTarget) },
+          h("span", { class: "he-film-play", "aria-hidden": "true" }, icon("play")), "Watch the film", h("span", { class: "he-film-len" }, FILM.length)),
         h("p", { class: "lead" }, "Ask about any concept, or bring a paper or article. OpenLemma teaches each idea on a live model you can move, with every quote checked against its source.")),
       h("div", { class: "he-ways" },
         h("form", { class: "he-ask", role: "search", onsubmit: (e) => { e.preventDefault(); const q = askIn.value.trim(); if (q) ask(q); else askIn.focus(); } },
@@ -1147,6 +1149,43 @@
       if (!res.ok) throw new Error((await res.json().catch(() => null))?.error || `Download failed (${res.status}). Try again in a moment.`);
       download(`${slug(lesson.title)}.html`, await res.text());
     } catch (err) { alertInline(err.message); }
+  }
+
+  /* The launch film: offered under the headline, played only when asked, in a theatre over the page. */
+  const FILM = { hd: "static/film-v2-1080.mp4", sd: "static/film-v2-720.mp4", poster: "static/film-v2-poster.jpg", length: "0:32" };
+  const FILM_TRANSCRIPT = [
+    "Some ideas are hard to explain. Don't read about it. Watch it move.",
+    "Ask about any concept: the OpenLemma home page, with “How does wave interference work?” typed into the ask box.",
+    "Ideas become models you can move: two waves on the same stretch of water add up, cancel to flat water, then add up again as one is shifted.",
+    "Every quote, checked against its source: a sentence from Wikipedia's “Wave interference” article is highlighted and found word for word.",
+    "Any subject: lessons in physics, biology, epidemiology, machine learning, climate science and social science. Then the OpenLemma logo and openlemma.org.",
+  ];
+  function openFilm(trigger) {
+    const video = h("video", { class: "film-video", controls: true, preload: "auto", poster: FILM.poster, "aria-label": "OpenLemma launch film, 33 seconds, with music" });
+    video.src = matchMedia("(max-width: 900px)").matches ? FILM.sd : FILM.hd;
+    const status = h("p", { class: "film-status", role: "status" });
+    const close = () => dialog.close();
+    const after = h("div", { class: "film-after", hidden: true },
+      h("p", { class: "film-after-title" }, "Now try it on something you want to understand."),
+      h("div", { class: "film-after-actions" },
+        h("button", { type: "button", class: "primary", onclick: () => { close(); document.getElementById("he-ask")?.focus(); } }, icon("search"), "Ask about a concept"),
+        h("a", { class: "btn", href: "#/make", onclick: () => { session.mode = "link"; close(); } }, icon("doc"), "Bring a source"),
+        h("button", { type: "button", class: "ghost", onclick: () => { after.hidden = true; video.currentTime = 0; video.play(); } }, icon("refresh"), "Replay")));
+    const dialog = h("dialog", { class: "film-dialog", "aria-label": "The OpenLemma film" },
+      h("div", { class: "film-frame" }, video, after),
+      h("div", { class: "film-bar" },
+        h("details", { class: "film-transcript" }, h("summary", {}, "Transcript"), h("ol", {}, FILM_TRANSCRIPT.map((t) => h("li", {}, t)))),
+        status,
+        h("button", { type: "button", class: "ghost film-close", onclick: close }, icon("cross"), "Close")));
+    video.addEventListener("ended", () => { after.hidden = false; after.querySelector("button").focus(); });
+    video.addEventListener("play", () => { after.hidden = true; });
+    video.addEventListener("error", () => status.replaceChildren("The film couldn't load. ", h("a", { href: video.currentSrc || video.src, target: "_blank", rel: "noopener" }, "Open the video file"), "."));
+    dialog.addEventListener("close", () => { video.pause(); video.removeAttribute("src"); video.load(); dialog.remove(); trigger?.focus(); });
+    dialog.addEventListener("click", (e) => { if (e.target === dialog) close(); });  // a click on the dimmed backdrop
+    document.body.append(dialog);
+    dialog.showModal();
+    video.play().catch(() => {});  // some browsers refuse; the native controls are there
+    cleanups.push(() => dialog.open && dialog.close());
   }
 
   async function openExample() { try { openLesson(await api("/api/example")); } catch (err) { showHome(err.message); } }
