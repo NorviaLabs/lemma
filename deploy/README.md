@@ -1,6 +1,6 @@
-# Lemma at tools.mohitranka.com/lemma
+# Lemma at openlemma.org
 
-Lemma runs in Docker on a free-tier Google Cloud e2-micro VM (`lemma` in project `lemma-511811`, zone `us-central1-a`, Ubuntu 24.04, 34.172.130.18). A Cloudflare Tunnel (`lemma`, b9f37d76-4c40-4ceb-9e02-8988a0755f90) carries `https://tools.mohitranka.com/lemma/*` to it, so the VM opens no ports beyond SSH and Cloudflare handles HTTPS. Anything else on tools.mohitranka.com gets a 404 from the tunnel, which leaves room for other tools.
+Lemma runs in Docker on a free-tier Google Cloud e2-micro VM (`lemma` in project `lemma-511811`, zone `us-central1-a`, Ubuntu 24.04, 34.172.130.18). A Cloudflare Tunnel (`lemma`, b9f37d76-4c40-4ceb-9e02-8988a0755f90) carries `https://openlemma.org` to it, so the VM opens no ports beyond SSH and Cloudflare handles HTTPS. The domain is registered with Cloudflare Registrar. Two Cloudflare redirect rules send `www.openlemma.org` and the old address, `tools.mohitranka.com/lemma/*`, to `https://openlemma.org`.
 
 Lemma's data (`accounts.db` and each account's library) lives in the `deploy_lemma-data` Docker volume.
 
@@ -21,14 +21,14 @@ Commit and push directly to `main` before deploying; do not create a pull reques
 
 ## Sign-in apps
 
-- GitHub: OAuth app "Lemma" under github.com/settings/developers, callback `https://tools.mohitranka.com/lemma/auth/github/callback`.
-- Google: project `lemma-511811` → Google Auth Platform, External and in production, web client "Lemma web" with callback `https://tools.mohitranka.com/lemma/auth/google/callback`. Its privacy policy link is `https://tools.mohitranka.com/lemma/privacy`.
+- GitHub: OAuth app "Lemma" under github.com/settings/developers, callback `https://openlemma.org/auth/github/callback`.
+- Google: project `lemma-511811` → Google Auth Platform, External and in production, web client "Lemma web" with callback `https://openlemma.org/auth/google/callback`. Its privacy policy link is `https://openlemma.org/privacy`.
 
 A new secret from either goes into `lemma.env`, followed by `push.sh`.
 
 ## Rebuilding from scratch
 
-1. `cloudflared tunnel login`, then `cloudflared tunnel create --credentials-file deploy/cloudflared/lemma.json lemma`. Put the new tunnel id in `cloudflared/config.yml`, then run `cloudflared tunnel route dns lemma tools.mohitranka.com`.
+1. `cloudflared tunnel login`, then `cloudflared tunnel create --credentials-file deploy/cloudflared/lemma.json lemma`. Put the new tunnel id in `cloudflared/config.yml`, then run `cloudflared tunnel route dns lemma openlemma.org`.
 2. Any Ubuntu VM reachable over SSH works, as long as it has about 1 GB of RAM or more.
 3. Fill in `lemma.env` and run `push.sh`.
 

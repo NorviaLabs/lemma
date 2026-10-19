@@ -2,7 +2,6 @@
 tunnel: b9f37d76-4c40-4ceb-9e02-8988a0755f90
 credentials-file: /etc/cloudflared/lemma.json
 ingress:
-  - hostname: tools.mohitranka.com
-    path: ^/lemma(/.*)?$
+  - hostname: openlemma.org
     service: http://lemma:8765
   - service: http_status:404

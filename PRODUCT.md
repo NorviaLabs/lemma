@@ -15,7 +15,7 @@ Secondary users, all served but never at the primary user's expense:
 - **Educators** preparing an interactive handout for a class, editing it, and sharing it before a seminar.
 - **Researchers** explaining their own work to a wider audience, alongside the paper.
 
-**Distribution:** open source (MIT), in two forms. A hosted Lemma at tools.mohitranka.com/lemma, where learners sign in with Google or GitHub and bring their own AI provider key; and a local Lemma that developers and curious learners run on their own computers. A stranger's first visit or first run therefore matters, including signing in or installing, connecting an AI provider, and getting to a first lesson.
+**Distribution:** open source (MIT), in two forms. A hosted Lemma at openlemma.org, where learners sign in with Google or GitHub and bring their own AI provider key; and a local Lemma that developers and curious learners run on their own computers. A stranger's first visit or first run therefore matters, including signing in or installing, connecting an AI provider, and getting to a first lesson.
 
 ## Product Purpose
 
