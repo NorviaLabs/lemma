@@ -944,8 +944,8 @@ body { background: var(--paper); }
 .lt-mark .logo { width: 22px; height: 22px; flex-shrink: 0; display: block; }
 .site-nav a { white-space: nowrap; border-radius: 9999px; padding: 10px 14px; color: var(--body); }
 .site-nav a:hover { background: var(--plate-2); color: var(--ink); }
-.site-nav a[href="#/make"] { order: 9; margin-left: 6px; background: var(--ink); color: #fff; }
-.site-nav a[href="#/make"]:hover { background: #2a2d36; color: #fff; }
+.site-nav a[href$="#/make"] { order: 9; margin-left: 6px; background: var(--ink); color: #fff; }
+.site-nav a[href$="#/make"]:hover { background: #2a2d36; color: #fff; }
 /* signed out, the way back in is a door, not one more link */
 .site-nav .account-link.signin-link { color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--rule-strong); padding: 10px 16px; margin-left: 6px; }
 .site-nav .account-link.signin-link:hover { background: transparent; box-shadow: inset 0 0 0 1.5px var(--ink); }
@@ -1210,7 +1210,7 @@ kbd { background: var(--surface); border-radius: 6px; }
   .site-head { gap: 4px 10px; padding-left: max(24px, env(safe-area-inset-left)); padding-right: max(24px, env(safe-area-inset-right)); }
   .site-nav { gap: 0; }
   .site-nav a { padding: 8px 9px; font-size: 14px; }
-  .site-nav a[href="#/make"] { margin-left: 4px; }
+  .site-nav a[href$="#/make"] { margin-left: 4px; }
   .he-intro h1 { font-size: 44px; }
   .he-stage { border-radius: 22px; padding: 14px; }
   .outline-list { padding: 4px; }
@@ -1316,4 +1316,33 @@ kbd { background: var(--surface); border-radius: 6px; }
 @media (max-width: 720px) {
   .site-foot { grid-template-columns: minmax(0, 1fr); padding-top: 32px; }
   .foot-nav { gap: 40px; }
+}
+
+/* privacy and terms: a document to read, at a comfortable measure, the gist first */
+main.doc { max-width: 808px; padding-top: clamp(24px, 5vw, 56px); }
+.doc-head h1 { margin: 0 0 12px; }
+.doc-meta { margin: 0; font-size: 15px; line-height: 1.5; color: var(--mute); }
+.doc-meta a, .doc a { color: var(--ink); text-decoration-color: var(--rule-strong); text-underline-offset: 3px; }
+.doc a:hover { text-decoration-color: var(--ink); }
+.doc-agree { margin: 16px 0 0; font-size: 17px; color: var(--body); }
+.doc-short { margin: 32px 0 8px; padding: clamp(20px, 3vw, 28px) clamp(20px, 3vw, 32px); background: var(--surface); border-radius: 22px; box-shadow: var(--lift-hi); }
+.doc section.doc-short > h2 { margin: 0 0 12px; font-size: 17px; letter-spacing: 0; }
+.doc-short ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.doc-short li { position: relative; padding-left: 22px; font-size: 16.5px; line-height: 1.5; color: var(--ink); }
+.doc-short li::before { content: ""; position: absolute; left: 4px; top: .62em; width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+.doc section > h2 { margin: 52px 0 16px; font-size: clamp(22px, 2.4vw, 26px); }
+.doc p, .doc dd { font-size: 17px; line-height: 1.65; color: var(--body); max-width: 68ch; }
+.doc p { margin: 0 0 14px; }
+.doc-list { margin: 0; }
+.doc-list dt { margin: 0; font: 600 17px/1.4 var(--sans); color: var(--ink); }
+.doc-list dd { margin: 4px 0 22px; }
+.doc-table { margin: 0 0 20px; border-top: 1px solid var(--rule); }
+.doc-table > div { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 6px 24px; padding: 16px 0; border-bottom: 1px solid var(--rule); }
+.doc-table dt { margin: 0; font: 600 16px/1.6 var(--sans); color: var(--ink); }
+.doc-table dd { margin: 0; }
+.doc-table dd ul { margin: 8px 0 10px; padding-left: 20px; }
+.doc-table dd li { margin: 0 0 6px; }
+@media (max-width: 640px) {
+  .doc-table > div { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .doc p, .doc dd { font-size: 16px; }
 }

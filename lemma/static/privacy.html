@@ -5,45 +5,98 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
 <title>OpenLemma privacy</title>
+<meta name="description" content="What OpenLemma keeps, what it never keeps, and who else sees your data.">
 <link rel="icon" href="static/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="static/icon-180.png">
 <link rel="stylesheet" href="static/styles.css">
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <header class="site-head">
   <a class="wordmark" href="./" aria-label="OpenLemma home"><svg class="logo" viewBox="0 0 28 28" aria-hidden="true"><path d="M21.8 7.6A10 10 0 1 0 24 14" fill="none" stroke="#111318" stroke-width="3.6" stroke-linecap="round"/><circle cx="23.2" cy="9.4" r="3.9" fill="#ffe46b" stroke="#111318" stroke-width="1.8"/><circle cx="14" cy="14" r="2.4" fill="#111318"/></svg><span class="wm-name"><span class="wm-open">Open</span>Lemma</span></a>
+  <nav class="site-nav" aria-label="Main">
+    <a href="./#/make">New lesson</a>
+    <a href="./#/gallery">Gallery</a>
+  </nav>
 </header>
-<main id="main" class="panel" style="max-width:760px;margin:32px auto">
-<h1>Privacy</h1>
-<p class="muted">Last updated 19 October 2026. OpenLemma at openlemma.org is run by Mohit Ranka.</p>
+<main id="main" class="doc">
+<header class="doc-head">
+  <h1>Privacy</h1>
+  <p class="doc-meta">Last updated 20 October 2026 · OpenLemma at openlemma.org is run by Mohit Ranka · <a href="terms">Terms of use</a></p>
+</header>
 
-<h2>What OpenLemma keeps</h2>
-<ul>
-  <li><strong>Your account.</strong> When you sign in with Google, OpenLemma keeps your name, email address and profile picture link, and when you joined and last signed in. It asks Google for nothing else.</li>
-  <li><strong>A session.</strong> A cookie keeps you signed in for up to 30 days. The server stores only a fingerprint (hash) of it.</li>
-  <li><strong>Daily usage.</strong> How many searches and lesson builds your account started each day, to apply the daily limits. These counts are deleted after seven days.</li>
-  <li><strong>Anonymous counts.</strong> Totals per day of things like lessons opened, goals reached with and without <strong>Show me</strong>, and builds that passed or failed OpenLemma's checks, to learn whether lessons teach well. Only the day and the kind of event are stored: not who you are, which lesson, or what you searched for.</li>
-  <li><strong>Lessons and builds.</strong> Lesson requests, selected source text and progress are saved so you can leave and return. Completed lessons are saved automatically. Interrupted builds can be retried. Only your account can open them; delete stopped builds and lessons from your library to remove them.</li>
-</ul>
+<section class="doc-short" aria-labelledby="short">
+  <h2 id="short">In short</h2>
+  <ul>
+    <li>OpenLemma keeps your Google name, email address and picture, and the lessons and builds you make.</li>
+    <li>Your AI provider key is never stored. It stays in your browser, which sends it only with each request that needs it.</li>
+    <li>No advertising, no tracking cookies and no request logs. Nothing is sold.</li>
+    <li>Delete lessons from your library at any time; email us to delete your whole account.</li>
+  </ul>
+</section>
 
-<h2>What OpenLemma doesn't keep</h2>
-<ul>
-  <li><strong>Your AI provider key.</strong> It is never saved in OpenLemma's storage: not with your account, your lessons or your builds. It stays in your browser, which sends it with each request that needs it. The server holds it in memory only while that request or build runs, and never writes it to disk. If a provider's error message repeats the key, OpenLemma removes it before saving the build. To retry a build, your browser sends the key again.</li>
-  <li><strong>Usage logs.</strong> The server writes no request logs, and the site has no advertising and no tracking cookies. When something inside OpenLemma breaks, it records an error id, the time and which part of OpenLemma's code failed, but not who you are, what you asked for, your sources or your key.</li>
-</ul>
+<section aria-labelledby="keeps">
+  <h2 id="keeps">What OpenLemma keeps</h2>
+  <dl class="doc-list">
+    <dt>Your account</dt>
+    <dd>When you sign in with Google, OpenLemma keeps your name, email address and profile picture link, and when you joined and last signed in. It asks Google for nothing else.</dd>
+    <dt>A session</dt>
+    <dd>A cookie keeps you signed in for up to 30 days. The server stores only a fingerprint (hash) of it.</dd>
+    <dt>Lessons and builds</dt>
+    <dd>Lesson requests, the text of the sources you choose, and build progress are saved so you can leave and come back. Finished lessons are saved to your library automatically, and an interrupted build can be retried. Only your account can open them. Delete stopped builds and lessons from your library to remove them.</dd>
+    <dt>Daily usage</dt>
+    <dd>How many searches, lesson builds and source reads your account started each day, to apply the daily limits. These counts are deleted after seven days.</dd>
+    <dt>Anonymous counts</dt>
+    <dd>Totals per day of things like lessons opened, goals reached with and without <strong>Show me</strong>, and builds that passed or failed OpenLemma's checks, to learn whether lessons teach well. Only the day and the kind of event are stored: not who you are, which lesson, or what you searched for.</dd>
+  </dl>
+</section>
 
-<h2>Who else sees your data</h2>
-<ul>
-  <li><strong>Google Cloud</strong> hosts OpenLemma: your account, your library, your sources' text and your build requests are stored on a Google Compute Engine server in the United States (Iowa, us-central1).</li>
-  <li><strong>Your AI provider</strong> (OpenCode, OpenAI or Anthropic, as you choose) receives your sources' text when you build a lesson, under your own key and their terms.</li>
-  <li><strong>TypeSafe</strong> receives the words you search for with each result's title and abstract (or, without an abstract, the start of its text), to rank the results by how well they would teach what you searched for; the title and opening text of each source of a lesson you build, to sort the lesson into a subject such as Medicine or Economics; and each concept the AI model drafts, with the passages of your sources it is about, to check it for errors before you see it. It never receives your key or your account. OpenLemma pays for it with the server's TypeSafe key, and every search and lesson build uses it.</li>
-  <li><strong>Wikipedia, the Stanford Encyclopedia of Philosophy, LibreTexts, OpenAlex, Europe PMC and arXiv</strong> receive the words you search for. OpenLemma contacts result sites to check readable full text before recommending sources. A link you paste is fetched from its own site.</li>
-  <li><strong>Cloudflare</strong> carries traffic to the site, and counts page views with Cloudflare Web Analytics, which uses no cookies and doesn't identify you. <strong>Google</strong> handles signing in.</li>
-</ul>
-<p>Nothing is sold or shared for advertising.</p>
+<section aria-labelledby="never">
+  <h2 id="never">What OpenLemma doesn't keep</h2>
+  <dl class="doc-list">
+    <dt>Your AI provider key</dt>
+    <dd>It is never saved in OpenLemma's storage: not with your account, your lessons or your builds. Your browser keeps it and sends it with each request that needs it. The server holds it in memory only while that request or build runs, and never writes it to disk. If a provider's error message repeats the key, OpenLemma removes it before saving the build. To retry a build, your browser sends the key again.</dd>
+    <dt>Usage logs</dt>
+    <dd>The server writes no request logs. When something inside OpenLemma breaks, it records an error id, the time and which part of its code failed, but not who you are, what you asked for, your sources or your key.</dd>
+    <dt>Your network address</dt>
+    <dd>To stop floods of requests, the server counts recent requests from each network address in memory for up to 10 minutes. The address is never written to disk.</dd>
+  </dl>
+</section>
 
-<h2>Deleting your data</h2>
-<p>Delete any saved lesson from your library at any time. To delete your account and everything in it, email <a href="mailto:contact@openlemma.org">contact@openlemma.org</a> from the address you signed in with.</p>
+<section aria-labelledby="others">
+  <h2 id="others">Who else sees your data</h2>
+  <dl class="doc-table">
+    <div><dt>Google Cloud</dt><dd>Hosts OpenLemma. Your account, your library, your sources' text and your build requests are stored on a Google Compute Engine server in the United States (Iowa, us-central1).</dd></div>
+    <div><dt>Google</dt><dd>Handles signing in.</dd></div>
+    <div><dt>Your AI provider</dt><dd>OpenCode, OpenAI or Anthropic, as you choose, receives your sources' text when you build a lesson, under your own key and their terms.</dd></div>
+    <div><dt>TypeSafe</dt><dd>Receives, for every search and lesson build:
+      <ul>
+        <li>the words you search for, with each result's title and abstract (or, without an abstract, the start of its text), to rank the results by how well they would teach what you searched for;</li>
+        <li>the title and opening text of each source of a lesson you build, to sort the lesson into a subject such as Medicine or Economics;</li>
+        <li>each concept the AI model drafts, with the passages of your sources it is about, to check it for errors before you see it.</li>
+      </ul>
+      It never receives your key or your account. OpenLemma pays for it with the server's TypeSafe key.</dd></div>
+    <div><dt>Search sources</dt><dd>Wikipedia, the Stanford Encyclopedia of Philosophy, LibreTexts, OpenAlex, Europe PMC and arXiv receive the words you search for. OpenLemma contacts result sites to check that their full text is readable before recommending them, and fetches a link you paste from its own site.</dd></div>
+    <div><dt>Cloudflare</dt><dd>Carries traffic to the site, and counts page views with Cloudflare Web Analytics, which uses no cookies and doesn't identify you.</dd></div>
+  </dl>
+  <p>Nothing is sold or shared for advertising.</p>
+</section>
+
+<section aria-labelledby="delete">
+  <h2 id="delete">Deleting your data</h2>
+  <p>Delete any saved lesson from your library at any time. To delete your account and everything in it, email <a href="mailto:contact@openlemma.org">contact@openlemma.org</a> from the address you signed in with.</p>
+</section>
 </main>
+<footer class="site-foot">
+  <div class="foot-brand">
+    <a class="wordmark" href="./" aria-label="OpenLemma home"><svg class="logo" viewBox="0 0 28 28" aria-hidden="true"><path d="M21.8 7.6A10 10 0 1 0 24 14" fill="none" stroke="#111318" stroke-width="3.6" stroke-linecap="round"/><circle cx="23.2" cy="9.4" r="3.9" fill="#ffe46b" stroke="#111318" stroke-width="1.8"/><circle cx="14" cy="14" r="2.4" fill="#111318"/></svg><span class="wm-name"><span class="wm-open">Open</span>Lemma</span></a>
+    <p class="foot-line">See how complex ideas work.</p>
+    <p class="foot-note">Lessons are generated by AI and can contain errors, so check them against the source.</p>
+  </div>
+  <nav class="foot-nav" aria-label="Footer">
+    <div><h2 class="foot-h">Learn</h2><ul><li><a href="./#/make">New lesson</a></li><li><a href="./#/gallery">Gallery</a></li><li><a href="./#/example">Example lesson</a></li></ul></div>
+    <div><h2 class="foot-h">OpenLemma</h2><ul><li><a href="privacy" aria-current="page">Privacy</a></li><li><a href="terms">Terms</a></li><li><a href="mailto:contact@openlemma.org">contact@openlemma.org</a></li></ul></div>
+  </nav>
+</footer>
 </body>
 </html>
