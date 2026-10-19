@@ -30,10 +30,14 @@ MAX_PDF_PAGES = 500
 FETCH_DEADLINE = 60  # seconds for a whole download, however slowly the site sends it
 PDF_DEADLINE = 60  # seconds to read one PDF's text; a small file can expand to hours of work
 READER_WAIT = 30  # seconds to wait for a free PDF reader before giving up
+PDF_MEMORY = 512 * 1024 * 1024  # address space for the PDF reader; a small file can expand to gigabytes
+MAX_DOWNLOADS = 4  # links read at once across the whole server, from searches, builds and pasted links
 USER_AGENT = "Lemma/1.0 (local paper reader)"
 FULL_TEXT = 4000  # Shorter pages are usually abstracts, not usable full text.
 # Reading a large PDF can take hundreds of MB, so only a couple are read at once; the rest wait their turn.
 _PDF_READERS = threading.BoundedSemaphore(2)
+_DOWNLOADS = threading.BoundedSemaphore(MAX_DOWNLOADS)
+BUSY = "OpenLemma is busy reading other sources. Try again in a minute."
 logging.getLogger("pypdf").setLevel(logging.ERROR)  # its font warnings would fill the server's error log
 
 
@@ -102,7 +106,7 @@ def _clean(text: str) -> str:
 
 def from_pdf(data: bytes, url: str = "") -> Paper:
     if not _PDF_READERS.acquire(timeout=READER_WAIT):
-        raise IngestError("OpenLemma is busy reading other sources. Try again in a minute.")
+        raise IngestError(BUSY)
     try:
         found = _read_pdf_in_child(data)
     finally:
@@ -119,10 +123,10 @@ def from_pdf(data: bytes, url: str = "") -> Paper:
 def _read_pdf_in_child(data: bytes) -> dict:
     """Read the PDF in a separate process that is killed at the deadline, since pypdf can't be interrupted."""
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    code = "import sys; sys.path.insert(0, sys.argv[1]); from lemma.ingest import _pdf_child; _pdf_child(int(sys.argv[2]), int(sys.argv[3]))"
-    try:
-        done = subprocess.run([sys.executable, "-c", code, root, str(MAX_PDF_PAGES), str(MAX_CHARS)],
-                              input=data, capture_output=True, timeout=PDF_DEADLINE)
+    code = "import sys; sys.path.insert(0, sys.argv[1]); from lemma.ingest import _pdf_child; _pdf_child(*map(int, sys.argv[2:5]))"
+    try:  # -I: the working directory and PYTHON* variables can't change what the child imports
+        done = subprocess.run([sys.executable, "-I", "-c", code, root, str(MAX_PDF_PAGES), str(MAX_CHARS), str(PDF_MEMORY)],
+                              input=data, capture_output=True, timeout=PDF_DEADLINE, env=_child_env())
     except subprocess.TimeoutExpired:
         raise IngestError("This PDF took too long to read. Try another copy of the paper, or its web page.") from None
     try:
@@ -134,12 +138,25 @@ def _read_pdf_in_child(data: bytes) -> dict:
     return found
 
 
-def _pdf_child(max_pages: int, max_chars: int) -> None:
+def _child_env() -> dict:
+    """The PDF reader's environment: enough to run Python, and none of the server's keys or secrets."""
+    return {k: v for k, v in os.environ.items() if k in ("PATH", "LANG", "LC_ALL", "TMPDIR", "SYSTEMROOT")}
+
+
+def _pdf_child(max_pages: int, max_chars: int, max_memory: int = 0) -> None:
     """The child process: a PDF on stdin, its text, title and page count as JSON on stdout."""
+    if max_memory:
+        try:
+            import resource
+            resource.setrlimit(resource.RLIMIT_AS, (max_memory, max_memory))
+        except (ImportError, ValueError, OSError):  # not every platform enforces it (macOS doesn't)
+            pass
     try:
         found = _read_pdf(sys.stdin.buffer.read(), max_pages, max_chars)
     except IngestError as e:
         found = {"error": str(e)}
+    except MemoryError:
+        found = {"error": "This PDF is too complex to read. Try another copy of the paper, or its web page."}
     sys.stdout.write(json.dumps(found))
 
 
@@ -424,6 +441,15 @@ def from_url(url: str, timeout: float | None = None) -> Paper:
     if urllib.parse.urlsplit(url).scheme not in ("http", "https"):
         raise IngestError("Only http and https links are supported.")
     timeout = min(timeout or FETCH_DEADLINE, FETCH_DEADLINE)
+    if not _DOWNLOADS.acquire(timeout=min(timeout, READER_WAIT)):
+        raise IngestError(BUSY)
+    try:  # held through reading the text too, since parsing a page takes many times its size in memory
+        return _download_and_read(url, timeout)
+    finally:
+        _DOWNLOADS.release()
+
+
+def _download_and_read(url: str, timeout: float) -> Paper:
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "application/pdf,text/html;q=0.9,application/xml;q=0.8,*/*;q=0.5"})
     with _Deadline(timeout) as deadline:
         try:
