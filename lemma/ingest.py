@@ -152,9 +152,11 @@ def _read_pdf(data: bytes, max_pages: int, max_chars: int) -> dict:
         reader = PdfReader(io.BytesIO(data))
         if reader.is_encrypted:
             try:
-                reader.decrypt("")
+                opened = reader.decrypt("")  # PasswordType.NOT_DECRYPTED (0) when it needs a password
             except Exception:
-                raise IngestError("This PDF is password-protected.") from None
+                opened = False
+            if not opened:
+                raise IngestError("This PDF is password-protected.")
         pages, size = [], 0
         for page in reader.pages:
             if len(pages) == max_pages or size >= max_chars:
