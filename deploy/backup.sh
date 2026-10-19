@@ -1,8 +1,10 @@
 #!/bin/sh
-# Copies the hosted Lemma's data to this computer: deploy/backup.sh ubuntu@<server address> [destination folder]
-# The databases are copied with SQLite's online backup, so a backup taken while people use the site is consistent.
+# Copies the hosted Lemma's data to this computer: deploy/backup.sh [user@server] [destination folder]
+# Without a server it uses deploy/host. The databases are copied with SQLite's online backup, so a backup taken while
+# people use the site is consistent.
 set -eu
-host="${1:?usage: deploy/backup.sh user@server [destination]}"
+host="${1:-$(cat "$(dirname "$0")/host" 2>/dev/null || true)}"
+[ -n "$host" ] || { echo "usage: deploy/backup.sh user@server [destination], or put user@server in deploy/host" >&2; exit 2; }
 dest="${2:-backups}"
 stamp="$(date -u +%Y-%m-%dT%H%MZ)"
 mkdir -p "$dest"

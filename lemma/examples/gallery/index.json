@@ -2,32 +2,27 @@
  {
   "slug": "attention-2017",
   "field": "Machine learning",
-  "cover": "sequential_bottleneck",
-  "source_file": "sources/attention-2017.txt"
+  "cover": "sequential_bottleneck"
  },
  {
   "slug": "ioannidis-2005",
   "field": "Research methods",
-  "cover": "false_alarms_and_power",
-  "source_file": "sources/ioannidis-2005.txt"
+  "cover": "false_alarms_and_power"
  },
  {
   "slug": "wuhan-2020",
   "field": "Epidemiology",
-  "cover": "doubling_time",
-  "source_file": "sources/wuhan-2020.txt"
+  "cover": "doubling_time"
  },
  {
   "slug": "opinion-dynamics-2002",
   "field": "Social science",
-  "cover": "averaging_to_consensus",
-  "source_file": "sources/opinion-dynamics-2002.txt"
+  "cover": "averaging_to_consensus"
  },
  {
   "slug": "gettier-1963",
   "field": "Philosophy",
-  "cover": "case_one_coins",
-  "source_file": "sources/gettier-1963.txt"
+  "cover": "case_one_coins"
  },
  {
   "slug": "galton-1886",
@@ -38,73 +33,61 @@
  {
   "slug": "turner-1893",
   "field": "History",
-  "cover": "frontier_as_moving_edge",
-  "source_file": "sources/turner-1893.txt"
+  "cover": "frontier_as_moving_edge"
  },
  {
   "slug": "aquinas-senses",
   "field": "Theology",
-  "cover": "reading_a_disputed_article",
-  "source_file": "sources/aquinas-senses.txt"
+  "cover": "reading_a_disputed_article"
  },
  {
   "slug": "mendel-1866",
   "field": "Biology",
-  "cover": "three_to_one_return",
-  "source_file": "sources/mendel-1866.txt"
+  "cover": "three_to_one_return"
  },
  {
   "slug": "brown-1954",
   "field": "Law",
-  "cover": "separate_but_equal",
-  "source_file": "sources/brown-1954.txt"
+  "cover": "separate_but_equal"
  },
  {
   "slug": "poe-red-death",
   "field": "Literature",
-  "cover": "forbidden_costume",
-  "source_file": "sources/poe-red-death.txt"
+  "cover": "forbidden_costume"
  },
  {
   "slug": "euclid-equilateral",
   "field": "Mathematics",
-  "cover": "circle_equal_distance",
-  "source_file": "sources/euclid-equilateral.txt"
+  "cover": "circle_equal_distance"
  },
  {
   "slug": "wave-interference",
   "field": "Physics",
-  "cover": "waves_add",
-  "source_file": "sources/wave-interference.txt"
+  "cover": "waves_add"
  },
  {
   "slug": "schelling-segregation",
   "field": "Urban studies",
-  "cover": "one_household_rule",
-  "source_file": "sources/schelling-segregation.txt"
+  "cover": "one_household_rule"
  },
  {
   "slug": "information-cascades",
   "field": "Social learning",
-  "cover": "clues_add_up",
-  "source_file": "sources/information-cascades.txt"
+  "cover": "clues_add_up"
  },
  {
   "slug": "ice-albedo-feedback",
   "field": "Climate science",
-  "cover": "energy_balance",
-  "source_file": "sources/ice-albedo-feedback.txt"
+  "cover": "energy_balance"
  },
  {
   "slug": "externalities-pigou",
   "field": "Economics",
-  "cover": "external_cost_gap",
-  "source_file": "sources/externalities-pigou.txt"
+  "cover": "external_cost_gap"
  },
  {
   "slug": "loss-aversion",
   "field": "Behavioural economics",
-  "cover": "losses_loom_larger",
-  "source_file": "sources/loss-aversion.txt"
+  "cover": "losses_loom_larger"
  }
 ]

@@ -12,7 +12,7 @@ You need [uv](https://docs.astral.sh/uv/) and a copy of this repository.
 uv run lemma                 # installs what's needed on first run, then opens http://localhost:8765
 ```
 
-The built-in example lesson (Galton, 1886) works straight away, with no setup.
+The built-in example lesson (Galton, 1886) and the gallery work straight away, with no setup. Signing in, searching and building need keys of your own; [What you need](#what-you-need) lists them.
 
 To make your own lessons, OpenLemma needs your own key for an AI provider, and the server needs a TypeSafe key (`TYPESAFE_API_KEY`) for Jev's checks (see [Run it](#run-it)). The home page asks for one:
 
@@ -85,6 +85,24 @@ Visual types: curves, bars, tables, agent simulations, networks, causal diagrams
 
 ## Development
 
+### What you need
+
+OpenLemma runs the same on your own computer as hosted, so a copy you run behaves like openlemma.org: people sign in with Google, and searching and building use keys. What works with each:
+
+- **Nothing set up:** the home page, the gallery, the example lesson, downloads, and the tests (`uv run python -m unittest discover tests`), which use stand-ins for every outside service.
+- **Signing in** (your library, searching, building) needs a Google OAuth web client of your own, from [Google Cloud](https://console.cloud.google.com/auth/clients), with `http://localhost:8765/auth/google/callback` as an authorized redirect URI. Start Lemma with `LEMMA_GOOGLE_CLIENT_ID` and `LEMMA_GOOGLE_CLIENT_SECRET` set.
+- **Searching and building** also need a TypeSafe key, `TYPESAFE_API_KEY`, for Jev's checks; without it Lemma says why they are off.
+- **Building** needs an AI provider of your own, chosen on your account page after you sign in: a key for OpenCode Go, OpenAI or Claude, or the Claude or ChatGPT subscription signed in on your computer.
+
+For development, run one Lemma with the development config, which lifts the daily caps:
+
+```sh
+set -a; . ./local.env; set +a     # plus your LEMMA_GOOGLE_* and TYPESAFE_API_KEY
+uv run lemma --dev
+```
+
+`local.env` holds no secrets and is committed; keep your keys in your shell or a file of your own outside git.
+
 ### Built-in lessons
 
 The gallery contains eighteen playable lessons: attention, research reliability, Wuhan transmission, opinion dynamics, Gettier, Galton, Turner's frontier thesis, Aquinas on scriptural senses, Mendel's peas, Brown v. Board of Education, Poe's *The Masque of the Red Death*, Euclid's equilateral triangle, wave interference, Schelling's segregation model, information cascades, ice–albedo feedback, externalities and Pigouvian taxes, and loss aversion.
@@ -93,7 +111,7 @@ All lesson JSON lives in `lemma/examples/gallery/`, registered by `index.json`. 
 
 The last six cover subjects the gallery lacked (physics, urban studies, social learning, climate science, economics and behavioural economics). Each was built in the Lemma app from three or four sources chosen from its topic search, so each is a combined lesson with per-source attribution: 32 concepts, 3 left out by the quality checks (each lesson says which). Ice–albedo, information cascades, externalities and loss aversion were built with Jev on, so they carry Jev's subject category; externalities keeps two possible problems Jev left for review on its last concept. Wave interference and Schelling were built before Jev was switched on and have neither. `eval/publish_coverage.py` published them from the Lemma home that built them, adding only activity sequences, ids and generation metadata; their full sources stay in ignored `eval/results/gallery-coverage/`.
 
-All seventeen non-Galton lessons have the same on-disk source representation: verified quotation excerpts in `lemma/examples/sources/<slug>.txt`, referenced by `source_file` in the gallery index. A combined lesson's file keeps its source bundle, each source holding only the quotes attributed to it, so attribution is still checked. These files include the source title, URL, quotation locators, and the quoted passages—not complete source reproductions. Runtime grounding and gallery tests use these checked-in files without requiring local evaluation results. Galton's full public-domain text remains in `lemma/examples/galton-1886.txt`. To recreate the excerpts from the original local evaluation sources, run `uv run python eval/normalize_gallery_sources.py`; this validates against the originals before writing and makes no provider calls.
+Each gallery lesson was checked against its complete source when it was built; the gallery ships no source text except Galton's full public-domain paper, `lemma/examples/galton-1886.txt`, for the example lesson. When a gallery lesson is served, every check runs except grounding (the quotes against the source), which `lemma.lesson.check_lesson` skips when it has no source. The publish scripts in `eval/` re-check a rebuilt lesson against its full local source before writing it, and make no provider calls.
 
 All seventeen non-Galton lessons carry the same `created`, `provider`, and `generation` metadata fields; combined lessons also list their `sources`. Timestamps and provider details for the original five come from their recorded pilot builds; generation metadata records the pipeline, model, full-source character count, and omitted-concept count. Galton remains the separate built-in example.
 

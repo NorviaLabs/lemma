@@ -191,26 +191,22 @@ class GalleryActivitiesTests(unittest.TestCase):
         self.assertEqual(example["concepts"], gallery["concepts"])
         self.assertEqual(source, gallery_source)
 
-    def test_non_galton_sources_have_one_checked_in_representation(self):
-        expected = set()
+    def test_only_the_example_ships_its_source_text(self):
+        # Gallery lessons were checked against their complete sources when they were built; the gallery ships only
+        # Galton's public-domain paper, for the example lesson, so no one else's text is redistributed.
+        self.assertEqual(sorted(p.name for p in server.EXAMPLES.iterdir() if p.suffix == ".txt"), ["galton-1886.txt"])
         for entry in server.gallery_index():
+            lesson, source = server.load_gallery(entry["slug"])
             if entry["slug"] == "galton-1886":
                 self.assertEqual(entry["source_file"], "galton-1886.txt")
+                self.assertEqual(list(L.check_lesson(lesson, source)), [])
                 continue
-            relative = f"sources/{entry['slug']}.txt"
-            expected.add(entry["slug"])
-            self.assertEqual(entry["source_file"], relative)
-            lesson, source = server.load_gallery(entry["slug"])
-            # A lesson built from several sources keeps their bundle, each source holding only its own quotes.
-            sources = list(L.source_map(source).values()) or [{"url": lesson["source"]["url"], "text": source}]
-            for s in sources:
-                self.assertTrue(s["text"].startswith("VERIFIED QUOTATION EXCERPTS — not the complete source.\n"))
-                self.assertIn(s["url"], s["text"])
-            self.assertEqual(list(L.check_lesson(lesson, source)), [])
+            self.assertNotIn("source_file", entry)
+            self.assertIsNone(source)
+            self.assertEqual(list(L.check_lesson(lesson, None)), [], entry["slug"])  # every check but grounding
             broken = copy.deepcopy(lesson)
-            broken["concepts"][0]["understand"]["quote"] = "An invented passage absent from all the checked in source excerpts."
-            self.assertTrue(L.check_lesson(broken, source))
-        self.assertEqual({p.stem for p in (ROOT / "lemma/examples/sources").glob("*.txt")}, expected)
+            broken["concepts"][0]["title"] = ""
+            self.assertTrue(L.check_lesson(broken, None))
 
     def test_non_galton_metadata_has_one_shape(self):
         keys = None

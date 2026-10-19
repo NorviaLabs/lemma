@@ -1,0 +1,38 @@
+OpenLemma
+Copyright (c) 2026 Mohit Ranka
+
+The source code in this repository is licensed under the MIT License (see LICENSE).
+The MIT License does not cover the material listed below, which keeps its own terms.
+
+1. Quotations in the gallery lessons
+   The lessons in lemma/examples/gallery/ quote short passages, word for word, from the works each lesson names in
+   its "source" or "sources" field, with the author, title and a link. The quotations are included for teaching and
+   commentary; copyright in them, where it exists, stays with their authors and publishers. Among them:
+   - Ioannidis, "Why Most Published Research Findings Are False" (PLOS Medicine, 2005): CC BY 4.0.
+   - Passages from Wikipedia articles: CC BY-SA 4.0. The lesson names each article; reusing those passages must
+     follow that license.
+   - Brown v. Board of Education (1954): a work of the United States government, not protected by copyright.
+   - Galton (1886), and the texts quoted from public-domain editions: Mendel's paper and Poe (1842), both from
+     Project Gutenberg, which publishes only texts in the public domain in the United States; Turner (1920 edition);
+     and Aquinas in the 1920 English translation by the Fathers of the English Dominican Province.
+
+2. Galton's paper
+   lemma/examples/galton-1886.txt is the text of Francis Galton, "Regression towards Mediocrity in Hereditary
+   Stature" (1886), in the public domain. It is the source the example lesson is checked against.
+
+3. Google sign-in button
+   lemma/static/google-sign-in-1x.png to -4x.png are Google's pre-approved "Sign in with Google" button images.
+   Google and the Google logo are trademarks of Google LLC; the images are used as Google's branding guidelines
+   require and are not licensed under the MIT License.
+
+4. Fonts
+   lemma/static/fonts/ holds Archivo and Spline Sans Mono, licensed under the SIL Open Font License 1.1. Their
+   license texts are in that folder (OFL-Archivo.txt, OFL-SplineSansMono.txt).
+
+5. OpenLemma name, logo and launch film
+   The OpenLemma name and logo (lemma/static/logo.svg, favicon.svg, icon-180.png) and the launch film and its poster
+   (lemma/static/film-v4-*) identify this project. The MIT License does not grant permission to use them to name or
+   promote other products, or to suggest that this project endorses them.
+
+Lessons built by people using OpenLemma quote the sources those people bring or choose. Those quotations belong to
+their rightsholders, and the person building a lesson is responsible for how they use and share it.

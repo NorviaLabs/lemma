@@ -13,6 +13,7 @@ dist/
 .forge/
 .impeccable/
 deploy/lemma.env
+deploy/host
 deploy/cloudflared/*.json
 
 # Evaluation runs: full paper texts and model output, shared as a folder rather than committed

@@ -10,7 +10,6 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from lemma import lesson as L
-from normalize_gallery_sources import quotation_excerpts
 
 RUN = ROOT / "eval/results/gallery-claude"
 GALLERY = ROOT / "lemma/examples/gallery"
@@ -53,18 +52,14 @@ def main():
             raise SystemExit(f"{slug}: sequence validation failed; no lessons published")
         metadata = json.loads((folder / "source-metadata.json").read_text())
         lesson["source"]["url"] = metadata["url"]
-        excerpt_text = quotation_excerpts(lesson)
-        if L.check_lesson(lesson, excerpt_text):
-            raise SystemExit(f"{slug}: excerpt validation failed; no lessons published")
         lesson["generation"] = dict(provider=record["provider"], model=record["model"], pipeline="lemma.generate.make_outline + build_lesson", source_chars=len(source), omitted=0)
-        prepared.append((slug, lesson, excerpt_text))
+        prepared.append((slug, lesson))
         entry = next(e for e in index if e["slug"] == slug)
         entry["cover"] = lesson["concepts"][0]["id"]
         entry.pop("cover_values", None)
-        entry["source_file"] = f"sources/{slug}.txt"
-    for slug, lesson, excerpts in prepared:
+        entry.pop("source_file", None)  # checked against its full source above; the gallery ships no source text
+    for slug, lesson in prepared:
         (GALLERY / f"{slug}.json").write_text(json.dumps(lesson, ensure_ascii=False, indent=1) + "\n")
-        (ROOT / f"lemma/examples/sources/{slug}.txt").write_text(excerpts)
         print(f"Published {slug}: {len(lesson['concepts'])} Claude-generated live-model concepts")
     (GALLERY / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
 

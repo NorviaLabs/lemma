@@ -98,8 +98,7 @@ class GalleryStillValidates(unittest.TestCase):
     def test_every_gallery_lesson_passes_every_check(self):
         for entry in server.gallery_index():
             with self.subTest(slug=entry["slug"]):
-                lesson, source = server.load_gallery(entry["slug"])
-                self.assertIsNotNone(source)
+                lesson, source = server.load_gallery(entry["slug"])  # only the example ships its source
                 self.assertEqual(list(L.check_lesson(lesson, source)), [])
 
     def test_bundled_example_passes_every_check(self):

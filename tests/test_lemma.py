@@ -1486,11 +1486,10 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(s, 200)
         self.assertNotIn(b"Something else entirely", html)
 
-    def test_gallery_quotes_match_their_papers(self):
-        for entry in server.gallery_index():
-            lesson, source = server.load_gallery(entry["slug"])
-            self.assertIsNotNone(source, entry["slug"])
-            self.assertEqual(list(L.check_lesson(lesson, source)), [], entry["slug"])
+    def test_every_gallery_lesson_opens(self):
+        for entry in server.gallery_index():  # served only after passing its checks
+            s, raw = self.req("GET", f"/api/gallery/{entry['slug']}")
+            self.assertEqual(s, 200, (entry["slug"], raw[:200]))
 
     def test_unexpected_error_is_reported_without_its_message(self):
         import contextlib

@@ -1,7 +1,9 @@
 #!/bin/sh
-# Copies this checkout to the server and (re)starts Lemma there: deploy/push.sh ubuntu@<server address>
+# Copies this checkout to the server and (re)starts Lemma there: deploy/push.sh [user@server]
+# Without an argument it uses deploy/host (one line, user@server; git-ignored, so the address stays out of the repo).
 set -eu
-host="${1:?usage: deploy/push.sh user@server}"
+host="${1:-$(cat "$(dirname "$0")/host" 2>/dev/null || true)}"
+[ -n "$host" ] || { echo "usage: deploy/push.sh user@server, or put user@server in deploy/host" >&2; exit 2; }
 cd "$(dirname "$0")/.."
 [ -f deploy/lemma.env ] || { echo "deploy/lemma.env is missing; copy deploy/lemma.env.example and fill it in." >&2; exit 1; }
 # rsync --delete below would otherwise remove the server's tunnel credentials, and the site would go down at its next restart.

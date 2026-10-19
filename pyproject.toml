@@ -4,13 +4,18 @@ version = "1.0.0"
 description = "Turn a research paper into a short, hands-on lesson with live models, predictions and checks"
 readme = "README.md"
 license = "MIT"
-license-files = ["LICENSE"]
+license-files = ["LICENSE", "NOTICE"]
 requires-python = ">=3.10"
 dependencies = [
     "anthropic>=1.13.0",
     "fonttools>=4",
     "pypdf>=4",
 ]
+
+[project.urls]
+Homepage = "https://openlemma.org"
+Source = "https://github.com/NorviaLabs/lemma"
+Issues = "https://github.com/NorviaLabs/lemma/issues"
 
 [project.scripts]
 lemma = "lemma.__main__:main"

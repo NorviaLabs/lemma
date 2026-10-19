@@ -52,4 +52,4 @@ Run the narrowest relevant tests during development, then the full unittest suit
 
 ## Publishing and deployment
 
-When asked to publish or deploy, commit and push directly to `main`; do not create a pull request unless explicitly requested. Deploy from a clean `main` matching `origin/main` with `deploy/push.sh ubuntu@34.172.130.18`. Verify the live gallery and lesson endpoints after deployment. Never commit deployment credentials or evaluation-run secrets.
+When asked to publish or deploy, commit and push directly to `main`; do not create a pull request unless explicitly requested. Deploy from a clean `main` matching `origin/main` with `deploy/push.sh` (it reads the server from the git-ignored `deploy/host`). Verify the live gallery and lesson endpoints after deployment. Never commit deployment credentials or evaluation-run secrets.

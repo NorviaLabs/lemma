@@ -13,7 +13,6 @@ services:
     environment:
       LEMMA_PUBLIC_URL: https://openlemma.org
       LEMMA_ALLOWED_HOSTS: openlemma.org,www.openlemma.org
-      LEMMA_ADMINS: mohitranka@gmail.com  # who may read the daily counts at /api/stats
       # Daily caps per account (UTC). Every search, build and read uses the server's TypeSafe key or bandwidth.
       # These match Lemma's safe defaults, which also apply if a line goes missing; never set them to unlimited here.
       LEMMA_DAILY_SEARCHES: "40"

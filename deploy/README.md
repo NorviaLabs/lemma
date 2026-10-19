@@ -1,6 +1,6 @@
 # Lemma at openlemma.org
 
-Lemma runs in Docker on a free-tier Google Cloud e2-micro VM (`lemma` in project `lemma-511811`, zone `us-central1-a`, Ubuntu 24.04, 34.172.130.18). A Cloudflare Tunnel (`lemma`, b9f37d76-4c40-4ceb-9e02-8988a0755f90) carries `https://openlemma.org` to it, so the VM opens no ports beyond SSH and Cloudflare handles HTTPS. The domain is registered with Cloudflare Registrar. The tunnel also carries `www.openlemma.org`, which Lemma redirects to `https://openlemma.org`.
+Lemma runs in Docker on a free-tier Google Cloud e2-micro VM (Ubuntu 24.04) in `us-central1`. A Cloudflare Tunnel named `lemma` carries `https://openlemma.org` to it, so the VM opens no ports beyond SSH and Cloudflare handles HTTPS. The domain is registered with Cloudflare Registrar. The tunnel also carries `www.openlemma.org`, which Lemma redirects to `https://openlemma.org`.
 
 Lemma's data (`accounts.db` and each account's library) lives in the `deploy_lemma-data` Docker volume.
 
@@ -8,16 +8,17 @@ Lemma's data (`accounts.db` and each account's library) lives in the `deploy_lem
 
 - `compose.yaml`: Lemma and `cloudflared`.
 - `cloudflared/config.yml`: the tunnel's routes. `cloudflared/lemma.json` holds the tunnel's credentials; it is secret and kept out of git.
-- `lemma.env`: the Google OAuth client ID and secret and the TypeSafe key; secret and kept out of git. `lemma.env.example` lists its keys.
+- `lemma.env`: the Google OAuth client ID and secret, the TypeSafe key, and `LEMMA_ADMINS`; secret and kept out of git. `lemma.env.example` lists its keys.
+- `host`: the VM's `user@address`, one line; kept out of git. `push.sh` and `backup.sh` use it when given no address.
 - `push.sh`: deploys this checkout. `vm-startup.sh`: prepares the VM (2 GB of swap and Docker), run by `push.sh`.
 
 ## Deploy, and redeploy after changes
 
 ```sh
-deploy/push.sh ubuntu@34.172.130.18
+deploy/push.sh
 ```
 
-Commit and push directly to `main` before deploying; do not create a pull request unless explicitly requested. Run the script from `main`, clean and matching `origin/main`; it refuses anything else, so the live site always matches `main`. It copies this checkout to the VM (secrets included), then rebuilds and restarts both containers. Logs: `ssh ubuntu@34.172.130.18 'cd lemma/deploy && sudo docker compose logs -f'`. Lemma's own lines are only error reports (`<time> error <id> in <where>: <type>` and the code it passed through); a learner who quotes an error id can be found with `sudo docker compose logs lemma | grep -A 30 <id>`.
+Commit and push directly to `main` before deploying; do not create a pull request unless explicitly requested. Run the script from `main`, clean and matching `origin/main`; it refuses anything else, so the live site always matches `main`. It copies this checkout to the VM (secrets included), then rebuilds and restarts both containers. Logs: `ssh "$(cat deploy/host)" 'cd lemma/deploy && sudo docker compose logs -f'`. Lemma's own lines are only error reports (`<time> error <id> in <where>: <type>` and the code it passed through); a learner who quotes an error id can be found with `sudo docker compose logs lemma | grep -A 30 <id>`.
 
 ## Limits and analytics
 
@@ -30,7 +31,7 @@ Commit and push directly to `main` before deploying; do not create a pull reques
 
 ## Sign-in apps
 
-- Google: project `lemma-511811` → Google Auth Platform, External and in production, web client "Lemma web" with callback `https://openlemma.org/auth/google/callback`. Its privacy policy link is `https://openlemma.org/privacy`.
+- Google: the project's Google Auth Platform, External and in production, web client "Lemma web" with callback `https://openlemma.org/auth/google/callback`. Its privacy policy link is `https://openlemma.org/privacy`.
 - GitHub sign-in was turned off on 2026-10-19 (its settings removed from `lemma.env`). Lemma still supports it: to offer it again, create an OAuth app with callback `https://openlemma.org/auth/github/callback` and set `LEMMA_GITHUB_CLIENT_ID` and `LEMMA_GITHUB_CLIENT_SECRET`.
 
 A new secret goes into `lemma.env`, followed by `push.sh`.
@@ -39,14 +40,14 @@ A new secret goes into `lemma.env`, followed by `push.sh`.
 
 1. `cloudflared tunnel login`, then `cloudflared tunnel create --credentials-file deploy/cloudflared/lemma.json lemma`. Put the new tunnel id in `cloudflared/config.yml`, then run `cloudflared tunnel route dns lemma openlemma.org`.
 2. Any Ubuntu VM reachable over SSH works, as long as it has about 1 GB of RAM or more.
-3. Fill in `lemma.env` and run `push.sh`.
+3. Fill in `lemma.env`, put the VM's `user@address` in `deploy/host`, and run `push.sh`.
 
 ## Backups
 
 All accounts and libraries live on the VM's one disk, so keep two kinds of backup:
 
-- **Disk snapshots, automatically.** In Google Cloud, Compute Engine → Snapshots → Snapshot schedules, create a daily schedule (keep 14 days) in `us-central1` and attach it to the `lemma` VM's boot disk. A snapshot restores the whole VM.
-- **A copy of the data on your own computer.** `deploy/backup.sh ubuntu@34.172.130.18` saves `backups/lemma-data-<time>.tgz` (git-ignored): every library, plus `accounts.db` and `metrics.db` copied with SQLite's online backup into `.backup/`, so it is consistent even while people use the site. To restore, unpack it into the `deploy_lemma-data` volume and move the two databases out of `.backup/`.
+- **Disk snapshots, automatically.** In Google Cloud, Compute Engine → Snapshots → Snapshot schedules, create a daily schedule (keep 14 days) in the VM's region and attach it to its boot disk. A snapshot restores the whole VM.
+- **A copy of the data on your own computer.** `deploy/backup.sh` saves `backups/lemma-data-<time>.tgz` (git-ignored): every library, plus `accounts.db` and `metrics.db` copied with SQLite's online backup into `.backup/`, so it is consistent even while people use the site. To restore, unpack it into the `deploy_lemma-data` volume and move the two databases out of `.backup/`.
 
 Restore drills (unpack into a scratch `LEMMA_HOME`, move the databases out of `.backup/`, run `PRAGMA integrity_check`, then read every account's requests and lessons through `server.api_requests`, `api_request` and `api_lessons`):
 
