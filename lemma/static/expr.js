@@ -4,6 +4,7 @@
 
   class ExprError extends Error {}
   const MAX_NESTING = 24; // keep in step with expr.py
+  const MAX_LENGTH = 4000; // characters; keep in step with expr.py
 
   const TOKEN = /\s*(?:(\d+\.?\d*(?:[eE][+-]?\d+)?|\.\d+(?:[eE][+-]?\d+)?)|([A-Za-z_][A-Za-z0-9_]*)|(<=|>=|==|!=|&&|\|\||[-+*/%^()<>!?:,]))/y;
   const KEYWORDS = { and: "&&", or: "||", not: "!" };
@@ -161,6 +162,8 @@
   const cache = new Map();
   function parse(src) {
     if (typeof src === "number") return ["num", src];
+    if (typeof src !== "string") throw new ExprError("expression must be a string");
+    if (src.length > MAX_LENGTH) throw new ExprError(`expression is longer than ${MAX_LENGTH} characters; write it more simply, as several outputs that build on each other`);
     let n = cache.get(src);
     if (!n) { n = new Parser(src).parse(); if (cache.size < 5000) cache.set(src, n); }
     return n;
@@ -213,5 +216,5 @@
 
   function evaluate(src, env) { return ev(parse(src), env); }
 
-  root.LemmaExpr = { ExprError, parse, evaluate, names, FUNCTIONS, CONSTANTS, MAX_NESTING, normcdf };
+  root.LemmaExpr = { ExprError, parse, evaluate, names, FUNCTIONS, CONSTANTS, MAX_NESTING, MAX_LENGTH, normcdf };
 })(typeof window !== "undefined" ? window : globalThis);

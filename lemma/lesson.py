@@ -1107,11 +1107,21 @@ def check_attribution(block: dict, sources: dict, where: str) -> list[str]:
     return problems
 
 
+# Checking a model costs time in proportion to its size, and a lesson can come from anyone who saves or
+# exports one; the largest bundled lesson's models come to about 25,000 characters.
+MAX_MODELS_CHARS = 60_000
+
+
 def check_lesson(lesson: dict, source_text: str | None) -> Problems:
     """All quality checks. ``source_text=None`` skips grounding (e.g. for an offline copy)."""
     P = Problems()
     if not isinstance(lesson, dict):
         P.add("lesson", "must be an object")
+        return P
+    concepts = lesson.get("concepts")
+    size = sum(len(json.dumps(c.get("model"), default=str)) for c in concepts if isinstance(c, dict)) if isinstance(concepts, list) else 0
+    if size > MAX_MODELS_CHARS:
+        P.add("lesson.concepts", f"models are too large ({size:,} characters; at most {MAX_MODELS_CHARS:,}). Simplify them")
         return P
     _text(lesson, "title", "lesson", P, 200)
     src = lesson.get("source") or {}

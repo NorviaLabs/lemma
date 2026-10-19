@@ -25,9 +25,10 @@ from __future__ import annotations
 import math
 import re
 
-__all__ = ["ExprError", "parse", "evaluate", "names", "FUNCTIONS", "CONSTANTS", "MAX_NESTING"]
+__all__ = ["ExprError", "parse", "evaluate", "names", "FUNCTIONS", "CONSTANTS", "MAX_NESTING", "MAX_LENGTH"]
 
 MAX_NESTING = 24  # real lessons nest at most 13 deep; an iteration unrolled by hand goes far deeper
+MAX_LENGTH = 4000  # characters; the longest in the bundled lessons is about 1,900, and checking costs time in proportion
 
 
 class ExprError(ValueError):
@@ -379,6 +380,10 @@ _cache: dict[str, tuple] = {}
 def parse(src: str) -> tuple:
     if isinstance(src, (int, float)) and not isinstance(src, bool):
         return ("num", float(src))
+    if not isinstance(src, str):
+        raise ExprError("expression must be a string")
+    if len(src) > MAX_LENGTH:
+        raise ExprError(f"expression is longer than {MAX_LENGTH} characters; write it more simply, as several outputs that build on each other")
     node = _cache.get(src)
     if node is None:
         try:
@@ -405,7 +410,10 @@ def names(src) -> set[str]:
             for a in n[1:]:
                 walk(a)
 
-    walk(parse(src))
+    try:
+        walk(parse(src))
+    except RecursionError:  # a long flat chain such as x+x+…+x nests one level per term
+        raise ExprError("expression is too deeply nested") from None
     return out
 
 
