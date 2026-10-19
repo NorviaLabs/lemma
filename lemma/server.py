@@ -1024,12 +1024,31 @@ class Handler(BaseHTTPRequestHandler):
         live = " http://localhost:8400" if DEV else ""  # impeccable live mode, only under `lemma --dev`
         csp = f"default-src 'self'; script-src 'self'{beacon}{live}; img-src 'self' data:{avatars}; font-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'{rum}{live}; frame-ancestors 'none'; base-uri 'none'"
         extra = {"Content-Security-Policy": csp} if name.endswith(".html") else {}
-        if name.startswith("fonts/"):
+        if name.startswith(("fonts/", "film-")):  # both are versioned by name, so they never change in place
             extra["Cache-Control"] = "public, max-age=31536000, immutable"
+        if ctype.startswith("video/"):
+            return self._send_ranged(f, ctype, extra)
         body = f.read_bytes()
         if DEV and name == "index.html":
             body = body.replace(b"</body>", b'<script src="static/dev-reload.js"></script>\n</body>')
         self._send(200, body, ctype, extra)
+
+    def _send_ranged(self, f, ctype: str, extra: dict):
+        """Serve a video in byte ranges: Safari and iOS won't play a <video> from a server that doesn't."""
+        data = f.read_bytes()
+        size = len(data)
+        extra = dict(extra, **{"Accept-Ranges": "bytes"})
+        m = re.fullmatch(r"bytes=(\d*)-(\d*)", (self.headers.get("Range") or "").strip())
+        if not m or m.groups() == ("", ""):
+            return self._send(200, data, ctype, extra)
+        first, last = m.groups()
+        if first:
+            start, end = int(first), min(int(last), size - 1) if last else size - 1
+        else:  # "bytes=-N": the last N bytes
+            start, end = max(0, size - int(last)), size - 1
+        if start >= size or start > end:
+            return self._send(416, b"", ctype, dict(extra, **{"Content-Range": f"bytes */{size}"}))
+        self._send(206, data[start:end + 1], ctype, dict(extra, **{"Content-Range": f"bytes {start}-{end}/{size}"}))
 
     def do_GET(self):
         self._dispatch("GET")

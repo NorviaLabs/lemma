@@ -1787,6 +1787,32 @@ class ServerLimitTests(unittest.TestCase):
             httpd.shutdown()
             httpd.server_close()
 
+    def test_the_film_streams_in_byte_ranges_and_caches(self):
+        server.HOSTED = False
+        httpd = server.make_server(0)
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+        path = "/static/film-v2-720.mp4"
+        size = (Path(server.STATIC.joinpath("film-v2-720.mp4"))).stat().st_size
+        def get(headers):
+            c = http.client.HTTPConnection("127.0.0.1", httpd.server_address[1], timeout=5)
+            c.request("GET", path, headers=dict({"Host": "localhost"}, **headers))
+            r = c.getresponse(); body = r.read(); c.close()
+            return r, body
+        try:
+            r, body = get({"Range": "bytes=0-99"})
+            self.assertEqual((r.status, len(body), r.getheader("Content-Range")), (206, 100, f"bytes 0-99/{size}"))
+            self.assertEqual(r.getheader("Content-Type"), "video/mp4")
+            r, body = get({"Range": f"bytes={size - 10}-"})
+            self.assertEqual((r.status, len(body)), (206, 10))
+            r, body = get({})
+            self.assertEqual((r.status, len(body), r.getheader("Accept-Ranges")), (200, size, "bytes"))
+            self.assertIn("immutable", r.getheader("Cache-Control"))
+            r, _ = get({"Range": f"bytes={size + 5}-"})
+            self.assertEqual((r.status, r.getheader("Content-Range")), (416, f"bytes */{size}"))
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+
     def test_dev_mode_is_off_on_a_hosted_server(self):
         server.DEV = True
         httpd = server.make_server(0, host="0.0.0.0", allowed_hosts=("tools.example.com",))
