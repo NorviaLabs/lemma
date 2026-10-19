@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import socket
 import threading
 import time
@@ -223,3 +224,20 @@ class AddressGuard(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SharedLimitTests(unittest.TestCase):
+    def test_downloads_share_one_limit_and_give_up_when_it_is_full(self):
+        held = threading.BoundedSemaphore(1)
+        held.acquire()
+        with patch.object(ingest, "_DOWNLOADS", held):
+            started = time.time()
+            with self.assertRaisesRegex(ingest.IngestError, "busy"):
+                ingest.from_url("https://example.org/paper", timeout=0.3)
+            self.assertLess(time.time() - started, 2)
+
+    def test_the_pdf_reader_gets_no_secrets(self):
+        with patch.dict(os.environ, {"TYPESAFE_API_KEY": "secret", "LEMMA_GOOGLE_CLIENT_SECRET": "s2"}):
+            env = ingest._child_env()
+        self.assertNotIn("TYPESAFE_API_KEY", env)
+        self.assertNotIn("LEMMA_GOOGLE_CLIENT_SECRET", env)
