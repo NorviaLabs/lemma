@@ -31,8 +31,10 @@ The MIT License does not cover the material listed below, which keeps its own te
 
 5. OpenLemma name, logo and launch film
    The OpenLemma name and logo (lemma/static/logo.svg, favicon.svg, icon-180.png) and the launch film and its poster
-   (lemma/static/film-v4-*) identify this project. The MIT License does not grant permission to use them to name or
+   (lemma/static/film-v5-*) identify this project. The MIT License does not grant permission to use them to name or
    promote other products, or to suggest that this project endorses them.
+   The film's music is "Product Launch" by jonasblakewood, from Pixabay; it keeps its own licence and is not
+   covered by the MIT License.
 
 Lessons built by people using OpenLemma quote the sources those people bring or choose. Those quotations belong to
 their rightsholders, and the person building a lesson is responsible for how they use and share it.

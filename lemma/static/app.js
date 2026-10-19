@@ -1277,7 +1277,7 @@
   }
 
   /* The launch film: embedded in the hero, loaded and played only when the visitor presses play. */
-  const FILM = { hd: "static/film-v4-1080.mp4", sd: "static/film-v4-720.mp4", poster: "static/film-v4-poster.jpg", length: "0:32" };
+  const FILM = { hd: "static/film-v5-1080.mp4", sd: "static/film-v5-720.mp4", poster: "static/film-v5-poster.jpg", length: "0:32" };
   function filmPlayer() {
     const video = h("video", { class: "film-video", preload: "none", poster: FILM.poster, playsinline: true, "aria-label": "OpenLemma launch film, 32 seconds, with music" });
     const status = h("p", { class: "film-status", role: "status" });

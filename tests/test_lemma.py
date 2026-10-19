@@ -1749,8 +1749,8 @@ class ServerLimitTests(unittest.TestCase):
     def test_the_film_streams_in_byte_ranges_and_caches(self):
         httpd = server.make_server(0)
         threading.Thread(target=httpd.serve_forever, daemon=True).start()
-        path = "/static/film-v4-720.mp4"
-        size = (Path(server.STATIC.joinpath("film-v4-720.mp4"))).stat().st_size
+        path = "/static/film-v5-720.mp4"
+        size = (Path(server.STATIC.joinpath("film-v5-720.mp4"))).stat().st_size
         def get(headers):
             c = http.client.HTTPConnection("127.0.0.1", httpd.server_address[1], timeout=5)
             c.request("GET", path, headers=dict({"Host": "localhost"}, **headers))
