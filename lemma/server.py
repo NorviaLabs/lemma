@@ -342,6 +342,21 @@ def _new_job(kind: str, job_id: str | None = None) -> generate.Job:
     return job
 
 
+def _forget(job: generate.Job):
+    """Unregister a job that failed before its thread started, so it never counts as running."""
+    with _lock:
+        if generate.JOBS.get(job.id) is job:
+            del generate.JOBS[job.id]
+
+
+def _start(job: generate.Job, fn, *args):
+    try:
+        generate.start(job, fn, *args)
+    except BaseException:
+        _forget(job)
+        raise
+
+
 def _job(job_id: str) -> generate.Job | None:
     job = generate.JOBS.get(job_id)
     return job if job and job.owner == _owner() else None
@@ -351,7 +366,7 @@ def api_outline(body):
     paper = _paper(body)
     provider = _provider()
     job = _new_job("outline")
-    generate.start(job, generate.make_outline, provider, paper["text"], str(body.get("audience", ""))[:300])
+    _start(job, generate.make_outline, provider, paper["text"], str(body.get("audience", ""))[:300])
     return {"id": job.id}
 
 
@@ -368,7 +383,7 @@ def api_build(body):
         SOURCES[(job.owner, lesson_id)] = paper["text"]
         while len(SOURCES) > KEEP_SOURCES:
             SOURCES.pop(next(iter(SOURCES)))
-    generate.start(job, generate.build_lesson, provider, paper, outline, str(body.get("audience", ""))[:300], lesson_id)
+    _start(job, generate.build_lesson, provider, paper, outline, str(body.get("audience", ""))[:300], lesson_id)
     return {"id": job.id, "lesson_id": lesson_id}
 
 
@@ -431,7 +446,11 @@ def _launch_request(record, provider, owner, build=False):
             store.save_request(json.loads(serialized), owner)
     job.on_change = persist
     generate.JOBS[job.id] = job
-    persist(job)  # Persist before any external work begins.
+    try:
+        persist(job)  # Persist before any external work begins.
+    except BaseException:
+        _forget(job)
+        raise
 
     def run(j):
         paper = record.get("paper")
@@ -492,7 +511,7 @@ def _launch_request(record, provider, owner, build=False):
                 j.status = "done"
             j.update("save", "done", "Saved to your library")
         return result
-    generate.start(job, run)
+    _start(job, run)
     return {"id": job.id}
 
 
@@ -734,16 +753,17 @@ def api_lesson_delete(lesson_id):
 
 
 def api_export(body):
-    owner = _owner()
     lesson = body.get("lesson")
     if not isinstance(lesson, dict):
         raise ApiError(400, "No lesson to export.")
+    # Shipped lessons are exported as shipped, never as sent, so anyone may download them without
+    # the server checking a model a stranger wrote.
     if isinstance(lesson.get("gallery"), dict):
-        lesson, source = load_gallery(str(lesson["gallery"].get("slug", "")))  # the lesson as shipped, not as sent
+        lesson, source = load_gallery(str(lesson["gallery"].get("slug", "")))
     elif lesson.get("example"):
-        source = load_example()[1]
+        lesson, source = load_example()
     else:
-        source = source_for(str(lesson.get("id", "")), owner)
+        source = source_for(str(lesson.get("id", "")), _owner())
         if not source:
             raise ApiError(409, NO_SOURCE)
     lesson = {k: v for k, v in lesson.items() if k != "plan"}
@@ -860,7 +880,12 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(403, {"error": "Cross-origin requests are not allowed."})
         if HOSTED and method == "POST" and path == "/api/logout":
             return self._sign_out()  # not in ROUTES: it clears the session cookie
-        with _uploads if int(self.headers.get("Content-Length") or 0) > LARGE_BODY else nullcontext():
+        n = self._length()
+        if n is None:
+            return self._json(400, {"error": "The request's Content-Length isn't a valid size."})
+        if n > MAX_BODY:
+            return self._json(413, {"error": "That upload is too large."})
+        with _uploads if n > LARGE_BODY else nullcontext():
             return self._route(method, path)
 
     def _route(self, method: str, path: str):
@@ -960,10 +985,13 @@ class Handler(BaseHTTPRequestHandler):
         except (BrokenPipeError, ConnectionResetError, OSError):
             return
 
+    def _length(self) -> int | None:
+        """The request body's size, or None when Content-Length isn't a whole number of bytes."""
+        value = (self.headers.get("Content-Length") or "0").strip()
+        return int(value) if value.isdigit() else None
+
     def _body(self) -> dict:
-        n = int(self.headers.get("Content-Length") or 0)
-        if n > MAX_BODY:
-            raise ApiError(413, "That upload is too large.")
+        n = self._length() or 0  # _dispatch already refused a bad or oversized length
         raw = self.rfile.read(n) if n else b"{}"
         try:
             body = json.loads(raw or b"{}")

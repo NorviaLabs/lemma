@@ -1682,12 +1682,22 @@ class ServerLimitTests(unittest.TestCase):
     def as_user(uid):
         server.REQUEST.user = {"id": uid, "email": f"{uid}@example.com"}
 
-    def test_exporting_needs_an_account_when_hosted(self):
+    def test_exporting_your_own_lesson_needs_an_account_when_hosted(self):
         lesson, _ = server.load_example()
         server.REQUEST.user = None
         with self.assertRaises(server.ApiError) as e:
-            server.api_export({"lesson": dict(lesson, example=True)})
+            server.api_export({"lesson": dict(lesson, id="mine", example=False)})
         self.assertEqual(e.exception.status, 401)
+
+    def test_anyone_can_download_the_example_and_gallery_as_shipped(self):
+        server.REQUEST.user = None
+        lesson, _ = server.load_example()
+        tampered = dict(lesson, example=True, title="Not the real title")
+        html = server.api_export({"lesson": tampered})
+        self.assertIn(lesson["title"], html)
+        self.assertNotIn("Not the real title", html)  # the shipped lesson, not the one sent
+        slug = server.api_gallery({})[0]["slug"]
+        self.assertIn("<!doctype html>", server.api_export({"lesson": {"gallery": {"slug": slug}}}))
 
     def test_exporting_an_unknown_lesson_refuses_rather_than_skipping_the_quote_check(self):
         lesson, _ = server.load_example()
@@ -1752,6 +1762,30 @@ class ServerLimitTests(unittest.TestCase):
             release.set()
             for t in first: t.join()
         self.assertEqual(sorted(map(str, results)), ["429", "ok", "ok"])
+
+    def test_a_build_that_fails_to_start_does_not_stay_running(self):
+        self.as_user("ph1")
+        server.REQUEST.headers = {}
+        record = {"id": "abcdef123456", "title": "T", "request": {"audience": ""}, "paper": {"text": "x"}, "status": "queued"}
+        with patch.object(server.store, "save_request", side_effect=OSError("disk full")):
+            with self.assertRaises(OSError):
+                server._launch_request(record, None, "ph1")
+        self.assertNotIn("abcdef123456", generate.JOBS)
+        server._new_job("build")  # the account can still build
+
+    def test_a_bad_content_length_is_refused_before_any_body_is_read(self):
+        server.HOSTED = False
+        httpd = server.make_server(0)
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+        try:
+            for length, status in (("-1", 400), ("abc", 400), (str(server.MAX_BODY + 1), 413)):
+                with socket.create_connection(httpd.server_address, timeout=5) as sock:
+                    sock.sendall(f"POST /api/event HTTP/1.1\r\nHost: localhost\r\nContent-Type: application/json\r\nContent-Length: {length}\r\n\r\n{{}}".encode())
+                    reply = sock.recv(200).decode()
+                self.assertIn(f" {status} ", reply.split("\r\n")[0], length)
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
 
     def test_dev_mode_is_off_on_a_hosted_server(self):
         server.DEV = True

@@ -1144,7 +1144,7 @@
   async function downloadLesson(lesson) {
     try {
       const res = await fetch("api/export", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ lesson }) });
-      if (!res.ok) throw new Error((await res.json()).error || "Export failed");
+      if (!res.ok) throw new Error((await res.json().catch(() => null))?.error || `Download failed (${res.status}). Try again in a moment.`);
       download(`${slug(lesson.title)}.html`, await res.text());
     } catch (err) { alertInline(err.message); }
   }
