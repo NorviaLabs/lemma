@@ -26,7 +26,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TMP_HOME = tempfile.mkdtemp(prefix="lemma-test-")
 os.environ["LEMMA_HOME"] = TMP_HOME
 
-from lemma import auth, categorize, chatgpt, claudecode, jev, claude, dev, expr, export, generate, ingest, kernels, lesson as L, llm, metrics, search, server, store  # noqa: E402
+from lemma import auth, categorize, chatgpt, jev, claude, dev, expr, export, generate, ingest, kernels, lesson as L, llm, metrics, search, server, store  # noqa: E402
 from lemma.llm import Provider, Reply  # noqa: E402
 import fakejev  # noqa: E402,F401  Jev is essential, so every search and build asks this stand-in
 
@@ -1165,84 +1165,6 @@ class ChatGPTTests(unittest.TestCase):
             conv.send("LIMIT")
 
 
-class ClaudeCodeTests(unittest.TestCase):
-    """The Claude subscription provider, against tests/fakeclaude.py in place of Claude Code."""
-
-    SIGNED_IN = json.dumps({"loggedIn": True, "authMethod": "claude.ai", "email": "me@example.com", "subscriptionType": "max"})
-
-    def setUp(self):
-        self.dir = tempfile.mkdtemp(prefix="lemma-fakeclaude-")
-        fake = Path(self.dir) / "claude"
-        fake.write_text(f'#!/bin/sh\nexec "{sys.executable}" "{ROOT / "tests/fakeclaude.py"}" "$@"\n')
-        fake.chmod(0o755)
-        self.log = Path(self.dir) / "log.jsonl"
-        self.orig = claudecode.CLAUDE
-        claudecode.CLAUDE = str(fake)
-        claudecode._checked.clear()
-        self.env = patch.dict(os.environ, {"FAKE_CLAUDE_LOG": str(self.log), "FAKE_CLAUDE_AUTH": self.SIGNED_IN, "ANTHROPIC_API_KEY": "sk-ant-api"})
-        self.env.start()
-
-    def tearDown(self):
-        self.env.stop()
-        claudecode.CLAUDE = self.orig
-        claudecode._checked.clear()
-        shutil.rmtree(self.dir, ignore_errors=True)
-
-    def logged(self):
-        return [json.loads(line) for line in self.log.read_text().splitlines()]
-
-    def test_status_wants_a_subscription_sign_in(self):
-        st = claudecode.status()
-        self.assertEqual((st["signed_in"], st["email"], st["plan"]), (True, "me@example.com", "max"))
-        for auth_json, why in (('{"loggedIn": false}', "claude auth login"), ('{"loggedIn": true, "authMethod": "api_key"}', "API key")):
-            os.environ["FAKE_CLAUDE_AUTH"] = auth_json
-            st = claudecode.status(fresh=True)
-            self.assertFalse(st["signed_in"])
-            self.assertIn(why, st["error"])
-            p = llm.make_provider("claude-code")
-            self.assertFalse(p.available()[0])
-            with self.assertRaisesRegex(llm.ProviderError, "claude auth login"):
-                p.conversation("S", "<paper>x</paper>")
-        claudecode.CLAUDE = str(Path(self.dir) / "missing")
-        self.assertIn("isn't installed", claudecode.status(fresh=True)["error"])
-
-    def test_one_process_holds_the_conversation(self):
-        p = llm.make_provider("claude-code", model="claude-sonnet-5-5")
-        self.assertEqual(p.available(), (True, ""))
-        self.assertIn("claude-opus-5-5", [m["id"] for m in p.models()])
-        conv = p.conversation("SYSTEM", "<paper>text</paper>")
-        progress = []
-        self.assertEqual(json.loads(conv.send("task", on_progress=lambda *a: progress.append(a[0])).text), {"turn": 1, "model": "claude-sonnet-5-5"})
-        self.assertEqual(progress, ["thinking", "writing"])
-        self.assertEqual(json.loads(conv.send("repair").text)["turn"], 2)  # the same process remembers the first turn
-        self.assertEqual(conv.send("LONG").stop_reason, "max_tokens")
-        with self.assertRaisesRegex(llm.ProviderError, "model overloaded"):
-            conv.send("FAIL")
-        with self.assertRaisesRegex(llm.ProviderError, "usage limit"):
-            conv.send("LIMIT")
-        with self.assertRaisesRegex(llm.ProviderError, "stopped before it replied"):
-            conv.send("CRASH")
-        conv.close()
-        start, first, second = self.logged()[:3]
-        args = start["args"]
-        self.assertEqual(args[args.index("--tools") + 1], "")  # no tools: the model only reads and replies
-        self.assertEqual(args[args.index("--system-prompt") + 1], "SYSTEM")
-        for flag in ("--safe-mode", "--strict-mcp-config", "--no-session-persistence"):
-            self.assertIn(flag, args)
-        self.assertFalse(start["api_key"])  # billed to the plan, not to an API key in the environment
-        self.assertFalse(os.path.exists(start["cwd"]))  # the empty working folder is removed when done
-        self.assertEqual([b["text"] for b in first["message"]["content"]], ["<paper>text</paper>", "task"])
-        self.assertEqual(second["message"]["content"], "repair")
-
-    def test_cancel_stops_the_process(self):
-        conv = llm.make_provider("claude-code").conversation("S", "<paper>x</paper>")
-        stop = threading.Event()
-        stop.set()
-        with self.assertRaisesRegex(llm.ProviderError, "Cancelled"):
-            conv.send("SLOW", cancelled=stop)
-        self.assertIsNotNone(conv.proc.poll())
-
-
 def caps(adaptive=True, effort=True):
     return {"thinking": {"supported": True, "types": {"adaptive": {"supported": adaptive}, "enabled": {"supported": not adaptive}}},
             "effort": {"supported": effort, "high": {"supported": effort}}}
@@ -1424,12 +1346,19 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(s, 200)
         st = json.loads(raw)
         self.assertIn("library_count", st)
-        self.assertEqual({p["id"]: p["sign_in"] for p in st["providers"]}, {"opencode-go": False, "openai": False, "claude": False, "chatgpt": True, "claude-code": True})
+        self.assertEqual({p["id"]: p["sign_in"] for p in st["providers"]}, {"opencode-go": False, "openai": False, "claude": False, "chatgpt": True})
         self.assertFalse(st["provider"]["ok"])  # no key sent
         st = json.loads(self.req("GET", "/api/status", headers={"X-Lemma-Provider": "openai", "X-Lemma-Key": "sk-secret-123", "X-Lemma-Model": "m"})[1])
         self.assertEqual((st["provider"]["id"], st["provider"]["model"], st["provider"]["ok"]), ("openai", "m", True))
         self.assertNotIn("sk-secret-123", json.dumps(st))  # the key never comes back
-        self.assertEqual(self.req("GET", "/api/status", headers={"X-Lemma-Provider": "nope"})[0], 400)
+        # A provider the browser saved that OpenLemma no longer offers, such as the old Claude subscription: status
+        # still answers, with the default provider unconnected, so the page loads and Settings offers the rest.
+        s, raw = self.req("GET", "/api/status", headers={"X-Lemma-Provider": "claude-code"})
+        st = json.loads(raw)
+        self.assertEqual((s, st["provider"]["id"], st["provider"]["ok"]), (200, llm.DEFAULT_PROVIDER, False))
+        self.assertNotIn("claude-code", {p["id"] for p in st["providers"]})
+        s, raw = self.req("GET", "/api/models", headers={"X-Lemma-Provider": "claude-code", "X-Lemma-Key": "k"})
+        self.assertEqual((s, json.loads(raw)["error"]), (400, "OpenLemma doesn't offer this AI provider. Choose another in Settings."))
 
     def test_rejects_foreign_host_and_origin(self):
         self.assertEqual(self.req("GET", "/api/status", headers={"Host": "evil.example"})[0], 403)
@@ -1552,7 +1481,7 @@ class HostedServerTests(unittest.TestCase):
             self.assertEqual(s, 200)
             offered = {p["id"] for p in json.loads(raw)["providers"]}
             self.assertNotIn("chatgpt", offered)  # the one thing a hosted server leaves out
-            self.assertIn("claude-code", offered)
+            self.assertIn("claude", offered)  # the keyed providers are all still there
             self.assertEqual(req("GET", "/api/status", {"Host": "evil.example"})[0], 403)
             self.assertEqual(req("GET", "/api/chatgpt", site)[0], 404)
             self.assertEqual(req("POST", "/api/chatgpt/login", dict(site, Origin="https://tools.example.com"))[0], 404)

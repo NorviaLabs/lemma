@@ -10,7 +10,6 @@ and replies with text.
 * **OpenAI**, at ``https://api.openai.com/v1``, with an OpenAI API key.
 * **Claude**, through the Anthropic API with a Claude API key (see ``claude.py``).
 * **ChatGPT**, with the learner's ChatGPT subscription instead of a key (see ``chatgpt.py``).
-* **Claude subscription**, with the learner's Claude plan through their own Claude Code (see ``claudecode.py``).
 """
 
 from __future__ import annotations
@@ -58,8 +57,6 @@ PROVIDERS = {
         ProviderInfo("claude", "Claude", "https://api.anthropic.com", "claude-opus-5-5", "https://platform.claude.com/settings/keys"),
         # Signs in with a ChatGPT subscription instead of a key; see chatgpt.py. Only for Lemma on the learner's own computer.
         ProviderInfo("chatgpt", "ChatGPT", "https://chatgpt.com/backend-api/codex", "gpt-6.1-sol", ""),
-        # A Claude Pro or Max plan, through the learner's installed Claude Code; see claudecode.py. Also only on their own computer.
-        ProviderInfo("claude-code", "Claude subscription", "", "claude-opus-5-5", ""),
     )
 }
 DEFAULT_PROVIDER = "opencode-go"
@@ -243,8 +240,4 @@ def make_provider(provider_id: str | None, key: str = "", model: str = "") -> Pr
         from .chatgpt import ChatGPTProvider
 
         return ChatGPTProvider(model)
-    if info.id == "claude-code":
-        from .claudecode import ClaudeCodeProvider
-
-        return ClaudeCodeProvider(model)
     return HTTPProvider(info, key, model)

@@ -19,7 +19,7 @@ from unittest.mock import patch
 
 import hosting  # noqa: F401  a temporary LEMMA_HOME and the Jev stand-in
 from test_lemma import SOURCE, TESTER, FakeConversation, FakeProvider, reset_server, session_cookie, sign_in
-from lemma import chatgpt, claudecode, generate, ingest, jev, metrics, search, server, store
+from lemma import chatgpt, generate, ingest, jev, metrics, search, server, store
 from lemma.llm import ProviderError
 
 
@@ -256,12 +256,6 @@ class LocalOnlyEndpoints(unittest.TestCase):
             s, body, _ = site.req("POST", "/api/chatgpt/logout", {})
             self.assertEqual((s, body["signed_in"], body["email"]), (200, False, ""))
             self.assertFalse(chatgpt._auth_file().exists())
-
-    def test_claude_code_status_is_checked_afresh(self):
-        with LocalServer() as site, patch.object(claudecode, "status", return_value={"signed_in": True, "email": "c@example.com"}) as status:
-            s, body, _ = site.req("GET", "/api/claude-code")
-        self.assertEqual((s, body["email"]), (200, "c@example.com"))
-        status.assert_called_once_with(fresh=True)
 
 
 class Searches(unittest.TestCase):

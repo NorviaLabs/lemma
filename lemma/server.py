@@ -20,7 +20,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib import resources
 from urllib.parse import parse_qs, quote, urlsplit
 
-from . import __version__, auth, categorize, chatgpt, claudecode, export, generate, ingest, jev, logs, metrics, search, store
+from . import __version__, auth, categorize, chatgpt, export, generate, ingest, jev, logs, metrics, search, store
 from . import lesson as L
 from .llm import DEFAULT_PROVIDER, PROVIDERS, ProviderError, make_provider
 
@@ -79,7 +79,9 @@ def provider_from_request(pid: str | None = None):
     req_pid, key, model = _credential()
     if pid and pid != req_pid:
         raise ApiError(400, "Save this provider in Settings first.")
-    if (req_pid or DEFAULT_PROVIDER) not in providers():
+    if req_pid not in PROVIDERS:  # e.g. one OpenLemma used to offer, still saved in the learner's browser
+        raise ApiError(400, "OpenLemma doesn't offer this AI provider. Choose another in Settings.")
+    if req_pid not in providers():
         raise ApiError(400, "This provider is only available when OpenLemma runs on your own computer.")
     try:
         return make_provider(req_pid, key, model)
@@ -141,7 +143,10 @@ def require_valid(lesson, source_text: str | None):
 
 
 def api_status(_body):
-    p = provider_from_request()
+    try:
+        p = provider_from_request()
+    except ApiError:  # a saved provider this server doesn't offer: report the default, unconnected, so Settings can offer the rest
+        p = make_provider(DEFAULT_PROVIDER)
     ok, msg = p.available()
     return {
         "version": __version__,
@@ -187,11 +192,6 @@ def api_chatgpt_logout(_body):
     _chatgpt_only()
     chatgpt.sign_out()
     return chatgpt.status()
-
-
-def api_claude_code(_body):
-    """Whether the server's Claude Code is signed in with a Claude subscription. It signs in in a terminal, not here."""
-    return claudecode.status(fresh=True)
 
 
 @contextmanager
@@ -790,7 +790,6 @@ ROUTES = [
     ("GET", r"/api/chatgpt", api_chatgpt, False),
     ("POST", r"/api/chatgpt/login", api_chatgpt_login, False),
     ("POST", r"/api/chatgpt/logout", api_chatgpt_logout, False),
-    ("GET", r"/api/claude-code", api_claude_code, False),
     ("POST", r"/api/papers", api_papers, False),
     ("POST", r"/api/search", api_search, False),
     ("GET", r"/api/search/([a-f0-9]{12})", api_search_status, True),
