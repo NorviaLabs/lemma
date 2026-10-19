@@ -119,6 +119,10 @@
     const S = { view: "intro", ci: 0, pc: {}, primerPage: 0, primerDone: false };
     const track = (name) => { if (hooks.onEvent) hooks.onEvent(name); };  // anonymous counts; see metrics.py
     let finishedOnce = false;
+    // The end-of-lesson feedback prompt, made by the app (signed-in accounts only) and kept across redraws so
+    // nothing typed is lost. The player itself sends nothing: a downloaded lesson is mounted without the hook.
+    let feedbackEl = null;
+    const feedbackPart = () => (hooks.feedback ? (feedbackEl ||= hooks.feedback(lesson)) : null);
     track("lesson_open");
     const primer = () => (Array.isArray(lesson.primer) ? lesson.primer : []);
     let cv = null;
@@ -282,7 +286,8 @@
             hooks.onSave ? h("button", { class: "primary", onclick: (e) => hooks.onSave(lesson, e.currentTarget) }, "Save to my library") : null,
             hooks.onDownload ? h("button", { class: "ghost", onclick: () => hooks.onDownload(lesson) }, "Download for offline use") : null,
             h("button", { class: "ghost", onclick: () => openConcept(0) }, "Revisit the concepts"),
-            hooks.onExit ? h("button", { class: "ghost", onclick: () => hooks.onExit() }, "Back to start") : null)),
+            hooks.onExit ? h("button", { class: "ghost", onclick: () => hooks.onExit() }, "Back to start") : null),
+          feedbackPart()),
         hall("The concepts")));
     }
 

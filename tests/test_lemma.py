@@ -1835,6 +1835,14 @@ class DevModeTests(unittest.TestCase):
     def test_export_never_includes_the_reload_script(self):
         self.assertNotIn("dev-reload", export.lesson_html(EXAMPLE))
 
+    def test_export_has_no_feedback_prompt_and_sends_nothing(self):
+        # The end-of-lesson feedback prompt is made by app.js and handed to the player only for signed-in accounts;
+        # the offline file mounts the player with no hooks, so it has no prompt and nothing that could send one.
+        html = export.lesson_html(EXAMPLE)
+        self.assertIn('LemmaPlayer.mount(document.getElementById("main"), JSON.parse(document.getElementById("lesson-data").textContent), {});', html)
+        for absent in ("How was this lesson", "api/feedback", "fetch(", "XMLHttpRequest", "sendBeacon"):
+            self.assertNotIn(absent, html)
+
 
 class ExportTests(unittest.TestCase):
     def test_fonts_are_embedded_not_linked(self):

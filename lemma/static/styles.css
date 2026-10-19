@@ -1543,3 +1543,109 @@ main.doc { max-width: 808px; padding-top: clamp(24px, 5vw, 56px); }
   .lib-none button { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { .is-running .lib-mark::before { animation: none; border-color: var(--green-soft); border-top-color: var(--green); } }
+
+/* ---------- feedback: one form wherever it is asked for (the #/feedback page, the end of a lesson, under an
+   error or a stopped build), and the admins' inbox */
+.fb label { margin: 22px 0 8px; }
+.fb-opt { font-weight: 400; color: var(--mute); }
+.fb-q { margin: 26px 0 10px; font: 600 15px/1.3 var(--sans); color: var(--ink); }
+.fb-rate .seg { gap: 7px; }
+.fb-rate .seg .icon { width: 17px; height: 17px; color: var(--mute); transition: color var(--ui); }
+.fb-rate .seg[aria-pressed="true"], .fb-rate .seg[aria-pressed="true"]:hover:not(:disabled) { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(17, 19, 24, .08), 0 2px 8px rgba(17, 19, 24, .06); }
+.fb-rate .seg[aria-pressed="true"][data-value="helpful"] .icon { color: var(--good); }
+.fb-rate .seg[aria-pressed="true"][data-value="not_helpful"] .icon { color: var(--bad); }
+.fb textarea { display: block; min-height: 0; line-height: 1.5; }
+.fb-help { margin: -2px 0 10px; font-size: 14.5px; line-height: 1.45; color: var(--mute); }
+.fb-foot { display: flex; align-items: baseline; gap: 6px 16px; margin-top: 10px; }
+.fb-reply { margin: 0; font-size: 14.5px; line-height: 1.45; color: var(--mute); overflow-wrap: anywhere; min-width: 0; }
+.fb-reply strong { font-weight: 600; color: var(--body); }
+.fb-count { margin-left: auto; font: 600 13px/1.3 var(--sans); color: var(--mute); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fb-count.is-full { color: var(--ink); }
+.fb .error { margin: 14px 0 0; }
+.fb-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 18px; }
+.fb-thanks { display: flex; align-items: flex-start; gap: 10px; margin: 0; font-size: 16px; line-height: 1.5; color: var(--ink); overflow-wrap: anywhere; animation: fb-in 320ms cubic-bezier(.16, 1, .3, 1); }
+.fb-thanks:focus { outline: none; }
+.fb-tick { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--good-bg); color: var(--good); }
+.fb-tick .icon { width: 14px; height: 14px; }
+@keyframes fb-in { from { opacity: 0; transform: translateY(-4px); } }
+
+/* the page, from the footer: one raised card, like signing in */
+.fb-page { display: grid; justify-items: center; padding: clamp(8px, 4vh, 48px) 0 24px; }
+.fb-card { width: 100%; max-width: 560px; padding: clamp(28px, 4vw, 44px); background: var(--surface); border-radius: 28px; box-shadow: var(--lift-hi); }
+.fb-card h1 { margin: 0 0 10px; font-size: clamp(28px, 3vw, 34px); line-height: 1.1; }
+.fb-lead { margin: 0; font-size: 17px; line-height: 1.5; color: var(--body); }
+.fb-card .fb-thanks, .fb-lesson .fb-thanks { padding: 16px 18px; border-radius: 16px; background: color-mix(in srgb, var(--good-bg) 60%, var(--surface)); }
+.fb-card .fb-thanks { margin-top: 26px; }
+.fb-card .fb-tick, .fb-lesson .fb-tick { background: var(--surface); }
+
+/* the end of a lesson: a quiet card after the finish actions, the rating first */
+.fb-lesson { margin-top: 36px; padding: 20px 24px 22px; background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--lift); }
+.fb-ask { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; }
+.fb-lesson h2.fb-q { margin: 0; font: 700 19px/1.25 var(--sans); letter-spacing: -.01em; }
+.fb-lesson .fb-more:not([hidden]) { animation: fb-in 320ms cubic-bezier(.16, 1, .3, 1); }
+.fb-lesson .fb label { margin-top: 18px; }
+.fb-lesson:has(.fb-thanks) { padding: 0; background: none; box-shadow: none; }
+
+/* "Report this" under an error: on the error's own wash, the form without a card of its own */
+.fb-report { margin-top: 8px; }
+.fb-report-btn { margin-left: -14px; color: var(--body); }
+.error .ghost:hover:not(:disabled) { background: color-mix(in srgb, var(--bad) 10%, var(--bad-bg)); color: var(--ink); }
+.error .fb label { margin-top: 10px; }
+.error .fb-help, .error .fb-reply, .error .fb-count, .error .fb-opt { color: var(--body); }
+.error .fb button.small:not(.ghost):not(:disabled) { background: var(--surface); }
+.error .fb button.small:not(.ghost):hover:not(:disabled) { background: color-mix(in srgb, var(--bad) 6%, var(--surface)); }
+.error .fb .error { padding: 0; margin-top: 10px; background: none; }
+.error .fb-thanks { margin-top: 6px; font-size: 15px; }
+.error .fb-tick { background: var(--surface); }
+
+/* …and on a library build row: the form opens inside the row on a canvas plate, as a question does */
+.lib-report { grid-column: 1 / -1; position: relative; z-index: 1; margin-top: 10px; padding: 4px 18px 18px; border-radius: 16px; background: var(--plate); }
+.lib-build .lib-report { grid-column: 2; }
+.lib-report .fb label { margin-top: 12px; }
+.lib-report:has(.fb-thanks) { padding: 14px 16px; }
+.lib-row.is-reporting, .lib-row.is-reporting:hover { background: var(--surface); }
+.lib-row.is-reporting .lib-open::after { display: none; }
+
+/* the account page's way to the inbox, for admins */
+.af-link.af-last { border-radius: 0 0 16px 16px; }
+
+/* the inbox: an Operate list in the library's grouped card */
+.fbx-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px 28px; margin-bottom: 28px; }
+.fbx-head h1 { margin: 0; }
+.fbx-filter { display: grid; justify-items: end; }
+.fbx-count { text-align: right; }
+.fbx-row { align-items: start; }
+.fbx-row:not(.is-asking):hover { background: transparent; }
+.fbx-row:not(.is-asking):hover + .lib-row::before { border-color: var(--rule); }
+.fbx-top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 10px; }
+.fbx-rate { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px 0 8px; border-radius: 9999px; font: 600 13px/1 var(--sans); }
+.fbx-rate .icon { width: 14px; height: 14px; }
+.fbx-rate.is-good { background: var(--good-bg); color: var(--good); }
+.fbx-rate.is-bad { background: var(--bad-bg); color: var(--bad); }
+.fbx-top .tag { height: 26px; padding: 0 10px; }
+.fbx-done { gap: 4px; }
+.fbx-done .icon { width: 12px; height: 12px; }
+.fbx-msg { margin: 0; max-width: 68ch; font-size: 17px; line-height: 1.5; color: var(--ink); white-space: pre-wrap; overflow-wrap: anywhere; }
+.fbx-msg.is-empty { color: var(--mute); }
+.fbx-row.is-done .fbx-msg:not(.is-empty) { color: var(--body); }
+.fbx-ctx { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 10px 0 0; font-size: 14.5px; line-height: 1.45; color: var(--body); overflow-wrap: anywhere; }
+.fbx-k { font-weight: 600; color: var(--mute); }
+.fbx-ctx code { font: 400 13.5px var(--mono); color: var(--ink); }
+.fbx-from { margin-top: 10px; }
+.fbx-row .lib-acts { margin-top: -6px; }
+.fbx-404 { margin: clamp(8px, 4vh, 48px) auto 0; }
+
+@media (max-width: 720px) {
+  .fb-ask { flex-direction: column; align-items: stretch; }
+  .fb-rate { display: flex; }
+  .fb-rate .seg { flex: 1; }
+  .fb-lesson { padding: 18px 18px 20px; }
+  .fb-card { border-radius: 22px; }
+  .fb-foot { flex-wrap: wrap; }
+  .lib-report { padding: 2px 14px 14px; }
+  .fbx-head { flex-direction: column; align-items: stretch; }
+  .fbx-filter { justify-items: start; }
+  .fbx-count { text-align: left; }
+  .fbx-row .lib-acts { margin: 8px 0 0 -12px; flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) { .fb-thanks, .fb-lesson .fb-more:not([hidden]) { animation: none; } .fb-rate .seg .icon { transition: none; } }
