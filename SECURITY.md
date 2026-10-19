@@ -2,7 +2,7 @@
 
 ## Reporting a problem
 
-Email **contact@openlemma.org** with what you found, how to reproduce it, and what someone could do with it. Please don't open a public issue or share details until it's fixed. We'll reply as soon as we can and tell you when a fix is live.
+Email **contact@openlemma.org**, or report it privately through GitHub's [private vulnerability reporting](https://github.com/NorviaLabs/lemma/security/advisories/new), with what you found, how to reproduce it, and what someone could do with it. Please don't open a public issue or share details until it's fixed. We'll reply as soon as we can and tell you when a fix is live.
 
 ## Testing responsibly
 

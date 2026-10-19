@@ -30,8 +30,10 @@ Keep each change focused and follow the code around it. Add or update tests for 
 
 `eval/run.py` calls paid models; don't run it as part of a contribution.
 
-## Reporting a security problem
+## Reporting problems
 
-Please don't open a public issue. See [SECURITY.md](SECURITY.md).
+- **A problem with the code:** open a GitHub issue at [github.com/NorviaLabs/lemma/issues](https://github.com/NorviaLabs/lemma/issues).
+- **A problem on openlemma.org:** use **Send feedback** on the site (in the footer, or **Report this** under an error).
+- **A security problem:** please don't open a public issue. See [SECURITY.md](SECURITY.md).
 
 By contributing, you agree that your contribution is licensed under the MIT License (see `LICENSE` and `NOTICE`).

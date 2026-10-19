@@ -4,13 +4,18 @@
 
 OpenLemma teaches complex concepts visually. Ask about a concept, or bring a paper, article or chapter, and it builds a short, hands-on lesson: the idea in brief, then for each idea a live model that shows how it works, an explanation with an exact quote from a real source, and then you try it yourself. For a concept, it finds encyclopedias, textbooks and papers to teach from; every quote is checked against its source. It runs at [openlemma.org](https://openlemma.org), or on your own computer. Who it is for and what it promises are in [`PRODUCT.md`](PRODUCT.md), and the visual design system is in [`DESIGN.md`](DESIGN.md). OpenLemma is open source under the [MIT License](LICENSE); the code, package and command are still called `lemma`.
 
+Try it at [openlemma.org](https://openlemma.org), or run your own copy.
+
 ## Quick start
 
 You need [uv](https://docs.astral.sh/uv/) and a copy of this repository.
 
 ```sh
+git clone https://github.com/NorviaLabs/lemma && cd lemma
 uv run lemma                 # installs what's needed on first run, then opens http://localhost:8765
 ```
+
+Signing in needs a Google OAuth client of your own, and development runs with `set -a; . ./local.env; set +a` first; [What you need](#what-you-need) has the details.
 
 The built-in example lesson (Galton, 1886) and the gallery work straight away, with no setup. Signing in, searching and building need keys of your own; [What you need](#what-you-need) lists them.
 
@@ -25,7 +30,7 @@ To make your own lessons, OpenLemma needs your own key for an AI provider, and t
 
 Ask about a concept and choose multiple sources, paste a link, or upload a PDF. Search results suggest an overview and up to two relevant papers only after downloading and checking readable full text; blocked copies are skipped in favor of readable alternatives. Checks are cached for five minutes, so availability can still change. You can change every selection. Lemma creates one combined lesson, attributes its evidence to individual sources, and asks the model to explain meaningful disagreements.
 
-Creation runs in the background. Review the proposed outline, then watch concept-by-concept progress and an approximate time range once enough work has completed. You can start checked concepts early, leave the page, and return through the build's link or My library. Completed lessons save automatically. Unreadable sources are listed as warnings; creation fails if none can be read.
+Creation runs in the background. Review the proposed outline, then watch concept-by-concept progress and an approximate time range once enough work has completed. You can start checked concepts early, leave the page, and return through the build's link or the Library. Completed lessons save automatically. Unreadable sources are listed as warnings; creation fails if none can be read.
 
 Requests, source text, and progress are stored privately under `LEMMA_HOME` (by default `~/.lemma`). Credentials are never written into build records. Server restarts mark active builds interrupted rather than resuming them automatically; retry uses your current provider credentials. You can cancel running builds, retry stopped builds with the same selections, and delete stopped builds or saved lessons from the library.
 
@@ -45,7 +50,7 @@ Claude is called through Anthropic's Python SDK with your key, streaming each re
 
 ### How Lemma uses your ChatGPT subscription
 
-This signs in the same way the Codex CLI does. **Sign in with ChatGPT** in Settings opens OpenAI's sign-in page, which sends you back to `http://localhost:1455/auth/callback`; Lemma listens there only while you sign in. Your tokens are kept in `~/.lemma/chatgpt-auth.json`, readable only by you, and refreshed when they expire. **Sign out** deletes them. Lessons are built through the ChatGPT backend that Codex uses, with no tools, and count against your plan's usage. It is for your own use on your own computer: a hosted Lemma serving other people must not offer it.
+This signs in the same way the Codex CLI does. **Sign in with ChatGPT** on your account page opens OpenAI's sign-in page, which sends you back to `http://localhost:1455/auth/callback`; Lemma listens there only while you sign in. Your tokens are kept in `~/.lemma/chatgpt-auth.json`, readable only by you, and refreshed when they expire. **Sign out** deletes them. Lessons are built through the ChatGPT backend that Codex uses, with no tools, and count against your plan's usage. It is for your own use on your own computer: a hosted Lemma serving other people must not offer it.
 
 ### Host it for other people
 
@@ -85,7 +90,7 @@ OpenLemma runs the same on your own computer as hosted, so a copy you run behave
 - **Nothing set up:** the home page, the gallery, the example lesson, downloads, and the tests (`uv run python -m unittest discover tests`), which use stand-ins for every outside service.
 - **Signing in** (your library, searching, building) needs a Google OAuth web client of your own, from [Google Cloud](https://console.cloud.google.com/auth/clients), with `http://localhost:8765/auth/google/callback` as an authorized redirect URI. Start Lemma with `LEMMA_GOOGLE_CLIENT_ID` and `LEMMA_GOOGLE_CLIENT_SECRET` set.
 - **Searching and building** also need a TypeSafe key, `TYPESAFE_API_KEY`, for Jev's checks; without it Lemma says why they are off.
-- **Building** needs an AI provider of your own, chosen on your account page after you sign in: a key for OpenCode Go, OpenAI or Claude, or the Claude or ChatGPT subscription signed in on your computer.
+- **Building** needs an AI provider of your own, chosen on your account page after you sign in: a key for OpenCode Go, OpenAI or Claude, or the ChatGPT subscription signed in on your computer.
 
 For development, run one Lemma with the development config, which lifts the daily caps:
 
@@ -100,13 +105,9 @@ uv run lemma --dev
 
 The gallery contains eighteen playable lessons: attention, research reliability, Wuhan transmission, opinion dynamics, Gettier, Galton, Turner's frontier thesis, Aquinas on scriptural senses, Mendel's peas, Brown v. Board of Education, Poe's *The Masque of the Red Death*, Euclid's equilateral triangle, wave interference, Schelling's segregation model, information cascades, ice–albedo feedback, externalities and Pigouvian taxes, and loss aversion.
 
-All lesson JSON lives in `lemma/examples/gallery/`, registered by `index.json`. Every concept has an ordered `activities` sequence. The six additions were generated with Claude Opus 5.5 through Lemma's outline, concept-build, repair, and validation pipeline: 30 concepts, none omitted. Each gallery cover uses a live model from its lesson, with the same player and offline export as the original six. Build evidence and full ingested sources remain in ignored `eval/results/gallery-claude/`; published lessons include generation metadata and verified quotation excerpts. No provider is called during playback.
+All lesson JSON lives in `lemma/examples/gallery/`, and a lesson appears in the gallery once it is registered in `index.json`. Every concept has an ordered `activities` sequence, and each gallery cover uses a live model from its lesson. No provider is called during playback; Galton remains the separate built-in example.
 
-The last six cover subjects the gallery lacked (physics, urban studies, social learning, climate science, economics and behavioural economics). Each was built in the Lemma app from three or four sources chosen from its topic search, so each is a combined lesson with per-source attribution: 32 concepts, 3 left out by the quality checks (each lesson says which). Ice–albedo, information cascades, externalities and loss aversion were built with Jev on, so they carry Jev's subject category; externalities keeps two possible problems Jev left for review on its last concept. Wave interference and Schelling were built before Jev was switched on and have neither. `eval/publish_coverage.py` published them from the Lemma home that built them, adding only activity sequences, ids and generation metadata; their full sources stay in ignored `eval/results/gallery-coverage/`.
-
-Each gallery lesson was checked against its complete source when it was built; the gallery ships no source text except Galton's full public-domain paper, `lemma/examples/galton-1886.txt`, for the example lesson. When a gallery lesson is served, every check runs except grounding (the quotes against the source), which `lemma.lesson.check_lesson` skips when it has no source. The publish scripts in `eval/` re-check a rebuilt lesson against its full local source before writing it, and make no provider calls.
-
-All seventeen non-Galton lessons carry the same `created`, `provider`, and `generation` metadata fields; combined lessons also list their `sources`. Timestamps and provider details for the original five come from their recorded pilot builds; generation metadata records the pipeline, model, full-source character count, and omitted-concept count. Galton remains the separate built-in example.
+The gallery ships no source text except Galton's full public-domain paper, `lemma/examples/galton-1886.txt`. Each gallery lesson was checked against its complete source when it was built. When one is served, every check runs except grounding (the quotes against the source), which `lemma.lesson.check_lesson` skips when it has no source; `tests/` opens every gallery lesson. To rebuild one, build it in the app from its sources, then publish it with the scripts in `eval/`, which re-check the lesson against its full local source before writing it and make no provider calls.
 
 The gallery lessons use the fixed model-first sequence. Newly built lessons choose their screens per concept: the outline proposes activity plans (worked examples, comparisons, staged evidence, matching, ordering, tracing, passages, estimates, and live-model blocks), Jev picks one plan per concept before drafting, and a concept may be taught without a live model. See `docs/lesson-flow-design.md` for the design and what remains.
 
