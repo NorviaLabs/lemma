@@ -120,6 +120,14 @@
     s.innerHTML = ICONS[name];
     return s;
   }
+  // A button that is waiting on the server: disabled and announced busy, but drawn in its own colours (see
+  // [aria-busy] in styles.css) so it reads as working, not as unavailable.
+  function busy(btn, on) {
+    btn.disabled = on;
+    if (on) btn.setAttribute("aria-busy", "true"); else btn.removeAttribute("aria-busy");
+  }
+  // A link that opens in a new tab says so, to the eye (the out arrow) and to a screen reader.
+  const ext = (href, ...kids) => h("a", { href, target: "_blank", rel: "noopener noreferrer", class: "ext" }, ...kids, icon("out"), h("span", { class: "sr-only" }, " (opens in a new tab)"));
 
   const STATE_MARK = { waiting: "", active: "", done: "check", failed: "cross", skipped: "dash" };
   const clock = (sec) => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, "0")}`;
@@ -255,7 +263,7 @@
         if (!p.sign_in) next.keys[p.id] = key.value.trim();
         if (!model.disabled && model.value) next.models[p.id] = model.value;
         if (!p.sign_in && !next.keys[p.id]) return msg.replaceChildren(errorBox(`Paste your ${p.name} key first.`));
-        save.disabled = true;
+        busy(save, true);
         msg.replaceChildren(h("p", { class: "muted" }, p.sign_in ? "Checking your sign-in…" : "Checking the key…"));
         try {
           await loadModels(next);  // a key that can't list models won't build lessons either
@@ -265,7 +273,7 @@
           msg.replaceChildren(h("p", { class: "ok" }, icon("check"), ` Saved. Lessons will be built with ${status.provider.label}.`));
           if (onSaved) onSaved();
         } catch (err) { msg.replaceChildren(errorBox(err.message)); }
-        save.disabled = false;
+        busy(save, false);
       } }, compact ? "Connect and continue" : "Save");
       model.addEventListener("change", () => { modelName.textContent = model.value; });
       const modelPart = compact
@@ -274,7 +282,7 @@
         : h("div", {}, h("label", { for: "model" }, `${p.name} model`), model, note);
       body.replaceChildren(choice, ...(p.sign_in ? signInPart(p) : [
         h("label", { for: "ai-key" }, `${p.name} key`), key,
-        h("p", { class: "muted small" }, h("a", { href: p.key_url, target: "_blank", rel: "noopener noreferrer" }, `Get ${/^[aeiou]/i.test(p.name) ? "an" : "a"} ${p.name} key`),
+        h("p", { class: "muted small" }, ext(p.key_url, `Get ${/^[aeiou]/i.test(p.name) ? "an" : "a"} ${p.name} key`),
           ". ", KEY_NOTE)]),
         modelPart, msg,
         h("div", { class: "actions" }, save));
@@ -344,7 +352,7 @@
     const noticeLine = h("p", { class: "he-live" }, "Watch two numbers as you drag: how far the parents are from average, and how far their children are.");
     const noticeMore = h("p", {}, "Try tall parents first, then short ones.");
     const tryText = h("p", {}, "Regression to the mean, taught from Galton's 1886 study of heredity. Drag the parents' height away from the middle and watch where their children land.");
-    const whyBtn = h("button", { type: "button", class: "he-skip", onclick: () => setStep(2, true) }, "Tell me why");
+    const whyBtn = h("button", { type: "button", class: "small he-skip", onclick: () => setStep(2, true) }, "Tell me why");
     const verbs = h("ol", { class: "verbs", "aria-live": "polite" },
       verb(1, "Try this", tryText),
       verb(2, "Notice", noticeLine, noticeMore, whyBtn),
@@ -797,7 +805,7 @@
       qIn.value = q;
       errSlot.replaceChildren();
       const seq = ++searchSeq, current = () => seq === searchSeq && results.isConnected;
-      submit.disabled = true;
+      busy(submit, true);
       submit.textContent = "Searching…";
       const progress = searchProgress(q);
       results.replaceChildren(progress.el);
@@ -816,7 +824,7 @@
       } catch (err) {
         if (current()) { results.replaceChildren(); errSlot.append(errorBox(err.message)); }
       } finally {
-        if (seq === searchSeq) { submit.disabled = false; submit.textContent = "Find sources"; }
+        if (seq === searchSeq) { busy(submit, false); submit.textContent = "Find sources"; }
       }
     };
     const chips = h("div", { class: "chips", role: "group", "aria-label": "Try a topic" },
@@ -829,9 +837,9 @@
       const make = h("button", { class: "primary", disabled: !selected.size, onclick: async () => {
         session.audience = audSel.value === "other" ? audOther.value.trim() || AUDIENCES[0] : audSel.value;
         const begin = async () => {
-          make.disabled = true;
+          busy(make, true);
           try { const job = await api("/api/requests", { sources: [...selected], topic: r.query, audience: session.audience }); showRequest(job.id); }
-          catch (e) { errSlot.replaceChildren(errorBox(e.message)); make.disabled = false; }
+          catch (e) { errSlot.replaceChildren(errorBox(e.message)); busy(make, false); }
         };
         if (!(status.provider || {}).ok) return showConnect(begin);
         await begin();
@@ -855,7 +863,7 @@
           x.summary ? h("p", { class: "r-sum" }, x.summary) : null,
           h("p", { class: "muted small" }, x.available ? "Full text checked. Availability can change." : `Could not verify readable full text: ${x.availability_error || "Try another source."}`),
           h("div", { class: "r-actions" }, learn,
-            h("a", { href: x.link || x.url, target: "_blank", rel: "noopener noreferrer", class: "r-open" }, "Open it", icon("out"), h("span", { class: "sr-only" }, " (opens in a new tab)"))),
+            ext(x.link || x.url, "Open it")),
           null);
       });
       results.replaceChildren(...[
@@ -889,7 +897,7 @@
     }
     function addRow(pick, ...content) {
       pick.row = h("li", { class: `bring-item ${pick.kind}` }, ...content,
-        h("button", { type: "button", class: "small ghost bring-remove", "aria-label": pick.kind === "file" ? `Remove ${pick.file.name}` : "Remove this link", onclick: () => removePick(pick) }, icon("cross")));
+        h("button", { type: "button", class: "icon-btn danger bring-remove", "aria-label": pick.kind === "file" ? `Remove ${pick.file.name}` : "Remove this link", onclick: () => removePick(pick) }, icon("cross")));
       picks.push(pick);
       bringList.append(pick.row);
     }
@@ -980,7 +988,7 @@
       const chosen = picks.filter((x) => x.kind === "file" || x.input.value.trim());
       if (!chosen.length) return picks[0].input?.focus();
       if (submit.disabled) return;
-      submit.disabled = true;
+      busy(submit, true);
       const label = submit.textContent;
       const sources = [];
       try {
@@ -995,14 +1003,14 @@
         }
       } catch (err) {
         errSlot.append(errorBox(err.message));
-        submit.disabled = false;
+        busy(submit, false);
         submit.textContent = label;
         return;
       }
       submit.textContent = label;
       const begin = async () => {
         try { const job = await api("/api/requests", { sources, audience: session.audience }); showRequest(job.id); }
-        catch (e) { errSlot.replaceChildren(errorBox(e.message)); submit.disabled = false; }
+        catch (e) { errSlot.replaceChildren(errorBox(e.message)); busy(submit, false); }
       };
       if (!(status.provider || {}).ok) return showConnect(begin);
       return begin();
@@ -1296,7 +1304,7 @@
         h("a", { class: "btn", href: "#/make", onclick: () => { session.mode = "bring"; } }, icon("doc"), "Bring a source"),
         h("button", { type: "button", class: "ghost", onclick: () => { video.currentTime = 0; start(); } }, icon("refresh"), "Replay")));
     video.addEventListener("ended", () => { after.hidden = false; after.querySelector("button").focus({ preventScroll: true }); });
-    video.addEventListener("error", () => status.replaceChildren("The film couldn't load. ", h("a", { href: video.currentSrc || video.src, target: "_blank", rel: "noopener" }, "Open the video file"), "."));
+    video.addEventListener("error", () => status.replaceChildren("The film couldn't load. ", ext(video.currentSrc || video.src, "Open the video file"), "."));
     cleanups.push(() => { video.pause(); video.removeAttribute("src"); video.load(); });
     return h("figure", { class: "he-film" }, h("div", { class: "film-frame" }, video, cover, after), status);
   }
@@ -1370,13 +1378,13 @@
     }
 
     /* Ask inside the row: the question, the action in red and a way out. Escape or "Keep" puts the row back. */
-    function ask(li, opener, { question, yes, busy, no, act }) {
+    function ask(li, opener, { question, yes, busyText, no, act }) {
       const acts = li.querySelector(".lib-acts");
       li.querySelector(".lib-msg").hidden = true;
       const close = () => { li.classList.remove("is-asking"); box.remove(); acts.hidden = false; opener.focus(); };
       const yesBtn = h("button", { type: "button", class: "small lib-yes", onclick: async () => {
-        yesBtn.disabled = noBtn.disabled = true;
-        yesBtn.textContent = busy;
+        busy(yesBtn, true); noBtn.disabled = true;
+        yesBtn.textContent = busyText;
         await act();
       } }, yes);
       const noBtn = h("button", { type: "button", class: "small ghost", onclick: close }, no);
@@ -1398,8 +1406,8 @@
           h("h3", { class: "lib-title" }, h("a", { class: "lib-open", href: `#/request/${r.id}` }, title)),
           h("p", { class: "lib-meta" }, h("span", { class: "lib-state" }, st.says), r.created ? h("span", {}, "Started ", when(r.created, true)) : null)),
         acts, h("p", { class: "lib-msg", role: "alert", hidden: true }));
-      const del = () => h("button", { type: "button", class: "small ghost lib-del", "aria-label": `Delete the build “${title}”`, onclick: (e) => ask(li, e.currentTarget, {
-        question: "Delete this build? Its sources and progress go with it.", yes: "Delete build", busy: "Deleting…", no: "Keep it",
+      const del = () => h("button", { type: "button", class: "small danger lib-del", "aria-label": `Delete the build “${title}”`, onclick: (e) => ask(li, e.currentTarget, {
+        question: "Delete this build? Its sources and progress go with it.", yes: "Delete build", busyText: "Deleting…", no: "Keep it",
         act: async () => {
           try { await api(`/api/requests/${r.id}`, undefined, "DELETE"); } catch (err) { return refuse(key, err.message); }
           const next = li.nextElementSibling?.dataset.key || li.previousElementSibling?.dataset.key;
@@ -1409,8 +1417,8 @@
         } }) }, "Delete");
       if (r.status === "running") {
         acts.append(h("a", { class: "btn small", href: `#/request/${r.id}` }, "View progress"),
-          h("button", { type: "button", class: "small ghost lib-del", onclick: (e) => ask(li, e.currentTarget, {
-            question: "Cancel this build? Retrying later starts again from reading the sources.", yes: "Cancel build", busy: "Cancelling…", no: "Keep building",
+          h("button", { type: "button", class: "small danger lib-del", onclick: (e) => ask(li, e.currentTarget, {
+            question: "Cancel this build? Retrying later starts again from reading the sources.", yes: "Cancel build", busyText: "Cancelling…", no: "Keep building",
             act: async () => {
               try { await api(`/api/requests/${r.id}/cancel`, {}); } catch (err) { return refuse(key, err.message); }
               await new Promise((ok) => setTimeout(ok, 600));  // the build stops between steps
@@ -1427,9 +1435,9 @@
             catch (err) { if (body.isConnected) refuse(key, err.message); else alertInline(err.message); }
           };
           if (!(status.provider || {}).ok) return showConnect(begin);
-          retry.disabled = true;
+          busy(retry, true);
           await begin();
-          retry.disabled = false;
+          busy(retry, false);
         } }, icon("refresh"), "Retry");
         acts.append(retry, del());
       }
@@ -1448,16 +1456,16 @@
         h("div", { class: "lib-acts" },
           h("button", { type: "button", class: "small ghost", "aria-label": `Download “${title}” as one offline file`, onclick: async (e) => {
             const b = e.currentTarget;
-            b.disabled = true; dlLabel.textContent = "Preparing…"; li.querySelector(".lib-msg").hidden = true;
+            busy(b, true); dlLabel.textContent = "Preparing…"; li.querySelector(".lib-msg").hidden = true;
             try { await exportLesson(await fetchLesson()); say(`Downloaded “${title}”.`); }
             catch (err) { showMsg(li, err.message); }
-            b.disabled = false; dlLabel.textContent = "Download";
+            busy(b, false); dlLabel.textContent = "Download";
           } }, icon("down"), dlLabel),
           h("button", { type: "button", class: "small ghost", "aria-label": `Edit “${title}”`, onclick: async () => {
             try { showEditor(await fetchLesson()); } catch (err) { showMsg(li, err.message); }
           } }, "Edit"),
-          h("button", { type: "button", class: "small ghost lib-del", "aria-label": `Delete “${title}”`, onclick: (e) => ask(li, e.currentTarget, {
-            question: "Delete this lesson from your library? This can't be undone.", yes: "Delete lesson", busy: "Deleting…", no: "Keep it",
+          h("button", { type: "button", class: "small danger lib-del", "aria-label": `Delete “${title}”`, onclick: (e) => ask(li, e.currentTarget, {
+            question: "Delete this lesson from your library? This can't be undone.", yes: "Delete lesson", busyText: "Deleting…", no: "Keep it",
             act: async () => {
               try { await api(`/api/lessons/${it.id}`, undefined, "DELETE"); } catch (err) { return refuse(key, err.message); }
               const sib = (dir) => { let n = li[dir]; while (n && n.hidden) n = n[dir]; return n?.dataset.key; };
@@ -1596,10 +1604,10 @@
       let edited = lesson;
       if (advanced.open) { try { edited = JSON.parse(json.value); } catch (e) { errSlot.append(errorBox("The JSON isn't valid: " + e.message)); return; } }
       else fields.forEach((f) => f());
-      save.disabled = true;
+      busy(save, true);
       try { await api("/api/lessons", { lesson: edited }); errSlot.append(h("p", { class: "ok", role: "status" }, icon("check"), " Checked and saved to your library.")); }
       catch (err) { errSlot.append(errorBox(err.message + " The lesson was not saved, because a lesson that fails its checks is never shown to learners.", err.problems)); }
-      save.disabled = false;
+      busy(save, false);
     } }, "Check and save");
     view(h("section", {},
       h("h1", {}, "Edit lesson"),
@@ -1695,8 +1703,8 @@
   async function showAccount(toProvider) {
     if (!status.user) { holdIntent({ route: toProvider ? "#/settings" : "#/account" }); return showSignIn(); }
     const u = status.user;
-    const out = h("button", { class: "ghost account-signout", onclick: async () => {
-      out.disabled = true;
+    const out = h("button", { class: "ghost small account-signout", onclick: async () => {
+      busy(out, true);
       try { await api("/api/logout", {}); } catch (e) { /* signed out either way */ }
       status = await api("/api/status").catch(() => Object.assign(status, { user: null }));
       drawAccountLink();
@@ -1739,8 +1747,17 @@
   }
 
   /* ------------------------------------------------------------ routing */
+  // The nav link for the page you are on says so (aria-current), and is drawn as the current pill.
+  function markNav(hash) {
+    const page = { "#/settings": "#/account", "#/": "", "": "" }[hash.split("?")[0]] ?? hash.split("?")[0];
+    document.querySelectorAll(".site-nav a").forEach((a) => {
+      if (page && a.getAttribute("href") === page) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+    });
+  }
+
   async function route() {
     const hash = location.hash;
+    markNav(hash);
     if (hash.startsWith("#/request/")) {
       if (player && hash.endsWith("/learn")) return;
       return showRequest(hash.split("/")[2]);
