@@ -1,4 +1,4 @@
-# Cloudflare Tunnel for Lemma. The credentials file next to this one is secret and kept out of git.
+# Cloudflare Tunnel for Lemma. Its credentials file sits next to this one on the server only (see Secrets in deploy/README.md).
 tunnel: b9f37d76-4c40-4ceb-9e02-8988a0755f90
 credentials-file: /etc/cloudflared/lemma.json
 ingress:

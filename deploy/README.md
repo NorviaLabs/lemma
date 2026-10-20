@@ -7,8 +7,8 @@ Lemma's data (`accounts.db`, `metrics.db`, `feedback.db` and each account's libr
 ## Files
 
 - `compose.yaml`: Lemma and `cloudflared`.
-- `cloudflared/config.yml`: the tunnel's routes. `cloudflared/lemma.json` holds the tunnel's credentials; it is secret and kept out of git.
-- `lemma.env`: the Google OAuth client ID and secret, the TypeSafe key, and `LEMMA_ADMINS`; secret and kept out of git. `lemma.env.example` lists its keys.
+- `cloudflared/config.yml`: the tunnel's routes.
+- `lemma.env.example`: the keys `lemma.env` holds (the Google OAuth client ID and secret, the TypeSafe key, and `LEMMA_ADMINS`).
 - `host`: the VM's `user@address`, one line; kept out of git. `push.sh` and `backup.sh` use it when given no address.
 - `push.sh`: deploys this checkout. `vm-startup.sh`: prepares the VM (2 GB of swap and Docker), run by `push.sh`.
 
@@ -18,7 +18,7 @@ Lemma's data (`accounts.db`, `metrics.db`, `feedback.db` and each account's libr
 deploy/push.sh
 ```
 
-Commit and push directly to `main` before deploying; do not create a pull request unless explicitly requested. Run the script from `main`, clean and matching `origin/main`; it refuses anything else, so the live site always matches `main`. It copies this checkout to the VM (secrets included), then rebuilds and restarts both containers. Logs: `ssh "$(cat deploy/host)" 'cd lemma/deploy && sudo docker compose logs -f'`. Lemma's own lines are only error reports (`<time> error <id> in <where>: <type>` and the code it passed through); a learner who quotes an error id can be found with `sudo docker compose logs lemma | grep -A 30 <id>`.
+Commit and push directly to `main` before deploying; do not create a pull request unless explicitly requested. Run the script from `main`, clean and matching `origin/main`; it refuses anything else, so the live site always matches `main`. It checks the VM has its secrets, copies this checkout there (never secrets; see below), then rebuilds and restarts both containers. Logs: `ssh "$(cat deploy/host)" 'cd lemma/deploy && sudo docker compose logs -f'`. Lemma's own lines are only error reports (`<time> error <id> in <where>: <type>` and the code it passed through); a learner who quotes an error id can be found with `sudo docker compose logs lemma | grep -A 30 <id>`.
 
 ## Limits and analytics
 
@@ -46,13 +46,34 @@ Anonymous daily counts in `metrics.db` name no account; its per-account quota ro
 - Google: the project's Google Auth Platform, External and in production, web client "Lemma web" with callback `https://openlemma.org/auth/google/callback`. Its privacy policy link is `https://openlemma.org/privacy`.
 - GitHub sign-in was turned off on 2026-10-19 (its settings removed from `lemma.env`). Lemma still supports it: to offer it again, create an OAuth app with callback `https://openlemma.org/auth/github/callback` and set `LEMMA_GITHUB_CLIENT_ID` and `LEMMA_GITHUB_CLIENT_SECRET`.
 
-A new secret goes into `lemma.env`, followed by `push.sh`.
+## Secrets
+
+The two secret files live only on the VM, readable only by their owner, and in the operator's password manager as the backup. They are never on a development computer or in git, so nothing run in this checkout can print them:
+
+- `~/lemma/deploy/lemma.env`: the Google OAuth client ID and secret, the TypeSafe key, and `LEMMA_ADMINS`.
+- `~/lemma/deploy/cloudflared/lemma.json`: the tunnel's credentials.
+
+`push.sh` refuses to deploy if either is missing, and its copy step leaves both alone. The data backups below don't include them.
+
+To change a value in `lemma.env`, edit it on the VM and recreate the container, then update the password manager:
+
+```sh
+ssh -t "$(cat deploy/host)" 'nano lemma/deploy/lemma.env && cd lemma/deploy && sudo docker compose up -d --force-recreate lemma'
+```
+
+To replace the tunnel's credentials (for example after rotating them in Cloudflare), copy the new file straight to the VM, then delete it here and keep it in the password manager:
+
+```sh
+scp <new credentials file> "$(cat deploy/host)":/tmp/lemma.json
+ssh "$(cat deploy/host)" 'sudo install -m 600 -o 65532 /tmp/lemma.json lemma/deploy/cloudflared/lemma.json && rm /tmp/lemma.json && cd lemma/deploy && sudo docker compose restart tunnel'
+```
 
 ## Rebuilding from scratch
 
-1. `cloudflared tunnel login`, then `cloudflared tunnel create --credentials-file deploy/cloudflared/lemma.json lemma`. Put the new tunnel id in `cloudflared/config.yml`, then run `cloudflared tunnel route dns lemma openlemma.org`.
-2. Any Ubuntu VM reachable over SSH works, as long as it has about 1 GB of RAM or more.
-3. Fill in `lemma.env`, put the VM's `user@address` in `deploy/host`, and run `push.sh`.
+1. Any Ubuntu VM reachable over SSH works, as long as it has about 1 GB of RAM or more. Put its `user@address` in `deploy/host`.
+2. `cloudflared tunnel login`, then `cloudflared tunnel create --credentials-file /tmp/lemma.json lemma` (outside this checkout). Put the new tunnel id in `cloudflared/config.yml`, then run `cloudflared tunnel route dns lemma openlemma.org`.
+3. Fill in a copy of `lemma.env.example` outside this checkout. Put both secrets on the VM with `ssh "$(cat deploy/host)" 'mkdir -p lemma/deploy/cloudflared'`, `scp` each to its place under "Secrets", and set their owners and modes as shown there. Save both in the password manager, then delete the local copies.
+4. Run `push.sh`.
 
 ## Backups
 
