@@ -9,7 +9,7 @@ You need [uv](https://docs.astral.sh/uv/). [README.md → What you need](README.
 ```sh
 uv sync
 uv run python -m unittest discover tests
-set -a; . ./local.env; . ./local.secrets.env; set +a   # your keys go in local.secrets.env (git-ignored)
+set -a; . ./local.env; . ./deploy/lemma.env; set +a   # your keys: copy deploy/lemma.env.example (git-ignored)
 uv run lemma --dev
 ```
 

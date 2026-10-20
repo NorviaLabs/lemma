@@ -25,7 +25,7 @@ Use uv and the committed `uv.lock`. The package supports Python 3.10+; `.python-
 
 ```sh
 uv sync
-set -a; . ./local.env; . ./local.secrets.env; set +a   # caps lifted (committed); your keys (git-ignored)
+set -a; . ./local.env; . ./deploy/lemma.env; set +a   # caps lifted (committed); your keys, same file as the server's (git-ignored)
 uv run lemma --dev                 # the one way to run it: http://localhost:8765, restarts on Python changes, live-reloads the browser
 uv run python -m unittest discover tests
 uv build                          # when changing packaging
@@ -44,7 +44,7 @@ CI runs the unittest discovery command with Node.js 22 installed. Install Node.j
 - Run exactly one Lemma at a time, always `uv run lemma --dev` (with a temporary `LEMMA_HOME` when it writes user data). Stop the running one before starting another; don't start extra servers, previews or ports to show something. Dev mode reloads on edits, so the one instance stays current. It always uses its port (8765 unless `--port` says otherwise): if the port stays busy for 10 seconds it stops with an error rather than moving, since Google sign-in returns only to `http://localhost:8765/auth/google/callback`.
 - Lemma behaves the same on your own computer as hosted for others. The only difference is the ChatGPT subscription, which only a server bound to this computer offers. Everything else is identical: sign-in is Google OAuth both ways (locally it returns to `http://localhost:8765/auth/google/callback`, which must be registered on the OAuth client), and accounts, limits, providers, headers, pages and copy are the same. Where a deployment needs different numbers, make it configuration read the same way everywhere, never a check of where Lemma runs: the daily caps (`LEMMA_DAILY_SEARCHES`, `LEMMA_DAILY_BUILDS`, `LEMMA_DAILY_READS`) default to the safe production caps when unset, only the explicit value `unlimited` lifts one, `local.env` does that for development, and `deploy/compose.yaml` must never. Defaults are always the restrictive, production-safe values; a missing setting must never make production more permissive. That difference has one switch, `server.ON_THIS_COMPUTER`, set by `make_server` from the address it binds; never branch on where Lemma runs anywhere else, in Python or the browser, and don't add local-only conveniences. `tests/test_one_behaviour.py` enforces this: it fails if the switch is read outside `providers()`, `_chatgpt_only()`, `make_server` and `main`, or if the same requests to a local and a public server get different answers. Don't widen its allowlist to make a change pass; fix the change.
 - Preserve Host/origin checks and the safeguards for a server on a public address (allowed hosts, exact port, no live reload, no ChatGPT subscription). Do not expose the server publicly as part of routine development.
-- Deployment secrets (`lemma.env`, the tunnel credentials) live only on the server; never put them back in `deploy/` or copy them to this computer (see Secrets in `deploy/README.md`).
+- Secrets live in `deploy/lemma.env` both on the server and on a development computer (the same file, git-ignored, never copied by `push.sh`); the tunnel credentials live only on the server. Never commit, print or log them (see Secrets in `deploy/README.md`).
 - Keep credentials, auth tokens, and personal lesson data out of source control and logs. Use a temporary `LEMMA_HOME` for manual tests that write user data rather than modifying the user's normal `~/.lemma` directory.
 
 ## Verification

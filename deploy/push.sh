@@ -11,7 +11,7 @@ cd "$(dirname "$0")/.."
 git fetch -q origin main
 [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" ] || { echo "Local main differs from origin/main; pull or push so they match." >&2; exit 1; }
 ssh "$host" 'sudo sh -s' < deploy/vm-startup.sh  # swap and Docker, the first time
-# The secrets live only on the server (deploy/README.md says how to change one), so this computer has none to leak.
+# The server keeps its own secrets (deploy/README.md says how to change one); a local deploy/lemma.env is never copied.
 ssh "$host" 'sudo test -f lemma/deploy/lemma.env && sudo test -f lemma/deploy/cloudflared/lemma.json' || {
   echo "The server is missing lemma/deploy/lemma.env or lemma/deploy/cloudflared/lemma.json; see \"Secrets\" in deploy/README.md." >&2; exit 1; }
 # Evaluation runs hold full paper texts and model output; the server needs neither.

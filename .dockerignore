@@ -14,4 +14,3 @@ eval
 .gemini
 .pytest_cache
 backups
-local.secrets.env

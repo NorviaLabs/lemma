@@ -48,12 +48,12 @@ Anonymous daily counts in `metrics.db` name no account; its per-account quota ro
 
 ## Secrets
 
-The two secret files live only on the VM, readable only by their owner, and in the operator's password manager as the backup. They are never on a development computer or in git, so nothing run in this checkout can print them:
+The server has two secret files, readable only by their owner and kept in the operator's password manager as the backup. Neither is ever in git:
 
 - `~/lemma/deploy/lemma.env`: the Google OAuth client ID and secret, the TypeSafe key, and `LEMMA_ADMINS`.
-- `~/lemma/deploy/cloudflared/lemma.json`: the tunnel's credentials.
+- `~/lemma/deploy/cloudflared/lemma.json`: the tunnel's credentials. It lives only on the VM.
 
-`push.sh` refuses to deploy if either is missing, and its copy step leaves both alone. The data backups below don't include them.
+Lemma reads its secrets from `deploy/lemma.env` everywhere: Compose loads it on the server, and a development computer loads its own copy with `set -a; . ./local.env; . ./deploy/lemma.env; set +a` (see `README.md`). `push.sh` refuses to deploy if the server is missing either file, and its copy step leaves both alone, so a local `deploy/lemma.env` never reaches the server. The data backups below don't include them.
 
 To change a value in `lemma.env`, edit it on the VM and recreate the container, then update the password manager:
 
@@ -72,7 +72,7 @@ ssh "$(cat deploy/host)" 'sudo install -m 600 -o 65532 /tmp/lemma.json lemma/dep
 
 1. Any Ubuntu VM reachable over SSH works, as long as it has about 1 GB of RAM or more. Put its `user@address` in `deploy/host`.
 2. `cloudflared tunnel login`, then `cloudflared tunnel create --credentials-file /tmp/lemma.json lemma` (outside this checkout). Put the new tunnel id in `cloudflared/config.yml`, then run `cloudflared tunnel route dns lemma openlemma.org`.
-3. Fill in a copy of `lemma.env.example` outside this checkout. Put both secrets on the VM with `ssh "$(cat deploy/host)" 'mkdir -p lemma/deploy/cloudflared'`, `scp` each to its place under "Secrets", and set their owners and modes as shown there. Save both in the password manager, then delete the local copies.
+3. Fill in a copy of `lemma.env.example`. Put both secrets on the VM with `ssh "$(cat deploy/host)" 'mkdir -p lemma/deploy/cloudflared'`, `scp` each to its place under "Secrets", and set their owners and modes as shown there. Save both in the password manager, then delete the local copy of the tunnel's credentials.
 4. Run `push.sh`.
 
 ## Backups
