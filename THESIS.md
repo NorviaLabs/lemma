@@ -16,9 +16,12 @@ The different kind of content people would like to learn
 
 * Gap between the existing information
 * Visualisation for deeper understanding
+* Concepts / Questions
 * (Optional) Testing to make sure you understand the code concepts well enough
 
 ## Codebase
 
 * Architecture / flow diagram 
 * Run the relevant flows with different inputs
+
+

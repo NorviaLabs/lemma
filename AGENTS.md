@@ -25,7 +25,7 @@ Use uv and the committed `uv.lock`. The package supports Python 3.10+; `.python-
 
 ```sh
 uv sync
-set -a; . ./local.env; set +a     # development config: lifts the daily caps (no secrets; committed)
+set -a; . ./local.env; . ./local.secrets.env; set +a   # caps lifted (committed); your keys (git-ignored)
 uv run lemma --dev                 # the one way to run it: http://localhost:8765, restarts on Python changes, live-reloads the browser
 uv run python -m unittest discover tests
 uv build                          # when changing packaging

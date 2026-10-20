@@ -12,6 +12,7 @@ dist/
 .codex/
 .forge/
 .impeccable/
+local.secrets.env
 deploy/lemma.env
 deploy/host
 deploy/cloudflared/*.json

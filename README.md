@@ -95,11 +95,11 @@ OpenLemma runs the same on your own computer as hosted, so a copy you run behave
 For development, run one Lemma with the development config, which lifts the daily caps:
 
 ```sh
-set -a; . ./local.env; set +a     # plus your LEMMA_GOOGLE_* and TYPESAFE_API_KEY
+set -a; . ./local.env; . ./local.secrets.env; set +a
 uv run lemma --dev
 ```
 
-`local.env` holds no secrets and is committed; keep your keys in your shell or a file of your own outside git.
+`local.env` holds no secrets and is committed. Put your `LEMMA_GOOGLE_CLIENT_ID`, `LEMMA_GOOGLE_CLIENT_SECRET` and `TYPESAFE_API_KEY` in `local.secrets.env`, one `NAME=value` per line; git ignores it.
 
 ### Built-in lessons
 
