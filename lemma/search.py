@@ -1,6 +1,7 @@
 """Finding something to learn from: search a topic across open scholarly indexes.
 
-Search words go to six services, none of which needs an account or key; source sites are then
+Search words go to six services, none of which needs an account; OpenAlex takes the server's OPENALEX_API_KEY
+when it is set, for a daily allowance of its own instead of one shared by every caller at the address. Source sites are then
 contacted to verify readable full text, and only verified readable sources are recommended.
 Wikipedia returns one overview article. The Stanford Encyclopedia of Philosophy and LibreTexts
 return entries and textbook chapters that explain a concept in depth. OpenAlex returns open-access
@@ -17,6 +18,7 @@ from __future__ import annotations
 import html
 import json
 import math
+import os
 import re
 import threading
 import time
@@ -103,10 +105,18 @@ def search_words(query: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"\bet al\b\.?|\b(?:1[5-9]|20)\d{2}\b", " ", query, flags=re.I)).strip() or query
 
 
+def _openalex_get(path: str, params: dict | None = None) -> bytes:
+    """An OpenAlex request, with the server's key when it has one. The key is only ever part of the address sent."""
+    params = dict(params or {})
+    if key := os.environ.get("OPENALEX_API_KEY", "").strip():
+        params["api_key"] = key
+    return _get("https://api.openalex.org/" + path + ("?" + urllib.parse.urlencode(params) if params else ""))
+
+
 def openalex(query: str, n: int = CANDIDATES) -> list[dict]:
     words, concept = _words(query), query_kind(query) == "concept"
     if doi := DOI.search(query):  # a DOI names one work: look it up rather than search for it
-        works = [json.loads(_get("https://api.openalex.org/works/doi:" + urllib.parse.quote(doi.group(1), safe="/")))]
+        works = [json.loads(_openalex_get("works/doi:" + urllib.parse.quote(doi.group(1), safe="/")))]
         return _openalex_results({"results": [w | {"relevance_score": 1} for w in works]}, n)
     params = {
         # An idea is searched as a phrase, so "free will" doesn't bring back "model-free control".
@@ -115,7 +125,7 @@ def openalex(query: str, n: int = CANDIDATES) -> list[dict]:
         "per-page": "25",
         "select": "id,type,display_name,publication_year,authorships,primary_location,best_oa_location,locations,cited_by_count,abstract_inverted_index,relevance_score",
     }
-    return _openalex_results(json.loads(_get("https://api.openalex.org/works?" + urllib.parse.urlencode(params))), n, concept)
+    return _openalex_results(json.loads(_openalex_get("works", params)), n, concept)
 
 
 def _openalex_results(data: dict, n: int, concept: bool = False) -> list[dict]:

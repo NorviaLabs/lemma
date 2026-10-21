@@ -827,6 +827,17 @@ class SearchTests(unittest.TestCase):
         sent = [urllib.parse.unquote_plus(u) for u in self.urls if "openalex" in u or "arxiv" in u]
         self.assertTrue(sent and not any("1886" in u for u in sent), sent)
 
+    def test_openalex_gets_the_server_key_only_when_it_has_one(self):
+        with patch.dict(os.environ, {"OPENALEX_API_KEY": ""}):
+            search.search("regression to the mean")
+        self.assertTrue(self.urls and not any("api_key" in u for u in self.urls), self.urls)
+        self.urls.clear()
+        search._cache.clear()
+        with patch.dict(os.environ, {"OPENALEX_API_KEY": "test-openalex-key"}):
+            search.search("regression to the mean")
+        sent = [u for u in self.urls if "api_key=test-openalex-key" in u]
+        self.assertTrue(sent and all(u.startswith("https://api.openalex.org/") for u in sent), self.urls)
+
     def test_bad_queries(self):
         with self.assertRaises(search.SearchError):
             search.search("   ")
