@@ -1302,6 +1302,22 @@
     const list = h("ol", { class: "outline-list" });
     const removedBox = h("div");
     const buildBtn = h("button", { class: "primary", onclick: startBuild });
+    // For a lesson asked as a question: what the answer builds on, and where each piece is (or isn't) taught.
+    const buildsOn = h("section", { class: "bo-card", "aria-labelledby": "builds-on-title", hidden: !o.question });
+    function drawBuildsOn() {
+      if (!o.question) return;
+      const taught = new Map(o.concepts.map((c, i) => [c.subject, c.known ? null : i + 1]).filter(([s]) => s));
+      const known = new Set(o.concepts.filter((c) => c.known && c.subject).map((c) => c.subject));
+      const assumed = new Set([...(o.assumes || []), ...known, ...(o.subjects || []).filter((s) => s.relation === null).map((s) => s.title)]);
+      const groups = [
+        ["Covered", "", (o.subjects || []).filter((s) => taught.get(s.title)).map((s) => `${s.title}: concept ${taught.get(s.title)}`)],
+        ["Assumed", "The lesson takes these as known.", [...assumed]],
+        ["Later", "Not in this lesson.", (o.subjects || []).filter((s) => !taught.get(s.title) && !assumed.has(s.title)).map((s) => s.title)],
+      ].filter(([, , items]) => items.length);
+      buildsOn.replaceChildren(h("h2", { id: "builds-on-title" }, "What this lesson builds on"),
+        ...groups.map(([name, note, items]) => h("div", { class: "bo-group" }, h("h3", {}, name), note ? h("p", { class: "muted small" }, note) : null,
+          h("ul", {}, items.map((x) => h("li", {}, x))))));
+    }
     // A concept relies on the ones it needs and the one whose model it reuses; it must come after them.
     const reliesOn = (c) => [...(Array.isArray(c.needs) ? c.needs : []), ...(c.builds_on ? [c.builds_on] : [])];
     const reliesOnAt = (a, b) => reliesOn(a).includes(b.id);  // a can't move above b
@@ -1325,6 +1341,7 @@
             const r = session.removed.splice(i, 1)[0], at = o.concepts.findIndex((x) => reliesOnAt(x, r));
             o.concepts.splice(at < 0 ? o.concepts.length : at, 0, r); draw();
           } }, "Restore"))))) : "");
+      drawBuildsOn();
       const n = cs.filter((c) => !c.known).length;
       buildBtn.textContent = `Build ${n} concept${n === 1 ? "" : "s"}`;
       buildBtn.disabled = n === 0;
@@ -1339,7 +1356,9 @@
       (o.primer || []).length ? h("details", { class: "advanced" },
         h("summary", {}, `The idea in brief: ${plural(o.primer.length, "page")} read before the first concept`),
         ...o.primer.map((pg) => h("div", {}, h("h3", {}, pg.heading), h("p", { style: "max-width:66ch;white-space:pre-line" }, pg.body)))) : null,
-      h("p", { class: "note" }, "Here's the proposed outline, from background to the main result. Reorder the concepts, remove any, or mark ones you already know."),
+      o.question ? h("p", { class: "muted" }, `Your question: “${o.question}”`) : null,
+      buildsOn,
+      h("p", { class: "note" }, `Here's the proposed outline, from ${o.question ? "what it builds on to the answer" : "background to the main result"}. Reorder the concepts, remove any, or mark ones you already know.`),
       list, removedBox,
       h("div", { class: "actions" }, buildBtn,
         session.requestId ? h("button", { class: "ghost", onclick: async () => { await api(`/api/requests/${session.requestId}/cancel`, {}); showRequest(session.requestId); } }, "Cancel this lesson") : null,

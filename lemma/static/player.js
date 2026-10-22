@@ -200,6 +200,7 @@
           h("p", { class: "summary" }, intro.summary || ""),
           (intro.background || []).length ? h("section", {}, h("h3", {}, "Good to know first"), h("ul", {}, intro.background.map((b) => h("li", {}, b)))) : null,
           (intro.known || []).length ? h("p", { class: "muted" }, "You said you already know: " + intro.known.join("; ") + ". Those concepts are skipped.") : null,
+          (intro.assumes || []).length ? h("p", { class: "muted" }, `This lesson assumes you know ${new Intl.ListFormat("en").format(intro.assumes)}.`) : null,
           primer().length ? h("section", { class: "brief-intro" },
             h("h3", {}, "Start with the idea in brief"),
             h("p", {}, `${primer().length} short pages: ${primer().map((pg) => pg.heading).join(" · ")}. Then explore each idea through examples and activities.`)) : null,
