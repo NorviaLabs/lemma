@@ -255,6 +255,30 @@ class JevChoosesPlans(unittest.TestCase):
         self.assertEqual({p["plan"] for p in job.result["activity_plans"]}, {None})
 
 
+class QuestionChecks(unittest.TestCase):
+    """The outline of a lesson asked for with a question has to answer it."""
+
+    def test_jev_reads_the_question_against_the_outline(self):
+        seen = {}
+
+        def ask(state, questions, timeout):
+            seen.update(state=state, questions=questions)
+            return {"_model": "jev-test", "answers": {"choice": "partly"}}
+        o = outline()
+        with patch.object(jev, "ask", side_effect=ask):
+            self.assertEqual(generate.answers_question("Why are tall parents' children shorter?", o), "partly")
+        self.assertEqual(seen["state"]["question"], "Why are tall parents' children shorter?")
+        self.assertEqual(seen["state"]["lesson"]["aha"], o["aha"])
+        self.assertEqual(set(seen["questions"]["answers"]["criteria"]), {"answers", "partly", "no"})
+
+    def test_a_check_jev_cannot_make_raises(self):
+        for name, effect in (("outage", jev.JevError("the checking service answered 529")),
+                             ("unreadable", lambda *a: {"answers": {"choice": "maybe"}})):
+            with self.subTest(name), patch.object(jev, "ask", side_effect=effect):
+                with self.assertRaisesRegex(generate.GenerationError, "^Couldn't check the outline against your question"):
+                    generate.answers_question("q", outline())
+
+
 class Jobs(unittest.TestCase):
     def test_an_unexpected_error_is_reported_with_an_error_id_and_the_server_lives_on(self):
         def boom(job):

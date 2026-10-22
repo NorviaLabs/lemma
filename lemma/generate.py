@@ -543,6 +543,31 @@ def _ask_json(job: Job, provider: Provider, document: str, task: str, check, sid
         conv.close()
 
 
+ANSWERS_TIMEOUT = 20
+ANSWERS = {"answers": "The lesson's path ends in an answer to the question the learner asked",
+           "partly": "It answers part of the question, or a closely related one",
+           "no": "It teaches something else and leaves the question unanswered"}
+
+
+def answers_question(question: str, outline: dict) -> str:
+    """Jev's reading of whether an outline answers the learner's question: "answers", "partly" or "no".
+    Raises GenerationError when Jev can't say."""
+    concepts = [c for c in outline.get("concepts") or [] if isinstance(c, dict)]
+    state = {"question": question, "lesson": {"title": outline.get("title", ""), "summary": outline.get("summary", ""),
+                                              "aha": outline.get("aha", ""),
+                                              "concepts": [f"{c.get('title', '')}: {c.get('idea', '')}" for c in concepts]}}
+    try:
+        answer = jev.ask(state, {"answers": {"type": "choice", "criteria": ANSWERS,
+                                             "instructions": "Does this lesson answer the question the learner asked?"}}, ANSWERS_TIMEOUT)["answers"]["choice"]
+    except jev.JevError as e:
+        raise GenerationError(f"Couldn't check the outline against your question just now ({e}). Retry in a moment.") from None
+    except (KeyError, TypeError):
+        raise GenerationError("Couldn't check the outline against your question just now. Retry in a moment.") from None
+    if answer not in ANSWERS:
+        raise GenerationError("Couldn't check the outline against your question just now. Retry in a moment.")
+    return answer
+
+
 def require_jev():
     try:
         jev.require()
