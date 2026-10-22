@@ -1,5 +1,5 @@
 {
-  "about": "Brought-source test set for Stage E: ten gallery papers a learner might bring on their own. Each lists the prerequisites a beginner needs that the paper itself takes for granted (it doesn't teach them), so a lesson from it alone should teach or name them as assumed. A prerequisite is a list of names that count as the same subject, matched as whole words in titles as in searches.json. Draft labels, to be corrected by a person.",
+  "about": "Brought-source test set for Stage E: ten gallery papers a learner might bring on their own. Each lists the prerequisites a beginner needs that the paper itself takes for granted (it doesn't teach them), so a lesson from it alone should teach or name them as assumed. A prerequisite is a list of names that count as the same subject, matched as whole words in titles as in searches.json. Drafted by Claude, accepted by the user on 2026-10-22.",
   "papers": [
     {"id": "attention-2017", "level": "beginner", "urls": ["https://arxiv.org/abs/1706.03762"],
      "prerequisites": [["Neural network", "Artificial neural network"], ["Word embedding", "Embedding"], ["Softmax function", "Softmax"], ["Dot product", "Matrix multiplication"]]},
