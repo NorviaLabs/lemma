@@ -57,16 +57,6 @@ def upload(site, text=SOURCE, name="galton.txt"):
     return body["paper_id"]
 
 
-def settle(site, job_id, timeout=30):
-    deadline = time.time() + timeout
-    while time.time() < deadline:
-        s, job, _ = site.req("GET", f"/api/jobs/{job_id}")
-        if job["status"] != "running":
-            return job
-        time.sleep(0.02)
-    raise AssertionError("job did not settle")
-
-
 class RequestBodies(unittest.TestCase):
     def test_malformed_or_oversized_bodies_are_refused_with_a_plain_message(self):
         with LocalServer() as site:
@@ -134,96 +124,24 @@ class Uploads(unittest.TestCase):
         self.assertEqual(len(tried), 5)
 
     def test_only_the_latest_papers_are_kept_in_memory(self):
-        with LocalServer() as site:
+        with LocalServer() as site, patch.object(server, "make_provider", return_value=FakeProvider()):
             ids = [upload(site, SOURCE + f"\nCopy {i}.") for i in range(server.KEEP_PAPERS + 1)]
-            s, body, _ = site.req("POST", "/api/outline", {"paper_id": ids[0]})
+            s, body, _ = site.req("POST", "/api/requests", {"sources": [{"paper_id": ids[0]}]})
             self.assertEqual((s, body["error"]), (404, "OpenLemma no longer has that source in memory. Please bring it again."))
             self.assertIn(ids[-1], server.PAPERS)
 
 
-class GatedProvider(FakeProvider):
-    """Holds each reply until the job is cancelled, like a model that is still writing."""
-
-    def conversation(self, system, document):
-        conv = FakeConversation(self, document)
-        send = conv.send
-
-        def held(text, cancelled=None, on_progress=None):
-            cancelled.wait(10)
-            return send(text, cancelled, on_progress)
-
-        conv.send = held
-        return conv
-
-
-class OutlineAndBuild(unittest.TestCase):
-    def setUp(self):
-        self.provider = FakeProvider()
-        self.make = patch.object(server, "make_provider", side_effect=lambda *a: self.provider)
-        self.make.start()
-
-    def tearDown(self):
-        self.make.stop()
-
-    def test_outline_then_build_then_save_over_http(self):
-        with LocalServer() as site:
-            pid = upload(site)
-            s, body, _ = site.req("POST", "/api/outline", {"paper_id": pid, "audience": "a curious teenager"})
-            self.assertEqual(s, 200, body)
-            outline = settle(site, body["id"])
-            self.assertEqual(outline["status"], "done", outline["error"])
-            self.assertIn("a curious teenager", self.provider.tasks["outline"])
-
-            s, body, _ = site.req("POST", "/api/build", {"paper_id": pid, "outline": outline["result"]})
-            self.assertEqual(s, 200, body)
-            built = settle(site, body["id"])
-            self.assertEqual(built["status"], "done", built["error"])
-            lesson = built["result"]
-            self.assertEqual(lesson["id"], body["lesson_id"])
-
-            # The source stays with the build, so the browser can save the lesson and its quotes are checked again.
-            s, saved, _ = site.req("POST", "/api/lessons", {"lesson": lesson})
-            self.assertEqual((s, saved["id"]), (200, lesson["id"]))
-            self.assertEqual(site.req("GET", f"/api/lessons/{lesson['id']}")[1]["title"], lesson["title"])
-            store.delete_lesson(lesson["id"])
-
-    def test_an_invalid_outline_is_refused_before_anything_is_built(self):
-        with LocalServer() as site:
-            pid = upload(site)
-            before = set(generate.JOBS)
-            s, body, _ = site.req("POST", "/api/build", {"paper_id": pid, "outline": {"title": "Only a title"}})
-            self.assertEqual(s, 400)
-            self.assertTrue(body["error"].startswith("The outline isn't valid: "), body["error"])
-            self.assertEqual(set(generate.JOBS), before)
-            self.assertEqual(self.provider.calls, 0)
-
+class ProviderNotReady(unittest.TestCase):
     def test_a_provider_that_is_not_ready_starts_nothing(self):
-        self.provider.available = lambda: (False, "Add your API key in Settings.")
-        with LocalServer() as site:
+        provider = FakeProvider()
+        provider.available = lambda: (False, "Add your API key on your account page.")
+        with LocalServer() as site, patch.object(server, "make_provider", return_value=provider):
             pid = upload(site)
             before = set(generate.JOBS)
-            s, body, _ = site.req("POST", "/api/outline", {"paper_id": pid})
-            self.assertEqual((s, body["error"]), (400, "Add your API key in Settings."))
+            s, body, _ = site.req("POST", "/api/requests", {"sources": [{"paper_id": pid}]})
+            self.assertEqual((s, body["error"]), (400, "Add your API key on your account page."))
             self.assertEqual(set(generate.JOBS), before)
-
-    def test_without_jev_no_outline_is_started(self):
-        with LocalServer() as site, patch.object(jev, "available", return_value=False):
-            pid = upload(site)
-            s, body, _ = site.req("POST", "/api/outline", {"paper_id": pid})
-            self.assertEqual((s, body["error"]), (503, jev.MISSING))
-            self.assertEqual(self.provider.calls, 0)
-
-    def test_cancelling_a_job_stops_it(self):
-        self.provider = GatedProvider()
-        with LocalServer() as site:
-            pid = upload(site)
-            job_id = site.req("POST", "/api/outline", {"paper_id": pid})[1]["id"]
-            self.assertEqual(site.req("GET", f"/api/jobs/{job_id}")[1]["status"], "running")
-            self.assertEqual(site.req("POST", f"/api/jobs/{job_id}/cancel", {})[1], {"ok": True})
-            self.assertEqual(settle(site, job_id)["status"], "cancelled")
-            # Cancelling something already gone is harmless.
-            self.assertEqual(site.req("POST", "/api/jobs/0123456789ab/cancel", {})[:2], (200, {"ok": True}))
-            self.assertEqual(site.req("GET", "/api/jobs/0123456789ab")[0], 404)
+            self.assertEqual(provider.calls, 0)
 
 
 class LocalOnlyEndpoints(unittest.TestCase):

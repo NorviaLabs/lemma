@@ -38,9 +38,8 @@ LOCAL_HOSTS = ("localhost", "127.0.0.1", "[::1]")
 ALLOWED_HOSTS: tuple[str, ...] = LOCAL_HOSTS  # Host header names Lemma answers; `--allowed-hosts` adds more
 
 PAPERS: dict[str, dict] = {}  # paper_id -> {text, title, url, kind, pages, owner}
-SOURCES: dict[tuple, str] = {}  # (owner, lesson id) -> paper text, for lessons built in this session
 RATE_LIMIT, RATE_WINDOW = 120, 600  # API writes per visitor address per 10 minutes, when hosted
-KEEP_PAPERS, KEEP_SOURCES = 5, 200  # papers kept per person, and paper texts kept in all
+KEEP_PAPERS = 5  # papers kept per person
 READING_EACH, READING = 2, 6  # links and uploads being read at once, per account and in all, when hosted
 _reading: dict[str | None, int] = {}
 SOURCE_READERS = 4  # sources of one request read at the same time
@@ -134,8 +133,6 @@ def load_gallery(slug: str) -> tuple[dict, str | None]:
 
 
 def source_for(lesson_id: str, owner: str | None = None) -> str | None:
-    if (owner, lesson_id) in SOURCES:
-        return SOURCES[(owner, lesson_id)]
     try:
         return store.load_lesson(lesson_id, owner)[1]
     except (KeyError, OSError, ValueError):
@@ -369,50 +366,6 @@ def _start(job: generate.Job, fn, *args):
     except BaseException:
         _forget(job)
         raise
-
-
-def _job(job_id: str) -> generate.Job | None:
-    job = generate.JOBS.get(job_id)
-    return job if job and job.owner == _owner() else None
-
-
-def api_outline(body):
-    paper = _paper(body)
-    provider = _provider()
-    job = _new_job("outline")
-    _start(job, generate.make_outline, provider, paper["text"], str(body.get("audience", ""))[:300])
-    return {"id": job.id}
-
-
-def api_build(body):
-    paper = _paper(body)
-    outline = generate.order_outline(body.get("outline"))
-    problems = generate.check_outline(outline, paper["text"])
-    if problems:
-        raise ApiError(400, "The outline isn't valid: " + "; ".join(problems[:3]))
-    provider = _provider()
-    job = _new_job("build")
-    lesson_id = uuid.uuid4().hex[:12]
-    with _lock:
-        SOURCES[(job.owner, lesson_id)] = paper["text"]
-        while len(SOURCES) > KEEP_SOURCES:
-            SOURCES.pop(next(iter(SOURCES)))
-    _start(job, generate.build_lesson, provider, paper, outline, str(body.get("audience", ""))[:300], lesson_id)
-    return {"id": job.id, "lesson_id": lesson_id}
-
-
-def api_job(job_id):
-    job = _job(job_id)
-    if not job:
-        raise ApiError(404, "That job has finished or expired.")
-    return job.snapshot()
-
-
-def api_job_cancel(job_id):
-    job = _job(job_id)
-    if job:
-        job.cancelled.set()
-    return {"ok": True}
 
 
 # Durable requests reuse the local thread runner; disk is the recovery boundary, not a queue.
@@ -843,10 +796,6 @@ ROUTES = [
     ("POST", r"/api/papers", api_papers, False),
     ("POST", r"/api/search", api_search, False),
     ("GET", r"/api/search/([a-f0-9]{12})", api_search_status, True),
-    ("POST", r"/api/outline", api_outline, False),
-    ("POST", r"/api/build", api_build, False),
-    ("GET", r"/api/jobs/([a-f0-9]{12})", api_job, True),
-    ("POST", r"/api/jobs/([a-f0-9]{12})/cancel", api_job_cancel, True),
     ("POST", r"/api/event", api_event, False),
     ("GET", r"/api/stats", api_stats, False),
     ("POST", r"/api/feedback", api_feedback_create, False),

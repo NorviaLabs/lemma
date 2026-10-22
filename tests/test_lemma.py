@@ -1395,7 +1395,7 @@ class ServerTests(unittest.TestCase):
         # Saving needs the paper text so quotes can be re-checked.
         built = dict(ex, id="abc123", example=False)
         self.assertEqual(self.req("POST", "/api/lessons", {"lesson": built})[0], 409)
-        server.SOURCES[(TESTER, "abc123")] = SOURCE
+        store.save_lesson(built, SOURCE, TESTER)  # as a finished build saves it, with its source
         self.assertEqual(self.req("POST", "/api/lessons", {"lesson": built})[0], 200)
         listing = json.loads(self.req("GET", "/api/lessons")[1])
         self.assertIn("abc123", [x["id"] for x in listing])
@@ -1572,7 +1572,7 @@ class HostedServerTests(unittest.TestCase):
             self.assertEqual(json.loads(req("GET", "/api/status", token=ta)[1])["user"]["name"], "Ada")
 
             lesson = dict(json.loads(req("GET", "/api/example")[1]), id="adas01", example=False)
-            server.SOURCES[(ada["id"], "adas01")] = SOURCE
+            store.save_lesson(lesson, SOURCE, ada["id"])  # Ada's finished build
             self.assertEqual(req("POST", "/api/lessons", {"lesson": lesson}, tb)[0], 409)  # Bob can't save Ada's build
             self.assertEqual(req("POST", "/api/lessons", {"lesson": lesson}, ta)[0], 200)
             self.assertEqual([x["id"] for x in json.loads(req("GET", "/api/lessons", token=ta)[1])], ["adas01"])
@@ -1580,12 +1580,6 @@ class HostedServerTests(unittest.TestCase):
             self.assertEqual(req("GET", "/api/lessons/adas01", token=tb)[0], 404)
             req("DELETE", "/api/lessons/adas01", token=tb)
             self.assertEqual(req("GET", "/api/lessons/adas01", token=ta)[0], 200)  # Bob's delete didn't touch it
-
-            job = generate.Job("build")
-            job.owner = ada["id"]
-            generate.JOBS[job.id] = job
-            self.assertEqual(req("GET", f"/api/jobs/{job.id}", token=ta)[0], 200)
-            self.assertEqual(req("GET", f"/api/jobs/{job.id}", token=tb)[0], 404)
 
             s, _, r = req("POST", "/api/logout", {}, ta)
             self.assertEqual(s, 200)

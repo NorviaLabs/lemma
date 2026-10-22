@@ -8,7 +8,7 @@
   let player = null;
   let pollTimer = null;
   let cleanups = [];
-  const session = { paper: null, audience: "", outline: null, removed: [], buildJob: null, lesson: null, search: null, mode: "search" };
+  const session = { audience: "", outline: null, removed: [], lesson: null, search: null, mode: "search" };
 
   /* ------------------------------------------------------------ helpers */
   function h(tag, attrs, ...kids) {
@@ -1228,12 +1228,10 @@
   /* ------------------------------------------------------------ outline */
   /* Connect an AI provider: shown the first time an AI step is needed, then the flow carries on. */
   function showConnect(then) {
-    const p = session.paper || {};
     setTitle("Connect an AI provider");
     view(h("section", { class: "panel connect", "aria-labelledby": "connect-title" },
       h("h1", { id: "connect-title" }, "Connect an AI provider"),
-      h("p", { class: "lead" }, "OpenLemma reads ", p.title ? h("cite", { class: "words" }, p.title) : "your sources",
-        " with an AI provider you choose, using your own key. Pick one and paste its key. OpenLemma carries on as soon as the key works."),
+      h("p", { class: "lead" }, "OpenLemma reads your sources with an AI provider you choose, using your own key. Pick one and paste its key. OpenLemma carries on as soon as the key works."),
       keyForm(then, { compact: true }),
       h("div", { class: "actions" }, h("button", { class: "ghost", onclick: () => showMake() }, "Back"))));
   }
@@ -1298,15 +1296,8 @@
   async function startBuild() {
     // The outline may have been made in another browser or before the key was removed; the reviewed outline stays in session.
     if (!(status.provider || {}).ok) return showConnect(() => startBuild());
-    if (session.requestId) {
-      try { await api(`/api/requests/${session.requestId}/outline`, { outline: session.outline }); showRequest(session.requestId); }
-      catch (err) { alertInline(err.message); }
-      return;
-    }
-    let job;
-    try { job = await api("/api/build", { paper_id: session.paper.paper_id, audience: session.audience, outline: session.outline }); } catch (err) { return showHome(err.message); }
-    session.buildJob = job.id;
-    showBuilding(job.id);
+    try { await api(`/api/requests/${session.requestId}/outline`, { outline: session.outline }); showRequest(session.requestId); }
+    catch (err) { alertInline(err.message); }
   }
 
   const STOPPED_TITLES = { error: "This build stopped", interrupted: "This build was interrupted", cancelled: "You cancelled this build" };
@@ -1359,38 +1350,6 @@
       }
     };
     poll();
-  }
-
-  function showBuilding(jobId) {
-    setHash("#/building");
-    setTitle("Building your lesson");
-    const progress = buildProgress(), stepsBox = progress.el, errSlot = h("div");
-    const eta = h("p", { class: "muted" });
-    const startBtn = h("button", { class: "primary", disabled: true, onclick: () => openBuilding(jobId) }, "Start the first concept");
-    const cancel = h("button", { class: "ghost", onclick: async () => { await api(`/api/jobs/${jobId}/cancel`, {}).catch(() => {}); showHome(); } }, "Cancel");
-    view(h("section", { class: "panel" },
-      h("h1", {}, "Building your lesson"),
-      h("p", { style: "max-width:66ch" }, "Each concept is drafted, then checked: its quote must appear in the source, its model must work, and every goal must be reachable. Concepts that fail are fixed or left out, never shown broken."),
-      eta, stepsBox, errSlot,
-      h("p", { class: "muted small" }, "You can start the first concept as soon as it's ready. The rest keep building in the background."),
-      h("div", { class: "actions" }, startBtn, cancel)));
-    const poll = async () => {
-      let s;
-      try { s = await api(`/api/jobs/${jobId}`); } catch (err) { errSlot.replaceChildren(errorBox(err.message)); return; }
-      progress.update(s.steps, s.now);
-      eta.textContent = s.status !== "running" ? "" : s.eta_seconds ? `About ${Math.max(1, Math.ceil(s.eta_seconds[0] / 60))}–${Math.max(1, Math.ceil(s.eta_seconds[1] / 60))} minutes left. Concepts that need fixing can take longer.` : "Estimating time remaining…";
-      startBtn.disabled = !(s.lesson && s.lesson.concepts.length);
-      if (s.status === "running") { pollTimer = setTimeout(poll, 1200); return; }
-      if (s.status === "done") { session.lesson = s.result; startBtn.disabled = false; startBtn.textContent = "Open the lesson"; startBtn.onclick = () => openLesson(s.result); cancel.textContent = "Back"; }
-      else if (s.status === "error") { errSlot.replaceChildren(errorBox(s.error)); cancel.textContent = "Back"; }
-    };
-    poll();
-  }
-
-  async function openBuilding(jobId) {
-    const s = await api(`/api/jobs/${jobId}`);
-    if (s.status === "done") return openLesson(s.result);
-    openLesson(s.lesson, { live: jobId });
   }
 
   /* ------------------------------------------------------------ learn */
@@ -2093,7 +2052,6 @@
       try { return openLesson(await api(`/api/lessons/${hash.slice(9)}`), { saved: true }); } catch (e) { return showHome(e.message); }
     }
     if (hash === "#/outline" && session.outline) return;
-    if (hash === "#/building" && session.buildJob) return;
     if (hash === "#/learn" || hash === "#/edit") return;
     return showHome();
   }
