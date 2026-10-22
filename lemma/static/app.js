@@ -1022,8 +1022,8 @@
       results.replaceChildren(...[
         h("h2", { id: "results-title" }, r.results.length ? `Sources for “${r.query}”` : `Nothing readable found for “${r.query}”`),
         r.results.length ? h("p", { class: "muted" }, r.kind === "paper"
-          ? "OpenLemma suggests the papers that best match your search, with an overview for context. They're a starting point, not full coverage. Change any selection before you start."
-          : "OpenLemma suggests an overview, an in-depth explanation and a paper for evidence. They're a starting point, not full coverage. Change any selection before you start.")
+          ? "OpenLemma suggests the papers that best match your search, with an overview and what they build on for context. They're a starting point, not full coverage. Change any selection before you start."
+          : "OpenLemma suggests an overview, articles on what the idea builds on, and an in-depth explanation and a paper where it finds them. They're a starting point, not full coverage. Change any selection before you start.")
           : h("p", { class: "muted" }, "Try other words, or paste a link to a source you already have."),
         r.unavailable.length ? h("p", { class: "muted small" }, `${r.unavailable.join(" and ")} didn't answer, so ${r.unavailable.length > 1 ? "their" : "its"} results are missing. Search again in a moment to include them.`) : null,
         h("ol", { class: "result-list" }, cards), r.results.length ? make : null].filter(Boolean));
