@@ -164,6 +164,7 @@ def api_status(_body):
         "library_count": len(store.list_lessons(_owner())) if getattr(REQUEST, "user", None) else 0,
         "user": getattr(REQUEST, "user", None),
         "level": store.settings(_owner()).get("level", levels.DEFAULT) if getattr(REQUEST, "user", None) else levels.DEFAULT,
+        "levels": [{"id": k, "name": name} for k, (name, _) in levels.LEVELS.items()],
         "sign_in": auth.providers(),
         "typesafe": jev.available(),  # search results and source text also go to TypeSafe, which the privacy notes must say
     }

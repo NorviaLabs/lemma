@@ -8,7 +8,7 @@
   let player = null;
   let pollTimer = null;
   let cleanups = [];
-  const session = { audience: "", outline: null, removed: [], lesson: null, search: null, mode: "search" };
+  const session = { level: "", outline: null, removed: [], lesson: null, search: null, mode: "search" };
 
   /* ------------------------------------------------------------ helpers */
   function h(tag, attrs, ...kids) {
@@ -451,7 +451,6 @@
     "Diminishing returns", "Network contagion", "Random walks", "Signal detection theory", "The wisdom of crowds",
     "Opinion dynamics", "Sampling bias", "Loss aversion", "Supply and demand", "Exponential growth"];
 
-  const AUDIENCES = ["A curious learner with no special background", "An undergraduate student", "An educator preparing a class", "A researcher from a neighbouring field"];
 
   /* The doorway concept: one live model from the example lesson, playable the moment the page opens.
      The label rail's three verbs light up as the visitor plays; until then the model sweeps by itself. */
@@ -960,7 +959,7 @@
       const progress = searchProgress(q);
       results.replaceChildren(progress.el);
       try {
-        let s = await api("/api/search", { query: q });
+        let s = await api("/api/search", { query: q, level: session.level });
         while (!s.done) {
           if (!current()) return;
           progress.update(s.progress);
@@ -985,10 +984,9 @@
       if (!r) return results.replaceChildren();
       const selected = new Set(r.results.filter((x) => x.recommended));
       const make = h("button", { class: "primary", disabled: !selected.size, onclick: async () => {
-        session.audience = audSel.value === "other" ? audOther.value.trim() || AUDIENCES[0] : audSel.value;
         const begin = async () => {
           busy(make, true);
-          try { const job = await api("/api/requests", { sources: [...selected], topic: r.query, audience: session.audience }); showRequest(job.id); }
+          try { const job = await api("/api/requests", { sources: [...selected], topic: r.query, level: session.level }); showRequest(job.id); }
           catch (e) { errSlot.replaceChildren(errorBox(e.message)); busy(make, false); }
         };
         if (!(status.provider || {}).ok) return showConnect(begin);
@@ -1085,13 +1083,14 @@
         : ready > 1 ? `${ready} sources, woven into one lesson. Up to ${MAX_SOURCES}.` : `Add more links or files to combine them into one lesson, up to ${MAX_SOURCES}.`);
       if (mode === "bring" && !submit.disabled) submit.textContent = ready > 1 ? `Read ${ready} sources` : "Read the source";
     }
-    const audSel = h("select", { id: "aud-select" }, AUDIENCES.map((a) => h("option", { value: a }, a)), h("option", { value: "other" }, "Someone else…"));
-    const audOther = h("input", { type: "text", id: "aud-other", placeholder: "For example, a nurse curious about trial design", hidden: true, "aria-label": "Describe who the lesson is for" });
-    if (session.audience) {
-      if (AUDIENCES.includes(session.audience)) audSel.value = session.audience;
-      else { audSel.value = "other"; audOther.hidden = false; audOther.value = session.audience; }
+    // How much the learner already knows, set before searching so it can shape what is found. The account remembers it.
+    session.level = session.level || status.level || "beginner";
+    const levelBtns = (status.levels || []).map((l) => h("button", { type: "button", role: "radio", class: "seg", onclick: () => setLevel(l.id) }, l.name));
+    function setLevel(v) {
+      session.level = v;
+      (status.levels || []).forEach((l, i) => { levelBtns[i].classList.toggle("active", l.id === v); levelBtns[i].setAttribute("aria-checked", String(l.id === v)); });
     }
-    audSel.addEventListener("change", () => { audOther.hidden = audSel.value !== "other"; if (!audOther.hidden) audOther.focus(); });
+    setLevel(session.level);
     const searchPane = h("div", {}, h("label", { for: "topic-q" }, "A concept or question"), qIn, chips);
     const bringPane = h("div", { class: "bring-pane",
         ondragover: (e) => { if ([...e.dataTransfer.types].includes("Files")) { e.preventDefault(); bringPane.classList.add("dropping"); } },
@@ -1134,7 +1133,6 @@
       e.preventDefault();
       if (signedOut) return mode === "search" ? runSearch() : toSignIn({ mode });
       errSlot.replaceChildren();
-      session.audience = audSel.value === "other" ? audOther.value.trim() || AUDIENCES[0] : audSel.value;
       if (mode === "search") return runSearch();
       const chosen = picks.filter((x) => x.kind === "file" || x.input.value.trim());
       if (!chosen.length) return picks[0].input?.focus();
@@ -1160,7 +1158,7 @@
       }
       submit.textContent = label;
       const begin = async () => {
-        try { const job = await api("/api/requests", { sources, audience: session.audience }); showRequest(job.id); }
+        try { const job = await api("/api/requests", { sources, level: session.level }); showRequest(job.id); }
         catch (e) { errSlot.replaceChildren(errorBox(e.message)); busy(submit, false); }
       };
       if (!(status.provider || {}).ok) return showConnect(begin);
@@ -1168,7 +1166,8 @@
     } },
       h("div", { class: "segmented", role: "tablist", "aria-label": "How to find it" }, Object.values(tabBtns)),
       searchPane, bringPane,
-      h("label", { for: "aud-select" }, "Who is it for?"), audSel, audOther,
+      h("label", { id: "level-label" }, "Your level"),
+      h("div", { class: "segmented", role: "radiogroup", "aria-labelledby": "level-label" }, levelBtns),
       privacy,
       errSlot,
       signedOut
