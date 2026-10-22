@@ -1302,15 +1302,15 @@
     const list = h("ol", { class: "outline-list" });
     const removedBox = h("div");
     const buildBtn = h("button", { class: "primary", onclick: startBuild });
-    // For a lesson asked as a question: what the answer builds on, and where each piece is (or isn't) taught.
-    const buildsOn = h("section", { class: "bo-card", "aria-labelledby": "builds-on-title", hidden: !o.question });
+    // What the lesson builds on (its question's answer, or the sources the learner brought), and where each piece is taught.
+    const buildsOn = h("section", { class: "bo-card", "aria-labelledby": "builds-on-title", hidden: !(o.subjects || []).length });
     async function addSource(title, btn) {
       busy(btn, true);
       try { await api(`/api/requests/${session.requestId}/add`, { title }); showRequest(session.requestId); }
       catch (e) { busy(btn, false); buildsOn.append(errorBox(e.message)); }
     }
     function drawBuildsOn() {
-      if (!o.question) return;
+      if (!(o.subjects || []).length) return;
       const taught = new Map(o.concepts.map((c, i) => [c.subject, c.known ? null : i + 1]).filter(([s]) => s));
       const known = new Set(o.concepts.filter((c) => c.known && c.subject).map((c) => c.subject));
       const assumed = new Set([...(o.assumes || []), ...known, ...(o.subjects || []).filter((s) => s.relation === null).map((s) => s.title)]);
@@ -1366,7 +1366,7 @@
         ...o.primer.map((pg) => h("div", {}, h("h3", {}, pg.heading), h("p", { style: "max-width:66ch;white-space:pre-line" }, pg.body)))) : null,
       o.question ? h("p", { class: "muted" }, `Your question: “${o.question}”`) : null,
       buildsOn,
-      h("p", { class: "note" }, `Here's the proposed outline, from ${o.question ? "what it builds on to the answer" : "background to the main result"}. Reorder the concepts, remove any, or mark ones you already know.`),
+      h("p", { class: "note" }, `Here's the proposed outline, from ${o.question ? "what it builds on to the answer" : (o.subjects || []).length ? "what it builds on to the main result" : "background to the main result"}. Reorder the concepts, remove any, or mark ones you already know.`),
       list, removedBox,
       h("div", { class: "actions" }, buildBtn,
         session.requestId ? h("button", { class: "ghost", onclick: async () => { await api(`/api/requests/${session.requestId}/cancel`, {}); showRequest(session.requestId); } }, "Cancel this lesson") : null,

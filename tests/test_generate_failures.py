@@ -405,6 +405,31 @@ class QuestionChecks(unittest.TestCase):
         self.assertEqual([f.kind for f in flags], ["unsupported_link"])
         self.assertIn("say plainly that these sources don't establish it", flags[0])
 
+    def test_brought_sources_are_outlined_with_what_they_build_on_and_no_question(self):
+        brought = dict(self.SEARCH, query=None, field=["statistics", "biology"])
+        with patch.object(self, "SEARCH", brought):
+            job, fp = self.asked(lambda o: None, answers=["no"])  # never asked: there is no question to answer
+        self.assertEqual(job.status, "done", job.error)
+        self.assertEqual(len(fp.sent), 1)
+        self.assertIn("What these sources build on, most needed first", fp.sent[0])
+        self.assertIn("- Mean (helps, learn first; no source)", fp.sent[0])
+        self.assertNotIn("came with a question", fp.sent[0])
+        self.assertNotIn("bridge", fp.sent[0])  # two fields, but nothing to connect without a question
+        self.assertNotIn("question", job.result)
+        self.assertEqual([x["title"] for x in job.result["subjects"]], ["Regression toward the mean", "Mean", "Galton board"])
+        built = wait(generate.start(generate.Job("build"), generate.build_lesson, Recording(), PAPER, job.result, "beginner"))
+        self.assertEqual(built.status, "done", built.error)
+        self.assertEqual(built.result["intro"]["assumes"], ["Galton board"])
+        self.assertNotIn("question", built.result["intro"])
+
+    def test_brought_sources_with_nothing_found_are_outlined_as_before(self):
+        fp = Recording()
+        empty = {"query": None, "field": ["statistics"], "subjects": [], "not_covered": []}
+        job = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, "beginner", empty))
+        self.assertEqual(job.status, "done", job.error)
+        self.assertNotIn("build on", fp.sent[0])
+        self.assertNotIn("subjects", job.result)
+
     def test_a_check_jev_cannot_make_raises(self):
         for name, effect in (("outage", jev.JevError("the checking service answered 529")),
                              ("unreadable", lambda *a: {"answers": {"choice": "maybe"}})):
