@@ -12,9 +12,10 @@ search isn't run again, so a rerun only rescores.
 A labelled prerequisite counts as found when one of its names appears, as whole words, in a result's title.
 A field is right when every field picked is a labelled one, and a bridge has two picked.
 
-A run passes when it doesn't fall below the stage before it (Stage A: 60 of 69 prerequisites in the results, 30
-recommended, 2 of 3 for search 5, the Advanced one), no off-topic subject is recommended, and at least FIELD_BAR
-of the 25 fields are right with every bridge right. --fields checks only the last part.
+A run passes when it holds the stages before it (60 of 69 prerequisites in the results, 2 of 3 for search 5, the
+Advanced one), Stage C's choice by need recommends at least 36 of the 69 (its prototype reached 40; Stage B's run
+29), at most MAX_RECOMMENDED sources are recommended per search on average, no off-topic subject is recommended,
+and at least FIELD_BAR of the 25 fields are right with every bridge right. --fields checks only the last part.
 """
 
 from __future__ import annotations
@@ -32,7 +33,8 @@ from lemma.llm import make_provider
 
 EVAL = Path(__file__).parent
 TESTS = json.loads((EVAL / "searches.json").read_text())["searches"]
-BARS = {"in_results": 60, "recommended": 30, "advanced_found": 2}  # Stage A's gate run, search-2026-10-22b
+BARS = {"in_results": 60, "recommended": 36, "advanced_found": 2}
+MAX_RECOMMENDED = 6  # sources recommended per search, on average: recall isn't bought by recommending everything
 FIELD_BAR = 22
 
 
@@ -50,7 +52,7 @@ def score(test: dict, result: dict) -> dict:
     pre = test["prerequisites"]
     return {"id": test["id"], "query": test["query"], "level": test["level"], "prerequisites": len(pre),
             "in_results": sum(found(p, titles) for p in pre), "recommended": sum(found(p, chosen) for p in pre),
-            "off_topic_recommended": [o for o in test["off_topic"] if found([o], chosen)],
+            "off_topic_recommended": [o for o in test["off_topic"] if found([o], chosen)], "recommended_sources": len(chosen),
             "field": (result.get("field") or {}).get("ids", []),
             "field_right": bool(result.get("field")) and field_right(test, result["field"]),
             "terms": result.get("plan", {}).get("terms", []), "unavailable": result.get("unavailable", [])}
@@ -129,14 +131,16 @@ def main() -> int:
     bridges = [r for r, t in zip(rows, TESTS) if t["kind"] == "bridge"] if len(rows) == len(TESTS) else []
     summary = {"provider": provider.label, "searches": len(rows), "prerequisites": total, "in_results": in_results,
                "recommended": recommended, "advanced_found": (advanced or {}).get("in_results", 0), "off_topic_recommended": off,
-               "fields_right": fields_right, "bridges_right": sum(r["field_right"] for r in bridges)}
+               "fields_right": fields_right, "bridges_right": sum(r["field_right"] for r in bridges),
+               "recommended_per_search": round(sum(r["recommended_sources"] for r in rows) / max(len(rows), 1), 2)}
     (out / "summary.json").write_text(json.dumps({"summary": summary, "rows": rows}, indent=1))
     print(f"\nprerequisites in results {in_results}/{total} (bar {BARS['in_results']}), recommended {recommended}/{total} "
           f"(bar {BARS['recommended']}), search 5 (Advanced) {summary['advanced_found']}/3 (bar {BARS['advanced_found']}), "
           f"off-topic recommended {off}, fields right {fields_right}/{len(TESTS)} (bar {FIELD_BAR}), "
-          f"bridges {summary['bridges_right']}/{len(bridges) or 3}")
+          f"bridges {summary['bridges_right']}/{len(bridges) or 3}, {summary['recommended_per_search']} recommended per search (at most {MAX_RECOMMENDED})")
     passed = (len(rows) == len(TESTS) and all(summary[k] >= bar for k, bar in BARS.items()) and off == 0
-              and fields_right >= FIELD_BAR and all(r["field_right"] for r in bridges))
+              and fields_right >= FIELD_BAR and all(r["field_right"] for r in bridges)
+              and summary["recommended_per_search"] <= MAX_RECOMMENDED)
     print("PASS" if passed else "FAIL")
     return 0 if passed else 1
 
