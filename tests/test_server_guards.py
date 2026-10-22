@@ -19,7 +19,7 @@ from unittest.mock import patch
 
 import hosting  # noqa: F401  a temporary LEMMA_HOME and the Jev stand-in
 from test_lemma import SOURCE, TESTER, FakeConversation, FakeProvider, reset_server, session_cookie, sign_in
-from lemma import chatgpt, generate, ingest, jev, metrics, search, server, store
+from lemma import categorize, chatgpt, generate, ingest, jev, metrics, search, server, store
 from lemma.llm import ProviderError
 
 
@@ -198,11 +198,40 @@ class Searches(unittest.TestCase):
     def test_the_level_and_provider_reach_the_search(self):
         with patch.object(search, "search", return_value={"query": "q", "results": []}) as live:
             self.wait_done(server.api_search({"query": "photosynthesis", "level": "advanced"})["id"])
-        query, level, provider, _ = live.call_args.args
-        self.assertEqual((query, level, provider.id), ("photosynthesis", "advanced", "fake"))
+        query, level, provider, _, field = live.call_args.args
+        self.assertEqual((query, level, provider.id, field), ("photosynthesis", "advanced", "fake", None))
         with self.assertRaises(server.ApiError) as e:
             server.api_search({"query": "photosynthesis", "level": "expert"})
         self.assertEqual(e.exception.status, 400)
+
+    def test_a_field_the_learner_chose_reaches_the_search(self):
+        with patch.object(search, "search", return_value={"query": "q", "results": []}) as live:
+            self.wait_done(server.api_search({"query": "Mercury", "level": "beginner", "field": ["religion"]})["id"])
+        self.assertEqual(live.call_args.args[4], categorize.chosen_field(["religion"]))
+        for bad in (["astrology"], ["other"], [], ["chemistry", "chemistry"], ["chemistry", "religion", "law"], "chemistry"):
+            with self.assertRaises(server.ApiError) as e:
+                server.api_search({"query": "Mercury", "field": bad})
+            self.assertEqual((e.exception.status, e.exception.message), (400, "Choose a field from the list."))
+
+    def test_each_field_remembers_its_own_level(self):
+        def found(field):
+            return lambda query, level, provider, on_progress=None, chosen=None: {"query": query, "results": [], "field": chosen or field}
+        ai, physics = categorize.chosen_field(["ai_ml"]), categorize.chosen_field(["physics_astronomy"])
+        # A level the learner sets is saved for the field the search lands in.
+        with patch.object(search, "search", side_effect=found(ai)):
+            self.wait_done(server.api_search({"query": "attention in transformers", "level": "advanced"})["id"])
+        self.assertEqual(store.settings(server._owner())["levels"], {"ai_ml": "advanced"})
+        # Without one, a search uses the level saved for the field Jev places it in, else the last level used.
+        with patch.object(search, "field_of", return_value=ai), patch.object(search, "search", side_effect=found(ai)) as live:
+            self.wait_done(server.api_search({"query": "what is a token"})["id"])
+        self.assertEqual(live.call_args.args[1], "advanced")
+        with patch.object(search, "search", side_effect=found(physics)):
+            self.wait_done(server.api_search({"query": "why is the sky blue", "level": "beginner"})["id"])
+        with patch.object(search, "field_of", return_value=categorize.chosen_field(["chemistry"])), \
+                patch.object(search, "search", side_effect=found(None)) as live:
+            self.wait_done(server.api_search({"query": "what is an acid"})["id"])
+        self.assertEqual(live.call_args.args[1], "beginner")
+        self.assertEqual(store.settings(server._owner())["levels"], {"ai_ml": "advanced", "physics_astronomy": "beginner"})
 
     def wait_done(self, sid):
         for _ in range(500):
@@ -229,7 +258,7 @@ class Searches(unittest.TestCase):
     def test_a_cached_search_answers_at_once(self):
         hit = {"query": "entropy", "results": []}
         with patch.object(search, "cached", return_value=hit), patch.object(search, "search") as live:
-            self.assertEqual(server.api_search({"query": "entropy"}), {"done": True, "result": hit})
+            self.assertEqual(server.api_search({"query": "entropy", "level": "beginner"}), {"done": True, "result": hit})
         live.assert_not_called()
 
 
@@ -315,7 +344,7 @@ class HostedCaps(unittest.TestCase):
     def test_each_account_has_a_few_searches_running_at_once(self):
         release = threading.Event()
 
-        def slow(query, level, provider, on_progress=None):
+        def slow(query, level, provider, on_progress=None, field=None):
             release.wait(5)
             return {"query": query, "results": []}
 

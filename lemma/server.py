@@ -165,6 +165,7 @@ def api_status(_body):
         "user": getattr(REQUEST, "user", None),
         "level": store.settings(_owner()).get("level", levels.DEFAULT) if getattr(REQUEST, "user", None) else levels.DEFAULT,
         "levels": [{"id": k, "name": name} for k, (name, _) in levels.LEVELS.items()],
+        "fields": [{"id": k, "name": name} for k, (name, _) in categorize.CATEGORIES.items() if k != "other"],
         "sign_in": auth.providers(),
         "typesafe": jev.available(),  # search results and source text also go to TypeSafe, which the privacy notes must say
     }
@@ -275,9 +276,39 @@ SEARCHES_EACH = 3  # searches one account can have running at once
 SEARCH_NEEDS_PROVIDER = "Connect an AI provider on your account page to search. OpenLemma uses it to work out what to look up."
 
 
+def _field(body) -> dict | None:
+    """A field the learner chose for a search, in place of Jev's pick: one or two categories."""
+    ids = body.get("field")
+    if ids is None:
+        return None
+    if not (isinstance(ids, list) and 1 <= len(ids) <= 2 and len(set(ids)) == len(ids)
+            and all(isinstance(i, str) and i in categorize.CATEGORIES and i != "other" for i in ids)):
+        raise ApiError(400, "Choose a field from the list.")
+    return categorize.chosen_field(ids)
+
+
+def _saved_level(owner: str, field: dict) -> str:
+    """The level the account last searched this field at, else the last level it used anywhere."""
+    saved = store.settings(owner)
+    for cid in field["ids"]:
+        if (saved.get("levels") or {}).get(cid) in levels.LEVELS:
+            return saved["levels"][cid]
+    return saved.get("level") if saved.get("level") in levels.LEVELS else levels.DEFAULT
+
+
+def _remember_level(owner: str, level: str, field: dict | None):
+    per = dict(store.settings(owner).get("levels") or {})
+    per.update({cid: level for cid in (field or {}).get("ids", [])})
+    store.save_settings(owner, level=level, levels=per)
+
+
 def api_search(body):
     owner = _owner()
-    level = _level(body)
+    # A level the learner set for this search wins, and is remembered for its field. Without one, the search
+    # uses the level saved for the field Jev places the question in, which may only be known once it runs.
+    chose_level = body.get("level") not in (None, "")
+    level = _parse_level(body) if chose_level else None
+    field = _field(body)
     # The learner's provider names what to look up, so a search needs one, as a build does. It is read here
     # because the search runs in its own thread, where this request's headers aren't.
     try:
@@ -286,9 +317,13 @@ def api_search(body):
         raise ApiError(e.status, SEARCH_NEEDS_PROVIDER if e.status == 400 else e.message) from None
     query = str(body.get("query", ""))
     try:
-        if hit := search.cached(query, level):
-            return {"done": True, "result": hit}
         query = search.clean(query)
+        if level is None and (known := field or search.field_of(query, ask=False)):
+            level = _saved_level(owner, known)
+        if level and (hit := search.cached(query, level, field)):
+            if chose_level:
+                _remember_level(owner, level, hit.get("field"))
+            return {"done": True, "result": hit}
         if not jev.available():
             raise search.SearchError(jev.MISSING)
     except search.SearchError as e:
@@ -309,7 +344,13 @@ def api_search(body):
 
     def run():
         try:
-            record["result"] = search.search(query, level, provider, progress)
+            at = level
+            if at is None:
+                progress({"planning": "active", "services": {}, "found": {}, "to_check": 0, "checked": 0, "readable": 0})
+                at = _saved_level(owner, search.field_of(query))
+            record["result"] = search.search(query, at, provider, progress, field)
+            if chose_level:
+                _remember_level(owner, at, record["result"].get("field"))
         except search.SearchError as e:
             record["error"] = str(e)
         except Exception as e:  # keep the server alive and tell the learner honestly
@@ -497,11 +538,16 @@ def _launch_request(record, provider, owner, build=False):
     return {"id": job.id}
 
 
-def _level(body) -> str:
-    """The learner's level from a request, remembered on the account for next time."""
+def _parse_level(body) -> str:
     level = levels.parse(body.get("level"))
     if level is None:
         raise ApiError(400, "Choose a level: " + ", ".join(name for name, _ in levels.LEVELS.values()) + ".")
+    return level
+
+
+def _level(body) -> str:
+    """The learner's level from a request, remembered on the account for next time."""
+    level = _parse_level(body)
     store.save_settings(_owner(), level=level)
     return level
 
