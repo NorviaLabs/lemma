@@ -1,4 +1,5 @@
-"""A stand-in for TypeSafe's Jev during tests: Jev is essential, so every search and build asks it.
+"""A stand-in for TypeSafe's Jev during tests: Jev is essential, so every search and build asks it. It also stands
+in for the step that works out what brought sources build on, which asks Jev and the learner's provider.
 
 Importing this module installs it for the whole test run. It answers every question harmlessly: no critical
 errors, an average relevance, and the first choice that isn't a rejection. Tests that need particular answers or
@@ -28,3 +29,10 @@ def answer(state, questions, timeout):
 
 os.environ.setdefault("TYPESAFE_API_KEY", "ts-test")
 patch.object(jev, "ask", side_effect=answer).start()
+
+# Sources a learner brings ask their provider and Wikipedia what they build on before the outline (search.source_subjects).
+# By default nothing is found, so a build outlines as it would without it; tests of the step itself use the real one.
+from lemma import search  # noqa: E402
+
+REAL_SOURCE_SUBJECTS = search.source_subjects
+patch.object(search, "source_subjects", return_value={"subjects": [], "not_covered": []}).start()

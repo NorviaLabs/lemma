@@ -910,6 +910,43 @@ class SearchTests(unittest.TestCase):
         self.assertEqual([x["title"] for x in r["results"] if x.get("prerequisite") and x["recommended"]], ["Variance"])
         self.assertEqual(len([x for x in r["results"] if x.get("prerequisite")]), 5)
 
+    def test_brought_sources_are_rated_for_what_they_build_on(self):
+        named = ["Mean", "Variance", "Correlation", "Galton board", "Heredity"]
+        self.pages("Mean", "Variance", "Correlation", "Heredity", missing=["Galton board"])
+        provider = TermsProvider(named)
+        seen = {}
+
+        def ask(state, questions, timeout):
+            seen.update(state=state, questions=questions)
+            need = {"Mean": 3.5, "Variance": 2.0, "Correlation": 3.0, "Heredity": 1.0}
+            out = {"_model": "jev-test"}
+            for x in state["subjects"]:
+                out[f"s{x['n']}_need"] = {"score": need[x["title"]]}
+                out[f"s{x['n']}_relation"] = {"choice": "unrelated" if x["title"] == "Heredity" else "prerequisite"}
+            for m in state.get("not_found", []):
+                out[f"m{m['m']}_need"] = {"score": 3.4}
+            return out
+        sources = [{"title": "Regression towards Mediocrity", "text": "Galton measured " * 500}]
+        with patch.object(jev, "ask", side_effect=ask), patch.object(search, "wikipedia", return_value=[]):
+            found = fakejev.REAL_SOURCE_SUBJECTS(provider, sources, "beginner", ["statistics"])
+        _, document, task = provider.asked[0]
+        self.assertIn("Regression towards Mediocrity", document)
+        self.assertLessEqual(document.count("Galton measured"), search.SOURCE_OPENING // len("Galton measured ") + 1)
+        self.assertIn("that the sources themselves take for granted", task)
+        self.assertIn("Beginner: no background in this field", task)
+        self.assertIn("Statistics & probability", task)
+        self.assertEqual([(x["title"], x["need"]) for x in found["subjects"]], [("Mean", 4.5), ("Correlation", 4.0), ("Variance", 3.0)])
+        self.assertEqual(found["subjects"][0]["url"], "https://en.wikipedia.org/wiki/Mean")
+        self.assertEqual(found["not_covered"], ["Galton board"])
+        self.assertIn("to follow these sources", seen["questions"]["s1_need"]["instructions"])
+
+    def test_a_check_of_brought_sources_jev_cannot_make_fails(self):
+        self.pages("Mean", "Variance", "Correlation", "Heredity", "Normal distribution")
+        with patch.object(jev, "ask", side_effect=jev.JevError("the checking service answered 529")):
+            with self.assertRaisesRegex(search.SearchError, "^Couldn't work out what your sources build on just now"):
+                fakejev.REAL_SOURCE_SUBJECTS(TermsProvider(["Mean", "Variance", "Correlation", "Heredity", "Normal distribution"]),
+                                             [{"title": "T", "text": "x"}], "beginner", None)
+
     def test_when_nothing_would_be_recommended_the_most_needed_prerequisites_are(self):
         named = ["Mean", "Variance", "Correlation", "Heredity", "Normal distribution"]
         self.pages(*named)

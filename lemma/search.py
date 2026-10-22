@@ -415,17 +415,21 @@ TERMS_STEER = {  # how the level changes what is worth looking up
 
 def terms(provider, query: str, level: str, field: dict | None = None) -> list[str]:
     """The Wikipedia article titles the learner's provider names for this question, field and level. Raises SearchError."""
-    cancelled = threading.Event()
-    timer = threading.Timer(TERMS_TIMEOUT, cancelled.set)
-    timer.start()
     about = ""
     if field:
         about = f"\nIts field: {categorize.describe(field)}"
         if field["kind"] == "both":
             about += ". It needs both fields: include what connects them"
     task = TERMS_TASK.format(level=levels.describe(level), field=about, low=TERMS[0], high=TERMS[1], steer=TERMS_STEER[level])
+    return _named_terms(provider, f"<question>\n{query}\n</question>", task)
+
+
+def _named_terms(provider, document: str, task: str) -> list[str]:
+    cancelled = threading.Event()
+    timer = threading.Timer(TERMS_TIMEOUT, cancelled.set)
+    timer.start()
     try:
-        reply = provider.conversation(TERMS_SYSTEM, f"<question>\n{query}\n</question>").send(task, cancelled)
+        reply = provider.conversation(TERMS_SYSTEM, document).send(task, cancelled)
     except ProviderError as e:
         if cancelled.is_set():
             raise SearchError(f"{provider.name} took too long to work out what to look up. Try again in a moment.") from None
@@ -440,6 +444,66 @@ def terms(provider, query: str, level: str, field: dict | None = None) -> list[s
     if not TERMS[0] <= len(names) <= TERMS[1]:
         raise SearchError(f"{provider.name} didn't say what to look up. Try again, or rephrase the question.")
     return names
+
+
+# Sources a learner brings get the same list of what they build on, named from their openings (see source_subjects).
+TERMS_SOURCES_TASK = """\
+The document above is the start of each source a learner brought to learn from. Their level: {level}{field}
+
+List {low} to {high} subjects this learner needs in order to follow these sources and that the sources themselves \
+take for granted, most basic first: what a reader is expected to know already, not what the sources teach. {steer} \
+Name each subject as the exact title of an English Wikipedia article.
+
+Reply with this JSON: {{"terms": ["Article title", ...]}}"""
+SOURCE_OPENING = 3000  # characters of each brought source the provider reads to name what it builds on
+SOURCES_TIMEOUT = 20
+
+
+def source_subjects(provider, sources: list[dict], level: str, field_ids: list[str] | None) -> dict:
+    """What sources a learner brought build on: {"subjects": [{"title", "url", "need" (1 to 5), "relation"}], most
+    needed first, "not_covered": [names no article was found for that this learner needs]}. The learner's provider
+    names Wikipedia articles from the sources' openings and Jev rates how much this learner needs each, as a search
+    does for its prerequisites. Raises SearchError; when Wikipedia can't be reached, the lists are empty."""
+    jev.require()
+    field = categorize.chosen_field(field_ids) if field_ids else None
+    about = f"\nTheir field: {categorize.describe(field)}" if field else ""
+    task = TERMS_SOURCES_TASK.format(level=levels.describe(level), field=about, low=TERMS[0], high=TERMS[1], steer=TERMS_STEER[level])
+    document = "\n\n".join(f"<source>\n{x.get('title', '')}\n\n{(x.get('text') or '')[:SOURCE_OPENING]}\n</source>" for x in sources)
+    names = _named_terms(provider, document, task)
+    try:
+        articles = resolve(names)
+    except (urllib.error.URLError, TimeoutError, OSError, ValueError):
+        return {"subjects": [], "not_covered": []}
+    named = {n for a in articles for n in [a["term"], *a.get("also", [])]}
+    missing = [n for n in names if n not in named]
+    state = {"sources": [{"title": x.get("title", ""), "text": (x.get("text") or "")[:OPENING]} for x in sources],
+             "level": levels.describe(level), "subjects": [{"n": i, "title": a["title"], "text": a.get("summary", "")} for i, a in enumerate(articles, 1)]}
+    if field:
+        state["field"] = categorize.describe(field)
+    if missing:
+        state["not_found"] = [{"m": j, "title": name} for j, name in enumerate(missing, 1)]
+    questions = {}
+    for i in range(1, len(articles) + 1):
+        questions[f"s{i}_need"] = {"type": "score", "criteria": NEED,
+                                   "instructions": f"How much does this learner, at their level, need subject n={i} to follow these sources?"}
+        questions[f"s{i}_relation"] = {"type": "choice", "criteria": RELATIONS,
+                                       "instructions": f"What is subject n={i} to these sources?"}
+    for j in range(1, len(missing) + 1):
+        questions[f"m{j}_need"] = {"type": "score", "criteria": NEED,
+                                   "instructions": f"How much does this learner, at their level, need the subject not_found m={j} to follow these sources?"}
+    try:
+        answers = jev.ask(state, questions, SOURCES_TIMEOUT)
+        rated = [(a, float(answers[f"s{i}_need"]["score"]), answers[f"s{i}_relation"]["choice"]) for i, a in enumerate(articles, 1)]
+        unfound = {name: float(answers[f"m{j}_need"]["score"]) for j, name in enumerate(missing, 1)}
+    except jev.JevError as e:
+        raise SearchError(f"Couldn't work out what your sources build on just now ({e}). Try again in a moment.") from None
+    except (KeyError, TypeError, ValueError) as e:
+        logs.report("source subjects", e)
+        raise SearchError("Couldn't work out what your sources build on just now. Try again in a moment.") from None
+    rated.sort(key=lambda x: -x[1])
+    return {"subjects": [{"title": a["title"], "url": a["url"], "need": round(n + 1, 2), "relation": rel}
+                         for a, n, rel in rated if rel != "unrelated"],
+            "not_covered": [name for name, n in unfound.items() if n >= ESSENTIAL_AT]}
 
 
 def resolve(names: list[str]) -> list[dict]:

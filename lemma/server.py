@@ -449,6 +449,21 @@ def _categorize(record, paper):
         raise generate.GenerationError(f"Couldn't sort this lesson into a subject just now ({e}). Retry in a moment.") from None
 
 
+def _source_context(job, provider, record, paper) -> dict:
+    """For sources the learner brought: what they build on, in the shape a search sends with its sources."""
+    job.step("subjects", "Working out what your sources build on", "active")
+    sources = list(L.source_map(paper["text"]).values()) or [{"title": paper.get("title", ""), "text": paper["text"]}]
+    category = record.get("category") or {}
+    field = [c["id"] for c in (category.get("primary"), category.get("secondary")) if c and c.get("id") in categorize.CATEGORIES and c["id"] != "other"]
+    try:
+        found = search.source_subjects(provider, sources, record["request"].get("level", levels.DEFAULT), field)
+    except search.SearchError as e:
+        job.update("subjects", "failed", str(e))
+        raise generate.GenerationError(str(e)) from None
+    job.update("subjects", "done", f"{len(found['subjects'])} subjects found")
+    return {"query": None, "about": "; ".join(x.get("title", "") for x in sources)[:400], "field": field or None, **found}
+
+
 def _launch_request(record, provider, owner, build=False):
     credential = _credential()[1]
     job = _new_job("request", record["id"])
@@ -529,6 +544,8 @@ def _launch_request(record, provider, owner, build=False):
         # The category comes from the sources themselves, sorted out before anything is paid for.
         if not record.get("category"):
             _categorize(record, paper)
+        if not build and not record["request"].get("search"):  # kept, so a retry doesn't pay for it again
+            record["request"]["search"] = _source_context(j, provider, record, paper)
         if not build:
             outline = generate.make_outline(j, provider, paper["text"], record["request"].get("level", levels.DEFAULT),
                                             record["request"].get("search"))

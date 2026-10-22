@@ -158,6 +158,41 @@ class RequestTests(unittest.TestCase):
         self.assertEqual(record['status'], 'awaiting_outline', record.get('error'))
         self.assertIn("Couldn't add Correlation: Blocked by the site.", record['warnings'])
 
+    def test_brought_sources_are_outlined_with_what_they_build_on(self):
+        found = {'subjects': [{'title': 'Mean', 'url': 'https://en.wikipedia.org/wiki/Mean', 'need': 4.5, 'relation': 'prerequisite'}], 'not_covered': []}
+        seen = []
+
+        def outline(job, provider, text, level, search=None):
+            seen.append(search)
+            raise generate.GenerationError('stop here')
+        with patch.object(server, '_first_readable', return_value=SimpleNamespace(title='Galton', url='https://example.org/paper', text=SOURCE)), \
+                patch.object(server.search, 'source_subjects', return_value=found) as step, patch.object(generate, 'make_outline', side_effect=outline):
+            rid = self.create()
+            self.assertEqual(self.settled(rid)['status'], 'error')
+            sources, level, field = step.call_args.args[1:]
+            self.assertEqual((sources[0]['title'], level), ('Galton', 'beginner'))
+            self.assertEqual(seen[0]['query'], None)
+            self.assertEqual(seen[0]['subjects'], found['subjects'])
+            self.assertEqual(seen[0]['field'], field or None)
+            server.api_request_retry(rid)
+            self.settled(rid)
+        self.assertEqual(step.call_count, 1)  # kept with the request: a retry doesn't ask again
+        self.assertEqual(seen[1], seen[0])
+
+    def test_a_lesson_from_a_search_doesnt_work_out_what_its_sources_build_on(self):
+        with patch.object(server, '_first_readable', return_value=SimpleNamespace(title='Galton', url='https://example.org/paper', text=SOURCE)), \
+                patch.object(server.search, 'source_subjects') as step, \
+                patch.object(generate, 'make_outline', side_effect=generate.GenerationError('stop here')):
+            self.settled(server.api_request_create({'sources': [{'url': 'https://example.org/paper', 'title': 'Paper'}], 'search': {'query': 'Why?'}})['id'])
+        step.assert_not_called()
+
+    def test_when_what_brought_sources_build_on_cant_be_worked_out_the_outline_waits(self):
+        with patch.object(server, '_first_readable', return_value=SimpleNamespace(title='Galton', url='https://example.org/paper', text=SOURCE)), \
+                patch.object(server.search, 'source_subjects', side_effect=server.search.SearchError("Couldn't work out what your sources build on just now.")):
+            record = self.settled(self.create())
+        self.assertEqual((record['status'], record['error']), ('error', "Couldn't work out what your sources build on just now."))
+        self.assertEqual({s['id']: s['state'] for s in record['steps']}['subjects'], 'failed')
+
     def test_a_request_without_a_level_is_for_a_beginner_and_an_unknown_one_is_refused(self):
         self.assertEqual(server.api_status({})['level'], 'beginner')
         with self.assertRaises(server.ApiError) as e:
