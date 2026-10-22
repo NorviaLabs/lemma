@@ -966,6 +966,18 @@ kbd { display: inline-block; min-width: 22px; padding: 1px 6px; text-align: cent
 .chip.surprise:hover:not(:disabled) { background: #ffdb3d; }
 .results { max-width: 760px; margin-bottom: 32px; }
 .results h2 { font-size: 24px; margin-top: 8px; }
+/* "Searching as Psychology · Beginner · Change", and the panel that switches field or level for a new search */
+.field-line { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin: 4px 0 12px; color: var(--body); }
+.field-line strong { color: var(--ink); }
+.field-change { margin: 0 0 20px; padding: 16px 20px 18px; border: 1px solid var(--rule); border-radius: var(--r); }
+.field-change .fc-label { margin: 14px 0 0; font-weight: 600; }
+.field-change .fc-label:first-child { margin-top: 0; }
+.field-change .chips { margin-top: 8px; }
+.chip[aria-checked="true"] { background: var(--ink); color: var(--surface); box-shadow: none; }
+.chip[aria-checked="true"]:hover:not(:disabled) { background: var(--ink); box-shadow: none; }
+.field-change select { margin-top: 10px; min-height: 44px; max-width: 100%; }
+.field-change .segmented { margin-top: 8px; }
+.field-change .actions { margin-top: 16px; }
 .search-progress { margin-top: 8px; padding: 18px 20px; border: 1px solid var(--rule); border-radius: var(--r); }
 .search-progress .sp-head { display: flex; align-items: center; gap: 12px; margin: 0 0 12px; font-weight: 600; }
 .search-progress .sp-spin { width: 18px; height: 18px; border-width: 2px; flex: none; }

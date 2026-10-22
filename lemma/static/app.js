@@ -948,7 +948,9 @@
     const qIn = h("input", { type: "search", id: "topic-q", placeholder: "For example: herd immunity, Simpson's paradox, loss aversion", autocomplete: "off", maxlength: 200 });
     const results = h("section", { class: "results", "aria-live": "polite", "aria-labelledby": "results-title" });
     let searchSeq = 0;  // a newer search (or leaving the page) quietly retires an older one
-    const runSearch = async (q) => {
+    // `field` is one the learner chose instead of Jev's pick. A level is sent only once the learner has set one
+    // this visit; otherwise the account's level for the question's field applies.
+    const runSearch = async (q, field) => {
       q = (q ?? qIn.value).trim();
       if (!q) return qIn.focus();
       if (signedOut) return toSignIn({ mode: "search", ask: q });
@@ -962,7 +964,7 @@
       const progress = searchProgress(q);
       results.replaceChildren(progress.el);
       try {
-        let s = await api("/api/search", { query: q, level: session.level });
+        let s = await api("/api/search", { query: q, ...(session.levelTouched ? { level: session.level } : {}), ...(field ? { field } : {}) });
         while (!s.done) {
           if (!current()) return;
           progress.update(s.progress);
@@ -972,6 +974,8 @@
         if (!current()) return;
         if (s.error) throw new Error(s.error);
         session.search = s.result;
+        if (s.result.plan?.level) setLevel(s.result.plan.level);  // the level it was searched at, which the lesson uses
+        if (s.result.field?.chosen_by === "jev") session.likely = { query: s.result.query, field: s.result.field };
         drawResults();
       } catch (err) {
         if (current()) { results.replaceChildren(); errSlot.append(errorBox(err.message)); }
@@ -982,6 +986,48 @@
     const chips = h("div", { class: "chips", role: "group", "aria-label": "Try a concept" },
       TOPICS.slice(0, 4).map((t) => h("button", { type: "button", class: "chip", onclick: () => runSearch(t) }, t)),
       h("button", { type: "button", class: "chip surprise", onclick: () => runSearch(TOPICS[Math.floor(Math.random() * TOPICS.length)]) }, icon("shuffle"), "Surprise me"));
+    // "Searching as Psychology · Beginner · Change": the field Jev read the question in, which the learner can switch.
+    const fieldName = (ids) => ids.map((id) => (status.fields || []).find((x) => x.id === id)?.name || id).join(" + ");
+    function fieldLine(r) {
+      const f = r.field, levelName = (status.levels || []).find((l) => l.id === r.plan?.level)?.name;
+      const jevs = session.likely?.query === r.query ? session.likely.field : f.chosen_by === "jev" ? f : null;
+      const options = jevs ? [jevs.ids, ...jevs.alternatives.map((a) => [a.id])] : [f.ids];
+      let choice = f.ids, level = r.plan?.level;
+      const same = (a, b) => a.join("+") === b.join("+");
+      const chips = options.map((ids) => h("button", { type: "button", role: "radio", class: "chip", onclick: () => pick(ids) }, fieldName(ids)));
+      const other = h("select", { id: "field-other", onchange: () => other.value && pick([other.value]) },
+        h("option", { value: "" }, "Another field…"), (status.fields || []).map((x) => h("option", { value: x.id }, x.name)));
+      function pick(ids) {
+        choice = ids;
+        chips.forEach((c, i) => c.setAttribute("aria-checked", String(same(options[i], ids))));
+        if (options.some((o) => same(o, ids))) other.value = "";
+        again.disabled = same(choice, f.ids) && level === r.plan?.level;
+      }
+      const levelBtns = (status.levels || []).map((l) => h("button", { type: "button", role: "radio", class: "seg", onclick: () => setPanelLevel(l.id) }, l.name));
+      function setPanelLevel(v) {
+        level = v;
+        (status.levels || []).forEach((l, i) => { levelBtns[i].classList.toggle("active", l.id === v); levelBtns[i].setAttribute("aria-checked", String(l.id === v)); });
+        pick(choice);
+      }
+      const again = h("button", { type: "button", class: "primary small", onclick: () => {
+        if (level !== r.plan?.level) setLevel(level, true);
+        runSearch(r.query, jevs && same(choice, jevs.ids) ? null : choice);  // back to Jev's own pick needs no field
+      } }, "Search again");
+      const panel = h("div", { class: "field-change", id: "field-change", hidden: true },
+        h("p", { class: "fc-label", id: "fc-field" }, "Field"),
+        h("div", { class: "chips", role: "radiogroup", "aria-labelledby": "fc-field" }, chips),
+        h("label", { for: "field-other", class: "sr-only" }, "Another field"), other,
+        h("p", { class: "fc-label", id: "fc-level" }, "Your level"),
+        h("div", { class: "segmented", role: "radiogroup", "aria-labelledby": "fc-level" }, levelBtns),
+        h("div", { class: "actions" }, again, h("span", { class: "muted small" }, "A new search counts toward today's searches.")));
+      setPanelLevel(level);
+      const toggle = h("button", { type: "button", class: "ghost small", "aria-expanded": "false", "aria-controls": "field-change", onclick: () => {
+        panel.hidden = !panel.hidden;
+        toggle.setAttribute("aria-expanded", String(!panel.hidden));
+        if (!panel.hidden) (chips.find((c) => c.getAttribute("aria-checked") === "true") || other).focus();
+      } }, "Change");
+      return [h("p", { class: "field-line" }, h("span", {}, "Searching as ", h("strong", {}, fieldName(f.ids)), levelName ? ` · ${levelName}` : ""), toggle), panel];
+    }
     function drawResults() {
       const r = session.search;
       if (!r) return results.replaceChildren();
@@ -1021,6 +1067,7 @@
       });
       results.replaceChildren(...[
         h("h2", { id: "results-title" }, r.results.length ? `Sources for “${r.query}”` : `Nothing readable found for “${r.query}”`),
+        ...(r.field ? fieldLine(r) : []),
         r.results.length ? h("p", { class: "muted" }, r.kind === "paper"
           ? "OpenLemma suggests the papers that best match your search, with an overview and what they build on for context. They're a starting point, not full coverage. Change any selection before you start."
           : "OpenLemma suggests an overview, articles on what the idea builds on, and an in-depth explanation and a paper where it finds them. They're a starting point, not full coverage. Change any selection before you start.")
@@ -1088,9 +1135,10 @@
     }
     // How much the learner already knows, set before searching so it can shape what is found. The account remembers it.
     session.level = session.level || status.level || "beginner";
-    const levelBtns = (status.levels || []).map((l) => h("button", { type: "button", role: "radio", class: "seg", onclick: () => setLevel(l.id) }, l.name));
-    function setLevel(v) {
+    const levelBtns = (status.levels || []).map((l) => h("button", { type: "button", role: "radio", class: "seg", onclick: () => setLevel(l.id, true) }, l.name));
+    function setLevel(v, touched) {
       session.level = v;
+      if (touched) session.levelTouched = true;
       (status.levels || []).forEach((l, i) => { levelBtns[i].classList.toggle("active", l.id === v); levelBtns[i].setAttribute("aria-checked", String(l.id === v)); });
     }
     setLevel(session.level);

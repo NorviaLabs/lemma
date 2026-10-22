@@ -71,9 +71,10 @@
   <dl class="doc-table">
     <div><dt>Google Cloud</dt><dd>Hosts OpenLemma. Your account, your library, your sources' text and your build requests are stored on a Google Compute Engine server in the United States (Iowa, us-central1).</dd></div>
     <div><dt>Google</dt><dd>Handles signing in.</dd></div>
-    <div><dt>Your AI provider</dt><dd>OpenCode, OpenAI or Anthropic, as you choose, receives your question and your level when you search, to work out which Wikipedia articles to look up, and your sources' text when you build a lesson, under your own key and their terms.</dd></div>
+    <div><dt>Your AI provider</dt><dd>OpenCode, OpenAI or Anthropic, as you choose, receives your question, its field and your level when you search, to work out which Wikipedia articles to look up, and your sources' text when you build a lesson, under your own key and their terms.</dd></div>
     <div><dt>TypeSafe</dt><dd>Receives, for every search and lesson build:
       <ul>
+        <li>the words you search for, to pick the field your question belongs to, such as Psychology or Chemistry;</li>
         <li>the words you search for, with each result's title and abstract (or, without an abstract, the start of its text), to rank the results by how well they would teach what you searched for;</li>
         <li>the title and opening text of each source of a lesson you build, to sort the lesson into a subject such as Medicine or Economics;</li>
         <li>each concept the AI model drafts, with the passages of your sources it is about, to check it for errors before you see it.</li>

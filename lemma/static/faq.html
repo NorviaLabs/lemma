@@ -76,6 +76,13 @@
         <p>Building then takes a few minutes, and you can start the first concept before it finishes. Leaving the page doesn't stop the build. The finished lesson is saved to your library.</p>
       </div>
     </details>
+    <details id="field">
+      <summary>Why do results say "Searching as…"?</summary>
+      <div class="faq-a">
+        <p>The same words can ask different things: "Mercury" could be the metal, the planet or the god. OpenLemma reads your question in the field it most likely belongs to, or in two fields when it needs both, and finds sources in that field.</p>
+        <p>If it picked the wrong one, choose <strong>Change</strong> under the results heading, pick another field or level, and search again. Your account remembers the level you chose for each field.</p>
+      </div>
+    </details>
   </div>
 </section>
 
@@ -106,7 +113,7 @@
       <div class="faq-a">
         <p>Lessons in your library are private to your account. A few services see parts of what you do, only to make OpenLemma work:</p>
         <ul>
-          <li><strong>Your AI provider</strong> receives your question and your level when you search, to work out what to look up, and your sources' text when you build a lesson, under your own key.</li>
+          <li><strong>Your AI provider</strong> receives your question, its field and your level when you search, to work out what to look up, and your sources' text when you build a lesson, under your own key.</li>
           <li><strong>TypeSafe</strong> receives your search words and results, the opening of each source, and each drafted concept, to rank results, sort lessons into subjects and check concepts for errors. It never receives your key or your account.</li>
           <li><strong>Search sources</strong> such as Wikipedia, OpenAlex and arXiv receive the words you search for, and Wikipedia the article titles your AI provider suggests.</li>
           <li><strong>Google</strong> hosts OpenLemma and handles signing in. <strong>Cloudflare</strong> carries traffic and counts page views without cookies.</li>
