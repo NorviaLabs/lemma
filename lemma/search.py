@@ -259,6 +259,7 @@ RELEVANCE = ["Unrelated to what was searched for",
              "Strongly related: mainly about it",
              "Exactly what was searched for, and would teach it well"]
 NEED_AT = 2.0  # Jev's need runs 0 to 4; a prerequisite that only "helps" (2) or more is recommended
+FALLBACK = 2  # prerequisites recommended, most needed first, when nothing else would be
 ESSENTIAL_AT = 3.0  # "needed": a subject this needed with no source is listed as not covered
 NEED = ["Not needed to follow the answer",
         "Nice to know, but the answer makes sense without it",
@@ -691,6 +692,12 @@ def _search(query: str, on_progress=None, extra=(), field: dict | None = None, l
         if result["recommended"]:
             left[slot] -= 1
             result["recommendation"] = REASONS.get(relation, REASONS[slot]) if slot == "prerequisite" else REASONS[slot]
+    # Jev may rate every prerequisite only "nice to know" and every other result off-topic; the learner still gets
+    # a starting set, the most needed of them (search-2026-10-22-e, "Why do kids like balloons?").
+    if not any(r["recommended"] for r in results):
+        for result in [r for r in prerequisites if r["available"] and r["judged"]["relation"] != "unrelated"
+                       and r["judged"]["role"] != "off_topic"][:FALLBACK]:
+            result.update(recommended=True, recommendation=REASONS.get(result["judged"]["relation"], REASONS["prerequisite"]))
     # What the lesson builds on, most needed first: the scaffold the outline reads, and what no source covers.
     graph = {"subjects": [{"title": r["title"], "term": r["term"], "relation": r["judged"]["relation"], "need": r["judged"]["need"],
                            "recommended": r["recommended"]} for r in prerequisites],

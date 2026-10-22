@@ -910,6 +910,15 @@ class SearchTests(unittest.TestCase):
         self.assertEqual([x["title"] for x in r["results"] if x.get("prerequisite") and x["recommended"]], ["Variance"])
         self.assertEqual(len([x for x in r["results"] if x.get("prerequisite")]), 5)
 
+    def test_when_nothing_would_be_recommended_the_most_needed_prerequisites_are(self):
+        named = ["Mean", "Variance", "Correlation", "Heredity", "Normal distribution"]
+        self.pages(*named)
+        self.need_answers({"Mean": 1.2, "Variance": 1.5, "Correlation": 1.4, "Heredity": 1.1, "Normal distribution": 1.9},
+                          {"Normal distribution": "unrelated"})
+        with patch.object(search, "RECOMMEND_AT", 9):  # and no other result is close enough to the question
+            r = search.search("regression to the mean", "beginner", TermsProvider(named))
+        self.assertEqual([x["title"] for x in r["results"] if x["recommended"]], ["Variance", "Correlation"])
+
     def test_a_needed_subject_no_article_was_found_for_is_not_covered(self):
         named = ["Mean", "Variance", "Correlation", "Galton board", "Reversion"]
         self.pages("Mean", "Variance", "Correlation", missing=["Galton board", "Reversion"])

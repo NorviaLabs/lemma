@@ -12,7 +12,7 @@ again, so a rerun only rescores.
 "old" is the outline prompt without the search (the lesson as it was before Stage D); "new" gives the outline the
 question, field, subjects and what no source covers. Scores per variant:
   answers    Jev reads the question against the outline: "answers", "partly" or "no"
-  taught     labelled prerequisites named in a concept's title or idea
+  taught     labelled prerequisites named in a concept's title, idea or subject
   accounted  taught, or named in the outline's "assumes"
   order      concepts teaching a prerequisite subject placed after a core or contribution concept
   failed     outlines that didn't pass their checks
@@ -70,7 +70,7 @@ def score(test: dict, outline: dict | None, answer: str | None) -> dict:
     if outline is None:
         return row
     concepts = [c for c in outline.get("concepts", []) if isinstance(c, dict)]
-    said = [f"{c.get('title', '')} {c.get('idea', '')}" for c in concepts]
+    said = [f"{c.get('title', '')} {c.get('idea', '')} {c.get('subject') or ''}" for c in concepts]  # the subject a concept says it teaches counts
     assumed = [a for a in outline.get("assumes") or [] if isinstance(a, str)]
     row["taught"] = sum(found(p, said) for p in test["prerequisites"])
     row["accounted"] = sum(found(p, said) or found(p, assumed) for p in test["prerequisites"])
@@ -101,7 +101,7 @@ def main() -> int:
 
     def one(test):
         path = out / args.variant / f"{test['id']:02d}.json"
-        if path.exists():
+        if path.exists() and json.loads(path.read_text())["outline"]:  # a failed one is tried again
             return json.loads(path.read_text())
         result = json.loads((EVAL / "results" / args.search / f"{test['id']:02d}.json").read_text())
         record = {"outline": None, "answer": None, "error": ""}
