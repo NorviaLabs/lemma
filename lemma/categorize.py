@@ -94,7 +94,10 @@ SPAN = {"one": "Answering it needs one field", "both": "Answering it needs two d
 
 def question_field(query: str) -> dict:
     """The field (or two) a learner's question belongs to, before anything is searched: "ids" in order, "kind"
-    "one" or "both", and "alternatives", the other fields Jev thought likely, for the learner to switch to."""
+    "one" or "both", and "alternatives", the other fields Jev thought likely, for the learner to switch to.
+
+    The second field of a question that needs two is asked for by name: the runner-up of "which field?" is the
+    other reading of an ambiguous question, not the other half of one that needs both."""
     answers = jev.ask({"question": query}, {
         "field": {"type": "choice", "criteria": {cid: desc for cid, (_, desc) in CATEGORIES.items()},
                   "instructions": "Which field is this question asking about? Judge what it really asks, even when it uses everyday words."},
@@ -107,10 +110,17 @@ def question_field(query: str) -> dict:
         if first not in CATEGORIES:
             raise KeyError(first)
         span = answers["span"]["choice"]
+        ids = [first]
+        if span == "both" and first != "other":
+            others = {cid: desc for cid, (_, desc) in CATEGORIES.items() if cid not in (first, "other")}
+            ids.append(jev.ask({"question": query}, {"second": {
+                "type": "choice", "criteria": others,
+                "instructions": f"Answering this question needs {CATEGORIES[first][0]} and one other field. Which other field?"}},
+                QUESTION_TIMEOUT)["second"]["choice"])
+            if ids[1] not in others:
+                raise KeyError(ids[1])
     except (KeyError, TypeError, ValueError):
         raise CategorizeError("the checking service sent a reply OpenLemma couldn't read") from None
-    second = max((k for k in probs if k not in (first, "other")), key=probs.get, default=None)
-    ids = [first, second] if span == "both" and second and first != "other" and probs[second] >= SECOND_AT else [first]
     return {"ids": ids, "kind": "both" if len(ids) == 2 else "one", "chosen_by": "jev",
             "alternatives": [dict(_named(k), p=round(p, 3)) for k, p in sorted(probs.items(), key=lambda kv: -kv[1])
                              if k not in ids and k != "other" and p >= ALTERNATIVE_AT],

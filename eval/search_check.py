@@ -10,8 +10,7 @@ one Jev ranking on the server's TypeSafe key. Results are saved to eval/results/
 search isn't run again, so a rerun only rescores.
 
 A labelled prerequisite counts as found when one of its names appears, as whole words, in a result's title.
-A field is right when the first one picked is among the labelled fields; a bridge also needs both fields picked,
-and both labelled.
+A field is right when every field picked is a labelled one, and a bridge has two picked.
 
 A run passes when it doesn't fall below the stage before it (Stage A: 60 of 69 prerequisites in the results, 30
 recommended, 2 of 3 for search 5, the Advanced one), no off-topic subject is recommended, and at least FIELD_BAR
@@ -58,9 +57,8 @@ def score(test: dict, result: dict) -> dict:
 
 
 def field_right(test: dict, field: dict) -> bool:
-    if test["kind"] == "bridge":
-        return field["kind"] == "both" and set(field["ids"]) <= set(test["fields"])
-    return field["ids"][0] in test["fields"]
+    """Every field picked is a labelled one; a bridge needs two of them."""
+    return set(field["ids"]) <= set(test["fields"]) and (test["kind"] != "bridge" or field["kind"] == "both")
 
 
 def fields(out: Path) -> int:

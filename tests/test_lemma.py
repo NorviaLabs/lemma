@@ -885,11 +885,13 @@ class SearchTests(unittest.TestCase):
         r = search.search("doi 10.1093/ije/dyh299", "beginner", provider)
         self.assertEqual((provider.asked, r["plan"]["terms"]), ([], []))
 
-    def field_answers(self, probs, span="one"):
+    def field_answers(self, probs, span="one", second=None):
         """A fake Jev that places a question in a field, and judges search results as fakejev does."""
         self.field_asks = []
 
         def ask(state, questions, timeout):
+            if "second" in questions:
+                return {"_model": "jev-test", "second": {"choice": second}}
             if "field" not in questions:
                 self.judged_state = state
                 return fakejev.answer(state, questions, timeout)
@@ -912,7 +914,7 @@ class SearchTests(unittest.TestCase):
         self.assertIn("Psychology (Behaviour and mind", self.judged_state["field"])  # Jev ranks the results in that field
 
     def test_a_question_needing_two_fields_asks_for_what_connects_them(self):
-        self.field_answers({"physics_astronomy": .5, "psychology": .45, "chemistry": .05}, "both")
+        self.field_answers({"physics_astronomy": .9, "chemistry": .1}, "both", second="psychology")
         self.pages("Pressure", "Sound", "Shock wave", "Startle response", "Balloon")
         provider = TermsProvider(["Pressure", "Sound", "Shock wave", "Startle response", "Balloon"])
         r = search.search("Why do balloons pop loudly and scare kids?", "beginner", provider)
@@ -2138,10 +2140,11 @@ class CategorizeTests(unittest.TestCase):
         source = (ROOT / "lemma/examples/galton-1886.txt").read_text()
         self.assertEqual(list(L.check_lesson(lesson, source)), [])
 
-    def field_reply(self, probs, span):
+    def field_reply(self, probs, span, second="medicine"):
         FakeJev.reply = {"model": "jev-1.13.0", "answers": {
             "field": {"type": "choice", "choice": max(probs, key=probs.get), "probabilities": probs},
-            "span": {"type": "choice", "choice": span, "probabilities": {span: .8}}}}
+            "span": {"type": "choice", "choice": span, "probabilities": {span: .8}},
+            "second": {"type": "choice", "choice": second, "probabilities": {second: .7}}}}
 
     def test_a_question_gets_one_field_and_the_likely_others_to_switch_to(self):
         self.field_reply({"chemistry": .5, "physics_astronomy": .3, "religion": .15, "other": .04, "law": .01}, "one")
@@ -2152,14 +2155,22 @@ class CategorizeTests(unittest.TestCase):
         self.assertEqual(body["state"], {"question": "Mercury"})
         self.assertEqual(set(body["questions"]["field"]["criteria"]), set(categorize.CATEGORIES))
 
-    def test_a_bridge_question_gets_both_fields_only_when_the_second_is_likely(self):
-        self.field_reply({"psychology": .55, "medicine": .4, "biology": .05}, "both")
+    def test_a_question_needing_two_fields_names_the_second_by_asking_for_it(self):
+        # The runner-up of "which field?" is biology, but asked for the other field it needs, Jev names medicine.
+        self.field_reply({"psychology": .9, "biology": .07, "medicine": .03}, "both")
         f = categorize.question_field("Why does stress make you sick?")
         self.assertEqual((f["ids"], f["kind"]), (["psychology", "medicine"], "both"))
-        self.field_reply({"psychology": .85, "medicine": .1, "biology": .05}, "both")
-        self.assertEqual(categorize.question_field("Why does stress make you sick?")["ids"], ["psychology"])
-        self.field_reply({"psychology": .55, "medicine": .4, "biology": .05}, "one")
+        self.assertEqual([a["id"] for a in f["alternatives"]], ["biology"])
+        asked = FakeJev.seen[1][1]["questions"]["second"]
+        self.assertIn("needs Psychology and one other field", asked["instructions"])
+        self.assertNotIn("psychology", asked["criteria"])
+        self.field_reply({"psychology": .9, "biology": .07, "medicine": .03}, "one")
+        FakeJev.seen = []
         self.assertEqual(categorize.question_field("Why does stress make you sick?")["kind"], "one")
+        self.assertEqual(len(FakeJev.seen), 1)  # one field needs no second question
+        self.field_reply({"psychology": .9, "biology": .1}, "both", second="psychology")
+        with self.assertRaises(categorize.CategorizeError):  # not a second field at all
+            categorize.question_field("Why does stress make you sick?")
 
     def test_a_question_jev_cannot_place_raises(self):
         FakeJev.status = 401
