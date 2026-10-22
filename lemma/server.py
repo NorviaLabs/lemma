@@ -20,7 +20,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib import resources
 from urllib.parse import parse_qs, quote, urlsplit
 
-from . import __version__, auth, categorize, chatgpt, export, feedback, generate, ingest, jev, logs, metrics, search, store
+from . import __version__, auth, categorize, chatgpt, export, feedback, generate, ingest, jev, levels, logs, metrics, search, store
 from . import lesson as L
 from .llm import DEFAULT_PROVIDER, PROVIDERS, ProviderError, make_provider
 
@@ -163,6 +163,7 @@ def api_status(_body):
         "providers": [{"id": i.id, "name": i.name, "default_model": i.default_model, "key_url": i.key_url, "sign_in": not i.key_url} for i in providers().values()],
         "library_count": len(store.list_lessons(_owner())) if getattr(REQUEST, "user", None) else 0,
         "user": getattr(REQUEST, "user", None),
+        "level": store.settings(_owner()).get("level", levels.DEFAULT) if getattr(REQUEST, "user", None) else levels.DEFAULT,
         "sign_in": auth.providers(),
         "typesafe": jev.available(),  # search results and source text also go to TypeSafe, which the privacy notes must say
     }
@@ -462,13 +463,13 @@ def _launch_request(record, provider, owner, build=False):
         if not record.get("category"):
             _categorize(record, paper)
         if not build:
-            outline = generate.make_outline(j, provider, paper["text"], record["request"]["audience"])
+            outline = generate.make_outline(j, provider, paper["text"], record["request"].get("level", levels.DEFAULT))
             with j.lock:
                 if not j.cancelled.is_set():
                     record["outline"] = outline
                     j.status = "awaiting_outline"
             return outline
-        result = generate.build_lesson(j, provider, paper, record["outline"], record["request"]["audience"], j.id)
+        result = generate.build_lesson(j, provider, paper, record["outline"], record["request"].get("level", levels.DEFAULT), j.id)
         result["category"] = record["category"]
         j.step("save", "Saving your lesson", "active")
         with _requests_lock:
@@ -485,10 +486,19 @@ def _launch_request(record, provider, owner, build=False):
     return {"id": job.id}
 
 
+def _level(body) -> str:
+    """The learner's level from a request, remembered on the account for next time."""
+    level = levels.parse(body.get("level"))
+    if level is None:
+        raise ApiError(400, "Choose a level: " + ", ".join(name for name, _ in levels.LEVELS.values()) + ".")
+    store.save_settings(_owner(), level=level)
+    return level
+
+
 def api_request_create(body):
     with _requests_lock:
         owner, provider = _owner(), _provider()
-        request = {"audience": str(body.get("audience", ""))[:300]}
+        request = {"level": _level(body)}
         paper = None
         if body.get("paper_id"):
             paper = dict(_paper(body))

@@ -5,9 +5,9 @@ import sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from lemma import generate, lesson as L, factcheck
+from lemma import generate, lesson as L, factcheck, levels
 from lemma.claude import ClaudeProvider
-from build_gallery import RUN, AUDIENCE, RecordingJob, save
+from build_gallery import RUN, LEVEL, RecordingJob, save
 
 key=subprocess.run(['pbpaste'],capture_output=True,text=True,check=True).stdout.strip()
 if not key.startswith('sk-ant-') or any(c.isspace() for c in key):
@@ -30,7 +30,7 @@ for slug in ('brown-1954','euclid-equilateral'):
             extra='\nReuse the earlier model exactly, keeping every control id, label and range, adding at most one control. Earlier model:\n'+json.dumps(base['model'],ensure_ascii=False)
         if c==outline['concepts'][-1]: extra+='\nEnd on the lesson aha: '+outline['aha']
         extra+='\nA previous attempt failed: '+next((o['reason'] for o in lesson['omitted'] if o['title']==c['title']),'validation')
-        task=generate.CONCEPT_TASK.format(audience=AUDIENCE,outline=generate._outline_text(outline['concepts'],c['id']),title=c['title'],id=c['id'],idea=c['idea'],visual=c['visual'],check_rule='Include one check.' if c.get('hard') else 'Do not include a check key.',extra=extra)
+        task=generate.CONCEPT_TASK.format(level=levels.describe(LEVEL),outline=generate._outline_text(outline['concepts'],c['id']),title=c['title'],id=c['id'],idea=c['idea'],visual=c['visual'],check_rule='Include one check.' if c.get('hard') else 'Do not include a check key.',extra=extra)
         def check(obj):
             if isinstance(obj,dict):
                 obj['id']=c['id']

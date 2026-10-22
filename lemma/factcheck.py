@@ -16,7 +16,7 @@ import math
 import re
 from collections import Counter
 
-from . import jev
+from . import jev, levels
 from . import lesson as L
 
 TIMEOUT = 30
@@ -163,7 +163,9 @@ def has_marked_answer(x: dict | None) -> bool:
 
 def lesson_text(lesson: dict, conditions: bool = True) -> str:
     intro, primer = lesson.get("intro") or {}, lesson.get("primer") or []
-    out = [f"LESSON: {lesson.get('title', '')}", f"AUDIENCE: {lesson.get('audience', '')}", f"SUMMARY: {intro.get('summary', '')}"]
+    # Lessons saved before levels name an audience instead.
+    learner = f"LEVEL: {levels.describe(lesson['level'])}" if lesson.get("level") else f"AUDIENCE: {lesson.get('audience', '')}"
+    out = [f"LESSON: {lesson.get('title', '')}", learner, f"SUMMARY: {intro.get('summary', '')}"]
     out += [f"BACKGROUND: {b}" for b in intro.get("background") or []]
     if intro.get("aha"):
         out.append(f"THE BIG SURPRISE: {intro['aha']}")

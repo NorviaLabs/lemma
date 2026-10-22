@@ -49,6 +49,20 @@ def library(owner: str | None = None) -> Path:
     return lib
 
 
+def settings(owner: str) -> dict:
+    """What an account chose last time, such as its level."""
+    try:
+        data = json.loads((library(owner).parent / "settings.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def save_settings(owner: str, **changes):
+    path = library(owner).parent / "settings.json"
+    write_private(path, json.dumps({**settings(owner), **changes}))
+
+
 def _paths(lesson_id: str, owner: str | None = None) -> tuple[Path, Path]:
     if not ID_RE.match(lesson_id or ""):
         raise KeyError(lesson_id)

@@ -66,6 +66,28 @@ class RequestTests(unittest.TestCase):
         server.api_lesson_delete(rid)
         self.assertFalse(store.request_path(rid, TESTER).exists())
 
+    def test_the_level_reaches_the_prompts_and_is_remembered(self):
+        provider = server._provider()
+        with patch.object(server, '_first_readable', return_value=SimpleNamespace(title='Galton', url='https://example.org/paper', text=SOURCE)):
+            rid = server.api_request_create({'sources': [{'url': 'https://example.org/paper', 'title': 'Paper'}], 'level': 'advanced'})['id']
+            outline = self.settled(rid)
+        self.assertEqual(outline['status'], 'awaiting_outline', outline.get('error'))
+        self.assertIn("The learner's level: Advanced: has studied or works in the field", provider.tasks['outline'])
+        self.assertEqual(server.api_status({})['level'], 'advanced')  # offered first next time
+        server.REQUEST.body = {'outline': outline['outline']}
+        server.api_request_outline(rid)
+        self.assertEqual(self.settled(rid)['status'], 'done')
+        lesson, _ = store.load_lesson(rid, TESTER)
+        self.assertEqual(lesson['level'], 'advanced')
+        concept = next(t for k, t in provider.tasks.items() if k != 'outline')
+        self.assertIn("The learner's level: Advanced", concept)
+
+    def test_a_request_without_a_level_is_for_a_beginner_and_an_unknown_one_is_refused(self):
+        self.assertEqual(server.api_status({})['level'], 'beginner')
+        with self.assertRaises(server.ApiError) as e:
+            server.api_request_create({'sources': [{'url': 'https://example.org/paper'}], 'level': 'expert'})
+        self.assertEqual((e.exception.status, e.exception.message), (400, 'Choose a level: Beginner, Intermediate, Advanced.'))
+
     def test_without_jev_no_build_is_started_or_saved(self):
         with patch.dict(os.environ, {'TYPESAFE_API_KEY': ''}), patch.object(server, '_first_readable') as read:
             with self.assertRaises(server.ApiError) as raised:

@@ -9,7 +9,7 @@ import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 
-from . import factcheck, jev
+from . import factcheck, jev, levels
 from . import lesson as L
 from . import logs, metrics
 from .llm import Provider, ProviderError
@@ -49,7 +49,7 @@ evidence and classifying, matching, ordering or tracing tasks instead: never inv
 it appears in the paper text. You may repair spacing broken by PDF extraction, but never change, add, drop \
 or reorder words. Models are teaching models: say how each is simplified, and never present invented numbers \
 as the paper's results. If the paper reports a number, you may use it and say where it comes from.
-5. Plain language. Short, clear sentences for the stated audience, without simplifying away scientific \
+5. Plain language. Short, clear sentences for the learner's stated level, without simplifying away scientific \
 caveats such as sample limits, correlation versus causation, or uncertainty.
 6. Prefer the visual type that shows the mechanism most directly. For populations, relationships and causes \
 (common in psychology, sociology and economics), consider agents, network, causal and sampling visuals \
@@ -69,10 +69,10 @@ def paper_document(text: str) -> str:
 
 
 OUTLINE_TASK = """\
-Read the paper above. The lesson is for: {audience}
+Read the paper above. The learner's level: {level}
 
 First find the paper's "aha": its single most surprising or satisfying result, the thing a newcomer would \
-not expect. Then propose a path of {n_hint} concepts, from the prerequisites the audience needs up to that aha. \
+not expect. Then propose a path of {n_hint} concepts, from the prerequisites this learner needs up to that aha. \
 Each concept teaches one mechanism that a live model can show, and adds one piece to the last.
 
 Reply with this JSON:
@@ -116,7 +116,7 @@ Add "hard": true to at most two concepts, the ones a newcomer is most likely to 
 
 
 CONCEPT_TASK = """\
-The lesson is for: {audience}
+The learner's level: {level}
 Lesson outline (for context; build only the concept marked ▶):
 {outline}
 
@@ -159,7 +159,7 @@ at least one part linked to a control or output;
 
 
 CONCEPT_TASK_NO_MODEL = """\
-The lesson is for: {audience}
+The learner's level: {level}
 Lesson outline (for context; build only the concept marked ▶):
 {outline}
 
@@ -194,7 +194,7 @@ def plan_rule(choice: dict | None) -> str:
     return "choose the blocks that best fit the reasoning this concept involves, teaching before asking."
 
 
-def choose_plans(job: Job, outline: dict, concepts: list[dict], audience: str) -> dict:
+def choose_plans(job: Job, outline: dict, concepts: list[dict], level: str) -> dict:
     """Jev chooses, for each concept with candidate plans, the one that would best teach it, or none of them.
     Raises GenerationError when Jev can't, before any concept is drafted."""
     asking = [c for c in concepts if c.get("plans")]
@@ -202,7 +202,7 @@ def choose_plans(job: Job, outline: dict, concepts: list[dict], audience: str) -
         return {}
     job.step("plans", "Choosing how to teach each concept", "active")
     titles = {c["id"]: c["title"] for c in concepts}
-    state = {"audience": audience or "a curious learner with no special background", "lesson": outline.get("summary", ""),
+    state = {"learner": levels.describe(level), "lesson": outline.get("summary", ""),
              "concepts": [{"id": c["id"], "title": c["title"], "idea": c["idea"], "role": c.get("role", "core"),
                            "relies_on": [titles.get(n, n) for n in c.get("needs") or []],
                            "has_live_model": c.get("visual") != "none"} for c in concepts]}
@@ -211,7 +211,7 @@ def choose_plans(job: Job, outline: dict, concepts: list[dict], audience: str) -
         criteria = {f"p{j}": f"{' → '.join(plan['blocks'])}: {plan.get('why', '')}" for j, plan in enumerate(c["plans"], 1)}
         criteria["none_suitable"] = "None of these plans would teach this concept well"
         questions[c["id"]] = {"type": "choice", "criteria": criteria,
-                              "instructions": f"Concept '{c['title']}': {c['idea']} Which plan would best help this audience understand it, "
+                              "instructions": f"Concept '{c['title']}': {c['idea']} Which plan would best help this learner understand it, "
                                               "judged by what the learner would actually do on each screen? Prefer a live model only where its "
                                               "controls are meaningful quantities; prefer comparing, classifying, ordering or tracing for "
                                               "distinctions, arguments and cases. Choose none_suitable rather than a poor plan."}
@@ -550,10 +550,10 @@ def require_jev():
         raise GenerationError(str(e)) from None
 
 
-def make_outline(job: Job, provider: Provider, paper_text: str, audience: str) -> dict:
+def make_outline(job: Job, provider: Provider, paper_text: str, level: str) -> dict:
     require_jev()  # before anything is paid for: the build that follows can't run without Jev
     job.step("outline", "Reading your sources and proposing an outline", "active")
-    task = OUTLINE_TASK.format(audience=audience or "a curious learner with no special background", n_hint="three to seven")
+    task = OUTLINE_TASK.format(level=levels.describe(level), n_hint="three to seven")
     if L.source_map(paper_text):
         task += MULTI_SOURCE_TASK
     obj, problems = _ask_json(job, provider, paper_document(L.source_document(paper_text)), task, lambda o: check_outline(o, paper_text, require_needs=True), "outline")
@@ -578,7 +578,7 @@ def _outline_text(concepts: list[dict], current: str) -> str:
     return "\n".join(lines)
 
 
-def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audience: str, lesson_id: str | None = None) -> dict:
+def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, level: str, lesson_id: str | None = None) -> dict:
     """Builds concepts in parallel; each one is published to ``job.lesson`` as soon as it passes the checks."""
     require_jev()
     concepts = [c for c in outline["concepts"] if isinstance(c, dict)]
@@ -590,7 +590,7 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audie
         "version": 1,
         "id": lesson_id or uuid.uuid4().hex[:12],
         "title": outline.get("title") or paper.get("title") or "Lesson",
-        "audience": audience,
+        "level": level,
         "created": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "source": {
             "title": src.get("title") or paper.get("title", ""),
@@ -614,7 +614,7 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audie
     sources = L.source_map(paper["text"])
     if sources:
         lesson["sources"] = [{k: v for k, v in s.items() if k != "text"} for s in sources.values()]
-    choices = choose_plans(job, outline, todo, audience)
+    choices = choose_plans(job, outline, todo, level)
     if choices:  # what Jev chose and from what, tied to this outline
         options = {c["id"]: c["plans"] for c in todo if c.get("plans")}
         lesson["activity_plans"] = [dict(x, options=options[cid]) for cid, x in choices.items()]
@@ -676,7 +676,7 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, audie
             extra += "\n- this is the last concept: it must build to the lesson's aha, so the walkthrough ends on it: " + lesson["intro"]["aha"]
         no_model = c.get("visual") == "none"
         fields = dict(
-            audience=audience or "a curious learner with no special background",
+            level=levels.describe(level),
             outline=_outline_text(concepts, c["id"]),
             title=c["title"],
             id=c["id"],

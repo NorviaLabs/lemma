@@ -49,7 +49,7 @@ import questions as Q  # noqa: E402
 
 EVAL = Path(__file__).resolve().parent
 PAPERS = json.loads((EVAL / "papers.json").read_text())
-AUDIENCE = "A curious adult with no background in this field"
+LEVEL = "beginner"
 PLANT_KINDS = plant_mod.KINDS
 # Lesson folders the eval never counts: Galton is the hand-made built-in example and the tests' fixture,
 # not a lesson Lemma generated, so it says nothing about the generator.
@@ -184,7 +184,7 @@ def each(papers, fn, parallel: int):
 
 def build(args):
     provider = provider_for(args.builder)
-    record_run(args.run, builder={"provider": provider.id, "model": provider.model}, audience=AUDIENCE, built=time.strftime("%Y-%m-%dT%H:%M:%S"))
+    record_run(args.run, builder={"provider": provider.id, "model": provider.model}, level=LEVEL, built=time.strftime("%Y-%m-%dT%H:%M:%S"))
 
     def one(paper):
         d = folder(args.run, paper)
@@ -203,11 +203,11 @@ def build(args):
             text = source.read_text()
             record["stage"] = "outline"
             say(paper, "outlining")
-            outline = generate.make_outline(job, watched, text, AUDIENCE)
+            outline = generate.make_outline(job, watched, text, LEVEL)
             save(d / "outline.json", outline)
             record["stage"] = "concepts"
             say(paper, f"building {len(outline['concepts'])} concepts")
-            built = generate.build_lesson(job, watched, {"text": text, "title": paper["title"], "url": paper["urls"][0]}, outline, AUDIENCE, f"eval-{paper['id']:02d}")
+            built = generate.build_lesson(job, watched, {"text": text, "title": paper["title"], "url": paper["urls"][0]}, outline, LEVEL, f"eval-{paper['id']:02d}")
             save(d / "lesson.json", built)
             record.update(status="done", stage="done")
         except (ingest.IngestError, generate.GenerationError, ProviderError) as e:

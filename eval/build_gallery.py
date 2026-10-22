@@ -18,7 +18,7 @@ from lemma.llm import ProviderError
 
 RUN = ROOT / "eval/results/gallery-claude"
 SLUGS = ("turner-1893", "aquinas-senses", "mendel-1866", "brown-1954", "poe-red-death", "euclid-equilateral")
-AUDIENCE = "A curious adult with no background in this field"
+LEVEL = "beginner"
 
 
 def save(path, value):
@@ -84,12 +84,12 @@ def main():
                     raise generate.GenerationError("Cached outline failed validation.")
             else:
                 print(f"{slug}: Claude outlining", flush=True)
-                outline = generate.make_outline(job, provider, text, AUDIENCE)
+                outline = generate.make_outline(job, provider, text, LEVEL)
                 save(outline_path, outline)
             record["stage"] = "build"
             save(record_path, record)
             print(f"{slug}: building {len(outline['concepts'])} concepts with normal repairs/checks", flush=True)
-            built = generate.build_lesson(job, provider, dict(text=text, title=existing["source"]["title"], url=existing["source"]["url"]), outline, AUDIENCE, "gallery-" + slug)
+            built = generate.build_lesson(job, provider, dict(text=text, title=existing["source"]["title"], url=existing["source"]["url"]), outline, LEVEL, "gallery-" + slug)
             problems = list(L.check_lesson(built, text))
             if problems:
                 raise generate.GenerationError("Generated lesson failed final validation.")
