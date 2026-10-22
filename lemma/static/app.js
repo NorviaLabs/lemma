@@ -1072,6 +1072,8 @@
           ? "OpenLemma suggests the papers that best match your search, with an overview and what they build on for context. They're a starting point, not full coverage. Change any selection before you start."
           : "OpenLemma suggests an overview, articles on what the idea builds on, and an in-depth explanation and a paper where it finds them. They're a starting point, not full coverage. Change any selection before you start.")
           : h("p", { class: "muted" }, "Try other words, or paste a link to a source you already have."),
+        // A subject the learner needs that no readable source was found for: the lesson takes it as known.
+        r.graph?.not_covered?.length ? h("p", { class: "muted small" }, `Not covered by these sources: ${new Intl.ListFormat("en").format(r.graph.not_covered)}. The lesson will assume you know ${r.graph.not_covered.length > 1 ? "them" : "it"}.`) : null,
         r.unavailable.length ? h("p", { class: "muted small" }, `${r.unavailable.join(" and ")} didn't answer, so ${r.unavailable.length > 1 ? "their" : "its"} results are missing. Search again in a moment to include them.`) : null,
         h("ol", { class: "result-list" }, cards), r.results.length ? make : null].filter(Boolean));
     }
