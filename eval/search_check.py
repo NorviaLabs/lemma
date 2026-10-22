@@ -2,6 +2,7 @@
 
     set -a; . ./deploy/lemma.env; set +a          # TYPESAFE_API_KEY: every search asks Jev
     uv run python eval/search_check.py --provider chatgpt --model gpt-6.1-sol
+    uv run python eval/search_check.py --fields      # only the field step: one Jev call per search, no provider
     LEMMA_PROVIDER_KEY=... uv run python eval/search_check.py --provider claude   # a provider with a key
 
 It costs money: each search is one short call on the provider you name (under your key or subscription) and
@@ -11,6 +12,9 @@ search isn't run again, so a rerun only rescores.
 A labelled prerequisite counts as found when one of its names appears, as whole words, in a result's title.
 The stage passes when the results hold at least 56 of the 69 prerequisites (the stage-0 prototype's articles),
 search 5 (Advanced) finds at least one of its own, and no off-topic subject is recommended.
+
+A field is right when the first one picked is among the labelled fields; a bridge also needs both fields picked,
+and both labelled. The field step passes at FIELD_BAR of 25 with every bridge right.
 """
 
 from __future__ import annotations
@@ -23,12 +27,13 @@ import sys
 import time
 from pathlib import Path
 
-from lemma import search
+from lemma import categorize, search
 from lemma.llm import make_provider
 
 EVAL = Path(__file__).parent
 TESTS = json.loads((EVAL / "searches.json").read_text())["searches"]
 BAR = 56  # prerequisites the stage-0 prototype's resolved articles found
+FIELD_BAR = 22
 
 
 def _words(text: str) -> str:
@@ -49,19 +54,56 @@ def score(test: dict, result: dict) -> dict:
             "terms": result.get("plan", {}).get("terms", []), "unavailable": result.get("unavailable", [])}
 
 
+def field_right(test: dict, field: dict) -> bool:
+    if test["kind"] == "bridge":
+        return field["kind"] == "both" and set(field["ids"]) <= set(test["fields"])
+    return field["ids"][0] in test["fields"]
+
+
+def fields(out: Path) -> int:
+    """The field step alone, saved to fields.json; a saved run is rescored, not rerun."""
+    path = out / "fields.json"
+    picked = json.loads(path.read_text()) if path.exists() else {}
+    right = bridges = 0
+    for test in TESTS:
+        if str(test["id"]) not in picked:
+            try:
+                picked[str(test["id"])] = categorize.question_field(test["query"])
+            except categorize.CategorizeError as e:
+                print(f"{test['id']:>2}. FAILED  {e}", flush=True)
+                continue
+            path.write_text(json.dumps(picked, indent=1))
+        field = picked[str(test["id"])]
+        ok = field_right(test, field)
+        right += ok
+        bridges += ok and test["kind"] == "bridge"
+        print(f"{test['id']:>2}. {test['query'][:50]:<50} {'ok   ' if ok else 'WRONG'} {'+'.join(field['ids']):<34} "
+              f"labelled {'/'.join(test['fields'])} ({test['kind']})", flush=True)
+    total_bridges = sum(t["kind"] == "bridge" for t in TESTS)
+    print(f"\nfields right {right}/{len(TESTS)} (bar {FIELD_BAR}), bridges {bridges}/{total_bridges}")
+    passed = len(picked) == len(TESTS) and right >= FIELD_BAR and bridges == total_bridges
+    print("PASS" if passed else "FAIL")
+    return 0 if passed else 1
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("--provider", required=True, help="claude, openai, opencode or chatgpt")
+    ap.add_argument("--provider", help="claude, openai, opencode or chatgpt")
+    ap.add_argument("--fields", action="store_true", help="run only the field step (Jev, no provider)")
     ap.add_argument("--model", default="")
     ap.add_argument("--run", default="search-" + time.strftime("%Y-%m-%d"))
     args = ap.parse_args()
+    out = EVAL / "results" / args.run
+    out.mkdir(parents=True, exist_ok=True)
+    if args.fields:
+        return fields(out)
+    if not args.provider:
+        ap.error("--provider is needed unless --fields")
     provider = make_provider(args.provider, os.environ.get("LEMMA_PROVIDER_KEY", ""), args.model)
     ok, why = provider.available()
     if not ok:
         print(why, file=sys.stderr)
         return 2
-    out = EVAL / "results" / args.run
-    out.mkdir(parents=True, exist_ok=True)
     rows = []
     for test in TESTS:
         path = out / f"{test['id']:02d}.json"

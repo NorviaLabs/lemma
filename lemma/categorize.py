@@ -85,3 +85,33 @@ def categorize(paper: dict) -> dict:
         "confidence": round(float(answer.get("confidence") or 0), 3),
         "model": answers["_model"],
     }
+
+
+QUESTION_TIMEOUT = 10
+ALTERNATIVE_AT = 0.05  # a field this likely is offered when the learner changes it
+SPAN = {"one": "Answering it needs one field", "both": "Answering it needs two different fields together"}
+
+
+def question_field(query: str) -> dict:
+    """The field (or two) a learner's question belongs to, before anything is searched: "ids" in order, "kind"
+    "one" or "both", and "alternatives", the other fields Jev thought likely, for the learner to switch to."""
+    answers = jev.ask({"question": query}, {
+        "field": {"type": "choice", "criteria": {cid: desc for cid, (_, desc) in CATEGORIES.items()},
+                  "instructions": "Which field is this question asking about? Judge what it really asks, even when it uses everyday words."},
+        "span": {"type": "choice", "criteria": SPAN,
+                 "instructions": "Does answering this question need one field, or two different fields together?"}}, QUESTION_TIMEOUT)
+    try:
+        answer = answers["field"]
+        probs = {k: float(v) for k, v in answer["probabilities"].items() if k in CATEGORIES}
+        first = answer["choice"]
+        if first not in CATEGORIES:
+            raise KeyError(first)
+        span = answers["span"]["choice"]
+    except (KeyError, TypeError, ValueError):
+        raise CategorizeError("the checking service sent a reply OpenLemma couldn't read") from None
+    second = max((k for k in probs if k not in (first, "other")), key=probs.get, default=None)
+    ids = [first, second] if span == "both" and second and first != "other" and probs[second] >= SECOND_AT else [first]
+    return {"ids": ids, "kind": "both" if len(ids) == 2 else "one", "chosen_by": "jev",
+            "alternatives": [dict(_named(k), p=round(p, 3)) for k, p in sorted(probs.items(), key=lambda kv: -kv[1])
+                             if k not in ids and k != "other" and p >= ALTERNATIVE_AT],
+            "model": answers["_model"]}

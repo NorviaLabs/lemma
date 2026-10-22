@@ -2081,6 +2081,37 @@ class CategorizeTests(unittest.TestCase):
         source = (ROOT / "lemma/examples/galton-1886.txt").read_text()
         self.assertEqual(list(L.check_lesson(lesson, source)), [])
 
+    def field_reply(self, probs, span):
+        FakeJev.reply = {"model": "jev-1.13.0", "answers": {
+            "field": {"type": "choice", "choice": max(probs, key=probs.get), "probabilities": probs},
+            "span": {"type": "choice", "choice": span, "probabilities": {span: .8}}}}
+
+    def test_a_question_gets_one_field_and_the_likely_others_to_switch_to(self):
+        self.field_reply({"chemistry": .5, "physics_astronomy": .3, "religion": .15, "other": .04, "law": .01}, "one")
+        f = categorize.question_field("Mercury")
+        self.assertEqual((f["ids"], f["kind"], f["chosen_by"]), (["chemistry"], "one", "jev"))
+        self.assertEqual([a["id"] for a in f["alternatives"]], ["physics_astronomy", "religion"])
+        body = FakeJev.seen[0][1]
+        self.assertEqual(body["state"], {"question": "Mercury"})
+        self.assertEqual(set(body["questions"]["field"]["criteria"]), set(categorize.CATEGORIES))
+
+    def test_a_bridge_question_gets_both_fields_only_when_the_second_is_likely(self):
+        self.field_reply({"psychology": .55, "medicine": .4, "biology": .05}, "both")
+        f = categorize.question_field("Why does stress make you sick?")
+        self.assertEqual((f["ids"], f["kind"]), (["psychology", "medicine"], "both"))
+        self.field_reply({"psychology": .85, "medicine": .1, "biology": .05}, "both")
+        self.assertEqual(categorize.question_field("Why does stress make you sick?")["ids"], ["psychology"])
+        self.field_reply({"psychology": .55, "medicine": .4, "biology": .05}, "one")
+        self.assertEqual(categorize.question_field("Why does stress make you sick?")["kind"], "one")
+
+    def test_a_question_jev_cannot_place_raises(self):
+        FakeJev.status = 401
+        with self.assertRaises(categorize.CategorizeError):
+            categorize.question_field("Mercury")
+        FakeJev.status, FakeJev.reply = 200, {"answers": {"field": {"choice": "astrology", "probabilities": {}}, "span": {"choice": "one"}}}
+        with self.assertRaises(categorize.CategorizeError):
+            categorize.question_field("Mercury")
+
 
 sys.path.insert(0, str(ROOT / "eval"))
 import jev_judge  # noqa: E402
