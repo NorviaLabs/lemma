@@ -10,7 +10,7 @@
      "prerequisites": [["Gas pressure", "Pressure"], ["Ideal gas law", "Boyle's law", "Charles's law"], ["Elasticity", "Rubber elasticity"]],
      "off_topic": ["Child development", "Play", "Party"]},
     {"id": 2, "query": "Why do kids like balloons?", "level": "beginner", "kind": "single", "fields": ["psychology"], "pair": 1,
-     "prerequisites": [["Play", "Play (activity)", "Child development"], ["Novelty", "Novelty preference", "Curiosity"], ["Colour vision", "Visual perception"]],
+     "prerequisites": [["Play", "Play (activity)", "Child development"], ["Novelty", "Novelty preference", "Curiosity"], ["Colour vision", "Color vision", "Visual perception"]],
      "off_topic": ["Gas laws", "Rubber", "Hot air balloon"]},
     {"id": 3, "query": "How does attention work in a transformer?", "level": "beginner", "kind": "single", "fields": ["ai_ml"], "pair": 4,
      "prerequisites": [["Word embedding", "Embedding"], ["Dot product", "Cosine similarity"], ["Softmax function", "Softmax"]],

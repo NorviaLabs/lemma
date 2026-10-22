@@ -275,8 +275,11 @@ def judge(query: str, results: list[dict], openings: dict, field: dict | None = 
                                           for i, r in enumerate(results, 1)]}
     within = ""
     if field:
-        state["field"] = categorize.describe(field)
-        within = f", as a question in {categorize.names(field)}"
+        # Only the main field: asked "in A and B", Jev marks down the articles that explain one side of a question
+        # needing both, and those are the prerequisites it needs (search-2026-10-22-c). The terms read both fields.
+        main = dict(field, ids=field["ids"][:1])
+        state["field"] = categorize.describe(main)
+        within = f", as a question in {categorize.names(main)}"
     questions = {}
     for i in range(1, len(results) + 1):
         questions[f"r{i}_relevance"] = {"type": "score", "criteria": RELEVANCE,

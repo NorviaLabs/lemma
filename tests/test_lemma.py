@@ -920,6 +920,7 @@ class SearchTests(unittest.TestCase):
         r = search.search("Why do balloons pop loudly and scare kids?", "beginner", provider)
         self.assertEqual(r["field"]["ids"], ["physics_astronomy", "psychology"])
         self.assertIn("It needs both fields: include what connects them", provider.asked[0][2])
+        self.assertNotIn("Psychology", self.judged_state["field"])  # results are ranked in the main field only
 
     def test_a_field_the_learner_chose_is_searched_and_cached_on_its_own(self):
         self.field_answers({"chemistry": .6, "religion": .3, "physics_astronomy": .1})
