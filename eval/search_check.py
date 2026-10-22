@@ -10,11 +10,12 @@ one Jev ranking on the server's TypeSafe key. Results are saved to eval/results/
 search isn't run again, so a rerun only rescores.
 
 A labelled prerequisite counts as found when one of its names appears, as whole words, in a result's title.
-The stage passes when the results hold at least 56 of the 69 prerequisites (the stage-0 prototype's articles),
-search 5 (Advanced) finds at least one of its own, and no off-topic subject is recommended.
-
 A field is right when the first one picked is among the labelled fields; a bridge also needs both fields picked,
-and both labelled. The field step passes at FIELD_BAR of 25 with every bridge right.
+and both labelled.
+
+A run passes when it doesn't fall below the stage before it (Stage A: 60 of 69 prerequisites in the results, 30
+recommended, 2 of 3 for search 5, the Advanced one), no off-topic subject is recommended, and at least FIELD_BAR
+of the 25 fields are right with every bridge right. --fields checks only the last part.
 """
 
 from __future__ import annotations
@@ -32,7 +33,7 @@ from lemma.llm import make_provider
 
 EVAL = Path(__file__).parent
 TESTS = json.loads((EVAL / "searches.json").read_text())["searches"]
-BAR = 56  # prerequisites the stage-0 prototype's resolved articles found
+BARS = {"in_results": 60, "recommended": 30, "advanced_found": 2}  # Stage A's gate run, search-2026-10-22b
 FIELD_BAR = 22
 
 
@@ -51,6 +52,8 @@ def score(test: dict, result: dict) -> dict:
     return {"id": test["id"], "query": test["query"], "level": test["level"], "prerequisites": len(pre),
             "in_results": sum(found(p, titles) for p in pre), "recommended": sum(found(p, chosen) for p in pre),
             "off_topic_recommended": [o for o in test["off_topic"] if found([o], chosen)],
+            "field": (result.get("field") or {}).get("ids", []),
+            "field_right": bool(result.get("field")) and field_right(test, result["field"]),
             "terms": result.get("plan", {}).get("terms", []), "unavailable": result.get("unavailable", [])}
 
 
@@ -118,17 +121,24 @@ def main() -> int:
         rows.append(row)
         print(f"{row['id']:>2}. {row['query'][:50]:<50} {row['level']:<12} results {row['in_results']}/{row['prerequisites']}"
               f"  recommended {row['recommended']}/{row['prerequisites']}"
+              + f"  field {'ok' if row['field_right'] else 'WRONG ' + '+'.join(row['field'])}"
               + (f"  OFF-TOPIC {row['off_topic_recommended']}" if row["off_topic_recommended"] else ""), flush=True)
     total = sum(r["prerequisites"] for r in rows)
     in_results, recommended = sum(r["in_results"] for r in rows), sum(r["recommended"] for r in rows)
     advanced = next((r for r in rows if r["id"] == 5), None)
     off = sum(len(r["off_topic_recommended"]) for r in rows)
+    fields_right = sum(r["field_right"] for r in rows)
+    bridges = [r for r, t in zip(rows, TESTS) if t["kind"] == "bridge"] if len(rows) == len(TESTS) else []
     summary = {"provider": provider.label, "searches": len(rows), "prerequisites": total, "in_results": in_results,
-               "recommended": recommended, "advanced_found": advanced and advanced["in_results"], "off_topic_recommended": off}
+               "recommended": recommended, "advanced_found": (advanced or {}).get("in_results", 0), "off_topic_recommended": off,
+               "fields_right": fields_right, "bridges_right": sum(r["field_right"] for r in bridges)}
     (out / "summary.json").write_text(json.dumps({"summary": summary, "rows": rows}, indent=1))
-    print(f"\nprerequisites in results {in_results}/{total} (bar {BAR}), recommended {recommended}/{total}, "
-          f"search 5 (Advanced) {summary['advanced_found']}/3, off-topic recommended {off}")
-    passed = len(rows) == len(TESTS) and in_results >= BAR and (advanced or {}).get("in_results", 0) > 0 and off == 0
+    print(f"\nprerequisites in results {in_results}/{total} (bar {BARS['in_results']}), recommended {recommended}/{total} "
+          f"(bar {BARS['recommended']}), search 5 (Advanced) {summary['advanced_found']}/3 (bar {BARS['advanced_found']}), "
+          f"off-topic recommended {off}, fields right {fields_right}/{len(TESTS)} (bar {FIELD_BAR}), "
+          f"bridges {summary['bridges_right']}/{len(bridges) or 3}")
+    passed = (len(rows) == len(TESTS) and all(summary[k] >= bar for k, bar in BARS.items()) and off == 0
+              and fields_right >= FIELD_BAR and all(r["field_right"] for r in bridges))
     print("PASS" if passed else "FAIL")
     return 0 if passed else 1
 
