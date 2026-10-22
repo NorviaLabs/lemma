@@ -129,7 +129,7 @@ SOURCES_TASK = """
 What these sources build on, most needed first, as Jev rated it for this learner:
 {subjects}
 Teach one of these as a concept only where a source covers it, and only as far as the sources' own ideas need it; \
-the sources' own content comes first. List the ones the lesson takes as known instead, and every one marked "no \
+the sources' own content comes first, so at most {most} concepts teach these. List the ones the lesson takes as known instead, and every one marked "no \
 source", in "assumes": a list of their titles, exactly as written above. Give every concept a "subject": the title \
 above that it teaches, or null if it teaches none of them. A concept that teaches something to learn first comes \
 before every core or contribution concept.
@@ -139,6 +139,7 @@ The question needs both {fields}: mark the one concept that connects them with "
 leaves it out). Teach the connection only as far as a source states it; where the sources don't state it, that concept \
 says plainly that these sources don't establish the link.
 """
+BROUGHT_BACKGROUND = 2  # concepts a lesson from brought sources may spend on what they build on (brought-2026-10-23)
 NEED_WORDS = ((4.0, "needed"), (3.0, "helps"), (0.0, "nice to know"))  # need on Jev's 1 to 5 scale, as search reports it
 RELATION_WORDS = {"prerequisite": "learn first", "part": "part of the answer", "explains": "connects the two fields"}
 
@@ -164,7 +165,7 @@ def _question_task(search: dict, subjects: list[dict]) -> str:
         where = f"a source covers it: {s['source']}" if s["source"] else "no source"
         lines.append(f"- {s['title']} ({what}; {where})")
     if not search.get("query"):  # sources the learner brought: what they build on, with no question to answer
-        return SOURCES_TASK.format(subjects="\n".join(lines))
+        return SOURCES_TASK.format(subjects="\n".join(lines), most=BROUGHT_BACKGROUND)
     task = QUESTION_TASK.format(question=search["query"], field=f" (field: {field})" if field else "",
                                 subjects="\n".join(lines) or "- (none found)")
     return task + (BRIDGE_TASK.format(fields=field) if len(search.get("field") or []) == 2 else "")
@@ -458,12 +459,13 @@ def order_outline(o):
 
 
 def check_outline(o, source_text: str | None = None, require_needs: bool = False, subjects: list[dict] | None = None,
-                  bridged: bool = False) -> list[str]:
+                  bridged: bool = False, brought: bool = False) -> list[str]:
     """``source_text`` checks the primer's quotes against the paper; None skips that. ``require_needs`` asks
     for every concept's "needs" (a fresh outline); outlines made before it existed may leave it out.
     ``subjects`` (a fresh outline for a question) checks "assumes", each concept's "subject", and that concepts
     teaching what to learn first come before the core ones. ``bridged`` (a question needing two fields) asks for
-    exactly one concept marked "bridge"."""
+    exactly one concept marked "bridge". ``brought`` (sources the learner brought, no question) allows at most
+    BROUGHT_BACKGROUND concepts on the listed subjects, so the sources' own content comes first."""
     problems = []
     if not isinstance(o, dict):
         return ["the reply must be a JSON object"]
@@ -533,6 +535,10 @@ def check_outline(o, source_text: str | None = None, require_needs: bool = False
         problems.append("mark at most two concepts as hard")
     if subjects is not None:
         problems += _check_subjects(o, [c for c in cs if isinstance(c, dict)], subjects)
+        background = sum(1 for c in cs if isinstance(c, dict) and c.get("subject") is not None)
+        if brought and background > BROUGHT_BACKGROUND:
+            problems.append(f"{background} concepts teach what the sources build on; teach at most {BROUGHT_BACKGROUND} of them "
+                            "and list the rest in \"assumes\", so the sources' own ideas come first")
         bridges = sum(1 for c in cs if isinstance(c, dict) and c.get("bridge") is True)
         if bridged and bridges != 1:
             problems.append(f"mark exactly one concept with \"bridge\": true, the one that connects the two fields (found {bridges})")
@@ -679,7 +685,8 @@ def make_outline(job: Job, provider: Provider, paper_text: str, level: str, sear
 
     def check(o):
         asked = bool(search and search.get("query"))
-        problems = check_outline(o, paper_text, require_needs=True, subjects=subjects, bridged=asked and len(search.get("field") or []) == 2)
+        problems = check_outline(o, paper_text, require_needs=True, subjects=subjects, bridged=asked and len(search.get("field") or []) == 2,
+                                 brought=bool(search) and not asked)
         if asked and not problems and answers_question(search["query"], o) == "no":
             problems.append(f"the outline must answer the learner's question, «{search['query']}»: build the path to the "
                             "sources' answer to it, and make that answer the aha")

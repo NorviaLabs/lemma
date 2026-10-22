@@ -422,6 +422,24 @@ class QuestionChecks(unittest.TestCase):
         self.assertEqual(built.result["intro"]["assumes"], ["Galton board"])
         self.assertNotIn("question", built.result["intro"])
 
+    def test_a_lesson_from_brought_sources_spends_at_most_two_concepts_on_background(self):
+        brought = dict(self.SEARCH, query=None)
+
+        def three(o):
+            for c, subject in zip(o["concepts"], ["Mean", "Regression toward the mean", "Galton board"]):
+                c["subject"] = subject
+            o["concepts"][2]["role"] = "prerequisite"
+            o["concepts"][1]["role"] = "prerequisite"
+
+        with patch.object(self, "SEARCH", brought):
+            job, fp = self.asked(three, lambda o: None)
+        self.assertEqual(job.status, "done", job.error)
+        self.assertIn("at most 2 concepts teach these", fp.sent[0])
+        self.assertIn("3 concepts teach what the sources build on; teach at most 2 of them", fp.sent[1])
+        with patch.object(self, "SEARCH", dict(self.SEARCH)):  # a question's lesson may teach all it builds on
+            job, fp = self.asked(three, lambda o: None)
+        self.assertNotIn("teach what the sources build on", " ".join(fp.sent))
+
     def test_brought_sources_with_nothing_found_are_outlined_as_before(self):
         fp = Recording()
         empty = {"query": None, "field": ["statistics"], "subjects": [], "not_covered": []}
