@@ -19,7 +19,7 @@
      "prerequisites": [["Selective attention", "Attention"], ["Neuron"], ["Perception", "Visual perception"]],
      "off_topic": ["Transformer (deep learning)", "Neural network (machine learning)"]},
     {"id": 5, "query": "How does attention work in a transformer?", "level": "advanced", "kind": "single", "fields": ["ai_ml"], "pair": 3,
-     "prerequisites": [["Multi-head attention"], ["Scaled dot-product attention"], ["Positional encoding"]],
+     "prerequisites": [["Multi-head attention", "Attention (machine learning)"], ["Scaled dot-product attention", "Attention (machine learning)"], ["Positional encoding"]],
      "off_topic": ["Selective attention", "Electrical transformer"]},
     {"id": 6, "query": "Why do prices rise when governments print money?", "level": "beginner", "kind": "single", "fields": ["economics"],
      "prerequisites": [["Money supply"], ["Inflation"], ["Supply and demand"]],
