@@ -548,6 +548,12 @@ def _search(query: str, on_progress=None, extra=()) -> dict:
 
     def check(result):
         urls = result.get("urls") or [result["url"]]
+        if result.get("prerequisite"):
+            # Wikipedia's API just returned this article and its opening, so it is readable; downloading it again
+            # would only queue behind the server's few download slots.
+            result.update(available=True, link=ingest.reader_link(result["url"]))
+            report(checked=1, readable=1)
+            return
         try:
             paper = ingest.first_readable(urls, timeout=CHECK_TIMEOUT, budget=CHECK_BUDGET)
         except ingest.IngestError as e:

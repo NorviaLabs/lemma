@@ -850,6 +850,10 @@ class SearchTests(unittest.TestCase):
         self.assertTrue(all(x["recommended"] for x in wiki))
         self.assertEqual(wiki[1]["recommendation"], "Explains something the idea builds on")
         self.assertEqual(wiki[1]["summary"], "About arithmetic mean.")
+        # Wikipedia's API already showed these are articles, so they aren't downloaded to check they can be read.
+        read = [call.args[0][0] for call in ingest.first_readable.call_args_list]
+        self.assertNotIn(wiki[1]["url"], read)
+        self.assertIn(wiki[0]["url"], read)
 
     def test_a_question_is_about_an_idea_however_long(self):
         self.assertEqual(search.query_kind("Why do people vote against their own economic interests?"), "concept")
