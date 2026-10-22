@@ -1304,14 +1304,22 @@
     const buildBtn = h("button", { class: "primary", onclick: startBuild });
     // For a lesson asked as a question: what the answer builds on, and where each piece is (or isn't) taught.
     const buildsOn = h("section", { class: "bo-card", "aria-labelledby": "builds-on-title", hidden: !o.question });
+    async function addSource(title, btn) {
+      busy(btn, true);
+      try { await api(`/api/requests/${session.requestId}/add`, { title }); showRequest(session.requestId); }
+      catch (e) { busy(btn, false); buildsOn.append(errorBox(e.message)); }
+    }
     function drawBuildsOn() {
       if (!o.question) return;
       const taught = new Map(o.concepts.map((c, i) => [c.subject, c.known ? null : i + 1]).filter(([s]) => s));
       const known = new Set(o.concepts.filter((c) => c.known && c.subject).map((c) => c.subject));
       const assumed = new Set([...(o.assumes || []), ...known, ...(o.subjects || []).filter((s) => s.relation === null).map((s) => s.title)]);
+      // An assumed subject whose own article search found, and no chosen source covers, can be added.
+      const addable = new Set((o.subjects || []).filter((s) => s.url && !s.source && assumed.has(s.title)).map((s) => s.title));
       const groups = [
         ["Covered", "", (o.subjects || []).filter((s) => taught.get(s.title)).map((s) => `${s.title}: concept ${taught.get(s.title)}`)],
-        ["Assumed", "The lesson takes these as known.", [...assumed]],
+        ["Assumed", addable.size ? "The lesson takes these as known. Adding a source remakes the outline; your edits to this one are lost." : "The lesson takes these as known.",
+          [...assumed].map((t) => addable.has(t) ? [t, " ", h("button", { type: "button", class: "small", "aria-label": `Add ${t} and remake the outline`, onclick: (e) => addSource(t, e.currentTarget) }, icon("plus"), "Add")] : t)],
         ["Later", "Not in this lesson.", (o.subjects || []).filter((s) => !taught.get(s.title) && !assumed.has(s.title)).map((s) => s.title)],
       ].filter(([, , items]) => items.length);
       buildsOn.replaceChildren(h("h2", { id: "builds-on-title" }, "What this lesson builds on"),

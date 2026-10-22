@@ -511,6 +511,21 @@ def _launch_request(record, provider, owner, build=False):
             paper = {"text": json.dumps({"lemma_sources": sources}, ensure_ascii=False),
                      "title": record["title"], "url": ""}
             record["paper"] = paper
+        if record.get("pending"):  # suggested sources the learner added at outline review
+            bundle = json.loads(paper["text"])["lemma_sources"]
+            for source in record["pending"]:
+                sid = f"s{max(int(s['id'][1:]) for s in bundle) + 1}"
+                j.step(sid, f"Reading {source['title']}", "active")
+                try:
+                    fetched = _first_readable(source["urls"])
+                except ingest.IngestError as e:
+                    j.update(sid, "failed", str(e))
+                    record["warnings"].append(f"Couldn't add {source['title']}: {e}")
+                    continue
+                j.update(sid, "done", "Full text ready")
+                bundle.append({"id": sid, "title": source["title"], "url": ingest.reader_link(fetched.url), "authors": "", "year": None, "text": fetched.text})
+            paper["text"] = json.dumps({"lemma_sources": bundle}, ensure_ascii=False)
+            record["pending"] = []
         # The category comes from the sources themselves, sorted out before anything is paid for.
         if not record.get("category"):
             _categorize(record, paper)
@@ -553,6 +568,10 @@ def _level(body) -> str:
     return level
 
 
+def _web_link(u) -> bool:
+    return isinstance(u, str) and len(u) <= 2048 and urlsplit(u).scheme in ("http", "https") and bool(urlsplit(u).hostname)
+
+
 def _search_context(body) -> dict | None:
     """The search a lesson was asked for from, as the browser sends it with the chosen sources: the question, its
     field, the subjects search rated and what no source covered. Only the learner's own provider reads it."""
@@ -567,7 +586,10 @@ def _search_context(body) -> dict | None:
     for x in raw.get("subjects") or [] if isinstance(raw.get("subjects"), list) else []:
         if isinstance(x, dict) and text(x.get("title")) and x.get("relation") in generate.RELATION_WORDS \
                 and isinstance(x.get("need"), (int, float)) and 1 <= x["need"] <= 5:
-            subjects.append({"title": text(x["title"]), "need": float(x["need"]), "relation": x["relation"]})
+            subject = {"title": text(x["title"]), "need": float(x["need"]), "relation": x["relation"]}
+            if _web_link(x.get("url")):  # its article, which outline review can offer to add
+                subject["url"] = x["url"]
+            subjects.append(subject)
     missing = raw.get("not_covered") if isinstance(raw.get("not_covered"), list) else []
     return {"query": text(raw["query"]), "field": field or None, "subjects": subjects[:12],
             "not_covered": [t for t in map(text, missing) if t][:10]}
@@ -596,7 +618,7 @@ def api_request_create(body):
                     request["sources"].append({"urls": [], "title": p["title"][:300], "upload": {k: p[k] for k in ("text", "title", "kind", "url")}})
                     continue
                 urls = s.get("urls") or [s.get("url")]
-                if not isinstance(urls, list) or not 1 <= len(urls) <= 5 or any(not isinstance(u, str) or len(u) > 2048 or urlsplit(u).scheme not in ("http", "https") or not urlsplit(u).hostname for u in urls):
+                if not isinstance(urls, list) or not 1 <= len(urls) <= 5 or not all(map(_web_link, urls)):
                     raise ApiError(400, "Each source needs valid HTTP or HTTPS links.")
                 request["sources"].append({"urls": urls, "title": str(s.get("title") or urls[0])[:300],
                                            "authors": str(s.get("authors", ""))[:300], "year": s.get("year") if isinstance(s.get("year"), int) else None})
@@ -668,6 +690,25 @@ def api_request_outline(rid):
             raise ApiError(400, "The outline isn't valid: " + "; ".join(problems[:3]))
         record["outline"] = outline
         return _launch_request(record, _provider(), owner, build=True)
+
+
+def api_request_add(rid):
+    """Adds a source outline review suggested (an assumed subject's own article) and remakes the outline with it."""
+    body = getattr(REQUEST, "body", {})
+    with _requests_lock:
+        owner = _owner()
+        record = _request_record(rid, owner)
+        if record["status"] != "awaiting_outline":
+            raise ApiError(409, "This build is not waiting for outline review.")
+        outline, title = record.get("outline") or {}, body.get("title")
+        suggested = {s["title"]: s for s in outline.get("subjects") or [] if s.get("url") and not s.get("source")}
+        if title not in suggested:
+            raise ApiError(400, "That isn't one of the suggested sources.")
+        if len(L.source_map(record["paper"]["text"])) >= 10:
+            raise ApiError(400, "A lesson takes at most 10 sources.")
+        record["pending"] = [{"urls": [suggested[title]["url"]], "title": title}]
+        record.pop("outline", None)
+        return _launch_request(record, _provider(), owner)
 
 
 def api_request_delete(rid):
@@ -877,6 +918,7 @@ ROUTES = [
     ("POST", r"/api/requests/([a-f0-9]{12})/cancel", api_request_cancel, True),
     ("POST", r"/api/requests/([a-f0-9]{12})/retry", api_request_retry, True),
     ("POST", r"/api/requests/([a-f0-9]{12})/outline", api_request_outline, True),
+    ("POST", r"/api/requests/([a-f0-9]{12})/add", api_request_add, True),
     ("DELETE", r"/api/requests/([a-f0-9]{12})", api_request_delete, True),
     ("GET", r"/api/status", api_status, False),
     ("GET", r"/api/models", api_models, False),

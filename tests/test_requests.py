@@ -104,6 +104,60 @@ class RequestTests(unittest.TestCase):
                 server.api_request_create({'sources': [{'url': 'https://example.org/paper'}], 'search': bad})
             self.assertEqual((e.exception.status, e.exception.message), (400, 'Invalid search.'))
 
+    def awaiting_with_suggestions(self):
+        """A request at outline review whose outline suggests one source to add (an assumed subject's article)."""
+        with patch.object(server, '_first_readable', return_value=SimpleNamespace(title='Galton', url='https://example.org/paper', text=SOURCE)):
+            rid = self.create()
+            self.assertEqual(self.settled(rid)['status'], 'awaiting_outline')
+        record = store.load_request(rid, TESTER)
+        record['outline']['subjects'] = [{'title': 'Correlation', 'url': 'https://en.wikipedia.org/wiki/Correlation', 'source': None},
+                                         {'title': 'Regression', 'url': 'https://en.wikipedia.org/wiki/Regression', 'source': 's1'},
+                                         {'title': 'Galton board', 'source': None}]
+        store.save_request(record, TESTER)
+        return rid
+
+    def add(self, rid, title):
+        server.REQUEST.body = {'title': title}
+        return server.api_request_add(rid)
+
+    def test_a_suggested_source_is_added_and_the_outline_remade_with_it(self):
+        rid = self.awaiting_with_suggestions()
+        correlation = SimpleNamespace(title='Correlation - Wikipedia', url='https://en.wikipedia.org/wiki/Correlation', text='Correlation is ' * 400)
+        with patch.object(server, '_first_readable', return_value=correlation) as read:
+            self.add(rid, 'Correlation')
+            record = self.settled(rid)
+        self.assertEqual(record['status'], 'awaiting_outline', record.get('error'))
+        read.assert_called_once_with(['https://en.wikipedia.org/wiki/Correlation'])
+        bundle = json.loads(store.load_request(rid, TESTER)['paper']['text'])['lemma_sources']
+        self.assertEqual([(s['id'], s['title']) for s in bundle][-1], ('s2', 'Correlation'))
+        self.assertEqual(store.load_request(rid, TESTER)['pending'], [])
+
+    def test_only_a_suggested_uncovered_source_can_be_added_at_outline_review(self):
+        rid = self.awaiting_with_suggestions()
+        for title in ('Regression', 'Galton board', 'Anything else'):  # covered already, no article, not suggested
+            with self.assertRaises(server.ApiError) as e:
+                self.add(rid, title)
+            self.assertEqual((e.exception.status, e.exception.message), (400, "That isn't one of the suggested sources."))
+        record = store.load_request(rid, TESTER)
+        record['paper']['text'] = json.dumps({'lemma_sources': [{'id': f's{i}', 'title': f'S{i}', 'text': 'x'} for i in range(1, 11)]})
+        store.save_request(record, TESTER)
+        with self.assertRaises(server.ApiError) as e:
+            self.add(rid, 'Correlation')
+        self.assertEqual((e.exception.status, e.exception.message), (400, 'A lesson takes at most 10 sources.'))
+        record['status'] = 'done'
+        store.save_request(record, TESTER)
+        with self.assertRaises(server.ApiError) as e:
+            self.add(rid, 'Correlation')
+        self.assertEqual(e.exception.status, 409)
+
+    def test_a_source_that_cant_be_added_is_a_warning_and_the_outline_is_still_remade(self):
+        rid = self.awaiting_with_suggestions()
+        with patch.object(server, '_first_readable', side_effect=ingest.IngestError('Blocked by the site.')):
+            self.add(rid, 'Correlation')
+            record = self.settled(rid)
+        self.assertEqual(record['status'], 'awaiting_outline', record.get('error'))
+        self.assertIn("Couldn't add Correlation: Blocked by the site.", record['warnings'])
+
     def test_a_request_without_a_level_is_for_a_beginner_and_an_unknown_one_is_refused(self):
         self.assertEqual(server.api_status({})['level'], 'beginner')
         with self.assertRaises(server.ApiError) as e:

@@ -699,7 +699,7 @@ def _search(query: str, on_progress=None, extra=(), field: dict | None = None, l
                        and r["judged"]["role"] != "off_topic"][:FALLBACK]:
             result.update(recommended=True, recommendation=REASONS.get(result["judged"]["relation"], REASONS["prerequisite"]))
     # What the lesson builds on, most needed first: the scaffold the outline reads, and what no source covers.
-    graph = {"subjects": [{"title": r["title"], "term": r["term"], "relation": r["judged"]["relation"], "need": r["judged"]["need"],
+    graph = {"subjects": [{"title": r["title"], "url": r["url"], "term": r["term"], "relation": r["judged"]["relation"], "need": r["judged"]["need"],
                            "recommended": r["recommended"]} for r in prerequisites],
              "not_covered": [name for name, n in unfound.items() if n >= ESSENTIAL_AT]}
     return {"query": query, "kind": mode, "results": results, "unavailable": unavailable, "graph": graph, "checked_at": time.time()}
