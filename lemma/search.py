@@ -452,7 +452,9 @@ The document above is the start of each source a learner brought to learn from. 
 
 List {low} to {high} subjects this learner needs in order to follow these sources and that the sources themselves \
 take for granted, most basic first: what a reader is expected to know already, not what the sources teach. {steer} \
-Name each subject as the exact title of an English Wikipedia article.
+Include the tools the sources use without explaining them (the mathematics, statistics or methods a reader must \
+already handle to follow an equation, a table or an argument), not only the field around them. Name each subject as \
+the exact title of an English Wikipedia article.
 
 Reply with this JSON: {{"terms": ["Article title", ...]}}"""
 SOURCE_OPENING = 3000  # characters of each brought source the provider reads to name what it builds on
