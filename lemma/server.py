@@ -515,7 +515,8 @@ def _launch_request(record, provider, owner, build=False):
         if not record.get("category"):
             _categorize(record, paper)
         if not build:
-            outline = generate.make_outline(j, provider, paper["text"], record["request"].get("level", levels.DEFAULT))
+            outline = generate.make_outline(j, provider, paper["text"], record["request"].get("level", levels.DEFAULT),
+                                            record["request"].get("search"))
             with j.lock:
                 if not j.cancelled.is_set():
                     record["outline"] = outline
@@ -552,10 +553,32 @@ def _level(body) -> str:
     return level
 
 
+def _search_context(body) -> dict | None:
+    """The search a lesson was asked for from, as the browser sends it with the chosen sources: the question, its
+    field, the subjects search rated and what no source covered. Only the learner's own provider reads it."""
+    raw = body.get("search")
+    if raw is None:
+        return None
+    if not isinstance(raw, dict) or not isinstance(raw.get("query"), str) or not raw["query"].strip():
+        raise ApiError(400, "Invalid search.")
+    text = lambda v: re.sub(r"\s+", " ", v).strip()[:200] if isinstance(v, str) else ""
+    field = [f for f in raw.get("field") or [] if f in categorize.CATEGORIES and f != "other"][:2] if isinstance(raw.get("field"), list) else []
+    subjects = []
+    for x in raw.get("subjects") or [] if isinstance(raw.get("subjects"), list) else []:
+        if isinstance(x, dict) and text(x.get("title")) and x.get("relation") in generate.RELATION_WORDS \
+                and isinstance(x.get("need"), (int, float)) and 1 <= x["need"] <= 5:
+            subjects.append({"title": text(x["title"]), "need": float(x["need"]), "relation": x["relation"]})
+    missing = raw.get("not_covered") if isinstance(raw.get("not_covered"), list) else []
+    return {"query": text(raw["query"]), "field": field or None, "subjects": subjects[:12],
+            "not_covered": [t for t in map(text, missing) if t][:10]}
+
+
 def api_request_create(body):
     with _requests_lock:
         owner, provider = _owner(), _provider()
         request = {"level": _level(body)}
+        if search := _search_context(body):
+            request["search"] = search
         paper = None
         if body.get("paper_id"):
             paper = dict(_paper(body))

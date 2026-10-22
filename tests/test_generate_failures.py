@@ -271,6 +271,87 @@ class QuestionChecks(unittest.TestCase):
         self.assertEqual(seen["state"]["lesson"]["aha"], o["aha"])
         self.assertEqual(set(seen["questions"]["answers"]["criteria"]), {"answers", "partly", "no"})
 
+    SEARCH = {"query": "Why are tall parents' children usually shorter?", "field": ["statistics"],
+              "subjects": [{"title": "Regression toward the mean", "need": 4.5, "relation": "part"},
+                           {"title": "Mean", "need": 3.2, "relation": "prerequisite"}],
+              "not_covered": ["Galton board"]}
+
+    def asked(self, *edits, answers=None):
+        """Makes an outline for SEARCH; each of `edits` changes one outline reply in turn, the last one every later reply.
+        `answers` are Jev's readings of the question, in turn."""
+        class Answering(Recording):
+            def reply(self, task, turn):
+                r = super().reply(task, turn)
+                if "propose a path" in task.lower():
+                    o = generate.extract_json(r.text)
+                    o["assumes"] = ["Galton board"]
+                    for c in o["concepts"]:
+                        c["subject"] = {"mid_parent": "Mean", "regression_line": "Regression toward the mean"}.get(c["id"])
+                    edits[min(turn, len(edits)) - 1](o)
+                    return Reply(json.dumps(o), "end_turn")
+                return r
+        readings = list(answers or ["answers"])
+
+        def ask(state, questions, timeout):
+            if "answers" in questions:
+                return {"_model": "jev-test", "answers": {"choice": readings.pop(0) if len(readings) > 1 else readings[0]}}
+            from fakejev import answer as harmless
+            return harmless(state, questions, timeout)
+        fp = Answering()
+        with patch.object(jev, "ask", side_effect=ask):
+            job = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, "beginner", self.SEARCH))
+        return job, fp
+
+    def test_the_outline_is_asked_to_answer_the_question_from_what_it_builds_on(self):
+        job, fp = self.asked(lambda o: None)
+        self.assertEqual(job.status, "done", job.error)
+        task = fp.sent[0]
+        self.assertIn("The learner came with a question: «Why are tall parents' children usually shorter?» (field: Statistics & probability)", task)
+        self.assertIn("- Regression toward the mean (needed, part of the answer; no source)", task)
+        self.assertIn("- Mean (helps, learn first; no source)", task)
+        self.assertIn("- Galton board (needed; no source)", task)
+        self.assertEqual(job.result["question"], self.SEARCH["query"])
+        self.assertEqual([s["title"] for s in job.result["subjects"]], ["Regression toward the mean", "Mean", "Galton board"])
+
+    def test_a_wrong_subject_or_a_late_prerequisite_is_sent_back(self):
+        def ghost(o):
+            o["concepts"][0]["subject"] = "Ghost"
+
+        def late(o):
+            o["concepts"][0]["subject"] = None
+            o["concepts"][2]["subject"] = "Mean"  # after the core concepts
+
+        job, fp = self.asked(ghost, late, lambda o: None)
+        self.assertEqual(job.status, "done", job.error)
+        self.assertIn("concepts[0].subject must be one of the listed subjects", fp.sent[1])
+        self.assertIn("concepts[2] teaches 'Mean', which the learner needs first, so it must come before the core concepts", fp.sent[2])
+
+    def test_an_outline_that_doesnt_answer_the_question_is_sent_back(self):
+        job, fp = self.asked(lambda o: None, answers=["no", "partly"])
+        self.assertEqual(job.status, "done", job.error)
+        self.assertEqual(len(fp.sent), 2)
+        self.assertIn("the outline must answer the learner's question, «Why are tall parents' children usually shorter?»", fp.sent[1])
+
+    def test_without_a_search_nothing_about_a_question_is_asked(self):
+        fp = Recording()
+        job = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, "beginner"))
+        self.assertEqual(job.status, "done", job.error)
+        self.assertNotIn("came with a question", fp.sent[0])
+        self.assertNotIn("question", job.result)
+
+    def test_the_lesson_answers_the_question_and_says_what_it_assumes(self):
+        job, _ = self.asked(lambda o: None)
+        fp = Recording()
+        built = wait(generate.start(generate.Job("build"), generate.build_lesson, fp, PAPER, job.result, "beginner"))
+        self.assertEqual(built.status, "done", built.error)
+        intro = built.result["intro"]
+        self.assertEqual((intro["question"], intro["assumes"]), (self.SEARCH["query"], ["Galton board"]))
+        concept = next(t for t in fp.sent if 'Its id must be "mid_parent"' in t)
+        self.assertIn("the learner asked: «Why are tall parents' children usually shorter?». This concept's part in answering it: Mean", concept)
+        self.assertIn("never teach them: Galton board", concept)
+        from test_lemma import L
+        self.assertEqual(list(L.check_lesson(built.result, SOURCE)), [])
+
     def test_a_check_jev_cannot_make_raises(self):
         for name, effect in (("outage", jev.JevError("the checking service answered 529")),
                              ("unreadable", lambda *a: {"answers": {"choice": "maybe"}})):

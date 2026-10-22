@@ -1035,7 +1035,9 @@
       const make = h("button", { class: "primary", disabled: !selected.size, onclick: async () => {
         const begin = async () => {
           busy(make, true);
-          try { const job = await api("/api/requests", { sources: [...selected], topic: r.query, level: session.level }); showRequest(job.id); }
+          // The search goes with the sources, so the outline answers the question and knows what it builds on.
+          const search = { query: r.query, field: r.field?.ids || null, subjects: r.graph?.subjects || [], not_covered: r.graph?.not_covered || [] };
+          try { const job = await api("/api/requests", { sources: [...selected], topic: r.query, level: session.level, search }); showRequest(job.id); }
           catch (e) { errSlot.replaceChildren(errorBox(e.message)); busy(make, false); }
         };
         if (!(status.provider || {}).ok) return showConnect(begin);

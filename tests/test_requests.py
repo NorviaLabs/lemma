@@ -82,6 +82,28 @@ class RequestTests(unittest.TestCase):
         concept = next(t for k, t in provider.tasks.items() if k != 'outline')
         self.assertIn("The learner's level: Advanced", concept)
 
+    def test_the_search_a_lesson_was_asked_for_from_reaches_the_outline(self):
+        search = {'query': '  Why does   stress make you sick? ', 'field': ['medicine', 'psychology', 'astrology'],
+                  'subjects': [{'title': 'Cortisol', 'need': 3.3, 'relation': 'part'}, {'title': 'Gossip', 'need': 1.2, 'relation': 'unrelated'},
+                               {'title': 'x' * 300, 'need': 4, 'relation': 'prerequisite'}, {'title': 'Odd', 'need': 9, 'relation': 'part'}],
+                  'not_covered': ['Allostatic load', 7]}
+        seen = {}
+
+        def outline(job, provider, text, level, search=None):
+            seen['search'] = search
+            raise generate.GenerationError('stop here')
+        with patch.object(server, '_first_readable', return_value=SimpleNamespace(title='Galton', url='https://example.org/paper', text=SOURCE)), \
+                patch.object(generate, 'make_outline', side_effect=outline):
+            self.settled(server.api_request_create({'sources': [{'url': 'https://example.org/paper', 'title': 'Paper'}], 'search': search})['id'])
+        self.assertEqual(seen['search'], {'query': 'Why does stress make you sick?', 'field': ['medicine', 'psychology'],
+                                          'subjects': [{'title': 'Cortisol', 'need': 3.3, 'relation': 'part'},
+                                                       {'title': 'x' * 200, 'need': 4.0, 'relation': 'prerequisite'}],
+                                          'not_covered': ['Allostatic load']})
+        for bad in ('stress', {'query': ''}, {'field': ['medicine']}):
+            with self.assertRaises(server.ApiError) as e:
+                server.api_request_create({'sources': [{'url': 'https://example.org/paper'}], 'search': bad})
+            self.assertEqual((e.exception.status, e.exception.message), (400, 'Invalid search.'))
+
     def test_a_request_without_a_level_is_for_a_beginner_and_an_unknown_one_is_refused(self):
         self.assertEqual(server.api_status({})['level'], 'beginner')
         with self.assertRaises(server.ApiError) as e:

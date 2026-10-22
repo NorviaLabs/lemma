@@ -114,6 +114,45 @@ each an ordered list of ACTIVITIES block kinds (see LESSON FORMAT) that teaches 
 the learner does and why it fits; a plan for a concept with no model uses no model blocks. The best one is chosen later.
 Add "hard": true to at most two concepts, the ones a newcomer is most likely to get wrong even after exploring (counterintuitive or multi-step); every other concept gets "hard": false. Only hard concepts get a quiz-style check."""
 
+QUESTION_TASK = """
+The learner came with a question: «{question}»{field}
+This lesson answers it. The "aha" is the sources' answer to that question, and the last concept delivers it; if the \
+sources answer only part of it, the summary says so plainly.
+What an answer builds on, most needed first, as the search found it:
+{subjects}
+Teach one of these as a concept only where a source covers it. List the ones the lesson takes as known instead, and \
+every one marked "no source", in "assumes": a list of their titles, exactly as written above. Give every concept a \
+"subject": the title above that it teaches, or null if it teaches none of them. A concept that teaches something to \
+learn first comes before every core or contribution concept.
+"""
+NEED_WORDS = ((4.0, "needed"), (3.0, "helps"), (0.0, "nice to know"))  # need on Jev's 1 to 5 scale, as search reports it
+RELATION_WORDS = {"prerequisite": "learn first", "part": "part of the answer", "explains": "connects the two fields"}
+
+
+def search_subjects(search: dict, paper_text: str) -> list[dict]:
+    """The search's subjects, each with the id of a chosen source that is its own article (or None), then the
+    subjects no source was found for."""
+    sources = L.source_map(paper_text)
+    key = lambda t: re.sub(r"[^a-z0-9]", "", str(t).lower())
+    out = []
+    for subject in search.get("subjects", []):
+        own = next((sid for sid, src in sources.items() if key(src.get("title", "")).startswith(key(subject["title"]))), None)
+        out.append(dict(subject, source=own))
+    return out + [{"title": t, "need": None, "relation": None, "source": None} for t in search.get("not_covered", [])]
+
+
+def _question_task(search: dict, subjects: list[dict]) -> str:
+    from .categorize import CATEGORIES  # categorize imports lesson, which generate imports first
+    field = " and ".join(CATEGORIES[f][0] for f in search.get("field") or [] if f in CATEGORIES)
+    lines = []
+    for s in subjects:
+        need = next((w for at, w in NEED_WORDS if (s["need"] or 0) >= at), "") if s["need"] is not None else "needed"
+        what = ", ".join(filter(None, [need, RELATION_WORDS.get(s["relation"])]))
+        where = f"a source covers it: {s['source']}" if s["source"] else "no source"
+        lines.append(f"- {s['title']} ({what}; {where})")
+    return QUESTION_TASK.format(question=search["query"], field=f" (field: {field})" if field else "",
+                                subjects="\n".join(lines) or "- (none found)")
+
 
 CONCEPT_TASK = """\
 The learner's level: {level}
@@ -397,9 +436,11 @@ def order_outline(o):
     return o
 
 
-def check_outline(o, source_text: str | None = None, require_needs: bool = False) -> list[str]:
+def check_outline(o, source_text: str | None = None, require_needs: bool = False, subjects: list[dict] | None = None) -> list[str]:
     """``source_text`` checks the primer's quotes against the paper; None skips that. ``require_needs`` asks
-    for every concept's "needs" (a fresh outline); outlines made before it existed may leave it out."""
+    for every concept's "needs" (a fresh outline); outlines made before it existed may leave it out.
+    ``subjects`` (a fresh outline for a question) checks "assumes", each concept's "subject", and that concepts
+    teaching what to learn first come before the core ones."""
     problems = []
     if not isinstance(o, dict):
         return ["the reply must be a JSON object"]
@@ -467,6 +508,25 @@ def check_outline(o, source_text: str | None = None, require_needs: bool = False
                     problems.append(f"concepts[{i}].needs names '{n}', which is not a concept in this outline")
     if isinstance(cs, list) and sum(1 for c in cs if isinstance(c, dict) and c.get("hard") is True) > 2:
         problems.append("mark at most two concepts as hard")
+    if subjects is not None:
+        problems += _check_subjects(o, [c for c in cs if isinstance(c, dict)], subjects)
+    return problems
+
+
+def _check_subjects(o: dict, cs: list[dict], subjects: list[dict]) -> list[str]:
+    problems = []
+    titles = {s["title"] for s in subjects}
+    assumes = o.get("assumes")
+    if not isinstance(assumes, list) or not all(isinstance(a, str) for a in assumes):
+        problems.append("needs 'assumes': a list of the subjects the lesson takes as known ([] if none)")
+    relation = {s["title"]: s["relation"] for s in subjects}
+    first_core = next((i for i, c in enumerate(cs) if c.get("role") in ("core", "contribution")), len(cs))
+    for i, c in enumerate(cs):
+        subject = c.get("subject")
+        if subject is not None and subject not in titles:
+            problems.append(f"concepts[{i}].subject must be one of the listed subjects, written exactly as listed, or null")
+        elif relation.get(subject) == "prerequisite" and i > first_core:
+            problems.append(f"concepts[{i}] teaches '{subject}', which the learner needs first, so it must come before the core concepts")
     return problems
 
 
@@ -575,16 +635,31 @@ def require_jev():
         raise GenerationError(str(e)) from None
 
 
-def make_outline(job: Job, provider: Provider, paper_text: str, level: str) -> dict:
+def make_outline(job: Job, provider: Provider, paper_text: str, level: str, search: dict | None = None) -> dict:
+    """``search`` is the search a lesson was asked for from ({"query", "field", "subjects", "not_covered"}): the
+    outline then has to answer its question, and says what it builds on and what it takes as known."""
     require_jev()  # before anything is paid for: the build that follows can't run without Jev
     job.step("outline", "Reading your sources and proposing an outline", "active")
     task = OUTLINE_TASK.format(level=levels.describe(level), n_hint="three to seven")
     if L.source_map(paper_text):
         task += MULTI_SOURCE_TASK
-    obj, problems = _ask_json(job, provider, paper_document(L.source_document(paper_text)), task, lambda o: check_outline(o, paper_text, require_needs=True), "outline")
+    subjects = search_subjects(search, paper_text) if search else None
+    if search:
+        task += _question_task(search, subjects)
+
+    def check(o):
+        problems = check_outline(o, paper_text, require_needs=True, subjects=subjects)
+        if search and not problems and answers_question(search["query"], o) == "no":
+            problems.append(f"the outline must answer the learner's question, «{search['query']}»: build the path to the "
+                            "sources' answer to it, and make that answer the aha")
+        return problems
+
+    obj, problems = _ask_json(job, provider, paper_document(L.source_document(paper_text)), task, check, "outline")
     if problems:
         job.update("outline", "failed", "; ".join(problems[:3]))
         raise GenerationError("Couldn't produce a usable outline for this paper: " + "; ".join(problems[:3]))
+    if search:
+        obj["question"], obj["subjects"] = search["query"], subjects
     job.update("outline", "done", f"{len(obj['concepts'])} concepts proposed")
     return obj
 
@@ -629,6 +704,8 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, level
             "background": [b for b in outline.get("background", []) if isinstance(b, str)],
             "known": [c["title"] for c in concepts if c.get("known")],
             "aha": outline.get("aha") if isinstance(outline.get("aha"), str) else None,
+            **({"question": outline["question"], "assumes": [a for a in outline.get("assumes") or [] if isinstance(a, str)]}
+               if isinstance(outline.get("question"), str) else {}),
         },
         "primer": outline.get("primer"),
         "provider": {"name": provider.name, "model": provider.model},
@@ -697,6 +774,11 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, level
             done_terms = [t.get("term") for t in base.get("terms", []) if isinstance(t, dict)]
             if done_terms:
                 extra += "\n- the learner already knows these terms, so they may be used freely: " + ", ".join(done_terms)
+        if lesson["intro"].get("question"):
+            extra += f"\n- the learner asked: «{lesson['intro']['question']}». This concept's part in answering it: {c.get('subject') or c['idea']}"
+            if lesson["intro"]["assumes"]:
+                extra += ("\n- the lesson takes these as known, so use them with a one-line reminder at most, never teach them: "
+                          + ", ".join(lesson["intro"]["assumes"]))
         if c["id"] == todo_ids[-1] and lesson["intro"].get("aha"):
             extra += "\n- this is the last concept: it must build to the lesson's aha, so the walkthrough ends on it: " + lesson["intro"]["aha"]
         no_model = c.get("visual") == "none"
