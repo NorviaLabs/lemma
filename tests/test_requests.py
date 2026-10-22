@@ -125,7 +125,7 @@ class RequestTests(unittest.TestCase):
         search._cache.clear()
         release = threading.Event()
 
-        def slow(query, on_progress=None, extra=()):
+        def slow(query, on_progress=None, extra=(), field=None):
             on_progress({'services': {'Wikipedia': 'done', 'OpenAlex': 'searching'}, 'found': {'Wikipedia': 1},
                          'to_check': 0, 'checked': 0, 'readable': 0})
             release.wait(5)
@@ -139,7 +139,7 @@ class RequestTests(unittest.TestCase):
             self.assertEqual(started['query'], 'free will')
             for _ in range(100):
                 status = server.api_search_status(started['id'])
-                if status['progress']:
+                if (status['progress'] or {}).get('services'):  # past working out the field and what to look up
                     break
                 time.sleep(.01)
             self.assertEqual(status['progress']['services']['OpenAlex'], 'searching')  # seen while it runs

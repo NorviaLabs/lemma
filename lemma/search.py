@@ -8,9 +8,11 @@ return entries and textbook chapters that explain a concept in depth. OpenAlex r
 papers ranked by relevance and citations, Europe PMC returns biomedical papers whose full text it
 serves openly, and arXiv returns preprints.
 
-Before the services are asked, the learner's own AI provider turns the question and their level into a few
-Wikipedia article titles (see terms()), so "Can you know something just by luck?" finds the Gettier problem.
-Those articles join the results as prerequisites; only the question and level go to the provider.
+Before the services are asked, Jev names the field the question belongs to (one, or two for a question that
+needs both; see categorize.question_field), so "Mercury" is read as chemistry or as religion, not both. Then the
+learner's own AI provider turns the question, its field and their level into a few Wikipedia article titles (see
+terms()), so "Can you know something just by luck?" finds the Gettier problem. Those articles join the results
+as prerequisites; only the question, field and level go to the provider.
 
 A search for a concept leads with the overview and explanations; a search for a paper leads with papers.
 Jev judges how well each result would teach what was searched for, which orders each group (the title match
@@ -32,7 +34,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from . import __version__, ingest, jev, levels, logs
+from . import __version__, categorize, ingest, jev, levels, logs
 from .generate import extract_json
 from .llm import ProviderError
 
@@ -263,17 +265,22 @@ ROLES = {"overview": "A general introduction or encyclopedia overview",
          "off_topic": "Not about what was searched for, or not credible scholarship"}
 
 
-def judge(query: str, results: list[dict], openings: dict) -> dict:
-    """Jev's relevance (0 to 4) and role for each result, by id(result). Raises SearchError when Jev can't judge them."""
+def judge(query: str, results: list[dict], openings: dict, field: dict | None = None) -> dict:
+    """Jev's relevance (0 to 4) and role for each result, by id(result), for the search read in its field.
+    Raises SearchError when Jev can't judge them."""
     if not results:
         return {}
     state = {"search": query, "results": [{"n": i, "title": r["title"], "from": r["source"],
                                            "text": (r.get("summary") or openings.get(id(r), ""))[:2 * OPENING]}
                                           for i, r in enumerate(results, 1)]}
+    within = ""
+    if field:
+        state["field"] = categorize.describe(field)
+        within = f", as a question in {categorize.names(field)}"
     questions = {}
     for i in range(1, len(results) + 1):
         questions[f"r{i}_relevance"] = {"type": "score", "criteria": RELEVANCE,
-                                        "instructions": f"How well would result n={i} help someone learn about what was searched for?"}
+                                        "instructions": f"How well would result n={i} help someone learn about what was searched for{within}?"}
         questions[f"r{i}_role"] = {"type": "choice", "criteria": ROLES,
                                    "instructions": f"What kind of source is result n={i}, for someone learning about what was searched for?"}
     try:
@@ -353,7 +360,7 @@ TERMS_TIMEOUT = 45  # seconds for the learner's provider to name what to look up
 TERMS = (5, 10)  # how many article titles it must name
 TERMS_SYSTEM = "You turn a learner's question into encyclopedia search terms. Reply with JSON only."
 TERMS_TASK = """\
-The document above is a learner's question. Their level: {level}
+The document above is a learner's question. Their level: {level}{field}
 
 List {low} to {high} subjects a lesson answering this question would teach from, for this learner: the central idea \
 first, then what this learner would need to follow it. {steer} Read the question for what it is really asking, in the \
@@ -368,12 +375,17 @@ TERMS_STEER = {  # how the level changes what is worth looking up
 }
 
 
-def terms(provider, query: str, level: str) -> list[str]:
-    """The Wikipedia article titles the learner's provider names for this question and level. Raises SearchError."""
+def terms(provider, query: str, level: str, field: dict | None = None) -> list[str]:
+    """The Wikipedia article titles the learner's provider names for this question, field and level. Raises SearchError."""
     cancelled = threading.Event()
     timer = threading.Timer(TERMS_TIMEOUT, cancelled.set)
     timer.start()
-    task = TERMS_TASK.format(level=levels.describe(level), low=TERMS[0], high=TERMS[1], steer=TERMS_STEER[level])
+    about = ""
+    if field:
+        about = f"\nIts field: {categorize.describe(field)}"
+        if field["kind"] == "both":
+            about += ". It needs both fields: include what connects them"
+    task = TERMS_TASK.format(level=levels.describe(level), field=about, low=TERMS[0], high=TERMS[1], steer=TERMS_STEER[level])
     try:
         reply = provider.conversation(TERMS_SYSTEM, f"<question>\n{query}\n</question>").send(task, cancelled)
     except ProviderError as e:
@@ -434,45 +446,75 @@ def clean(query: str) -> str:
     return query
 
 
-def _cache_key(query: str, level: str) -> str:
-    return f"{level}|{clean(query).lower()}"
+def _cache_key(query: str, level: str, field: dict | None = None) -> str:
+    """Jev's own pick of field depends only on the question, so only a field the learner chose is part of the key."""
+    chosen = "+".join(field["ids"]) if field and field.get("chosen_by") == "learner" else ""
+    return f"{level}|{chosen}|{clean(query).lower()}"
 
 
-def cached(query: str, level: str = levels.DEFAULT) -> dict | None:
-    """A recent result for this search at this level, so it can be shown at once."""
+def cached(query: str, level: str = levels.DEFAULT, field: dict | None = None) -> dict | None:
+    """A recent result for this search at this level (and field, when the learner chose one), shown at once."""
     with _cache_lock:
-        hit = _cache.get(_cache_key(query, level))
+        hit = _cache.get(_cache_key(query, level, field))
         return json.loads(json.dumps(hit)) if hit and time.time() - hit["checked_at"] < CACHE_TTL else None
 
 
-def search(query: str, level: str = levels.DEFAULT, provider=None, on_progress=None) -> dict:
-    """Returns {"results": [...], "unavailable": [source names that didn't answer], "plan": what was looked up}.
+_fields: dict[str, tuple[float, dict]] = {}
+
+
+def field_of(query: str, ask: bool = True) -> dict | None:
+    """The field Jev places this question in, asked at most once per CACHE_TTL. With ask=False, only one already
+    known, or None. Raises SearchError when Jev can't place it."""
+    k = clean(query).lower()
+    with _cache_lock:
+        hit = _fields.get(k)
+    if hit and time.time() - hit[0] < CACHE_TTL:
+        return json.loads(json.dumps(hit[1]))
+    if not ask:
+        return None
+    try:
+        field = categorize.question_field(clean(query))
+    except categorize.CategorizeError as e:
+        raise SearchError(f"Couldn't tell which field the question belongs to ({e}). Try again in a moment.") from None
+    with _cache_lock:
+        _fields[k] = (time.time(), field)
+        while len(_fields) > 200:
+            _fields.pop(next(iter(_fields)))
+    return json.loads(json.dumps(field))
+
+
+def search(query: str, level: str = levels.DEFAULT, provider=None, on_progress=None, field: dict | None = None) -> dict:
+    """Returns {"results": [...], "unavailable": [source names that didn't answer], "field": the question's field
+    (None for an identifier), "plan": what was looked up}.
 
     ``provider`` is the learner's, which names what to look up; a search for an identifier (a DOI or an arXiv id)
-    needs none. ``on_progress`` is called with a fresh snapshot each time a step moves on:
+    needs none. ``field`` is one the learner chose (categorize.chosen_field); otherwise Jev picks it. ``on_progress`` is called with a fresh snapshot each time a step moves on:
     {"planning": "active" | "done", "services": {name: "searching" | "done" | "failed"}, "found": {name: count},
     "to_check": n, "checked": n, "readable": n}."""
     query = clean(query)
-    key = _cache_key(query, level)
-    if hit := cached(query, level):
+    key = _cache_key(query, level, field)
+    if hit := cached(query, level, field):
         return hit
     try:
         jev.require()  # before any service is contacted: results are only shown once Jev has judged them
     except jev.JevError as e:
         raise SearchError(str(e)) from None
-    plan = {"level": level, "terms": [], "articles": []}
+    identifier = bool(DOI.search(query) or ARXIV_ID.search(query))
+    if on_progress and not identifier:
+        on_progress({"planning": "active", "services": {}, "found": {}, "to_check": 0, "checked": 0, "readable": 0})
+    if not identifier:
+        field = field or field_of(query)
+    plan = {"level": level, "field": field and field["ids"], "terms": [], "articles": []}
     extra, wiki_failed = [], False
-    if provider is not None and not (DOI.search(query) or ARXIV_ID.search(query)):
-        if on_progress:
-            on_progress({"planning": "active", "services": {}, "found": {}, "to_check": 0, "checked": 0, "readable": 0})
-        plan["terms"] = terms(provider, query, level)
+    if provider is not None and not identifier:
+        plan["terms"] = terms(provider, query, level, field)
         try:
             extra = resolve(plan["terms"])
         except (urllib.error.URLError, TimeoutError, OSError, ValueError):
             wiki_failed = True  # the search still runs on the question, and isn't cached
         plan["articles"] = [{"title": a["title"], "term": a["term"], "how": a["resolved"]} for a in extra]
-    result = _search(query, on_progress, extra)
-    result["plan"] = plan
+    result = _search(query, on_progress, extra, field)
+    result["field"], result["plan"] = field, plan
     if wiki_failed:
         result["unavailable"] = sorted(set(result["unavailable"]) | {"Wikipedia"})
     if not result["unavailable"]:
@@ -491,7 +533,7 @@ REASONS = {"overview": "Accessible overview", "prerequisite": "Explains somethin
            "explainer": "Explains the idea in depth", "paper": "Relevant paper for deeper evidence"}
 
 
-def _search(query: str, on_progress=None, extra=()) -> dict:
+def _search(query: str, on_progress=None, extra=(), field: dict | None = None) -> dict:
     calls = {"Wikipedia": wikipedia, SEP: sep, "LibreTexts": libretexts, "OpenAlex": openalex, "Europe PMC": europepmc, "arXiv": arxiv}
     if DOI.search(query):  # an identifier names one work, so only the service that can look it up is asked
         calls = {"OpenAlex": openalex}
@@ -578,7 +620,7 @@ def _search(query: str, on_progress=None, extra=()) -> dict:
         results = [r for r in results if r["kind"] != "paper" or not r.get("summary") or closeness(r) < 0]
     # Jev judges how well each result would teach what was searched for; that orders each group, with the title
     # match breaking ties.
-    judged = judge(query, results, openings)
+    judged = judge(query, results, openings, field)
     rank = lambda r: (-judged.get(id(r), (0, ""))[0], closeness(r))
     indexed = [r for r in results if r["source"] in ("OpenAlex", "Europe PMC")]
     papers = sorted(indexed, key=lambda r: (not r["available"], *rank(r)))[:PAPERS]

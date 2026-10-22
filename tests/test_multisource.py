@@ -173,7 +173,7 @@ class MultiSourceTests(unittest.TestCase):
         from unittest.mock import patch
         search._cache.clear()
         now = 1000
-        def results(query, on_progress=None, extra=()):
+        def results(query, on_progress=None, extra=(), field=None):
             return {'query': query, 'results': [], 'unavailable': [], 'checked_at': now}
         with patch.object(search.time, 'time', side_effect=lambda: now), patch.object(search, '_search', side_effect=results) as run:
             search.search('cache-test')

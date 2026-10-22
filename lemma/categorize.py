@@ -115,3 +115,17 @@ def question_field(query: str) -> dict:
             "alternatives": [dict(_named(k), p=round(p, 3)) for k, p in sorted(probs.items(), key=lambda kv: -kv[1])
                              if k not in ids and k != "other" and p >= ALTERNATIVE_AT],
             "model": answers["_model"]}
+
+
+def chosen_field(ids: list[str]) -> dict:
+    """A field the learner picked instead of Jev's."""
+    return {"ids": list(ids), "kind": "both" if len(ids) == 2 else "one", "chosen_by": "learner", "alternatives": [], "model": ""}
+
+
+def describe(field: dict) -> str:
+    """The field's names and what they cover, as a prompt or Jev reads them."""
+    return " and ".join(f"{CATEGORIES[cid][0]} ({CATEGORIES[cid][1]})" for cid in field["ids"])
+
+
+def names(field: dict) -> str:
+    return " and ".join(CATEGORIES[cid][0] for cid in field["ids"])

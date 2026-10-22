@@ -730,6 +730,7 @@ class SearchTests(unittest.TestCase):
         self.readable.start()
         self.addCleanup(self.readable.stop)
         search._cache.clear()
+        search._fields.clear()
         self.urls = []
         self.orig = search._get
 
@@ -883,6 +884,62 @@ class SearchTests(unittest.TestCase):
         provider = TermsProvider(["Anything"] * 5)
         r = search.search("doi 10.1093/ije/dyh299", "beginner", provider)
         self.assertEqual((provider.asked, r["plan"]["terms"]), ([], []))
+
+    def field_answers(self, probs, span="one"):
+        """A fake Jev that places a question in a field, and judges search results as fakejev does."""
+        self.field_asks = []
+
+        def ask(state, questions, timeout):
+            if "field" not in questions:
+                self.judged_state = state
+                return fakejev.answer(state, questions, timeout)
+            self.field_asks.append(state)
+            return {"_model": "jev-test", "field": {"choice": max(probs, key=probs.get), "probabilities": probs},
+                    "span": {"choice": span}}
+        p = patch.object(jev, "ask", side_effect=ask)
+        p.start()
+        self.addCleanup(p.stop)
+
+    def test_the_question_is_placed_in_a_field_before_anything_is_looked_up(self):
+        self.field_answers({"psychology": .6, "economics": .3, "sociology_anthropology": .1})
+        self.pages("Conformity", "Social proof", "Herd behavior", "Information cascade", "Peer pressure")
+        provider = TermsProvider(["Conformity", "Social proof", "Herd behavior", "Information cascade", "Peer pressure"])
+        r = search.search("Why do people follow the herd?", "beginner", provider)
+        self.assertEqual((r["field"]["ids"], r["field"]["chosen_by"], r["plan"]["field"]), (["psychology"], "jev", ["psychology"]))
+        self.assertEqual([a["id"] for a in r["field"]["alternatives"]], ["economics", "sociology_anthropology"])
+        self.assertEqual(self.field_asks, [{"question": "Why do people follow the herd?"}])
+        self.assertIn("Its field: Psychology (Behaviour and mind", provider.asked[0][2])
+        self.assertIn("Psychology (Behaviour and mind", self.judged_state["field"])  # Jev ranks the results in that field
+
+    def test_a_question_needing_two_fields_asks_for_what_connects_them(self):
+        self.field_answers({"physics_astronomy": .5, "psychology": .45, "chemistry": .05}, "both")
+        self.pages("Pressure", "Sound", "Shock wave", "Startle response", "Balloon")
+        provider = TermsProvider(["Pressure", "Sound", "Shock wave", "Startle response", "Balloon"])
+        r = search.search("Why do balloons pop loudly and scare kids?", "beginner", provider)
+        self.assertEqual(r["field"]["ids"], ["physics_astronomy", "psychology"])
+        self.assertIn("It needs both fields: include what connects them", provider.asked[0][2])
+
+    def test_a_field_the_learner_chose_is_searched_and_cached_on_its_own(self):
+        self.field_answers({"chemistry": .6, "religion": .3, "physics_astronomy": .1})
+        self.pages("Mercury (element)", "Metal", "Liquid", "Toxicity", "Thermometer")
+        provider = TermsProvider(["Mercury (element)", "Metal", "Liquid", "Toxicity", "Thermometer"])
+        search.search("Mercury", "beginner", provider)
+        religion = categorize.chosen_field(["religion"])
+        r = search.search("Mercury", "beginner", provider, field=religion)
+        self.assertEqual(len(self.field_asks), 1)  # the learner's choice needs no Jev pick
+        self.assertEqual((r["field"]["ids"], r["field"]["chosen_by"]), (["religion"], "learner"))
+        self.assertIn("Religion & theology", provider.asked[1][2])
+        self.assertEqual(len(provider.asked), 2)  # not answered from the search Jev placed in chemistry
+        self.assertEqual(search.cached("Mercury", "beginner", religion)["field"]["ids"], ["religion"])
+        self.assertEqual(search.cached("Mercury", "beginner")["field"]["ids"], ["chemistry"])
+        self.assertEqual(search.field_of("mercury", ask=False)["ids"], ["chemistry"])  # remembered, not asked again
+        self.assertEqual(len(self.field_asks), 1)
+
+    def test_a_question_jev_cannot_place_stops_the_search(self):
+        with patch.object(jev, "ask", side_effect=jev.JevError("the checking service answered 529")), patch.object(search, "_search") as run:
+            with self.assertRaisesRegex(search.SearchError, "^Couldn't tell which field the question belongs to"):
+                search.search("Mercury", "beginner", TermsProvider(["Mercury"] * 5))
+        run.assert_not_called()
 
     def test_a_provider_that_names_nothing_useful_or_fails_stops_the_search(self):
         with self.assertRaisesRegex(search.SearchError, "^Fake didn't say what to look up"):
