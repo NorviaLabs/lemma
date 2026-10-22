@@ -125,6 +125,11 @@ every one marked "no source", in "assumes": a list of their titles, exactly as w
 "subject": the title above that it teaches, or null if it teaches none of them. A concept that teaches something to \
 learn first comes before every core or contribution concept.
 """
+BRIDGE_TASK = """\
+The question needs both {fields}: mark the one concept that connects them with "bridge": true (every other concept \
+leaves it out). Teach the connection only as far as a source states it; where the sources don't state it, that concept \
+says plainly that these sources don't establish the link.
+"""
 NEED_WORDS = ((4.0, "needed"), (3.0, "helps"), (0.0, "nice to know"))  # need on Jev's 1 to 5 scale, as search reports it
 RELATION_WORDS = {"prerequisite": "learn first", "part": "part of the answer", "explains": "connects the two fields"}
 
@@ -150,8 +155,14 @@ def _question_task(search: dict, subjects: list[dict]) -> str:
         what = ", ".join(filter(None, [need, RELATION_WORDS.get(s["relation"])]))
         where = f"a source covers it: {s['source']}" if s["source"] else "no source"
         lines.append(f"- {s['title']} ({what}; {where})")
-    return QUESTION_TASK.format(question=search["query"], field=f" (field: {field})" if field else "",
+    task = QUESTION_TASK.format(question=search["query"], field=f" (field: {field})" if field else "",
                                 subjects="\n".join(lines) or "- (none found)")
+    return task + (BRIDGE_TASK.format(fields=field) if len(search.get("field") or []) == 2 else "")
+
+
+def field_names(search: dict | None) -> str:
+    from .categorize import CATEGORIES
+    return " and ".join(CATEGORIES[f][0] for f in (search or {}).get("field") or [] if f in CATEGORIES)
 
 
 CONCEPT_TASK = """\
@@ -436,11 +447,13 @@ def order_outline(o):
     return o
 
 
-def check_outline(o, source_text: str | None = None, require_needs: bool = False, subjects: list[dict] | None = None) -> list[str]:
+def check_outline(o, source_text: str | None = None, require_needs: bool = False, subjects: list[dict] | None = None,
+                  bridged: bool = False) -> list[str]:
     """``source_text`` checks the primer's quotes against the paper; None skips that. ``require_needs`` asks
     for every concept's "needs" (a fresh outline); outlines made before it existed may leave it out.
     ``subjects`` (a fresh outline for a question) checks "assumes", each concept's "subject", and that concepts
-    teaching what to learn first come before the core ones."""
+    teaching what to learn first come before the core ones. ``bridged`` (a question needing two fields) asks for
+    exactly one concept marked "bridge"."""
     problems = []
     if not isinstance(o, dict):
         return ["the reply must be a JSON object"]
@@ -510,6 +523,11 @@ def check_outline(o, source_text: str | None = None, require_needs: bool = False
         problems.append("mark at most two concepts as hard")
     if subjects is not None:
         problems += _check_subjects(o, [c for c in cs if isinstance(c, dict)], subjects)
+        bridges = sum(1 for c in cs if isinstance(c, dict) and c.get("bridge") is True)
+        if bridged and bridges != 1:
+            problems.append(f"mark exactly one concept with \"bridge\": true, the one that connects the two fields (found {bridges})")
+        elif not bridged and bridges:
+            problems.append("this question needs one field, so no concept is a \"bridge\"; remove it")
     return problems
 
 
@@ -648,7 +666,7 @@ def make_outline(job: Job, provider: Provider, paper_text: str, level: str, sear
         task += _question_task(search, subjects)
 
     def check(o):
-        problems = check_outline(o, paper_text, require_needs=True, subjects=subjects)
+        problems = check_outline(o, paper_text, require_needs=True, subjects=subjects, bridged=len(search.get("field") or []) == 2 if search else False)
         if search and not problems and answers_question(search["query"], o) == "no":
             problems.append(f"the outline must answer the learner's question, «{search['query']}»: build the path to the "
                             "sources' answer to it, and make that answer the aha")
@@ -659,7 +677,7 @@ def make_outline(job: Job, provider: Provider, paper_text: str, level: str, sear
         job.update("outline", "failed", "; ".join(problems[:3]))
         raise GenerationError("Couldn't produce a usable outline for this paper: " + "; ".join(problems[:3]))
     if search:
-        obj["question"], obj["subjects"] = search["query"], subjects
+        obj["question"], obj["subjects"], obj["field"] = search["query"], subjects, search.get("field")
     job.update("outline", "done", f"{len(obj['concepts'])} concepts proposed")
     return obj
 
@@ -704,7 +722,8 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, level
             "background": [b for b in outline.get("background", []) if isinstance(b, str)],
             "known": [c["title"] for c in concepts if c.get("known")],
             "aha": outline.get("aha") if isinstance(outline.get("aha"), str) else None,
-            **({"question": outline["question"], "assumes": [a for a in outline.get("assumes") or [] if isinstance(a, str)]}
+            **({"question": outline["question"], "assumes": [a for a in outline.get("assumes") or [] if isinstance(a, str)],
+                "bridge": next((c["id"] for c in concepts if c.get("bridge") is True), None)}
                if isinstance(outline.get("question"), str) else {}),
         },
         "primer": outline.get("primer"),
@@ -823,7 +842,8 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, level
             if base and isinstance(obj, dict) and not problems:
                 problems = list(L.check_builds_on(obj, base, "concept"))
             if not problems:  # only a draft that passes the rules is worth Jev's judgement
-                problems = factcheck.check_concept(obj, paper["text"], todo_ids.index(c["id"]) + 1)
+                link = field_names(outline) if c.get("bridge") is True and len(outline.get("field") or []) == 2 else None
+                problems = factcheck.check_concept(obj, paper["text"], todo_ids.index(c["id"]) + 1, link)
                 passed_rules[0] = (obj, problems)
             return problems
 

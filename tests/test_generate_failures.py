@@ -352,6 +352,59 @@ class QuestionChecks(unittest.TestCase):
         from test_lemma import L
         self.assertEqual(list(L.check_lesson(built.result, SOURCE)), [])
 
+    def test_a_question_needing_two_fields_has_one_concept_that_connects_them(self):
+        two = dict(self.SEARCH, field=["statistics", "biology"])
+
+        def bridge_none(o):
+            pass
+
+        def bridge_two(o):
+            o["concepts"][0]["bridge"] = o["concepts"][1]["bridge"] = True
+
+        def bridge_one(o):
+            o["concepts"][2]["bridge"] = True
+        with patch.object(self, "SEARCH", two):
+            job, fp = self.asked(bridge_none, bridge_two, bridge_one)
+        self.assertEqual(job.status, "done", job.error)
+        self.assertIn("The question needs both Statistics & probability and Biology: mark the one concept that connects them", fp.sent[0])
+        self.assertIn("mark exactly one concept with \"bridge\": true, the one that connects the two fields (found 0)", fp.sent[1])
+        self.assertIn("(found 2)", fp.sent[2])
+        self.assertEqual(job.result["field"], ["statistics", "biology"])
+
+        seen = {}
+
+        def check(c, paper, n=1, link=None):
+            seen[c["id"]] = link
+            return []
+        with patch.object(generate.factcheck, "check_concept", side_effect=check):
+            built = wait(generate.start(generate.Job("build"), generate.build_lesson, Recording(), PAPER, job.result, "beginner"))
+        self.assertEqual(built.status, "done", built.error)
+        bridge = job.result["concepts"][2]["id"]
+        self.assertEqual(built.result["intro"]["bridge"], bridge)
+        self.assertEqual({cid: link for cid, link in seen.items() if link}, {bridge: "Statistics & probability and Biology"})
+
+    def test_a_one_field_question_has_no_bridge(self):
+        def stray(o):
+            o["concepts"][0]["bridge"] = True
+        job, fp = self.asked(stray, lambda o: None)
+        self.assertEqual(job.status, "done", job.error)
+        self.assertNotIn("connects them", fp.sent[0])
+        self.assertIn("this question needs one field, so no concept is a \"bridge\"", fp.sent[1])
+
+    def test_a_bridge_concept_is_asked_whether_its_link_has_a_source(self):
+        from lemma import factcheck
+        concept = copy.deepcopy(EXAMPLE["concepts"][0])
+        self.assertFalse(any(k.startswith("unsupported_link") for k in factcheck.questions_for(concept)))
+        qs = factcheck.questions_for(concept, link="Psychology and Medicine")
+        link = [q for k, q in qs.items() if k.startswith("unsupported_link|")]
+        self.assertEqual(len(link), len(factcheck.LENSES))
+        self.assertIn("a connection between Psychology and Medicine", link[0]["instructions"])
+        yes = lambda state, questions, timeout: {k: {"noul": 0.9 if k.startswith("unsupported_link") else 0.0} for k in questions}
+        with patch.object(jev, "ask", side_effect=yes):
+            flags = factcheck.check_concept(concept, SOURCE, 1, "Psychology and Medicine")
+        self.assertEqual([f.kind for f in flags], ["unsupported_link"])
+        self.assertIn("say plainly that these sources don't establish it", flags[0])
+
     def test_a_check_jev_cannot_make_raises(self):
         for name, effect in (("outage", jev.JevError("the checking service answered 529")),
                              ("unreadable", lambda *a: {"answers": {"choice": "maybe"}})):

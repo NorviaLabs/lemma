@@ -407,7 +407,7 @@ class GenerationTests(unittest.TestCase):
         from lemma import factcheck
         rounds = {}
 
-        def fake(c, paper, n=1):
+        def fake(c, paper, n=1, link=None):
             rounds[c["id"]] = rounds.get(c["id"], 0) + 1
             if flagged(c["id"], rounds[c["id"]]):
                 return [factcheck.Flag("concept: " + factcheck.REPAIR["fabricated_finding"], "fabricated_finding", .9)]
@@ -463,7 +463,7 @@ class GenerationTests(unittest.TestCase):
         outline = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, "")).result
         real = factcheck.check_concept
 
-        def failing(c, paper, n=1):
+        def failing(c, paper, n=1, link=None):
             if c.get("id") == "mid_parent":
                 raise jev.JevError("Jev answered 503")
             return real(c, paper, n)
@@ -479,7 +479,7 @@ class GenerationTests(unittest.TestCase):
         outline = wait(generate.start(generate.Job("outline"), generate.make_outline, fp, SOURCE, "")).result
         real = factcheck.check_concept
 
-        def failing(c, paper, n=1):
+        def failing(c, paper, n=1, link=None):
             if c.get("id") == "mid_parent":
                 raise RecursionError("maximum recursion depth exceeded")
             return real(c, paper, n)

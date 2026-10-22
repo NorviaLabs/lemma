@@ -15,6 +15,7 @@ question, field, subjects and what no source covers. Scores per variant:
   taught     labelled prerequisites named in a concept's title, idea or subject
   accounted  taught, or named in the outline's "assumes"
   order      concepts teaching a prerequisite subject placed after a core or contribution concept
+  bridge     concepts marked as connecting a two-field question's fields
   failed     outlines that didn't pass their checks
 """
 
@@ -66,7 +67,7 @@ def sources(out: Path, test: dict, result: dict) -> str | None:
 
 def score(test: dict, outline: dict | None, answer: str | None) -> dict:
     row = {"id": test["id"], "query": test["query"], "prerequisites": len(test["prerequisites"]), "failed": outline is None,
-           "answer": answer, "taught": 0, "accounted": 0, "order": 0}
+           "answer": answer, "taught": 0, "accounted": 0, "order": 0, "bridges": 0}
     if outline is None:
         return row
     concepts = [c for c in outline.get("concepts", []) if isinstance(c, dict)]
@@ -76,6 +77,7 @@ def score(test: dict, outline: dict | None, answer: str | None) -> dict:
     row["accounted"] = sum(found(p, said) or found(p, assumed) for p in test["prerequisites"])
     kinds = {s["title"]: s.get("relation") for s in outline.get("subjects") or []}
     core = [i for i, c in enumerate(concepts) if c.get("role") in ("core", "contribution")]
+    row["bridges"] = sum(1 for c in concepts if c.get("bridge") is True)
     row["order"] = sum(1 for i, c in enumerate(concepts) if kinds.get(c.get("subject")) == "prerequisite" and core and i > core[0])
     return row
 
@@ -133,7 +135,8 @@ def main() -> int:
     (out / f"summary-{args.variant}.json").write_text(json.dumps({"summary": summary, "rows": rows}, indent=1))
     for r in rows:
         print(f"{r['id']:>2}. {r['query'][:50]:<50} {r['answer'] or 'FAILED':<8} taught {r['taught']}/{r['prerequisites']}"
-              f"  accounted {r['accounted']}/{r['prerequisites']}" + (f"  ORDER {r['order']}" if r["order"] else ""))
+              f"  accounted {r['accounted']}/{r['prerequisites']}" + (f"  bridge {r['bridges']}" if r["bridges"] else "")
+              + (f"  ORDER {r['order']}" if r["order"] else ""))
     print(f"\n{args.variant}: answers {summary['answers']}, partly {summary['partly']}, no {summary['no']} of {len(rows)}; "
           f"taught {summary['taught']}/{total}, accounted {summary['accounted']}/{total}; order problems {summary['order']}; failed {summary['failed']}")
     return 0

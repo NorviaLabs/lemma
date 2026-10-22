@@ -269,6 +269,9 @@ CRITICAL = {  # yes = an error was found
     "misleading_quote": "Read in its context in the paper excerpt, does the quote say something different from what the concept uses it for?",
 }
 WRONG_ANSWER = "Is the answer this exercise marks as correct actually wrong, given the model and what the concept teaches?"
+# Asked only of the concept that connects a question's two fields ("bridge" in the outline).
+UNSUPPORTED_LINK = ("Does this concept state a connection between {link} that the paper excerpt doesn't support, without saying "
+                    "plainly that the sources don't establish it?")
 # The kinds the eval confirmed on 4 or 5 of 5 planted errors; reversed_model and misleading_quote weren't reliable yet.
 BUILD_KINDS = ("wrong_claim", "fabricated_finding", "wrong_answer")
 
@@ -283,6 +286,9 @@ REPAIR = {
                           "teaching model, not a finding.",
     "wrong_answer": "an independent check is fairly sure the answer marked correct in this concept's {exercise} is wrong. Recheck it "
                     "against the model and the explanation, and fix the marked answer and its reasons, or the question.",
+    "unsupported_link": "an independent check is fairly sure this concept states the connection between the question's two fields "
+                        "without a source for it. Quote the passage that states the link, or say plainly that these sources don't "
+                        "establish it.",
 }
 
 
@@ -295,10 +301,13 @@ class Flag(str):
         return s
 
 
-def questions_for(c: dict, kinds=BUILD_KINDS) -> dict:
-    """The yes/no questions about one concept, keyed kind|lens (wrong answers: wrong_answer:predict|lens)."""
+def questions_for(c: dict, kinds=BUILD_KINDS, link: str | None = None) -> dict:
+    """The yes/no questions about one concept, keyed kind|lens (wrong answers: wrong_answer:predict|lens). ``link``
+    names the two fields a bridge concept connects."""
     qs = {}
     for lens, lead in LENSES.items():
+        if link:
+            qs[f"unsupported_link|{lens}"] = {"type": "noul", "instructions": lead + UNSUPPORTED_LINK.format(link=link)}
         for kind in kinds:
             if kind != "wrong_answer":
                 qs[f"{kind}|{lens}"] = {"type": "noul", "instructions": lead + CRITICAL[kind]}
@@ -319,14 +328,14 @@ def confirmed(answers: dict) -> dict:
     return {k: round(max(ps), 3) for k, ps in by_kind.items() if sum(p >= CONFIRM_AT for p in ps) * 2 > len(ps)}
 
 
-def check_concept(c: dict, paper: str, n: int = 1) -> list[Flag]:
+def check_concept(c: dict, paper: str, n: int = 1, link: str | None = None) -> list[Flag]:
     """Repair requests for the critical errors Jev confirms in a drafted concept. Raises jev.JevError when Jev
     can't check it, so an unchecked concept is never shown."""
     if not isinstance(c, dict):
         return []
     paper = L.source_document(paper)
     state = f"{concept_text(c, n)}\n\n=== FROM THE PAPER ===\n\n{concept_evidence(c, paper)}"
-    found = confirmed(jev.ask(state, questions_for(c), TIMEOUT))
+    found = confirmed(jev.ask(state, questions_for(c, link=link), TIMEOUT))
     flags = []
     for kind, certainty in found.items():
         base, _, exercise = kind.partition(":")
