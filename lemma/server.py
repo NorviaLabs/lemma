@@ -797,14 +797,17 @@ def api_example(_body):
 
 
 def card_quote(quote: str | None, most: int = 32) -> str | None:
-    """A verbatim run of whole sentences from a quote, short enough to set large on a gallery card. Sentences
-    under five words (headings such as "Reply to Objection 1.") are skipped; a long sentence is cut with an ellipsis."""
+    """A verbatim run of whole sentences from a quote, short enough to set large on a gallery card. Headings under
+    five words ("Article 1.") before the first sentence are skipped, and the run stops at the next one ("Objection
+    1."), so the card never joins sentences that aren't side by side; a long sentence is cut with an ellipsis."""
     if not quote:
         return quote
-    sentences = [s for s in re.split(r"(?<=[.!?;])\s+", quote.strip()) if len(s.split()) >= 5] or [quote.strip()]
+    sentences = re.split(r"(?<=[.!?;])\s+", quote.strip())
+    while len(sentences) > 1 and len(sentences[0].split()) < 5:
+        sentences.pop(0)
     words = []
     for s in sentences:
-        if words and len(words) + len(s.split()) > most:
+        if words and (len(s.split()) < 5 or len(words) + len(s.split()) > most):
             break
         words += s.split()
     return " ".join(words[:most]).rstrip(",;:") + ("…" if len(words) > most else "")
