@@ -10,7 +10,7 @@
     {"id": "mendel-1866", "level": "beginner", "urls": ["https://www.gutenberg.org/cache/epub/69362/pg69362-images.html"],
      "prerequisites": [["Pollination", "Fertilisation", "Fertilization"], ["Hybrid (biology)", "Hybrid"], ["Probability"]]},
     {"id": "ioannidis-2005", "level": "beginner", "urls": ["https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1182327/fullTextXML"],
-     "prerequisites": [["Statistical hypothesis testing", "Null hypothesis"], ["P-value", "Statistical significance"], ["Power (statistics)", "Statistical power"], ["Prior probability", "Bayes' theorem"]]},
+     "prerequisites": [["Statistical hypothesis testing", "Statistical hypothesis test", "Null hypothesis"], ["P-value", "Statistical significance"], ["Power (statistics)", "Statistical power"], ["Prior probability", "Bayes' theorem"]]},
     {"id": "schelling-segregation", "level": "beginner", "urls": ["https://www.ncbi.nlm.nih.gov/pmc/articles/2393808"],
      "prerequisites": [["Agent-based model"], ["Residential segregation", "Racial segregation"], ["Emergence"]]},
     {"id": "information-cascades", "level": "beginner", "urls": ["http://www.dklevine.com/archive/refs41193.pdf"],
