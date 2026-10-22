@@ -862,13 +862,72 @@ class SearchTests(unittest.TestCase):
         self.assertEqual(search.query_kind("The nature of the firm and the theory of transaction costs"), "paper")
         self.assertEqual(search.query_kind("Why did Galton 1886 find regression?"), "paper")  # a year names a paper
 
-    def test_at_most_three_prerequisites_are_recommended(self):
+    def test_at_most_four_prerequisites_are_recommended(self):
         named = ["Mean", "Variance", "Correlation", "Heredity", "Normal distribution"]
         self.pages(*named)
         r = search.search("regression to the mean", "beginner", TermsProvider(named))
         prerequisites = [x for x in r["results"] if x.get("prerequisite")]
         self.assertEqual(len(prerequisites), 5)
-        self.assertEqual(sum(x["recommended"] for x in prerequisites), 3)
+        self.assertEqual(sum(x["recommended"] for x in prerequisites), 4)
+
+    def need_answers(self, need, relation=None, missing=None):
+        """A fake Jev that rates each prerequisite's need (Jev's 0 to 4) and relation by title, and a subject
+        no article was found for by name; everything else as fakejev does."""
+        def ask(state, questions, timeout):
+            out = fakejev.answer(state, questions, timeout)
+            self.judged_state, self.judged_questions = state, questions
+            for r in state.get("results", []):
+                if f"r{r['n']}_need" in questions:
+                    out[f"r{r['n']}_need"] = {"score": need.get(r["title"], 0.0)}
+                    out[f"r{r['n']}_relation"] = {"choice": (relation or {}).get(r["title"], "prerequisite")}
+            for m in state.get("not_found", []):
+                out[f"m{m['m']}_need"] = {"score": (missing or {}).get(m["title"], 0.0)}
+            return out
+        p = patch.object(jev, "ask", side_effect=ask)
+        p.start()
+        self.addCleanup(p.stop)
+
+    def test_prerequisites_are_chosen_by_how_much_the_learner_needs_them(self):
+        named = ["Mean", "Variance", "Correlation", "Heredity", "Normal distribution", "Francis Galton"]
+        self.pages(*named)
+        self.need_answers({"Mean": 4, "Variance": 3, "Correlation": 3.5, "Heredity": 2.5, "Normal distribution": 1, "Francis Galton": 3},
+                          {"Francis Galton": "unrelated"})
+        r = search.search("regression to the mean", "advanced", TermsProvider(named))
+        chosen = [x["title"] for x in r["results"] if x.get("prerequisite") and x["recommended"]]
+        self.assertEqual(chosen, ["Mean", "Correlation", "Variance", "Heredity"])  # most needed first, listed in that order
+        self.assertEqual([s["title"] for s in r["graph"]["subjects"] if s["recommended"]], chosen)
+        self.assertFalse(next(s for s in r["graph"]["subjects"] if s["title"] == "Francis Galton")["recommended"])
+        self.assertEqual(r["graph"]["subjects"][0]["need"], 5.0)  # on the 1 to 5 scale, like relevance
+        self.assertIn("Advanced: has studied or works in the field", self.judged_state["level"])
+        self.assertNotIn("r1_need", self.judged_questions)  # only prerequisites are rated for need
+        self.assertNotIn("explains", next(q for k, q in self.judged_questions.items() if k.endswith("_relation"))["criteria"])
+
+    def test_a_prerequisite_needed_too_little_is_listed_but_not_recommended(self):
+        named = ["Mean", "Variance", "Correlation", "Heredity", "Normal distribution"]
+        self.pages(*named)
+        self.need_answers({"Mean": 1.9, "Variance": 4})
+        r = search.search("regression to the mean", "beginner", TermsProvider(named))
+        self.assertEqual([x["title"] for x in r["results"] if x.get("prerequisite") and x["recommended"]], ["Variance"])
+        self.assertEqual(len([x for x in r["results"] if x.get("prerequisite")]), 5)
+
+    def test_a_needed_subject_no_article_was_found_for_is_not_covered(self):
+        named = ["Mean", "Variance", "Correlation", "Galton board", "Reversion"]
+        self.pages("Mean", "Variance", "Correlation", missing=["Galton board", "Reversion"])
+        self.need_answers({"Mean": 3}, missing={"Galton board": 3.2, "Reversion": 1})
+        with patch.object(search, "wikipedia", return_value=[]):  # nor found by searching for it
+            r = search.search("regression to the mean", "beginner", TermsProvider(named))
+        self.assertEqual([m["title"] for m in self.judged_state["not_found"]], ["Galton board", "Reversion"])
+        self.assertEqual(r["graph"]["not_covered"], ["Galton board"])
+
+    def test_a_reply_without_need_fails_the_search(self):
+        self.pages("Mean", "Variance", "Correlation", "Heredity", "Normal distribution")
+
+        def ask(state, questions, timeout):
+            out = fakejev.answer(state, questions, timeout)
+            return {k: v for k, v in out.items() if not k.endswith("_need")}
+        with patch.object(jev, "ask", side_effect=ask), patch.object(search.logs, "report"):
+            with self.assertRaisesRegex(search.SearchError, "Couldn't rank the results"):
+                search.search("regression to the mean", "beginner", TermsProvider(["Mean", "Variance", "Correlation", "Heredity", "Normal distribution"]))
 
     def test_each_level_is_searched_and_remembered_on_its_own(self):
         self.pages("Mean", "Variance", "Correlation", "Heredity", "Normal distribution")
@@ -893,7 +952,7 @@ class SearchTests(unittest.TestCase):
             if "second" in questions:
                 return {"_model": "jev-test", "second": {"choice": second}}
             if "field" not in questions:
-                self.judged_state = state
+                self.judged_state, self.judged_questions = state, questions
                 return fakejev.answer(state, questions, timeout)
             self.field_asks.append(state)
             return {"_model": "jev-test", "field": {"choice": max(probs, key=probs.get), "probabilities": probs},
@@ -921,6 +980,8 @@ class SearchTests(unittest.TestCase):
         self.assertEqual(r["field"]["ids"], ["physics_astronomy", "psychology"])
         self.assertIn("It needs both fields: include what connects them", provider.asked[0][2])
         self.assertNotIn("Psychology", self.judged_state["field"])  # results are ranked in the main field only
+        relation = next(q for k, q in self.judged_questions.items() if k.endswith("_relation"))
+        self.assertIn("explains", relation["criteria"])  # a subject can be what connects the two fields
 
     def test_a_field_the_learner_chose_is_searched_and_cached_on_its_own(self):
         self.field_answers({"chemistry": .6, "religion": .3, "physics_astronomy": .1})

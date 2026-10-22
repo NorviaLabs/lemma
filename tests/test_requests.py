@@ -125,7 +125,7 @@ class RequestTests(unittest.TestCase):
         search._cache.clear()
         release = threading.Event()
 
-        def slow(query, on_progress=None, extra=(), field=None):
+        def slow(query, on_progress=None, extra=(), field=None, level=None, missing=()):
             on_progress({'services': {'Wikipedia': 'done', 'OpenAlex': 'searching'}, 'found': {'Wikipedia': 1},
                          'to_check': 0, 'checked': 0, 'readable': 0})
             release.wait(5)

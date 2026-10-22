@@ -258,6 +258,17 @@ RELEVANCE = ["Unrelated to what was searched for",
              "Related: covers it, but it isn't the main subject",
              "Strongly related: mainly about it",
              "Exactly what was searched for, and would teach it well"]
+NEED_AT = 2.0  # Jev's need runs 0 to 4; a prerequisite that only "helps" (2) or more is recommended
+ESSENTIAL_AT = 3.0  # "needed": a subject this needed with no source is listed as not covered
+NEED = ["Not needed to follow the answer",
+        "Nice to know, but the answer makes sense without it",
+        "Helps: the answer is easier to follow with it",
+        "Needed: the answer uses it, so this learner should understand it first",
+        "Can't follow the answer at all without it"]
+RELATIONS = {"prerequisite": "Something to understand first, before the answer makes sense",
+             "part": "A piece of the answer itself",
+             "unrelated": "Not needed for this question"}
+EXPLAINS = {"explains": "Connects the question's two fields: how one causes or explains what the other studies"}
 ROLES = {"overview": "A general introduction or encyclopedia overview",
          "explainer": "An in-depth explanation, such as a textbook chapter or a philosophy encyclopedia entry",
          "review": "A review or survey that explains a field or a body of research",
@@ -265,14 +276,22 @@ ROLES = {"overview": "A general introduction or encyclopedia overview",
          "off_topic": "Not about what was searched for, or not credible scholarship"}
 
 
-def judge(query: str, results: list[dict], openings: dict, field: dict | None = None) -> dict:
-    """Jev's relevance (0 to 4) and role for each result, by id(result), for the search read in its field.
+def judge(query: str, results: list[dict], openings: dict, field: dict | None = None, level: str | None = None,
+          missing: list[str] = ()) -> tuple[dict, dict]:
+    """Jev's relevance (0 to 4) and role for each result, by id(result), for the search read in its field; and for
+    each prerequisite, how much this learner needs it (0 to 4) and what it is to the question. ``missing`` names
+    subjects no article was found for, rated by name alone; their need is returned by name.
     Raises SearchError when Jev can't judge them."""
     if not results:
-        return {}
+        return {}, {}
     state = {"search": query, "results": [{"n": i, "title": r["title"], "from": r["source"],
                                            "text": (r.get("summary") or openings.get(id(r), ""))[:2 * OPENING]}
                                           for i, r in enumerate(results, 1)]}
+    if level:
+        state["level"] = levels.describe(level)
+    if missing:
+        state["not_found"] = [{"m": j, "title": name} for j, name in enumerate(missing, 1)]
+    relations = {**RELATIONS, **(EXPLAINS if field and field["kind"] == "both" else {})}
     within = ""
     if field:
         # Only the main field: asked "in A and B", Jev marks down the articles that explain one side of a question
@@ -286,9 +305,21 @@ def judge(query: str, results: list[dict], openings: dict, field: dict | None = 
                                         "instructions": f"How well would result n={i} help someone learn about what was searched for{within}?"}
         questions[f"r{i}_role"] = {"type": "choice", "criteria": ROLES,
                                    "instructions": f"What kind of source is result n={i}, for someone learning about what was searched for?"}
+    for i, r in enumerate(results, 1):
+        if r.get("prerequisite"):
+            questions[f"r{i}_need"] = {"type": "score", "criteria": NEED,
+                                       "instructions": f"How much does this learner, at their level, need the subject of result n={i} to follow an answer to what was searched for?"}
+            questions[f"r{i}_relation"] = {"type": "choice", "criteria": relations,
+                                           "instructions": f"What is the subject of result n={i} to what was searched for?"}
+    for j in range(1, len(missing) + 1):
+        questions[f"m{j}_need"] = {"type": "score", "criteria": NEED,
+                                   "instructions": f"How much does this learner, at their level, need the subject not_found m={j} to follow an answer to what was searched for?"}
     try:
         answers = jev.ask(state, questions, JEV_TIMEOUT)
         judged = {id(r): (float(answers[f"r{i}_relevance"]["score"]), answers[f"r{i}_role"]["choice"]) for i, r in enumerate(results, 1)}
+        subjects = {id(r): (float(answers[f"r{i}_need"]["score"]), answers[f"r{i}_relation"]["choice"])
+                    for i, r in enumerate(results, 1) if r.get("prerequisite")}
+        unfound = {name: float(answers[f"m{j}_need"]["score"]) for j, name in enumerate(missing, 1)}
     except jev.JevError as e:
         raise SearchError(f"Couldn't rank the results just now ({e}). Try again in a moment.") from None
     except (KeyError, TypeError, ValueError) as e:
@@ -297,7 +328,10 @@ def judge(query: str, results: list[dict], openings: dict, field: dict | None = 
     for r in results:
         relevance, role = judged[id(r)]
         r["judged"] = {"relevance": round(relevance + 1, 2), "role": role}  # on the 1 to 5 scale; not shown to learners
-    return judged
+        if id(r) in subjects:
+            need, relation = subjects[id(r)]
+            r["judged"].update(need=round(need + 1, 2), relation=relation)
+    return {k: (*v, *subjects.get(k, (None, None))) for k, v in judged.items()}, unfound
 
 
 QUESTION = re.compile(r"^\s*(?:how|why|what|when|where|which|who|can|could|do|does|did|is|are|was|were|should|would|will)\b|\?\s*$", re.I)
@@ -427,7 +461,10 @@ def resolve(names: list[str]) -> list[dict]:
             if not found:
                 continue
             article, how = found[0], "search"
-        if _key(article["title"]) not in {_key(a["title"]) for a in out}:
+        same = next((a for a in out if _key(a["title"]) == _key(article["title"])), None)
+        if same:
+            same.setdefault("also", []).append(name)
+        else:
             out.append(dict(article, prerequisite=True, term=name, resolved=how))
     return out
 
@@ -516,7 +553,9 @@ def search(query: str, level: str = levels.DEFAULT, provider=None, on_progress=N
         except (urllib.error.URLError, TimeoutError, OSError, ValueError):
             wiki_failed = True  # the search still runs on the question, and isn't cached
         plan["articles"] = [{"title": a["title"], "term": a["term"], "how": a["resolved"]} for a in extra]
-    result = _search(query, on_progress, extra, field)
+    named = {n for a in extra for n in [a.get("term"), *a.get("also", [])]}
+    missing = [] if wiki_failed else [t for t in plan["terms"] if t not in named]
+    result = _search(query, on_progress, extra, field, level, missing)
     result["field"], result["plan"] = field, plan
     if wiki_failed:
         result["unavailable"] = sorted(set(result["unavailable"]) | {"Wikipedia"})
@@ -529,14 +568,15 @@ def search(query: str, level: str = levels.DEFAULT, provider=None, on_progress=N
 
 
 RECOMMEND = {  # how many of each kind to suggest as a starting set; prerequisites are the articles terms() named
-    "concept": {"overview": 1, "prerequisite": 3, "explainer": 1, "paper": 1},
-    "paper": {"paper": 2, "overview": 1, "prerequisite": 3},
+    "concept": {"overview": 1, "prerequisite": 4, "explainer": 1, "paper": 1},
+    "paper": {"paper": 2, "overview": 1, "prerequisite": 4},
 }
 REASONS = {"overview": "Accessible overview", "prerequisite": "Explains something the idea builds on",
+           "part": "Explains part of the answer", "explains": "Connects the two fields",
            "explainer": "Explains the idea in depth", "paper": "Relevant paper for deeper evidence"}
 
 
-def _search(query: str, on_progress=None, extra=(), field: dict | None = None) -> dict:
+def _search(query: str, on_progress=None, extra=(), field: dict | None = None, level: str | None = None, missing=()) -> dict:
     calls = {"Wikipedia": wikipedia, SEP: sep, "LibreTexts": libretexts, "OpenAlex": openalex, "Europe PMC": europepmc, "arXiv": arxiv}
     if DOI.search(query):  # an identifier names one work, so only the service that can look it up is asked
         calls = {"OpenAlex": openalex}
@@ -623,24 +663,36 @@ def _search(query: str, on_progress=None, extra=(), field: dict | None = None) -
         results = [r for r in results if r["kind"] != "paper" or not r.get("summary") or closeness(r) < 0]
     # Jev judges how well each result would teach what was searched for; that orders each group, with the title
     # match breaking ties.
-    judged = judge(query, results, openings, field)
+    judged, unfound = judge(query, results, openings, field, level, list(missing))
     rank = lambda r: (-judged.get(id(r), (0, ""))[0], closeness(r))
+    # Prerequisites are chosen by how much this learner needs them, not by how close they are to the question:
+    # the closest are often the idea itself, while the basics it builds on rank lower (search-2026-10-22-d).
+    need = lambda r: (-(judged.get(id(r), (0, "", 0))[2] or 0), *rank(r))
+    prerequisites = sorted((r for r in results if r.get("prerequisite")), key=need)
     indexed = [r for r in results if r["source"] in ("OpenAlex", "Europe PMC")]
     papers = sorted(indexed, key=lambda r: (not r["available"], *rank(r)))[:PAPERS]
     papers += sorted((r for r in results if r["source"] == "arXiv"), key=rank)
     if mode == "paper":  # one particular paper: the closest match leads, whichever service found it
         papers.sort(key=lambda r: (not r["available"], *rank(r)))
-    by_kind = {kind: sorted((r for r in results if r["kind"] == kind), key=rank) for kind in ("overview", "explainer")}
+    by_kind = {kind: sorted((r for r in results if r["kind"] == kind and not r.get("prerequisite")), key=rank) for kind in ("overview", "explainer")}
+    by_kind["overview"][1:1] = prerequisites  # after the question's own article, most needed first
     order = ["overview", "explainer", "paper"] if mode == "concept" else ["paper", "overview", "explainer"]
     results = [r for kind in order for r in (papers if kind == "paper" else by_kind[kind])]
     # A small, complementary starting set from sources that passed actual ingestion.
     left = dict(RECOMMEND[mode])
     for result in results:
-        relevance, role = judged.get(id(result), (RECOMMEND_AT, ""))
-        suits = relevance >= RECOMMEND_AT and role != "off_topic"  # Jev's judgement
+        relevance, role, needed, relation = judged.get(id(result), (RECOMMEND_AT, "", None, None))
         slot = "prerequisite" if result.get("prerequisite") else result["kind"]
+        if slot == "prerequisite":
+            suits = needed >= NEED_AT and relation != "unrelated" and role != "off_topic"
+        else:
+            suits = relevance >= RECOMMEND_AT and role != "off_topic"  # Jev's judgement
         result["recommended"] = bool(result["available"] and suits and left.get(slot))
         if result["recommended"]:
             left[slot] -= 1
-            result["recommendation"] = REASONS[slot]
-    return {"query": query, "kind": mode, "results": results, "unavailable": unavailable, "checked_at": time.time()}
+            result["recommendation"] = REASONS.get(relation, REASONS[slot]) if slot == "prerequisite" else REASONS[slot]
+    # What the lesson builds on, most needed first: the scaffold the outline reads, and what no source covers.
+    graph = {"subjects": [{"title": r["title"], "term": r["term"], "relation": r["judged"]["relation"], "need": r["judged"]["need"],
+                           "recommended": r["recommended"]} for r in prerequisites],
+             "not_covered": [name for name, n in unfound.items() if n >= ESSENTIAL_AT]}
+    return {"query": query, "kind": mode, "results": results, "unavailable": unavailable, "graph": graph, "checked_at": time.time()}
