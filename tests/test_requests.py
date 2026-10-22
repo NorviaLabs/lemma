@@ -125,13 +125,15 @@ class RequestTests(unittest.TestCase):
         search._cache.clear()
         release = threading.Event()
 
-        def slow(query, on_progress=None):
+        def slow(query, on_progress=None, extra=()):
             on_progress({'services': {'Wikipedia': 'done', 'OpenAlex': 'searching'}, 'found': {'Wikipedia': 1},
                          'to_check': 0, 'checked': 0, 'readable': 0})
             release.wait(5)
             return {'query': query, 'kind': 'concept', 'results': [], 'unavailable': [], 'checked_at': time.time()}
 
-        with patch.object(search, '_search', side_effect=slow):
+        # What to look up is tested in SearchTests; here the provider names nothing Wikipedia knows.
+        with patch.object(search, '_search', side_effect=slow), patch.object(search, 'terms', return_value=['Free will'] * 5), \
+                patch.object(search, 'resolve', return_value=[]):
             started = server.api_search({'query': '  free   will '})
             self.assertFalse(started['done'])
             self.assertEqual(started['query'], 'free will')

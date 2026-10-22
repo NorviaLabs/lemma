@@ -914,14 +914,15 @@
   function searchProgress(q) {
     const list = h("ul", { class: "search-services" });
     const bar = h("progress", { class: "search-bar", "aria-hidden": "true" });  // no value: still asking the libraries
-    const line = h("p", { class: "muted small" }, "Asking the libraries…");
+    const line = h("p", { class: "muted small" }, "Working out what to look up…");
     const said = h("p", { class: "sr-only", role: "status" }, `Searching for “${q}”.`);
     // Muted for screen readers, which would otherwise hear every tick; `said` announces each new phase instead.
     const el = h("div", { class: "search-progress", "aria-live": "off" },
       h("p", { class: "sp-head" }, h("span", { class: "spinner sp-spin", "aria-hidden": "true" }), `Searching for “${q}”`), list, bar, line, said);
     let phase = "asking";
     function update(p) {
-      if (!p) return;
+      if (!p || p.planning === "active") return;
+      if (phase === "asking") line.textContent = "Asking the libraries…";
       list.replaceChildren(...Object.entries(p.services).map(([name, st]) => h("li", { class: `sp-${st}` },
         st === "searching" ? h("span", { class: "sp-dot", "aria-hidden": "true" }) : icon(st === "done" ? "check" : "cross"),
         h("span", {}, SERVICE_NAMES[name] || name),
@@ -951,6 +952,8 @@
       q = (q ?? qIn.value).trim();
       if (!q) return qIn.focus();
       if (signedOut) return toSignIn({ mode: "search", ask: q });
+      // The learner's AI provider works out what to look up, so a search needs one, as a build does.
+      if (!(status.provider || {}).ok) return showConnect(() => { session.ask = q; session.mode = "search"; showMake(); });
       qIn.value = q;
       errSlot.replaceChildren();
       const seq = ++searchSeq, current = () => seq === searchSeq && results.isConnected;
@@ -1117,17 +1120,17 @@
       results.hidden = m !== "search";
       submit.textContent = "Find sources";
       if (m === "bring") refreshBring();
-      const to = p.ok ? h("strong", {}, p.label) : signedOut ? "the AI provider you connect after signing in" : "the AI provider you connect next";
+      const to = () => p.ok ? h("strong", {}, p.label) : signedOut ? "the AI provider you connect after signing in" : "the AI provider you connect next";
       const checks = status.typesafe ? (m === "search" ? "to rank results and check concepts for errors" : "to sort the lesson into a subject and check concepts for errors") : "";
       privacy.replaceChildren(...[
-        m === "search" ? "Your search goes to Wikipedia, arXiv and four other libraries. The sources you pick go to " : "The sources you add go to ", to,
+        m === "search" ? ["Your question goes to ", to(), " to work out what to look up, then to Wikipedia, arXiv and four other libraries. The sources you pick go to "] : "The sources you add go to ", to(),
         checks ? [" to build the lesson, and parts go to TypeSafe, a checking service OpenLemma pays for, ", checks, ". "] : " to build the lesson. ",
         // A sign-in provider (ChatGPT, on your own computer only) has no key to speak of.
         (status.providers || []).find((x) => x.id === p.id)?.sign_in
           ? "Your sources and progress are saved so you can come back. "
           : "Your sources and progress are saved so you can come back; your key isn't. ",
         h("a", { href: "faq#who-sees" }, "What's shared"),
-        p.ok ? [" · ", h("a", { href: "#/settings" }, "Change AI provider or model")] : null].filter(Boolean));
+        p.ok ? [" · ", h("a", { href: "#/settings" }, "Change AI provider or model")] : null].flat().filter(Boolean));
     }
     const form = h("form", { class: "panel bring", "aria-label": "New lesson", onsubmit: async (e) => {
       e.preventDefault();
@@ -1230,7 +1233,7 @@
     setTitle("Connect an AI provider");
     view(h("section", { class: "panel connect", "aria-labelledby": "connect-title" },
       h("h1", { id: "connect-title" }, "Connect an AI provider"),
-      h("p", { class: "lead" }, "OpenLemma reads your sources with an AI provider you choose, using your own key. Pick one and paste its key. OpenLemma carries on as soon as the key works."),
+      h("p", { class: "lead" }, "OpenLemma works out what to look up and reads your sources with an AI provider you choose, using your own key. Pick one and paste its key. OpenLemma carries on as soon as the key works."),
       keyForm(then, { compact: true }),
       h("div", { class: "actions" }, h("button", { class: "ghost", onclick: () => showMake() }, "Back"))));
   }
@@ -1836,7 +1839,7 @@
               : h("a", { class: "btn" + (p.id === options[0].id ? " primary" : ""), href: `auth/${p.id}/start` }, p.label)))
           : errorBox("Signing in isn't set up on this server yet."),
         h("ul", { class: "signin-points" },
-          point("Searching for sources is free."),
+          point("Ask about anything: OpenLemma finds sources that teach it."),
           point("Every lesson you build is saved to your library."),
           point("Lessons are built with your own AI provider key, which stays in this browser.")),
         h("p", { class: "signin-fine" }, "OpenLemma keeps your name, email address and picture, and asks Google for nothing else. ",

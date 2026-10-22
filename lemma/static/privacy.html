@@ -71,7 +71,7 @@
   <dl class="doc-table">
     <div><dt>Google Cloud</dt><dd>Hosts OpenLemma. Your account, your library, your sources' text and your build requests are stored on a Google Compute Engine server in the United States (Iowa, us-central1).</dd></div>
     <div><dt>Google</dt><dd>Handles signing in.</dd></div>
-    <div><dt>Your AI provider</dt><dd>OpenCode, OpenAI or Anthropic, as you choose, receives your sources' text when you build a lesson, under your own key and their terms.</dd></div>
+    <div><dt>Your AI provider</dt><dd>OpenCode, OpenAI or Anthropic, as you choose, receives your question and your level when you search, to work out which Wikipedia articles to look up, and your sources' text when you build a lesson, under your own key and their terms.</dd></div>
     <div><dt>TypeSafe</dt><dd>Receives, for every search and lesson build:
       <ul>
         <li>the words you search for, with each result's title and abstract (or, without an abstract, the start of its text), to rank the results by how well they would teach what you searched for;</li>
@@ -79,7 +79,7 @@
         <li>each concept the AI model drafts, with the passages of your sources it is about, to check it for errors before you see it.</li>
       </ul>
       It never receives your key or your account. OpenLemma pays for it with the server's TypeSafe key.</dd></div>
-    <div><dt>Search sources</dt><dd>Wikipedia, the Stanford Encyclopedia of Philosophy, LibreTexts, OpenAlex, Europe PMC and arXiv receive the words you search for. OpenLemma contacts result sites to check that their full text is readable before recommending them, and fetches a link you paste from its own site.</dd></div>
+    <div><dt>Search sources</dt><dd>Wikipedia, the Stanford Encyclopedia of Philosophy, LibreTexts, OpenAlex, Europe PMC and arXiv receive the words you search for, and Wikipedia also the article titles your AI provider suggests. OpenLemma contacts result sites to check that their full text is readable before recommending them, and fetches a link you paste from its own site.</dd></div>
     <div><dt>Cloudflare</dt><dd>Carries traffic to the site, and counts page views with Cloudflare Web Analytics, which uses no cookies and doesn't identify you.</dd></div>
   </dl>
   <p>Nothing is sold or shared for advertising.</p>

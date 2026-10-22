@@ -180,9 +180,29 @@ class Searches(unittest.TestCase):
     def setUp(self):
         search._cache.clear()
         sign_in()
+        self.provider = patch.object(server, "_provider", return_value=FakeProvider())
+        self.provider.start()
 
     def tearDown(self):
+        self.provider.stop()
         reset_server()
+
+    def test_search_needs_a_connected_provider(self):
+        with patch.object(server, "_provider", side_effect=server.ApiError(400, "Add your Claude key on your account page to build lessons.")), \
+                patch.object(search, "search") as live:
+            with self.assertRaises(server.ApiError) as e:
+                server.api_search({"query": "photosynthesis"})
+        self.assertEqual((e.exception.status, e.exception.message), (400, server.SEARCH_NEEDS_PROVIDER))
+        live.assert_not_called()
+
+    def test_the_level_and_provider_reach_the_search(self):
+        with patch.object(search, "search", return_value={"query": "q", "results": []}) as live:
+            self.wait_done(server.api_search({"query": "photosynthesis", "level": "advanced"})["id"])
+        query, level, provider, _ = live.call_args.args
+        self.assertEqual((query, level, provider.id), ("photosynthesis", "advanced", "fake"))
+        with self.assertRaises(server.ApiError) as e:
+            server.api_search({"query": "photosynthesis", "level": "expert"})
+        self.assertEqual(e.exception.status, 400)
 
     def wait_done(self, sid):
         for _ in range(500):
@@ -218,8 +238,11 @@ class HostedCaps(unittest.TestCase):
 
     def setUp(self):
         search._cache.clear()
+        self.provider = patch.object(server, "_provider", return_value=FakeProvider())
+        self.provider.start()
 
     def tearDown(self):
+        self.provider.stop()
         reset_server()
         server.REQUEST.user = None
         generate.JOBS.clear()
@@ -292,7 +315,7 @@ class HostedCaps(unittest.TestCase):
     def test_each_account_has_a_few_searches_running_at_once(self):
         release = threading.Event()
 
-        def slow(query, on_progress=None):
+        def slow(query, level, provider, on_progress=None):
             release.wait(5)
             return {"query": query, "results": []}
 

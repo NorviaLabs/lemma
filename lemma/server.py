@@ -272,11 +272,21 @@ SEARCHES: dict[str, dict] = {}
 SEARCHES_EACH = 3  # searches one account can have running at once
 
 
+SEARCH_NEEDS_PROVIDER = "Connect an AI provider on your account page to search. OpenLemma uses it to work out what to look up."
+
+
 def api_search(body):
     owner = _owner()
+    level = _level(body)
+    # The learner's provider names what to look up, so a search needs one, as a build does. It is read here
+    # because the search runs in its own thread, where this request's headers aren't.
+    try:
+        provider = _provider()
+    except ApiError as e:
+        raise ApiError(e.status, SEARCH_NEEDS_PROVIDER if e.status == 400 else e.message) from None
     query = str(body.get("query", ""))
     try:
-        if hit := search.cached(query):
+        if hit := search.cached(query, level):
             return {"done": True, "result": hit}
         query = search.clean(query)
         if not jev.available():
@@ -299,7 +309,7 @@ def api_search(body):
 
     def run():
         try:
-            record["result"] = search.search(query, progress)
+            record["result"] = search.search(query, level, provider, progress)
         except search.SearchError as e:
             record["error"] = str(e)
         except Exception as e:  # keep the server alive and tell the learner honestly

@@ -8,6 +8,10 @@ return entries and textbook chapters that explain a concept in depth. OpenAlex r
 papers ranked by relevance and citations, Europe PMC returns biomedical papers whose full text it
 serves openly, and arXiv returns preprints.
 
+Before the services are asked, the learner's own AI provider turns the question and their level into a few
+Wikipedia article titles (see terms()), so "Can you know something just by luck?" finds the Gettier problem.
+Those articles join the results as prerequisites; only the question and level go to the provider.
+
 A search for a concept leads with the overview and explanations; a search for a paper leads with papers.
 Jev judges how well each result would teach what was searched for, which orders each group (the title match
 breaking ties) and decides which results are recommended (see judge()). Without Jev, a search doesn't run.
@@ -28,8 +32,9 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from . import ingest, jev, logs
-from .ingest import USER_AGENT
+from . import __version__, ingest, jev, levels, logs
+from .generate import extract_json
+from .llm import ProviderError
 
 TIMEOUT = 12
 MAX_QUERY = 200
@@ -49,11 +54,13 @@ class SearchError(Exception):
     pass
 
 
+# Wikimedia asks API clients to say who they are and how to reach them.
+API_AGENT = f"OpenLemma/{__version__} (https://openlemma.org; https://github.com/NorviaLabs/lemma)"
 MAX_WAIT = 15  # seconds we'll wait once when a service asks us to slow down
 
 
 def _get(url: str, retry: bool = True) -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "application/json, application/atom+xml;q=0.9, text/html;q=0.8"})
+    req = urllib.request.Request(url, headers={"User-Agent": API_AGENT, "Accept": "application/json, application/atom+xml;q=0.9, text/html;q=0.8"})
     try:
         with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
             return resp.read(4 * 1024 * 1024)
@@ -283,10 +290,15 @@ def judge(query: str, results: list[dict], openings: dict) -> dict:
     return judged
 
 
+QUESTION = re.compile(r"^\s*(?:how|why|what|when|where|which|who|can|could|do|does|did|is|are|was|were|should|would|will)\b|\?\s*$", re.I)
+
+
 def query_kind(query: str) -> str:
     """"paper" when the search looks for a particular paper (a DOI, an arXiv id, a year, "et al", a quoted or
-    long title), otherwise "concept": an idea to learn about."""
-    return "paper" if PAPER_QUERY.search(query) or len(query.split()) >= 8 else "concept"
+    long title), otherwise "concept": an idea to learn about. A question, however long, is about an idea."""
+    if PAPER_QUERY.search(query):
+        return "paper"
+    return "concept" if QUESTION.search(query) or len(query.split()) < 8 else "paper"
 
 
 def arxiv(query: str, n: int = 3) -> list[dict]:
@@ -319,18 +331,89 @@ def _arxiv_results(root) -> list[dict]:
     return out
 
 
+WIKI_API = "https://en.wikipedia.org/w/api.php?"
+
+
+def _article(title: str, summary: str) -> dict:
+    return {
+        "kind": "overview", "source": "Wikipedia", "title": title, "authors": "Wikipedia contributors", "year": None,
+        "venue": "Encyclopedia article", "cited_by": None,
+        "url": "https://en.wikipedia.org/wiki/" + urllib.parse.quote(title.replace(" ", "_")),
+        "summary": _plain(summary),
+    }
+
+
 def wikipedia(query: str) -> list[dict]:
     params = {"action": "query", "list": "search", "srsearch": query, "srlimit": "1", "format": "json", "utf8": "1"}
-    data = json.loads(_get("https://en.wikipedia.org/w/api.php?" + urllib.parse.urlencode(params)))
+    data = json.loads(_get(WIKI_API + urllib.parse.urlencode(params)))
+    return [_article(r.get("title", ""), r.get("snippet", "")) for r in (data.get("query") or {}).get("search") or []]
+
+
+TERMS_TIMEOUT = 45  # seconds for the learner's provider to name what to look up
+TERMS = (5, 10)  # how many article titles it must name
+TERMS_SYSTEM = "You turn a learner's question into encyclopedia search terms. Reply with JSON only."
+TERMS_TASK = """\
+The document above is a learner's question. Their level: {level}
+
+List {low} to {high} subjects a lesson answering this question would teach from, for this learner: the central idea \
+first, then what this learner would need to follow it. {steer} Read the question for what it is really asking, in the \
+discipline it belongs to, even when it uses everyday words. Name each subject as the exact title of an English \
+Wikipedia article.
+
+Reply with this JSON: {{"terms": ["Article title", ...]}}"""
+TERMS_STEER = {  # how the level changes what is worth looking up
+    "beginner": "Include the foundations a newcomer needs before the central idea makes sense.",
+    "intermediate": "Assume the field's basics; include the specific ideas that connect them to the central idea.",
+    "advanced": "Skip the basics entirely; name the specific technical sub-topics, mechanisms and methods involved.",
+}
+
+
+def terms(provider, query: str, level: str) -> list[str]:
+    """The Wikipedia article titles the learner's provider names for this question and level. Raises SearchError."""
+    cancelled = threading.Event()
+    timer = threading.Timer(TERMS_TIMEOUT, cancelled.set)
+    timer.start()
+    task = TERMS_TASK.format(level=levels.describe(level), low=TERMS[0], high=TERMS[1], steer=TERMS_STEER[level])
+    try:
+        reply = provider.conversation(TERMS_SYSTEM, f"<question>\n{query}\n</question>").send(task, cancelled)
+    except ProviderError as e:
+        if cancelled.is_set():
+            raise SearchError(f"{provider.name} took too long to work out what to look up. Try again in a moment.") from None
+        raise SearchError(str(e)) from None
+    finally:
+        timer.cancel()
+    try:
+        names = extract_json(reply.text)["terms"]
+        names = list(dict.fromkeys(n.strip() for n in names if isinstance(n, str) and n.strip()))
+    except (ValueError, KeyError, TypeError):
+        names = []
+    if not TERMS[0] <= len(names) <= TERMS[1]:
+        raise SearchError(f"{provider.name} didn't say what to look up. Try again, or rephrase the question.")
+    return names
+
+
+def resolve(names: list[str]) -> list[dict]:
+    """The Wikipedia article each name lands on, looked up by title in one request (following redirects); only a
+    name that isn't an article, or is a disambiguation page, is searched for instead."""
+    params = {"action": "query", "titles": "|".join(names), "redirects": "1", "prop": "extracts|pageprops",
+              "ppprop": "disambiguation", "exintro": "1", "explaintext": "1", "exlimit": "max", "exchars": "320",
+              "format": "json", "formatversion": "2", "utf8": "1"}
+    data = (json.loads(_get(WIKI_API + urllib.parse.urlencode(params))).get("query")) or {}
+    renamed = {x["from"]: x["to"] for x in (data.get("normalized") or []) + (data.get("redirects") or [])}
+    pages = {p["title"]: p for p in data.get("pages") or [] if not p.get("missing") and "disambiguation" not in (p.get("pageprops") or {})}
     out = []
-    for r in (data.get("query") or {}).get("search") or []:
-        title = r.get("title", "")
-        out.append({
-            "kind": "overview", "source": "Wikipedia", "title": title, "authors": "Wikipedia contributors", "year": None,
-            "venue": "Encyclopedia article", "cited_by": None,
-            "url": "https://en.wikipedia.org/wiki/" + urllib.parse.quote(title.replace(" ", "_")),
-            "summary": _plain(r.get("snippet", "")),
-        })
+    for name in names:
+        title = renamed.get(name, name)
+        title = renamed.get(title, title)  # a normalized title can itself redirect
+        if title in pages:
+            article, how = _article(title, pages[title].get("extract", "")), "exact"
+        else:
+            found = wikipedia(name)
+            if not found:
+                continue
+            article, how = found[0], "search"
+        if _key(article["title"]) not in {_key(a["title"]) for a in out}:
+            out.append(dict(article, prerequisite=True, term=name, resolved=how))
     return out
 
 
@@ -351,28 +434,47 @@ def clean(query: str) -> str:
     return query
 
 
-def cached(query: str) -> dict | None:
-    """A recent result for this search, so it can be shown at once."""
+def _cache_key(query: str, level: str) -> str:
+    return f"{level}|{clean(query).lower()}"
+
+
+def cached(query: str, level: str = levels.DEFAULT) -> dict | None:
+    """A recent result for this search at this level, so it can be shown at once."""
     with _cache_lock:
-        hit = _cache.get(clean(query).lower())
+        hit = _cache.get(_cache_key(query, level))
         return json.loads(json.dumps(hit)) if hit and time.time() - hit["checked_at"] < CACHE_TTL else None
 
 
-def search(query: str, on_progress=None) -> dict:
-    """Returns {"results": [...], "unavailable": [source names that didn't answer]}.
+def search(query: str, level: str = levels.DEFAULT, provider=None, on_progress=None) -> dict:
+    """Returns {"results": [...], "unavailable": [source names that didn't answer], "plan": what was looked up}.
 
-    ``on_progress`` is called with a fresh snapshot each time a service answers or a result is checked:
-    {"services": {name: "searching" | "done" | "failed"}, "found": {name: count}, "to_check": n,
-    "checked": n, "readable": n}."""
+    ``provider`` is the learner's, which names what to look up; a search for an identifier (a DOI or an arXiv id)
+    needs none. ``on_progress`` is called with a fresh snapshot each time a step moves on:
+    {"planning": "active" | "done", "services": {name: "searching" | "done" | "failed"}, "found": {name: count},
+    "to_check": n, "checked": n, "readable": n}."""
     query = clean(query)
-    key = query.lower()
-    if hit := cached(query):
+    key = _cache_key(query, level)
+    if hit := cached(query, level):
         return hit
     try:
         jev.require()  # before any service is contacted: results are only shown once Jev has judged them
     except jev.JevError as e:
         raise SearchError(str(e)) from None
-    result = _search(query, on_progress)
+    plan = {"level": level, "terms": [], "articles": []}
+    extra, wiki_failed = [], False
+    if provider is not None and not (DOI.search(query) or ARXIV_ID.search(query)):
+        if on_progress:
+            on_progress({"planning": "active", "services": {}, "found": {}, "to_check": 0, "checked": 0, "readable": 0})
+        plan["terms"] = terms(provider, query, level)
+        try:
+            extra = resolve(plan["terms"])
+        except (urllib.error.URLError, TimeoutError, OSError, ValueError):
+            wiki_failed = True  # the search still runs on the question, and isn't cached
+        plan["articles"] = [{"title": a["title"], "term": a["term"], "how": a["resolved"]} for a in extra]
+    result = _search(query, on_progress, extra)
+    result["plan"] = plan
+    if wiki_failed:
+        result["unavailable"] = sorted(set(result["unavailable"]) | {"Wikipedia"})
     if not result["unavailable"]:
         with _cache_lock:
             _cache[key] = result
@@ -381,20 +483,21 @@ def search(query: str, on_progress=None) -> dict:
     return json.loads(json.dumps(result))
 
 
-RECOMMEND = {  # how many of each kind to suggest as a starting set
-    "concept": {"overview": 1, "explainer": 1, "paper": 1},
-    "paper": {"paper": 2, "overview": 1},
+RECOMMEND = {  # how many of each kind to suggest as a starting set; prerequisites are the articles terms() named
+    "concept": {"overview": 1, "prerequisite": 3, "explainer": 1, "paper": 1},
+    "paper": {"paper": 2, "overview": 1, "prerequisite": 3},
 }
-REASONS = {"overview": "Accessible overview", "explainer": "Explains the idea in depth", "paper": "Relevant paper for deeper evidence"}
+REASONS = {"overview": "Accessible overview", "prerequisite": "Explains something the idea builds on",
+           "explainer": "Explains the idea in depth", "paper": "Relevant paper for deeper evidence"}
 
 
-def _search(query: str, on_progress=None) -> dict:
+def _search(query: str, on_progress=None, extra=()) -> dict:
     calls = {"Wikipedia": wikipedia, SEP: sep, "LibreTexts": libretexts, "OpenAlex": openalex, "Europe PMC": europepmc, "arXiv": arxiv}
     if DOI.search(query):  # an identifier names one work, so only the service that can look it up is asked
         calls = {"OpenAlex": openalex}
     elif ARXIV_ID.search(query):
         calls = {"arXiv": arxiv}
-    state = {"services": {name: "searching" for name in calls}, "found": {}, "to_check": 0, "checked": 0, "readable": 0}
+    state = {"planning": "done", "services": {name: "searching" for name in calls}, "found": {}, "to_check": 0, "checked": 0, "readable": 0}
     lock = threading.Lock()
 
     def report(**changes):
@@ -418,6 +521,8 @@ def _search(query: str, on_progress=None) -> dict:
             report(services={**state["services"], name: "failed" if name in unavailable else "done"},
                    found={**state["found"], name: len(found[name])})
     unavailable = [name for name in calls if name in unavailable]  # in a fixed order, whatever answered first
+    if "Wikipedia" in calls:  # after Wikipedia's own answer, so an article the question itself names isn't a prerequisite
+        found["Wikipedia"] = found["Wikipedia"] + list(extra)
     # One entry per work. A copy found by another service adds its links, Europe PMC's open full text first.
     results, seen = [], {}
     for name in calls:
@@ -482,8 +587,9 @@ def _search(query: str, on_progress=None) -> dict:
     for result in results:
         relevance, role = judged.get(id(result), (RECOMMEND_AT, ""))
         suits = relevance >= RECOMMEND_AT and role != "off_topic"  # Jev's judgement
-        result["recommended"] = bool(result["available"] and suits and left.get(result["kind"]))
+        slot = "prerequisite" if result.get("prerequisite") else result["kind"]
+        result["recommended"] = bool(result["available"] and suits and left.get(slot))
         if result["recommended"]:
-            left[result["kind"]] -= 1
-            result["recommendation"] = REASONS[result["kind"]]
+            left[slot] -= 1
+            result["recommendation"] = REASONS[slot]
     return {"query": query, "kind": mode, "results": results, "unavailable": unavailable, "checked_at": time.time()}

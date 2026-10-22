@@ -698,6 +698,31 @@ ARXIV = b"""<feed xmlns="http://www.w3.org/2005/Atom"><entry><id>http://arxiv.or
 WIKI = {"query": {"search": [{"title": "Regression toward the mean", "snippet": "In <span>statistics</span> &amp; more"}]}}
 
 
+class TermsProvider(Provider):
+    """The learner's provider as search uses it: asked once for article titles."""
+    id, name = "fake", "Fake"
+
+    def __init__(self, terms=(), error=None, wait=False):
+        self.terms, self.error, self.wait, self.asked = list(terms), error, wait, []
+
+    def available(self):
+        return True, ""
+
+    def conversation(self, system, document):
+        provider = self
+
+        class Conv:
+            def send(self, text, cancelled=None, on_progress=None):
+                provider.asked.append((system, document, text))
+                if provider.wait:
+                    cancelled.wait(5)
+                    raise llm.ProviderError("Cancelled.")
+                if provider.error:
+                    raise provider.error
+                return Reply(json.dumps({"terms": provider.terms}), "end_turn")
+        return Conv()
+
+
 class SearchTests(unittest.TestCase):
     def setUp(self):
         from unittest.mock import patch
@@ -720,6 +745,8 @@ class SearchTests(unittest.TestCase):
                 return b'<feed xmlns="http://www.w3.org/2005/Atom"></feed>'
             if "plato.stanford.edu" in url:
                 return b"<html></html>"
+            if "titles=" in url:
+                return json.dumps(self.titles).encode()
             return json.dumps(WIKI).encode()
 
         search._get = fake
@@ -792,6 +819,87 @@ class SearchTests(unittest.TestCase):
             with self.assertRaisesRegex(search.SearchError, "TYPESAFE_API_KEY"):
                 search.search("a topic nobody has searched for")
         run.assert_not_called()
+
+    # What the learner's provider names, and the Wikipedia articles those names land on.
+    def pages(self, *titles, redirects=(), disambiguation=(), missing=()):
+        self.titles = {"query": {
+            "redirects": [{"from": a, "to": b} for a, b in redirects],
+            "pages": [{"title": t, "extract": f"About {t.lower()}."} for t in titles]
+                     + [{"title": t, "pageprops": {"disambiguation": ""}} for t in disambiguation]
+                     + [{"title": t, "missing": True} for t in missing]}}
+
+    def test_the_learners_provider_names_what_to_look_up(self):
+        named = ["Regression toward the mean", "Mean", "Correlation", "Heredity", "Francis Galton"]
+        self.pages("Regression toward the mean", "Arithmetic mean", "Correlation", redirects=[("Mean", "Arithmetic mean")],
+                   disambiguation=["Heredity"], missing=["Francis Galton"])
+        provider = TermsProvider(named)
+        r = search.search("Why are tall parents' children usually shorter than them?", "advanced", provider)
+        system, document, task = provider.asked[0]
+        self.assertIn("Why are tall parents' children usually shorter than them?", document)
+        self.assertIn("Advanced: has studied or works in the field", task)
+        self.assertIn(search.TERMS_STEER["advanced"], task)
+        self.assertEqual(r["plan"]["terms"], named)
+        # Titles are looked up in one request; a disambiguation page or a missing title is searched for instead.
+        self.assertEqual(sum("titles=" in u for u in self.urls), 1)
+        self.assertEqual([(a["title"], a["how"]) for a in r["plan"]["articles"]],
+                         [("Regression toward the mean", "exact"), ("Arithmetic mean", "exact"), ("Correlation", "exact")])
+        wiki = [x for x in r["results"] if x["source"] == "Wikipedia"]
+        # The article the question itself finds stays the overview; the others are prerequisites, recommended.
+        self.assertEqual([(x["title"], bool(x.get("prerequisite"))) for x in wiki],
+                         [("Regression toward the mean", False), ("Arithmetic mean", True), ("Correlation", True)])
+        self.assertTrue(all(x["recommended"] for x in wiki))
+        self.assertEqual(wiki[1]["recommendation"], "Explains something the idea builds on")
+        self.assertEqual(wiki[1]["summary"], "About arithmetic mean.")
+
+    def test_a_question_is_about_an_idea_however_long(self):
+        self.assertEqual(search.query_kind("Why do people vote against their own economic interests?"), "concept")
+        self.assertEqual(search.query_kind("Can you know something just by luck"), "concept")
+        self.assertEqual(search.query_kind("The nature of the firm and the theory of transaction costs"), "paper")
+        self.assertEqual(search.query_kind("Why did Galton 1886 find regression?"), "paper")  # a year names a paper
+
+    def test_at_most_three_prerequisites_are_recommended(self):
+        named = ["Mean", "Variance", "Correlation", "Heredity", "Normal distribution"]
+        self.pages(*named)
+        r = search.search("regression to the mean", "beginner", TermsProvider(named))
+        prerequisites = [x for x in r["results"] if x.get("prerequisite")]
+        self.assertEqual(len(prerequisites), 5)
+        self.assertEqual(sum(x["recommended"] for x in prerequisites), 3)
+
+    def test_each_level_is_searched_and_remembered_on_its_own(self):
+        self.pages("Mean", "Variance", "Correlation", "Heredity", "Normal distribution")
+        provider = TermsProvider(["Mean", "Variance", "Correlation", "Heredity", "Normal distribution"])
+        search.search("regression to the mean", "beginner", provider)
+        search.search("Regression to the mean", "beginner", provider)
+        self.assertEqual(len(provider.asked), 1)  # answered from the cache, with no second call
+        search.search("regression to the mean", "advanced", provider)
+        self.assertEqual(len(provider.asked), 2)
+        self.assertIsNotNone(search.cached("regression to the mean", "advanced"))
+
+    def test_a_search_for_an_identifier_names_nothing(self):
+        provider = TermsProvider(["Anything"] * 5)
+        r = search.search("doi 10.1093/ije/dyh299", "beginner", provider)
+        self.assertEqual((provider.asked, r["plan"]["terms"]), ([], []))
+
+    def test_a_provider_that_names_nothing_useful_or_fails_stops_the_search(self):
+        with self.assertRaisesRegex(search.SearchError, "^Fake didn't say what to look up"):
+            search.search("regression to the mean", "beginner", TermsProvider(["Mean", "Variance"]))
+        with self.assertRaisesRegex(search.SearchError, "^Fake says you've hit a usage limit.$"):
+            search.search("regression to the mean", "beginner", TermsProvider(error=llm.ProviderError("Fake says you've hit a usage limit.")))
+        slow = TermsProvider(["Mean"] * 5, wait=True)
+        with patch.object(search, "TERMS_TIMEOUT", 0.05):
+            with self.assertRaisesRegex(search.SearchError, "^Fake took too long to work out what to look up"):
+                search.search("regression to the mean", "beginner", slow)
+
+    def test_when_wikipedia_cant_look_the_titles_up_the_search_still_runs_uncached(self):
+        def failing(url, retry=True):
+            if "titles=" in url:
+                raise TimeoutError()
+            return self.orig_fake(url)
+        self.orig_fake, search._get = search._get, failing
+        r = search.search("regression to the mean", "beginner", TermsProvider(["Mean", "Variance", "Correlation", "Heredity", "Galton"]))
+        self.assertIn("Wikipedia", r["unavailable"])
+        self.assertEqual(r["results"][0]["title"], "Regression toward the mean")
+        self.assertIsNone(search.cached("regression to the mean", "beginner"))
 
     def test_a_service_that_fails_is_reported_not_fatal(self):
         def failing(url, retry=True):
@@ -1628,7 +1736,8 @@ class HostedServerTests(unittest.TestCase):
             self.assertTrue(metrics.take(bob["id"], "search"))
             self.assertFalse(metrics.take(bob["id"], "search"))
             self.assertTrue(metrics.take(ada["id"], "search"))
-            s, raw, _ = req("POST", "/api/search", {"query": "loss aversion"}, tb)
+            with patch.object(server, "_provider", return_value=FakeProvider()):
+                s, raw, _ = req("POST", "/api/search", {"query": "loss aversion"}, tb)
             self.assertEqual(s, 429)
             self.assertIn("today's 1 searches", json.loads(raw)["error"])
 
