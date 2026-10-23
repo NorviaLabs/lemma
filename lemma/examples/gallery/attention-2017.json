@@ -27,9 +27,7 @@
    "Recurrent neural network",
    "Seq2seq",
    "BLEU",
-   "Softmax function",
    "Matrix multiplication",
-   "Dot product",
    "Word embedding",
    "Gradient descent"
   ]
@@ -525,38 +523,42 @@
    "idea": "Softmax turns any set of scores into positive weights that add up to 1, giving the highest score the largest share and exaggerating gaps between scores.",
    "role": "prerequisite",
    "predict": {
-    "question": "Start from cat = 2, mat = 1, left = 0. Now add 10 to every score, so they become 12, 11 and 10. What happens to the three shares?",
+    "question": "Scores of 3, 2 and 1 give 'cat' about 67% of the shares. Now every score goes up by 10, to 13, 12 and 11. What happens to the share for 'cat'?",
     "options": [
-     "They stay exactly the same",
-     "Cat's share grows, because bigger scores get exaggerated more",
-     "The shares even out, because a +10 swamps the small differences",
-     "The shares add up to more than 100%"
+     "It stays at about 67%",
+     "It climbs close to 100%, because 13 is a huge score",
+     "It falls toward 33%, because 13, 12 and 11 are close to each other in proportion",
+     "It can't be worked out without running the network"
     ],
     "answer": 0,
     "why": [
-     "Right: shares depend only on the gaps between scores. Adding 10 to everyone multiplies every word's e^score by the same factor (e¹⁰), and that factor cancels when each is divided by the total.",
-     "It is tempting to think large scores are favoured. What softmax exaggerates is the gaps, and the gaps (1 and 1) have not changed, so cat keeps the same share.",
-     "This would hold if shares were scores divided by their sum, because 12 : 11 : 10 is nearly even. Softmax works on the gaps, and those are unchanged, so the split stays about 67 / 24 / 9.",
-     "Dividing by the total always makes the shares add to exactly 100%, however large the scores are."
+     "Right: adding 10 to every score multiplies every e-to-the-score by the same factor, so the ratios and the shares do not change. Only the gaps between scores matter, and the gaps are still 1 and 1.",
+     "Tempting if you think big scores win on their own, but every score rose by the same amount. Share depends on how far a score sits above the others, and that distance has not changed.",
+     "That would be true if shares were the scores divided by their total (13/36 ≈ 36%). Softmax works on gaps, not proportions: each point of lead multiplies the advantage by about 2.7, whatever the starting level.",
+     "The rule needs only the three scores, so you can work it out by hand. The shortcut: equal shifts leave the gaps alone, so the shares stay the same."
     ]
    },
    "terms": [
     {
-     "term": "softmax",
-     "means": "The rule that turns a list of scores into positive shares that add up to 1 (100%): raise e to each score, then divide each result by their total"
+     "term": "exponential",
+     "means": "The number e ≈ 2.72 raised to a power (eˣ). It is always positive and gets about 2.7 times bigger for each +1 in the power."
     },
     {
-     "term": "exponential",
-     "means": "Raising the number e ≈ 2.718 to a power (written e^x). It is always positive, and each extra point multiplies the result by about 2.7"
+     "term": "softmax",
+     "means": "The rule that turns a list of scores into shares: take e to each score, then divide each result by their total."
+    },
+    {
+     "term": "weights",
+     "means": "The shares softmax produces. Each is positive and together they add up to 1 (100%)."
     }
    ],
    "model": {
-    "title": "Three match scores become three shares of attention",
-    "note": "Teaching model: one word ('it' in 'The cat left the mat because it was tired') has hand-set match scores for just three other words. In the Transformer these scores come from learned dot products, and softmax may run over many more entries. The rule that turns scores into shares is exact, but the scores are illustrative, not the paper's data.",
+    "title": "Turning three match scores into shares",
+    "note": "Teaching model: one word, 'it', in 'The cat sat because it was tired', scored against just three other words. The scores are made up and set by hand. In a real Transformer the scores come from dot products the network computes, and each word is scored against every word in the sentence. The share rule is the standard softmax, the same function the paper uses. Numbers are illustrative, not the paper's data.",
     "controls": [
      {
-      "id": "s1",
-      "label": "Match score: cat",
+      "id": "a",
+      "label": "Score: cat",
       "kind": "slider",
       "min": -4,
       "max": 4,
@@ -566,8 +568,8 @@
       "color": 0
      },
      {
-      "id": "s2",
-      "label": "Match score: mat",
+      "id": "b",
+      "label": "Score: sat",
       "kind": "slider",
       "min": -4,
       "max": 4,
@@ -577,8 +579,8 @@
       "color": 1
      },
      {
-      "id": "s3",
-      "label": "Match score: left",
+      "id": "c",
+      "label": "Score: tired",
       "kind": "slider",
       "min": -4,
       "max": 4,
@@ -590,27 +592,27 @@
     ],
     "outputs": [
      {
-      "id": "w1",
-      "label": "Share for cat",
-      "expr": "exp(s1) / (exp(s1) + exp(s2) + exp(s3))",
+      "id": "wa",
+      "label": "Share: cat",
+      "expr": "exp(a) / (exp(a) + exp(b) + exp(c))",
       "unit": "%",
       "scale": 100,
       "decimals": 1,
       "color": 0
      },
      {
-      "id": "w2",
-      "label": "Share for mat",
-      "expr": "exp(s2) / (exp(s1) + exp(s2) + exp(s3))",
+      "id": "wb",
+      "label": "Share: sat",
+      "expr": "exp(b) / (exp(a) + exp(b) + exp(c))",
       "unit": "%",
       "scale": 100,
       "decimals": 1,
       "color": 1
      },
      {
-      "id": "w3",
-      "label": "Share for left",
-      "expr": "exp(s3) / (exp(s1) + exp(s2) + exp(s3))",
+      "id": "wc",
+      "label": "Share: tired",
+      "expr": "exp(c) / (exp(a) + exp(b) + exp(c))",
       "unit": "%",
       "scale": 100,
       "decimals": 1,
@@ -619,19 +621,11 @@
      {
       "id": "total",
       "label": "All shares together",
-      "expr": "w1 + w2 + w3",
+      "expr": "wa + wb + wc",
       "unit": "%",
       "scale": 100,
       "decimals": 0,
       "color": 7
-     },
-     {
-      "id": "ratio12",
-      "label": "Cat's share ÷ mat's share",
-      "expr": "w1 / w2",
-      "unit": "×",
-      "decimals": 1,
-      "color": 0
      }
     ],
     "visual": {
@@ -640,24 +634,24 @@
       {
        "id": "bar_cat",
        "label": "cat",
-       "value": "w1 * 100",
+       "value": "wa * 100",
        "color": 0
       },
       {
-       "id": "bar_mat",
-       "label": "mat",
-       "value": "w2 * 100",
+       "id": "bar_sat",
+       "label": "sat",
+       "value": "wb * 100",
        "color": 1
       },
       {
-       "id": "bar_left",
-       "label": "left",
-       "value": "w3 * 100",
+       "id": "bar_tired",
+       "label": "tired",
+       "value": "wc * 100",
        "color": 2
       },
       {
        "id": "bar_total",
-       "label": "Total",
+       "label": "All three together",
        "value": "total * 100",
        "color": 7
       }
@@ -671,191 +665,186 @@
    "animation": {
     "steps": [
      {
-      "say": "Take the sentence 'The cat left the mat because it was tired.' The word 'it' looks back and gives three words a match score, just like the scores from the last lesson.",
-      "focus": [
-       "s1",
-       "s2",
-       "s3"
-      ],
-      "ms": 4200
-     },
-     {
-      "say": "Each slider is one word's match score. Higher means a better match. A score can be any number, even below zero.",
-      "focus": "s1",
-      "ms": 3600
-     },
-     {
-      "say": "Each coloured bar is the share of 'it's attention that the word gets, out of 100%.",
+      "say": "Take the word 'it' in 'The cat sat because it was tired'. Each coloured bar is the share of its attention that 'it' gives to 'cat', 'sat' or 'tired'.",
       "focus": [
        "bar_cat",
-       "bar_mat",
-       "bar_left"
+       "bar_sat",
+       "bar_tired"
       ],
+      "ms": 4000
+     },
+     {
+      "say": "These three sliders are raw match scores, like the dot products you just met. A score can be any number, even a negative one.",
+      "focus": [
+       "a",
+       "b",
+       "c"
+      ],
+      "ms": 3800
+     },
+     {
+      "say": "Raise the score for 'tired' and watch its bar grow while the other two shrink.",
+      "set": {
+       "c": 2
+      },
+      "focus": "bar_tired",
       "ms": 3600
      },
      {
-      "say": "The grey bar adds the three shares together.",
+      "say": "The grey bar adds up all three shares. Keep an eye on it.",
       "focus": "bar_total",
-      "ms": 2600
+      "ms": 3000
      },
      {
-      "say": "Watch: give 'mat' a higher score and see how the bars move.",
+      "say": "Back to the starting scores. Now let's see the rule at work.",
       "set": {
-       "s2": 2.5
+       "c": 0
       },
-      "focus": "bar_mat",
-      "ms": 3800
+      "focus": "bar_cat",
+      "ms": 2400
      }
     ]
    },
    "explore": {
-    "prompt": "Now steer the shares yourself. The bars respond only to the three scores, so think about the gaps between scores rather than the scores alone.",
+    "prompt": "Now steer the shares yourself. Think about what the rule will do before you move a slider, then check.",
     "goals": [
      {
-      "text": "Make all three words get an equal share of the attention",
-      "when": "abs(w1 - w3) < 0.01 && abs(w2 - w3) < 0.01",
+      "text": "Make 'tired' get the biggest share, while 'cat' and 'sat' get exactly equal shares.",
+      "when": "wc > wa && wc > wb && abs(wa - wb) < 0.005",
       "solution": {
-       "s1": 0,
-       "s2": 0
+       "a": 0,
+       "b": 0,
+       "c": 1
       },
       "hints": [
-       "When would two words end up with the same share?",
-       "Shares depend on the gaps between scores, not on how big the scores are.",
-       "You need no gap at all between any two words. Any common score will do, and one word already has a score you could match."
+       "Start with 'cat' and 'sat': when do two words get the same share?",
+       "Shares come only from the scores, so two equal scores always get two equal shares.",
+       "Make the 'cat' and 'sat' scores match each other, then lift 'tired' above both of them."
       ]
      },
      {
-      "text": "Split the attention evenly between cat and mat, while 'left' gets less than 5%",
-      "when": "abs(w1 - w2) < 0.01 && w3 < 0.05",
+      "text": "Without touching the score for 'cat', give 'cat' at least 90% of the shares.",
+      "when": "abs(a - 2) < 0.01 && wa >= 0.9",
       "solution": {
-       "s2": 2,
-       "s3": -1
+       "b": -1,
+       "c": -1
       },
       "hints": [
-       "There are two jobs: make cat and mat tie, then make 'left' nearly vanish.",
-       "Cat and mat tie only when their scores are equal. Then lower 'left' until it sits far enough below the pair.",
-       "A gap of 2 between 'left' and the tied pair still leaves 'left' a little over 5%. Open the gap a bit further."
+       "The shares always add to 100%. What happens to 'cat' if the others shrink?",
+       "Lower the other two scores to open a wider gap below 'cat'.",
+       "Lowering both others works faster than lowering one. Each point of gap multiplies 'cat's lead by about 2.7, so a gap of a few points is enough."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. Softmax only cares about gaps. Adding the same amount to every score multiplies every e^score by the same factor. That factor cancels when each is divided by the total, so the shares stay about 67%, 24% and 9%.",
-     "incorrect": "You may have pictured shares as scores divided by their sum, or as favouring big numbers in themselves. Softmax raises e to each score and then divides by the total, so only the differences between scores matter. Shifting every score by 10 leaves the gaps unchanged, so the shares stay the same."
+     "correct": "Yes. Softmax only sees the gaps between scores. Adding the same amount to every score multiplies every e-to-the-score by the same factor, and that factor cancels when you divide by the total.",
+     "incorrect": "You may have treated the shares as the scores divided by their total, or assumed big numbers win by themselves. Softmax raises e to each score, so a shift of +10 multiplies all three results by the same amount. The ratios, and so the shares, do not change. Only the gaps count."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start here: cat scores 2, mat 1, left 0. The shares come out at about 67%, 24% and 9%.",
+       "say": "Start with all three scores equal at 0. Each word gets exactly a third, 33.3%. Equal scores give equal shares.",
        "set": {
-        "s1": 2,
-        "s2": 1,
-        "s3": 0
+        "a": 0,
+        "b": 0,
+        "c": 0
+       },
+       "focus": [
+        "wa",
+        "wb",
+        "wc"
+       ],
+       "ms": 3600
+      },
+      {
+       "say": "Raise 'cat' by just 1. Its share jumps to about 58%, and 'sat' and 'tired' fall to about 21% each. The grey total stays at 100%: 'cat' gained exactly what the others lost.",
+       "set": {
+        "a": 1
+       },
+       "focus": [
+        "wa",
+        "total"
+       ],
+       "ms": 4400
+      },
+      {
+       "say": "First half of the rule: each score becomes e to that power, the exponential. It is always positive, and each +1 multiplies it by about 2.7. Drop 'tired' to −4: its share shrinks to about 0.5%, never zero.",
+       "set": {
+        "c": -4
+       },
+       "focus": "wc",
+       "ms": 5200
+      },
+      {
+       "say": "The second half: divide each exponential by the total of all three, so the results add up to 1. These two steps together are called softmax, and the shares it produces are called weights.",
+       "focus": "total",
+       "ms": 4400
+      },
+      {
+       "say": "Now try scores of 4, 2 and 0. On a plain ruler 'cat' is only twice 'sat'. Softmax gives 'cat' about 87%, 'sat' 12% and 'tired' under 2%. A lead of 2 points becomes a share about 7 times bigger: softmax exaggerates gaps.",
+       "set": {
+        "a": 4,
+        "b": 2,
+        "c": 0
        },
        "focus": [
         "bar_cat",
-        "bar_mat",
-        "bar_left"
+        "bar_sat"
        ],
-       "ms": 4200
+       "ms": 5600
       },
       {
-       "say": "However you set the scores, the total is always 100%. The rule that turns scores into shares like this is called softmax.",
-       "focus": "bar_total",
-       "ms": 4200
-      },
-      {
-       "say": "Push 'left' well below zero. Its share shrinks towards 0 but never goes negative, and the share it loses goes to the other two.",
+       "say": "Let 'sat' tie with 'cat' at 4. They split almost everything, about 49.5% each. Softmax is soft: it favours the leader strongly but never forces a single winner.",
        "set": {
-        "s3": -3
-       },
-       "focus": "bar_left",
-       "ms": 4500
-      },
-      {
-       "say": "How does it work? Softmax raises e, about 2.718, to the power of each score. This is called the exponential, and it is always positive. Then softmax divides each result by their total, so the shares add up to 1.",
-       "focus": "w1",
-       "ms": 5500
-      },
-      {
-       "say": "Compare cat and mat. Their scores differ by only 1, yet cat gets about 2.7 times mat's share.",
-       "focus": "ratio12",
-       "ms": 4200
-      },
-      {
-       "say": "Widen the gap to 3 by lowering mat. Now cat gets about 20 times as much. Each extra point of gap multiplies the advantage by 2.7, so softmax exaggerates gaps.",
-       "set": {
-        "s2": -1
+        "b": 4
        },
        "focus": [
-        "ratio12",
-        "bar_cat"
+        "bar_cat",
+        "bar_sat"
        ],
-       "ms": 5500
+       "ms": 4600
       },
       {
-       "say": "Finally, let mat jump past cat. The top score always takes the biggest share. Mat now gets about 88%, and cat falls to about 12%, even though cat's own score never moved.",
+       "say": "At 4, 2, 0, 'it' gives 87% to 'cat'. The Transformer used this rule to let every word weigh all others at once, with no word-by-word reading, and beat earlier translators after 12 hours of training on one 8-GPU machine.",
        "set": {
-        "s2": 4
+        "b": 2
        },
-       "focus": [
-        "bar_mat",
-        "bar_cat"
-       ],
-       "ms": 5500
+       "focus": "bar_cat",
+       "ms": 6400
       }
      ]
     },
-    "explanation": "Softmax takes a list of scores, which can be any numbers, and turns them into shares that are always positive and always add up to 100%. It raises e to each score (the exponential) and divides each result by the total. Because of the exponential, each extra point of gap multiplies the leader's advantage by about 2.7, so modest gaps in score become large gaps in share. Raising one word's score therefore takes share away from all the others, and only the gaps between scores matter. The paper does not test softmax itself. It uses this standard rule as a building block: to turn the decoder's final output into probabilities for the next word and, as the next lesson shows, to turn match scores into attention weights.",
-    "quote": "softmax function to convert the decoder output to predicted next-token probabilities.",
-    "quote_where": "Section 3.4 (Embeddings and Softmax)",
+    "explanation": "Softmax takes a list of scores, which can be any numbers, even negative, and turns each one into its exponential: e raised to that score. That result is always positive. It then divides each result by their total, so the weights add up to exactly 1 (100%). Each extra point of score multiplies a result by about 2.7, so a lead of a few points becomes a dominant share. Gaps get exaggerated, but no word is ever cut to exactly zero. The Transformer paper uses softmax to turn its match scores into weights ('apply a softmax function to obtain the weights on the values') but never defines it, so the definition quoted here comes from an encyclopedia article on the function. The scores in this model are made up; in the paper they are computed by the network.",
+    "quote": "The softmax function takes as input a tuple z of K real numbers and normalizes it into a probability distribution consisting of K probabilities proportional to the exponentials of the input numbers.",
+    "quote_where": "Softmax function article, Definition section",
+    "source_id": "s2",
     "source_ids": [
+     "s2",
      "s1"
-    ],
-    "source_id": "s1"
+    ]
    },
    "connect": {
     "equation": [
      {
-      "text": "share_{cat}",
-      "link": "w1"
+      "text": "σ(z)_{i}",
+      "link": "wa"
      },
      {
-      "text": " = exp("
+      "text": " = "
      },
      {
-      "text": "s_{cat}",
-      "link": "s1"
+      "text": "e^{z_{i}}",
+      "link": "a"
      },
      {
-      "text": ") ÷ [ exp("
-     },
-     {
-      "text": "s_{cat}",
-      "link": "s1"
-     },
-     {
-      "text": ") + exp("
-     },
-     {
-      "text": "s_{mat}",
-      "link": "s2"
-     },
-     {
-      "text": ") + exp("
-     },
-     {
-      "text": "s_{left}",
-      "link": "s3"
-     },
-     {
-      "text": ") ]"
+      "text": " / ( e^{z_{1}} + e^{z_{2}} + … + e^{z_{K}} )"
      }
     ],
-    "caption": "This is the standard softmax rule the model uses. The paper relies on it but does not write it out. Each coloured s is the match score from the slider of the same colour (cat, mat, left), and exp(s) is the exponential: e raised to that score. The left side is the cat bar. Put mat's or left's exp on top instead to get their shares. All three shares divide by the same total, so they always add to 1."
+    "caption": "This is the standard softmax formula from the Softmax function article (source s2). The Transformer paper uses it inside its attention formula without writing it out. Here i is the word whose share you want, such as 'cat'. z_{i} (blue) is its score, set by the 'cat' slider. σ(z)_{i} (blue) is its share, shown in the 'Share: cat' box. The bottom line adds e-to-the-score for all K words (K = 3 in the model), which is why the shares always total 100%."
    },
-   "recap": "Softmax turns any scores into positive shares that add to 100%, and every extra point of gap multiplies the leader's advantage by about 2.7.",
+   "recap": "Softmax makes every score positive with eˣ, then divides by the total: the weights add to 100%, the top score gets the most, and each point of lead multiplies its advantage by about 2.7.",
    "activities": [
     {
      "id": "tour",
@@ -880,17 +869,16 @@
      "i": 1
     },
     {
-     "id": "guess_top",
+     "id": "est_top_share",
      "kind": "estimate",
-     "hypothetical": true,
-     "question": "Imagine just two words, one scoring exactly 2 points higher than the other. What share (in %) does the higher-scoring word get?",
-     "answer": 88,
-     "tolerance": 4,
+     "question": "Picture the scores 'cat' 2, 'sat' 0, 'tired' 0. Without touching the sliders, estimate the share softmax gives 'cat'. (e² is about 7.4.)",
+     "answer": 79,
+     "tolerance": 5,
      "unit": "%",
-     "explanation": "A gap of 2 means the leader's exponential is e² ≈ 7.4 times the other's. The split is 7.4 parts to 1 part, and 7.4 ÷ 8.4 ≈ 88%. A gap of just 2 points already gives nearly a 9-to-1 split.",
+     "explanation": "e² ≈ 7.4, and e⁰ = 1 for each of the other two words. The total is 7.4 + 1 + 1 = 9.4, so 'cat' gets 7.4 / 9.4 ≈ 79%. A 2-point lead already wins almost four-fifths of the shares, even though 'cat' is only one of three words. Set the sliders to check.",
      "hints": [
-      "Only the gap matters, so give the lower word e⁰ = 1 part.",
-      "The leader then gets e² parts, which is about 2.7 × 2.7."
+      "First turn each score into e to that power: e² ≈ 7.4, and e⁰ = 1.",
+      "Then divide 'cat's number by the total of all three numbers."
      ]
     },
     {
@@ -2783,6 +2771,13 @@
    "title": "Attention Is All You Need",
    "url": "https://arxiv.org/pdf/1706.03762",
    "authors": "",
+   "year": null
+  },
+  {
+   "id": "s2",
+   "title": "Softmax function",
+   "url": "https://en.wikipedia.org/wiki/Softmax_function",
+   "authors": "Wikipedia",
    "year": null
   }
  ],

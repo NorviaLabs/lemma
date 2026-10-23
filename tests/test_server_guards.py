@@ -153,6 +153,20 @@ class LocalOnlyEndpoints(unittest.TestCase):
             s, body, _ = site.req("GET", "/api/models")
         self.assertEqual((s, body["error"]), (502, "The key was rejected."))
 
+    def test_gallery_lessons_are_checked_once_and_may_be_cached_but_other_answers_are_not(self):
+        server._GALLERY_CHECKED.clear()
+        checked = []
+        real = server.require_valid
+        with LocalServer() as site, patch.object(server, "require_valid", side_effect=lambda l, s: checked.append(l["id"]) or real(l, s)):
+            for _ in range(3):
+                s, body, r = site.req("GET", "/api/gallery/wuhan-2020")
+                self.assertEqual((s, r.getheader("Cache-Control")), (200, "public, max-age=300"))
+            self.assertEqual(checked, ["gallery-wuhan-2020"])
+            s, _, r = site.req("GET", "/api/gallery")
+            self.assertEqual((s, r.getheader("Cache-Control")), (200, "public, max-age=300"))
+            for path in ("/api/status", "/api/gallery/no-such-lesson"):
+                self.assertEqual(site.req("GET", path)[2].getheader("Cache-Control"), "no-store")
+
     def test_chatgpt_sign_in_reports_when_openai_wont_start_it_and_sign_out_forgets_the_account(self):
         with LocalServer() as site:
             with patch.object(chatgpt, "_device_request", return_value=(503, {})):

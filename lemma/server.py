@@ -866,9 +866,15 @@ def api_gallery(_body):
     return items
 
 
+_GALLERY_CHECKED: dict[str, str] = {}  # slug -> the lesson as last checked, so each version is checked once, not per visitor
+
+
 def api_gallery_lesson(slug):
     lesson, source = load_gallery(slug)
-    require_valid(lesson, source)
+    text = json.dumps(lesson, ensure_ascii=False, sort_keys=True)
+    if _GALLERY_CHECKED.get(slug) != text:
+        require_valid(lesson, source)
+        _GALLERY_CHECKED[slug] = text
     return lesson
 
 
@@ -935,6 +941,7 @@ def api_export(body):
     return export.lesson_html(lesson)
 
 
+SHARED = {api_gallery, api_gallery_lesson}  # the same for every visitor, so browsers and Cloudflare may keep them for a while
 ROUTES = [
     ("POST", r"/api/requests", api_request_create, False),
     ("GET", r"/api/requests", api_requests, False),
@@ -1017,8 +1024,8 @@ class Handler(BaseHTTPRequestHandler):
         if self.command != "HEAD":
             self.wfile.write(body)
 
-    def _json(self, status: int, obj):
-        self._send(status, json.dumps(obj, ensure_ascii=False).encode("utf-8"), "application/json; charset=utf-8")
+    def _json(self, status: int, obj, extra: dict | None = None):
+        self._send(status, json.dumps(obj, ensure_ascii=False).encode("utf-8"), "application/json; charset=utf-8", extra)
 
     def _dispatch(self, method: str):
         if not self._allowed_host():
@@ -1094,7 +1101,7 @@ class Handler(BaseHTTPRequestHandler):
                                                  f"email contact@openlemma.org with error id {eid}."})
             if isinstance(result, str):
                 return self._send(200, result.encode("utf-8"), "text/html; charset=utf-8", {"Content-Disposition": "attachment; filename=lesson.html"})
-            return self._json(200, result)
+            return self._json(200, result, {"Cache-Control": "public, max-age=300"} if fn in SHARED else None)
         return self._json(404, {"error": "Not found."})
 
     # ---------------------------------------------------------- accounts (hosted only; see auth.py)
