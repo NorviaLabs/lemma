@@ -56,7 +56,15 @@ class PdfLimits(unittest.TestCase):
                 self.assertEqual(ingest.from_bytes(SMALL).pages, 1)
 
     def test_a_reader_waiting_for_a_slot_gives_up_with_a_plain_message(self):
-        errors = []
+        errors, reading, finish = [], threading.Semaphore(0), threading.Event()
+        real_read = ingest._read_pdf_in_child
+
+        def slow_read(data):  # holds its slot until the test lets it go, however fast the computer is
+            if data is BOMB:
+                reading.release()
+                finish.wait(10)
+                raise ingest.IngestError("This PDF took too long to read.")
+            return real_read(data)
 
         def read_bomb():
             try:
@@ -64,17 +72,20 @@ class PdfLimits(unittest.TestCase):
             except ingest.IngestError as e:
                 errors.append(e)
 
-        with patch.object(ingest, "PDF_DEADLINE", 3, create=True), patch.object(ingest, "READER_WAIT", 0.5, create=True):
+        with patch.object(ingest, "_read_pdf_in_child", slow_read), patch.object(ingest, "READER_WAIT", 0.5, create=True):
             busy = [threading.Thread(target=read_bomb) for _ in range(2)]
             for t in busy:
                 t.start()
-            time.sleep(0.3)
+            for _ in busy:
+                self.assertTrue(reading.acquire(timeout=5))
             start = time.monotonic()
             with self.assertRaisesRegex(ingest.IngestError, "busy"):
                 ingest.from_bytes(SMALL)
             self.assertLess(time.monotonic() - start, 2)
+            finish.set()
             for t in busy:
                 t.join()
+            self.assertEqual(ingest.from_bytes(SMALL).pages, 1)  # both slots were freed
         self.assertEqual(len(errors), 2)
 
     def test_only_the_first_pages_are_read(self):
