@@ -50,7 +50,7 @@ Claude is called through Anthropic's Python SDK with your key, streaming each re
 
 ### How Lemma uses your ChatGPT subscription
 
-This signs in the same way the Codex CLI does. **Sign in with ChatGPT** on your account page opens OpenAI's sign-in page, which sends you back to `http://localhost:1455/auth/callback`; Lemma listens there only while you sign in. Your tokens are kept in `~/.lemma/chatgpt-auth.json`, readable only by you, and refreshed when they expire. **Sign out** deletes them. Lessons are built through the ChatGPT backend that Codex uses, with no tools, and count against your plan's usage. It is for your own use on your own computer: a hosted Lemma serving other people must not offer it.
+This signs in the same way the Codex CLI's device sign-in does. **Sign in with ChatGPT** on your account page shows a one-time code and opens OpenAI's sign-in page, where you sign in and enter it; Lemma checks with OpenAI until you have, and the code lasts 15 minutes. Nothing listens on your computer, so it also works when Lemma runs in Docker or on another machine of yours. Your tokens are kept in `~/.lemma/chatgpt-auth.json`, readable only by you, and refreshed when they expire. **Sign out** deletes them. Lessons are built through the ChatGPT backend that Codex uses, with no tools, and count against your plan's usage. It is for your own use on your own computer: a hosted Lemma serving other people must not offer it.
 
 ### Host it for other people
 

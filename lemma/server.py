@@ -195,10 +195,10 @@ def api_chatgpt(_body):
 
 
 def api_chatgpt_login(_body):
-    """Starts a ChatGPT sign-in; the browser opens the returned page."""
+    """Starts a ChatGPT sign-in: the browser opens the returned page, where the learner enters the returned code."""
     _chatgpt_only()
     try:
-        return {"url": chatgpt.start_sign_in()}
+        return chatgpt.start_sign_in()
     except ProviderError as e:
         raise ApiError(409, str(e)) from None
 

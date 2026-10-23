@@ -1382,47 +1382,49 @@ class ChatGPTTests(unittest.TestCase):
     def setUp(self):
         FakeChatGPT.calls.clear()
         self.token_calls = []
-        self.orig_token = chatgpt._token_request
+        self.device_calls = []
+        self.device_replies = []  # what OpenAI's device sign-in answers each time Lemma checks back
+        self.orig_token, self.orig_device = chatgpt._token_request, chatgpt._device_request
 
         def fake_token(fields):
             self.token_calls.append(fields)
             n = len(self.token_calls)
-            return {"access_token": fake_jwt({"https://api.openai.com/auth": {"chatgpt_account_id": "acct-1"}, "n": n}),
-                    "refresh_token": f"refresh-{n}", "expires_in": 3600, "id_token": fake_jwt({"email": "me@example.com"})}
+            tokens = {"access_token": fake_jwt({"https://api.openai.com/auth": {"chatgpt_account_id": "acct-1"}, "n": n}),
+                      "expires_in": 3600, "id_token": fake_jwt({"email": "me@example.com"})}
+            if fields["grant_type"] == "authorization_code":
+                tokens["refresh_token"] = f"refresh-{n}"  # a refresh keeps the old one
+            return tokens
 
-        chatgpt._token_request = fake_token
+        def fake_device(url, body):
+            self.device_calls.append((url, body))
+            if url == chatgpt.DEVICE_CODE_URL:
+                return 200, {"device_auth_id": "dev-1", "user_code": "ABCD-1234", "interval": "1"}
+            return self.device_replies.pop(0) if self.device_replies else (403, {})
+
+        chatgpt._token_request, chatgpt._device_request = fake_token, fake_device
 
     def tearDown(self):
-        chatgpt._token_request = self.orig_token
-        chatgpt._stop_listening()
+        chatgpt._token_request, chatgpt._device_request = self.orig_token, self.orig_device
         chatgpt.sign_out()
 
-    def sign_in(self):
-        url = chatgpt.start_sign_in()
-        q = dict(urllib.parse.parse_qsl(urllib.parse.urlsplit(url).query))
-        return q
+    def sign_in(self, *replies):
+        self.device_replies[:] = replies or [(200, {"authorization_code": "the-code", "code_verifier": "the-verifier"})]
+        started = chatgpt.start_sign_in()
+        deadline = time.time() + 10
+        while chatgpt.status()["waiting"] and time.time() < deadline:
+            time.sleep(0.05)
+        return started
 
-    def callback(self, query):
-        c = http.client.HTTPConnection("127.0.0.1", chatgpt.CALLBACK_PORT, timeout=10)
-        c.request("GET", "/auth/callback?" + urllib.parse.urlencode(query))
-        r = c.getresponse()
-        r.read()
-        c.close()
-        return r.status
-
-    def test_sign_in_with_pkce_then_refresh(self):
+    def test_device_sign_in_then_refresh(self):
         self.assertFalse(chatgpt.status()["signed_in"])
-        q = self.sign_in()
-        self.assertEqual((q["client_id"], q["redirect_uri"], q["code_challenge_method"]), (chatgpt.CLIENT_ID, chatgpt.REDIRECT_URI, "S256"))
-        self.assertTrue(chatgpt.status()["waiting"])
-        self.assertEqual(self.callback({"code": "c", "state": "wrong"}), 400)  # someone else's redirect is ignored
-        self.assertEqual(self.callback({"code": "the-code", "state": q["state"]}), 200)
-        verifier = self.token_calls[0]["code_verifier"]
-        challenge = base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest()).rstrip(b"=").decode()
-        self.assertEqual(challenge, q["code_challenge"])
-        self.assertEqual(self.token_calls[0]["code"], "the-code")
+        started = self.sign_in((403, {}), (400, {"error": "authorization_pending"}), (200, {"authorization_code": "the-code", "code_verifier": "the-verifier"}))
+        self.assertEqual((started["waiting"], started["code"], started["url"]), (True, "ABCD-1234", chatgpt.VERIFY_URL))
+        self.assertEqual(self.device_calls[0], (chatgpt.DEVICE_CODE_URL, {"client_id": chatgpt.CLIENT_ID}))
+        self.assertEqual(self.device_calls[1:], [(chatgpt.DEVICE_TOKEN_URL, {"device_auth_id": "dev-1", "user_code": "ABCD-1234"})] * 3)
+        self.assertEqual(self.token_calls, [{"grant_type": "authorization_code", "code": "the-code", "code_verifier": "the-verifier",
+                                             "redirect_uri": chatgpt.DEVICE_REDIRECT_URI, "client_id": chatgpt.CLIENT_ID}])
         st = chatgpt.status()
-        self.assertEqual((st["signed_in"], st["email"]), (True, "me@example.com"))
+        self.assertEqual((st["signed_in"], st["email"], st["waiting"], st["code"]), (True, "me@example.com", False, ""))
         self.assertEqual(oct(os.stat(chatgpt._auth_file()).st_mode & 0o777), "0o600")
         token, account = chatgpt.access_token()
         self.assertEqual((account, len(self.token_calls)), ("acct-1", 1))  # still fresh: no refresh
@@ -1431,14 +1433,26 @@ class ChatGPTTests(unittest.TestCase):
         store.write_private(chatgpt._auth_file(), json.dumps(auth))
         chatgpt.access_token()
         self.assertEqual(self.token_calls[1], {"grant_type": "refresh_token", "refresh_token": "refresh-1", "client_id": chatgpt.CLIENT_ID})
+        self.assertEqual(chatgpt.load()["refresh"], "refresh-1")
+
+    def test_a_refused_code_is_reported_and_signing_out_stops_a_sign_in(self):
+        self.sign_in((400, {"error": "expired_token"}))
+        st = chatgpt.status()
+        self.assertEqual((st["signed_in"], st["waiting"]), (False, False))
+        self.assertIn("sign-in failed (400)", st["error"])
+        self.assertEqual(self.token_calls, [])
+        self.device_replies[:] = []
+        chatgpt.start_sign_in()
+        self.assertTrue(chatgpt.status()["waiting"])
+        chatgpt.sign_out()
+        self.assertEqual((chatgpt.status()["waiting"], chatgpt.status()["code"]), (False, ""))
 
     def test_conversation_models_and_errors(self):
         p = llm.make_provider("chatgpt")
         self.assertFalse(p.available()[0])
         with self.assertRaisesRegex(llm.ProviderError, "Sign in"):
             p.conversation("S", "<paper>x</paper>").send("task")
-        q = self.sign_in()
-        self.callback({"code": "c", "state": q["state"]})
+        self.sign_in()
         self.assertEqual(p.available(), (True, ""))
         self.assertEqual([m["id"] for m in p.models()], ["gpt-6.1-sol"])
         conv = p.conversation("SYSTEM", "<paper>text</paper>")

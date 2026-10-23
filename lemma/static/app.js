@@ -415,16 +415,22 @@
         return [h("p", {}, icon("check"), ` Signed in${chatgpt.email ? ` as ${chatgpt.email}` : ""}. `,
           h("button", { class: "ghost small", onclick: async () => { signins.chatgpt = await api("/api/chatgpt/logout", {}); draw(); } }, "Sign out"))];
       }
+      if (chatgpt.waiting) showCode(chatgpt);  // a sign-in already under way keeps its code on screen
       const start = h("button", { class: "primary", onclick: async () => {
         const tab = window.open("", "_blank");  // opened now, while the click still counts, so it isn't blocked
         try {
-          const r = await api("/api/chatgpt/login", {});
-          if (tab) tab.location = r.url; else location.assign(r.url);
-          msg.replaceChildren(h("p", { class: "muted" }, "Finish signing in in the new tab. OpenLemma will notice when you're done."));
+          signins.chatgpt = await api("/api/chatgpt/login", {});
+          if (tab) tab.location = signins.chatgpt.url;
+          showCode(signins.chatgpt);
           waitForSignIn();
         } catch (err) { if (tab) tab.close(); msg.replaceChildren(errorBox(err.message)); }
       } }, `Sign in with ${p.name}`);
       return [start, h("p", { class: "muted small" }, "Lessons count against your plan's usage. OpenLemma keeps your sign-in on this computer only, in ~/.lemma, and you can sign out at any time.")];
+    }
+    function showCode(chatgpt) {  // the learner types this code on OpenAI's page; nothing on this computer listens for them
+      msg.replaceChildren(h("p", {}, "On OpenAI's sign-in page, sign in and enter this code:"),
+        h("p", { class: "device-code" }, chatgpt.code),
+        h("p", { class: "muted small" }, ext(chatgpt.url, "Open the sign-in page"), ". OpenLemma will notice when you're done. The code lasts 15 minutes."));
     }
     function waitForSignIn() {
       stopPoll();
@@ -439,7 +445,10 @@
     }
     draw();
     for (const x of providers.filter((x) => x.sign_in)) {
-      api("/api/chatgpt").then((r) => { signins[x.id] = r; draw(); }).catch(() => {});
+      api("/api/chatgpt").then((r) => {
+        signins[x.id] = r; draw();
+        if (r.waiting) waitForSignIn();  // a sign-in started before this page was opened
+      }).catch(() => {});
     }
     return body;
   }

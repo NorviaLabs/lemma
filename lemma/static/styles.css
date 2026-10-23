@@ -435,6 +435,7 @@ button.hall-replay:hover:not(:disabled) { color: var(--ink); }
 .signin-lead { margin: 0; font-size: 17px; line-height: 1.5; color: var(--body); }
 .signin-ask { margin: 12px 0 0; padding: 14px 18px; border-radius: 16px; background: var(--plate); font: 600 17px/1.4 var(--sans); color: var(--ink); quotes: "\201C" "\201D"; }
 .signin-ask::before { content: open-quote; }
+.device-code { margin: 8px 0; font: 600 28px/1.2 var(--mono); letter-spacing: 0.12em; color: var(--ink); user-select: all; }
 .signin-ask::after { content: close-quote; }
 .signin-options { display: grid; gap: 10px; margin: 26px 0 28px; }
 .signin-options .btn { min-height: 50px; font-size: 16px; }

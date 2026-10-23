@@ -9,7 +9,6 @@ import base64
 import http.client
 import json
 import os
-import socket
 import threading
 import time
 import unittest
@@ -154,20 +153,12 @@ class LocalOnlyEndpoints(unittest.TestCase):
             s, body, _ = site.req("GET", "/api/models")
         self.assertEqual((s, body["error"]), (502, "The key was rejected."))
 
-    def test_chatgpt_sign_in_reports_a_busy_port_and_sign_out_forgets_the_account(self):
-        chatgpt._stop_listening()  # a listener left by an earlier sign-in would be closed and its port reused
-        self.addCleanup(chatgpt._stop_listening)
+    def test_chatgpt_sign_in_reports_when_openai_wont_start_it_and_sign_out_forgets_the_account(self):
         with LocalServer() as site:
-            with socket.socket() as busy:
-                busy.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # an earlier test's closed callback may linger in TIME_WAIT
-                try:
-                    busy.bind(("127.0.0.1", chatgpt.CALLBACK_PORT))
-                    busy.listen()
-                except OSError:
-                    pass  # another program is listening there, which makes it just as busy
+            with patch.object(chatgpt, "_device_request", return_value=(503, {})):
                 s, body, _ = site.req("POST", "/api/chatgpt/login", {})
             self.assertEqual(s, 409)
-            self.assertIn(f"Port {chatgpt.CALLBACK_PORT} is busy", body["error"])
+            self.assertIn("OpenAI didn't start a sign-in (503)", body["error"])
 
             store.write_private(chatgpt._auth_file(), json.dumps({"access": "a", "refresh": "r", "expires": time.time() + 3600, "account_id": "", "email": "me@example.com"}))
             self.assertEqual(site.req("GET", "/api/chatgpt")[1]["email"], "me@example.com")

@@ -1,8 +1,8 @@
 """Building lessons with the learner's own ChatGPT Plus or Pro subscription.
 
-This signs in the way the Codex CLI and personal coding harnesses do: OpenAI's sign-in page
-sends the learner back to ``http://localhost:1455/auth/callback``, and Lemma swaps the code
-for tokens that it keeps in ``~/.lemma/chatgpt-auth.json`` (readable only by the learner).
+This signs in the way the Codex CLI's device sign-in does: Lemma asks OpenAI for a one-time code, the learner
+enters it on OpenAI's sign-in page, and Lemma, checking back meanwhile, swaps the result for tokens that it keeps
+in ``~/.lemma/chatgpt-auth.json`` (readable only by the learner). Nothing listens on the learner's computer.
 Requests go to the ChatGPT backend that Codex uses, and count against the learner's plan.
 
 It is for one person using Lemma on their own computer, with their own subscription. A hosted
@@ -13,33 +13,30 @@ program is for.
 from __future__ import annotations
 
 import base64
-import hashlib
 import json
-import os
-import secrets
 import socket
 import threading
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from . import __version__, store
 from .llm import Conversation, Provider, ProviderError, Reply, REQUEST_TIMEOUT
 
 CLIENT_ID = "app_EMoamEEZ73f0CkXaXp7hrann"  # the Codex CLI's
-AUTHORIZE_URL = "https://auth.openai.com/oauth/authorize"
-TOKEN_URL = "https://auth.openai.com/oauth/token"
-CALLBACK_PORT = 1455  # the only redirect the sign-in page accepts for this client
-REDIRECT_URI = f"http://localhost:{CALLBACK_PORT}/auth/callback"
-SCOPE = "openid profile email offline_access"
+AUTH = "https://auth.openai.com"
+TOKEN_URL = AUTH + "/oauth/token"
+DEVICE_CODE_URL = AUTH + "/api/accounts/deviceauth/usercode"
+DEVICE_TOKEN_URL = AUTH + "/api/accounts/deviceauth/token"
+VERIFY_URL = AUTH + "/codex/device"  # where the learner enters the code
+DEVICE_REDIRECT_URI = AUTH + "/deviceauth/callback"
 BACKEND = "https://chatgpt.com/backend-api/codex"
 DEFAULT_MODEL = "gpt-6.1-sol"
-SIGN_IN_WAIT = 600  # seconds the callback listener waits for the learner
+SIGN_IN_WAIT = 15 * 60  # seconds a code lasts
 
 _lock = threading.Lock()
-_login: dict = {}  # the sign-in in progress: {"error": str} once it fails
+_login: dict = {}  # the sign-in in progress: {"code", "url", "stop"}, or {"error": str} once it fails
 
 
 def _auth_file():
@@ -61,12 +58,12 @@ def load() -> dict | None:
         return None
 
 
-def _save(tokens: dict):
+def _save(tokens: dict, refresh: str = ""):
     access = tokens["access_token"]
     claims = _claims(tokens.get("id_token") or "") or _claims(access)
     auth = {
         "access": access,
-        "refresh": tokens["refresh_token"],
+        "refresh": tokens.get("refresh_token") or refresh,  # a refresh may keep the old refresh token
         "expires": time.time() + float(tokens.get("expires_in") or 3600),
         "account_id": (_claims(access).get("https://api.openai.com/auth") or {}).get("chatgpt_account_id", ""),
         "email": claims.get("email", ""),
@@ -75,12 +72,15 @@ def _save(tokens: dict):
 
 
 def sign_out():
+    _cancel_sign_in()
     _auth_file().unlink(missing_ok=True)
 
 
 def status() -> dict:
     auth = load()
-    return {"signed_in": bool(auth), "email": (auth or {}).get("email", ""), "error": _login.get("error", ""), "waiting": bool(_login.get("server"))}
+    waiting = "stop" in _login
+    return {"signed_in": bool(auth), "email": (auth or {}).get("email", ""), "error": _login.get("error", ""), "waiting": waiting,
+            "code": _login.get("code", "") if waiting else "", "url": _login.get("url", "") if waiting else ""}
 
 
 def _token_request(fields: dict) -> dict:
@@ -93,9 +93,27 @@ def _token_request(fields: dict) -> dict:
         raise ProviderError(f"ChatGPT sign-in failed ({e.code}). Sign in again on your account page.") from None
     except (urllib.error.URLError, TimeoutError, socket.timeout, ValueError) as e:
         raise ProviderError(f"Couldn't reach OpenAI to sign in ({e}).") from None
-    if not tokens.get("access_token") or not tokens.get("refresh_token"):
+    if not tokens.get("access_token") or (fields["grant_type"] != "refresh_token" and not tokens.get("refresh_token")):
         raise ProviderError("OpenAI's sign-in reply was missing its tokens. Sign in again on your account page.")
     return tokens
+
+
+def _device_request(url: str, body: dict) -> tuple[int, dict]:
+    """(status, reply) for one of the device sign-in calls, which answer "not yet" with an error status."""
+    req = urllib.request.Request(url, data=json.dumps(body).encode(), method="POST",
+                                 headers={"Content-Type": "application/json", "User-Agent": f"Lemma/{__version__}"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            status, raw = resp.status, resp.read()
+    except urllib.error.HTTPError as e:
+        status, raw = e.code, e.read()
+    except (urllib.error.URLError, TimeoutError, socket.timeout) as e:
+        raise ProviderError(f"Couldn't reach OpenAI to sign in ({e}).") from None
+    try:
+        reply = json.loads(raw)
+    except ValueError:
+        reply = {}
+    return status, reply if isinstance(reply, dict) else {}
 
 
 def access_token() -> tuple[str, str]:
@@ -105,7 +123,7 @@ def access_token() -> tuple[str, str]:
         if not auth:
             raise ProviderError("Sign in with your ChatGPT account on your account page to build lessons.")
         if auth["expires"] - time.time() < 120:
-            _save(_token_request({"grant_type": "refresh_token", "refresh_token": auth["refresh"], "client_id": CLIENT_ID}))
+            _save(_token_request({"grant_type": "refresh_token", "refresh_token": auth["refresh"], "client_id": CLIENT_ID}), auth["refresh"])
             auth = load()
         return auth["access"], auth["account_id"]
 
@@ -113,68 +131,60 @@ def access_token() -> tuple[str, str]:
 # ---------------------------------------------------------------- signing in
 
 
-def start_sign_in() -> str:
-    """Listens for OpenAI's redirect and returns the sign-in page to open."""
-    verifier = secrets.token_urlsafe(64)
-    challenge = base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest()).rstrip(b"=").decode()
-    state = secrets.token_urlsafe(24)
-
-    class Callback(BaseHTTPRequestHandler):
-        def log_message(self, *args):
-            pass
-
-        def do_GET(self):
-            url = urllib.parse.urlsplit(self.path)
-            q = dict(urllib.parse.parse_qsl(url.query))
-            if url.path != "/auth/callback":
-                return self._page(404, "Not found.")
-            if q.get("state") != state:
-                return self._page(400, "This sign-in link has expired. Start again from your OpenLemma account page.")
-            if q.get("error"):
-                _login["error"] = q.get("error_description") or q["error"]
-                self._page(400, "Sign-in was cancelled. You can close this tab and try again from OpenLemma.")
-            else:
-                try:
-                    _save(_token_request({"grant_type": "authorization_code", "code": q.get("code", ""), "redirect_uri": REDIRECT_URI,
-                                          "client_id": CLIENT_ID, "code_verifier": verifier}))
-                    self._page(200, "Signed in. You can close this tab and go back to OpenLemma.")
-                except ProviderError as e:
-                    _login["error"] = str(e)
-                    self._page(400, str(e))
-            threading.Thread(target=_stop_listening, daemon=True).start()
-
-        def _page(self, status, text):
-            body = f"<!doctype html><meta charset=utf-8><title>OpenLemma</title><p style='font:18px system-ui;margin:3em'>{text}</p>".encode()
-            self.send_response(status)
-            self.send_header("Content-Type", "text/html; charset=utf-8")
-            self.send_header("Content-Length", str(len(body)))
-            self.end_headers()
-            self.wfile.write(body)
-
-    _stop_listening()
+def start_sign_in() -> dict:
+    """Asks OpenAI for a code and checks back in the background until the learner has entered it.
+    Returns the status, with the code and the page to enter it on."""
+    got, reply = _device_request(DEVICE_CODE_URL, {"client_id": CLIENT_ID})
+    if not 200 <= got < 300 or not reply.get("device_auth_id") or not reply.get("user_code"):
+        raise ProviderError(f"OpenAI didn't start a sign-in ({got}). Try again in a moment.")
     try:
-        server = HTTPServer(("127.0.0.1", CALLBACK_PORT), Callback)
-    except OSError:
-        raise ProviderError(f"Port {CALLBACK_PORT} is busy, perhaps with a Codex sign-in. Finish or close it, then try again.") from None
+        interval = max(1.0, float(reply.get("interval") or 5))
+    except ValueError:
+        interval = 5.0
+    _cancel_sign_in()
+    stop = threading.Event()
     _login.clear()
-    _login["server"] = server
-    threading.Thread(target=server.serve_forever, daemon=True).start()
-    timer = threading.Timer(SIGN_IN_WAIT, _stop_listening, args=(server,))
-    timer.daemon = True  # don't hold Lemma open when it's stopped
-    timer.start()
-    return AUTHORIZE_URL + "?" + urllib.parse.urlencode({
-        "response_type": "code", "client_id": CLIENT_ID, "redirect_uri": REDIRECT_URI, "scope": SCOPE,
-        "code_challenge": challenge, "code_challenge_method": "S256", "state": state,
-        "id_token_add_organizations": "true", "codex_cli_simplified_flow": "true", "originator": "codex_cli_rs",
-    })
+    _login.update(code=reply["user_code"], url=VERIFY_URL, stop=stop)
+    threading.Thread(target=_wait_for_code, args=(stop, reply["device_auth_id"], reply["user_code"], interval), daemon=True).start()
+    return status()
 
 
-def _stop_listening(only=None):
-    server = _login.get("server")
-    if server and (only is None or only is server):
-        _login.pop("server", None)
-        server.shutdown()
-        server.server_close()
+def _wait_for_code(stop: threading.Event, device_id: str, code: str, interval: float):
+    deadline = time.time() + SIGN_IN_WAIT
+    error = "The sign-in code expired. Start again from your account page."
+    while not stop.wait(interval):
+        if time.time() > deadline:
+            break
+        try:
+            status, reply = _device_request(DEVICE_TOKEN_URL, {"device_auth_id": device_id, "user_code": code})
+        except ProviderError:
+            continue  # a dropped connection: check again next time
+        if status in (403, 404) or reply.get("error") == "authorization_pending":
+            continue  # not entered yet
+        if reply.get("error") == "slow_down":
+            interval += 5
+            continue
+        if not 200 <= status < 300 or not reply.get("authorization_code"):
+            error = f"ChatGPT sign-in failed ({status}). Start again from your account page."
+            break
+        try:
+            _save(_token_request({"grant_type": "authorization_code", "code": reply["authorization_code"],
+                                  "code_verifier": reply.get("code_verifier", ""), "redirect_uri": DEVICE_REDIRECT_URI, "client_id": CLIENT_ID}))
+            error = ""
+        except ProviderError as e:
+            error = str(e)
+        break
+    else:
+        return  # cancelled, by a new sign-in or signing out
+    if _login.get("stop") is stop:
+        _login.clear()
+        if error:
+            _login["error"] = error
+
+
+def _cancel_sign_in():
+    if stop := _login.pop("stop", None):
+        stop.set()
 
 
 # ---------------------------------------------------------------- provider
