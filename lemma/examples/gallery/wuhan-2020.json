@@ -1984,68 +1984,80 @@
    "idea": "If you know how fast cases grow and how far apart generations are, you can infer how many people each case infects: faster growth or longer gaps between generations both mean a larger R0.",
    "role": "contribution",
    "predict": {
-    "question": "Suppose a later study found the gap between generations was nearer 4.5 days, not 7.5, while cases still grew at Wuhan's speed. What would happen to the R0 estimate?",
+    "question": "A different virus spreads exactly as fast as early Wuhan's, doubling every 7.4 days. But its patients fall ill only about 4 days after the person who infected them, not 7.5. Compared with Wuhan's R0 of about 2, what does this virus's R0 come out as?",
     "options": [
-     "It rises, because generations come faster",
-     "It falls, but stays above 1",
-     "It falls below 1, so the outbreak was really shrinking",
-     "It stays the same, because growth speed alone sets R0"
+     "Larger than 2, because a quicker hand-off makes the virus spread faster",
+     "About 2, because the growth speed is the same",
+     "Smaller, roughly 1.4 to 1.5",
+     "Below 1, so the outbreak is actually shrinking"
     ],
-    "answer": 1,
+    "answer": 2,
     "why": [
-     "Faster generations sound like faster spread. But the growth speed is fixed here, so with fewer days per generation, each case needs fewer infections to produce that same growth.",
-     "Right. At Wuhan's growth rate a 4.5-day gap gives about 1.5. A shorter gap means less multiplying per generation. But a growing epidemic always needs each case to infect more than one person.",
-     "A shorter gap does lower R0. But cases were still growing, and while growth is above zero the implied R0 stays above 1. The curve never drops below the tipping line.",
-     "Growth speed is only half the story. The same daily growth gives a different number per case depending on how many days one generation takes."
+     "A quick hand-off feels like faster spread. But the growth speed is fixed here, so the hand-off speed cannot add anything. Short gaps mean many generations fit into one doubling, and each generation only has to be a little bigger than the last.",
+     "Same growth sounds like the same R0. But R0 counts people per generation, and growth is measured per day. With a 4-day gap, cases grow by only about 1.45 times over one gap, not 2 times.",
+     "Correct. In 4 days, cases doubling every 7.4 days grow by about 2^(4/7.4) ≈ 1.45 times. The exact formula, which allows for gaps that vary, gives about 1.4. The same growth with shorter generations means fewer infections per case.",
+     "R0 below 1 would mean the outbreak shrinks, yet this one is still doubling every 7.4 days. Any steadily growing outbreak has R0 above 1. A shorter gap lowers R0 towards 1 but never below it while cases grow."
     ]
    },
    "terms": [
     {
      "term": "renewal equation",
-     "means": "A rule that builds each day's new cases from earlier cases, weighted by how long ago those earlier patients fell ill"
+     "means": "A rule saying that today's new patients were infected by earlier patients, weighted by how long ago those earlier patients fell ill"
+    },
+    {
+     "term": "zoonotic infection",
+     "means": "An infection caught from an animal (or an animal setting like a market) rather than from another person"
     }
    ],
    "model": {
-    "title": "How many people each case infects, from growth speed and the gap between generations",
-    "note": "Teaching model: it assumes every new patient falls ill exactly one serial interval after the person who infected them, with no spread, so R0 = exp(growth rate × serial interval). The paper instead fitted a transmission model in which the serial interval varies from patient to patient (mean 7.5 days, SD 3.4). That model used a prior based on SARS and gave R0 = 2.2 (95% CI, 1.4 to 3.9). At Wuhan's values this simpler rule gives about 2.0. The 7.4-day doubling time, the 7.5-day serial interval and the 2.2 estimate are the paper's. Every other point on the curve is illustrative.",
+    "title": "Two timing facts in, one number out: how many people each case infects",
+    "note": "Teaching model: uses the standard formula that links a steady growth rate to R0 when the gap between patients follows a gamma-shaped spread. The spread is kept in the same proportion as the paper's estimate (SD 3.4 days for a mean of 7.5). The model assumes perfectly steady exponential growth and treats the gap between illnesses as the gap between infections. The paper used a fuller renewal-equation model with a prior based on SARS, so at Wuhan's values this curve gives about 1.9, not the paper's 2.2. The curves are illustrative. Only the 'Paper' dot (growth 0.10 per day, R0 2.2) and the 7.4-day and 7.5-day values come from the paper.",
     "controls": [
      {
-      "id": "r",
-      "label": "Daily growth rate",
+      "id": "td",
+      "label": "Days for cases to double",
       "kind": "slider",
-      "min": 0.01,
-      "max": 0.3,
-      "step": 0.002,
-      "default": 0.05,
-      "unit": "/day",
+      "min": 3,
+      "max": 20,
+      "step": 0.1,
+      "default": 14,
+      "unit": " days",
       "color": 0
      },
      {
-      "id": "gap",
-      "label": "Serial interval (gap between one patient and the next)",
+      "id": "si",
+      "label": "Days between one patient falling ill and the next",
       "kind": "slider",
-      "min": 2,
+      "min": 3,
       "max": 14,
       "step": 0.5,
       "default": 4,
-      "unit": "days",
+      "unit": " days",
       "color": 1
      }
     ],
     "outputs": [
      {
-      "id": "doubling",
-      "label": "Days for cases to double",
-      "expr": "ln(2) / r",
-      "unit": " days",
-      "decimals": 1,
-      "color": 3
+      "id": "growth",
+      "label": "Daily growth rate",
+      "expr": "ln(2) / td",
+      "unit": " /day",
+      "decimals": 3,
+      "color": 0
+     },
+     {
+      "id": "per_gap",
+      "label": "Growth across one gap",
+      "expr": "pow(2, si / td)",
+      "unit": "×",
+      "decimals": 2,
+      "color": 1
      },
      {
       "id": "r0",
-      "label": "People each case infects (R0)",
-      "expr": "exp(r * gap)",
-      "unit": "",
+      "label": "Each case infects (R0)",
+      "expr": "pow(1 + growth * si / 4.866, 4.866)",
+      "unit": " people",
       "decimals": 2,
       "color": 2
      }
@@ -2053,9 +2065,9 @@
     "visual": {
      "type": "curves",
      "x": {
-      "label": "Daily growth rate (per day)",
+      "label": "Daily growth rate of cases",
       "min": 0,
-      "max": 0.3
+      "max": 0.25
      },
      "y": {
       "label": "People each case infects (R0)",
@@ -2064,43 +2076,41 @@
      },
      "series": [
       {
-       "id": "r0_curve",
-       "label": "R0 for this serial interval",
-       "expr": "exp(x * gap)",
-       "color": 2,
+       "id": "main_curve",
+       "label": "Your gap",
+       "expr": "pow(1 + x * si / 4.866, 4.866)",
+       "color": 1,
        "dashed": false
-      }
-     ],
-     "markers": [
+      },
       {
-       "id": "wuhan",
-       "x": "ln(2) / 7.4",
-       "label": "Wuhan: doubling every 7.4 days",
-       "color": 5
+       "id": "wuhan_curve",
+       "label": "7.5-day gap (Wuhan)",
+       "expr": "pow(1 + x * 7.5 / 4.866, 4.866)",
+       "color": 4,
+       "dashed": true
       }
      ],
      "hlines": [
       {
-       "id": "tip",
+       "id": "tipping",
        "y": 1,
-       "label": "Tipping point: each case infects 1",
-       "color": 7
+       "label": "Tipping point (1)"
       }
      ],
      "points": [
       {
        "id": "now",
-       "x": "r",
-       "y": "min(r0, 6)",
-       "label": "Your outbreak",
+       "x": "growth",
+       "y": "pow(1 + growth * si / 4.866, 4.866)",
+       "label": "This outbreak",
        "color": 2
       },
       {
-       "id": "paper_est",
-       "x": "ln(2) / 7.4",
+       "id": "paper_point",
+       "x": 0.1,
        "y": 2.2,
-       "label": "Paper's estimate: 2.2",
-       "color": 5
+       "label": "Paper: 2.2",
+       "color": 3
       }
      ]
     }
@@ -2108,71 +2118,72 @@
    "animation": {
     "steps": [
      {
-      "say": "This curve answers one question: how many people does each patient infect? Higher up means more people.",
-      "focus": "r0_curve",
-      "ms": 3200
+      "say": "This curve answers one question: for a given speed of growth in cases (left to right), how many people must each patient be infecting (up)?",
+      "focus": "main_curve",
+      "ms": 4000
      },
      {
-      "say": "Left to right is how fast cases grow each day. This slider sets that speed, and the box shows how many days cases take to double.",
+      "say": "This slider sets how many days cases take to double. Shorter doubling means faster growth, so the dot slides right.",
       "set": {
-       "r": 0.1
+       "td": 9
       },
-      "focus": [
-       "r",
-       "doubling"
-      ],
-      "ms": 3800
+      "focus": "td",
+      "ms": 4000
      },
      {
-      "say": "This slider sets the gap between one patient falling ill and the person they infected falling ill. Watch the curve bend.",
+      "say": "This slider sets the gap between one patient falling ill and the person they infected falling ill. Watch the whole curve tilt.",
       "set": {
-       "gap": 10
+       "si": 10
       },
-      "focus": "gap",
-      "ms": 3800
+      "focus": "si",
+      "ms": 4000
      },
      {
-      "say": "The dot is your outbreak. The flat line is the tipping point, where each case infects exactly one person.",
+      "say": "The dot is this outbreak. Its height is the number in this box.",
       "focus": [
        "now",
-       "tip"
+       "r0"
       ],
-      "ms": 3200
+      "ms": 3500
      },
      {
-      "say": "This point marks the paper's own estimate for Wuhan.",
-      "focus": "paper_est",
-      "ms": 2600
+      "say": "The flat line marks 1, the tipping point you met earlier.",
+      "set": {
+       "td": 14,
+       "si": 4
+      },
+      "focus": "tipping",
+      "ms": 3000
      }
     ]
    },
    "explore": {
-    "prompt": "Two outbreaks can grow at the same speed yet differ in how many people each case infects. Use both sliders to build these two unusual outbreaks.",
+    "prompt": "Now drive it yourself. Turn the two timing facts into a number of infections per case, and see how each fact pushes the answer.",
     "goals": [
      {
-      "text": "Build a slow outbreak that is still very contagious: cases take at least 10 days to double, yet each case infects more than 2 people.",
-      "when": "doubling >= 10 && r0 > 2",
+      "text": "Put the model in the state the paper measured for early Wuhan, and see what the two timing facts say about how many people each patient infected.",
+      "when": "abs(td - 7.4) < 0.05 && abs(si - 7.5) < 0.01",
       "solution": {
-       "r": 0.06,
-       "gap": 12
+       "td": 7.4,
+       "si": 7.5
       },
       "hints": [
-       "A slow doubling means a small growth rate. What else can make each case infect more people?",
-       "Keep growth low enough for a 10-day doubling, then stretch the gap between generations.",
-       "Each case infects more than 2 when one generation takes longer than one doubling. So make the gap longer than the doubling time shown in the box."
+       "You need both timing facts from the paper brief, one for each slider.",
+       "One fact is how many days cases took to double. The other is the average gap between one patient falling ill and the next.",
+       "Both are a little over a week, and they differ by only a tenth of a day."
       ]
      },
      {
-      "text": "Now the reverse: a fast outbreak that is only mildly contagious. Cases double in under 5 days, yet each case infects fewer than 2 people.",
-      "when": "doubling < 5 && r0 < 2",
+      "text": "Build an outbreak that doubles more slowly than Wuhan's, yet in which each case still infects more than 2 people.",
+      "when": "td >= 8 && r0 > 2",
       "solution": {
-       "r": 0.14,
-       "gap": 4
+       "td": 10,
+       "si": 12
       },
       "hints": [
-       "A fast doubling needs a high growth rate. What keeps each case's count of infections low?",
-       "Shrink the gap between generations, so the outbreak takes many quick, small steps.",
-       "Each case infects fewer than 2 when a new generation arrives before cases have had time to double. So make the gap shorter than the doubling time."
+       "Slower doubling on its own lowers R0, so the other slider has to make up for it.",
+       "If each generation takes longer to appear, how big must each generation be to keep up the same daily growth?",
+       "Stretch the gap between patients well past the doubling time you choose."
       ]
      }
     ]
@@ -2182,89 +2193,100 @@
      "s1"
     ],
     "feedback": {
-     "correct": "Yes. With the growth speed fixed, a shorter gap leaves fewer days of growth inside each generation, so each case must have infected fewer people. That comes to about 1.5 at a 4.5-day gap. Because cases are still growing, R0 stays above 1.",
-     "incorrect": "R0 is how much cases multiply over one generation. At the same daily growth, a shorter generation means less multiplying per generation, so R0 goes down. Any outbreak that is still growing keeps R0 above 1."
+     "correct": "Right. The growth per day is fixed, so a shorter gap means each generation has less time to grow. Over 4 days, cases doubling every 7.4 days grow only about 1.45 times, so each case needs to infect only about 1.4 to 1.5 people. The same daily growth with quicker generations means a smaller R0.",
+     "incorrect": "It is tempting to link a quick hand-off with a more infectious virus, or to think equal growth means equal R0. But R0 counts infections per generation, and the growth rate is per day. If generations come every 4 days instead of 7.5, cases grow less within one generation, so each case must be infecting fewer people, about 1.4. That is still above 1, because the outbreak is still growing."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start at Wuhan-like growth of 0.10 per day, with generations only 2 days apart. Each case needs to infect only about 1.2 people. Small steps, taken often, add up quickly.",
+       "say": "Start slow. Cases double every 14 days, and patients are 4 days apart. Over one 4-day gap, cases grow only about 1.2 times, so each case needs to infect only about 1.2 people.",
        "set": {
-        "r": 0.1,
-        "gap": 2
-       },
-       "focus": "r0",
-       "ms": 4200
-      },
-      {
-       "say": "Keep the same growth but space generations 6 days apart. Cases now grow for more days between one generation and the next, so each case must have infected more people: about 1.8.",
-       "set": {
-        "gap": 6
+        "td": 14,
+        "si": 4
        },
        "focus": [
-        "gap",
+        "per_gap",
         "r0"
        ],
-       "ms": 4500
+       "ms": 5000
       },
       {
-       "say": "Keep the 6-day gap and double the growth rate. Faster growth over the same gap also means more infections per case: about 3.3.",
+       "say": "Keep the same growth but stretch the gap to 14 days, the same as the doubling time. Now cases double within one generation, so each generation is about twice the last. Each case must infect about 2 people.",
        "set": {
-        "r": 0.2
+        "si": 14
        },
        "focus": [
-        "r",
+        "si",
         "r0"
        ],
-       "ms": 4200
+       "ms": 5500
       },
       {
-       "say": "That is the whole trick. R0 is how much cases multiply over one gap between generations. Growth speed times gap length sets it, so the dot always rides on this curve.",
-       "focus": "r0_curve",
-       "ms": 4500
+       "say": "Why 1.9 and not exactly 2? Gaps vary from person to person. The quick hand-offs start new chains sooner, so slightly fewer infections per case produce the same growth.",
+       "focus": [
+        "per_gap",
+        "r0"
+       ],
+       "ms": 5000
       },
       {
-       "say": "Now Wuhan. The paper found cases doubled about every 7.4 days, and each new patient fell ill about 7.5 days after the person who infected them.",
+       "say": "Now keep the 14-day gap and make cases double every 7 days. Each generation has twice as long to grow, so R0 jumps to about 3.4. Faster growth, same gap: bigger R0.",
        "set": {
-        "r": 0.094,
-        "gap": 7.5
+        "td": 7
        },
        "focus": [
-        "doubling",
-        "gap"
-       ],
-       "ms": 4800
-      },
-      {
-       "say": "So one generation takes about as long as one doubling. Each generation is about twice the size of the one before, which means each patient infected about 2 people.",
-       "focus": [
-        "r0",
+        "td",
         "now"
        ],
-       "ms": 4800
+       "ms": 5000
       },
       {
-       "say": "The paper used a fuller method: a renewal equation that also lets the gap vary from patient to patient. It gave 2.2 (95% CI, 1.4 to 3.9). Two timing facts were enough, and nobody had to watch a single infection happen.",
-       "focus": "paper_est",
+       "say": "This link is a renewal equation: today's new patients were infected by patients from about one gap ago. If you know the gap and the growth, you can work backwards to how many new patients each one produced.",
+       "focus": "main_curve",
        "ms": 5500
+      },
+      {
+       "say": "The paper did exactly this. It left out the market-linked cases, since each could be a zoonotic infection caught from animals rather than from a person. It fitted the model only to person-to-person spread before testing ramped up.",
+       "focus": "wuhan_curve",
+       "ms": 5500
+      },
+      {
+       "say": "Here is early Wuhan. Cases doubled every 7.4 days, and each patient fell ill about 7.5 days after the person who infected them. The two facts are nearly equal, so each generation was roughly double the last.",
+       "set": {
+        "td": 7.4,
+        "si": 7.5
+       },
+       "focus": [
+        "now",
+        "per_gap"
+       ],
+       "ms": 6000
+      },
+      {
+       "say": "That gives R0 ≈ 1.9, right beside the paper's fuller estimate of 2.2. From two timing facts alone, without ever watching a single infection happen, each patient infected about 2 other people.",
+       "focus": [
+        "r0",
+        "paper_point"
+       ],
+       "ms": 6500
       }
      ]
     },
-    "explanation": "The growth rate tells you how fast cases multiply each day. The serial interval tells you how many days one generation of cases takes. Put them together and you get how much cases multiply per generation, which is R0. So faster growth, or a longer gap between generations, both mean each case infected more people. The paper fitted a transmission model built on renewal equations to cases with onset from December 10 to January 4 that were not linked to the market. Using a serial interval estimated from just 6 pairs of cases, it got R0 = 2.2. The 95% confidence interval runs from 1.4 to 3.9, so the true value is uncertain. The paper stopped at January 4 because wider testing after that changed how many cases were caught.",
-    "quote": "In the epidemic curve up to January 4, 2020, the epidemic growth rate was 0.10 per day (95% CI, 0.050 to 0.16) and the doubling time was 7.4 days (95% CI, 4.2 to 14). Using the serial interval distribution above, we estimated that R0 was 2.2 (95% CI, 1.4 to 3.9).",
-    "quote_where": "Results",
+    "explanation": "If you know how fast cases grow each day and how long one generation of patients takes, you can work out how many new patients each patient must be producing. When cases double in about one generation gap, each patient must infect about two people. Faster growth, or a longer wait between generations, both push R0 up. The paper fitted a transmission model built on renewal equations to cases that fell ill from December 10 to January 4. It left out market-linked cases, treating them as possible zoonotic infection from animals rather than person-to-person spread. It found growth of 0.10 per day (doubling every 7.4 days) and, with a 7.5-day serial interval, R0 of 2.2 (95% CI, 1.4 to 3.9). The range is wide because the serial interval came from only 6 pairs of cases, and this model's simpler formula gives about 1.9 because the paper used a fuller model with a SARS-based starting guess.",
+    "quote": "illness onset between December 10 and January 4, because we expected the proportion of infections identified would increase soon after the formal announcement of the outbreak in Wuhan on December 31. We fitted a transmission model (formulated with the use of renewal equations) with zoonotic infections to onset dates that were not linked to the Huanan Seafood Wholesale Market, and we used this model to derive the epidemic growth rate, the epidemic doubling time, and the basic reproductive number (R0)",
+    "quote_where": "Methods, Statistical Analysis",
     "source_id": "s1"
    },
    "check": {
     "kind": "model",
-    "task": "Another virus grows at the paper's reported rate of 0.10 per day, but each of its cases infects about 3 people. Put the model in that state by finding how far apart its generations must be.",
-    "when": "abs(r - 0.1) < 0.003 && abs(r0 - 3) < 0.12",
+    "task": "Put the model in a state where cases double faster than they did in Wuhan, yet each case infects fewer than 1.5 people.",
+    "when": "td < 7 && r0 < 1.5",
     "solution": {
-     "r": 0.1,
-     "gap": 11
+     "td": 6,
+     "si": 3
     },
-    "hint": "Same growth, bigger R0: should generations be closer together or further apart? Set the growth rate first, then move only the other slider.",
-    "misconception": "R0 depends only on how fast cases grow, so two viruses that grow equally fast must infect the same number of people per case."
+    "hint": "Fast growth alone pushes R0 up. Which timing fact could pull it back down? Think about how much an outbreak grows within one very short generation.",
+    "misconception": "That a faster-growing outbreak must always come from a virus where each case infects more people. In fact R0 depends on growth per generation, so quick spread can come from short gaps between generations rather than many infections per case."
    },
    "connect": {
     "equation": [
@@ -2273,40 +2295,33 @@
       "link": "r0"
      },
      {
-      "text": " = exp("
+      "text": " = (1 + "
      },
      {
       "text": "r",
-      "link": "r"
+      "link": "growth"
      },
      {
       "text": " × "
      },
      {
       "text": "T",
-      "link": "gap"
+      "link": "si"
      },
      {
-      "text": ") = 2^("
-     },
-     {
-      "text": "T",
-      "link": "gap"
-     },
-     {
-      "text": " ÷ "
+      "text": " / k)^{k},   where r = ln 2 / "
      },
      {
       "text": "T_{d}",
-      "link": "doubling"
+      "link": "td"
      },
      {
-      "text": ")"
+      "text": " and k ≈ 4.87"
      }
     ],
-    "caption": "The paper prints no formula, so this is the teaching model's rule. It assumes every generation is exactly T days apart. r (blue) is the daily growth rate and T (orange) is the serial interval. T_{d} is the doubling time, and R_{0} is how much cases multiply in one generation. In words: count how many doublings fit into one generation. For Wuhan, 7.5 ÷ 7.4 ≈ 1 doubling, so R0 ≈ 2. The paper's renewal-equation model also lets the gap vary from patient to patient, and it gave 2.2."
+    "caption": "This is the model's rule, not an equation printed in the paper. It is the standard shortcut a renewal-equation model gives for steady growth with gamma-shaped gaps. T_{d} is the doubling time. r is the daily growth rate (paper: 0.10 per day). T is the mean gap between patients (paper: 7.5 days). k = (7.5 / 3.4)² sets how much gaps vary. When T equals T_{d}, R_{0} is close to 2."
    },
-   "recap": "Divide the serial interval by the doubling time to count doublings per generation: 7.5 ÷ 7.4 ≈ 1, so each Wuhan patient infected about 2 people (paper: 2.2).",
+   "recap": "Growth per day times days per generation gives growth per generation, which is R0. Wuhan's 7.4-day doubling and 7.5-day serial interval imply about 2 infections per case (paper: 2.2).",
    "activities": [
     {
      "id": "tour",
@@ -2332,8 +2347,7 @@
     },
     {
      "id": "use",
-     "kind": "predict",
-     "hypothetical": true
+     "kind": "predict"
     },
     {
      "id": "why",
