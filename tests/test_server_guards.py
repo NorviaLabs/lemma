@@ -266,6 +266,15 @@ class Searches(unittest.TestCase):
             self.assertEqual(server.api_search({"query": "entropy", "level": "beginner"}), {"done": True, "result": hit})
         live.assert_not_called()
 
+    def test_a_site_out_of_builds_for_the_day_says_so_and_the_gallery_still_opens(self):
+        with LocalServer() as site, patch.object(server, "make_provider", return_value=FakeProvider()), \
+                patch.dict(os.environ, {"LEMMA_SITE_DAILY_BUILDS": "0"}):
+            pid = upload(site, SOURCE)
+            s, body, _ = site.req("POST", "/api/requests", {"sources": [{"paper_id": pid}]})
+            self.assertEqual(s, 429, body)
+            self.assertIn("for everyone", body["error"])
+            self.assertEqual(site.req("GET", "/api/gallery")[0], 200)
+
 
 class HostedCaps(unittest.TestCase):
     """Limits shared by everyone on a hosted server, and each account's own."""

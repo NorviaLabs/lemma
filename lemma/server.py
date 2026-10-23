@@ -1093,6 +1093,8 @@ class Handler(BaseHTTPRequestHandler):
                     result = fn(match.group(1))
                 else:
                     result = fn(self._body() if method == "POST" else {})
+            except metrics.SiteSpent as e:
+                return self._json(429, {"error": str(e)})
             except ApiError as e:
                 return self._json(e.status, {"error": e.message, "problems": e.problems})
             except Exception as e:

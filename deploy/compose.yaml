@@ -20,6 +20,9 @@ services:
       LEMMA_DAILY_BUILDS: "20"
       LEMMA_DAILY_READS: "100"
       LEMMA_DAILY_FEEDBACK: "10"
+      # Daily caps for all accounts together (UTC), so a rush of new accounts can't run up the TypeSafe bill.
+      LEMMA_SITE_DAILY_SEARCHES: "400"
+      LEMMA_SITE_DAILY_BUILDS: "200"
     volumes:
       - lemma-data:/data
     healthcheck:
