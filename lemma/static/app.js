@@ -415,22 +415,27 @@
         return [h("p", {}, icon("check"), ` Signed in${chatgpt.email ? ` as ${chatgpt.email}` : ""}. `,
           h("button", { class: "ghost small", onclick: async () => { signins.chatgpt = await api("/api/chatgpt/logout", {}); draw(); } }, "Sign out"))];
       }
-      if (chatgpt.waiting) showCode(chatgpt);  // a sign-in already under way keeps its code on screen
+      if (chatgpt.waiting) {  // the learner types this code on OpenAI's page; nothing on this computer listens for them
+        const open = h("button", { class: "primary", onclick: () => {
+          navigator.clipboard?.writeText(chatgpt.code).catch(() => {});
+          window.open(chatgpt.url, "_blank", "noopener");
+        } }, "Copy code and open OpenAI");
+        return [h("div", { class: "device-step" },
+          h("p", {}, "Enter this code on OpenAI's sign-in page:"),
+          h("p", { class: "device-code" }, chatgpt.code),
+          open,
+          h("p", { class: "muted small" }, "OpenAI's page calls this the Codex CLI and says the code is in your terminal. It means this code. "
+            + "OpenLemma notices when you're done, and the code lasts 15 minutes."))];
+      }
       const start = h("button", { class: "primary", onclick: async () => {
-        const tab = window.open("", "_blank");  // opened now, while the click still counts, so it isn't blocked
         try {
           signins.chatgpt = await api("/api/chatgpt/login", {});
-          if (tab) tab.location = signins.chatgpt.url;
-          showCode(signins.chatgpt);
+          draw();
+          body.querySelector(".device-step")?.scrollIntoView({ block: "center", behavior: "smooth" });
           waitForSignIn();
-        } catch (err) { if (tab) tab.close(); msg.replaceChildren(errorBox(err.message)); }
+        } catch (err) { msg.replaceChildren(errorBox(err.message)); }
       } }, `Sign in with ${p.name}`);
       return [start, h("p", { class: "muted small" }, "Lessons count against your plan's usage. OpenLemma keeps your sign-in on this computer only, in ~/.lemma, and you can sign out at any time.")];
-    }
-    function showCode(chatgpt) {  // the learner types this code on OpenAI's page; nothing on this computer listens for them
-      msg.replaceChildren(h("p", {}, "On OpenAI's sign-in page, sign in and enter this code:"),
-        h("p", { class: "device-code" }, chatgpt.code),
-        h("p", { class: "muted small" }, ext(chatgpt.url, "Open the sign-in page"), ". OpenLemma will notice when you're done. The code lasts 15 minutes."));
     }
     function waitForSignIn() {
       stopPoll();
@@ -439,7 +444,7 @@
         let chatgpt;
         try { chatgpt = signins.chatgpt = await api("/api/chatgpt"); } catch (e) { return waitForSignIn(); }
         if (chatgpt.signed_in) { msg.replaceChildren(); return draw(); }
-        if (chatgpt.error) return msg.replaceChildren(errorBox(chatgpt.error));
+        if (chatgpt.error) { draw(); return msg.replaceChildren(errorBox(chatgpt.error)); }  // the code is gone: back to the button
         if (chatgpt.waiting) waitForSignIn();
       }, 1500);
     }
