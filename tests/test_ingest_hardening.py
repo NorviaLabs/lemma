@@ -46,7 +46,8 @@ SMALL = make_pdf(pages=1, lines_per_page=20)
 
 class PdfLimits(unittest.TestCase):
     def test_a_pdf_bomb_stops_at_the_deadline_and_frees_its_reader_slot(self):
-        with patch.object(ingest, "PDF_DEADLINE", 2, create=True):
+        # Without the text cap the reader works through all four pages, several times the deadline on any computer.
+        with patch.object(ingest, "PDF_DEADLINE", 1, create=True), patch.object(ingest, "MAX_CHARS", 100_000_000, create=True):
             start = time.monotonic()
             with self.assertRaises(ingest.IngestError):
                 ingest.from_bytes(BOMB)
