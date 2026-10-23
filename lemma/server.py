@@ -710,20 +710,24 @@ def api_request_outline(rid):
 
 
 def api_request_add(rid):
-    """Adds a source outline review suggested (an assumed subject's own article) and remakes the outline with it."""
+    """Adds the sources outline review suggested that the learner chose (assumed subjects' own articles) and remakes
+    the outline with them, once for all of them."""
     body = getattr(REQUEST, "body", {})
     with _requests_lock:
         owner = _owner()
         record = _request_record(rid, owner)
         if record["status"] != "awaiting_outline":
             raise ApiError(409, "This build is not waiting for outline review.")
-        outline, title = record.get("outline") or {}, body.get("title")
-        suggested = {s["title"]: s for s in outline.get("subjects") or [] if s.get("url") and not s.get("source")}
-        if title not in suggested:
+        titles = body.get("titles")
+        if not isinstance(titles, list) or not titles or not all(isinstance(t, str) for t in titles):
+            raise ApiError(400, "Choose at least one source to add.")
+        titles = list(dict.fromkeys(titles))
+        suggested = {s["title"]: s for s in (record.get("outline") or {}).get("subjects") or [] if s.get("url") and not s.get("source")}
+        if any(t not in suggested for t in titles):
             raise ApiError(400, "That isn't one of the suggested sources.")
-        if len(L.source_map(record["paper"]["text"])) >= 10:
+        if len(L.source_map(record["paper"]["text"])) + len(titles) > 10:
             raise ApiError(400, "A lesson takes at most 10 sources.")
-        record["pending"] = [{"urls": [suggested[title]["url"]], "title": title}]
+        record["pending"] = [{"urls": [suggested[t]["url"]], "title": t} for t in titles]
         record.pop("outline", None)
         return _launch_request(record, _provider(), owner)
 

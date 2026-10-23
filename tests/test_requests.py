@@ -105,44 +105,52 @@ class RequestTests(unittest.TestCase):
             self.assertEqual((e.exception.status, e.exception.message), (400, 'Invalid search.'))
 
     def awaiting_with_suggestions(self):
-        """A request at outline review whose outline suggests one source to add (an assumed subject's article)."""
+        """A request at outline review whose outline suggests two sources to add (an assumed subject's article)."""
         with patch.object(server, '_first_readable', return_value=SimpleNamespace(title='Galton', url='https://example.org/paper', text=SOURCE)):
             rid = self.create()
             self.assertEqual(self.settled(rid)['status'], 'awaiting_outline')
         record = store.load_request(rid, TESTER)
         record['outline']['subjects'] = [{'title': 'Correlation', 'url': 'https://en.wikipedia.org/wiki/Correlation', 'source': None},
+                                         {'title': 'Variance', 'url': 'https://en.wikipedia.org/wiki/Variance', 'source': None},
                                          {'title': 'Regression', 'url': 'https://en.wikipedia.org/wiki/Regression', 'source': 's1'},
                                          {'title': 'Galton board', 'source': None}]
         store.save_request(record, TESTER)
         return rid
 
-    def add(self, rid, title):
-        server.REQUEST.body = {'title': title}
+    def add(self, rid, *titles):
+        server.REQUEST.body = {'titles': list(titles)}
         return server.api_request_add(rid)
 
-    def test_a_suggested_source_is_added_and_the_outline_remade_with_it(self):
+    def test_suggested_sources_are_added_together_and_the_outline_remade_once(self):
         rid = self.awaiting_with_suggestions()
-        correlation = SimpleNamespace(title='Correlation - Wikipedia', url='https://en.wikipedia.org/wiki/Correlation', text='Correlation is ' * 400)
-        with patch.object(server, '_first_readable', return_value=correlation) as read:
-            self.add(rid, 'Correlation')
+        article = lambda urls: SimpleNamespace(title='Wikipedia', url=urls[0], text='An article is ' * 400)
+        outlines = []
+        real_outline = generate.make_outline
+        with patch.object(server, '_first_readable', side_effect=article) as read, \
+                patch.object(generate, 'make_outline', side_effect=lambda *a, **k: outlines.append(1) or real_outline(*a, **k)):
+            self.add(rid, 'Correlation', 'Variance', 'Correlation')
             record = self.settled(rid)
         self.assertEqual(record['status'], 'awaiting_outline', record.get('error'))
-        read.assert_called_once_with(['https://en.wikipedia.org/wiki/Correlation'])
+        self.assertEqual([c.args[0] for c in read.call_args_list], [['https://en.wikipedia.org/wiki/Correlation'], ['https://en.wikipedia.org/wiki/Variance']])
+        self.assertEqual(len(outlines), 1)
         bundle = json.loads(store.load_request(rid, TESTER)['paper']['text'])['lemma_sources']
-        self.assertEqual([(s['id'], s['title']) for s in bundle][-1], ('s2', 'Correlation'))
+        self.assertEqual([(s['id'], s['title']) for s in bundle][-2:], [('s2', 'Correlation'), ('s3', 'Variance')])
         self.assertEqual(store.load_request(rid, TESTER)['pending'], [])
 
     def test_only_a_suggested_uncovered_source_can_be_added_at_outline_review(self):
         rid = self.awaiting_with_suggestions()
         for title in ('Regression', 'Galton board', 'Anything else'):  # covered already, no article, not suggested
             with self.assertRaises(server.ApiError) as e:
-                self.add(rid, title)
+                self.add(rid, 'Correlation', title)
             self.assertEqual((e.exception.status, e.exception.message), (400, "That isn't one of the suggested sources."))
-        record = store.load_request(rid, TESTER)
-        record['paper']['text'] = json.dumps({'lemma_sources': [{'id': f's{i}', 'title': f'S{i}', 'text': 'x'} for i in range(1, 11)]})
-        store.save_request(record, TESTER)
         with self.assertRaises(server.ApiError) as e:
-            self.add(rid, 'Correlation')
+            self.add(rid)
+        self.assertEqual((e.exception.status, e.exception.message), (400, 'Choose at least one source to add.'))
+        record = store.load_request(rid, TESTER)
+        record['paper']['text'] = json.dumps({'lemma_sources': [{'id': f's{i}', 'title': f'S{i}', 'text': 'x'} for i in range(1, 10)]})
+        store.save_request(record, TESTER)
+        with self.assertRaises(server.ApiError) as e:  # nine sources: room for one more, not two
+            self.add(rid, 'Correlation', 'Variance')
         self.assertEqual((e.exception.status, e.exception.message), (400, 'A lesson takes at most 10 sources.'))
         record['status'] = 'done'
         store.save_request(record, TESTER)

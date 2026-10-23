@@ -1318,9 +1318,10 @@
     const buildBtn = h("button", { class: "primary", onclick: startBuild });
     // What the lesson builds on (its question's answer, or the sources the learner brought), and where each piece is taught.
     const buildsOn = h("section", { class: "bo-card", "aria-labelledby": "builds-on-title", hidden: !(o.subjects || []).length });
-    async function addSource(title, btn) {
+    const toAdd = new Set();  // assumed subjects the learner ticked, added together with one remake of the outline
+    async function addSources(btn) {
       busy(btn, true);
-      try { await api(`/api/requests/${session.requestId}/add`, { title }); showRequest(session.requestId); }
+      try { await api(`/api/requests/${session.requestId}/add`, { titles: [...toAdd] }); showRequest(session.requestId); }
       catch (e) { busy(btn, false); buildsOn.append(errorBox(e.message)); }
     }
     function drawBuildsOn() {
@@ -1330,15 +1331,20 @@
       const assumed = new Set([...(o.assumes || []), ...known, ...(o.subjects || []).filter((s) => s.relation === null).map((s) => s.title)]);
       // An assumed subject whose own article search found, and no chosen source covers, can be added.
       const addable = new Set((o.subjects || []).filter((s) => s.url && !s.source && assumed.has(s.title)).map((s) => s.title));
+      const n = toAdd.size;
+      const addBtn = h("button", { type: "button", class: "small", disabled: !n, onclick: (e) => addSources(e.currentTarget) },
+        icon("plus"), n ? `Add ${n} ${n === 1 ? "source" : "sources"} and remake the outline` : "Tick the ones to add");
+      const tick = (t) => h("label", { class: "bo-pick" },
+        h("input", { type: "checkbox", checked: toAdd.has(t), onchange: (e) => { e.target.checked ? toAdd.add(t) : toAdd.delete(t); drawBuildsOn(); buildsOn.querySelector(`input[value="${CSS.escape(t)}"]`)?.focus(); }, value: t }), t);
       const groups = [
         ["Covered", "", (o.subjects || []).filter((s) => taught.get(s.title)).map((s) => `${s.title}: concept ${taught.get(s.title)}`)],
-        ["Assumed", addable.size ? "The lesson takes these as known. Adding a source remakes the outline; your edits to this one are lost." : "The lesson takes these as known.",
-          [...assumed].map((t) => addable.has(t) ? [t, " ", h("button", { type: "button", class: "small", "aria-label": `Add ${t} and remake the outline`, onclick: (e) => addSource(t, e.currentTarget) }, icon("plus"), "Add")] : t)],
+        ["Assumed", addable.size ? "The lesson takes these as known. Tick the ones you'd like it to teach from their own articles. Adding remakes the outline; your edits to this one are lost." : "The lesson takes these as known.",
+          [...assumed].map((t) => addable.has(t) ? tick(t) : t), addable.size ? addBtn : null],
         ["Later", "Not in this lesson.", (o.subjects || []).filter((s) => !taught.get(s.title) && !assumed.has(s.title)).map((s) => s.title)],
       ].filter(([, , items]) => items.length);
       buildsOn.replaceChildren(h("h2", { id: "builds-on-title" }, "What this lesson builds on"),
-        ...groups.map(([name, note, items]) => h("div", { class: "bo-group" }, h("h3", {}, name), note ? h("p", { class: "muted small" }, note) : null,
-          h("ul", {}, items.map((x) => h("li", {}, x))))));
+        ...groups.map(([name, note, items, after]) => h("div", { class: "bo-group" }, h("h3", {}, name), note ? h("p", { class: "muted small" }, note) : null,
+          h("ul", {}, items.map((x) => h("li", {}, x))), after ? h("div", { class: "bo-add" }, after) : null)));
     }
     // A concept relies on the ones it needs and the one whose model it reuses; it must come after them.
     const reliesOn = (c) => [...(Array.isArray(c.needs) ? c.needs : []), ...(c.builds_on ? [c.builds_on] : [])];

@@ -976,6 +976,9 @@ kbd { display: inline-block; min-width: 22px; padding: 1px 6px; text-align: cent
 .bo-card h3 { font-size: 15px; margin: 0; }
 .bo-card ul { margin: 4px 0 0; padding-left: 20px; }
 .bo-card .muted.small { margin: 2px 0 0; }
+.bo-card li:has(> .bo-pick) { list-style: none; margin-left: -20px; }
+.bo-card .bo-pick { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.bo-card .bo-add { margin-top: 8px; }
 /* "Searching as Psychology · Beginner · Change", and the panel that switches field or level for a new search */
 .field-line { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin: 4px 0 12px; color: var(--body); }
 .field-line strong { color: var(--ink); }
