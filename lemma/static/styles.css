@@ -468,6 +468,8 @@ button.hall-replay:hover:not(:disabled) { color: var(--ink); }
 .af-link dd a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }  /* the whole row opens the library */
 .af-link dd .icon { width: 16px; height: 16px; color: var(--mute); transition: transform var(--ui), color var(--ui); }
 .af-link { border-radius: 16px 16px 0 0; transition: background-color var(--ui); }
+.af-site dd { flex-direction: column; align-items: flex-end; gap: 2px; font-weight: 500; }
+.af-site .full { color: var(--bad); font-weight: 600; }
 .af-link:hover { background: var(--plate); }
 .af-link:hover dd .icon { color: var(--ink); transform: translateX(2px); }
 .af-link:has(a:focus-visible) { outline: var(--ring); outline-offset: -2px; }  /* rows in a grouped list: the ring sits inside */

@@ -171,6 +171,7 @@ def api_status(_body):
     }
     if _is_admin():
         status["feedback_new"] = feedback.count_new()
+        status["site_today"] = metrics.site_today()
     return status
 
 

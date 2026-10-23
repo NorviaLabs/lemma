@@ -4,7 +4,8 @@
   sources it reads on the server, and the feedback it sends. Searches and builds also have a cap for the whole
   site, so many new accounts at once can't run up the bill either. They are configuration with safe defaults: a missing setting means the usual
   cap, never none, and only an explicit `unlimited` lifts one (as local.env does for development).
-* Counts are per day and event name only (lessons opened, goals reached, builds that passed or failed):
+* Counts are per day and event name only (lessons opened, goals reached, builds that passed or failed, searches
+  or builds a cap turned away):
   no account, lesson, paper or address is recorded with them.
 """
 
@@ -121,10 +122,19 @@ class _Refused(Exception):
 
 
 def _refuse(who: str, kind: str, cap: int) -> bool:
+    count(f"limit_{'site' if who == SITE else 'account'}_{kind}")  # how often each cap turns someone away, never who
     if who == SITE:
         raise SiteSpent(f"OpenLemma has used all of today's {f'{cap} ' if cap else ''}{SITE_QUOTAS[kind][2]} for everyone, to keep its costs in check. "
                         "They reset at midnight UTC. The gallery and your library still work.")
     return False
+
+
+def site_today() -> dict:
+    """{kind: {"used", "limit", "what"}}: today's use of each site-wide allowance; limit None when it is unlimited."""
+    with _tx() as con:
+        used = dict(con.execute("SELECT kind, n FROM usage WHERE user_id = ? AND day = ?", (SITE, _day())).fetchall())
+    return {kind: {"used": used.get(kind, 0), "limit": limit(kind, site=True), "what": what}
+            for kind, (_, _, what) in SITE_QUOTAS.items()}
 
 
 def count(name: str) -> None:

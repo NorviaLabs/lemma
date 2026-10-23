@@ -84,6 +84,8 @@ class Quotas(unittest.TestCase):
             with self.assertRaises(metrics.SiteSpent) as e:
                 metrics.take("site-new", "job")
             self.assertIn("today's 3 outlines and builds for everyone", str(e.exception))
+            self.assertEqual(metrics.site_today()["job"], {"used": 3, "limit": 3, "what": "outlines and builds"})
+            self.assertEqual(next(iter(metrics.report().values())).get("limit_site_job"), 1)
             self.assertTrue(metrics.take("site-new", "search"))  # searches have their own allowance
             self.assertTrue(metrics.take("site-new", "read"))  # and reads have none for the site
 

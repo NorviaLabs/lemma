@@ -1971,7 +1971,10 @@
           h("dd", {}, h("a", { href: "#/library" }, n ? `${n} saved lesson${n === 1 ? "" : "s"}` : "No saved lessons yet"), icon("chevron"))),
         row("Signed in with", PROVIDER_NAMES[u.provider] || u.provider),
         row("Member since", new Date(u.created * 1000).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })),
-        // Only admins' status carries feedback_new.
+        // Only admins' status carries feedback_new and site_today.
+        status.site_today ? h("div", { class: "af-row af-site" }, h("dt", {}, "Today, for everyone"),
+          h("dd", {}, ...Object.values(status.site_today).map(s => h("span", s.limit !== null && s.used >= s.limit ? { class: "full" } : {},
+            s.limit === null ? `${s.used} ${s.what}` : `${s.used} of ${s.limit} ${s.what}${s.used >= s.limit ? " (limit reached)" : ""}`)))) : null,
         "feedback_new" in status ? h("div", { class: "af-row af-link af-last" }, h("dt", {}, "Feedback"),
           h("dd", {}, h("a", { href: "#/feedback/inbox" }, `${status.feedback_new} new`), icon("chevron"))) : null));
     // Connected or not, and with what: read from the server's status, and redrawn whenever the form saves.

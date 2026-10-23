@@ -1925,6 +1925,14 @@ class HostedServerTests(unittest.TestCase):
                 s, raw, _ = req("POST", "/api/search", {"query": "loss aversion"}, tb)
             self.assertEqual(s, 429)
             self.assertIn("today's 1 searches", json.loads(raw)["error"])
+            # Admins see how often a cap turned someone away (never who), and how much of the site's day is used.
+            today = next(iter(json.loads(req("GET", "/api/stats", token=ta)[1]).values()))
+            self.assertEqual(today.get("limit_account_search"), 2)
+            site = json.loads(req("GET", "/api/status", token=ta)[1])["site_today"]
+            self.assertEqual(set(site), {"search", "job"})
+            self.assertEqual((site["search"]["limit"], site["search"]["what"]), (400, "searches"))
+            self.assertGreaterEqual(site["search"]["used"], 2)
+            self.assertNotIn("site_today", json.loads(req("GET", "/api/status", token=tb)[1]))
 
             s, raw, r = req("GET", "/terms")
             self.assertEqual(s, 200)
