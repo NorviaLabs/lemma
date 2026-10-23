@@ -1702,7 +1702,7 @@ class ServerTests(unittest.TestCase):
     def test_gallery_lessons_open_read_only(self):
         items = json.loads(self.req("GET", "/api/gallery")[1])
         self.assertEqual([x["slug"] for x in items], [x["slug"] for x in server.gallery_index()])
-        self.assertEqual(len(items), 18)
+        self.assertEqual(len(items), 19)
         for x in items:
             self.assertTrue(x["field"] and x["concepts"] and x["cover"]["idea"], x["slug"])
             s, raw = self.req("GET", f"/api/gallery/{x['slug']}")

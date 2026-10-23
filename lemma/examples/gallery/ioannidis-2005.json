@@ -1,9 +1,9 @@
 {
  "version": 1,
  "id": "gallery-ioannidis-2005",
- "title": "Passing the Test Isn't Proof: Why a 'Significant' Finding Can Still Be Wrong",
- "audience": "A curious adult with no background in this field",
- "created": "2026-10-19T01:37:53",
+ "title": "Why a 'Significant' Discovery Can Still Be Wrong",
+ "level": "beginner",
+ "created": "2026-10-23T01:37:02",
  "source": {
   "title": "Why Most Published Research Findings Are False",
   "authors": "Ioannidis JPA",
@@ -12,329 +12,401 @@
   "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1182327/fullTextXML"
  },
  "intro": {
-  "summary": "The paper asks a simple question: when a study reports a 'statistically significant' finding, how likely is that finding to be true? Ioannidis builds a counting model. It combines the share of tested ideas that are really true, the study's chance of detecting a real effect (power), the usual 5% false-alarm rate, bias, and how many teams test the same question. Plugging in plausible values, he argues that in many fields a claimed finding is more likely false than true, and that small studies, small effects, many loosely chosen hypotheses, flexible analyses, conflicts of interest and crowded 'hot' fields all make this worse. The main limitation is that this is a theoretical model, not a measurement: its conclusions depend on assumed values for things like the pre-study odds and bias, which are hard to know for any real field.",
+  "summary": "The paper asks a simple question: when a study reports a 'statistically significant' finding, how likely is that finding to be true? Ioannidis builds a simple counting model of a research field. The model tracks how many tested ideas are really true, how often studies catch real effects (power), how often they raise false alarms, how much bias pushes results toward 'positive', and how many teams chase the same question. Using this model with assumed numbers, he argues that in most study designs and fields a claimed finding is more likely false than true, especially in small, flexible, biased or 'hot' fields. The main limitation is that the key inputs, above all the share of tested ideas that are true, cannot be measured directly, so the conclusions depend on assumptions the author admits are 'considerably subjective'. Critics have argued that the headline 'most findings are false' depends on these assumed inputs, so it is best read as a warning about conditions, not a measured fact about every field. This lesson covers the core model, power, bias and multiple teams. It does not cover how later replication projects tested these ideas, Bayesian methods for setting prior odds, or detailed reforms such as preregistration; those are good next steps.",
   "background": [
-   "Many studies declare a result 'statistically significant' when the p-value is below 0.05, which roughly means the data would be fairly surprising if there were no real effect.",
-   "Even when nothing real is going on, about 1 test in 20 will cross that 0.05 line by chance: a false alarm.",
-   "A study's 'power' is its chance of detecting an effect that really exists; small studies and small effects mean low power.",
-   "The same logic appears in medical screening: a positive test for a rare disease is often a false positive, because healthy people far outnumber sick ones."
+   "A study tests an idea, such as 'this drug lowers blood pressure', and a statistical test decides whether the data look convincing enough to claim an effect.",
+   "By convention, a result is called 'statistically significant' when it would happen less than 5% of the time if there were really no effect (p < 0.05).",
+   "Passing this test does not tell you the chance that the idea is true. That chance also depends on how plausible the idea was before the study.",
+   "A doctor's screening test is a useful everyday parallel: even an accurate test gives many false alarms when the disease is rare."
   ],
   "known": [],
-  "aha": "In the paper's genome example, even with no bias at all, if ten teams test the same gene and one gets a significant result, the chance that gene is truly linked to the disease is barely higher than before anyone looked."
+  "aha": "When many teams chase the same long-shot idea, the one 'significant' result that gets published can be hardly more likely true than the idea was before anyone studied it at all.",
+  "assumes": [
+   "Probability",
+   "Statistical significance",
+   "Bias (statistics)",
+   "Statistical hypothesis test",
+   "P-value",
+   "Power (statistics)",
+   "Effect size",
+   "Type I and type II errors",
+   "Conditional probability"
+  ]
  },
  "primer": [
   {
    "heading": "The question",
-   "body": "Published findings are sometimes overturned by later studies, in fields from clinical trials to genetics. Ioannidis asks how often we should expect this. If a paper reports a statistically significant result, what is the chance the relationship it claims really exists?",
+   "body": "Science news is full of findings that later fall apart: a diet that prevents cancer, a gene that causes a disease. Ioannidis asks whether this is bad luck or something built into how research is done and judged. His focus is the common habit of treating one study with p < 0.05 as proof that an effect is real.",
    "quote": "There is increasing concern that most current published research findings are false.",
-   "quote_where": "Abstract"
+   "quote_where": "Abstract",
+   "source_ids": [
+    "s1"
+   ],
+   "source_id": "s1"
   },
   {
-   "heading": "What they did",
-   "body": "Instead of running experiments, the paper does careful bookkeeping. Picture every relationship a field tests. Some are really true and most are not. Each test either 'finds' something or doesn't. Counting the four outcomes (real hits, false alarms, misses, correct nulls) gives the chance that a claimed finding is real. The paper then adds two distortions: bias, meaning results that get reported as findings when they shouldn't, and many teams testing the same question."
+   "heading": "What he did",
+   "body": "He did not run a new experiment. He built a simple model of a whole research field, like counting results in a big two-by-two table: ideas that are really true or not, against studies that say 'yes' or 'no'. The model has a few inputs: how many of the tested ideas are true to begin with, how good studies are at catching real effects, how often they raise false alarms, how much bias nudges results toward 'yes', and how many teams test the same question. He then plugged in plausible values for different kinds of research.",
+   "source_ids": [
+    "s1"
+   ]
   },
   {
-   "heading": "What they found",
-   "body": "The chance that a significant finding is true depends heavily on how plausible the idea was before the study. When a field tests thousands of long shots, almost every 'hit' is a false alarm. Low power, bias and crowds of competing teams push the odds down further. Only large, well-run studies of fairly plausible ideas give findings that are usually right.",
+   "heading": "What he found",
+   "body": "In the model, a significant finding is often more likely false than true. Being significant is not enough: it matters how long a shot the idea was, how big and careful the study was, how much room researchers had to bend the analysis, and how many teams were racing. A large, careful trial of a plausible treatment does well, at about 85% true in his illustrative table. Exploratory work that searches thousands of genes does terribly.",
    "quote": "Simulations show that for most study designs and settings, it is more likely for a research claim to be false than true.",
-   "quote_where": "Abstract"
+   "quote_where": "Abstract",
+   "source_ids": [
+    "s1"
+   ],
+   "source_id": "s1"
   },
   {
-   "heading": "Why it matters",
-   "body": "A p-value below 0.05 is not a stamp of truth. To judge a finding, you need to ask how likely it was beforehand, how big and well-powered the study was, how much room there was for bias, and how many others were testing the same thing. Keep the limits in mind: these are model calculations built on assumed inputs, not counts of real false papers.",
-   "quote": "Research is not most appropriately represented and summarized by p-values, but, unfortunately, there is a widespread notion that medical research articles should be interpreted based only on p-values.",
-   "quote_where": "Modeling the Framework for False Positive Findings"
+   "heading": "The surprising part",
+   "body": "Some results run against intuition. If ten teams around the world test the same long-shot idea and one of them gets a significant result, that 'winning' result can be barely more believable than the idea was before anyone did any research. In fields where nothing is really there, the size of the claimed effects may simply measure how much bias the field has.",
+   "source_ids": [
+    "s1"
+   ]
+  },
+  {
+   "heading": "Why it matters, and its limits",
+   "body": "The paper pushed scientists toward larger studies, shared standards, registering studies in advance, and judging the whole body of evidence rather than a single exciting result. Its numbers are model outputs, not measurements. The share of true ideas in a field cannot be observed directly, so readers must make rough guesses about it, and the author says so openly.",
+   "quote": "Even though these assumptions would be considerably subjective, they would still be very useful in interpreting research claims and putting them in context.",
+   "quote_where": "How Can We Improve the Situation?",
+   "source_ids": [
+    "s1"
+   ],
+   "source_id": "s1"
   }
  ],
  "provider": {
-  "name": "Claude",
+  "name": "Claude subscription",
   "model": "claude-opus-5-5"
  },
  "concepts": [
   {
-   "id": "false_alarms_and_power",
-   "title": "Significance has two failure modes",
-   "idea": "When there is no real effect, about 5% of studies still cross p < 0.05; when there is a real effect, only a fraction of studies (the power) catch it.",
+   "id": "tests_as_filters",
+   "title": "A test is a filter with two kinds of mistakes",
+   "idea": "A significance test lets through a small share (α) of ideas with no real effect as false alarms, and catches only a share (the power, 1 − β) of ideas with a real effect.",
    "role": "prerequisite",
    "predict": {
-    "question": "A lab runs 100 separate studies of a supplement that, unknown to them, does nothing at all. Each study is huge: 1,000 people per group. Roughly how many of the 100 studies will still score below 0.05?",
+    "question": "Picture a field where none of the 1,000 ideas it tests has a real effect. It uses the usual 5% false-alarm rate. About how many 'yes' results will it get, and how many of them are true?",
     "options": [
-     "About 5",
-     "Almost none, because huge studies don't make that mistake",
-     "About 50, because it's a coin flip with no effect",
-     "About 80, because big studies have high power"
+     "None: with no real effects, the test has nothing to say yes to",
+     "About 50, and every one of them is a false alarm",
+     "About 800, because the test catches most effects",
+     "We can't say without knowing the catch rate"
     ],
-    "answer": 0,
+    "answer": 1,
     "why": [
-     "Right: with no real effect, the 0.05 line lets through about 5 false alarms in every 100 studies, whatever their size.",
-     "It feels as if size should protect you, but in the model the false-alarm share stayed near 5% even at 200 per group. Size only helps you catch real effects.",
-     "With no effect the p-values are spread evenly from 0 to 1, so only the slice below 0.05 counts: about 5%, not half.",
-     "Power is the catch rate for a real effect. Here there is nothing to catch, so power doesn't apply and only the 5% false-alarm rate is left."
+     "It feels as if a test should stay silent when nothing is there. But the false-alarm rate applies to ideas with no effect, so 5% of 1,000 still come out yes.",
+     "Right: all 1,000 ideas sit in the no-effect row, and 5% of them slip through. That gives about 50 yes results, and none of them is real.",
+     "The catch rate only applies to ideas with a real effect. This field has none, so the catch rate never comes into play.",
+     "The catch rate filters the real-effect row, and that row is empty here. Only the false-alarm rate matters, and we know it is 5%."
     ]
    },
    "terms": [
     {
-     "term": "statistically significant",
-     "means": "A study result whose p-value falls below the agreed line, usually 0.05"
-    },
-    {
      "term": "false positive",
-     "means": "A significant result when there is really no effect"
+     "means": "A 'yes' from the test for an idea that has no real effect: a false alarm"
     },
     {
-     "term": "Type I error rate (α)",
-     "means": "How often false positives happen when there is no effect. The 0.05 line sets it at about 5%"
+     "term": "false negative",
+     "means": "A 'no' from the test for an idea that does have a real effect: a miss"
     },
     {
-     "term": "power (1 − β)",
-     "means": "The share of studies that catch a real effect when one is there"
+     "term": "α",
+     "means": "The Type I error rate: the share of no-effect ideas that the test wrongly calls significant, usually 5%"
+    },
+    {
+     "term": "power",
+     "means": "The share of real effects the test catches, written 1 − β, where β is the share it misses"
     }
    ],
    "model": {
-    "title": "200 imaginary studies, each comparing two groups",
-    "note": "Teaching model: each study compares two groups drawn from bell-shaped populations with the same spread, using a simple z-test. The true difference is measured in units of that spread. The 0.05 line is fixed, and there is no bias or flexible analysis. The long-run share is calculated for a two-sided test, and the simulated run of 200 studies wobbles around it by chance. Numbers are illustrative, not the paper's data.",
+    "title": "1,000 tested ideas sorted by the truth and by the test's verdict",
+    "note": "Teaching model: a fixed set of 1,000 tested ideas, 100 with a real effect and 900 without. Each box shows the expected count, so there is no chance variation and no bias. The numbers are illustrative, not the paper's data.",
     "controls": [
      {
-      "id": "real",
-      "label": "Groups truly differ",
-      "kind": "toggle",
-      "default": 1,
-      "color": 0,
-      "min": 0,
-      "max": 1,
-      "step": 1
+      "id": "alpha",
+      "label": "False-alarm rate (share of no-effect ideas that get a yes)",
+      "kind": "slider",
+      "min": 0.01,
+      "max": 0.5,
+      "step": 0.01,
+      "default": 0.05,
+      "unit": "",
+      "color": 3
      },
      {
-      "id": "gap",
-      "label": "Size of the true difference (in spreads)",
+      "id": "power",
+      "label": "Catch rate (share of real effects that get a yes)",
       "kind": "slider",
-      "min": 0.1,
+      "min": 0.05,
       "max": 1,
-      "step": 0.1,
-      "default": 0.3,
+      "step": 0.05,
+      "default": 0.8,
       "unit": "",
-      "color": 1
-     },
-     {
-      "id": "n",
-      "label": "People per group",
-      "kind": "slider",
-      "min": 10,
-      "max": 200,
-      "step": 10,
-      "default": 20,
-      "unit": "",
-      "color": 2
+      "color": 0
      }
     ],
     "outputs": [
      {
-      "id": "power_if_real",
-      "label": "Catch rate if the difference is real",
-      "expr": "normcdf(gap / sqrt(2 / n) - 1.96, 0, 1) + normcdf(-gap / sqrt(2 / n) - 1.96, 0, 1)",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 0,
-      "color": 1
-     },
-     {
-      "id": "expected",
-      "label": "Long-run share scoring below 0.05",
-      "expr": "real == 1 ? power_if_real : 0.05",
-      "unit": "%",
-      "scale": 100,
+      "id": "true_yes",
+      "label": "Real effect, test says yes",
+      "expr": "100 * power",
+      "unit": "",
       "decimals": 0,
       "color": 0
      },
      {
-      "id": "simulated",
-      "label": "Share below 0.05 in this run",
-      "expr": "sim_share_significant",
-      "unit": "%",
-      "scale": 100,
+      "id": "missed",
+      "label": "Real effect, test says no",
+      "expr": "100 * (1 - power)",
+      "unit": "",
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "false_alarm",
+      "label": "No effect, test says yes",
+      "expr": "900 * alpha",
+      "unit": "",
       "decimals": 0,
       "color": 3
+     },
+     {
+      "id": "correct_no",
+      "label": "No effect, test says no",
+      "expr": "900 * (1 - alpha)",
+      "unit": "",
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "total_yes",
+      "label": "All 'yes' results",
+      "expr": "true_yes + false_alarm",
+      "unit": "",
+      "decimals": 0,
+      "color": 4
      }
     ],
     "visual": {
-     "type": "sampling",
-     "kernel": "two_group",
-     "params": {
-      "mu1": 0,
-      "mu2": "real * gap",
-      "sd": 1,
-      "n": "n",
-      "alpha": 0.05,
-      "samples": 200,
-      "seed": 7
-     }
+     "type": "table",
+     "columns": [
+      "Test says yes",
+      "Test says no"
+     ],
+     "rows": [
+      {
+       "label": "Real effect (100 ideas)",
+       "cells": [
+        "true_yes",
+        "missed"
+       ]
+      },
+      {
+       "label": "No real effect (900 ideas)",
+       "cells": [
+        {
+         "value": "false_alarm",
+         "highlight": "false_alarm > true_yes"
+        },
+        "correct_no"
+       ]
+      }
+     ],
+     "decimals": 0,
+     "scale": "sequential",
+     "scale_min": 0,
+     "scale_max": 900
     }
    },
    "animation": {
     "steps": [
      {
-      "say": "Each dot is one imaginary study. It measures two groups of people and asks whether they differ. 200 studies run at once.",
-      "ms": 3600
-     },
-     {
-      "say": "A dot's place is the study's p-value: how surprising its data would be if the groups were really the same. Below 0.05 counts as a result worth reporting.",
-      "focus": "simulated",
+      "say": "Each row is a pile of ideas that a field tests. The top row holds 100 ideas with a real effect. The bottom row holds 900 ideas with none.",
+      "focus": [
+       "true_yes",
+       "false_alarm"
+      ],
       "ms": 4200
      },
      {
-      "say": "This switch decides whether the groups truly differ, or are secretly identical.",
-      "focus": "real",
-      "ms": 3000
+      "say": "Each column is the test's verdict: yes, meaning significant, or no. This box counts every yes.",
+      "focus": "total_yes",
+      "ms": 3600
      },
      {
-      "say": "This slider sets how big the true difference is.",
-      "focus": "gap",
-      "ms": 2800
-     },
-     {
-      "say": "And this one sets how many people each study measures per group.",
+      "say": "This slider sets how often an idea with no effect still gets a yes. Watch the bottom-left box grow.",
       "set": {
-       "n": 40
+       "alpha": 0.1
       },
-      "focus": "n",
-      "ms": 2800
+      "focus": "alpha",
+      "ms": 4000
      },
      {
-      "say": "These boxes count the share of studies that land below 0.05.",
+      "say": "This slider sets how many of the real effects the test manages to catch.",
+      "set": {
+       "power": 0.5
+      },
+      "focus": "power",
+      "ms": 4000
+     },
+     {
+      "say": "Two sliders, four boxes. Let's put them back and see what each one means.",
+      "set": {
+       "alpha": 0.05,
+       "power": 0.8
+      },
       "focus": [
-       "expected",
-       "simulated"
+       "true_yes",
+       "missed",
+       "false_alarm",
+       "correct_no"
       ],
-      "ms": 3000
+      "ms": 3600
      }
     ]
    },
    "explore": {
-    "prompt": "Play with the switch and both sliders. Watch how the share of studies scoring below 0.05 behaves when nothing is there and when something is.",
+    "prompt": "Now you run the filter. Move both sliders and watch which row each one changes.",
     "goals": [
      {
-      "text": "Keep the true difference real and modest (smaller than 0.5 spreads), yet get studies to catch it at least 80% of the time.",
-      "when": "real == 1 && gap < 0.5 && power_if_real >= 0.8",
+      "text": "Make false alarms outnumber the real effects the test catches, while the test still catches more than half of the real effects.",
+      "when": "false_alarm > true_yes && true_yes > 50",
       "solution": {
-       "gap": 0.4,
-       "n": 120
+       "alpha": 0.1
       },
       "hints": [
-       "Two things make a real difference easier to catch: how big it is, and how many people each study has.",
-       "You may nudge the difference up a little, but it must stay modest. The people-per-group slider has to do most of the work.",
-       "With the difference near the top of its allowed range, you need roughly a hundred or more people per group."
+       "Which mistake comes from the bigger row of ideas?",
+       "The no-effect row holds nine times as many ideas, so a small rise in the false-alarm rate adds a lot of false alarms. Leave the catch rate alone.",
+       "Each step of the false-alarm slider adds 9 false alarms. Keep going until they pass the 80 real effects being caught."
       ]
      },
      {
-      "text": "Switch the real difference off. Keep the studies big enough that they would catch the current difference more often than not if it were real. Does the long-run share drop below 5%?",
-      "when": "real == 0 && power_if_real > 0.5",
+      "text": "Build a better filter: fewer than 20 false alarms, while the test still catches at least 90 of the 100 real effects.",
+      "when": "false_alarm < 20 && true_yes >= 89.5",
       "solution": {
-       "real": 0,
-       "n": 120
+       "alpha": 0.02,
+       "power": 0.9
       },
       "hints": [
-       "The catch-rate box still updates when the switch is off. It tells you what would happen if the difference were real.",
-       "Add people per group until that catch rate passes one half.",
-       "With the default difference you'll need well over fifty per group. Then compare the long-run share with what you saw at small sizes."
+       "Each slider controls one row. You will need to move both.",
+       "To get fewer false alarms, lower the false-alarm rate. To catch more real effects, raise the catch rate.",
+       "False alarms are 900 times the false-alarm rate, so that rate has to fall below about 2.2%."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. With no real effect, about 5% of studies cross the 0.05 line by chance alone, and making studies bigger doesn't change that. So about 5 of the 100 supplement studies will be false alarms.",
-     "incorrect": "It's tempting to think big studies can't produce false alarms, or that power matters here. But when nothing is there, the 0.05 line itself lets through about 5% of studies, whatever their size. Study size only changes how often a real effect is caught."
+     "correct": "Yes. The false-alarm rate filters only the no-effect ideas. When every tested idea has no effect, about 5% of them still come out 'yes', and every one of those is false.",
+     "incorrect": "The two rates act on different rows. The catch rate only matters for ideas with a real effect. The false-alarm rate applies to every no-effect idea, even when nothing real is there. With 1,000 no-effect ideas, about 50 still pass."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start with no real difference at all: both groups come from the same population. Small studies, 20 people per group.",
+       "say": "Start at the usual setting. Of the 900 ideas with no effect, 45 still get a yes. Each of these false alarms is called a false positive.",
        "set": {
-        "real": 0,
-        "gap": 0.3,
-        "n": 20
+        "alpha": 0.05,
+        "power": 0.8
        },
-       "focus": "real",
-       "ms": 3200
-      },
-      {
-       "say": "Some dots still land below 0.05, about 5 in every 100. Such a study is called statistically significant. When nothing is really there, it's a false positive.",
-       "focus": [
-        "expected",
-        "simulated"
-       ],
+       "focus": "false_alarm",
        "ms": 4200
       },
       {
-       "say": "Make every study ten times bigger. The false-alarm share doesn't budge: still about 5%. This is the Type I error rate (α), and the 0.05 line itself sets it.",
-       "set": {
-        "n": 200
-       },
-       "focus": "expected",
-       "ms": 4200
+       "say": "The share of no-effect ideas that slip through is called α, the Type I error rate. At 5%, 5% of 900 gives 45.",
+       "focus": "alpha",
+       "ms": 3800
       },
       {
-       "say": "Now switch a real difference on: a small one, 0.3 spreads, back at 20 people per group. Only about 16 studies in 100 catch it.",
-       "set": {
-        "real": 1,
-        "n": 20
-       },
-       "focus": "power_if_real",
+       "say": "Now the top row. Of the 100 real effects, 80 get a yes. The share the test catches is its power, written 1 − β.",
+       "focus": "true_yes",
        "ms": 4000
       },
       {
-       "say": "The share of studies that catch a real effect is called power (1 − β). Here most studies miss an effect that is truly there.",
-       "focus": "power_if_real",
-       "ms": 3600
+       "say": "The other 20 real effects are missed. Each miss is a false negative, and β is the share missed, here 20%.",
+       "focus": "missed",
+       "ms": 3800
       },
       {
-       "say": "Give each study 100 people per group. The catch rate climbs to about 56%.",
+       "say": "Raise α to 10%. False alarms double to 90. Notice that the real-effect row did not move at all: each slider filters only its own row.",
        "set": {
-        "n": 100
-       },
-       "focus": "n",
-       "ms": 3400
-      },
-      {
-       "say": "At 200 per group it reaches about 85%. Two separate ways to go wrong: false alarms stay near 5% at any size, while misses shrink only as power grows.",
-       "set": {
-        "n": 200
+        "alpha": 0.1
        },
        "focus": [
-        "power_if_real",
-        "simulated"
+        "alpha",
+        "false_alarm",
+        "true_yes"
        ],
        "ms": 4600
+      },
+      {
+       "say": "Now picture a weak study whose power is only 30%. It catches just 30 of the 100 real effects and misses 70.",
+       "set": {
+        "power": 0.3
+       },
+       "focus": [
+        "power",
+        "true_yes",
+        "missed"
+       ],
+       "ms": 4400
+      },
+      {
+       "say": "Look at the 'yes' column: 30 real finds and 90 false alarms. Both mistakes are small-sounding rates, but together they decide what a pile of 'yes' results is made of.",
+       "focus": [
+        "total_yes",
+        "false_alarm"
+       ],
+       "ms": 5200
       }
      ]
     },
-    "explanation": "A study is called statistically significant when its p-value falls below 0.05. That line can fail in two different ways. When there is no real effect, about 5% of studies still cross it by chance. These false positives happen at the Type I error rate (α), and bigger studies don't reduce them. When there is a real effect, only some studies catch it: that share is the power (1 − β), and it grows with study size and effect size. The paper builds its whole argument on these two rates, taking α = 0.05 as the usual choice. This model assumes clean, honest analyses; real research can be messier.",
+    "explanation": "A significance test works like a filter that sorts ideas into 'yes' and 'no'. It makes two kinds of mistake. Ideas with no real effect get through as false positives at rate α, the Type I error rate, usually 5%. Ideas with a real effect are caught only at a rate called the power, 1 − β, and the rest become false negatives. Each rate acts on its own row, so how many ideas sit in each row matters as much as the rates themselves. The paper builds its whole argument on this 2 × 2 table, which compares research findings against the true state of each relationship. The counts here are expected averages: in real studies, chance makes them wobble, and bias can push them further.",
     "quote": "The probability of a study finding a true relationship reflects the power 1 - β (one minus the Type II error rate). The probability of claiming a relationship when none truly exists reflects the Type I error rate, α.",
-    "quote_where": "Section 'It can be proven that most claimed research findings are false'"
+    "quote_where": "Section 'Modeling the Framework for False Positive Findings'",
+    "source_ids": [
+     "s1"
+    ],
+    "source_id": "s1"
    },
    "connect": {
     "equation": [
      {
-      "text": "share significant = "
+      "text": "caught = c × "
      },
      {
-      "text": "1 − β",
-      "link": "power_if_real"
+      "text": "(1 − β)",
+      "link": "power"
      },
      {
-      "text": " when the relationship is "
+      "text": " × R/(R + 1) = "
      },
      {
-      "text": "real",
-      "link": "real"
+      "text": "true_yes",
+      "link": "true_yes"
      },
      {
-      "text": ";  share significant = α ≈ 0.05 when it is not"
+      "text": "     false alarms = c × "
+     },
+     {
+      "text": "α",
+      "link": "alpha"
+     },
+     {
+      "text": " /(R + 1) = "
+     },
+     {
+      "text": "false_alarm",
+      "link": "false_alarm"
      }
     ],
-    "caption": "The paper calls the catch rate for a real relationship the power, 1 − β (the 'Catch rate if the difference is real' box). It calls the false-alarm rate α, usually 0.05. The model computes power from a simple z-test formula; the paper uses the two rates directly."
+    "caption": "These are the 'yes' cells of the paper's 2 × 2 table (Table 1). Here c is the number of relationships tested (1,000 in the model), and R is the ratio of true to no relationships (1 to 9 in the model, giving 100 real and 900 none). The blue term is the power (the catch rate) and the orange term is α (the false-alarm rate). Each one scales only its own row."
    },
-   "recap": "Significance can fail twice: about 5% false alarms when nothing is there, and missed effects whenever power is low.",
+   "recap": "A test makes two mistakes: it lets through a share α of no-effect ideas as false alarms, and it misses a share β of real effects.",
    "activities": [
     {
      "id": "tour",
@@ -347,6 +419,82 @@
     {
      "id": "idea",
      "kind": "explain"
+    },
+    {
+     "id": "sort_cells",
+     "kind": "sort",
+     "title": "Everyday filters, same four boxes",
+     "prompt": "Every yes-or-no detector makes the same two mistakes as a significance test. Put each outcome in its box.",
+     "hypothetical": true,
+     "groups": [
+      {
+       "id": "caught",
+       "label": "Real, detector says yes (caught)"
+      },
+      {
+       "id": "missed",
+       "label": "Real, detector says no (missed: false negative)"
+      },
+      {
+       "id": "false_alarm",
+       "label": "Not real, detector says yes (false alarm: false positive)"
+      },
+      {
+       "id": "quiet",
+       "label": "Not real, detector says no (correctly quiet)"
+      }
+     ],
+     "cards": [
+      {
+       "id": "c1",
+       "text": "The smoke alarm goes off while you make toast, and there is no fire.",
+       "group": "false_alarm",
+       "feedback": "Nothing is burning, but the alarm says yes. This is the kind of mistake α counts."
+      },
+      {
+       "id": "c2",
+       "text": "A small fire starts in the basement, and the alarm stays silent.",
+       "group": "missed",
+       "feedback": "Something real was there and the detector said no. This is a miss, the kind β counts."
+      },
+      {
+       "id": "c3",
+       "text": "There is a real kitchen fire, and the alarm sounds.",
+       "group": "caught",
+       "feedback": "A real effect, correctly flagged. The share of these among real fires is the alarm's power."
+      },
+      {
+       "id": "c4",
+       "text": "An ordinary quiet evening: no fire, no alarm.",
+       "group": "quiet",
+       "feedback": "Nothing there, and nothing flagged. Most no-effect cases land here."
+      },
+      {
+       "id": "c5",
+       "text": "A home pregnancy test shows positive, but the person is not pregnant.",
+       "group": "false_alarm",
+       "feedback": "The test says yes when nothing is there: a false positive."
+      },
+      {
+       "id": "c6",
+       "text": "A drug really works, but a small study of it finds no significant effect.",
+       "group": "missed",
+       "feedback": "A real effect the test failed to catch. Small, weak studies make this mistake often."
+      },
+      {
+       "id": "c7",
+       "text": "A metal detector beeps over a coin buried in the sand.",
+       "group": "caught",
+       "feedback": "Something real, and the detector said yes."
+      },
+      {
+       "id": "c8",
+       "text": "A study of a sugar pill with no effect finds no significant difference.",
+       "group": "quiet",
+       "feedback": "No real effect, and the test correctly stays quiet."
+      }
+     ],
+     "takeaway": "A false alarm can only come from things that are not real, and a miss can only come from things that are real. That is why each mistake belongs to one row of the table."
     },
     {
      "id": "goal_1",
@@ -365,294 +513,284 @@
     {
      "id": "why",
      "kind": "reveal"
-    },
-    {
-     "id": "eq",
-     "kind": "connect"
     }
    ]
   },
   {
-   "id": "prior_odds_ppv",
-   "title": "How likely was it before you looked?",
-   "idea": "The chance that a significant finding is true depends on the ratio of true to false ideas being tested: when real effects are rare, false alarms outnumber real hits.",
+   "id": "prestudy_odds_ppv",
+   "title": "Long-shot ideas make 'yes' results unreliable",
+   "idea": "The chance that a significant finding is true (PPV) depends heavily on the share of tested ideas that were true to begin with (the pre-study odds R).",
    "role": "core",
-   "predict": {
-    "question": "A genome scan tests 100,000 gene variants. About 10 are truly linked to a disease, so there is roughly 1 true idea for every 10,000 false ones. The study has 60% power at the usual 5% cut-off, with no bias. A variant comes out just significant. Roughly how likely is it to be real?",
-    "options": [
-     "About 95%",
-     "About 60%, the study's power",
-     "About 50%",
-     "Well under 1%"
-    ],
-    "answer": 3,
-    "why": [
-     "Tempting because p < 0.05 sounds like '95% sure'. But the 5% is the false-alarm rate among false ideas, not the chance a claim is real. With almost 100,000 false ideas, that 5% makes thousands of false alarms.",
-     "Power tells you how often a real effect gets caught. It does not tell you how many of the claims are real. The handful of real hits is buried under the false alarms.",
-     "Fifty-fifty needs real hits and false alarms to be about equal. At 80% power that only happens near 16 false ideas per true one, and this field is about 10,000 to 1.",
-     "Correct. About 6 real hits (60% of 10) sit against about 5,000 false alarms (5% of ~100,000). The paper works this case in Box 1 and gets about 12 in 10,000, roughly 0.12%."
-    ]
-   },
    "terms": [
     {
-     "term": "pre-study odds (R)",
-     "means": "How many true ideas a field tests for each false one, before any study is run"
+     "term": "PPV (positive predictive value)",
+     "means": "Of all the 'yes' results, the share that are real: the chance that a significant finding is true"
     },
     {
-     "term": "positive predictive value (PPV)",
-     "means": "The share of significant, claimed findings that are actually real"
+     "term": "pre-study odds R",
+     "means": "How many ideas with a real effect a field tests for every idea with no effect, before any study is run"
     }
    ],
    "model": {
-    "title": "1000 tested ideas, sorted by whether they are real and whether the study came out significant",
-    "note": "Teaching model: a field tests 1000 ideas, each once, with power fixed at 80%, the significance cut-off fixed at 5%, and no bias. The table shows expected counts, not one random run. The formula is the paper's, but the counts are illustrative, not the paper's data.",
+    "title": "1,000 tested ideas sorted by the truth and by the test's verdict",
+    "note": "Teaching model: a fixed set of 1,000 tested ideas, and you choose how many have a real effect. Each box shows the expected count, so there is no chance variation, no bias and only one study per idea. It uses the same arithmetic as the paper's 2×2 table (Table 1). The numbers are illustrative, not the paper's data.",
     "controls": [
      {
-      "id": "false_per_true",
-      "label": "False ideas tested for each true one",
+      "id": "alpha",
+      "label": "False-alarm rate (share of no-effect ideas that get a yes)",
       "kind": "slider",
-      "min": 1,
-      "max": 200,
-      "step": 1,
-      "default": 1,
+      "min": 0.01,
+      "max": 0.5,
+      "step": 0.01,
+      "default": 0.05,
+      "unit": "",
+      "color": 3
+     },
+     {
+      "id": "power",
+      "label": "Catch rate (share of real effects that get a yes)",
+      "kind": "slider",
+      "min": 0.05,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.8,
       "unit": "",
       "color": 0
+     },
+     {
+      "id": "real",
+      "label": "Ideas with a real effect (out of 1,000)",
+      "kind": "slider",
+      "min": 1,
+      "max": 500,
+      "step": 1,
+      "default": 100,
+      "unit": "",
+      "color": 5
      }
     ],
     "outputs": [
      {
-      "id": "true_ideas",
-      "label": "Truly real ideas (of 1000)",
-      "expr": "1000 / (false_per_true + 1)",
+      "id": "true_yes",
+      "label": "Real effect, test says yes",
+      "expr": "real * power",
       "unit": "",
       "decimals": 0,
-      "color": 4
+      "color": 0
      },
      {
-      "id": "real_hits",
-      "label": "Real hits (real and significant)",
-      "expr": "0.8 * true_ideas",
-      "unit": "",
-      "decimals": 0,
-      "color": 2
-     },
-     {
-      "id": "false_alarms",
-      "label": "False alarms (not real but significant)",
-      "expr": "0.05 * (1000 - true_ideas)",
+      "id": "false_alarm",
+      "label": "No effect, test says yes",
+      "expr": "(1000 - real) * alpha",
       "unit": "",
       "decimals": 0,
       "color": 3
      },
      {
-      "id": "misses",
-      "label": "Missed real ideas",
-      "expr": "0.2 * true_ideas",
+      "id": "total_yes",
+      "label": "All 'yes' results",
+      "expr": "true_yes + false_alarm",
       "unit": "",
       "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "ratio",
+      "label": "Real ideas for each no-effect idea",
+      "expr": "real / (1000 - real)",
+      "unit": "",
+      "decimals": 3,
       "color": 5
      },
      {
-      "id": "correct_nulls",
-      "label": "Correctly not significant",
-      "expr": "0.95 * (1000 - true_ideas)",
-      "unit": "",
-      "decimals": 0,
-      "color": 6
-     },
-     {
       "id": "ppv",
-      "label": "Share of claimed findings that are real",
-      "expr": "real_hits / (real_hits + false_alarms)",
+      "label": "Share of 'yes' results that are real",
+      "expr": "true_yes / total_yes",
       "unit": "%",
       "scale": 100,
       "decimals": 0,
-      "color": 1
+      "color": 6
      }
     ],
     "visual": {
      "type": "table",
      "columns": [
-      "Truly real",
-      "Not real"
+      "Test says yes",
+      "Test says no"
      ],
      "rows": [
       {
-       "label": "Significant (claimed finding)",
+       "label": "Real effect",
+       "cells": [
+        "true_yes",
+        "real * (1 - power)"
+       ]
+      },
+      {
+       "label": "No real effect",
        "cells": [
         {
-         "value": "real_hits",
-         "highlight": "real_hits > false_alarms"
+         "value": "false_alarm",
+         "highlight": "false_alarm > true_yes"
         },
-        {
-         "value": "false_alarms",
-         "highlight": "false_alarms > real_hits"
-        }
-       ]
-      },
-      {
-       "label": "Not significant",
-       "cells": [
-        "misses",
-        "correct_nulls"
-       ]
-      },
-      {
-       "label": "Total tested",
-       "cells": [
-        "true_ideas",
-        "1000 - true_ideas"
+        "(1000 - real) * (1 - alpha)"
        ]
       }
      ],
      "decimals": 0,
-     "scale": "none"
+     "scale": "sequential",
+     "scale_min": 0,
+     "scale_max": 1000
     }
    },
    "animation": {
     "steps": [
      {
-      "say": "This grid sorts 1000 ideas a field tests. The columns say whether an idea is truly real. The rows say whether its study came out significant.",
-      "focus": "true_ideas",
-      "ms": 4000
+      "say": "Same table as last time: 1,000 tested ideas, sorted by whether the effect is real and by what the test said.",
+      "focus": "total_yes",
+      "ms": 5000
      },
      {
-      "say": "The top row is what gets claimed: real hits on the left, false alarms on the right.",
-      "focus": [
-       "real_hits",
-       "false_alarms"
-      ],
-      "ms": 3500
-     },
-     {
-      "say": "Every study here has 80% power and uses the usual 5% cut-off. Those two stay fixed.",
-      "focus": "misses",
-      "ms": 3000
-     },
-     {
-      "say": "This slider sets how many false ideas the field tests for each true one. Watch the top row as it moves.",
+      "say": "One new slider: how many of the 1,000 ideas truly have an effect. Watch the rows refill as it drops.",
       "set": {
-       "false_per_true": 10
+       "real": 30
       },
-      "focus": "false_per_true",
-      "ms": 4000
+      "focus": "real",
+      "ms": 6000
      },
      {
-      "say": "This number is the share of claimed findings that are actually real.",
+      "say": "And one new box: of all the 'yes' results, what share are real. Keep an eye on it.",
+      "set": {
+       "real": 100
+      },
       "focus": "ppv",
-      "ms": 3000
+      "ms": 5000
      }
     ]
    },
    "explore": {
-    "prompt": "Slide through fields from 'half the ideas are true' to 'true ideas are rare' and watch the claimed-findings row tip over.",
+    "prompt": "Leave the test alone and change the mix of ideas going in, then try to rescue a field of long shots by changing the test.",
     "goals": [
      {
-      "text": "Find the most lopsided field, with at least 14 false ideas per true one, where a claimed finding is still more likely real than not.",
-      "when": "ppv > 0.5 && false_per_true >= 14",
+      "text": "Without touching the test's two rates, find the tipping point: the largest number of real ideas at which false alarms still outnumber real discoveries (within a few ideas).",
+      "when": "false_alarm > true_yes && real >= 54 && abs(alpha - 0.05) < 0.001 && abs(power - 0.8) < 0.001",
       "solution": {
-       "false_per_true": 15
+       "real": 58
       },
       "hints": [
-       "Watch the two cells in the top row as you move the slider. Which way does the balance tip?",
-       "You want the point just before false alarms overtake real hits, where the two cells are almost equal.",
-       "Each true idea gives 0.8 of a real hit. Each false idea gives 0.05 of a false alarm. How many false ideas does it take to match one true idea's hits? Stop one short of that."
+       "Only one slider should move here: the one for how many ideas are real.",
+       "Lower it slowly and watch for the moment the 'No effect, test says yes' box becomes highlighted.",
+       "The flip happens somewhere between 50 and 60 real ideas. Find the last setting before the highlight switches off."
       ]
      },
      {
-      "text": "Make false alarms outnumber real hits about three to one.",
-      "when": "false_alarms / real_hits >= 2.8 && false_alarms / real_hits <= 3.2",
+      "text": "Picture a field where only 2% of tested ideas are real. Change the test so that at least half of the 'yes' results are real.",
+      "when": "abs(real - 20) < 0.5 && ppv >= 0.5",
       "solution": {
-       "false_per_true": 48
+       "real": 20,
+       "alpha": 0.01
       },
       "hints": [
-       "Compare the two top-row cells as a ratio, not as separate numbers.",
-       "That ratio grows in step with the slider. Double the false ideas per true one and the ratio doubles.",
-       "In the first goal you found where the ratio is about 1 to 1. A field three times more lopsided gives 3 to 1."
+       "With so few real ideas, which kind of mistake is crowding the 'yes' column?",
+       "The catch rate is already high. The false alarms come from the 980 no-effect ideas, so shrink the share of them that get a yes.",
+       "You need a false-alarm rate well below 2%, or a lower false-alarm rate together with a higher catch rate."
       ]
      }
     ]
    },
+   "predict": {
+    "question": "A lab screens 10,000 random chemicals for a cure, and perhaps 10 of them truly work. The test catches 80% of real cures and gives a false alarm for 5% of duds. One chemical comes back 'yes'. Roughly how likely is it to really work?",
+    "options": [
+     "About 95%",
+     "About 80%",
+     "About 50%",
+     "Under 2%"
+    ],
+    "answer": 3,
+    "why": [
+     "Tempting because the false-alarm rate is 5%, but that is the share of duds that pass. It is not the share of passes that are real. About 500 duds pass, against about 8 real cures.",
+     "80% is the catch rate: the chance that a real cure gets a yes. The question asks the reverse, how many of the yeses are real, and that depends on how rare real cures are.",
+     "A yes is not a coin flip. With only 10 real cures among 10,000, the mix going in is so lopsided that false alarms far outnumber real finds.",
+     "Correct. About 8 real cures pass (80% of 10), and about 500 duds pass (5% of 9,990). So only about 8 of roughly 508 yeses are real, around 1.6%."
+    ]
+   },
    "understand": {
     "feedback": {
-     "correct": "Right. At about 10,000 false ideas per true one, the 5% false-alarm rate produces thousands of false alarms, while 60% of 10 real variants gives about 6 real hits. A barely significant result is still very unlikely to be real. The paper's Box 1 puts it at about 12 in 10,000.",
-     "incorrect": "You may have read p < 0.05 or the power as the chance a claim is real. Neither is. What matters is how real hits compare with false alarms, and when true ideas are extremely rare, the false alarms swamp the hits."
+     "correct": "Right. When real ideas are rare, even a good test yields far more false alarms than real finds: about 8 real cures among roughly 508 yeses here.",
+     "incorrect": "You probably read one of the test's rates as the chance that a yes is true. Those rates describe what the test does to real ideas and to duds. How many yeses are real also depends on how rare real cures are, and here they are very rare."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start with a field where half the ideas are true: 1 false idea for each true one. That is 500 real ideas, and 80% of them are caught: 400 real hits. Of the 500 false ideas, 5% slip through: 25 false alarms.",
+       "say": "Start where we left off: 100 real ideas out of 1,000. The 'yes' column holds 80 real discoveries and 45 false alarms, so 64% of the yeses are real.",
        "set": {
-        "false_per_true": 1
+        "real": 100
        },
-       "focus": [
-        "real_hits",
-        "false_alarms"
-       ],
-       "ms": 5500
+       "focus": "ppv",
+       "ms": 5000
       },
       {
-       "say": "The balance of true to false ideas, judged before any study is run, is called the pre-study odds (R). Here R = 1. The slider shows its flip side, false ideas per true one, so R = 1 ÷ slider.",
-       "focus": "false_per_true",
-       "ms": 5500
-      },
-      {
-       "say": "Of the 425 claimed findings, 400 are real, about 94%. This share is called the positive predictive value (PPV).",
+       "say": "That share has a name: the PPV (positive predictive value). It is the chance that a 'yes' result is actually true.",
        "focus": "ppv",
        "ms": 4500
       },
       {
-       "say": "Now make true ideas rarer: 10 false per true one, so R = 1/10. Real ideas drop to about 91, and real hits to about 73. False alarms rise to about 45.",
+       "say": "Now picture a field that tests mostly sensible ideas, half of them real. You get 400 discoveries against 25 false alarms, and the PPV climbs to about 94%.",
        "set": {
-        "false_per_true": 10
+        "real": 500
        },
+       "focus": "ppv",
+       "ms": 5500
+      },
+      {
+       "say": "The number of real ideas a field tests for each no-effect idea is called the pre-study odds R. Here it is 500 to 500, so R = 1.",
+       "focus": "ratio",
+       "ms": 5000
+      },
+      {
+       "say": "Now a field of long shots: 20 real ideas in 1,000, so R is about 0.02. Only 16 real discoveries, but 49 false alarms. The PPV falls to about 25%.",
+       "set": {
+        "real": 20
+       },
+       "focus": "false_alarm",
+       "ms": 6000
+      },
+      {
+       "say": "Notice what did not change: the test. It still gives 5% false alarms and catches 80% of real effects. Only the mix of ideas going in changed.",
        "focus": [
-        "real_hits",
-        "false_alarms"
+        "alpha",
+        "power"
        ],
        "ms": 5500
       },
       {
-       "say": "PPV falls to about 62%. Nothing about the studies changed. Only the mix of ideas going in did.",
-       "focus": "ppv",
-       "ms": 4000
-      },
-      {
-       "say": "At 50 false per true, about 16 real hits face about 49 false alarms. The false-alarm cell lights up: it has overtaken the hits. PPV is about 24%.",
+       "say": "Push it to the extreme: one real idea in 1,000. At most one real discovery hides among about 50 false alarms. Under 2% of the yeses are real.",
        "set": {
-        "false_per_true": 50
-       },
-       "focus": "false_alarms",
-       "ms": 5500
-      },
-      {
-       "say": "Notice that false alarms can never top 50, which is 5% of 1000. They barely grow. What changes is that the real hits shrink toward nothing.",
-       "focus": "real_hits",
-       "ms": 5000
-      },
-      {
-       "say": "At 200 false per true, about 4 real hits sit against about 50 false alarms. PPV is about 7%: a significant result here is far more likely a false alarm than a discovery.",
-       "set": {
-        "false_per_true": 200
+        "real": 1
        },
        "focus": "ppv",
-       "ms": 5500
+       "ms": 6000
       }
      ]
     },
-    "explanation": "A significant result can come from a real effect (a real hit) or from a false idea that got lucky (a false alarm). How many of each you get depends on the mix of ideas being tested, the pre-study odds (R). When true ideas are common, real hits dominate. When they are rare, the steady 5% of false ideas that slip through outnumbers the few real hits, even though every study is run perfectly. Ioannidis puts this into a 2 × 2 table of expected counts and derives the positive predictive value (PPV) = (1 − β)R/(R − βR + α), so a finding is more likely true than false only when power × R exceeds α. In his genome example (Box 1), R is about 1 in 10,000 and a just-significant result is real only about 12 times in 10,000. This assumes no bias and one study per idea, and in practice R is never known exactly: the paper says it must be estimated with rough, partly subjective assumptions.",
-    "quote": "According to the 2 × 2 table, one gets PPV = (1 - β)R/(R - βR + α). A research finding is thus more likely true than false if (1 - β)R > α.",
-    "quote_where": "Modeling the Framework for False Positive Findings"
+    "explanation": "The test was the same in every scene: 5% false alarms and an 80% catch rate. Only the mix of ideas going in, the pre-study odds R, changed. When real ideas are rare, the few real discoveries are swamped by false alarms from the huge pile of no-effect ideas, so the PPV (positive predictive value) falls even though every study was run correctly. Ioannidis uses a 2×2 table to show that PPV = (1 − β)R/(R − βR + α), so a finding is more likely true than false only when power × R is larger than α. In his genome example (Box 1), R is 1 in 10,000 and power is 60%, so a just-significant result raises the chance of truth about 12-fold, but only to 12 in 10,000. The catch is that R is rarely known, and the paper says researchers must make rough, admittedly subjective, estimates of it. This model also leaves out bias and repeated studies, which the paper shows lower the PPV further.",
+    "quote": "As shown above, the post-study probability that a finding is true (PPV) depends a lot on the pre-study odds (R). Thus, research findings are more likely true in confirmatory designs, such as large phase III randomized controlled trials, or meta-analyses thereof, than in hypothesis-generating experiments.",
+    "quote_where": "Corollary 3",
+    "source_ids": [
+     "s1"
+    ],
+    "source_id": "s1"
    },
    "check": {
     "kind": "model",
-    "task": "Put the model in a state where only about 1 in 10 claimed findings is real (between 8% and 12%).",
-    "when": "ppv >= 0.08 && ppv <= 0.12",
+    "task": "Keep the usual 5% false-alarm rate and give the test a perfect catch rate. Then find a field where, even so, fewer than half of the 'yes' results are real.",
+    "when": "abs(alpha - 0.05) < 0.001 && power > 0.99 && ppv < 0.5",
     "solution": {
-     "false_per_true": 144
+     "power": 1,
+     "real": 40
     },
-    "hint": "One real claim in ten means about 9 false alarms for every real hit. False alarms level off near 50, so real hits must shrink to around 5 or 6. How rare must true ideas be for that?",
-    "misconception": "That a result with p < 0.05 is real about 95% of the time, whatever field it comes from."
+    "hint": "With a perfect catch rate, the number of real discoveries equals the number of real ideas. Compare that with 5% of the no-effect ideas, then lower the number of real ideas until the false alarms win.",
+    "misconception": "A significant result at p < 0.05 means the finding is 95% likely to be true. In fact, 5% is the share of no-effect ideas that pass. How many passes are real also depends on how rare real ideas are."
    },
    "connect": {
     "equation": [
@@ -661,33 +799,44 @@
       "link": "ppv"
      },
      {
-      "text": " = (1 − β)"
+      "text": " = "
+     },
+     {
+      "text": "(1 − β)",
+      "link": "power"
      },
      {
       "text": "R",
-      "link": "false_per_true"
+      "link": "ratio"
      },
      {
       "text": " / ("
      },
      {
       "text": "R",
-      "link": "false_per_true"
+      "link": "ratio"
      },
      {
       "text": " − β"
      },
      {
       "text": "R",
-      "link": "false_per_true"
+      "link": "ratio"
      },
      {
-      "text": " + α)"
+      "text": " + "
+     },
+     {
+      "text": "α",
+      "link": "alpha"
+     },
+     {
+      "text": ")"
      }
     ],
-    "caption": "PPV (orange) is the share of claimed findings that are real. R is the pre-study odds of true to false ideas, the inverse of the slider (R = 1 ÷ false ideas per true one). 1 − β is power, fixed here at 0.8, and α is the significance cut-off, fixed at 0.05. This is the paper's formula for one unbiased study per idea."
+    "caption": "This is the paper's formula from its 2×2 table. PPV is the 'share of yes results that are real' box. (1 − β) is the catch rate slider (power). α is the false-alarm rate slider. R, the pre-study odds, is the 'real ideas for each no-effect idea' box, which the model computes as real ÷ (1,000 − real). The top of the fraction counts real discoveries; the bottom counts all yeses, real and false."
    },
-   "recap": "A significant result is only as trustworthy as the field it comes from: when true ideas are rare, false alarms outnumber real hits and most claimed findings are false.",
+   "recap": "The same test gives mostly trustworthy 'yes' results in a field of likely ideas, and mostly false alarms in a field of long shots.",
    "activities": [
     {
      "id": "tour",
@@ -727,289 +876,319 @@
      "id": "eq",
      "kind": "connect"
     }
-   ]
+   ],
+   "builds_on": "tests_as_filters"
   },
   {
-   "id": "power_and_small_studies",
+   "id": "power_drags_ppv",
    "title": "Small studies, small effects, weaker findings",
-   "idea": "Lower power shrinks the number of real hits while the false alarms stay the same, so findings from small studies or small effects are less likely to be true.",
+   "idea": "Small studies and small effects lower a study's power, and lower power drags down the chance that a significant finding is true.",
    "role": "core",
    "predict": {
-    "question": "Two labs test the same kind of idea in the same field. Lab A studies 50 people and Lab B studies 5,000. Both report a result just under p < 0.05. Whose finding is more likely to be real?",
+    "question": "Imagine a study so tiny, chasing an effect so faint, that its power falls all the way to 5%. That is the same as its false-alarm rate. If it reports a significant 'yes', what is the chance the finding is true?",
     "options": [
-     "Lab B's: its big study catches real effects far more often, so real hits make up more of its significant results",
-     "Equal: both crossed the same p < 0.05 line",
-     "Lab A's: getting significance with only 50 people shows the effect must be strong",
-     "Lab B's, because big studies produce fewer false alarms"
+     "0%: every such finding is false",
+     "The same as before the study: the 'yes' tells you nothing new",
+     "50%: a coin flip",
+     "Still fairly high, because it passed the significance test"
     ],
-    "answer": 0,
+    "answer": 1,
     "why": [
-     "Right. Same field means the same odds, and the false-alarm cell is the same for both. The big study fills the real-hit cell much more, so its PPV is higher.",
-     "Tempting, because the p-value line is identical. But the share of significant results that are real also depends on how often the study catches real effects, and that is much lower for 50 people.",
-     "It feels like an achievement, but a small study gets significant results from false ideas just as often (about 5%). It catches far fewer real ones, so its hits are more likely to be false alarms.",
-     "Right lab, wrong reason. The false-alarm rate is set by the 5% cut-off, whatever the study size. Big studies win by adding real hits, not by removing false alarms."
+     "Tempting, since the study is so weak. But real effects still pass 5% of the time, so some 'yes' results are true. They just aren't any more common than before the study.",
+     "Correct. Real ideas and dead ends now pass equally often (5% each), so 'yes' results mix them in the same proportion they were tested. PPV = R/(R + 1), the pre-study chance.",
+     "A coin flip needs real and false ideas tested in equal numbers. Here PPV falls back to the starting odds, which is 50% only if R = 1.",
+     "This is the trap the paper warns about. A 'yes' only counts as evidence if real effects pass more often than dead ends. At 5% power, they don't."
     ]
    },
    "terms": [
     {
-     "term": "power",
-     "means": "The chance that a study comes out significant when the effect it tests is real. Small studies have low power."
+     "term": "sample size",
+     "means": "How many people (or mice, or genes) a study measures. Here it is the number of people in each group."
     },
     {
-     "term": "effect size",
-     "means": "How big a real effect is. Small effects are harder to detect, so they also lower power."
+     "term": "underpowered",
+     "means": "Too small for the effect it is hunting, so the study usually misses that effect even when it is real."
     }
    ],
    "model": {
-    "title": "1000 tested ideas, sorted by whether they are real and whether the study came out significant",
-    "note": "Teaching model: a field tests 1000 ideas, each once, with the significance cut-off fixed at 5% and no bias. The new slider sets how often a study catches a real effect, which stands in for both study size and how big the real effects are. The table shows expected counts, not one random run. The formula is the paper's no-bias case, but the counts are illustrative, not the paper's data.",
+    "title": "How often a 'yes' is true, as the study gets bigger or the effect gets fainter",
+    "note": "Teaching model: power comes from a simple two-group test (two-sided, false-alarm rate 0.05), using the size of the real effect in standard-deviation units and the number of people per group. The chance a 'yes' is true uses the paper's no-bias formula for a single study. Bias and multiple teams are left out. The formula is the paper's. All slider settings and the resulting numbers are illustrative, not the paper's data.",
     "controls": [
      {
-      "id": "false_per_true",
-      "label": "False ideas tested for each true one",
+      "id": "n",
+      "label": "People in each group",
       "kind": "slider",
-      "min": 1,
-      "max": 200,
-      "step": 1,
-      "default": 1,
+      "min": 10,
+      "max": 2000,
+      "step": 10,
+      "default": 100,
       "unit": "",
       "color": 0
      },
      {
-      "id": "power",
-      "label": "Chance a study catches a real effect",
+      "id": "d",
+      "label": "Size of the real effect (d)",
       "kind": "slider",
-      "min": 5,
-      "max": 95,
-      "step": 5,
-      "default": 80,
-      "unit": "%",
+      "min": 0.05,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.3,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "odds",
+      "label": "True ideas per false idea tested (R)",
+      "kind": "slider",
+      "min": 0.01,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.25,
+      "unit": "",
       "color": 2
      }
     ],
     "outputs": [
      {
-      "id": "true_ideas",
-      "label": "Truly real ideas (of 1000)",
-      "expr": "1000 / (false_per_true + 1)",
-      "unit": "",
-      "decimals": 0,
-      "color": 4
-     },
-     {
-      "id": "real_hits",
-      "label": "Real hits (real and significant)",
-      "expr": "(power / 100) * true_ideas",
-      "unit": "",
-      "decimals": 0,
-      "color": 2
-     },
-     {
-      "id": "false_alarms",
-      "label": "False alarms (not real but significant)",
-      "expr": "0.05 * (1000 - true_ideas)",
-      "unit": "",
+      "id": "power",
+      "label": "Real effects caught (power)",
+      "expr": "normcdf(d * sqrt(n / 2) - 1.96, 0, 1) + normcdf(-d * sqrt(n / 2) - 1.96, 0, 1)",
+      "unit": "%",
+      "scale": 100,
       "decimals": 0,
       "color": 3
      },
      {
-      "id": "misses",
-      "label": "Missed real ideas",
-      "expr": "(1 - power / 100) * true_ideas",
-      "unit": "",
-      "decimals": 0,
-      "color": 5
-     },
-     {
-      "id": "correct_nulls",
-      "label": "Correctly not significant",
-      "expr": "0.95 * (1000 - true_ideas)",
-      "unit": "",
-      "decimals": 0,
-      "color": 6
-     },
-     {
       "id": "ppv",
-      "label": "Share of claimed findings that are real",
-      "expr": "real_hits / (real_hits + false_alarms)",
+      "label": "Chance a 'yes' is true (PPV)",
+      "expr": "power * odds / (power * odds + 0.05)",
       "unit": "%",
       "scale": 100,
       "decimals": 0,
-      "color": 1
+      "color": 4
+     },
+     {
+      "id": "prior",
+      "label": "Chance before the study",
+      "expr": "odds / (odds + 1)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 6
      }
     ],
     "visual": {
-     "type": "table",
-     "columns": [
-      "Truly real",
-      "Not real"
-     ],
-     "rows": [
+     "type": "curves",
+     "x": {
+      "label": "True ideas per false idea tested (R)",
+      "min": 0,
+      "max": 1
+     },
+     "y": {
+      "label": "Chance a 'yes' result is true",
+      "min": 0,
+      "max": 1
+     },
+     "series": [
       {
-       "label": "Significant (claimed finding)",
-       "cells": [
-        {
-         "value": "real_hits",
-         "highlight": "real_hits > false_alarms"
-        },
-        {
-         "value": "false_alarms",
-         "highlight": "false_alarms > real_hits"
-        }
-       ]
+       "id": "ppv_curve",
+       "label": "This study",
+       "expr": "power * x / (power * x + 0.05)",
+       "color": 4,
+       "dashed": false
       },
       {
-       "label": "Not significant",
-       "cells": [
-        "misses",
-        "correct_nulls"
-       ]
-      },
-      {
-       "label": "Total tested",
-       "cells": [
-        "true_ideas",
-        "1000 - true_ideas"
-       ]
+       "id": "ref80",
+       "label": "A study that catches 80% of real effects",
+       "expr": "0.8 * x / (0.8 * x + 0.05)",
+       "color": 5,
+       "dashed": true
       }
      ],
-     "decimals": 0,
-     "scale": "none"
+     "markers": [
+      {
+       "id": "odds_marker",
+       "x": "odds",
+       "label": "This field",
+       "color": 2
+      }
+     ],
+     "hlines": [
+      {
+       "id": "even",
+       "y": 0.5,
+       "label": "As likely true as false"
+      }
+     ],
+     "points": [
+      {
+       "id": "here",
+       "x": "odds",
+       "y": "ppv",
+       "label": "This field's 'yes'"
+      }
+     ]
     }
    },
    "animation": {
     "steps": [
      {
-      "say": "It's the same table as before: 1000 tested ideas, split by whether they are real and whether the study came out significant.",
-      "set": {
-       "false_per_true": 1,
-       "power": 80
-      },
-      "focus": "ppv",
-      "ms": 5000
+      "say": "The solid curve shows the chance that a 'yes' result is true. Each spot along the bottom is a different field.",
+      "focus": "ppv_curve",
+      "ms": 3200
      },
      {
-      "say": "This slider is the same one as before. It sets how many false ideas the field tests for each real one.",
-      "focus": "false_per_true",
-      "ms": 5000
-     },
-     {
-      "say": "This slider is new. It sets how often a study catches a real effect when there is one. Watch the real hits shrink as it drops.",
-      "set": {
-       "power": 40
-      },
+      "say": "On the left are fields full of long shots. Further right, more of the tested ideas are real. The dot marks one field.",
       "focus": [
-       "power",
-       "real_hits"
+       "odds",
+       "here"
       ],
-      "ms": 6500
+      "ms": 3400
+     },
+     {
+      "say": "This slider sets how many people the study tests in each group. Shrink it and watch the curve sink.",
+      "set": {
+       "n": 30
+      },
+      "focus": "n",
+      "ms": 3600
+     },
+     {
+      "say": "This one sets how big the real effect is. Make it fainter and the curve sinks again.",
+      "set": {
+       "n": 100,
+       "d": 0.15
+      },
+      "focus": "d",
+      "ms": 3600
+     },
+     {
+      "say": "The dashed curve is a solid study that catches 80% of real effects. Keep it in mind as a yardstick.",
+      "set": {
+       "d": 0.3
+      },
+      "focus": "ref80",
+      "ms": 3200
      }
     ]
    },
    "explore": {
-    "prompt": "Now you set the field. Use both sliders to see when weak studies sink a field, and when strong studies can rescue one.",
+    "prompt": "Now you steer. Keep the field's odds where they are and work only with the study's size and the effect's size.",
     "goals": [
      {
-      "text": "In a field where at least 1 in 5 tested ideas is real, make most claimed findings false.",
-      "when": "true_ideas > 199 && ppv < 0.5",
+      "text": "The field only has small effects (size 0.2 or less). Make its 'yes' results true at least 4 times in 5, without changing the field's odds.",
+      "when": "d < 0.21 && ppv >= 0.8 && abs(odds - 0.25) < 0.001",
       "solution": {
-       "false_per_true": 4,
-       "power": 15
+       "d": 0.2,
+       "n": 500
       },
       "hints": [
-       "Making real ideas rarer only goes so far here. What else can shrink the real hits?",
-       "Keep the field fairly well aimed, then pull the catch-rate slider a long way down.",
-       "Most findings are false once real hits fall below false alarms. Use as many false ideas as the goal allows, then try the lowest few catch rates."
+       "The effect has to stay small. Which other slider raises power?",
+       "Make the study bigger and watch the power box. The chance a 'yes' is true climbs with it.",
+       "You need the study to catch roughly four in five real effects. That takes a few hundred people per group."
       ]
      },
      {
-      "text": "In a field where real ideas are 1 in 18 or rarer, make real hits outnumber false alarms.",
-      "when": "false_per_true >= 17 && real_hits > false_alarms",
+      "text": "Run a small study (30 people per group or fewer) whose 'yes' results are still true at least 3 times in 4, at the field's current odds.",
+      "when": "n <= 30 && ppv >= 0.75 && abs(odds - 0.25) < 0.001",
       "solution": {
-       "false_per_true": 17,
-       "power": 90
+       "n": 20,
+       "d": 0.8
       },
       "hints": [
-       "Rarer real ideas mean more false alarms, and you can't remove those. What can you do about the real hits?",
-       "Make the field just as rare as the goal allows, then push the catch rate up.",
-       "The margin is thin: only the top few catch-rate settings work, and only at the least rare end of the allowed range."
+       "With so few people, what else could raise power?",
+       "A bigger real effect is easier to catch, even in a small study.",
+       "Keep the study small and push the effect well past the middle of its range."
       ]
      }
     ]
    },
    "understand": {
+    "source_ids": [
+     "s1"
+    ],
     "feedback": {
-     "correct": "Yes. Within one field the false alarms are fixed by the 5% cut-off. The bigger study catches more of the real effects, so a larger share of its significant results are real.",
-     "incorrect": "You may have treated p < 0.05 as meaning the same thing in every study, or assumed big studies cut false alarms. The cut-off sets the false alarms. Study size changes how many real hits sit beside them, and that is what changes the share that are real."
+     "correct": "Right. When power drops to the false-alarm rate, real ideas and dead ends pass the test at the same rate. The 'yes' results then mix true and false ideas in exactly the proportion they were tested, so the chance stays at its pre-study level.",
+     "incorrect": "You may have treated 'passed the test' as evidence in itself. A 'yes' only raises the chance an idea is true if real effects pass more often than dead ends. At 5% power they pass equally often, so the chance stays where it started: R/(R + 1)."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Let's aim the field less well: 10 false ideas for each real one. With studies that catch real effects 80% of the time, we get about 73 real hits against 45 false alarms. 62% of claimed findings are real.",
+       "say": "Start at 100 people per group and a moderate effect. The study catches about 56% of real effects; that is its power. A 'yes' here is true about 74% of the time.",
        "set": {
-        "false_per_true": 10,
-        "power": 80
+        "n": 100,
+        "d": 0.3,
+        "odds": 0.25
        },
        "focus": [
-        "real_hits",
-        "false_alarms",
+        "power",
         "ppv"
        ],
-       "ms": 5500
+       "ms": 4200
       },
       {
-       "say": "The chance that a study catches a real effect is called its power. Small studies have low power: with few people, real effects often fail to reach significance.",
-       "focus": "power",
-       "ms": 4500
-      },
-      {
-       "say": "Cut the power to 50%. Real hits fall to about 45. Now look at the false alarms: still 45.",
+       "say": "The number of people a study measures is its sample size. Cut it to 20 per group. Power falls to about 16%, and a 'yes' is now true only about 44% of the time. It is more likely false than true.",
        "set": {
-        "power": 50
+        "n": 20
        },
        "focus": [
-        "real_hits",
-        "false_alarms"
+        "n",
+        "ppv"
+       ],
+       "ms": 4800
+      },
+      {
+       "say": "Why? False alarms don't shrink with the study: about 5 in every 100 dead-end ideas still pass. Real effects, though, get caught far less often. True 'yes' results thin out while the false ones stay.",
+       "focus": "power",
+       "ms": 5000
+      },
+      {
+       "say": "A study this small for the effect it hunts is called underpowered. Notice that the whole curve dropped, not just the dot. Low power hurts in every field, whatever its odds.",
+       "focus": "ppv_curve",
+       "ms": 4600
+      },
+      {
+       "say": "Now go back to 100 per group but make the effect faint. Power is about 11% and a 'yes' is true about 35% of the time. A faint effect hurts in exactly the same way, because both work through power.",
+       "set": {
+        "n": 100,
+        "d": 0.1
+       },
+       "focus": [
+        "d",
+        "power",
+        "ppv"
        ],
        "ms": 5000
       },
       {
-       "say": "Why don't false alarms move? They come from ideas that aren't real. For those, only the 5% cut-off matters, not how big the study is.",
-       "focus": "false_alarms",
-       "ms": 5000
-      },
-      {
-       "say": "Drop power to 20%, like a small study. Only 18 real hits are left beside 45 false alarms. The missed real ideas pile up below, and just 29% of findings are real.",
+       "say": "Keep the faint effect but run 1,000 per group. Power climbs back to about 61% and a 'yes' is true about 75% of the time. A big enough study can make up for a faint effect.",
        "set": {
-        "power": 20
+        "n": 1000
        },
        "focus": [
-        "misses",
+        "n",
         "ppv"
        ],
-       "ms": 5500
+       "ms": 4800
       },
       {
-       "say": "Small effects do the same thing. When the real effect size is small, even a decent study often misses it. Small effects lower power just as small samples do.",
-       "focus": "power",
-       "ms": 4500
-      },
-      {
-       "say": "Push power down to 5%, the same rate as the false alarms. Real ideas and false ones now reach significance equally often. The share of real findings, 9%, equals the share of tested ideas that were real. The study told you nothing new.",
+       "say": "Finally, push to the strongest study: it catches nearly every real effect. The curve rises above the dashed yardstick, but the dot stops near 83%. With 1 true idea for every 4 false ones, even perfect power can't pass that ceiling.",
        "set": {
-        "power": 5
+        "n": 2000,
+        "d": 0.3
        },
        "focus": [
-        "ppv",
-        "true_ideas"
+        "ppv_curve",
+        "ppv"
        ],
-       "ms": 6500
+       "ms": 5600
       }
      ]
     },
-    "explanation": "A significant result comes from one of two cells: real hits or false alarms. Power only touches the real-hit cell. Lower it and real hits shrink, while false alarms stay fixed by the 5% cut-off, so a growing share of claimed findings are false. Small studies and small effects both lower power, so both make findings less trustworthy. As power sinks towards 5%, a significant result adds almost nothing to what you knew before. The paper shows this from its PPV formula rather than by counting real studies. It contrasts large cardiology trials with molecular studies about 100 times smaller, and smoking's large effects (relative risks 3–20) with tiny genetic ones (1.1–1.5), all with other factors held equal and bias set aside.",
+    "explanation": "A study that is small, or that hunts a faint effect, catches fewer of the real effects: its power drops. False alarms don't drop with it, because about 5 in every 100 dead-end ideas still pass the test. So a bigger share of the 'yes' results are false alarms, and the chance that any given 'yes' is true (PPV) falls. Ioannidis derives this from his PPV formula, shows it in figure panels at power 0.20, 0.50 and 0.80, and states it as Corollaries 1 and 2: fields with small studies or small effects should expect fewer true findings. This is an argument from the formula, not a measurement across fields. The paper also notes the factors interact: fields that expect small effects may run larger studies to make up for it.",
     "quote": "The smaller the studies conducted in a scientific field, the less likely the research findings are to be true. Small sample size means smaller power and, for all functions above, the PPV for a true research finding decreases as power decreases towards 1 − β = 0.05.",
-    "quote_where": "Corollaries, Corollary 1"
+    "quote_where": "Corollaries, Corollary 1",
+    "source_id": "s1"
    },
    "connect": {
     "equation": [
@@ -1026,15 +1205,29 @@
      },
      {
       "text": "R",
-      "link": "false_per_true"
+      "link": "odds"
      },
      {
-      "text": " / (R − βR + α)"
+      "text": " / ("
+     },
+     {
+      "text": "R",
+      "link": "odds"
+     },
+     {
+      "text": " − β"
+     },
+     {
+      "text": "R",
+      "link": "odds"
+     },
+     {
+      "text": " + α)"
      }
     ],
-    "caption": "This is the paper's no-bias formula. (1 − β) is power, the new green slider. R is the pre-study odds, which equals 1 divided by the false ideas tested per true one. α is the 5% cut-off, held fixed. Lowering (1 − β) shrinks the top of the fraction, which is the real hits. The α part of the bottom is the false alarms, and it doesn't change, so PPV falls."
+    "caption": "This is the paper's formula for one study with no bias. (1 − β) is the power, the share of real effects caught; in the model it comes from the people-per-group and effect-size sliders. β is the share missed. R is the field's true-to-false ratio (the odds slider), and α = 0.05 is the false-alarm rate. The bottom equals (1 − β)R + α, so as power shrinks toward α, the true 'yes' results shrink while the false alarms (α) stay put."
    },
-   "recap": "Small studies and small effects lower power: real hits shrink, false alarms don't, so significant findings are less likely to be true.",
+   "recap": "Small studies and faint effects both lower power. Since false alarms don't shrink with power, a 'yes' from a weak study is less likely to be true.",
    "activities": [
     {
      "id": "tour",
@@ -1052,443 +1245,34 @@
      "id": "cmp",
      "kind": "compare",
      "hypothetical": true,
-     "prompt": "Same field, same odds (5 false ideas tested for each real one). The only difference is study size. On the left is a large, cardiology-style trial; on the right is a small study. Compare the two significant-result cells.",
+     "prompt": "The paper contrasts big trials in cardiology (several thousand people) with molecular studies about 100-fold smaller. Here both hunt the same small effect in a field with the same odds. The equal effects and odds are our assumption. A third case adds a large effect, like smoking's link to cancer, in a small study.",
      "cases": [
       {
-       "label": "Large trial (catches 90% of real effects)",
+       "label": "Large cardiology-style trial: 2,000 per group, small effect",
        "values": {
-        "false_per_true": 5,
-        "power": 90
+        "n": 2000,
+        "d": 0.2,
+        "odds": 0.25
        }
       },
       {
-       "label": "Small study (catches 20% of real effects)",
+       "label": "Small molecular-style study: 20 per group, same small effect",
        "values": {
-        "false_per_true": 5,
-        "power": 20
+        "n": 20,
+        "d": 0.2,
+        "odds": 0.25
+       }
+      },
+      {
+       "label": "Small study, but a large effect (illustrative size)",
+       "values": {
+        "n": 20,
+        "d": 0.9,
+        "odds": 0.25
        }
       }
      ],
-     "takeaway": "False alarms are about 42 in both. The large trial has about 150 real hits beside them, so 78% of its findings are real. The small study has about 33, which gives 44%. Same field, same cut-off: only power changed. In the paper, cardiology trials and small molecular studies also differ in other ways, but holding the odds fixed isolates the role of power."
-    },
-    {
-     "id": "goal_1",
-     "kind": "goal",
-     "i": 0
-    },
-    {
-     "id": "goal_2",
-     "kind": "goal",
-     "i": 1
-    },
-    {
-     "id": "q",
-     "kind": "choice",
-     "mode": "determinate",
-     "question": "Two fields run studies of the same size, and in both about 1 in 10 tested ideas is real. In field A the real effects are large, like smoking's effect on lung cancer (the paper cites relative risks of 3–20). In field B they are tiny, like single gene variants for complex diseases (1.1–1.5). Which field's significant findings are more likely to be true?",
-     "options": [
-      {
-       "text": "Field A: large effects are easier to catch, so its studies have more power and more real hits beside the same false alarms",
-       "feedback": "Right. Effect size feeds into power. With the same study size and the same odds, field A's real-hit cell is bigger, so its PPV is higher. This is the paper's Corollary 2."
-      },
-      {
-       "text": "Field B: hunting tiny effects takes more care, so its findings are more trustworthy",
-       "feedback": "Care is a separate matter. With the same study size, tiny effects are missed more often, so field B has fewer real hits beside the same number of false alarms."
-      },
-      {
-       "text": "Neither: same study size and same odds give the same share of true findings",
-       "feedback": "Study size isn't the only thing that sets power. Effect size does too, so the two fields have different power and different PPV."
-      },
-      {
-       "text": "You can't tell without seeing each study's p-value",
-       "feedback": "The p-values would show whether each study crossed 0.05, but the question is what crossing means. That depends on power and odds, and power is lower in field B."
-      }
-     ],
-     "answer": 0,
-     "hints": [
-      "Which cell of the table does effect size change: real hits or false alarms?",
-      "A tiny real effect is easy to miss. What does that do to power?"
-     ]
-    }
-   ],
-   "builds_on": "prior_odds_ppv"
-  },
-  {
-   "id": "bias_u",
-   "title": "Bias turns non-findings into findings",
-   "idea": "If a share u of analyses that should have come out null get reported as findings anyway, the extra 'hits' come mostly from false ideas, so PPV drops.",
-   "role": "core",
-   "predict": {
-    "question": "Imagine a field of tiny studies where power is only 5%, so a real effect is caught no more often than a false idea crosses the cut-off. What does adding bias do to the share of claimed findings that are real?",
-    "options": [
-     "It drops sharply, as it does in other fields",
-     "It stays where it started, at the share of tested ideas that are real",
-     "It rises, because bias also rescues real ideas that were missed"
-    ],
-    "answer": 1,
-    "why": [
-     "Tempting, since bias lowered PPV every time so far. That was because the nulls were mostly false ideas. At 5% power, real and false ideas both come out null 95% of the time, so bias draws on both equally.",
-     "Right. When power equals the 5% false-alarm rate, real and false ideas are claimed at the same rate, with or without bias. So PPV stays at the starting share. This is the paper's exception: 'unless 1 − β ≤ α'.",
-     "Bias does rescue some missed real ideas. But it rescues false ones in exactly the same proportion, so the share can't rise. Try it: set power to its minimum and move the new slider."
-    ]
-   },
-   "terms": [
-    {
-     "term": "bias",
-     "means": "In the paper's sense, the share u of analyses that should have come out not significant but get reported as findings anyway, through choices in design, data, analysis or reporting"
-    },
-    {
-     "term": "positive predictive value",
-     "means": "PPV: the share of claimed findings that are actually real"
-    },
-    {
-     "term": "selective reporting",
-     "means": "Writing up only the analyses or outcomes that came out significant"
-    },
-    {
-     "term": "study registration",
-     "means": "Publicly fixing a study's plan before the data come in, so the analysis can't be reshaped afterwards"
-    }
-   ],
-   "model": {
-    "title": "1000 tested ideas, sorted by whether they are real and whether they get claimed as findings",
-    "note": "Teaching model: the same field of 1000 ideas, each tested once at a 5% significance cut-off. The new slider is the paper's u: a share of the analyses that should have come out null get reported as findings anyway. Following the paper's assumption, this share is the same for real and not-real ideas. The table shows expected counts, not one random run. The formula is the paper's Table 2 case, but the counts are illustrative, not the paper's data.",
-    "controls": [
-     {
-      "id": "false_per_true",
-      "label": "False ideas tested for each true one",
-      "kind": "slider",
-      "min": 1,
-      "max": 200,
-      "step": 1,
-      "default": 1,
-      "unit": "",
-      "color": 0
-     },
-     {
-      "id": "power",
-      "label": "Chance a study catches a real effect",
-      "kind": "slider",
-      "min": 5,
-      "max": 95,
-      "step": 5,
-      "default": 80,
-      "unit": "%",
-      "color": 2
-     },
-     {
-      "id": "bias",
-      "label": "Null results reported as findings anyway",
-      "kind": "slider",
-      "min": 0,
-      "max": 80,
-      "step": 5,
-      "default": 0,
-      "unit": "%",
-      "color": 7
-     }
-    ],
-    "outputs": [
-     {
-      "id": "true_ideas",
-      "label": "Truly real ideas (of 1000)",
-      "expr": "1000 / (false_per_true + 1)",
-      "unit": "",
-      "decimals": 0,
-      "color": 4
-     },
-     {
-      "id": "real_hits",
-      "label": "Real hits (real and claimed)",
-      "expr": "true_ideas * (power / 100 + (bias / 100) * (1 - power / 100))",
-      "unit": "",
-      "decimals": 0,
-      "color": 2
-     },
-     {
-      "id": "false_alarms",
-      "label": "False alarms (not real but claimed)",
-      "expr": "(1000 - true_ideas) * (0.05 + (bias / 100) * 0.95)",
-      "unit": "",
-      "decimals": 0,
-      "color": 3
-     },
-     {
-      "id": "misses",
-      "label": "Missed real ideas",
-      "expr": "true_ideas * (1 - power / 100) * (1 - bias / 100)",
-      "unit": "",
-      "decimals": 0,
-      "color": 5
-     },
-     {
-      "id": "correct_nulls",
-      "label": "Correctly not claimed",
-      "expr": "(1000 - true_ideas) * 0.95 * (1 - bias / 100)",
-      "unit": "",
-      "decimals": 0,
-      "color": 6
-     },
-     {
-      "id": "ppv",
-      "label": "Share of claimed findings that are real",
-      "expr": "real_hits / (real_hits + false_alarms)",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 0,
-      "color": 1
-     }
-    ],
-    "visual": {
-     "type": "table",
-     "columns": [
-      "Truly real",
-      "Not real"
-     ],
-     "rows": [
-      {
-       "label": "Claimed as a finding",
-       "cells": [
-        {
-         "value": "real_hits",
-         "highlight": "real_hits > false_alarms"
-        },
-        {
-         "value": "false_alarms",
-         "highlight": "false_alarms > real_hits"
-        }
-       ]
-      },
-      {
-       "label": "…of these, null results reported anyway",
-       "cells": [
-        "true_ideas * (bias / 100) * (1 - power / 100)",
-        "(1000 - true_ideas) * (bias / 100) * 0.95"
-       ]
-      },
-      {
-       "label": "Not claimed",
-       "cells": [
-        "misses",
-        "correct_nulls"
-       ]
-      },
-      {
-       "label": "Total tested",
-       "cells": [
-        "true_ideas",
-        "1000 - true_ideas"
-       ]
-      }
-     ],
-     "decimals": 0,
-     "scale": "none"
-    }
-   },
-   "animation": {
-    "steps": [
-     {
-      "say": "Same table as before: 1000 tested ideas, split by whether they are real and whether they end up claimed as findings. The top row is what gets published as a discovery.",
-      "set": {
-       "false_per_true": 1,
-       "power": 80,
-       "bias": 0
-      },
-      "focus": [
-       "real_hits",
-       "false_alarms"
-      ],
-      "ms": 5500
-     },
-     {
-      "say": "One new slider. Of the studies that came out null, what share still get written up as findings? This could happen through a tweak to the analysis or a choice of what to report. The new second row counts these.",
-      "set": {
-       "bias": 30
-      },
-      "focus": "bias",
-      "ms": 6500
-     },
-     {
-      "say": "Watch the claimed row swell, and watch the share of claimed findings that are real.",
-      "focus": "ppv",
-      "ms": 4500
-     }
-    ]
-   },
-   "explore": {
-    "prompt": "Bias acts only on null results. Use that to predict where it does the most damage, then test your guess on the table.",
-    "goals": [
-     {
-      "text": "Keep studies well powered (at least 80%) and the field fairly focused (at most five false ideas per true one), yet make false alarms outnumber real hits in the claimed row.",
-      "when": "power >= 80 && false_per_true <= 5 && false_alarms > real_hits",
-      "solution": {
-       "false_per_true": 4,
-       "bias": 20
-      },
-      "hints": [
-       "Without the new slider, can false alarms ever win under these limits? Check the claimed row.",
-       "The new slider takes a share of each column's null results. Which column has more null results to feed it, and how can you make that column bigger?",
-       "Take the false-ideas slider up to its allowed limit first. Then raise the new slider one step at a time until the right-hand claimed cell turns larger."
-      ]
-     },
-     {
-      "text": "Find a field where a modest amount of bias (at most 15%) cuts the share of claimed findings that are real to less than half of what it would be with no bias.",
-      "when": "bias > 0 && bias <= 15 && ppv < 0.5 * ((power / 100) * true_ideas / ((power / 100) * true_ideas + 0.05 * (1000 - true_ideas)))",
-      "solution": {
-       "false_per_true": 50,
-       "bias": 10
-      },
-      "hints": [
-       "Bias hurts most where real ideas are rare.",
-       "Note the share with no bias first, then add a little and compare. In the focused field from the walkthrough, a small dose barely dents it.",
-       "Push the false-ideas slider well past twenty before adding any bias. With dozens of false ideas per true one, a small step on the new slider is enough."
-      ]
-     }
-    ]
-   },
-   "understand": {
-    "feedback": {
-     "correct": "Yes. Bias hurts because null results are mostly false ideas. When power is as low as the false-alarm rate, real and false ideas come out null equally often. Bias then pads both columns in the same proportion, and PPV stays at the starting share of real ideas.",
-     "incorrect": "You probably expected bias always to lower PPV, or to help by rescuing missed real ideas. What matters is the mix of the null results it draws on. At 5% power that mix matches the mix of ideas tested, so PPV doesn't move. It only falls when the nulls are mostly false ideas, which is the usual case."
-    },
-    "walkthrough": {
-     "steps": [
-      {
-       "say": "Start with an honest field: one false idea for each true one, 80% power, and no null result reported as a finding. 400 real hits against 25 false alarms, so 94% of claims are real.",
-       "set": {
-        "false_per_true": 1,
-        "power": 80,
-        "bias": 0
-       },
-       "focus": "ppv",
-       "ms": 4500
-      },
-      {
-       "say": "Look at the 'Not claimed' row. These are the null results. Only 100 sit under 'Truly real' (the missed ideas). 475 sit under 'Not real'. Real ideas are usually caught, but false ideas almost always come out null.",
-       "focus": [
-        "misses",
-        "correct_nulls"
-       ],
-       "ms": 5500
-      },
-      {
-       "say": "Now let 10% of null results be reported as findings anyway. The paper calls this share bias, u. It takes 10% of each column's nulls: about 10 extra real hits, but about 48 extra false alarms.",
-       "set": {
-        "bias": 10
-       },
-       "focus": [
-        "real_hits",
-        "false_alarms"
-       ],
-       "ms": 6000
-      },
-      {
-       "say": "The share of claimed findings that are real is called the positive predictive value, PPV. It drops from 94% to 85%. The paper's estimate for a well-run, adequately powered trial with a 50% starting chance is about 85%.",
-       "focus": "ppv",
-       "ms": 5500
-      },
-      {
-       "say": "Push u to 30%. The real column gains 30 more claims, while the not-real column gains about 143. PPV falls to 72%.",
-       "set": {
-        "bias": 30
-       },
-       "focus": [
-        "false_alarms",
-        "ppv"
-       ],
-       "ms": 5000
-      },
-      {
-       "say": "Now switch to a long-shot field: 20 false ideas for each true one, and no bias. PPV is already only 44%, with about 38 real hits and 48 false alarms.",
-       "set": {
-        "false_per_true": 20,
-        "bias": 0
-       },
-       "focus": "ppv",
-       "ms": 5000
-      },
-      {
-       "say": "Give it the same 30% bias. Real hits barely move, from 38 to 41, because there are hardly any real nulls to draw from. False alarms jump from 48 to about 319. PPV crashes to 11%.",
-       "set": {
-        "bias": 30
-       },
-       "focus": [
-        "real_hits",
-        "false_alarms",
-        "ppv"
-       ],
-       "ms": 6500
-      }
-     ]
-    },
-    "explanation": "The paper defines bias as anything in design, data, analysis or reporting that turns a result that should have been null into a reported finding; selective reporting is a typical form. Bias works on null results, and null results are mostly false ideas: a real idea is usually caught, but a false idea almost always comes out null. So each step up in u adds a few real hits and many false alarms, and PPV falls fastest where true ideas are rare. In the paper's schizophrenia gene example (Box 1), u = 0.10 cuts the chance that a significant finding is true from about 12 × 10⁻⁴ to 4.4 × 10⁻⁴. The paper suggests common standards and study registration as remedies, but warns that bias remains a major problem even in strict designs. Like the paper, the model assumes u is the same for real and false ideas; the paper also notes that 'reverse bias' can bury real findings, though it judges this less common.",
-    "quote": "Thus, with increasing bias, the chances that a research finding is true diminish considerably.",
-    "quote_where": "Bias section"
-   },
-   "connect": {
-    "equation": [
-     {
-      "text": "PPV",
-      "link": "ppv"
-     },
-     {
-      "text": " = ("
-     },
-     {
-      "text": "[1 − β]",
-      "link": "power"
-     },
-     {
-      "text": "R",
-      "link": "false_per_true"
-     },
-     {
-      "text": " + "
-     },
-     {
-      "text": "u",
-      "link": "bias"
-     },
-     {
-      "text": "βR) / (R + α − βR + "
-     },
-     {
-      "text": "u",
-      "link": "bias"
-     },
-     {
-      "text": " − "
-     },
-     {
-      "text": "u",
-      "link": "bias"
-     },
-     {
-      "text": "α + "
-     },
-     {
-      "text": "u",
-      "link": "bias"
-     },
-     {
-      "text": "βR)"
-     }
-    ],
-    "caption": "The paper's formula for PPV with bias. 1 − β is the power slider. R is the ratio of true to false ideas, so R = 1 ÷ (false ideas per true one). u is the new slider, and α = 0.05. On top, uβR is bias rescuing missed real ideas. Below, u − uα is bias rescuing the far larger pool of false ideas' nulls."
-   },
-   "recap": "Bias feeds on null results, and null results are mostly false ideas, so every bit of bias adds far more false alarms than real hits.",
-   "activities": [
-    {
-     "id": "tour",
-     "kind": "watch"
-    },
-    {
-     "id": "how",
-     "kind": "walk"
-    },
-    {
-     "id": "idea",
-     "kind": "explain"
+     "takeaway": "With everything else equal, the big trial's 'yes' is true about 83% of the time and the small study's only about a third of the time. A large effect lets even a small study do well, because it lifts power. Those are Corollaries 1 and 2 seen as one movement of the curve. These numbers are illustrative; the paper gives the sample-size contrast, not these exact values."
     },
     {
      "id": "goal_1",
@@ -1507,144 +1291,734 @@
     {
      "id": "why",
      "kind": "reveal"
+    }
+   ]
+  },
+  {
+   "id": "bias_inflates",
+   "title": "Bending the analysis turns 'no' into 'yes'",
+   "idea": "Bias (u), the share of analyses that should have been negative but get reported as findings, adds false 'yes' results and lowers PPV.",
+   "role": "core",
+   "predict": {
+    "question": "A field keeps bending its analyses just as often as before, but it starts running much bigger studies, so power rises a lot. What happens to the chance that one of its 'yes' results is true?",
+    "options": [
+     "It rises a little, but the bending still holds it well down",
+     "It jumps close to 100%, because big studies catch real effects",
+     "It stays exactly the same, because only the bending matters",
+     "It falls, because bigger studies find more false effects"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. More power adds a few more true 'yes' results. The bent 'yes' results from false ideas stay, so they keep the chance well below what an honest study would give.",
+     "Tempting, because power did help in the last concept. But bending makes false ideas come out 'yes' whatever the sample size, so a huge study still carries those false alarms (in the walkthrough, about 32%).",
+     "Bending is the main drag, but power still counts. Catching more real effects adds true 'yes' results, so the chance does creep up.",
+     "The paper does warn that extremely large studies can flag trivial effects. That is a different problem. In this model more power only adds true 'yes' results, so the chance cannot fall."
+    ]
+   },
+   "terms": [
+    {
+     "term": "u",
+     "means": "The share of analyses that should have come out 'no' but get reported as findings anyway, because of bias"
     },
     {
-     "id": "practices",
+     "term": "post hoc subgroup analysis",
+     "means": "Splitting the data into groups after seeing the results, then checking each group until one shows an effect"
+    },
+    {
+     "term": "selective reporting",
+     "means": "Publishing only the analyses or outcomes that came out 'yes' and leaving out the rest"
+    }
+   ],
+   "model": {
+    "title": "How often a 'yes' is true when some 'no' results get bent into 'yes'",
+    "note": "Teaching model: power comes from a simple two-sided, two-group test with a false-alarm rate of 0.05. It uses the size of the real effect in standard-deviation units and the number of people per group. The chance a 'yes' is true uses the paper's single-study formula with bias (its Table 2). Like the paper, it assumes the same share of analyses is bent whether or not the idea is true. Reverse bias (true findings buried) and multiple teams are left out. The formula is the paper's. All slider settings and resulting numbers are illustrative, not the paper's data.",
+    "controls": [
+     {
+      "id": "n",
+      "label": "People in each group",
+      "kind": "slider",
+      "min": 10,
+      "max": 2000,
+      "step": 10,
+      "default": 100,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "d",
+      "label": "Size of the real effect (d)",
+      "kind": "slider",
+      "min": 0.05,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.3,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "odds",
+      "label": "True ideas per false idea tested (R)",
+      "kind": "slider",
+      "min": 0.01,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.25,
+      "unit": "",
+      "color": 2
+     },
+     {
+      "id": "u",
+      "label": "Share of 'no' results reported as 'yes'",
+      "kind": "slider",
+      "min": 0,
+      "max": 0.8,
+      "step": 0.01,
+      "default": 0,
+      "unit": "",
+      "color": 7
+     }
+    ],
+    "outputs": [
+     {
+      "id": "power",
+      "label": "Real effects caught (power)",
+      "expr": "normcdf(d * sqrt(n / 2) - 1.96, 0, 1) + normcdf(-d * sqrt(n / 2) - 1.96, 0, 1)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "clean",
+      "label": "Chance a 'yes' is true, if run honestly",
+      "expr": "power * odds / (power * odds + 0.05)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "ppv",
+      "label": "Chance a 'yes' is true (PPV)",
+      "expr": "(power * odds + u * (1 - power) * odds) / (power * odds + 0.05 + u * 0.95 + u * (1 - power) * odds)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "alarm",
+      "label": "False ideas that come out 'yes'",
+      "expr": "0.05 + 0.95 * u",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 7
+     },
+     {
+      "id": "prior",
+      "label": "Chance before the study",
+      "expr": "odds / (odds + 1)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 6
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "True ideas per false idea tested (R)",
+      "min": 0,
+      "max": 1
+     },
+     "y": {
+      "label": "Chance a 'yes' result is true",
+      "min": 0,
+      "max": 1
+     },
+     "series": [
+      {
+       "id": "ppv_curve",
+       "label": "This study, as reported",
+       "expr": "(power * x + u * (1 - power) * x) / (power * x + 0.05 + u * 0.95 + u * (1 - power) * x)",
+       "color": 4,
+       "dashed": false
+      },
+      {
+       "id": "clean_curve",
+       "label": "Same study, run honestly",
+       "expr": "power * x / (power * x + 0.05)",
+       "color": 5,
+       "dashed": true
+      }
+     ],
+     "markers": [
+      {
+       "id": "odds_marker",
+       "x": "odds",
+       "label": "This field",
+       "color": 2
+      }
+     ],
+     "hlines": [
+      {
+       "id": "even",
+       "y": 0.5,
+       "label": "As likely true as false"
+      }
+     ],
+     "points": [
+      {
+       "id": "here",
+       "x": "odds",
+       "y": "ppv",
+       "label": "This field's 'yes'"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This is the same picture as before. The solid curve shows how often a 'yes' is true across fields, and the dot marks this field.",
+      "set": {
+       "u": 0
+      },
+      "focus": [
+       "ppv_curve",
+       "here"
+      ],
+      "ms": 4500
+     },
+     {
+      "say": "One new slider: the share of results that should have said 'no' but get reported as 'yes' because the analysis was bent. Watch the solid curve sink.",
+      "set": {
+       "u": 0.3
+      },
+      "focus": "u",
+      "ms": 5500
+     },
+     {
+      "say": "The dashed curve stays put. It is the same study run honestly, kept for comparison. The new box counts how many false ideas come out 'yes'.",
+      "focus": [
+       "clean_curve",
+       "alarm"
+      ],
+      "ms": 5000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Bend the analysis yourself. Find out how little bending it takes to spoil a 'yes', and what can still rescue one.",
+    "goals": [
+     {
+      "text": "Starting from the original study, add just enough bending that a 'yes' becomes slightly worse than a coin flip: true less than 50% of the time, but more than 45%.",
+      "when": "ppv < 0.5 && ppv > 0.45",
+      "solution": {
+       "u": 0.12
+      },
+      "hints": [
+       "Only one slider adds false 'yes' results without changing the study itself.",
+       "Small amounts matter. Nudge the bending slider up from zero and watch the PPV box, not the curve.",
+       "The tipping point comes well before one in five 'no' results gets bent."
+      ]
+     },
+     {
+      "text": "Leave heavy bending in place, with at least 30% of 'no' results reported as 'yes', and still get a 'yes' that is more likely true than false.",
+      "when": "u >= 0.3 && ppv > 0.5",
+      "solution": {
+       "u": 0.4,
+       "odds": 1
+      },
+      "hints": [
+       "Bigger studies alone won't get you there. What else made 'yes' results trustworthy in the earlier concepts?",
+       "Bending turns false ideas into 'yes' results. A field that tests fewer false ideas has fewer to bend.",
+       "Keep the bending slider at or above 30%, then move the true-ideas-per-false-idea slider well to the right."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "source_ids": [
+     "s1"
+    ],
+    "feedback": {
+     "correct": "Yes. Extra power adds true 'yes' results, so the chance creeps up. The bent 'yes' results from false ideas don't depend on sample size, though, so the bending keeps the chance held down. The paper's own advice is that large studies may still have biases.",
+     "incorrect": "You probably expected sample size to decide everything, either curing the problem or making it worse. In the paper's formula, bending adds false 'yes' results at the same rate whatever the study's size. More power helps a little, and only less bending removes those false alarms."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start honest, with nothing bent. The solid and dashed curves lie on top of each other, and a 'yes' in this field is true about 74% of the time.",
+       "set": {
+        "u": 0,
+        "n": 100,
+        "d": 0.3,
+        "odds": 0.25
+       },
+       "focus": "ppv",
+       "ms": 4500
+      },
+      {
+       "say": "Now bend one in ten analyses that should have said 'no'. The paper calls this share u. Ways to do it: a post hoc subgroup analysis (slicing data after seeing it) or selective reporting (publishing only what 'worked').",
+       "set": {
+        "u": 0.1
+       },
+       "focus": "u",
+       "ms": 7000
+      },
+      {
+       "say": "Look at the false-alarm box. Chance alone used to let 5% of false ideas through as 'yes'. Now it is nearly 15%: chance's 5% plus the bent ones.",
+       "focus": "alarm",
+       "ms": 5000
+      },
+      {
+       "say": "At u = 0.2 the solid curve sinks well below the dashed honest one. A 'yes' is now true only about 40% of the time, so it is more likely false than true.",
+       "set": {
+        "u": 0.2
+       },
+       "focus": [
+        "ppv_curve",
+        "clean_curve"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "Bend half of them, and a 'yes' is true about 27% of the time. The idea had a 20% chance before anyone ran the study, so the study added almost nothing.",
+       "set": {
+        "u": 0.5
+       },
+       "focus": [
+        "ppv",
+        "prior"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "Can a huge study rescue it? With 2,000 people per group, power climbs to nearly 100%. Yet a 'yes' is true only about 32% of the time. More people don't stop false ideas from being bent into 'yes'.",
+       "set": {
+        "n": 2000
+       },
+       "focus": [
+        "power",
+        "ppv"
+       ],
+       "ms": 6500
+      },
+      {
+       "say": "Now undo the bending in the same big study. A 'yes' is true about 83% of the time. The drop from 83% to 32% was what the bending cost. The cure is less bending, not just more people.",
+       "set": {
+        "u": 0
+       },
+       "focus": [
+        "here",
+        "clean_curve"
+       ],
+       "ms": 6500
+      }
+     ]
+    },
+    "explanation": "The paper defines bias as design, data, analysis or reporting choices that produce a 'finding' when an honest analysis would have said 'no'. It calls u the share of such analyses that get reported as findings anyway. Most honest 'no' results come from false ideas, so bending them adds mostly false 'yes' results. The false-alarm rate climbs from 5% toward 5% + u, and the chance a 'yes' is true (PPV) falls. Ioannidis showed this by adding u to his 2 × 2 table (Table 2) and plotting PPV against pre-study odds for several levels of u at three levels of power (Figure 1). This is a model built on assumptions, not a measurement. It assumes u is the same for true and false ideas, it leaves out 'reverse bias' (true findings buried), which the paper thinks is less common, and the drop fails only if a study catches real effects no more often than its 5% false-alarm rate.",
+    "quote": "In the presence of bias (Table 2), one gets PPV = ([1 - β]R + uβR)/(R + α − βR + u − uα + uβR), and PPV decreases with increasing u, unless 1 − β ≤ α, i.e., 1 − β ≤ 0.05 for most situations. Thus, with increasing bias, the chances that a research finding is true diminish considerably.",
+    "quote_where": "Section 'Bias'",
+    "source_id": "s1"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "PPV",
+      "link": "ppv"
+     },
+     {
+      "text": " = (["
+     },
+     {
+      "text": "1 − β",
+      "link": "power"
+     },
+     {
+      "text": "]"
+     },
+     {
+      "text": "R",
+      "link": "odds"
+     },
+     {
+      "text": " + "
+     },
+     {
+      "text": "u",
+      "link": "u"
+     },
+     {
+      "text": "βR) / (R + α − βR + "
+     },
+     {
+      "text": "u",
+      "link": "u"
+     },
+     {
+      "text": " − "
+     },
+     {
+      "text": "u",
+      "link": "u"
+     },
+     {
+      "text": "α + "
+     },
+     {
+      "text": "u",
+      "link": "u"
+     },
+     {
+      "text": "βR)"
+     }
+    ],
+    "caption": "This is the paper's PPV formula with bias. 1 − β is power (the orange-linked output), R is the true-to-false ratio (green slider) and α is the 0.05 false-alarm rate. u (the bending slider) appears in both parts. In the top, uβR counts real effects that were missed but bent into 'yes'. In the bottom, u − uα counts false ideas bent into 'yes', which is why bending drags PPV down. Set u to 0 and you get back the honest formula from earlier concepts."
+   },
+   "recap": "Every analysis bent from 'no' to 'yes' mostly adds a false finding, so more flexibility means a 'yes' is less likely true, and bigger studies can't wash that out.",
+   "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "sort_practices",
      "kind": "sort",
-     "title": "What moves u?",
-     "prompt": "Each card is a research practice the paper discusses. Does it tend to raise bias (more null results turned into findings) or lower it?",
+     "title": "What pushes u up?",
+     "prompt": "Sort each research practice by what it does. Does it bend more 'no' results into 'yes' (raises u), does it hold bending down, or is it plain chance, which is not bias at all?",
      "groups": [
       {
        "id": "raises",
-       "label": "Raises u"
+       "label": "Raises u: more 'no' turned into 'yes'"
       },
       {
-       "id": "lowers",
-       "label": "Lowers u"
+       "id": "holds",
+       "label": "Holds u down"
+      },
+      {
+       "id": "chance",
+       "label": "Chance, not bias"
       }
      ],
      "cards": [
       {
        "id": "c1",
-       "text": "Running subgroup analyses that weren't planned, after seeing the data",
+       "text": "After seeing the results, the team checks men, women, older and younger patients separately, and reports the group that shows an effect",
        "group": "raises",
-       "feedback": "The paper lists post hoc subgroup analyses as one way to push results across p = 0.05. Every extra unplanned cut is another chance for a null to become a 'finding'."
+       "feedback": "This is a post hoc subgroup analysis, which the paper lists as a way to make more relationships cross p = 0.05."
       },
       {
        "id": "c2",
-       "text": "Deciding after the fact to include or exclude certain patients",
+       "text": "Partway through, the team changes what counts as having the disease",
        "group": "raises",
-       "feedback": "The paper names 'serendipitous inclusion or exclusion of certain patients or controls' as a form of manipulation that raises u."
+       "feedback": "The paper names 'changes in the disease or control definitions' as a form of manipulation that raises u."
       },
       {
        "id": "c3",
-       "text": "Changing the disease definition until a result crosses p < 0.05",
+       "text": "Some patients are dropped from the data after the team looks at how they did",
        "group": "raises",
-       "feedback": "Changes in disease or control definitions give more ways to turn a null into a positive. The paper's Corollary 4 calls this flexibility."
+       "feedback": "The paper calls this 'serendipitous inclusion or exclusion of certain patients or controls': flexibility that raises u."
       },
       {
        "id": "c4",
-       "text": "Writing up only the outcomes that came out significant",
+       "text": "The team tries many analysis methods and reports only the one with the best result",
        "group": "raises",
-       "feedback": "Selective reporting is the paper's 'typical form' of bias. The paper notes strong evidence that it happens even in randomized trials."
+       "feedback": "This is selective reporting. The paper warns about fields where 'only “best” results are reported'."
       },
       {
        "id": "c5",
-       "text": "Registering the study plan before collecting data",
-       "group": "lowers",
-       "feedback": "The paper suggests upfront registration, at least for randomized trials, and adhering to a protocol. A fixed plan leaves less room to reshape a null afterwards."
+       "text": "A funder who profits from a positive result helps design and write up the study",
+       "group": "raises",
+       "feedback": "The paper's Corollary 5 says conflicts of interest may increase bias, u."
       },
       {
        "id": "c6",
-       "text": "Following common standards for how trials are run and reported",
-       "group": "lowers",
-       "feedback": "Corollary 4: adherence to common standards 'is likely to increase the proportion of true findings'."
+       "text": "The plan is written and registered before any data come in, and the study follows it to the letter",
+       "group": "holds",
+       "feedback": "The paper suggests upfront registration and adhering to a protocol, as in randomized trials, to diminish bias."
       },
       {
        "id": "c7",
-       "text": "Using an outcome everyone agrees on, like death",
-       "group": "lowers",
-       "feedback": "The paper contrasts unequivocal outcomes such as death with many made-up scales. Fewer outcome choices mean fewer ways to manufacture a finding."
+       "text": "The outcome is one everyone agrees on and can't be redefined, such as death",
+       "group": "holds",
+       "feedback": "The paper says true findings may be more common when outcomes are 'unequivocal and universally agreed (e.g., death)'."
       },
       {
        "id": "c8",
-       "text": "Using a standard, agreed analysis method instead of trying many and reporting the 'best'",
-       "group": "lowers",
-       "feedback": "The paper says fields with stereotyped methods, such as the log-rank test, may yield more true findings than fields where only 'best' results are reported."
+       "text": "A flawlessly run study of a false idea gets p < 0.05 purely by luck",
+       "group": "chance",
+       "feedback": "The paper says bias 'should not be confused with chance variability'. This false alarm is already counted in the 5% α, not in u."
       }
      ],
-     "takeaway": "Flexibility after the data arrive raises u. Fixing choices in advance lowers it. The paper warns that even strict designs still show substantial bias."
+     "takeaway": "Flexibility after seeing the data, and interests in a particular answer, push u up. Fixed plans and agreed outcomes hold it down. Some false 'yes' results happen by luck even in perfect studies; those are α, not bias."
     },
     {
-     "id": "eq",
-     "kind": "connect"
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "use",
+     "kind": "predict"
+    },
+    {
+     "id": "why",
+     "kind": "reveal"
     }
    ],
-   "builds_on": "power_and_small_studies"
+   "builds_on": "power_drags_ppv"
   },
   {
-   "id": "many_teams",
-   "title": "The hotter the field, the shakier the finding",
-   "idea": "When n teams test the same question and attention goes to whichever one gets a significant result, the chance of at least one false alarm grows quickly, so that lone finding is less likely to be true.",
+   "id": "null_field_bias",
+   "title": "When nothing is there, effects measure bias",
+   "idea": "In a field where no tested effect is real, every claimed effect comes from chance plus bias, so the size of the claimed effects measures the field's bias.",
+   "role": "core",
+   "terms": [
+    {
+     "term": "null field",
+     "means": "A research field where none of the effects being tested is actually real"
+    },
+    {
+     "term": "relative risk",
+     "means": "How many times more likely an outcome is in one group than in another; 1.0 means no difference"
+    },
+    {
+     "term": "net bias",
+     "means": "The overall push toward 'yes' results in a field once all its biases are added together"
+    }
+   ],
+   "recap": "If nothing real is there, chance alone scatters results around zero, so any steady, one-sided pattern of claimed effects measures bias, and very large effects deserve suspicion before celebration.",
+   "understand": {
+    "explanation": "Imagine a field where none of the ideas being tested is real; the paper calls this a “null field.” If its studies were perfect, their estimates would only scatter by chance around 'no effect': a relative risk (how many times more often the outcome happens in one group than in another, where 1.0 means no difference) would land a little above or a little below 1.0, and about 1 test in 20 would reach p < 0.05 by luck (the false-alarm rate α). Bias is the share u of analyses that should have come out negative but get reported as findings, and it pushes results one way, so any steady excess beyond that chance scatter is not a discovery but a reading of the field's net bias, meaning all its biases added together. The paper goes further: among null fields, the ones claiming the biggest effects have the worst bias, so a very large, very significant effect calls for careful checking, not only excitement. This is a line of reasoning, not a measurement: in practice we rarely know for sure that a field is null, and the paper offers it as a way to read evidence, not as data from a real field.",
+    "quote": "In such a “null field,” one would ideally expect all observed effect sizes to vary by chance around the null in the absence of bias. The extent that observed findings deviate from what is expected by chance alone would be simply a pure measure of the prevailing bias.",
+    "quote_where": "Section 'Claimed Research Findings May Often Be Simply Accurate Measures of the Prevailing Bias'",
+    "source_id": "s1",
+    "source_ids": [
+     "s1"
+    ]
+   },
+   "activities": [
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "ev",
+     "kind": "stages",
+     "hypothetical": true,
+     "prompt": "Follow the paper's own thought experiment about diet and a tumour. The paper itself says 'let us suppose': this is an imagined field, not real data. Reveal one stage at a time.",
+     "stages": [
+      {
+       "label": "1. Assume nothing is real",
+       "text": "Suppose that no nutrient or eating pattern actually changes the risk of developing one particular tumour. Every nutrient you might test has no true effect. This is a null field."
+      },
+      {
+       "label": "2. A way to state the size of an effect",
+       "text": "Researchers compare people who eat the most of a nutrient (the top third of intake) with people who eat the least (the bottom third). The result is given as a relative risk. A relative risk of 1.0 means the two groups get the tumour equally often. A value of 1.3 means the high-intake group gets it 30% more often, and 0.8 means 20% less often."
+      },
+      {
+       "label": "3. What chance alone would give",
+       "text": "If the studies were flawless, each estimate would land somewhere near 1.0 by chance: some a bit above, some a bit below. Roughly 1 test in 20 would reach significance by luck, and those flukes would point in either direction. Nothing would line up."
+      },
+      {
+       "label": "4. What the literature claims",
+       "text": "Now suppose the published papers have tested 60 nutrients and report that every one of them is linked to the tumour, with relative risks between 1.2 and 1.4. That is far more 'findings' than chance allows, and they all point the same way."
+      },
+      {
+       "label": "5. The gap is the bias",
+       "text": "Since nothing real is there, the distance between stage 3 and stage 4 cannot be discovery. It can only come from bias: choices in design, analysis and reporting that turn 'no' into 'yes'. The size of the claimed effects is then a measure of the field's net bias, meaning all its biases added together. In the paper's words, claimed effect sizes are 'the most accurate estimates of the net bias'."
+      },
+      {
+       "label": "6. The twist, and its limits",
+       "text": "Comparing null fields, the ones claiming stronger effects are the ones with worse bias. The paper notes that a few true effects hidden among the false ones would not change this picture much when most findings are false. But we rarely know for certain that a field is null. The paper says researchers will resist that label, and that other lines of evidence or new methods are what eventually settle it."
+      }
+     ],
+     "takeaway": "When the truth is 'nothing', chance gives a scatter centred on no effect. Any steady, one-sided excess in what gets claimed is a reading of bias."
+    },
+    {
+     "id": "s",
+     "kind": "sort",
+     "hypothetical": true,
+     "title": "Chance or bias?",
+     "prompt": "Picture an imagined null field: none of the effects tested is real. Sort each observation by what most likely produced it.",
+     "groups": [
+      {
+       "id": "chance",
+       "label": "Expected by chance alone"
+      },
+      {
+       "id": "bias",
+       "label": "Signal of bias"
+      }
+     ],
+     "cards": [
+      {
+       "id": "c1",
+       "text": "Across many studies, the estimates fall a little above and a little below 'no effect'",
+       "group": "chance",
+       "feedback": "This is exactly what flawless studies produce when nothing is real: random scatter centred on no effect."
+      },
+      {
+       "id": "c2",
+       "text": "About 1 test in 20 reaches p < 0.05",
+       "group": "chance",
+       "feedback": "That matches the false-alarm rate α = 0.05. Even perfect studies let this many flukes through."
+      },
+      {
+       "id": "c3",
+       "text": "The few significant results are split between 'raises risk' and 'lowers risk'",
+       "group": "chance",
+       "feedback": "Chance has no favourite direction, so flukes point both ways. A split like this is what luck looks like."
+      },
+      {
+       "id": "c4",
+       "text": "All 60 nutrients tested are reported as linked to the disease",
+       "group": "bias",
+       "feedback": "Chance would give about 3 lucky hits out of 60, not 60. A hit rate this high in a null field points to bias turning negatives into findings."
+      },
+      {
+       "id": "c5",
+       "text": "The reported effects cluster tightly between 1.2 and 1.4, and none sits near 1.0",
+       "group": "bias",
+       "feedback": "Chance would put most estimates near 1.0. A tight one-sided cluster away from 1.0 is the paper's picture of the field's net bias."
+      },
+      {
+       "id": "c6",
+       "text": "An effect appears only after some patients are dropped from the analysis after the data were seen",
+       "group": "bias",
+       "feedback": "The paper lists this kind of selective inclusion or exclusion as one way to push results over the p = 0.05 line. It is bias, not luck."
+      },
+      {
+       "id": "c7",
+       "text": "Only the analyses that crossed p < 0.05 were written up; the others stayed in a drawer",
+       "group": "bias",
+       "feedback": "Selective reporting is the paper's typical example of bias. It fills the published record with 'yes' results that chance alone would not supply."
+      }
+     ],
+     "takeaway": "Chance looks like scatter, about α of tests reaching significance, and no favoured direction. Bias looks like too many findings, all leaning the same way."
+    },
+    {
+     "id": "q",
+     "kind": "choice",
+     "mode": "determinate",
+     "hypothetical": true,
+     "question": "In a field where most ideas tested are long shots, a new study reports that one food triples the risk of a disease, with an extremely small p-value. What does the paper's argument suggest you should do first?",
+     "options": [
+      {
+       "text": "Treat it as a major discovery, because an effect this big and this significant is hard to get by luck",
+       "feedback": "This is the traditional reading that the paper sets out to reverse. Luck rarely produces such an effect, but bias can. In low-odds fields, too large and too significant effects 'may actually be more likely to be signs of large bias'."
+      },
+      {
+       "text": "Look hard for what might have gone wrong in the data, analysis or reporting before believing it",
+       "feedback": "Correct. The paper says such effects should lead investigators to 'careful critical thinking about what might have gone wrong'. That is a call for scrutiny, not an automatic verdict."
+      },
+      {
+       "text": "Conclude that the finding is certainly false",
+       "feedback": "This goes too far. The argument makes bias a likely explanation that must be checked, not a proof. A few true effects can exist even in low-odds fields, and only further evidence can tell them apart."
+      },
+      {
+       "text": "Ignore the size of the effect, since only the p-value matters",
+       "feedback": "The paper argues the reverse. The size and pattern of claimed effects carry information, possibly about bias, and the paper warns against reading research through p-values alone."
+      }
+     ],
+     "answer": 1,
+     "hints": [
+      "In a field with few real effects, what is the most common source of an impressive-looking 'yes'?",
+      "The paper says this concept 'totally reverses' how we usually react to large effects. Which option is the reversed reaction, without overclaiming?"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "many_teams_race",
+   "title": "More teams racing, less trustworthy winners",
+   "idea": "When n independent teams test the same question and attention goes to any one that reaches significance, the chance that this finding is true falls as n grows.",
    "role": "contribution",
    "predict": {
-    "question": "A dozen labs test whether a popular supplement improves memory. One gets p < 0.05 and publishes; eleven shelve null results. Compared with one lab's significant result on a question nobody else studied (same study size, same prior odds), how should you rate the published finding?",
+    "question": "A news story says one lab found that a common spice prevents a rare illness, which is a long-shot idea. Later you learn that 25 other labs quietly ran the same test and found nothing. Before, you thought this lab was the only one. How should you rate its 'yes' now?",
     "options": [
-     "More likely real: a popular question attracts good researchers",
-     "About as likely real: each lab's study is just as good",
-     "Less likely real: twelve chances for a fluke stand behind it",
-     "Certainly false: eleven labs found nothing"
+     "Less likely to be true than you first thought",
+     "More likely to be true, because 26 labs studied it",
+     "Just as likely, because each lab's result stands on its own p-value",
+     "More likely, as long as that lab's study was very large"
     ],
-    "answer": 2,
+    "answer": 0,
     "why": [
-     "Popularity feels like a sign of quality, but the studies are the same size. Twelve teams give a not-real idea twelve chances at a fluke, and only the lucky one got noticed.",
-     "Each study is equally good, but we only see the one that crossed p < 0.05. Picking the winner from twelve tries inflates false alarms, so it is weaker evidence than a lone study.",
-     "Right. With twelve teams, about 46% of not-real ideas get at least one significant result (1 − 0.95¹²). Real hits can't grow past the power, so the finding sits near the prior odds.",
-     "Less likely real is not the same as certainly false. Small studies often miss real effects, so one positive and eleven nulls could still hide a real effect. Weigh all twelve results together."
+     "Right. With 26 labs testing a long-shot idea, a fluke 'yes' from at least one of them is very likely, so the one 'yes' that made the news counts for much less.",
+     "It feels as if more research should mean more certainty. But the other 25 labs' silence is not support. Their tests were extra chances for a fluke, and only the winner got noticed.",
+     "The lab's own p-value doesn't change. But the chance that a 'yes' is true depends on how many tries came before it. One hit out of 26 tries is far weaker than one hit out of one.",
+     "A big study helps catch real effects, but it doesn't remove the other labs' chances of a fluke. In the model, making studies bigger barely moves the dot once many teams are racing."
     ]
    },
    "terms": [
     {
-     "term": "positive predictive value (PPV)",
-     "means": "The share of claimed findings that are actually real: the chance a significant result is true"
+     "term": "independent teams",
+     "means": "Groups that each run their own separate study, so one team's luck has no effect on another's"
     },
     {
-     "term": "pre-study probability",
-     "means": "The chance an idea is real before anyone tests it, set by how many false ideas are tested for each true one"
+     "term": "hot field",
+     "means": "An area of research where many teams are chasing the same questions at the same time"
     }
    ],
    "model": {
-    "title": "1000 tested ideas, each tested by several teams, sorted by whether they are real and whether any team came out significant",
-    "note": "Teaching model: a field tests 1000 ideas. Each idea is tested by the same number of independent teams with equal power. An idea counts as a claimed finding if at least one team gets p < 0.05, and the other teams' results are ignored. The significance cut-off is fixed at 5% and there is no bias. The counts follow the paper's formula for several independent studies (no-bias case) and are expected counts, not one random run. The slider can't reach the paper's genome odds of about 1 real idea in 10,000, so this is an illustrative miniature, not the paper's data.",
+    "title": "How often a winning 'yes' is true when several teams test the same question",
+    "note": "Teaching model: power comes from a simple two-group test (two-sided, false-alarm rate 0.05), using the real effect's size in standard-deviation units and the number of people per group. The chance a 'yes' is true uses the paper's formula for several separate studies of equal power on the same question, where a 'yes' means at least one team reached significance. Bias is left out, as in the paper's version of this formula. Every team is assumed to have the same power. The R slider stops at 0.01, far above the paper's genome example (1 in 10,000), so the model's numbers differ from the paper's Box 1. The formula is the paper's. All slider settings and resulting numbers are illustrative, not the paper's data.",
     "controls": [
      {
-      "id": "false_per_true",
-      "label": "False ideas tested for each true one",
+      "id": "n",
+      "label": "People in each group",
       "kind": "slider",
-      "min": 1,
-      "max": 200,
-      "step": 1,
-      "default": 1,
+      "min": 10,
+      "max": 2000,
+      "step": 10,
+      "default": 100,
       "unit": "",
       "color": 0
      },
      {
-      "id": "power",
-      "label": "Chance a study catches a real effect",
+      "id": "d",
+      "label": "Size of the real effect (d)",
       "kind": "slider",
-      "min": 5,
-      "max": 95,
-      "step": 5,
-      "default": 80,
-      "unit": "%",
+      "min": 0.05,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.3,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "odds",
+      "label": "True ideas per false idea tested (R)",
+      "kind": "slider",
+      "min": 0.01,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.25,
+      "unit": "",
       "color": 2
      },
      {
       "id": "teams",
-      "label": "Teams testing each idea",
+      "label": "Teams testing the same question",
       "kind": "slider",
       "min": 1,
-      "max": 20,
+      "max": 30,
       "step": 1,
       "default": 1,
       "unit": "",
@@ -1653,232 +2027,284 @@
     ],
     "outputs": [
      {
-      "id": "true_ideas",
-      "label": "Truly real ideas (of 1000)",
-      "expr": "1000 / (false_per_true + 1)",
-      "unit": "",
-      "decimals": 0,
-      "color": 4
-     },
-     {
-      "id": "before",
-      "label": "Chance an idea is real before testing",
-      "expr": "1 / (false_per_true + 1)",
+      "id": "power",
+      "label": "Real effects caught by one team (power)",
+      "expr": "normcdf(d * sqrt(n / 2) - 1.96, 0, 1) + normcdf(-d * sqrt(n / 2) - 1.96, 0, 1)",
       "unit": "%",
       "scale": 100,
-      "decimals": 1,
-      "color": 4
-     },
-     {
-      "id": "real_hits",
-      "label": "Real hits (real, at least one team significant)",
-      "expr": "(1 - pow(1 - power / 100, teams)) * true_ideas",
-      "unit": "",
-      "decimals": 0,
-      "color": 2
-     },
-     {
-      "id": "false_alarms",
-      "label": "False alarms (not real, at least one team significant)",
-      "expr": "(1 - pow(0.95, teams)) * (1000 - true_ideas)",
-      "unit": "",
       "decimals": 0,
       "color": 3
      },
      {
       "id": "ppv",
-      "label": "Share of claimed findings that are real",
-      "expr": "real_hits / (real_hits + false_alarms)",
+      "label": "Chance a winning 'yes' is true (PPV)",
+      "expr": "odds * (1 - pow(max(0, 1 - power), teams)) / (odds + 1 - pow(0.95, teams) - odds * pow(max(0, 1 - power), teams))",
       "unit": "%",
       "scale": 100,
       "decimals": 1,
-      "color": 1
+      "color": 4
      },
      {
-      "id": "boost",
-      "label": "Times likelier than before testing",
-      "expr": "ppv / before",
+      "id": "prior",
+      "label": "Chance before any study",
+      "expr": "odds / (odds + 1)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 1,
+      "color": 6
+     },
+     {
+      "id": "ratio",
+      "label": "Times more believable than before",
+      "expr": "ppv / prior",
       "unit": "×",
+      "scale": 1,
       "decimals": 1,
       "color": 5
+     },
+     {
+      "id": "fluke",
+      "label": "Chance some team gets a fluke 'yes' when nothing is there",
+      "expr": "1 - pow(0.95, teams)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 7
      }
     ],
     "visual": {
-     "type": "table",
-     "columns": [
-      "Truly real",
-      "Not real"
-     ],
-     "rows": [
+     "type": "curves",
+     "x": {
+      "label": "True ideas per false idea tested (R)",
+      "min": 0,
+      "max": 1
+     },
+     "y": {
+      "label": "Chance a 'yes' result is true",
+      "min": 0,
+      "max": 1
+     },
+     "series": [
       {
-       "label": "At least one team significant (claimed finding)",
-       "cells": [
-        {
-         "value": "real_hits",
-         "highlight": "real_hits > false_alarms"
-        },
-        {
-         "value": "false_alarms",
-         "highlight": "false_alarms > real_hits"
-        }
-       ]
+       "id": "ppv_curve",
+       "label": "A winning 'yes' with this many teams",
+       "expr": "x * (1 - pow(max(0, 1 - power), teams)) / (x + 1 - pow(0.95, teams) - x * pow(max(0, 1 - power), teams))",
+       "color": 4,
+       "dashed": false
       },
       {
-       "label": "No team significant",
-       "cells": [
-        "pow(1 - power / 100, teams) * true_ideas",
-        "pow(0.95, teams) * (1000 - true_ideas)"
-       ]
+       "id": "one_team",
+       "label": "The same study done by one team alone",
+       "expr": "power * x / (power * x + 0.05)",
+       "color": 5,
+       "dashed": true
       },
       {
-       "label": "Total tested",
-       "cells": [
-        "true_ideas",
-        "1000 - true_ideas"
-       ]
+       "id": "prior_curve",
+       "label": "Chance before any study",
+       "expr": "x / (x + 1)",
+       "color": 6,
+       "dashed": true
       }
      ],
-     "decimals": 0,
-     "scale": "none"
+     "markers": [
+      {
+       "id": "odds_marker",
+       "x": "odds",
+       "label": "This field",
+       "color": 2
+      }
+     ],
+     "hlines": [
+      {
+       "id": "even",
+       "y": 0.5,
+       "label": "As likely true as false"
+      }
+     ],
+     "points": [
+      {
+       "id": "here",
+       "x": "odds",
+       "y": "ppv",
+       "label": "This field's winning 'yes'"
+      }
+     ]
     }
    },
    "animation": {
     "steps": [
      {
-      "say": "Same table as before: 1000 tested ideas, sorted by whether they're real and whether they came out significant.",
+      "say": "Same picture as before. The solid curve and the dot show how often a 'yes' turns out true. The sliders set study size, effect size and how many tested ideas are true.",
       "focus": [
-       "true_ideas",
-       "ppv"
+       "ppv_curve",
+       "here"
       ],
-      "ms": 5000
+      "ms": 6500
      },
      {
-      "say": "New slider: how many separate teams test each idea. An idea now counts as a claimed finding if at least one team gets a significant result. The other teams are ignored.",
+      "say": "One new slider: how many teams test the very same question. Each team runs its own study, and the news reports whichever team gets a 'yes'.",
       "set": {
-       "teams": 3
+       "teams": 6
       },
       "focus": "teams",
       "ms": 7000
      },
      {
-      "say": "Two new boxes. One shows the chance an idea was real before anyone tested it. The other shows how many times likelier it looks after a claimed finding.",
+      "say": "Two dashed curves help you compare: one team on its own, and the chance before any study. Watch where the solid curve heads as more teams join.",
       "set": {
-       "teams": 1
+       "teams": 20
       },
       "focus": [
-       "before",
-       "boost"
+       "one_team",
+       "prior_curve"
       ],
-      "ms": 6500
+      "ms": 7000
      }
     ]
    },
    "explore": {
-    "prompt": "Real ideas are rare in this field, and teams keep piling onto each question. See how far you can push the number of teams before a lone finding stops being convincing.",
+    "prompt": "Race some teams. First find when a winning 'yes' stops being trustworthy, then find what can rescue it.",
     "goals": [
      {
-      "text": "In a field where under 1% of tested ideas are real, find the most teams per idea you can have while a claimed finding is still at least 5 times likelier to be real than before testing.",
-      "when": "before < 0.01 && teams >= 4 && boost >= 5",
+      "text": "Leave the field and the studies as they start. Add teams until a winning team's 'yes' is more likely false than true.",
+      "when": "ppv < 0.5",
       "solution": {
-       "false_per_true": 200,
-       "power": 95,
-       "teams": 4
+       "teams": 6
       },
       "hints": [
-       "Every added team adds more chances of a fluke. The only lever working the other way is how reliable each study is.",
-       "First make real ideas rare. Then max out the chance a study catches a real effect, add teams one at a time and watch the 'times likelier' box.",
-       "The answer is a small single-digit number of teams. One team past it, even near-perfect studies can't reach 5×."
+       "Which slider gives a fluke more chances to show up?",
+       "Add teams one at a time and watch the dot sink toward the 'as likely true as false' line.",
+       "It tips over somewhere between five and ten teams."
+      ]
+     },
+     {
+      "text": "Imagine at least ten teams racing. Make a winning team's 'yes' more likely true than false again.",
+      "when": "teams >= 10 && ppv > 0.5",
+      "solution": {
+       "teams": 10,
+       "odds": 0.5
+      },
+      "hints": [
+       "Try making each study bigger first. Does the dot climb much?",
+       "With many teams, extra flukes are the problem. Only a field where more of the tested ideas are true gives real effects enough weight.",
+       "Slide the true-to-false ideas slider right in small steps and stop when the dot rises above the dashed line."
       ]
      }
     ]
    },
    "understand": {
+    "source_ids": [
+     "s1"
+    ],
     "feedback": {
-     "correct": "Yes. Twelve teams means twelve chances for a not-real idea to produce a fluke, and the shelved nulls hide how much testing happened. Real effects can't be caught much more often than the power already allows. So the lone published result is weaker evidence than a single isolated study.",
-     "incorrect": "The trap is judging the published study on its own merits. The other eleven labs are invisible, but they still count: each one was another 5% chance of a false alarm. Picking the one significant result out of twelve inflates the false alarms far more than the real hits. The finding is less likely real, though not certainly false."
+     "correct": "Yes. The 25 silent labs were 25 more chances for a fluke. With that many tries on a long-shot idea, a false 'yes' from somebody is close to expected, so the one that made the news is weak evidence.",
+     "incorrect": "It's natural to think more research means more reliable findings. But when only the team that says 'yes' gets noticed, every extra team adds another chance of a false alarm. A real effect can be caught at most once in a meaningful sense, so as teams multiply, flukes take up a bigger share of the 'yes' results."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Let's build the paper's genome example in miniature. In the paper, real links are very rare, and each study has 60% power. Our slider stops at 200 false ideas per true one, so here only about 1 idea in 201 is real.",
+       "say": "Start with one team in the field from before. Its 'yes' is true about 74% of the time, up from 20% before the study.",
        "set": {
-        "false_per_true": 200,
-        "power": 60,
+        "n": 100,
+        "d": 0.3,
+        "odds": 0.25,
         "teams": 1
        },
        "focus": [
-        "false_per_true",
-        "power"
+        "ppv",
+        "prior"
        ],
-       "ms": 6500
+       "ms": 5000
       },
       {
-       "say": "Before anyone tests, the chance any given idea is real is just 0.5%. Call this the pre-study probability.",
-       "focus": "before",
-       "ms": 4500
-      },
-      {
-       "say": "One team per idea: about 3 real hits against about 50 false alarms. So a claimed finding is real only about 5.7% of the time. That share is the positive predictive value (PPV).",
-       "focus": "ppv",
-       "ms": 6500
-      },
-      {
-       "say": "Still, 5.7% is about 11 times the 0.5% we started with. That is close to the 12-fold boost the paper reports for one study. A significant result taught us something.",
-       "focus": "boost",
-       "ms": 5500
-      },
-      {
-       "say": "Now two teams test every idea, and attention goes to whichever gets significance. False alarms nearly double, to about 97. Each team is a fresh 5% chance of a fluke.",
+       "say": "Now three teams test the same question. Each has a 5% chance of a false alarm, so the chance that somebody gets a fluke 'yes' rises to about 14%. The winning 'yes' drops to about 62% true.",
        "set": {
-        "teams": 2
-       },
-       "focus": "false_alarms",
-       "ms": 6000
-      },
-      {
-       "say": "Five teams. Real hits creep only from 3 to about 5: they were already likely to be caught, and there are only 5 real ideas to find. False alarms have climbed past 200.",
-       "set": {
-        "teams": 5
+        "teams": 3
        },
        "focus": [
-        "real_hits",
-        "false_alarms"
+        "fluke",
+        "ppv"
        ],
        "ms": 6500
       },
       {
-       "say": "Ten teams. About 40% of the not-real ideas now get at least one significant result. A lone finding is real only about 1.2% of the time, roughly 2.5 times the starting 0.5%.",
+       "say": "Ten teams. These are independent teams: each runs its own study, so each has its own shot at a fluke. Some team now has about a 40% chance of a fluke 'yes', and a winning 'yes' is only about 38% true.",
+       "set": {
+        "teams": 10
+       },
+       "focus": [
+        "fluke",
+        "ppv",
+        "ppv_curve"
+       ],
+       "ms": 7500
+      },
+      {
+       "say": "Can bigger studies fix it? Give every team 1,000 people per group. Power jumps to nearly 100%, yet the winning 'yes' barely moves. Some team was already catching the real effects. The extra flukes are what hurt.",
+       "set": {
+        "n": 1000
+       },
+       "focus": [
+        "power",
+        "ppv"
+       ],
+       "ms": 7500
+      },
+      {
+       "say": "Now a long-shot field: about one true idea for every hundred false ones, back to normal studies, one team. A single 'yes' makes the idea about ten times more believable than before, from about 1% to about 10%.",
+       "set": {
+        "n": 100,
+        "odds": 0.01,
+        "teams": 1
+       },
+       "focus": [
+        "ratio",
+        "here"
+       ],
+       "ms": 7000
+      },
+      {
+       "say": "Ten teams chase the same long shot. The winning 'yes' is now only about 2.4% likely true, about two and a half times the starting guess.",
        "set": {
         "teams": 10
        },
        "focus": [
         "ppv",
-        "boost"
+        "ratio"
        ],
-       "ms": 6500
+       "ms": 6000
       },
       {
-       "say": "The paper's genome numbers are starker. With no bias, ten teams test the same genes and one finds a significant link. The paper puts the chance it's real at 1.5 in 10,000, against 1 in 10,000 before. Research barely moved us.",
-       "focus": "boost",
-       "ms": 8000
+       "say": "Twenty teams: this is a hot field. The solid curve has sunk nearly onto the 'before any study' curve. The published 'yes' is about 1.5% likely true against 1% before, hardly more believable than the idea was before anyone studied it at all.",
+       "set": {
+        "teams": 20
+       },
+       "focus": [
+        "ppv_curve",
+        "prior_curve",
+        "ratio"
+       ],
+       "ms": 8500
       }
      ]
     },
-    "explanation": "When many teams test the same question, each team is another 5% chance that a not-real idea throws up a fluke. So the share of false ideas with at least one significant result grows as 1 − 0.95ⁿ, about 40% with ten teams. Real effects were already caught at the rate set by power, so real hits can barely grow. If attention goes to the one significant team, the positive predictive value (PPV) of that lone finding sinks back toward the pre-study probability. The paper derives this from its 2 × 2 table for n independent studies of equal power, and shows it in its figures and in the genome example: 1.5 × 10⁻⁴ after ten teams, against 10⁻⁴ before. The paper also notes that hot fields can sometimes bring larger studies and better standards, and its remedy is to weigh the totality of the evidence, including the teams that found nothing.",
-    "quote": "Corollary 6: The hotter a scientific field (with more scientific teams involved), the less likely the research findings are to be true. This seemingly paradoxical corollary follows because, as stated above, the PPV of isolated findings decreases when many teams of investigators are involved in the same field.",
-    "quote_where": "Corollaries (Corollary 6)"
+    "explanation": "When several separate teams test the same question, each has its own 5% chance of a false alarm, so the chance that somebody gets a fluke 'yes' climbs fast: about 40% with ten teams. The chance that someone catches a real effect also rises, but it can't pass 100%, and decent studies are already close. So if attention goes to whichever team says 'yes', that 'yes' is more and more often a fluke. The paper builds this into its 2 × 2 table for n studies of equal power and shows in Figure 2 that PPV falls as n grows. In its genome example (Box 1), ten teams leave a significant hit at only about 1.5 in 10,000, against 1 in 10,000 before any study. This version assumes no bias, equal power and fully separate teams. The paper also notes that a hot field can sometimes push for larger studies and better standards, and that the cure is to weigh all the evidence, not one team's hit.",
+    "quote": "The hotter a scientific field (with more scientific teams involved), the less likely the research findings are to be true. This seemingly paradoxical corollary follows because, as stated above, the PPV of isolated findings decreases when many teams of investigators are involved in the same field.",
+    "quote_where": "Corollaries, Corollary 6",
+    "source_id": "s1"
    },
    "check": {
     "kind": "model",
-    "task": "Put the model in a state where one team's significant result would be more likely real than not, but with several teams racing, the lone claimed finding is more likely false than real.",
-    "when": "teams >= 2 && ppv < 0.5 && (power / 100) * true_ideas > 0.05 * (1000 - true_ideas)",
+    "task": "Show that strong studies don't rescue a long-shot hot field. Use studies that catch at least 90% of real effects, in a field with at most one true idea for every 20 false ones tested. Make a winning 'yes' less than twice as believable as the idea was before any study.",
+    "when": "power >= 0.9 && odds <= 0.05 && ratio < 2",
     "solution": {
-     "false_per_true": 10,
-     "power": 80,
-     "teams": 5
+     "n": 300,
+     "odds": 0.01,
+     "teams": 20
     },
-    "hint": "First find a field where real ideas are uncommon but not rare, so that with one team the claimed findings are still mostly real. Then raise the number of teams and watch the share that is real.",
-    "misconception": "That more teams testing a question can only add confirmation, so the finding gets more trustworthy. When only the one significant result gets attention, every extra team is another chance of a false alarm."
+    "hint": "Raise power with the study size, make the field a long shot, then remember that each extra team is one more chance for a fluke.",
+    "misconception": "More teams studying a question means more evidence, so any one team's 'yes' must be more reliable, especially if the studies are big."
    },
    "connect": {
     "equation": [
@@ -1891,17 +2317,13 @@
      },
      {
       "text": "R",
-      "link": "false_per_true"
+      "link": "odds"
      },
      {
-      "text": "(1 − "
+      "text": " × (1 − "
      },
      {
-      "text": "β",
-      "link": "power"
-     },
-     {
-      "text": "ⁿ",
+      "text": "β^{n}",
       "link": "teams"
      },
      {
@@ -1909,37 +2331,36 @@
      },
      {
       "text": "R",
-      "link": "false_per_true"
+      "link": "odds"
      },
      {
-      "text": " + 1 − [1 − α]"
+      "text": " + "
      },
      {
-      "text": "ⁿ",
-      "link": "teams"
+      "text": "1 − (1 − α)^{n}",
+      "link": "fluke"
      },
      {
       "text": " − "
      },
      {
       "text": "R",
-      "link": "false_per_true"
+      "link": "odds"
      },
      {
-      "text": "β",
-      "link": "power"
+      "text": " × "
      },
      {
-      "text": "ⁿ",
+      "text": "β^{n}",
       "link": "teams"
      },
      {
       "text": ")"
      }
     ],
-    "caption": "This is the paper's formula for n independent studies of equal power, without bias. PPV is the share of claimed findings that are real. R is the ratio of true to false ideas: 1 divided by the 'false ideas for each true one' slider. β is the chance one study misses a real effect, so 1 − β is the power slider. n is the number of teams. α = 0.05 is the significance cut-off. [1 − α]ⁿ is the chance no team gets a fluke on a false idea, so 1 − [1 − α]ⁿ is the false-alarm rate that climbs with n."
+    "caption": "The paper's formula for n equal-power studies, no bias. Its n is the Teams slider, not people per group. R is the true-to-false ideas slider. β is 1 minus one team's power, so β^{n} is the chance every team misses a real effect. With α = 0.05, 1 − (1 − α)^{n} is the chance some team gets a fluke 'yes' (the fluke box). As n grows, that part swells in the bottom of the fraction and PPV sinks."
    },
-   "recap": "When many teams chase one question and only the significant result gets noticed, false alarms grow with every team while real hits can't, so the lone finding barely beats the prior odds.",
+   "recap": "When many teams chase the same question and only the 'yes' gets noticed, that 'yes' is worth less. In a long-shot field, it is barely more believable than the idea was before anyone looked.",
    "activities": [
     {
      "id": "tour",
@@ -1959,8 +2380,14 @@
      "i": 0
     },
     {
+     "id": "goal_2",
+     "kind": "goal",
+     "i": 1
+    },
+    {
      "id": "use",
-     "kind": "predict"
+     "kind": "predict",
+     "hypothetical": true
     },
     {
      "id": "why",
@@ -1975,115 +2402,34 @@
      "kind": "connect"
     }
    ],
-   "builds_on": "power_and_small_studies"
+   "builds_on": "power_drags_ppv"
   }
  ],
  "omitted": [],
+ "sources": [
+  {
+   "id": "s1",
+   "title": "Why Most Published Research Findings Are False",
+   "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1182327/fullTextXML",
+   "authors": "",
+   "year": null
+  }
+ ],
  "activity_plans": [
   {
-   "concept": "false_alarms_and_power",
-   "chosen": "p1",
-   "plan": {
-    "blocks": [
-     "watch",
-     "walk",
-     "explain",
-     "goal",
-     "predict",
-     "reveal",
-     "connect"
-    ],
-    "why": "The learner switches the true effect off and on and changes sample size, watching the share of significant studies settle near 5% or near the power."
-   },
-   "confidence": 0.28,
-   "model": "jev-1.13.0",
-   "options": [
-    {
-     "blocks": [
-      "watch",
-      "walk",
-      "explain",
-      "goal",
-      "predict",
-      "reveal",
-      "connect"
-     ],
-     "why": "The learner switches the true effect off and on and changes sample size, watching the share of significant studies settle near 5% or near the power."
-    },
-    {
-     "blocks": [
-      "watch",
-      "walk",
-      "explain",
-      "compare",
-      "goal",
-      "predict",
-      "reveal"
-     ],
-     "why": "Side-by-side model states (no effect vs real effect, small vs large n) make the two error rates concrete before the learner hunts for a high-power setting."
-    }
-   ]
-  },
-  {
-   "concept": "prior_odds_ppv",
-   "chosen": "p1",
-   "plan": {
-    "blocks": [
-     "watch",
-     "walk",
-     "explain",
-     "goal",
-     "predict",
-     "reveal",
-     "check",
-     "connect"
-    ],
-    "why": "The learner slides the pre-study odds R down and watches the false-alarm cell overtake the true-hit cell, then finds where findings become more likely true than false."
-   },
-   "confidence": 0.77,
-   "model": "jev-1.13.0",
-   "options": [
-    {
-     "blocks": [
-      "watch",
-      "walk",
-      "explain",
-      "goal",
-      "predict",
-      "reveal",
-      "check",
-      "connect"
-     ],
-     "why": "The learner slides the pre-study odds R down and watches the false-alarm cell overtake the true-hit cell, then finds where findings become more likely true than false."
-    },
-    {
-     "blocks": [
-      "watch",
-      "walk",
-      "worked",
-      "explain",
-      "goal",
-      "estimate",
-      "check",
-      "connect"
-     ],
-     "why": "A worked count with 1,000 tested ideas makes the arithmetic of PPV tangible before the learner estimates a PPV for a new field."
-    }
-   ]
-  },
-  {
-   "concept": "power_and_small_studies",
+   "concept": "tests_as_filters",
    "chosen": "p2",
    "plan": {
     "blocks": [
      "watch",
      "walk",
      "explain",
-     "compare",
+     "sort",
      "goal",
-     "choice"
+     "predict",
+     "reveal"
     ],
-    "why": "Comparing a cardiology-style large trial with a small study at the same odds makes the role of power visible, then a choice applies it to a new case."
+    "why": "After the model tour, the learner sorts everyday outcomes (a smoke alarm going off with no fire, a missed fire) into the four cells, then practises on the model."
    },
    "confidence": 0.31,
    "model": "jev-1.13.0",
@@ -2098,69 +2444,24 @@
       "reveal",
       "connect"
      ],
-     "why": "The learner lowers power toward 0.05 and watches PPV fall, then predicts which of two fields (big trials vs small molecular studies) yields more trustworthy findings."
+     "why": "The learner adjusts the false-alarm and catch rates for 1,000 tested ideas and sees how many land in each cell, building the table everything else rests on."
     },
     {
      "blocks": [
       "watch",
       "walk",
       "explain",
-      "compare",
-      "goal",
-      "choice"
-     ],
-     "why": "Comparing a cardiology-style large trial with a small study at the same odds makes the role of power visible, then a choice applies it to a new case."
-    }
-   ]
-  },
-  {
-   "concept": "bias_u",
-   "chosen": "p1",
-   "plan": {
-    "blocks": [
-     "watch",
-     "walk",
-     "explain",
-     "goal",
-     "predict",
-     "reveal",
-     "sort",
-     "connect"
-    ],
-    "why": "The learner raises u and watches PPV fall, then sorts research practices (post hoc subgroups, preregistration, changing outcome definitions) by whether they raise or lower u."
-   },
-   "confidence": 0.8,
-   "model": "jev-1.13.0",
-   "options": [
-    {
-     "blocks": [
-      "watch",
-      "walk",
-      "explain",
-      "goal",
-      "predict",
-      "reveal",
       "sort",
-      "connect"
-     ],
-     "why": "The learner raises u and watches PPV fall, then sorts research practices (post hoc subgroups, preregistration, changing outcome definitions) by whether they raise or lower u."
-    },
-    {
-     "blocks": [
-      "watch",
-      "walk",
-      "explain",
       "goal",
-      "compare",
       "predict",
       "reveal"
      ],
-     "why": "Comparing the same field at u = 0 and u = 0.1 shows how a little flexibility changes the odds, before a prediction about a new field."
+     "why": "After the model tour, the learner sorts everyday outcomes (a smoke alarm going off with no fire, a missed fire) into the four cells, then practises on the model."
     }
    ]
   },
   {
-   "concept": "many_teams",
+   "concept": "prestudy_odds_ppv",
    "chosen": "p1",
    "plan": {
     "blocks": [
@@ -2173,9 +2474,9 @@
      "check",
      "connect"
     ],
-    "why": "The learner sets the paper's genome-study numbers, then raises the number of teams and sees PPV sink back toward the pre-study odds. This lands the aha and checks the counterintuitive 'hotter field' corollary."
+    "why": "The learner shrinks the share of true ideas and watches false alarms outnumber real discoveries in the 'yes' column. A model check then targets the common belief that p < 0.05 means 95% sure."
    },
-   "confidence": 0.85,
+   "confidence": 0.45,
    "model": "jev-1.13.0",
    "options": [
     {
@@ -2189,20 +2490,190 @@
       "check",
       "connect"
      ],
-     "why": "The learner sets the paper's genome-study numbers, then raises the number of teams and sees PPV sink back toward the pre-study odds. This lands the aha and checks the counterintuitive 'hotter field' corollary."
+     "why": "The learner shrinks the share of true ideas and watches false alarms outnumber real discoveries in the 'yes' column. A model check then targets the common belief that p < 0.05 means 95% sure."
     },
     {
      "blocks": [
       "watch",
       "walk",
-      "stages",
       "explain",
+      "worked",
       "goal",
       "predict",
       "reveal",
       "check"
      ],
-     "why": "The genome example unfolds in stages (no bias, then bias, then ten teams) before the learner reproduces the collapse on the model."
+     "why": "A worked example with a rare-disease screening test mirrors the table before the learner tries field settings on the model."
+    }
+   ]
+  },
+  {
+   "concept": "power_drags_ppv",
+   "chosen": "p2",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "compare",
+     "goal",
+     "predict",
+     "reveal"
+    ],
+    "why": "The learner compares a large cardiology trial with a small molecular study side by side on the model, then practises reaching a target PPV."
+   },
+   "confidence": 0.27,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner slides power from 0.8 down toward 0.2 and finds the pre-study odds needed to keep PPV above 50%."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "compare",
+      "goal",
+      "predict",
+      "reveal"
+     ],
+     "why": "The learner compares a large cardiology trial with a small molecular study side by side on the model, then practises reaching a target PPV."
+    }
+   ]
+  },
+  {
+   "concept": "bias_inflates",
+   "chosen": "p2",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "sort",
+     "goal",
+     "predict",
+     "reveal"
+    ],
+    "why": "The learner sorts practices (post hoc subgroups, changed outcome definitions, a pre-registered plan) by whether they raise u, then tests them on the model."
+   },
+   "confidence": 0.79,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner raises bias u and finds how much it takes to pull a decent field below 50% PPV, then applies the idea to a new field."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "sort",
+      "goal",
+      "predict",
+      "reveal"
+     ],
+     "why": "The learner sorts practices (post hoc subgroups, changed outcome definitions, a pre-registered plan) by whether they raise u, then tests them on the model."
+    }
+   ]
+  },
+  {
+   "concept": "null_field_bias",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "explain",
+     "stages",
+     "sort",
+     "choice"
+    ],
+    "why": "The learner follows the 60-nutrient example stage by stage, then sorts observations into 'expected by chance' or 'signal of bias' and judges what a very large effect suggests."
+   },
+   "confidence": 0.16,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "explain",
+      "stages",
+      "sort",
+      "choice"
+     ],
+     "why": "The learner follows the 60-nutrient example stage by stage, then sorts observations into 'expected by chance' or 'signal of bias' and judges what a very large effect suggests."
+    },
+    {
+     "blocks": [
+      "choice",
+      "explain",
+      "compare",
+      "choice"
+     ],
+     "why": "An opening judgment ('a huge effect is exciting') is revisited after comparing a field where effects vary around zero with one where all 60 claims point the same way."
+    }
+   ]
+  },
+  {
+   "concept": "many_teams_race",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "check",
+     "connect"
+    ],
+    "why": "The learner adds teams and watches PPV sink toward the pre-study probability. A model check targets the intuition that more research must mean more reliable findings."
+   },
+   "confidence": 0.83,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "check",
+      "connect"
+     ],
+     "why": "The learner adds teams and watches PPV sink toward the pre-study probability. A model check targets the intuition that more research must mean more reliable findings."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "worked",
+      "goal",
+      "predict",
+      "reveal",
+      "check"
+     ],
+     "why": "A worked walk through Box 1 (R = 10⁻⁴, 60% power, ten teams) grounds the paper's own numbers before the learner explores 'hot field' settings."
     }
    ]
   }
@@ -2222,8 +2693,8 @@
  "generation": {
   "provider": "claude",
   "model": "claude-opus-5-5",
-  "pipeline": "lemma.generate.make_outline + build_lesson",
-  "source_chars": 29311,
-  "omitted": 0
+  "source_chars": 29644,
+  "omitted": 0,
+  "pipeline": "brought sources → subjects + make_outline + build_lesson (2026-10-23)"
  }
 }

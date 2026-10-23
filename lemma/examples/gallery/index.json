@@ -2,12 +2,12 @@
  {
   "slug": "attention-2017",
   "field": "Machine learning",
-  "cover": "sequential_bottleneck"
+  "cover": "dot_product_match"
  },
  {
   "slug": "ioannidis-2005",
   "field": "Research methods",
-  "cover": "false_alarms_and_power"
+  "cover": "tests_as_filters"
  },
  {
   "slug": "wuhan-2020",
@@ -15,14 +15,19 @@
   "cover": "doubling_time"
  },
  {
+  "slug": "stress-sickness",
+  "field": "Biology",
+  "cover": "immune_layers"
+ },
+ {
   "slug": "opinion-dynamics-2002",
   "field": "Social science",
-  "cover": "averaging_to_consensus"
+  "cover": "repeated_averaging"
  },
  {
   "slug": "gettier-1963",
   "field": "Philosophy",
-  "cover": "case_one_coins"
+  "cover": "jtb_recipe"
  },
  {
   "slug": "galton-1886",
@@ -33,61 +38,61 @@
  {
   "slug": "turner-1893",
   "field": "History",
-  "cover": "frontier_as_moving_edge"
+  "cover": "frontier_line"
  },
  {
   "slug": "aquinas-senses",
   "field": "Theology",
-  "cover": "reading_a_disputed_article"
+  "cover": "how_an_article_works"
  },
  {
   "slug": "mendel-1866",
   "field": "Biology",
-  "cover": "three_to_one_return"
+  "cover": "three_to_one_in_the_crowd"
  },
  {
   "slug": "brown-1954",
   "field": "Law",
-  "cover": "separate_but_equal"
+  "cover": "separate_but_equal_precedent"
  },
  {
   "slug": "poe-red-death",
   "field": "Literature",
-  "cover": "forbidden_costume"
+  "cover": "seven_rooms"
  },
  {
   "slug": "euclid-equilateral",
   "field": "Mathematics",
-  "cover": "circle_equal_distance"
+  "cover": "circle_same_distance"
  },
  {
   "slug": "wave-interference",
   "field": "Physics",
-  "cover": "waves_add"
+  "cover": "add_waves"
  },
  {
   "slug": "schelling-segregation",
   "field": "Urban studies",
-  "cover": "one_household_rule"
+  "cover": "rules_on_a_grid"
  },
  {
   "slug": "information-cascades",
   "field": "Social learning",
-  "cover": "clues_add_up"
+  "cover": "one_clue_update"
  },
  {
   "slug": "ice-albedo-feedback",
   "field": "Climate science",
-  "cover": "energy_balance"
+  "cover": "albedo"
  },
  {
   "slug": "externalities-pigou",
   "field": "Economics",
-  "cover": "external_cost_gap"
+  "cover": "external_cost"
  },
  {
   "slug": "loss-aversion",
   "field": "Behavioural economics",
-  "cover": "losses_loom_larger"
+  "cover": "bet_expected_value"
  }
 ]

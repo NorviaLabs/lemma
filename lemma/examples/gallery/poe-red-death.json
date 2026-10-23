@@ -1,423 +1,108 @@
 {
  "version": 1,
  "id": "gallery-poe-red-death",
- "title": "Walls Against Death: A Close Reading of Poe's Red Death",
- "audience": "A curious adult with no background in this field",
- "created": "2026-10-19T02:14:01",
+ "title": "Walls Against Death: Reading Poe's 'The Masque of the Red Death'",
+ "level": "beginner",
+ "created": "2026-10-23T04:34:49",
  "source": {
   "title": "The Masque of the Red Death",
   "authors": "Edgar Allan Poe",
   "year": 1842,
-  "venue": "Graham's Magazine (first published as \"The Mask of the Red Death\")",
+  "venue": "",
   "url": "https://www.gutenberg.org/files/1064/1064-h/1064-h.htm"
  },
  "intro": {
-  "summary": "Poe's short story asks whether wealth, walls and pleasure can shut out death. A prince seals himself and a thousand courtiers inside an abbey while a plague kills his people outside. At a masked ball, a guest dressed as the plague walks through seven coloured rooms, the prince dies chasing him, and the costume turns out to be empty. The story's answer is that nothing walls out death. Its main limit as 'evidence' is that it is fiction. Readings of the rooms and the clock as symbols of a human life are interpretations that Poe never states outright.",
+  "summary": "This source is a short story, not a research study, so its 'findings' are what happens in the plot and what readers take from it. A deadly plague called the Red Death sweeps the land. A rich prince, Prospero, locks himself and a thousand friends inside a walled abbey, welds the gates shut and throws a masked ball in seven coloured rooms. At midnight a guest dressed as a Red Death victim appears; the prince chases him, dies, and the guests find the costume is empty: the plague itself was inside all along, and everyone dies. The main limitation is that Poe never states a moral, so symbolic readings (for example, that the seven rooms stand for the stages of a life) are interpretations, and readers disagree about them. This lesson does not cover Gothic fiction as a genre, the history of the Black Death, Poe's own theories of the short story, or the long debate over whether the story is a strict allegory; these are good next topics.",
   "background": [
-   "Edgar Allan Poe (1809–1849) was an American writer known for short, dark Gothic tales built around a single strong effect.",
-   "A 'masque' is a masked ball or courtly entertainment, where guests hide their faces behind costumes.",
-   "The 'Red Death' is an invented disease. Poe gives it vivid symptoms, but it matches no real illness.",
-   "Readers often treat the story as an allegory, a tale whose objects and places stand for bigger ideas like time, life and death."
+   "A short story is a piece of fiction short enough to read in one sitting; this one is only a few pages long.",
+   "A plague is a disease that spreads quickly through a population and kills many people; real plagues such as the Black Death led some rich people to flee to isolated estates.",
+   "A masquerade is a party where guests wear masks and costumes, so no one can be sure who anyone really is.",
+   "A symbol is an object in a story that stands for a larger idea, the way a red rose often stands for love."
   ],
   "known": [],
-  "aha": "The welded gates never kept the plague out: the 'guest' everyone took for a man in costume was empty inside, so death had walked in unseen, and the seal meant to protect the revellers only locked them in with it."
+  "aha": "The prince's welded gates did not keep the Red Death out: the terrifying guest's costume was empty, because death itself had been inside the walls all along.",
+  "assumes": [
+   "Short story",
+   "Artistic symbol",
+   "Masquerade ball",
+   "Allegory",
+   "Gothic fiction",
+   "Memento mori",
+   "Black Death",
+   "Edgar Allan Poe"
+  ]
  },
  "primer": [
   {
    "heading": "The question",
-   "body": "A terrible plague, the Red Death, is sweeping the land. It kills within half an hour and leaves blood on the victim's face. The story asks a question as old as plagues: can the rich and powerful escape death by locking themselves away?",
+   "body": "The story asks a question everyone faces sooner or later: can money, walls and fun keep death away? It opens with a terrible imaginary disease, the Red Death, which kills its victims within half an hour and marks their faces with blood. The story itself never states its question outright. It shows a man trying to answer it with a wall.",
    "quote": "No pestilence had ever been so fatal, or so hideous.",
-   "quote_where": "Opening paragraph"
-  },
-  {
-   "heading": "What Poe did",
-   "body": "Poe sets up a sealed experiment. Prince Prospero takes a thousand healthy friends into a walled abbey and has the iron gates welded shut. He fills it with food, wine and entertainers. Months later he throws a masked ball across seven rooms, each lit in a single colour. The last room is black, with blood-red windows and a huge ebony clock whose hourly chime makes everyone freeze.",
-   "quote": "With such precautions the courtiers might bid defiance to contagion. The external world could take care of itself.",
-   "quote_where": "Second paragraph"
+   "quote_where": "Opening paragraph",
+   "source_ids": [
+    "s1"
+   ],
+   "source_id": "s1"
   },
   {
    "heading": "What happens",
-   "body": "At midnight the guests notice a tall figure dressed as a plague victim, with its mask and robes spattered with blood. The furious prince chases it from the blue room through every room to the black one. He falls dead there. When the guests seize the figure, they find nothing inside the costume. Then they all die.",
+   "body": "While half his country dies, Prince Prospero gathers a thousand healthy friends inside a fortified abbey. The courtiers weld the iron gates shut, so no one can get in or out. They decide that the suffering outside is not their problem. After five or six months they hold a grand masked ball in a strange suite of seven coloured rooms. The last room is black, has blood-red windows and holds a giant ebony clock that stops the party every hour.",
+   "quote": "With such precautions the courtiers might bid defiance to contagion. The external world could take care of itself.",
+   "quote_where": "Second paragraph",
+   "source_ids": [
+    "s1"
+   ],
+   "source_id": "s1"
+  },
+  {
+   "heading": "What we find",
+   "body": "At midnight the guests notice a new masked figure dressed as a corpse spattered with blood: a costume of the Red Death. The furious prince chases him through all seven rooms and drops dead in the black room. When the guests seize the figure, they find nothing inside the mask and grave clothes. The disease itself had walked in, and every guest dies.",
    "quote": "gasped in unutterable horror at finding the grave cerements and corpse-like mask, which they handled with so violent a rudeness, untenanted by any tangible form.",
-   "quote_where": "Final paragraphs"
+   "quote_where": "Final paragraphs",
+   "source_ids": [
+    "s1"
+   ],
+   "source_id": "s1"
   },
   {
    "heading": "Why it matters, and its limits",
-   "body": "The story turns a wall into a trap. The seal meant to keep death out ends up keeping the revellers in with it. Its images still shape how people talk about wealth and isolation during epidemics. But it is a work of imagination, not a report. When we read the seven rooms as stages of life or the clock as mortality, that is a well-supported interpretation, not something the text declares."
+   "body": "The ending turns every safety measure into a trap: the walls kept help out and the guests in, and death came anyway. Many readers see the story as being about mortality, the fact that everyone dies. On that reading, wealth and distraction can delay facing death but cannot escape it. Poe never spells this out, though. Readings such as 'the seven rooms are seven stages of life' are popular but are not stated in the text, so this lesson flags them as interpretations, not facts.",
+   "quote": "And Darkness and Decay and the Red Death held illimitable dominion over all.",
+   "quote_where": "Last sentence",
+   "source_ids": [
+    "s1"
+   ],
+   "source_id": "s1"
   }
  ],
  "provider": {
-  "name": "Claude",
+  "name": "Claude subscription",
   "model": "claude-opus-5-5"
  },
  "concepts": [
   {
-   "id": "sealed_abbey",
-   "title": "Within and without: the sealed abbey",
-   "idea": "Prospero tries to buy safety by welding himself and his friends inside a wall, splitting the world into a protected 'within' and an abandoned 'without'.",
+   "id": "red_death_plague",
+   "title": "The Red Death: a plague that kills fast and isolates its victims",
+   "idea": "The Red Death is an imaginary plague that kills within half an hour and marks its victims with blood, which shuts them off from other people's help and sympathy.",
    "role": "prerequisite",
    "terms": [
     {
      "term": "pestilence",
-     "means": "A deadly disease that spreads through a whole population; a plague"
+     "means": "A deadly disease that spreads through a whole population, like a plague"
     },
     {
-     "term": "castellated abbey",
-     "means": "A building that was once a religious house, fortified with walls like a castle"
+     "term": "pest ban",
+     "means": "Poe's phrase for the plague's visible mark: a sign that labels someone as infected and so pushes others away from them"
     }
    ],
-   "recap": "Prospero welds a wall between a pleasure-filled 'within' and a plague-ridden 'without', and decides the outside is no longer his concern.",
+   "recap": "The Red Death kills in half an hour, and its bloody stains, especially on the face, mark victims so that others stop helping or pitying them.",
    "understand": {
-    "explanation": "The story opens by drawing a hard line: outside is a pestilence that kills in half an hour and cuts its victims off from all sympathy. Inside a castellated abbey, behind a wall with welded iron gates, are a thousand healthy friends, food and every kind of pleasure. Prospero builds this line on purpose: he leaves his half-emptied lands to fend for themselves, and his court treats grief and thought as foolish. Everything that follows in the tale happens on the 'within' side of this wall, so keep the split in mind. This is a short story, not a study, so what the wall means is a matter of reading the text. Still, the text itself states the division in plain words.",
-    "quote": "The prince had provided all the appliances of pleasure. There were buffoons, there were improvisatori, there were ballet-dancers, there were musicians, there was Beauty, there was wine. All these and security were within. Without was the “Red Death”.",
-    "quote_where": "Second paragraph"
-   },
-   "activities": [
-    {
-     "id": "ev",
-     "kind": "stages",
-     "prompt": "Follow how the story builds its wall, one step at a time.",
-     "stages": [
-      {
-       "label": "1. The plague outside",
-       "text": "A pestilence (a deadly disease sweeping the whole country) called the 'Red Death' is killing people. Victims feel sharp pains, then dizziness, then bleed from their pores, and they die within half an hour. The scarlet stains on a victim's face shut them out 'from the aid and from the sympathy of his fellow-men.' So even before any wall goes up, the sick are already cast out."
-      },
-      {
-       "label": "2. The retreat",
-       "text": "When his lands are 'half depopulated', Prince Prospero does not stay with his people. He picks 'a thousand hale and light-hearted friends' from his court, healthy and cheerful ones. He leads them into a castellated abbey: a former religious house with castle-like walls, built to his own strange taste."
-      },
-      {
-       "label": "3. The welding",
-       "text": "The abbey has a 'strong and lofty wall' with iron gates. Once inside, the courtiers bring furnaces and heavy hammers and weld the bolts shut. Now nobody can come in, and nobody can rush out on a sudden impulse of despair. The abbey is fully stocked with food."
-      },
-      {
-       "label": "4. The split",
-       "text": "Inside are jesters, dancers, musicians, wine and 'security'. Outside is the Red Death. The narrator sums up the court's mood: 'The external world could take care of itself.' Grieving and even thinking are dismissed as folly."
-      }
-     ],
-     "takeaway": "Step by step, the prince turns one plague-struck country into two worlds: a sealed 'within' he protects and a 'without' he abandons."
-    },
-    {
-     "id": "idea",
-     "kind": "explain"
-    },
-    {
-     "id": "s",
-     "kind": "sort",
-     "title": "Which side of the wall?",
-     "prompt": "Place each detail from the story on the side of the wall where the story puts it.",
-     "groups": [
-      {
-       "id": "within",
-       "label": "Within the abbey"
-      },
-      {
-       "id": "without",
-       "label": "Without (outside the wall)"
-      }
-     ],
-     "cards": [
-      {
-       "id": "c1",
-       "text": "Buffoons, ballet-dancers and musicians",
-       "group": "within",
-       "feedback": "Within. These are among the 'appliances of pleasure' the prince provided inside the abbey."
-      },
-      {
-       "id": "c2",
-       "text": "Wine",
-       "group": "within",
-       "feedback": "Within. The story lists 'there was wine' among the pleasures behind the wall."
-      },
-      {
-       "id": "c3",
-       "text": "A thousand hale and light-hearted friends",
-       "group": "within",
-       "feedback": "Within. Prospero chose these healthy, cheerful courtiers to join him. 'Hale' means they were picked from among the well."
-      },
-      {
-       "id": "c4",
-       "text": "Security",
-       "group": "within",
-       "feedback": "Within. The text says 'All these and security were within.' Safety is presented as one more thing the prince keeps inside."
-      },
-      {
-       "id": "c5",
-       "text": "The 'Red Death'",
-       "group": "without",
-       "feedback": "Without. The text says it plainly: 'Without was the “Red Death”.' The whole design of the abbey assumes the plague stays on that side."
-      },
-      {
-       "id": "c6",
-       "text": "The prince's subjects in his half-depopulated lands",
-       "group": "without",
-       "feedback": "Without. Prospero leaves when his dominions are half emptied, and his people stay behind: 'The external world could take care of itself.'"
-      },
-      {
-       "id": "c7",
-       "text": "Victims shut out from the sympathy of their fellow-men",
-       "group": "without",
-       "feedback": "Without. The plague already isolates the sick. The wall repeats that exclusion on a larger scale, because nobody inside will help them."
-      },
-      {
-       "id": "c8",
-       "text": "Ample provisions of food",
-       "group": "within",
-       "feedback": "Within. 'The abbey was amply provisioned', so the revellers can stay sealed in for months without needing the outside world."
-      }
-     ],
-     "takeaway": "Pleasure, health, food and safety are gathered inside. Disease, the common people and their suffering are left outside. The wall sorts the world just as you did."
-    },
-    {
-     "id": "p",
-     "kind": "passage",
-     "question": "Which passage best shows the court's attitude toward the people left outside the wall?",
-     "options": [
-      {
-       "quote": "The external world could take care of itself. In the meantime it was folly to grieve, or to think.",
-       "feedback": "Yes. This states the attitude outright. The outside world is not their responsibility, and even grieving over it or thinking about it is dismissed as foolish."
-      },
-      {
-       "quote": "The abbey was amply provisioned. With such precautions the courtiers might bid defiance to contagion.",
-       "feedback": "This shows the courtiers' confidence that supplies and walls keep the disease out. It is about their own safety, not about how they regard the people outside."
-      },
-      {
-       "quote": "This was an extensive and magnificent structure, the creation of the prince’s own eccentric yet august taste.",
-       "feedback": "This describes the building and the prince's taste. It says nothing about his attitude toward his abandoned subjects."
-      },
-      {
-       "quote": "They resolved to leave means neither of ingress nor egress to the sudden impulses of despair or of frenzy from within.",
-       "feedback": "Close, because it describes the sealing. But it is about blocking any way in or out, including panicked attempts to leave from inside. It shows how sealed the wall is, not what the court thinks of the people outside."
-      }
-     ],
-     "answer": 0,
-     "hints": [
-      "Look for a line about the world beyond the wall, not about the building or its supplies.",
-      "Which passage mentions 'the external world'?"
-     ]
-    }
-   ]
-  },
-  {
-   "id": "seven_rooms",
-   "title": "Seven rooms from east to west",
-   "idea": "The seven rooms run in a fixed colour order from a blue eastern room to a black western room with blood-red windows, so the building itself lays out a path that ends in death.",
-   "role": "core",
-   "terms": [
-    {
-     "term": "symbolic reading",
-     "means": "Treating a concrete detail in a story, such as a room's colour, as standing for a larger idea, such as a stage of life"
-    },
-    {
-     "term": "allegory",
-     "means": "A story whose places, objects or characters can be read as a sustained picture of something beyond the literal events"
-    }
-   ],
-   "recap": "Inside the sealed abbey, the prince's seven rooms form a one-way colour path from a bright blue east to a black west lit through blood-red glass, so the house itself points toward death.",
-   "understand": {
-    "explanation": "Inside the sealed abbey, the masked ball takes place in seven rooms, and Poe describes them in a strict order from east to west: blue, purple, green, orange, white, violet, and finally black. The rooms have no lamps inside. Fires burn in corridors behind stained-glass windows, and in six rooms the glass matches that room's colour. The seventh, black room breaks the pattern: its windows are scarlet, \"a deep blood colour\", and few guests dare to enter it. A symbolic reading treats this layout as more than decoration. Read that way, the suite becomes an allegory: a fixed path that runs like the sun from east to west, or like a life from youth to death, and it ends in the colours of the plague. Poe never states what the rooms mean, so these are readings that critics and readers bring to the text, not facts the story declares.",
-    "quote": "That at the eastern extremity was hung, for example in blue—and vividly blue were its windows. The second chamber was purple in its ornaments and tapestries, and here the panes were purple. The third was green throughout, and so were the casements. The fourth was furnished and lighted with orange—the fifth with white—the sixth with violet.",
-    "quote_where": "Description of the imperial suite, middle of the story"
-   },
-   "activities": [
-    {
-     "id": "idea",
-     "kind": "explain"
-    },
-    {
-     "id": "room_order",
-     "kind": "order",
-     "prompt": "Put the seven rooms in order as Poe lays them out, starting at the eastern end and finishing at the western end.",
-     "items": [
-      "Blue room, with vividly blue windows",
-      "Purple room, with purple panes",
-      "Green room, with green casements",
-      "Orange room",
-      "White room",
-      "Violet room",
-      "Black velvet room, with scarlet windows"
-     ],
-     "explanation": "Poe names the blue room as the one 'at the eastern extremity' and then counts onward: purple second, green third, orange fourth, white fifth, violet sixth. The seventh, black room is 'the western or black chamber'. It is also where the ebony clock stands. The order is fixed, so moving through the suite always means moving toward the black room.",
-     "hints": [
-      "The story starts its count at the eastern end, and that room is the colour of a clear morning sky.",
-      "After blue and purple comes a colour of growing things. Then come three lighter or warmer colours.",
-      "The last room is the only one whose windows do not match its walls."
-     ]
-    },
-    {
-     "id": "reading_choice",
-     "kind": "choice",
-     "mode": "interpretive",
-     "question": "Poe never explains the colour sequence. Which reading of the seven rooms do you find most persuasive? Each option's feedback shows what supports it and where it runs out.",
-     "options": [
-      {
-       "text": "Sunrise to sunset: the rooms follow the sun's path from east to west, from bright morning to the darkness of night.",
-       "feedback": "Supported: Poe takes care to call the blue room 'eastern' and the black room 'western', and the sun rises in the east and sets in the west. Later he notes that 'the night is waning away' as fewer guests visit the black room. Limit: the middle colours, such as green and white, do not match sky colours very well, so this reading explains the two ends better than the middle."
-      },
-      {
-       "text": "Birth to death: the rooms are the stages of a human life, ending in the black room where death waits.",
-       "feedback": "Supported: the path is one-way and ends in black and blood red, the colours of death and of the Red Death. The clock that marks passing time stands in that same room, and the guests avoid it, as people avoid thinking about their own end. Limit: the text never names any stages of life. Any exact mapping, such as 'green is youth' or 'white is old age', is a reader's guess and not something Poe says."
-      },
-      {
-       "text": "No hidden meaning: the colours are just the prince's strange taste in decoration.",
-       "feedback": "Supported: Poe does say the layout came from 'the duke's love of the bizarre' and that he 'had a fine eye for colours and effects'. Limit: the details pile up in one direction. The black room has blood-coloured glass and holds the clock, guests fear it, and the story's climax happens there. That makes 'mere decoration' hard to sustain, even though the literal explanation is true inside the story."
-      },
-      {
-       "text": "The rooms get steadily darker, one shade at a time, from blue to black.",
-       "feedback": "This one rests on a misreading of the text. The fifth room is white, the lightest colour of all, so the suite does not darken step by step. Whatever the sequence means, it is not a smooth fade. The real break comes at the very end, when the black room's scarlet windows depart from the matching rule."
-      }
-     ]
-    },
-    {
-     "id": "black_room_passage",
-     "kind": "passage",
-     "question": "Which passage marks the black room as different from the other six?",
-     "options": [
-      {
-       "quote": "But in this chamber only, the colour of the windows failed to correspond with the decorations. The panes here were scarlet—a deep blood colour.",
-       "feedback": "Yes. Every other room has windows that match its walls, but the black room alone breaks that rule, and it breaks it with the colour of blood. That links the end of the path to the 'redness and the horror of blood' of the plague."
-      },
-      {
-       "quote": "These windows were of stained glass whose colour varied in accordance with the prevailing hue of the decorations of the chamber into which it opened.",
-       "feedback": "This passage states the general rule that window colour matches room colour. It sets up the contrast, but it does not single out the black room. The passage that does is the one saying the black room breaks this rule."
-      },
-      {
-       "quote": "The third was green throughout, and so were the casements.",
-       "feedback": "This describes an ordinary room where walls and windows match. It shows the pattern the black room will break, but it says nothing about what makes the black room different."
-      },
-      {
-       "quote": "There was a sharp turn at every twenty or thirty yards, and at each turn a novel effect.",
-       "feedback": "This applies to the whole suite. Every turn gives a new effect, so the line explains why guests see only one room at a time. It does not set the black room apart."
-      }
-     ],
-     "answer": 0,
-     "hints": [
-      "Look for a passage about one room only, not about the whole suite.",
-      "The difference concerns the windows and whether they match the walls."
-     ]
-    }
-   ]
-  },
-  {
-   "id": "ebony_clock",
-   "title": "The clock that stops the dance",
-   "idea": "Each hourly chime forces the revel to freeze and remember time, and each time the guests laugh it off and vow not to be shaken again, a repeating cycle of denial.",
-   "role": "core",
-   "terms": [
-    {
-     "term": "memento mori",
-     "means": "An object or image that reminds people they will die (Latin: 'remember that you must die')"
-    }
-   ],
-   "recap": "Every hour the clock makes the revellers remember time, and every hour they laugh and promise to forget. The promise never holds.",
-   "understand": {
-    "explanation": "In the black western room, the room at the end of the path, stands a gigantic ebony clock. Every hour its chime is so strange that the orchestra stops, the waltzers freeze, the giddiest guests grow pale and the older, steadier ones pass their hands over their brows as if lost in thought. When the echoes fade, everyone laughs at their own nervousness, and the musicians whisper vows that the next chime will not move them. Sixty minutes later the same thing happens again, in the same way, so the vow never holds. Readers often call an object like this a memento mori, a reminder that you will die. Poe never uses that phrase, so treat it as one reading; what the text itself shows is a loop of reminder, fear and forced forgetting, with the hour spelled out as 3,600 seconds 'of the Time that flies' inside the sealed walls.",
-    "quote": "But when the echoes had fully ceased, a light laughter at once pervaded the assembly; the musicians looked at each other and smiled as if at their own nervousness and folly, and made whispering vows, each to the other, that the next chiming of the clock should produce in them no similar emotion",
-    "quote_where": "Paragraph describing the ebony clock in the black chamber"
-   },
-   "activities": [
-    {
-     "id": "idea",
-     "kind": "explain"
-    },
-    {
-     "id": "cycle_order",
-     "kind": "order",
-     "prompt": "Put one turn of the clock's cycle in the order Poe describes it.",
-     "items": [
-      "The ebony clock begins to strike the hour",
-      "The musicians pause and the waltzers stop dancing",
-      "The giddiest grow pale; the older guests pass their hands over their brows",
-      "The echoes die away and light laughter spreads through the crowd",
-      "The musicians whisper vows that the next chime will not affect them",
-      "Sixty minutes later the clock strikes again and the same unease returns"
-     ],
-     "explanation": "The order matters. The fear comes while the chimes are still ringing ('while the chimes of the clock yet rang'). The laughter comes only once the echoes have 'fully ceased', so the guests relax because the sound has stopped, not because anything has changed. The vow comes last, and the next chime cancels it. The final step leads straight back to the first, which is what makes this a cycle and not a single event.",
-     "hints": [
-      "Start with the sound itself, then ask what the sound does to the music.",
-      "The laughter cannot start until the echoes have ended.",
-      "The vow looks forward to the next chime, so it must come just before the next chime arrives."
-     ]
-    },
-    {
-     "id": "vow_fails",
-     "kind": "passage",
-     "question": "Which passage shows that the musicians' vow fails?",
-     "options": [
-      {
-       "quote": "and then, after the lapse of sixty minutes, (which embrace three thousand and six hundred seconds of the Time that flies,) there came yet another chiming of the clock, and then were the same disconcert and tremulousness and meditation as before.",
-       "feedback": "Yes. The vow was that the next chime would produce 'no similar emotion'. Here the next chime produces 'the same disconcert and tremulousness and meditation as before', so the promise breaks at the first test. Poe also counts out the seconds, so time is felt passing even inside the sealed abbey."
-      },
-      {
-       "quote": "But the echoes of the chime die away—they have endured but an instant—and a light, half-subdued laughter floats after them as they depart.",
-       "feedback": "This is the laughter step of the cycle, the moment of relief. It shows the guests shaking off the chime, not the vow failing. The failure comes when the next chime brings the same fear back. Notice too that the laughter is 'half-subdued', so even the relief is uneasy."
-      },
-      {
-       "quote": "But, in spite of these things, it was a gay and magnificent revel.",
-       "feedback": "This line says the party went on despite the chimes. It is close to the guests' own view of things, but it does not show a vow, or a vow breaking."
-      },
-      {
-       "quote": "Its pendulum swung to and fro with a dull, heavy, monotonous clang",
-       "feedback": "This describes the clock's steady ticking between the hours. It sets up the clock, but it says nothing about the guests' promise or what happens to it."
-      }
-     ],
-     "answer": 0,
-     "hints": [
-      "First recall what the vow promised: that the next chime would cause 'no similar emotion'.",
-      "Look for the passage where the next chime actually arrives and you can see how the guests react."
-     ]
-    },
-    {
-     "id": "midnight",
-     "kind": "choice",
-     "mode": "determinate",
-     "question": "At midnight the clock strikes again, but this time the cycle does not end in laughter. According to the text, what is different about this chime?",
-     "options": [
-      {
-       "text": "It has twelve strokes, so the pause lasts longer, more thought creeps in, and guests have time to notice something they had missed.",
-       "feedback": "Right. Poe writes that 'there were twelve strokes to be sounded' and that 'more of thought crept, with more of time' into the guests' minds. The longer reminder gives them time to notice a masked figure no one had noticed before. Each hourly chime was too short to break the denial. This one is long enough."
-      },
-      {
-       "text": "The guests finally keep their vow and stay calm through the chime.",
-       "feedback": "No. Poe says there was 'an uneasy cessation of all things as before'. The same freeze happens, and the vow fails once more. What changes is how long the freeze lasts."
-      },
-      {
-       "text": "The clock stops working, so the music never pauses.",
-       "feedback": "No. The text says 'the music ceased, as I have told'. The clock stops only at the very end of the story, 'with that of the last of the gay'."
-      },
-      {
-       "text": "The prince orders the musicians to keep playing over the chime.",
-       "feedback": "The text says nothing like this. The prince does hush the music later with a wave of his hand, but that comes after the midnight chime, when he is angry, and it is not a response to the clock."
-      }
-     ],
-     "answer": 0,
-     "hints": [
-      "Count the strokes of an ordinary hour against the strokes at midnight.",
-      "Poe links the number of strokes to how much thought 'crept' into the guests' minds."
-     ]
-    }
-   ]
-  },
-  {
-   "id": "forbidden_costume",
-   "title": "The one costume nobody could bear",
-   "idea": "At a ball where almost any grotesque costume is allowed, the one disguise the guests cannot tolerate is the plague itself, because it names exactly what the party exists to forget.",
-   "role": "core",
-   "terms": [
-    {
-     "term": "masquerade licence",
-     "means": "The freedom the masked ball gives guests to dress and act however they like"
-    },
-    {
-     "term": "mummer",
-     "means": "A masked or costumed performer; Poe's word for the stranger"
-    }
-   ],
-   "recap": "Grotesque, wanton and even corpse-like costumes were tolerated, but dressing as the Red Death itself was not, because it named the one thing the revel existed to forget.",
-   "understand": {
-    "explanation": "Prospero's ball is built to be wild. His own taste fills the rooms with costumes that are grotesque, wanton, bizarre and even disgusting, so the night's masquerade licence, its permission to dress as anything, is almost unlimited. The story even says a tall figure in grave clothes with a corpse-like mask 'might have been endured'. What crosses the line is that this mummer, a masked stranger, has dressed as the Red Death itself, with a blood-dabbled robe and a face spattered with scarlet. The guests move from surprise to terror and disgust, and a natural reading is that this costume points straight at the plague the sealed abbey and the revel exist to shut out. That reading is an interpretation: Poe never says it outright, and his narrator says only that some matters are beyond any jest.",
-    "quote": "In truth the masquerade licence of the night was nearly unlimited; but the figure in question had out-Heroded Herod, and gone beyond the bounds of even the prince’s indefinite decorum.",
-    "quote_where": "The masked figure appears at midnight (paragraph after the twelve strokes of the clock)"
+    "explanation": "Edgar Allan Poe's short story opens by describing an invented plague called the Red Death. A pestilence is a deadly disease that sweeps through a whole population, and the story says no pestilence had ever been so fatal or so hideous. The symptoms come in a fixed sequence: sharp pains, sudden dizziness, heavy bleeding through the skin, and then death, all within half an hour. The worst part is social. Scarlet stains appear on the body and especially on the face, and Poe calls these marks the 'pest ban': a visible sign that cuts the sick person off from other people's help and sympathy. The story never ties the Red Death to any real disease. It is fiction, so read these details as the author's description, not as medical facts.",
+    "quote": "The scarlet stains upon the body and especially upon the face of the victim, were the pest ban which shut him out from the aid and from the sympathy of his fellow-men.",
+    "quote_where": "Opening paragraph",
+    "source_id": "s1",
+    "source_ids": [
+     "s1"
+    ]
    },
    "activities": [
     {
@@ -427,340 +112,1956 @@
     {
      "id": "cmp",
      "kind": "compare",
-     "prompt": "Set what the ball allows beside what the stranger wears. Look for the one detail that tips the guests from tolerance into horror.",
+     "hypothetical": true,
+     "prompt": "Put an everyday illness beside the Red Death. Notice what other people do when they see each one.",
      "cases": [
       {
-       "label": "What the ball allows",
-       "text": "The prince's own taste shaped the costumes. There were 'arabesque figures with unsuited limbs', 'delirious fancies such as the madman fashions', 'much of the bizarre, something of the terrible, and not a little of that which might have excited disgust.' The guests are called 'a multitude of dreams.'"
+       "label": "An ordinary bad flu (made-up example)",
+       "text": "You get a fever and stay in bed for a week. Nothing on your face tells strangers you are sick. Friends drop off soup, call to check on you, and feel sorry for you. The illness is slow enough for them to help, and nothing about how you look drives them away."
       },
       {
-       "label": "The stranger, part one",
-       "text": "Tall and gaunt, 'shrouded from head to foot in the habiliments of the grave', with a mask so like 'a stiffened corpse' that close study could hardly detect the cheat. The narrator says: 'all this might have been endured, if not approved.'"
-      },
-      {
-       "label": "The stranger, part two",
-       "text": "'But the mummer had gone so far as to assume the type of the Red Death.' His robe is 'dabbled in blood' and his face 'besprinkled with the scarlet horror', the same scarlet stains the story's opening describes on plague victims."
+       "label": "The Red Death (from the story)",
+       "text": "Sharp pains, sudden dizziness, then 'profuse bleeding at the pores, with dissolution', all within half an hour. Scarlet stains cover the body and especially the face. The story says these stains were 'the pest ban which shut him out from the aid and from the sympathy of his fellow-men.'"
       }
      ],
-     "takeaway": "Death as a theme is tolerated. The specific marks of the Red Death are not. The line falls between death in general and the plague raging outside the walls."
+     "takeaway": "In the made-up flu case, help keeps coming because the illness is slow and hidden. With the Red Death, the bloody marks are visible on the face, and the story says those marks shut the victim out from help and sympathy. The flu is only a contrast for illustration and is not in the story."
     },
     {
-     "id": "s",
-     "kind": "sort",
-     "title": "Endured or beyond the bounds?",
-     "prompt": "Sort each costume detail by how the story says the revellers treat it.",
-     "groups": [
-      {
-       "id": "endured",
-       "label": "Endured at the ball"
-      },
-      {
-       "id": "beyond",
-       "label": "Beyond the bounds"
-      }
-     ],
-     "cards": [
-      {
-       "id": "c1",
-       "text": "Arabesque figures with mismatched limbs",
-       "group": "endured",
-       "feedback": "Endured. These are among the prince's own grotesque designs for the night."
-      },
-      {
-       "id": "c2",
-       "text": "Costumes that might have excited disgust",
-       "group": "endured",
-       "feedback": "Endured. The story lists 'not a little of that which might have excited disgust' among the ordinary maskers, so disgust alone is not what crosses the line."
-      },
-      {
-       "id": "c3",
-       "text": "Something of the terrible",
-       "group": "endured",
-       "feedback": "Endured. Terror in costume was part of the revel's palette."
-      },
-      {
-       "id": "c4",
-       "text": "Grave clothes from head to foot",
-       "group": "endured",
-       "feedback": "Endured, which surprises many people. The narrator says 'all this might have been endured, if not approved.' Death imagery on its own was not the problem."
-      },
-      {
-       "id": "c5",
-       "text": "A mask like a stiffened corpse",
-       "group": "endured",
-       "feedback": "Endured, by the same sentence. A corpse mask is grim, but it still falls inside the night's licence."
-      },
-      {
-       "id": "c6",
-       "text": "A robe dabbled in blood",
-       "group": "beyond",
-       "feedback": "Beyond the bounds. Blood is the Red Death's 'Avatar and its seal'. This is the moment the mummer 'assume[s] the type of the Red Death.'"
-      },
-      {
-       "id": "c7",
-       "text": "A face spattered with scarlet",
-       "group": "beyond",
-       "feedback": "Beyond the bounds. The opening calls scarlet stains on the face 'the pest ban' that marks a victim. The costume copies the plague's own signature."
-      }
-     ],
-     "takeaway": "Everything up to a corpse in grave clothes stays inside the licence. Only the plague's specific signs, blood and scarlet stains, push the costume past what anyone will bear."
-    },
-    {
-     "id": "q_why",
+     "id": "q",
      "kind": "choice",
      "mode": "determinate",
-     "question": "Based on the story, why is this costume the one the guests cannot bear?",
+     "question": "According to the story, which detail is what shuts a Red Death victim off from other people's help and sympathy?",
      "options": [
       {
-       "text": "It is the most disgusting costume at the ball.",
-       "feedback": "Not supported. Costumes 'which might have excited disgust' were already present and tolerated. Disgust alone does not explain the line."
+       "text": "The scarlet stains on the body, and especially on the face",
+       "feedback": "Right. The story names these stains as 'the pest ban which shut him out from the aid and from the sympathy of his fellow-men.' Because the mark is visible, especially on the face, everyone around can see who is sick and turns away."
       },
       {
-       "text": "Costumes about death were forbidden.",
-       "feedback": "Not supported. The narrator says the grave clothes and corpse mask 'might have been endured.' Death in general was allowed."
+       "text": "The disease kills within half an hour",
+       "feedback": "The speed is real and terrible: the story says the whole illness lasts 'half an hour.' But the story ties being cut off from help and sympathy to the visible stains, not to the timing."
       },
       {
-       "text": "It copies the Red Death, the very plague the revellers sealed themselves away to escape and forget.",
-       "feedback": "Supported. The line is crossed only when the mummer 'assume[s] the type of the Red Death', with the blood and scarlet stains the story's opening gives the disease. The prince calls it 'blasphemous mockery'."
+       "text": "The sharp pains and sudden dizziness",
+       "feedback": "These are symptoms the victim feels inside, and the story does list them. Nobody else can see a pain or a dizzy spell, though. The story gives the job of shutting the victim out to the marks other people can see."
       },
       {
-       "text": "It clashed with the prince's colour scheme.",
-       "feedback": "Not supported. The text gives no hint that the reaction is about style. The prince's rage is aimed at the insult of mocking the plague."
+       "text": "No earlier pestilence had ever been so fatal",
+       "feedback": "The story does say this. It tells us how deadly the plague is, though, not why victims lose other people's help. The sentence about losing 'aid' and 'sympathy' is about the scarlet stains."
       }
      ],
-     "answer": 2,
+     "answer": 0,
      "hints": [
-      "Look again at which details the narrator says 'might have been endured'.",
-      "What do the blood and the scarlet stains copy from the story's first paragraph?"
-     ]
-    },
-    {
-     "id": "q_reading",
-     "kind": "choice",
-     "mode": "interpretive",
-     "question": "The narrator says that even for 'the utterly lost, to whom life and death are equally jests, there are matters of which no jest can be made.' What does the guests' horror suggest about them?",
-     "options": [
-      {
-       "text": "Their carefree mood was always partly a cover. Like the pauses at each chime, the costume shows the fear they had been laughing off.",
-       "feedback": "Well supported. It links to the clock: each chime made 'the giddiest' grow pale before they laughed it away. The costume is a chime that cannot be laughed off. Still, the text describes their feelings only from outside."
-      },
-      {
-       "text": "They are offended on moral grounds. Mocking a plague that is killing people outside is simply in bad taste.",
-       "feedback": "Partly supported. The company feels the costume has 'neither wit nor propriety', and the prince calls it 'blasphemous mockery'. This reading fits less well with the guests' terror, which goes beyond offence."
-      },
-      {
-       "text": "They are reacting only to surprise at an uninvited guest.",
-       "feedback": "Weakly supported. Surprise is the first note ('disapprobation and surprise'), but the reaction escalates to 'terror, of horror, and of disgust', which surprise alone does not explain."
-      }
+      "Look for the sentence that uses the words 'aid' and 'sympathy'.",
+      "Which detail could other people see just by looking at the victim?"
      ]
     }
    ]
   },
   {
-   "id": "empty_mask",
-   "title": "The empty mask: death was already inside",
-   "idea": "The stranger walks the full path of rooms to the black chamber, the prince dies there, and the costume proves empty: the plague itself had come in, so the seal only trapped the revellers with it.",
-   "role": "contribution",
+   "id": "walled_abbey",
+   "title": "Prospero's plan: lock out the world",
+   "idea": "Prospero tries to escape the plague by sealing his friends inside a walled abbey with welded gates, which keeps the world out but also locks everyone in.",
+   "role": "core",
    "terms": [
     {
-     "term": "mummer",
-     "means": "An old word for a masked actor or costumed performer; the story uses it for the stranger in the Red Death disguise"
+     "term": "seclusion",
+     "means": "Shutting yourself away from other people, so that no one comes in or goes out"
     },
     {
-     "term": "irony",
-     "means": "Here, an outcome that is the opposite of what someone planned: the thing built to save you is what dooms you"
+     "term": "abbey",
+     "means": "A large old building once used by monks or nuns; Prospero's is 'castellated', meaning built with castle-like walls"
+    },
+    {
+     "term": "ingress and egress",
+     "means": "Old formal words for a way in (ingress) and a way out (egress)"
     }
    ],
-   "recap": "The welded gates never kept the plague out: the 'guest' was empty inside, so the seal meant to protect the revellers only locked them in with death.",
+   "recap": "Prospero's walls and welded gates keep the plague's world out, but by removing every way out they also turn the abbey into a sealed trap for everyone inside.",
    "understand": {
-    "explanation": "The prince orders the stranger seized, but no one dares, so the figure walks the whole chain of rooms from the blue room to the black one. Prospero chases it with a dagger, and he drops dead the moment it turns to face him. When the guests finally grab the mummer, they find only the shroud and the mask, with no body inside. The figure was never a man in costume: it was the Red Death itself, already within the walls. That is the story's irony. The welded gates, meant to keep contagion out, now leave no way out for anyone, and every reveller dies inside. Poe never explains how the plague got in. 'Like a thief in the night' is his phrase, and reading the walls as a trap is an interpretation of the story's logic, not a fact the text states.",
-    "quote": "And now was acknowledged the presence of the Red Death. He had come like a thief in the night. And one by one dropped the revellers in the blood-bedewed halls of their revel, and died each in the despairing posture of his fall.",
-    "quote_where": "Final paragraph"
+    "explanation": "In the last concept you met the Red Death, a plague that kills in half an hour. When half of his lands have died, Prince Prospero does not try to help them. Instead he takes a thousand healthy, cheerful friends into an abbey, a big castle-like building, and shuts them away from the world; this shutting-away is called seclusion. The building already has a high wall and iron gates, but the courtiers go further and melt the gate bolts shut with furnaces and hammers. The old words ingress and egress mean a way in and a way out, and the story says the welding was meant to leave neither of them for anyone inside who might panic. Whether this plan protects them is a question the rest of the story answers; for now we only know the plan, and that its strongest lock faces inward as well as outward.",
+    "quote": "The courtiers, having entered, brought furnaces and massy hammers and welded the bolts. They resolved to leave means neither of ingress nor egress to the sudden impulses of despair or of frenzy from within.",
+    "quote_where": "Second paragraph of the story",
+    "source_id": "s1",
+    "source_ids": [
+     "s1"
+    ]
    },
    "activities": [
     {
-     "id": "ending",
-     "kind": "stages",
-     "prompt": "Follow the last minutes of the masquerade, one moment at a time.",
-     "stages": [
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "ex",
+     "kind": "worked",
+     "title": "Prospero's precautions, one at a time, with the reason the story gives",
+     "steps": [
       {
-       "label": "1. The order nobody obeys",
-       "text": "In the blue eastern room, Prospero shouts: \"Seize him and unmask him!\" His courtiers start forward, then stop. A nameless awe holds them back. The stranger, a mummer dressed as the Red Death, passes within a yard of the prince, and the crowd shrinks back to the walls."
+       "text": "When does he act? Only 'when his dominions were half depopulated', that is, when half the people in his lands had already died.",
+       "result": "The plan starts late, and it is a plan to save himself and his circle, not his people."
       },
       {
-       "label": "2. The walk along the path",
-       "text": "With slow, measured steps, the figure goes from blue to purple, to green, to orange, to white, to violet. This is the fixed east-to-west route the building lays out, and it ends in the black room with blood-red windows."
+       "text": "Who goes in? 'A thousand hale and light-hearted friends': people who are healthy (hale) and cheerful, taken from among the knights and ladies of his court.",
+       "result": "He picks guests who are well and in a good mood. No sick or poor people are let in."
       },
       {
-       "label": "3. The chase into the black room",
-       "text": "Ashamed of his own fear, Prospero rushes through the six rooms with a drawn dagger. No one follows him. At the far end of the black velvet room, the figure turns to face him. There is a sharp cry, the dagger falls, and the prince drops dead on the black carpet."
+       "text": "Where? 'The deep seclusion of one of his castellated abbeys', girdled by 'a strong and lofty wall' with 'gates of iron'.",
+       "result": "A wall and gates keep outsiders out, but gates can still be opened from the inside."
       },
       {
-       "label": "4. The unmasking",
-       "text": "Desperate, a crowd of revellers throws itself into the black room and seizes the figure standing by the ebony clock. They tear at the grave clothes and the corpse-like mask, and they find nothing inside. No body, no man. The costume was empty."
+       "text": "The extra step: the courtiers 'brought furnaces and massy hammers and welded the bolts'. Welding melts the metal locks together so they can never be opened again.",
+       "result": "The stated reason points inward: no ingress and egress, no way in or out, 'to the sudden impulses of despair or of frenzy from within'. They fear their own panic too."
       },
       {
-       "label": "5. The last chime",
-       "text": "Now everyone understands what came in. The revellers fall one by one in the halls of their party. The ebony clock stops with the last of them, and the fires in the tripods go out."
+       "text": "Supplies: 'The abbey was amply provisioned.' There was plenty of food and drink stored inside.",
+       "result": "No one ever needs to leave, so a door is not needed for daily life."
       },
       {
-       "label": "6. What the walls really did",
-       "text": "Go back to the welded iron gates. They were meant to keep the plague out. They never did. The 'guest' everyone took for a man in costume was empty inside, so death had walked in unseen. And since the bolts left no way in or out, the seal meant to protect the revellers only locked them in with it."
+       "text": "Pleasures and attitude: 'buffoons', 'musicians', 'ballet-dancers', 'wine', and the view that 'it was folly to grieve, or to think' and 'The external world could take care of itself.'",
+       "result": "The plan also seals out thought and grief. The guests are meant to forget what is happening beyond the wall."
+      },
+      {
+       "text": "The story sums it up: 'All these and security were within. Without was the “Red Death”.' (Within means inside; without means outside.)",
+       "result": "The plan rests on one belief: danger is outside, safety is inside, and a wall can keep the two apart."
       }
      ],
-     "takeaway": "The abbey's protection turned around completely: once death was inside, the wall that shut out the world also shut in everyone with the plague."
+     "takeaway": "Each precaution has a stated purpose, but one of them, the welded bolts, works in both directions: it stops anyone coming in and also stops anyone getting out."
+    },
+    {
+     "id": "trap",
+     "kind": "choice",
+     "mode": "determinate",
+     "question": "Which precaution does the most to trap the guests inside as well as keep the world out?",
+     "options": [
+      {
+       "text": "Choosing a thousand healthy, light-hearted friends",
+       "feedback": "This decides who comes in, but it puts no limit on leaving. It is about selecting guests, not locking doors."
+      },
+      {
+       "text": "The strong, lofty wall with gates of iron",
+       "feedback": "Close, but not the strongest answer. A wall with gates still has gates, and gates can be opened from inside. It is the next step that takes that choice away."
+      },
+      {
+       "text": "Welding the bolts of the gates shut",
+       "feedback": "Yes. Welding makes the gates impossible to open, and the story says the aim was to leave 'neither of ingress nor egress', no way in and no way out, for anyone inside who gave way to 'despair or of frenzy from within'. The lock faces both directions."
+      },
+      {
+       "text": "Stocking the abbey with plenty of food and drink",
+       "feedback": "Supplies remove the need to leave, but they do not stop anyone who wants to. A full pantry is a comfort, not a lock."
+      },
+      {
+       "text": "Providing musicians, dancers, jesters and wine",
+       "feedback": "The entertainment keeps people from thinking about the outside, which is a kind of mental wall. But it does not physically stop anyone from leaving; the welded bolts do."
+      }
+     ],
+     "answer": 2,
+     "hints": [
+      "Ask of each option: does it stop someone who wants to leave?",
+      "Gates can be opened. What did the courtiers do to make sure they could not be?",
+      "Look for the step whose stated reason is about people 'from within'."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "seven_rooms",
+   "title": "Seven rooms, east to west, ending in black",
+   "idea": "The ball is held in seven winding rooms that run from a blue room in the east to a black room with blood-red windows in the west, and the guests avoid that last room.",
+   "role": "core",
+   "predict": {
+    "question": "Picture a stage director who must pick one room in this layout for the night's most frightening moment. Using only what this part of the story describes, which room fits best?",
+    "options": [
+     "The blue room, because the prince stands there",
+     "The orange room, because it sits in the middle and everyone passes through it",
+     "The black room, because its blood-red light and its emptiness already make guests afraid",
+     "Any room would do, because the colours are only decoration"
+    ],
+    "answer": 2,
+    "why": [
+     "The prince matters, but the blue room is the ordinary start of the line. Its glass matches its walls and it is full of dancers, so nothing about it signals dread.",
+     "A busy middle room seems like a good stage. But Poe puts the frightening room at the far western end, not in the crowd, and the middle rooms are where 'beat feverishly the heart of life'.",
+     "Right. It is the one room whose windows clash with its walls, its light makes faces look 'wild', and guests already refuse to go in. The setting has prepared the reader to fear it.",
+     "This is tempting if you read the rooms as scenery. But Poe chooses the colours with care: six rooms match and one breaks the pattern, and that break is what makes the guests stay away."
+    ]
+   },
+   "terms": [
+    {
+     "term": "suite",
+     "means": "A set of rooms joined one after another and used together, like a row of connected hotel rooms"
+    },
+    {
+     "term": "brazier",
+     "means": "A metal bowl or stand that holds burning coals or fire, used for light or heat"
+    }
+   ],
+   "model": {
+    "title": "Map of the seven rooms, east to west",
+    "note": "Teaching model: a bird's-eye plan with the seven rooms drawn as equal squares in a zigzag. Poe gives no sizes beyond 'a sharp turn at every twenty or thirty yards', so shapes and distances are illustrative, not from the story. The squares are not painted in the story's colours: each label names its room's colour. 'Crowded with dancers' is simplified to yes or no. Poe says that early on 'few' guests dared enter the black room, and that later in the night 'none' did.",
+    "controls": [
+     {
+      "id": "room",
+      "label": "Which room you stand in (1 = east end)",
+      "kind": "slider",
+      "min": 1,
+      "max": 7,
+      "step": 1,
+      "default": 1,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "fire",
+      "label": "Light the fires outside the windows",
+      "kind": "toggle",
+      "default": 0,
+      "color": 1,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "turns",
+      "label": "Turns west of the blue room",
+      "expr": "room - 1",
+      "unit": "",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "match",
+      "label": "Windows match the walls (1 yes, 0 no)",
+      "expr": "room < 7 ? 1 : 0",
+      "unit": "",
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "crowded",
+      "label": "Crowded with dancers (1 yes, 0 no)",
+      "expr": "room < 7 ? 1 : 0",
+      "unit": "",
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "lit",
+      "label": "Room is lit (1 yes, 0 dark)",
+      "expr": "fire == 1 ? 1 : 0",
+      "unit": "",
+      "decimals": 0,
+      "color": 1
+     }
+    ],
+    "visual": {
+     "type": "geometry",
+     "xmin": -1,
+     "xmax": 16,
+     "ymin": -4,
+     "ymax": 4,
+     "polygons": [
+      {
+       "points": [
+        [
+         12.1,
+         -0.1
+        ],
+        [
+         13.9,
+         -0.1
+        ],
+        [
+         13.9,
+         1.7
+        ],
+        [
+         12.1,
+         1.7
+        ]
+       ],
+       "label": "1 Blue",
+       "color": 2
+      },
+      {
+       "points": [
+        [
+         10.1,
+         -1.7
+        ],
+        [
+         11.9,
+         -1.7
+        ],
+        [
+         11.9,
+         0.1
+        ],
+        [
+         10.1,
+         0.1
+        ]
+       ],
+       "label": "2 Purple",
+       "color": 2
+      },
+      {
+       "points": [
+        [
+         8.1,
+         -0.1
+        ],
+        [
+         9.9,
+         -0.1
+        ],
+        [
+         9.9,
+         1.7
+        ],
+        [
+         8.1,
+         1.7
+        ]
+       ],
+       "label": "3 Green",
+       "color": 2
+      },
+      {
+       "points": [
+        [
+         6.1,
+         -1.7
+        ],
+        [
+         7.9,
+         -1.7
+        ],
+        [
+         7.9,
+         0.1
+        ],
+        [
+         6.1,
+         0.1
+        ]
+       ],
+       "label": "4 Orange",
+       "color": 2
+      },
+      {
+       "points": [
+        [
+         4.1,
+         -0.1
+        ],
+        [
+         5.9,
+         -0.1
+        ],
+        [
+         5.9,
+         1.7
+        ],
+        [
+         4.1,
+         1.7
+        ]
+       ],
+       "label": "5 White",
+       "color": 2
+      },
+      {
+       "points": [
+        [
+         2.1,
+         -1.7
+        ],
+        [
+         3.9,
+         -1.7
+        ],
+        [
+         3.9,
+         0.1
+        ],
+        [
+         2.1,
+         0.1
+        ]
+       ],
+       "label": "6 Violet",
+       "color": 2
+      },
+      {
+       "points": [
+        [
+         0.1,
+         -0.1
+        ],
+        [
+         1.9,
+         -0.1
+        ],
+        [
+         1.9,
+         1.7
+        ],
+        [
+         0.1,
+         1.7
+        ]
+       ],
+       "label": "7 Black",
+       "color": 5
+      }
+     ],
+     "segments": [
+      {
+       "x1": 13,
+       "y1": 0.8,
+       "x2": 11,
+       "y2": -0.8,
+       "label": "the way through",
+       "color": 7
+      },
+      {
+       "x1": 11,
+       "y1": -0.8,
+       "x2": 9,
+       "y2": 0.8,
+       "color": 7
+      },
+      {
+       "x1": 9,
+       "y1": 0.8,
+       "x2": 7,
+       "y2": -0.8,
+       "color": 7
+      },
+      {
+       "x1": 7,
+       "y1": -0.8,
+       "x2": 5,
+       "y2": 0.8,
+       "color": 7
+      },
+      {
+       "x1": 5,
+       "y1": 0.8,
+       "x2": 3,
+       "y2": -0.8,
+       "color": 7
+      },
+      {
+       "x1": 3,
+       "y1": -0.8,
+       "x2": 1,
+       "y2": 0.8,
+       "color": 7
+      },
+      {
+       "x1": 0.6,
+       "y1": 1.7,
+       "x2": 1.4,
+       "y2": 1.7,
+       "color": 5
+      }
+     ],
+     "circles": [
+      {
+       "x": "15 - 2 * room",
+       "y": "room % 2 == 1 ? 0.8 : -0.8",
+       "r": "fire == 1 ? 0.75 : 0.05",
+       "label": "fire-light",
+       "color": 1
+      }
+     ],
+     "points": [
+      {
+       "id": "east",
+       "x": 15.2,
+       "y": -3,
+       "label": "East",
+       "color": 7
+      },
+      {
+       "id": "west",
+       "x": 0.2,
+       "y": -3,
+       "label": "West",
+       "color": 7
+      },
+      {
+       "id": "red_glass",
+       "x": 1,
+       "y": 1.7,
+       "label": "blood-red windows",
+       "color": 5
+      },
+      {
+       "id": "you",
+       "x": "15 - 2 * room",
+       "y": "room % 2 == 1 ? 0.8 : -0.8",
+       "label": "You",
+       "color": 0
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This is a map of seven rooms seen from above, joined in a zigzag. East is on the right, west on the left.",
+      "focus": [
+       "east",
+       "west"
+      ],
+      "ms": 3600
+     },
+     {
+      "say": "The dot is you. This slider walks you from room to room.",
+      "set": {
+       "room": 3
+      },
+      "focus": [
+       "room",
+       "you"
+      ],
+      "ms": 3400
+     },
+     {
+      "say": "These boxes tell you whether your room's windows match its walls, and whether dancers crowd it.",
+      "focus": [
+       "match",
+       "crowded"
+      ],
+      "ms": 3600
+     },
+     {
+      "say": "This switch lights fires in a hidden passage outside the windows. They are the only light the rooms get, so watch the glow around you.",
+      "set": {
+       "fire": 1
+      },
+      "focus": [
+       "fire",
+       "lit",
+       "you"
+      ],
+      "ms": 3800
+     },
+     {
+      "say": "Back to the start. Let's walk through them.",
+      "set": {
+       "room": 1,
+       "fire": 0
+      },
+      "focus": "you",
+      "ms": 2600
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Walk the rooms yourself. Use what you just learned about the order of the colours and the one room the guests avoid.",
+    "goals": [
+     {
+      "text": "Stand in the last room that is still crowded with dancers before the room they refuse to enter",
+      "when": "room == 6",
+      "solution": {
+       "room": 6
+      },
+      "hints": [
+       "Which room do the guests stay out of?",
+       "The crowded rooms run from the east end up to the room just before the one they avoid.",
+       "Walk west until the next step would make the crowd box drop to 0, and stop there."
+      ]
+     },
+     {
+      "text": "With the rooms lit, stand two rooms east of the room the guests are afraid to enter",
+      "when": "room == 5 && fire == 1",
+      "solution": {
+       "room": 5,
+       "fire": 1
+      },
+      "hints": [
+       "Two things are needed: light, and the right room.",
+       "No room has a lamp of its own, so the switch has to be on. Then find the feared room and count back toward the east.",
+       "East is toward the blue room, so from the black end you step back two rooms, not forward."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "source_ids": [
+     "s1"
+    ],
+    "feedback": {
+     "correct": "Yes. Poe has already made the black room frightening before anything happens in it: its scarlet glass clashes with its black walls, its light makes faces look wild, and guests won't go in. A director would follow that design.",
+     "incorrect": "You may have read the colours as scenery, or looked for the busiest room. But Poe builds a pattern (six rooms where glass matches walls) and then breaks it in the last, western room. That break, and the guests' refusal to enter, is what marks the black room as the place of fear."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start at the eastern end, in the blue room, with the fires lit. Poe calls this run of seven joined rooms a suite. Here the walls are blue, and so are the windows.",
+       "set": {
+        "room": 1,
+        "fire": 1
+       },
+       "focus": [
+        "you",
+        "match"
+       ],
+       "ms": 4200
+      },
+      {
+       "say": "Where does the light come from? No lamp or candle burns in any room. Outside each window stands a brazier, a metal stand holding fire. Its light shines through the coloured glass.",
+       "focus": [
+        "fire",
+        "lit"
+       ],
+       "ms": 4600
+      },
+      {
+       "say": "Turn west into the purple room. The way bends sharply, so you see little more than one room at a time. Each turn brings a new surprise.",
+       "set": {
+        "room": 2
+       },
+       "focus": "you",
+       "ms": 4000
+      },
+      {
+       "say": "Green, then orange. In every room so far, the glass matches the walls.",
+       "set": {
+        "room": 4
+       },
+       "focus": [
+        "turns",
+        "match"
+       ],
+       "ms": 3800
+      },
+      {
+       "say": "White, then violet. All six of these rooms are packed with dancers.",
+       "set": {
+        "room": 6
+       },
+       "focus": "crowded",
+       "ms": 3800
+      },
+      {
+       "say": "Now the last, westernmost room. Black velvet covers the walls, ceiling and floor, but the windows are scarlet, a deep blood colour. It is the only room where glass and walls don't match.",
+       "set": {
+        "room": 7
+       },
+       "focus": [
+        "red_glass",
+        "match"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "Firelight through blood-red glass onto black cloth makes faces look ghastly. So the dancers stay out, and the crowd box drops to 0. The one room nobody enters lies at the very end of the line.",
+       "focus": [
+        "crowded",
+        "red_glass",
+        "west"
+       ],
+       "ms": 5600
+      }
+     ]
+    },
+    "explanation": "The masked ball takes place in a suite of seven rooms laid out in a winding line. It runs from a blue room at the eastern end, through purple, green, orange, white and violet, to a black room at the western end. No room has a lamp. Each one is lit by a brazier outside its window, so each room glows the colour of its glass. In six rooms the glass matches the walls. In the black room alone the panes are blood-red, and the light they throw is so ghastly that few guests dare to go in. Poe doesn't tell us what this layout means. He describes it in careful detail, room by room, and readers have to decide for themselves why the frightening room sits at the far western end.",
+    "quote": "But in the western or black chamber the effect of the fire-light that streamed upon the dark hangings through the blood-tinted panes, was ghastly in the extreme, and produced so wild a look upon the countenances of those who entered, that there were few of the company bold enough to set foot within its precincts at all.",
+    "quote_where": "Description of the seven rooms, before the clock is introduced",
+    "source_id": "s1"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "windows match walls  ⇔  "
+     },
+     {
+      "text": "room",
+      "link": "room"
+     },
+     {
+      "text": " < 7;   "
+     },
+     {
+      "text": "crowded",
+      "link": "crowded"
+     },
+     {
+      "text": "  ⇔  room < 7"
+     }
+    ],
+    "caption": "The story has no equation. This is the model's own rule, written out. The blue 'room' term is the slider: rooms 1 to 6 have glass that matches their walls and are full of dancers. Room 7, the black room, breaks both patterns, and the match and crowded boxes drop to 0 there."
+   },
+   "recap": "Seven rooms run east to west from blue to black. Only the last room's blood-red windows clash with its walls, and the guests keep out of it.",
+   "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
     },
     {
      "id": "idea",
      "kind": "explain"
     },
     {
-     "id": "find_line",
-     "kind": "passage",
-     "question": "Which passage shows that the stranger was not a man in a costume but the plague itself?",
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "route",
+     "kind": "trace",
+     "prompt": "The rooms are scattered below, and some lines are doorways Poe never mentions. Trace the route a guest walks from the eastern end of the suite to the western end, in Poe's order.",
+     "nodes": [
+      {
+       "id": "blue",
+       "label": "Blue room",
+       "x": 85,
+       "y": 20
+      },
+      {
+       "id": "purple",
+       "label": "Purple room",
+       "x": 20,
+       "y": 30
+      },
+      {
+       "id": "green",
+       "label": "Green room",
+       "x": 60,
+       "y": 50
+      },
+      {
+       "id": "orange",
+       "label": "Orange room",
+       "x": 35,
+       "y": 78
+      },
+      {
+       "id": "white",
+       "label": "White room",
+       "x": 82,
+       "y": 82
+      },
+      {
+       "id": "violet",
+       "label": "Violet room",
+       "x": 12,
+       "y": 62
+      },
+      {
+       "id": "black",
+       "label": "Black room, scarlet windows",
+       "x": 50,
+       "y": 12
+      }
+     ],
+     "edges": [
+      {
+       "from": "blue",
+       "to": "purple"
+      },
+      {
+       "from": "purple",
+       "to": "green"
+      },
+      {
+       "from": "green",
+       "to": "orange"
+      },
+      {
+       "from": "orange",
+       "to": "white"
+      },
+      {
+       "from": "white",
+       "to": "violet"
+      },
+      {
+       "from": "violet",
+       "to": "black"
+      },
+      {
+       "from": "blue",
+       "to": "green"
+      },
+      {
+       "from": "orange",
+       "to": "black"
+      },
+      {
+       "from": "purple",
+       "to": "white"
+      },
+      {
+       "from": "violet",
+       "to": "green"
+      }
+     ],
+     "answer": [
+      "blue",
+      "purple",
+      "green",
+      "orange",
+      "white",
+      "violet",
+      "black"
+     ],
+     "path": true,
+     "hints": [
+      "Start at the room Poe names first, at the eastern end.",
+      "The black room has to come last, and the room just before it is violet."
+     ],
+     "explanation": "Poe lists the rooms in order: blue at the eastern end, then purple, green, orange, white and violet, and finally black at the western end. The extra lines were shortcuts that don't exist. A guest has to pass through every room in turn, and the black room is always reached last."
+    },
+    {
+     "id": "use",
+     "kind": "predict"
+    },
+    {
+     "id": "why",
+     "kind": "reveal"
+    }
+   ]
+  },
+  {
+   "id": "ebony_clock",
+   "title": "The clock that interrupts the party",
+   "idea": "Every hour the ebony clock's chime freezes the revel, the guests laugh it off and promise not to be shaken again, and the same unease returns at the next chime.",
+   "role": "core",
+   "terms": [
+    {
+     "term": "motif",
+     "means": "A detail that comes back again and again in a story and gains meaning each time it returns, like a song's chorus"
+    }
+   ],
+   "understand": {
+    "explanation": "A huge clock made of ebony, a dark wood, stands against the west wall of the black room, the one the guests avoid. Every hour its chime is so strange that the orchestra stops, the dancers freeze, the young guests go pale and the older ones rub their brows as if lost in thought. When the echoes fade, everyone laughs at their own nerves, and the musicians whisper promises that the next chime will not move them. Sixty minutes later the clock strikes again and the same unease returns, so the promise never holds. A detail that keeps coming back like this is called a motif, and each return adds weight to it. The story never says what the clock stands for. Many readers take it as a reminder that time, and life, is running out (a memento mori, an object that reminds us we will die), but that is a reading of the text, not something the text states.",
+    "quote": "the musicians looked at each other and smiled as if at their own nervousness and folly, and made whispering vows, each to the other, that the next chiming of the clock should produce in them no similar emotion; and then, after the lapse of sixty minutes, (which embrace three thousand and six hundred seconds of the Time that flies,) there came yet another chiming of the clock, and then were the same disconcert and tremulousness and meditation as before.",
+    "quote_where": "Fifth paragraph, the description of the ebony clock",
+    "quote_source_id": "s1",
+    "source_id": "s1",
+    "source_ids": [
+     "s1"
+    ]
+   },
+   "activities": [
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "cycle_order",
+     "kind": "order",
+     "prompt": "Put one hour of the party in order, from one chime of the ebony clock to the next.",
+     "items": [
+      "The ebony clock strikes the hour with a loud, deep, strange note",
+      "The musicians pause and the waltzers stop dancing",
+      "The giddiest guests grow pale; older guests pass their hands over their brows",
+      "The echoes die away and light laughter spreads through the crowd",
+      "The musicians whisper vows that the next chime will not affect them",
+      "Sixty minutes pass",
+      "The clock chimes again and the same unease returns"
+     ],
+     "hints": [
+      "The guests can only laugh at their fear after the sound has stopped.",
+      "The promise about the next chime comes after the laughter, while they are smiling at their own nerves.",
+      "The last step mirrors the first: the cycle closes where it began."
+     ],
+     "explanation": "The story gives exactly this sequence: chime, music stops, faces go pale, echoes fade, laughter, vows, sixty minutes, chime again. The last step loops back to the first, so the cycle repeats all night. The vow sits just before the next chime, and that placement shows it failing: the very next chime brings back the 'same disconcert and tremulousness and meditation as before'."
+    },
+    {
+     "id": "what_they_ignore",
+     "kind": "choice",
+     "mode": "interpretive",
+     "question": "The guests keep trying to shrug off the chime, and keep failing. What do you think they are failing to ignore?",
      "options": [
       {
-       "quote": "gasped in unutterable horror at finding the grave cerements and corpse-like mask, which they handled with so violent a rudeness, untenanted by any tangible form.",
-       "feedback": "Yes. 'Untenanted by any tangible form' means no one was inside the costume. The figure was not a reveller in disguise, so the disguise was the Red Death itself."
+       "text": "The passing of time: every hour that strikes is an hour of their lives gone",
+       "feedback": "This reading has the strongest support in the passage. The narrator calls the hour 'three thousand and six hundred seconds of the Time that flies', with a capital T, and the guests react with 'confused reverie or meditation', not just surprise. The limit: the story never says this outright, so it remains an interpretation."
       },
       {
-       "quote": "With such precautions the courtiers might bid defiance to contagion.",
-       "feedback": "This is the courtiers' hope at the start, from before the ball. It tells us what they believed the walls would do, not what came in. The ending proves that belief wrong."
+       "text": "The plague raging outside the walls",
+       "feedback": "There is some support. The ball takes place 'while the pestilence raged most furiously abroad', and the clock stands in the black room with blood-red windows, the colour of the Red Death. The limit: the clock passage itself never mentions the plague, so this link comes from the setting around the clock, not from what the chime is said to mean."
       },
       {
-       "quote": "there were many individuals in the crowd who had found leisure to become aware of the presence of a masked figure which had arrested the attention of no single individual before.",
-       "feedback": "This shows the figure arrived without anyone noticing, which is a strong clue. But at this point everyone still assumes a person is under the mask. Only the unmasking shows the costume is empty."
+       "text": "Just a loud noise that interrupts the music",
+       "feedback": "The text does not support this. It describes the sound as 'clear and loud and deep and exceedingly musical', so it is not simply unpleasant, and the reactions go far beyond annoyance: the giddiest grow pale and the old fall into meditation. A mere noise would not explain why the same unease returns every hour."
       },
       {
-       "quote": "The external world could take care of itself.",
-       "feedback": "This describes the courtiers' attitude toward the people left outside. It says nothing about the stranger. Its irony only becomes clear once death turns out to be inside, not outside."
+       "text": "Guilt about the people they abandoned outside",
+       "feedback": "This is possible but thinly supported. The courtiers did shut out a dying country, and the story notes that 'the external world could take care of itself'. But guilt is never mentioned, and the reactions described, pallor and dazed reflection, fit fear or unease better than a troubled conscience."
+      }
+     ]
+    }
+   ],
+   "recap": "Each hour the clock forces the revellers to stop and feel uneasy; they laugh and vow to ignore it, but the feeling returns with every chime."
+  },
+  {
+   "id": "the_chase",
+   "title": "Midnight: the masked figure walks east to west",
+   "idea": "At midnight a guest costumed as a Red Death victim walks unchallenged from the blue room through every room to the black one, and the prince who chases him dies there.",
+   "role": "core",
+   "predict": {
+    "question": "Imagine a retelling where the masked figure walks the other way: from the black room east to the blue room, with the prince chasing behind. What would the walk lose compared with Poe's version?",
+    "options": [
+     "The walk would no longer lead into the room the guests feared, with its clock and blood-red windows. The chase would end in the bright blue room instead.",
+     "Nothing. The direction of the walk carries no meaning.",
+     "The figure would pass through fewer rooms on the way.",
+     "The prince would have to get past the welded iron gates."
+    ],
+    "answer": 0,
+    "why": [
+     "This fits the story. Poe's route heads for the black room the guests feared, with its clock and blood-red glass, and a reversed walk moves away from it. Poe never explains his choice, so this is a reading, not his statement.",
+     "Tempting if you treat the route as stage directions. But Poe names every room in order, and the walk ends in the one room the guests feared. Reversing it changes where the chase ends.",
+     "Someone might think direction changes distance. The suite is the same seven rooms either way, so a full walk still crosses all of them.",
+     "The gates are in the wall around the whole abbey, not in the suite. A walk from room to room never reaches them, in either direction."
+    ]
+   },
+   "terms": [
+    {
+     "term": "nameless awe",
+     "means": "A fear and wonder so deep it has no name. Poe gives it as the reason nobody grabs the figure."
+    },
+    {
+     "term": "mummer",
+     "means": "Someone in a mask and costume playing a part. This is Poe's word for the masked figure."
+    }
+   ],
+   "model": {
+    "title": "Map of the seven rooms, east to west: the midnight chase",
+    "note": "Teaching model: a bird's-eye plan with the seven rooms drawn as equal squares in a zigzag. Poe gives no sizes beyond 'a sharp turn at every twenty or thirty yards', so shapes and distances are illustrative, not from the story. The squares are not painted in the story's colours; each label names its room's colour. The 'You' marker now stands for the masked figure: you walk in its footsteps. Poe gives the figure's route room by room and says the prince crossed 'the six chambers', but he gives no speeds or timings. Positions are therefore snapshots, not a timed chase. The rule 'the prince falls when both reach the black room' is the model's summary of the story's ending.",
+    "controls": [
+     {
+      "id": "room",
+      "label": "Which room you stand in (1 = east end)",
+      "kind": "slider",
+      "min": 1,
+      "max": 7,
+      "step": 1,
+      "default": 1,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "fire",
+      "label": "Light the fires outside the windows",
+      "kind": "toggle",
+      "default": 0,
+      "color": 1,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "prince",
+      "label": "Prince Prospero's room (1 = east end)",
+      "kind": "slider",
+      "min": 1,
+      "max": 7,
+      "step": 1,
+      "default": 1,
+      "unit": "",
+      "color": 3
+     }
+    ],
+    "outputs": [
+     {
+      "id": "turns",
+      "label": "Turns west of the blue room",
+      "expr": "room - 1",
+      "unit": "",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "gap",
+      "label": "Rooms the prince is behind the figure",
+      "expr": "room - prince",
+      "unit": "",
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "confront",
+      "label": "Figure turns to face the prince (1 yes, 0 no)",
+      "expr": "(room == 7 && prince == 7) ? 1 : 0",
+      "unit": "",
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "alive",
+      "label": "Prince is alive (1 yes, 0 no)",
+      "expr": "confront == 1 ? 0 : 1",
+      "unit": "",
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "lit",
+      "label": "Room is lit (1 yes, 0 dark)",
+      "expr": "fire == 1 ? 1 : 0",
+      "unit": "",
+      "decimals": 0,
+      "color": 1
+     }
+    ],
+    "visual": {
+     "type": "geometry",
+     "xmin": -1,
+     "xmax": 16,
+     "ymin": -4,
+     "ymax": 4,
+     "polygons": [
+      {
+       "points": [
+        [
+         12.1,
+         -0.1
+        ],
+        [
+         13.9,
+         -0.1
+        ],
+        [
+         13.9,
+         1.7
+        ],
+        [
+         12.1,
+         1.7
+        ]
+       ],
+       "label": "1 Blue",
+       "color": 2
+      },
+      {
+       "points": [
+        [
+         10.1,
+         -1.7
+        ],
+        [
+         11.9,
+         -1.7
+        ],
+        [
+         11.9,
+         0.1
+        ],
+        [
+         10.1,
+         0.1
+        ]
+       ],
+       "label": "2 Purple",
+       "color": 2
+      },
+      {
+       "points": [
+        [
+         8.1,
+         -0.1
+        ],
+        [
+         9.9,
+         -0.1
+        ],
+        [
+         9.9,
+         1.7
+        ],
+        [
+         8.1,
+         1.7
+        ]
+       ],
+       "label": "3 Green",
+       "color": 2
+      },
+      {
+       "points": [
+        [
+         6.1,
+         -1.7
+        ],
+        [
+         7.9,
+         -1.7
+        ],
+        [
+         7.9,
+         0.1
+        ],
+        [
+         6.1,
+         0.1
+        ]
+       ],
+       "label": "4 Orange",
+       "color": 2
+      },
+      {
+       "points": [
+        [
+         4.1,
+         -0.1
+        ],
+        [
+         5.9,
+         -0.1
+        ],
+        [
+         5.9,
+         1.7
+        ],
+        [
+         4.1,
+         1.7
+        ]
+       ],
+       "label": "5 White",
+       "color": 2
+      },
+      {
+       "points": [
+        [
+         2.1,
+         -1.7
+        ],
+        [
+         3.9,
+         -1.7
+        ],
+        [
+         3.9,
+         0.1
+        ],
+        [
+         2.1,
+         0.1
+        ]
+       ],
+       "label": "6 Violet",
+       "color": 2
+      },
+      {
+       "points": [
+        [
+         0.1,
+         -0.1
+        ],
+        [
+         1.9,
+         -0.1
+        ],
+        [
+         1.9,
+         1.7
+        ],
+        [
+         0.1,
+         1.7
+        ]
+       ],
+       "label": "7 Black",
+       "color": 5
+      }
+     ],
+     "segments": [
+      {
+       "x1": 13,
+       "y1": 0.8,
+       "x2": 11,
+       "y2": -0.8,
+       "label": "the way through",
+       "color": 7
+      },
+      {
+       "x1": 11,
+       "y1": -0.8,
+       "x2": 9,
+       "y2": 0.8,
+       "color": 7
+      },
+      {
+       "x1": 9,
+       "y1": 0.8,
+       "x2": 7,
+       "y2": -0.8,
+       "color": 7
+      },
+      {
+       "x1": 7,
+       "y1": -0.8,
+       "x2": 5,
+       "y2": 0.8,
+       "color": 7
+      },
+      {
+       "x1": 5,
+       "y1": 0.8,
+       "x2": 3,
+       "y2": -0.8,
+       "color": 7
+      },
+      {
+       "x1": 3,
+       "y1": -0.8,
+       "x2": 1,
+       "y2": 0.8,
+       "color": 7
+      },
+      {
+       "x1": 0.6,
+       "y1": 1.7,
+       "x2": 1.4,
+       "y2": 1.7,
+       "color": 5
+      },
+      {
+       "x1": "15 - 2 * prince",
+       "y1": "(prince % 2 == 1 ? 0.8 : -0.8) - 0.5",
+       "x2": "15 - 2 * room",
+       "y2": "room % 2 == 1 ? 0.8 : -0.8",
+       "label": "prince to figure",
+       "color": 3
+      }
+     ],
+     "circles": [
+      {
+       "x": "15 - 2 * room",
+       "y": "room % 2 == 1 ? 0.8 : -0.8",
+       "r": "fire == 1 ? 0.75 : 0.05",
+       "label": "fire-light",
+       "color": 1
+      }
+     ],
+     "points": [
+      {
+       "id": "east",
+       "x": 15.2,
+       "y": -3,
+       "label": "East",
+       "color": 7
+      },
+      {
+       "id": "west",
+       "x": 0.2,
+       "y": -3,
+       "label": "West",
+       "color": 7
+      },
+      {
+       "id": "red_glass",
+       "x": 1,
+       "y": 1.7,
+       "label": "blood-red windows",
+       "color": 5
+      },
+      {
+       "id": "clock",
+       "x": 0.3,
+       "y": 0.8,
+       "label": "ebony clock",
+       "color": 6
+      },
+      {
+       "id": "you",
+       "x": "15 - 2 * room",
+       "y": "room % 2 == 1 ? 0.8 : -0.8",
+       "label": "You, as the masked figure",
+       "color": 0
+      },
+      {
+       "id": "prince_dot",
+       "x": "15 - 2 * prince",
+       "y": "(prince % 2 == 1 ? 0.8 : -0.8) - 0.5",
+       "label": "Prince Prospero",
+       "color": 3
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Same map as before: seven rooms, blue in the east, black in the west. The 'You' dot now walks in the footsteps of a masked stranger at the ball.",
+      "set": {
+       "room": 1,
+       "prince": 1,
+       "fire": 0
+      },
+      "focus": "you",
+      "ms": 6000
+     },
+     {
+      "say": "New: this slider moves Prince Prospero, the dot with his name. Watch him head west.",
+      "set": {
+       "prince": 3
+      },
+      "focus": "prince",
+      "ms": 5500
+     },
+     {
+      "say": "These boxes count how many rooms he trails behind, and whether he is still alive.",
+      "set": {
+       "prince": 1
+      },
+      "focus": [
+       "gap",
+       "alive"
+      ],
+      "ms": 5500
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Use the two sliders to rebuild the chase, one moment at a time, in the order Poe tells it.",
+    "goals": [
+     {
+      "text": "Recreate the moment just before the chase begins: the figure has walked as far as Poe says it got before anyone moved, and the prince is still where he gave his order.",
+      "when": "abs(room - 6) < 0.5 && prince < 1.5",
+      "solution": {
+       "room": 6,
+       "prince": 1
+      },
+      "hints": [
+       "Think back to the walkthrough. Which room did Poe name last before 'a decided movement had been made'?",
+       "The prince hasn't moved yet, so leave his slider in the room where he shouted his order.",
+       "The figure has reached the room just before the dead end, but not the dead end itself."
+      ]
+     },
+     {
+      "text": "Bring the chase to its end: put the figure and the prince where the prince falls.",
+      "when": "alive == 0",
+      "solution": {
+       "room": 7,
+       "prince": 7
+      },
+      "hints": [
+       "Where does the figure stop walking and turn around?",
+       "The prince's dagger drops 'upon the sable carpet'. Which room has the black carpet?",
+       "Both dots must end up in the same room, at the far western end."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Right. Poe's route always leads west, into the black room the guests avoided, with its clock and blood-red glass. Reverse it and the chase ends somewhere bright instead. This is a reading of the story: Poe never explains why he chose that direction.",
+     "incorrect": "The route is not random stage direction. Poe names every room in order, from blue to violet, and the walk ends in the one room nobody dared enter. Reversing it would end the chase in the cheerful east."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Midnight. As the clock's twelve strokes fade, the guests notice a stranger dressed as a Red Death victim, blood on his clothes and face. The prince, in the blue room, orders his courtiers to seize him.",
+       "set": {
+        "room": 1,
+        "prince": 1,
+        "fire": 0
+       },
+       "focus": "prince_dot",
+       "ms": 5500
+      },
+      {
+       "say": "The stranger walks right past him, within a yard. Nobody puts out a hand. Poe calls what grips them 'nameless awe': fear and wonder so deep it has no name.",
+       "set": {
+        "room": 2
+       },
+       "focus": "you",
+       "ms": 5500
+      },
+      {
+       "say": "On through purple, green, orange. The crowd shrinks back to the walls. The prince still hasn't moved, and the gap keeps growing.",
+       "set": {
+        "room": 4
+       },
+       "focus": "gap",
+       "ms": 5000
+      },
+      {
+       "say": "Poe's word for the stranger is a mummer: someone in a mask and costume, playing a part. This one keeps the same slow, solemn step into the white room.",
+       "set": {
+        "room": 5
+       },
+       "focus": "you",
+       "ms": 5000
+      },
+      {
+       "say": "Only after the mummer has walked through the violet room does the prince, ashamed of his own fear, run after him with a drawn dagger. He runs alone: no courtier follows. Here he is mid-rush, as the figure enters the black room.",
+       "set": {
+        "room": 7,
+        "prince": 3
+       },
+       "focus": [
+        "prince_dot",
+        "gap"
+       ],
+       "ms": 6500
+      },
+      {
+       "say": "Light the fires. The blood-red glass glows. One room separates them now: the black room, with the ebony clock against its western wall.",
+       "set": {
+        "prince": 6,
+        "fire": 1
+       },
+       "focus": [
+        "red_glass",
+        "clock"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "When the prince steps in, the figure reaches the far wall, turns and faces him. A sharp cry, the dagger falls, and the prince drops dead on the black carpet. You'll stage that moment yourself next.",
+       "focus": "alive",
+       "ms": 6500
+      }
+     ]
+    },
+    "explanation": "At midnight the guests notice a stranger dressed as a victim of the Red Death. The prince orders him seized, but nobody touches him, because a 'nameless awe' holds everyone back. The figure walks slowly through the rooms in Poe's exact order, blue to purple to green to orange to white to violet, before anyone moves. Then the prince, ashamed, rushes alone through the six chambers. At the far end of the black room the figure turns, and the prince falls dead. This is a work of fiction, so the evidence is Poe's text itself: the map, the positions and the 'falls when both reach the black room' rule are our simplification, and Poe gives no timings.",
+    "quote": "he made his way uninterruptedly, but with the same solemn and measured step which had distinguished him from the first, through the blue chamber to the purple—through the purple to the green—through the green to the orange—through this again to the white—and even thence to the violet, ere a decided movement had been made to arrest him.",
+    "quote_where": "The paragraph after the prince's order in the blue room",
+    "source_ids": [
+     "s1"
+    ],
+    "source_id": "s1"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "gap = "
+     },
+     {
+      "text": "figure's room",
+      "link": "room"
+     },
+     {
+      "text": " − "
+     },
+     {
+      "text": "prince's room",
+      "link": "prince"
+     },
+     {
+      "text": ";  the prince "
+     },
+     {
+      "text": "falls",
+      "link": "alive"
+     },
+     {
+      "text": " when both = 7"
+     }
+    ],
+    "caption": "Poe's story has no equation; this is the model's own rule. Blue is the figure's room (the 'room' slider), orange is the prince's room, and their difference is the gap box. When both reach room 7, the black room, the 'Prince is alive' box drops to 0."
+   },
+   "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "route",
+     "kind": "trace",
+     "prompt": "Trace the masked figure's walk at midnight, from where the prince gives his order to where the figure turns around. Watch out for routes the figure never took.",
+     "nodes": [
+      {
+       "id": "blue",
+       "label": "1 Blue room (prince's order)",
+       "x": 88,
+       "y": 35
+      },
+      {
+       "id": "purple",
+       "label": "2 Purple room",
+       "x": 74,
+       "y": 65
+      },
+      {
+       "id": "green",
+       "label": "3 Green room",
+       "x": 60,
+       "y": 35
+      },
+      {
+       "id": "orange",
+       "label": "4 Orange room",
+       "x": 46,
+       "y": 65
+      },
+      {
+       "id": "white",
+       "label": "5 White room",
+       "x": 32,
+       "y": 35
+      },
+      {
+       "id": "violet",
+       "label": "6 Violet room",
+       "x": 18,
+       "y": 65
+      },
+      {
+       "id": "black",
+       "label": "7 Black room (clock)",
+       "x": 6,
+       "y": 35
+      },
+      {
+       "id": "gates",
+       "label": "Iron gates of the abbey",
+       "x": 92,
+       "y": 88
+      },
+      {
+       "id": "corridor",
+       "label": "Corridor behind the windows",
+       "x": 40,
+       "y": 10
+      }
+     ],
+     "edges": [
+      {
+       "from": "blue",
+       "to": "purple"
+      },
+      {
+       "from": "purple",
+       "to": "green"
+      },
+      {
+       "from": "green",
+       "to": "orange"
+      },
+      {
+       "from": "orange",
+       "to": "white"
+      },
+      {
+       "from": "white",
+       "to": "violet"
+      },
+      {
+       "from": "violet",
+       "to": "black"
+      },
+      {
+       "from": "blue",
+       "to": "gates"
+      },
+      {
+       "from": "green",
+       "to": "corridor"
+      },
+      {
+       "from": "corridor",
+       "to": "violet"
+      }
+     ],
+     "answer": [
+      "blue",
+      "purple",
+      "green",
+      "orange",
+      "white",
+      "violet",
+      "black"
+     ],
+     "path": true,
+     "explanation": "Poe names every step: 'through the blue chamber to the purple—through the purple to the green—through the green to the orange—through this again to the white—and even thence to the violet', and the figure turns at 'the extremity of the velvet apartment'. The figure skips no room. The corridor lies behind the windows and holds the braziers, so it is not a route. The iron gates were welded shut and lie outside the suite.",
+     "hints": [
+      "The figure walks slowly and takes no shortcuts.",
+      "The corridor is only seen through the windows, and the gates were welded shut."
+     ]
+    },
+    {
+     "id": "why_no_one",
+     "kind": "choice",
+     "mode": "determinate",
+     "question": "The prince shouts 'Seize him and unmask him!' and the figure passes within a yard of his courtiers. Why does no one grab him?",
+     "options": [
+      {
+       "text": "A 'nameless awe' inspired by the figure's costume holds them all back.",
+       "feedback": "Supported. Poe writes that 'from a certain nameless awe with which the mad assumptions of the mummer had inspired the whole party, there were found none who put forth hand to seize him'."
+      },
+      {
+       "text": "They didn't hear the order over the music.",
+       "feedback": "Not supported. The prince's words 'rang throughout the seven rooms loudly and clearly', and the music had stopped at the wave of his hand."
+      },
+      {
+       "text": "They thought the costume was a harmless joke and saw no reason to act.",
+       "feedback": "Not supported. The guests felt 'terror, of horror, and of disgust', and Poe says the costume had gone beyond even the prince's loose rules of good taste."
+      },
+      {
+       "text": "The figure threatened them with a weapon.",
+       "feedback": "Not in the text. The only weapon in the scene is the prince's own dagger. The figure simply walks with a 'solemn and measured step'."
       }
      ],
      "answer": 0,
      "hints": [
-      "Look for the moment the revellers actually touch the figure.",
-      "Which line says what was, or wasn't, under the mask?"
+      "Look at what Poe says the party felt, not at anything the figure did.",
+      "Poe uses a two-word phrase for a fear too strong to name."
+     ]
+    }
+   ],
+   "recap": "Held back by nameless awe, nobody stops the masked figure as it walks every room from blue to black. The prince who finally chases it dies in the black room, where it turns to face him.",
+   "builds_on": "seven_rooms"
+  },
+  {
+   "id": "empty_mask",
+   "title": "The empty costume: death was already inside",
+   "idea": "The guests find nothing under the mask and grave clothes, because the figure is the Red Death itself given a human shape, so the walls that were meant to keep death out could never have worked.",
+   "role": "contribution",
+   "terms": [
+    {
+     "term": "mummer",
+     "means": "An old word for a person in costume at a masked party, like someone in a Halloween outfit"
+    },
+    {
+     "term": "cerements",
+     "means": "Grave clothes: the cloth wrapped around a dead body before burial"
+    },
+    {
+     "term": "untenanted",
+     "means": "Empty, with nobody living inside, like a rented flat with no tenant"
+    },
+    {
+     "term": "personification",
+     "means": "Showing a thing or idea, such as a disease, as if it were a person who can walk and act"
+    }
+   ],
+   "recap": "The welded gates kept people out, not death: the costume was empty because the Red Death had been inside the walls all along.",
+   "understand": {
+    "explanation": "When the revellers finally grab the mummer (the costumed stranger), they find his cerements, the grave clothes wrapped around a corpse, and his corpse-like mask untenanted: empty, with no body inside. The narrator then says the Red Death itself was present, so the figure is a personification, the plague shown as a person who walks and acts. This twist undoes Prospero's whole plan: welded gates and a high wall can stop people, but they cannot stop a disease, and they cannot stop death. The black room and the hourly clock had been reminders of death inside the abbey the whole time, and the guests had laughed them off. Poe never explains how the plague got in, so reading the ending as a lesson that no wealth or wall can shut death out is an interpretation it invites, not something the narrator states outright.",
+    "quote": "seizing the mummer, whose tall figure stood erect and motionless within the shadow of the ebony clock, gasped in unutterable horror at finding the grave cerements and corpse-like mask, which they handled with so violent a rudeness, untenanted by any tangible form.",
+    "quote_where": "Final paragraphs, just after Prospero dies",
+    "source_ids": [
+     "s1"
+    ],
+    "source_id": "s1"
+   },
+   "activities": [
+    {
+     "id": "guess",
+     "kind": "choice",
+     "mode": "opening",
+     "question": "At midnight a guest dressed as a victim of the Red Death walks through all seven rooms. The prince chases him into the black room and drops dead when the figure turns to face him. Before you read on, who do you guess is under the mask?",
+     "options": [
+      {
+       "text": "One of the thousand guests, playing a cruel joke",
+       "feedback": "A sensible first guess. Masked balls are full of jokes, and the prince himself assumes this when he asks who dares to insult him. Keep it in mind and see whether the ending agrees."
+      },
+      {
+       "text": "Someone from outside who got past the wall",
+       "feedback": "Reasonable if you think the walls had a weak spot. But remember that the gates were welded shut. Watch for whether the story ever shows anyone breaking in."
+      },
+      {
+       "text": "No one: the costume is the plague itself",
+       "feedback": "A bold guess. It would mean the figure is not a person at all. See whether the evidence in the next screens backs this up."
+      },
+      {
+       "text": "I can't tell yet",
+       "feedback": "Fair enough. The story keeps the answer back until the very end. Let's look at the evidence in the order Poe gives it."
+      }
      ]
     },
     {
-     "id": "precautions",
-     "kind": "sort",
-     "title": "Shelter or trap?",
-     "prompt": "Sort each of Prospero's arrangements by what it did in the end.",
-     "groups": [
+     "id": "evidence",
+     "kind": "stages",
+     "prompt": "Here is how the ending unfolds, one step at a time. Watch what the guests find and what it means for Prospero's walls.",
+     "stages": [
       {
-       "id": "helped",
-       "label": "Helped for a while"
+       "label": "1. The prince falls",
+       "text": "Prospero runs after the figure with a dagger. In the black room the figure turns, there is a sharp cry, and the prince falls dead on the black carpet. The guests now find the courage of despair and rush into the room they had all been avoiding."
       },
       {
-       "id": "trapped",
-       "label": "Trapped them in the end"
+       "label": "2. They seize the stranger",
+       "text": "The figure stands still in the shadow of the ebony clock. Poe calls him the mummer, an old word for a person in costume at a masked party. The guests grab him roughly, expecting to unmask a man."
+      },
+      {
+       "label": "3. The costume is empty",
+       "text": "Under the hands of the guests are only the cerements (grave clothes, the cloth wrapped around a corpse) and the corpse-like mask. Poe says they were untenanted by any tangible form: empty, with no body inside, like a flat with no tenant. Nobody was ever wearing the costume."
+      },
+      {
+       "label": "4. Death is named",
+       "text": "The narrator says: \"And now was acknowledged the presence of the Red Death. He had come like a thief in the night.\" The figure was the plague shown as a person. This is called personification: a thing or idea, here a disease, drawn as someone who walks and acts. The phrase \"like a thief in the night\" echoes a well-known Bible line and means arriving unseen and unannounced."
+      },
+      {
+       "label": "5. Everything stops",
+       "text": "One by one the revellers drop dead in the halls. The ebony clock stops when the last of them dies, and the fires in the tripods go out. Darkness, Decay and the Red Death rule over everything."
+      },
+      {
+       "label": "6. Look back at the walls",
+       "text": "The courtiers had welded the iron gates so that nobody could get in or out. No gate was opened, and yet death was in the room. The black chamber and the chiming clock, both part of Prospero's own design, had been reminding the guests of death inside the walls from the start."
+      }
+     ],
+     "takeaway": "The prince's welded gates did not keep the Red Death out: the terrifying guest's costume was empty, because death itself had been inside the walls all along."
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "which_line",
+     "kind": "passage",
+     "question": "Which passage tells you that the Red Death got in without anyone opening the gates?",
+     "options": [
+      {
+       "quote": "And now was acknowledged the presence of the Red Death. He had come like a thief in the night.",
+       "source_id": "s1",
+       "feedback": "Correct. A thief in the night arrives unseen. The plague is present, but nobody saw it come in, so the locks were never tested and never mattered."
+      },
+      {
+       "quote": "The courtiers, having entered, brought furnaces and massy hammers and welded the bolts.",
+       "source_id": "s1",
+       "feedback": "This describes the precaution, not how it failed. It is what makes the ending a shock: the gates were truly sealed."
+      },
+      {
+       "quote": "With such precautions the courtiers might bid defiance to contagion.",
+       "source_id": "s1",
+       "feedback": "This is the courtiers' belief that the walls would protect them. The ending shows that belief was wrong, but this line does not show death arriving."
+      },
+      {
+       "quote": "The external world could take care of itself.",
+       "source_id": "s1",
+       "feedback": "This shows the guests' attitude toward everyone left outside. It says nothing about how death came in."
+      }
+     ],
+     "answer": 0,
+     "hints": [
+      "Look for a line that describes an arrival, not a plan.",
+      "Which line names the Red Death as being present?"
+     ]
+    },
+    {
+     "id": "what_failed",
+     "kind": "sort",
+     "title": "Walls against death",
+     "prompt": "Sort each item. Was it a precaution meant to keep death away, or a sign that death was already inside the abbey?",
+     "groups": [
+      {
+       "id": "precaution",
+       "label": "Precaution meant to keep death away (it failed)"
+      },
+      {
+       "id": "inside",
+       "label": "Sign that death was already inside"
       }
      ],
      "cards": [
       {
        "id": "c1",
-       "text": "Welding the bolts of the iron gates shut",
-       "group": "trapped",
-       "feedback": "The courtiers left 'means neither of ingress nor egress.' That was meant to stop despair from breaking out. Once death was inside, it meant no one could escape."
+       "text": "Iron gates with the bolts welded shut",
+       "group": "precaution",
+       "feedback": "A precaution. It stopped anyone from walking in, yet the Red Death was in the black room all the same."
       },
       {
        "id": "c2",
-       "text": "Stocking the abbey with ample provisions",
-       "group": "helped",
-       "feedback": "The supplies let the court live in seclusion for five or six months. They bought time, but food could not keep out what finally came."
+       "text": "A strong, high wall around the abbey",
+       "group": "precaution",
+       "feedback": "A precaution. A wall stops people and animals. It cannot stop the thing it was built against."
       },
       {
        "id": "c3",
-       "text": "Holding a masked ball where almost any costume was allowed",
-       "group": "trapped",
-       "feedback": "The 'nearly unlimited' licence of the masquerade let the plague walk among the guests looking like one more costume. Nobody noticed it until midnight."
+       "text": "Plenty of food stored, so no one had to go out",
+       "group": "precaution",
+       "feedback": "A precaution. It kept the guests from meeting the outside world, but death did not need anyone to go out and fetch it."
       },
       {
        "id": "c4",
-       "text": "Musicians, dancers, buffoons and wine",
-       "group": "helped",
-       "feedback": "These made the months inside pleasant and kept grief away. They comforted people but offered no protection. The music simply stopped when the clock struck."
+       "text": "Inviting only a thousand healthy, cheerful friends",
+       "group": "precaution",
+       "feedback": "A precaution. The story calls them hale, meaning healthy. Choosing well people did not keep the plague away in the end."
       },
       {
        "id": "c5",
-       "text": "Packing a thousand friends together in the crowded rooms",
-       "group": "trapped",
-       "feedback": "The rooms were 'densely crowded' with the whole court. When the Red Death showed itself, there was no one beyond its reach. The revellers fell 'one by one' in their own halls."
+       "text": "The rule that it was foolish to grieve or think",
+       "group": "precaution",
+       "feedback": "A precaution of the mind: if you never think about death, perhaps it cannot touch you. The clock kept forcing that thought back, and in the end the rule failed too."
+      },
+      {
+       "id": "c6",
+       "text": "The ebony clock whose hourly chime froze the party",
+       "group": "inside",
+       "feedback": "A sign. The clock stood in the black room and reminded everyone, every hour, that time and life were running out. It stops when the last guest dies."
+      },
+      {
+       "id": "c7",
+       "text": "The black room with blood-red windows that guests avoided",
+       "group": "inside",
+       "feedback": "A sign. Prospero built it himself. Its blood-coloured panes echo the Red Death's scarlet marks, and it is where the prince dies."
+      },
+      {
+       "id": "c8",
+       "text": "Grave clothes and a mask with no body inside",
+       "group": "inside",
+       "feedback": "A sign, and the clearest one. The empty costume shows the figure was the plague itself, not a guest who slipped in."
       }
      ],
-     "takeaway": "Even the comforts that helped only delayed the end. The very features of the shelter (sealed gates, licence to disguise, a crowd shut in together) are what let death in unnoticed and kept everyone with it.",
+     "takeaway": "Every precaution was built to stop people. The signs of death were built into the party itself, so the walls were guarding against the wrong thing."
+    },
+    {
+     "id": "guess_again",
+     "kind": "choice",
+     "mode": "determinate",
+     "revisits": "guess",
+     "question": "Go back to your first guess. What was really under the mask, and what does that mean for Prospero's walls?",
+     "options": [
+      {
+       "text": "Nothing: the Red Death itself had taken a human shape, so walls built to stop people could never stop it",
+       "feedback": "Correct. The guests find the grave clothes untenanted, and the narrator then acknowledges the presence of the Red Death. A wall is no barrier to something that is not a person."
+      },
+      {
+       "text": "A guest playing a cruel joke, who died of fright",
+       "feedback": "That is what the prince assumed, but the story rules it out. When the guests seize the figure, the costume is empty, with no body inside."
+      },
+      {
+       "text": "An outsider who climbed the wall",
+       "feedback": "The story never shows anyone breaking in, and the gates stayed welded. Also, an outsider would have had a body; the costume had none."
+      },
+      {
+       "text": "A wearer who slipped out of the costume before the guests grabbed it",
+       "feedback": "The text does not support this. The figure stood erect and motionless by the clock until it was seized, and then the narrator names it as the Red Death."
+      }
+     ],
+     "answer": 0,
      "hints": [
-      "Ask of each one: did it matter once the plague was inside?",
-      "The gates, the costumes and the crowd all mattered at midnight. Food and music did not."
+      "What did the guests feel when they grabbed the costume?",
+      "Reread stage 3: what does untenanted mean?"
      ]
     },
     {
-     "id": "gates_meaning",
+     "id": "how_inside",
      "kind": "choice",
-     "mode": "determinate",
-     "question": "By the end of the story, what had the welded gates actually done?",
+     "mode": "interpretive",
+     "question": "Poe never says exactly how the Red Death got inside. Which reading do you find most convincing? There is no single right answer here.",
      "options": [
       {
-       "text": "Kept the plague out. The prince died of shock, and the others of fear.",
-       "feedback": "The text rules this out. The empty costume and the line 'now was acknowledged the presence of the Red Death' show the plague itself was inside, not just fear of it."
+       "text": "It slipped in unseen: \"like a thief in the night\" means it simply arrived, and locks don't matter to a plague",
+       "feedback": "Well supported by the narrator's own words about arrival. The limit: the story never shows a moment of entry, so 'slipping in' is filled in by the reader."
       },
       {
-       "text": "Failed to keep the plague out, and then left the revellers no way to escape it.",
-       "feedback": "Supported. Death came in 'like a thief in the night' as a figure everyone took for a guest. With the bolts welded and no means of egress, all the revellers died inside the walls."
+       "text": "It was inside all along: the black room and the clock show death was built into the abbey from the start",
+       "feedback": "Supported by how Prospero designed the rooms and by the clock that stops when the last guest dies. The limit: these are symbols, so the reading depends on treating the rooms and clock as meaningful, which the narrator never says outright."
       },
       {
-       "text": "Protected everyone except Prospero, who was killed for chasing the figure.",
-       "feedback": "Not supported. The prince dies first, but then 'one by one dropped the revellers.' The story ends with the last of them dead and the clock stopped."
+       "text": "It is a lesson: no one, however rich or well protected, can shut out death",
+       "feedback": "This is the reading the ending most clearly invites, in the spirit of a memento mori (a reminder that you will die). The limit: Poe never states a moral, so this is an interpretation of the story, not a claim it makes."
       },
       {
-       "text": "Showed that the plague had been hiding inside the abbey from the very start.",
-       "feedback": "The text never says when or how the Red Death got in, only that it 'had come like a thief in the night.' The story's point is that walls could not stop it, not a precise timeline of its entry."
+       "text": "It is a literal supernatural event and needs no deeper meaning",
+       "feedback": "The story does present it as real within its world: the guests truly die. The limit: this reading has trouble explaining why Poe gives so much detail to the coloured rooms and the clock."
       }
-     ],
-     "answer": 1,
-     "hints": [
-      "Remember who dies at the end: just the prince, or everyone?",
-      "Think about what 'neither ingress nor egress' means once the danger is already inside."
      ]
     }
    ]
   }
  ],
  "omitted": [],
+ "sources": [
+  {
+   "id": "s1",
+   "title": "The Masque of the Red Death",
+   "url": "https://www.gutenberg.org/files/1064/1064-h/1064-h.htm",
+   "authors": "",
+   "year": null
+  }
+ ],
  "activity_plans": [
   {
-   "concept": "sealed_abbey",
-   "chosen": "p1",
+   "concept": "red_death_plague",
+   "chosen": "p2",
    "plan": {
     "blocks": [
-     "stages",
      "explain",
-     "sort",
-     "passage"
+     "compare",
+     "choice"
     ],
-    "why": "The learner sees the plague, the retreat and the welding in sequence. Then they sort details into 'within' and 'without' and find the line that shows Prospero's attitude."
+    "why": "Compare an ordinary illness, where friends help, with the Red Death, whose visible stains cut victims off, then ask which detail makes this plague socially isolating."
    },
-   "confidence": 0.88,
+   "confidence": 0.34,
    "model": "jev-1.13.0",
    "options": [
     {
      "blocks": [
-      "stages",
       "explain",
-      "sort",
-      "passage"
+      "stages",
+      "sort"
      ],
-     "why": "The learner sees the plague, the retreat and the welding in sequence. Then they sort details into 'within' and 'without' and find the line that shows Prospero's attitude."
+     "why": "Reveal the symptoms in the story's order (pains, dizziness, bleeding, death in half an hour), then have the learner sort story details into 'what the disease does to the body' and 'what it does to how others treat you'."
     },
     {
      "blocks": [
-      "choice",
       "explain",
       "compare",
       "choice"
      ],
-     "why": "An opening judgment on whether the walls will work is followed by teaching, then a comparison of life inside and outside the abbey."
+     "why": "Compare an ordinary illness, where friends help, with the Red Death, whose visible stains cut victims off, then ask which detail makes this plague socially isolating."
+    }
+   ]
+  },
+  {
+   "concept": "walled_abbey",
+   "chosen": "p2",
+   "plan": {
+    "blocks": [
+     "explain",
+     "worked",
+     "choice"
+    ],
+    "why": "Walk step by step through each precaution and the reason the text gives for it, then ask the learner to spot the precaution that also traps the guests inside."
+   },
+   "confidence": 0.37,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "explain",
+      "sort",
+      "choice"
+     ],
+     "why": "Sort the story's details into 'inside the walls' (wine, music, security) and 'outside' (the Red Death), then ask what the welded gates also prevent."
+    },
+    {
+     "blocks": [
+      "explain",
+      "worked",
+      "choice"
+     ],
+     "why": "Walk step by step through each precaution and the reason the text gives for it, then ask the learner to spot the precaution that also traps the guests inside."
     }
    ]
   },
@@ -769,33 +2070,41 @@
    "chosen": "p1",
    "plan": {
     "blocks": [
+     "watch",
+     "walk",
      "explain",
-     "order",
-     "choice",
-     "passage"
+     "goal",
+     "trace",
+     "predict",
+     "reveal"
     ],
-    "why": "The learner reads the room descriptions, then puts the rooms in order from east to west. Next they weigh readings of the sequence, such as sunrise to sunset or birth to death, and find the passage that marks the black room as different."
+    "why": "Step through the rooms on the map, find the one room whose windows don't match its walls, trace the colour order, then predict where a frightening scene would be staged."
    },
-   "confidence": 0.85,
+   "confidence": 0.76,
    "model": "jev-1.13.0",
    "options": [
     {
      "blocks": [
+      "watch",
+      "walk",
       "explain",
-      "order",
-      "choice",
-      "passage"
+      "goal",
+      "trace",
+      "predict",
+      "reveal"
      ],
-     "why": "The learner reads the room descriptions, then puts the rooms in order from east to west. Next they weigh readings of the sequence, such as sunrise to sunset or birth to death, and find the passage that marks the black room as different."
+     "why": "Step through the rooms on the map, find the one room whose windows don't match its walls, trace the colour order, then predict where a frightening scene would be staged."
     },
     {
      "blocks": [
-      "worked",
+      "watch",
+      "walk",
       "explain",
-      "match",
+      "goal",
+      "compare",
       "choice"
      ],
-     "why": "A worked walk through the suite is followed by matching each room to its windows, which shows the one mismatch: black walls with scarlet panes."
+     "why": "After exploring the map, compare the six bright rooms with the black room side by side, then weigh up interpretive readings, such as the rooms as stages of life, flagged as readings rather than facts."
     }
    ]
   },
@@ -806,10 +2115,9 @@
     "blocks": [
      "explain",
      "order",
-     "passage",
      "choice"
     ],
-    "why": "The learner orders the cycle (chime, freeze, pale faces, laughter, vow, chime again) and finds the passage that shows the vow failing."
+    "why": "Put the hourly cycle in order (chime, music stops, faces go pale, echoes fade, laughter, vows, sixty minutes, chime again), then interpret what the guests keep failing to ignore."
    },
    "confidence": 0.91,
    "model": "jev-1.13.0",
@@ -818,70 +2126,77 @@
      "blocks": [
       "explain",
       "order",
-      "passage",
       "choice"
      ],
-     "why": "The learner orders the cycle (chime, freeze, pale faces, laughter, vow, chime again) and finds the passage that shows the vow failing."
+     "why": "Put the hourly cycle in order (chime, music stops, faces go pale, echoes fade, laughter, vows, sixty minutes, chime again), then interpret what the guests keep failing to ignore."
     },
     {
      "blocks": [
-      "stages",
       "explain",
+      "passage",
       "choice"
      ],
-     "why": "The chime is revealed stage by stage, ending at midnight's twelve strokes. Then the learner judges why the longest chime is the moment the stranger is noticed."
+     "why": "Choose the passage that shows the guests' promises failing, then discuss what the clock might stand for, with the caveat that the story never says."
     }
    ]
   },
   {
-   "concept": "forbidden_costume",
-   "chosen": "p1",
+   "concept": "the_chase",
+   "chosen": "p2",
    "plan": {
     "blocks": [
+     "watch",
+     "walk",
      "explain",
-     "compare",
-     "sort",
+     "goal",
+     "trace",
      "choice"
     ],
-    "why": "The learner compares the allowed grotesque costumes with the stranger's, sorts costume details into 'endured' and 'beyond the bounds', and judges why the line falls there."
+    "why": "Trace the figure's route across the map, then ask why no courtier stops him: the text's 'nameless awe'."
    },
-   "confidence": 0.77,
+   "confidence": 0.45,
    "model": "jev-1.13.0",
    "options": [
     {
      "blocks": [
+      "watch",
+      "walk",
       "explain",
-      "compare",
-      "sort",
-      "choice"
+      "goal",
+      "order",
+      "predict",
+      "reveal"
      ],
-     "why": "The learner compares the allowed grotesque costumes with the stranger's, sorts costume details into 'endured' and 'beyond the bounds', and judges why the line falls there."
+     "why": "Move the figure and then the prince through the rooms, order the events of the chase, then predict in which room the confrontation must happen."
     },
     {
      "blocks": [
-      "stages",
+      "watch",
+      "walk",
       "explain",
-      "passage",
+      "goal",
+      "trace",
       "choice"
      ],
-     "why": "The guests' reaction is revealed in steps, from not noticing to murmur, terror and disgust. Then the learner finds the passage that pins down what crossed the line."
+     "why": "Trace the figure's route across the map, then ask why no courtier stops him: the text's 'nameless awe'."
     }
    ]
   },
   {
    "concept": "empty_mask",
-   "chosen": "p2",
+   "chosen": "p1",
    "plan": {
     "blocks": [
+     "choice",
      "stages",
      "explain",
      "passage",
      "sort",
      "choice"
     ],
-    "why": "After the ending unfolds, the learner finds the lines that show death 'came in'. They sort the prince's precautions into those that helped and those that trapped him, and judge what the welded gates finally meant."
+    "why": "Ask an opening guess about who is under the mask, reveal the evidence in stages up to the empty costume, then sort which precautions failed and revisit the guess."
    },
-   "confidence": 0.4,
+   "confidence": 0.33,
    "model": "jev-1.13.0",
    "options": [
     {
@@ -889,20 +2204,20 @@
       "choice",
       "stages",
       "explain",
-      "trace",
-      "choice"
-     ],
-     "why": "The learner first guesses who is under the mask. Then they follow the chase stage by stage and trace the stranger's route through the rooms. Finally they return to their guess once the empty costume is revealed."
-    },
-    {
-     "blocks": [
-      "stages",
-      "explain",
       "passage",
       "sort",
       "choice"
      ],
-     "why": "After the ending unfolds, the learner finds the lines that show death 'came in'. They sort the prince's precautions into those that helped and those that trapped him, and judge what the welded gates finally meant."
+     "why": "Ask an opening guess about who is under the mask, reveal the evidence in stages up to the empty costume, then sort which precautions failed and revisit the guess."
+    },
+    {
+     "blocks": [
+      "explain",
+      "compare",
+      "passage",
+      "choice"
+     ],
+     "why": "Compare a 'guest in a costume' reading with a 'death in person' reading, find the passage that decides between them, then interpret what the ending says about walls, with the caveat that Poe states no moral."
     }
    ]
   }
@@ -922,8 +2237,8 @@
  "generation": {
   "provider": "claude",
   "model": "claude-opus-5-5",
-  "pipeline": "lemma.generate.make_outline + build_lesson",
-  "source_chars": 13957,
-  "omitted": 0
+  "source_chars": 14354,
+  "omitted": 0,
+  "pipeline": "brought sources → subjects + make_outline + build_lesson (2026-10-23)"
  }
 }

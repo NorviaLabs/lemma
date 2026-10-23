@@ -1,9 +1,9 @@
 {
  "version": 1,
  "id": "gallery-information-cascades",
- "title": "Why Sensible People Follow the Crowd, and Why Crowds Can Turn on a Dime",
- "audience": "A curious adult with no background in this field",
- "created": "2026-10-19T02:40:15",
+ "title": "Following the Crowd: How Two Hunches Can Steer Millions",
+ "level": "beginner",
+ "created": "2026-10-23T04:45:43",
  "source": {
   "title": "A Theory of Fads, Fashion, Custom, and Cultural Change as Informational Cascades",
   "authors": "Sushil Bikhchandani, David Hirshleifer, and Ivo Welch",
@@ -12,566 +12,157 @@
   "url": ""
  },
  "intro": {
-  "summary": "The core paper (Bikhchandani, Hirshleifer and Welch, 1992) asks why people so often end up doing the same thing, and why that shared behaviour can collapse suddenly. Its model has people decide one after another. Each has a private, imperfect clue and can see only what earlier people did. The authors show that after only a couple of matching choices, it becomes rational to copy the crowd and ignore your own clue. From then on, the crowd's choices carry no new information, so these 'cascades' are often wrong and are easily broken by a little public news. A later physics paper (Hisakado and Mori) extends the idea to voters who copy a few others in a network. It finds that once copiers pass a critical share, the crowd can lock onto either the right or the wrong answer, and that network hubs barely move that tipping point. The main limits: the core results are mathematical models with illustrative examples rather than tests, the authors themselves call some predictions unrealistic, and the network results rest on approximations and finite simulations. Good follow-up topics are lab tests that try to separate cascades from simple herding, fads that arise when the true value can change, 'fashion leaders' with better information, and cascades on small-world networks.",
+  "summary": "Why do people copy each other so readily, and why do crowd behaviours like fads, medical fashions and bank runs sometimes flip suddenly? Bikhchandani, Hirshleifer and Welch (1992) model people who decide in a line. Each sees only earlier choices plus one private clue, and they show that sensible people soon ignore their own clue (an 'informational cascade'). Such cascades are often wrong, rest on very little information, and can be shattered by one small piece of public news. Hisakado and Mori (2015) extend a simpler 'herder' version of the idea to networks: they find that hubs (highly connected people) do not change the herder share at which a crowd can lock onto the wrong answer, though hubs do change how fast votes settle. Main limits and open questions: both are mathematical models with strong simplifications (identical clues, fixed order, mean-field approximations, a 50% copying threshold), the field evidence is suggestive rather than causal, and the two papers model followers differently (rational inference versus a mechanical majority rule); good follow-ups are lab tests such as Anderson and Holt's urn experiment, cascades on small-world networks, and reputational cascades.",
   "background": [
-   "A private signal is a clue only you see, such as a taste test, a hunch or a review you read, and it is right more often than wrong but not always.",
-   "Updating on evidence (Bayes' rule) means each new clue shifts how likely you think something is, and independent clues add up.",
-   "Copying others can be a sensible way to learn, because their choices may reflect clues you do not have.",
-   "The core paper is a mathematical model; the stories it cites (hybrid corn, tonsillectomy, sage grouse) are illustrations, not proof."
+   "A probability is a number from 0 to 1 that says how likely something is. A conditional probability is how likely something is once you know some other fact, such as the chance a restaurant is good given that it is busy.",
+   "Bayesian updating means starting with a belief and shifting it by the right amount each time a new clue arrives.",
+   "A network is a set of people (nodes) joined by links. A 'hub' is someone with far more links than most.",
+   "Herd behaviour means many people doing the same thing. An informational cascade is one specific reason for it: copying because others' choices seem to carry information."
   ],
   "known": [],
-  "aha": "A crowd of millions in a cascade may rest on just two people's clues, so it is wrong surprisingly often, and one small piece of public news, weaker than a single person's clue, can overturn it."
+  "aha": "A cascade followed by millions of people may rest on just one or two people's private hunches, so a single public clue weaker than one person's hunch can reverse the whole crowd.",
+  "assumes": [
+   "Herd behavior",
+   "Conditional probability",
+   "Network theory",
+   "Probability",
+   "Information asymmetry",
+   "Bayesian inference",
+   "Bayes' theorem",
+   "Rational choice model",
+   "Phase transition",
+   "Expected utility hypothesis"
+  ]
  },
  "primer": [
   {
    "heading": "The question",
-   "body": "Whole groups often converge on one behaviour: a restaurant, a medical procedure, a political mood. Older theories explained this with punishment for being different, benefits from matching others, or a simple liking for fitting in. Those forces make conformity sturdier the longer it lasts. But real fashions and fads often flip suddenly. The authors wanted one explanation for both the sameness and the sudden flips.",
-   "quote": "None of these theories explains why mass behavior is often fragile in the sense that small shocks can frequently lead to large shifts in behavior.",
+   "body": "People copy each other everywhere: in fashion, medicine, investing, and which restaurant to try. Copying is often sensible, yet crowds also get things badly wrong and then suddenly change course. The authors ask one question. Can a single, rational reason for copying explain both why crowds agree so quickly and why that agreement is so easy to break?",
+   "quote": "An informational cascade occurs when it is optimal for an individual, having observed the actions of those ahead of him, to follow the behavior of the preceding individual without regard to his own information.",
    "quote_where": "Section I, Introduction",
    "source_id": "s2",
    "source_ids": [
-    "s2"
+    "s2",
+    "s1"
    ]
   },
   {
    "heading": "What they did",
-   "body": "They built a simple model. People line up and each decides to adopt or reject something, such as a new seed or a treatment. Each person has a private clue that points the right way more often than not. Each person sees what everyone before them chose, but not their clues. Everyone reasons sensibly from what they can see. Then the authors worked out what the line of choices looks like.",
+   "body": "They built a simple model. People stand in a line and each decides whether to adopt something, like a new seed or a treatment. Each person gets one private clue that is right more often than not. Each person also sees what everyone ahead chose, but not the clues behind those choices. Later work by Hisakado and Mori put a simpler 'herder' version on networks, where each voter looks at only a few earlier voters, sometimes chosen through popular hubs.",
    "source_ids": [
-    "s2"
+    "s2",
+    "s3",
+    "s1"
    ]
   },
   {
    "heading": "What they found",
-   "body": "Very quickly, often by the third person, the evidence from earlier choices outweighs any single private clue. From then on everyone copies, whatever their own clue says. This is an informational cascade. Because copiers ignore their clues, their choices add nothing new. The whole crowd may rest on two or three early clues, so it can easily be wrong. A lab version with urns and coloured balls, run by Anderson and Holt, found cascades in most rounds.",
-   "quote": "The experimenters observed that an information cascade was observed in 41 of 56 such runs.",
-   "quote_where": "Qualitative example (summarising Anderson and Holt, 1997)",
-   "source_id": "s1",
-   "source_ids": [
-    "s1",
-    "s2"
-   ]
-  },
-  {
-   "heading": "Why crowds are fragile",
-   "body": "Since a cascade holds only a little real information, a little new public information can break it, even after millions have joined. This explains why fads appear and vanish. It also suggests why it can be worth publishing even modest evidence against a popular practice. One caution: the authors note that real life mixes cascades with peer pressure, payoffs from matching and the wish to fit in.",
-   "quote": "Intuitively, cascades aggregate the information of only a few early individuals' actions.",
-   "quote_where": "Section III.A.2, The Depth of a Cascade",
+   "body": "After just two people lean the same way, the third person should copy them whatever her own clue says. From then on, every later choice is a copy, so it adds no new information. Crowds therefore lock in fast and on little evidence, and they often lock onto the wrong answer. Because a huge crowd may rest on only one or two real clues, a small public announcement can tip it over.",
+   "quote": "The release of a small amount of public information can shatter a long-lasting cascade, where a \"small amount\" refers to a signal less informative than the private signal of a single individual.",
+   "quote_where": "Section III.A.2, Result 3",
    "source_id": "s2",
    "source_ids": [
     "s2"
    ]
   },
   {
-   "heading": "Crowds and networks",
-   "body": "A later physics paper by Hisakado and Mori mixes 'independents', who follow their own clue, with 'herders', who copy the majority of a few earlier voters picked through a network. Once herders pass a critical share, the vote can settle on either the right or the wrong answer. Networks with big hubs change how fast the vote settles but not that tipping point. These results come from approximations and computer simulations, not from real voting data.",
-   "quote": "In our model the network does not affect the critical point at which an information cascade transition occurs.",
+   "heading": "What happens on networks",
+   "body": "Hisakado and Mori found that once the share of copiers ('herders') passes a tipping point, a vote can settle on either the right or the wrong answer. Adding influential hubs did not move that tipping point. Hubs only changed how quickly the vote settled. Their results rest on approximations and computer simulations, and they assume herders simply follow the majority of the few voters they see.",
+   "quote": "In conclusion, the influence of hubs can only be seen in the convergence speed and cannot be seen in the phase transition between the one-peak and two-peaks phases.",
    "quote_where": "Section 7, Concluding Remarks",
    "source_id": "s3",
    "source_ids": [
     "s3"
    ]
+  },
+  {
+   "heading": "Why it matters, and its limits",
+   "body": "If crowds rest on thin evidence, then 'everyone is doing it' is weak proof. Fresh, independent evidence is always worth gathering. This is why some military courts let the lowest rank vote first and some countries ban polls just before elections. These are models, though. Real people also copy out of social pressure, reputation or a wish to fit in, and the real-world examples are suggestive, not proof that cascades caused them.",
+   "quote": "Thus the fact that a vast segment of society already smokes need not discourage investigation of the effects of smoking.",
+   "quote_where": "Section III.A.2",
+   "source_id": "s2",
+   "source_ids": [
+    "s2",
+    "s1"
+   ]
   }
  ],
  "provider": {
-  "name": "Claude",
+  "name": "Claude subscription",
   "model": "claude-opus-5-5"
  },
  "concepts": [
   {
-   "id": "clues_add_up",
-   "title": "Clues add up: how evidence shifts your belief",
-   "idea": "With equally reliable yes/no clues, your belief that something is good depends only on how many more 'good' clues than 'bad' clues you have, and on how reliable each clue is.",
+   "id": "one_clue_update",
+   "title": "One private clue nudges your belief",
+   "idea": "A clue that is right more often than not should shift your belief toward what it points to, by an amount set by how accurate the clue is.",
    "role": "prerequisite",
    "predict": {
-    "question": "Maya's clues are each right 80% of the time. She has two good clues and no bad ones. Then she gets one more good clue and one more bad clue. What happens to her chance that the thing is good?",
+    "question": "A new case: one friend's restaurant tips turn out right only 40% of the time, so she is wrong more often than right. You start 50–50 about a new place, and she says it is good. Where should your belief that it is good end up?",
     "options": [
-     "It stays exactly where it was",
-     "It goes up: she now has three good clues",
-     "It goes down: the bad clue is the newest news",
-     "It drops to 50%: mixed evidence means no idea"
+     "It rises a little, because any 'good' tip is some good news",
+     "It stays at 50%, because a clue this unreliable tells you nothing",
+     "It falls to about 40%, because her 'good' points the wrong way more often than not",
+     "It rises to about 60%, because she is right 40% of the time"
     ],
-    "answer": 0,
+    "answer": 2,
     "why": [
-     "Right. The new good clue and the new bad clue cancel, so her lead is still two, and with the same reliability her belief is unchanged.",
-     "Counting only the good clues is tempting, but the new bad clue cancels the new good one. Only the lead counts, and it is still two.",
-     "Recent news can feel weightier, but in this model order does not matter. Each clue counts the same, and the pair cancels.",
-     "Her evidence is mixed overall, but she still has two more good clues than bad ones. Belief returns to 50% only when the lead is zero."
+     "It is tempting to treat any 'good' word as good news. But a clue only pushes you toward what it says when it is right more than half the time. Below half, it pushes the other way.",
+     "Only a clue right exactly half the time (a coin flip) leaves you unmoved. A clue right 40% of the time is wrong 60% of the time, and that pattern is itself information.",
+     "Correct. From 50–50, the after-belief equals how often the 'good' clue is right when the place is good. Here that is 40%. Her tip is useful, but read in reverse.",
+     "This mixes up 40% and 60%. She says 'good' and is wrong 60% of the time, so 'good' points away from good, not toward it."
     ]
    },
    "terms": [
     {
-     "term": "Bayes' rule",
-     "means": "The rule of probability for updating a belief when new evidence arrives"
-    },
-    {
-     "term": "posterior",
-     "means": "Your belief after weighing the clues, written as a chance"
+     "term": "private signal",
+     "means": "A clue only you see, such as the ball you drew from an urn or your own first taste of the food"
     },
     {
      "term": "signal accuracy",
-     "means": "How often a single clue points the right way. 50% means the clue is useless."
+     "means": "How often that kind of clue points to the right answer"
+    },
+    {
+     "term": "prior belief",
+     "means": "How likely you thought something was before the new clue arrived"
+    },
+    {
+     "term": "posterior belief",
+     "means": "Your updated belief after taking the clue into account"
     }
    ],
    "model": {
-    "title": "How likely is it good, given the clues you hold?",
-    "note": "Teaching model: one person starts at 50–50 and gets yes/no clues. Each clue is right with the same chance, and clues are independent of one another once the truth is fixed. The person combines them by the laws of probability, as in the binary-clue case of Bikhchandani, Hirshleifer and Welch (1992) with a 50–50 starting belief. Clue counts and settings are illustrative, not data from the paper.",
+    "title": "Your belief that the restaurant is good, before and after one clue",
+    "note": "Teaching model: one person, one yes-or-no question (is it good?), and one clue whose accuracy is known exactly and is the same whether the place is good or bad. This is the Bayes'-rule step taken by the very first person in the basic cascade model (Wikipedia's 'Quantitative description' of Bikhchandani, Hirshleifer and Welch, 1992). Real people may not know how accurate a clue is, and the model leaves that out. Numbers are illustrative, not data from either source.",
     "controls": [
      {
-      "id": "g",
-      "label": "Good clues",
+      "id": "q",
+      "label": "How often this kind of clue is right",
       "kind": "slider",
-      "min": 0,
-      "max": 8,
-      "step": 1,
-      "default": 1,
-      "unit": "",
-      "color": 0
-     },
-     {
-      "id": "b",
-      "label": "Bad clues",
-      "kind": "slider",
-      "min": 0,
-      "max": 8,
-      "step": 1,
-      "default": 0,
+      "min": 0.5,
+      "max": 0.95,
+      "step": 0.05,
+      "default": 0.6,
       "unit": "",
       "color": 1
      },
      {
       "id": "p",
-      "label": "How often a clue is right",
+      "label": "Your belief it's good, before the clue",
       "kind": "slider",
-      "min": 0.5,
+      "min": 0.05,
       "max": 0.95,
       "step": 0.05,
-      "default": 0.7,
-      "unit": "",
-      "color": 4
-     }
-    ],
-    "outputs": [
-     {
-      "id": "lead",
-      "label": "Lead (good − bad)",
-      "expr": "g - b",
-      "unit": "",
-      "decimals": 0,
-      "color": 5
-     },
-     {
-      "id": "belief_good",
-      "label": "Chance it's good",
-      "expr": "1 / (1 + pow((1 - p) / p, g - b))",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 0,
-      "color": 2
-     },
-     {
-      "id": "belief_bad",
-      "label": "Chance it's bad",
-      "expr": "1 - belief_good",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 0,
-      "color": 3
-     }
-    ],
-    "visual": {
-     "type": "bars",
-     "bars": [
-      {
-       "id": "good_bar",
-       "label": "Chance it's good",
-       "value": "belief_good * 100",
-       "color": 2
-      },
-      {
-       "id": "bad_bar",
-       "label": "Chance it's bad",
-       "value": "belief_bad * 100",
-       "color": 3
-      }
-     ],
-     "min": 0,
-     "max": 100,
-     "unit": "%",
-     "decimals": 0
-    }
-   },
-   "animation": {
-    "steps": [
-     {
-      "say": "Two bars: how likely something is good, and how likely it is bad. With no clues at all, it's a coin toss, 50–50.",
-      "set": {
-       "g": 0,
-       "b": 0,
-       "p": 0.7
-      },
-      "focus": "good_bar",
-      "ms": 3600
-     },
-     {
-      "say": "This slider hands you good clues, hints that it's good. One clue tips the bars.",
-      "set": {
-       "g": 1
-      },
-      "focus": "g",
-      "ms": 3400
-     },
-     {
-      "say": "This one hands you bad clues, hints the other way.",
-      "set": {
-       "g": 0,
-       "b": 1
-      },
-      "focus": "b",
-      "ms": 3200
-     },
-     {
-      "say": "This slider sets how often a single clue is right. Trust your clues more, and one clue moves you further.",
-      "set": {
-       "p": 0.9
-      },
-      "focus": "p",
-      "ms": 3800
-     },
-     {
-      "say": "This box counts good clues minus bad ones. Keep an eye on it.",
-      "set": {
-       "g": 1,
-       "b": 0,
-       "p": 0.7
-      },
-      "focus": "lead",
-      "ms": 3200
-     }
-    ]
-   },
-   "explore": {
-    "prompt": "Play with the clue counts and their reliability. See how many different clue piles you can find that land on the same belief.",
-    "goals": [
-     {
-      "text": "Hold at least four clues, each better than a coin toss, and still be exactly 50–50.",
-      "when": "abs(belief_good - 0.5) < 0.001 && g + b >= 4 && p > 0.5",
-      "solution": {
-       "g": 2,
-       "b": 2
-      },
-      "hints": [
-       "What happens to your belief when a good clue meets a bad clue?",
-       "Each bad clue cancels exactly one good clue. Watch the lead box.",
-       "Give both clue sliders the same count, high enough that together they make at least four."
-      ]
-     },
-     {
-      "text": "With at least five bad clues on the table, push the chance it's good above 90%.",
-      "when": "b >= 5 && belief_good > 0.9",
-      "solution": {
-       "g": 8,
-       "b": 5
-      },
-      "hints": [
-       "Five bad clues pull hard. What could outweigh them?",
-       "Only the lead and the reliability matter. You need several more good clues than bad ones, or clues you can trust more.",
-       "At the starting reliability, grow the lead one good clue at a time and watch where the good bar passes 90%."
-      ]
-     }
-    ]
-   },
-   "understand": {
-    "feedback": {
-     "correct": "Yes. A good clue and a bad clue of equal reliability cancel exactly, so Maya's lead stays at two and her belief does not move.",
-     "incorrect": "It is natural to weigh the newest clue more, or to count only good clues. In this model each clue shifts the odds by the same factor, up for good and down for bad, so one of each leaves the lead and the belief unchanged."
-    },
-    "walkthrough": {
-     "steps": [
-      {
-       "say": "One good clue, and each clue is right 70% of the time. Your belief jumps from 50% to 70%. Updating a belief from evidence like this follows Bayes' rule, and the result is your posterior.",
-       "set": {
-        "g": 1,
-        "b": 0,
-        "p": 0.7
-       },
-       "focus": "good_bar",
-       "ms": 4800
-      },
-      {
-       "say": "A second good clue pushes the posterior higher, to about 84%.",
-       "set": {
-        "g": 2
-       },
-       "focus": "good_bar",
-       "ms": 3600
-      },
-      {
-       "say": "Now add one bad clue. You're back at 70%, exactly where one good clue left you.",
-       "set": {
-        "b": 1
-       },
-       "focus": "good_bar",
-       "ms": 4000
-      },
-      {
-       "say": "Three good and two bad: still 70%. Each matching pair cancels. Only the lead of one is left.",
-       "set": {
-        "g": 3,
-        "b": 2
-       },
-       "focus": "lead",
-       "ms": 4200
-      },
-      {
-       "say": "Even them up at three and three: 50%. Six clues, and you know no more than with none.",
-       "set": {
-        "g": 3,
-        "b": 3
-       },
-       "focus": "good_bar",
-       "ms": 4200
-      },
-      {
-       "say": "The second ingredient is signal accuracy, how often a clue is right. With a lead of two but clues right only 55% of the time, you're barely past 60%.",
-       "set": {
-        "g": 4,
-        "b": 2,
-        "p": 0.55
-       },
-       "focus": "p",
-       "ms": 4800
-      },
-      {
-       "say": "Keep the same lead of two, but make the clues right 90% of the time. Now you're near 99%.",
-       "set": {
-        "p": 0.9
-       },
-       "focus": "good_bar",
-       "ms": 4000
-      },
-      {
-       "say": "Pile on clues: eight good, six bad. The lead is still two, and the belief is the same 99%. The size of the pile doesn't count. Only the lead and the accuracy do.",
-       "set": {
-        "g": 8,
-        "b": 6
-       },
-       "focus": [
-        "lead",
-        "good_bar"
-       ],
-       "ms": 5200
-      }
-     ]
-    },
-    "explanation": "Each good clue multiplies the odds that the thing is good by the same factor, and each bad clue divides them by that same factor. So a good clue and a bad clue cancel exactly. Your belief depends only on the lead (good minus bad) and on how reliable each clue is. Bikhchandani, Hirshleifer and Welch (1992) build their cascade model on this arithmetic: a person holding one good and one bad clue is exactly 50–50. The Wikipedia summary writes out the same Bayes' rule calculation for any number of clues. All of this holds only under the model's assumptions: equally reliable clues, clues independent of one another given the truth, and a person who reasons perfectly. Real people often update less neatly.",
-    "quote": "If the first individual adopted, the second individual adopts if his signal is also H. However, if his signal is L, the second individual computes the expected value of adoption (given one H and one L signal) to be 1/2.",
-    "quote_where": "Section II.A, A Specific Model",
-    "source_id": "s2",
-    "source_ids": [
-     "s2",
-     "s1"
-    ]
-   },
-   "connect": {
-    "equation": [
-     {
-      "text": "P(A | clues)",
-      "link": "belief_good"
-     },
-     {
-      "text": " = "
-     },
-     {
-      "text": "q",
-      "link": "p"
-     },
-     {
-      "text": "^{a}",
-      "link": "g"
-     },
-     {
-      "text": "(1 − "
-     },
-     {
-      "text": "q",
-      "link": "p"
-     },
-     {
-      "text": ")"
-     },
-     {
-      "text": "^{b}",
-      "link": "b"
-     },
-     {
-      "text": " ÷ [ "
-     },
-     {
-      "text": "q",
-      "link": "p"
-     },
-     {
-      "text": "^{a}",
-      "link": "g"
-     },
-     {
-      "text": "(1 − "
-     },
-     {
-      "text": "q",
-      "link": "p"
-     },
-     {
-      "text": ")"
-     },
-     {
-      "text": "^{b}",
-      "link": "b"
-     },
-     {
-      "text": " + (1 − "
-     },
-     {
-      "text": "q",
-      "link": "p"
-     },
-     {
-      "text": ")"
-     },
-     {
-      "text": "^{a}",
-      "link": "g"
-     },
-     {
-      "text": "q",
-      "link": "p"
-     },
-     {
-      "text": "^{b}",
-      "link": "b"
-     },
-     {
-      "text": " ]"
-     }
-    ],
-    "caption": "This is the Bayes' rule formula from the Wikipedia summary, with the starting belief set to 50–50 so it cancels out. Wikipedia's q is the slider 'How often a clue is right' (the 1992 paper calls it p). a counts good clues and b counts bad clues. The result is the 'Chance it's good' bar. Divide top and bottom by the matching pairs and only a − b, the lead, is left."
-   },
-   "recap": "Matching good and bad clues cancel: your belief rests only on the lead and on how trustworthy each clue is.",
-   "activities": [
-    {
-     "id": "tour",
-     "kind": "watch"
-    },
-    {
-     "id": "how",
-     "kind": "walk"
-    },
-    {
-     "id": "idea",
-     "kind": "explain"
-    },
-    {
-     "id": "goal_1",
-     "kind": "goal",
-     "i": 0
-    },
-    {
-     "id": "goal_2",
-     "kind": "goal",
-     "i": 1
-    },
-    {
-     "id": "use",
-     "kind": "predict"
-    },
-    {
-     "id": "why",
-     "kind": "reveal"
-    },
-    {
-     "id": "eq",
-     "kind": "connect"
-    }
-   ]
-  },
-  {
-   "id": "cascade_starts",
-   "title": "Two matching choices outweigh your own clue",
-   "idea": "When you can see only earlier actions, you infer their clues from those actions, and once adopters lead rejecters by two, your single clue can no longer change your choice, so you copy.",
-   "role": "core",
-   "predict": {
-    "question": "Suppose every clue is much sharper, right 95% of the time instead of 70%. Everyone else is the same. How big a lead of earlier adopters over rejecters do you now need before you would ignore your own bad clue and adopt anyway?",
-    "options": [
-     "A lead of one is enough",
-     "Still a lead of two",
-     "A bigger lead, because a 95%-right clue is hard to override",
-     "No lead is ever enough: with clues that good you always trust your own"
-    ],
-    "answer": 1,
-    "why": [
-     "Tempting, because sharper clues make each earlier choice look more convincing. But a lead of one only cancels your one bad clue and leaves you at 50–50, so you toss a coin. You don't copy for sure.",
-     "Right. Each earlier choice is read as a clue exactly as sharp as yours, so sharper clues strengthen both sides equally. Only the count matters, and two beats one at any accuracy above 50%.",
-     "This feels natural, since a reliable clue deserves respect. But the earlier people's clues are just as reliable, so two of them still outweigh your sharper one.",
-     "This would hold only if your clue were better than everyone else's. In this model all clues are equally good, so two earlier ones still outvote yours."
-    ]
-   },
-   "terms": [
-    {
-     "term": "informational cascade",
-     "means": "The point where what earlier people did outweighs your own clue, so your choice no longer depends on that clue"
-    },
-    {
-     "term": "up cascade",
-     "means": "A cascade in which everyone from then on adopts"
-    },
-    {
-     "term": "down cascade",
-     "means": "A cascade in which everyone from then on rejects"
-    }
-   ],
-   "model": {
-    "title": "Earlier choices plus your own clue: what do you do?",
-    "note": "Teaching model: the binary-clue case of Bikhchandani, Hirshleifer and Welch (1992). Everyone starts at 50–50, and every clue is right with the same chance. You adopt if 'good' is more likely than 'bad', reject if less likely, and toss a coin on a tie. 'Good clues' and 'Bad clues' now count earlier people who adopted or rejected while still following their own clue; each such choice is read as one clue. In the paper, a choice made on a coin-flip tie reveals a little less than a full clue, but this does not change where copying starts. Choices made by people who were already copying reveal nothing, so in a real queue the lead you can read from choices stops at two. Settings are illustrative, not data from the paper.",
-    "controls": [
-     {
-      "id": "g",
-      "label": "Good clues",
-      "kind": "slider",
-      "min": 0,
-      "max": 8,
-      "step": 1,
-      "default": 1,
+      "default": 0.5,
       "unit": "",
       "color": 0
      },
      {
-      "id": "b",
-      "label": "Bad clues",
-      "kind": "slider",
-      "min": 0,
-      "max": 8,
-      "step": 1,
-      "default": 0,
-      "unit": "",
-      "color": 1
-     },
-     {
-      "id": "p",
-      "label": "How often a clue is right",
-      "kind": "slider",
-      "min": 0.5,
-      "max": 0.95,
-      "step": 0.05,
-      "default": 0.7,
-      "unit": "",
-      "color": 4
-     },
-     {
-      "id": "own",
-      "label": "My own clue says good",
+      "id": "up",
+      "label": "The clue says 'good' (off: says 'bad')",
       "kind": "toggle",
       "default": 1,
-      "color": 6,
+      "color": 2,
       "min": 0,
       "max": 1,
       "step": 1
@@ -579,85 +170,38 @@
     ],
     "outputs": [
      {
-      "id": "lead",
-      "label": "Lead from earlier choices (adopted − rejected)",
-      "expr": "g - b",
-      "unit": "",
-      "decimals": 0,
-      "color": 5
-     },
-     {
-      "id": "belief_good",
-      "label": "Chance it's good (with my clue)",
-      "expr": "1 / (1 + pow((1 - p) / p, g - b + 2 * own - 1))",
+      "id": "after",
+      "label": "Belief it's good, after the clue",
+      "expr": "up ? p * q / (p * q + (1 - p) * (1 - q)) : p * (1 - q) / (p * (1 - q) + (1 - p) * q)",
       "unit": "%",
       "scale": 100,
-      "decimals": 0,
-      "color": 2
-     },
-     {
-      "id": "belief_bad",
-      "label": "Chance it's bad (with my clue)",
-      "expr": "1 - belief_good",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 0,
+      "decimals": 1,
       "color": 3
      },
      {
-      "id": "adopt",
-      "label": "Chance I adopt",
-      "expr": "belief_good > 0.5001 ? 1 : (belief_good < 0.4999 ? 0 : 0.5)",
-      "unit": "%",
+      "id": "shift",
+      "label": "How far the clue moved you",
+      "expr": "after - p",
+      "unit": " pts",
       "scale": 100,
-      "decimals": 0,
-      "color": 7
-     },
-     {
-      "id": "adopt_other",
-      "label": "Chance I'd adopt with the opposite clue",
-      "expr": "(1 / (1 + pow((1 - p) / p, g - b + 1 - 2 * own))) > 0.5001 ? 1 : ((1 / (1 + pow((1 - p) / p, g - b + 1 - 2 * own))) < 0.4999 ? 0 : 0.5)",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 0,
-      "color": 6
-     },
-     {
-      "id": "swing",
-      "label": "How much my clue swings my choice",
-      "expr": "abs(adopt - adopt_other)",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 0,
-      "color": 6
+      "decimals": 1,
+      "color": 4
      }
     ],
     "visual": {
      "type": "bars",
      "bars": [
       {
-       "id": "good_bar",
-       "label": "Chance it's good",
-       "value": "belief_good * 100",
-       "color": 2
+       "id": "before_bar",
+       "label": "Before the clue",
+       "value": "p * 100",
+       "color": 0
       },
       {
-       "id": "bad_bar",
-       "label": "Chance it's bad",
-       "value": "belief_bad * 100",
+       "id": "after_bar",
+       "label": "After the clue",
+       "value": "after * 100",
        "color": 3
-      },
-      {
-       "id": "adopt_bar",
-       "label": "Chance I adopt",
-       "value": "adopt * 100",
-       "color": 7
-      },
-      {
-       "id": "adopt_other_bar",
-       "label": "Chance I'd adopt with the opposite clue",
-       "value": "adopt_other * 100",
-       "color": 6
       }
      ],
      "min": 0,
@@ -669,204 +213,217 @@
    "animation": {
     "steps": [
      {
-      "say": "Same belief bars as before, with one twist: you can't see other people's clues, only what they did. 'Good clues' now counts earlier people who adopted. 'Bad clues' counts those who rejected.",
-      "set": {
-       "g": 1,
-       "b": 0,
-       "own": 1
-      },
-      "focus": [
-       "g",
-       "b"
-      ],
-      "ms": 6000
+      "say": "Is the new restaurant down the street any good? The left bar shows how sure you are that it's good before you hear anything.",
+      "focus": "before_bar",
+      "ms": 3600
      },
      {
-      "say": "New switch: your own private clue, good or bad. The good and bad bars now include it on top of the earlier choices.",
-      "set": {
-       "own": 0
-      },
-      "focus": "own",
-      "ms": 5000
+      "say": "Then a clue arrives, like a friend's tip. This switch sets whether the clue says 'good' or 'bad'.",
+      "focus": "up",
+      "ms": 3200
      },
      {
-      "say": "Two new bars show what you'd do: once with your clue as set, once with the opposite clue. If they differ, your clue matters.",
+      "say": "This slider sets how often this kind of clue turns out right. Watch the right bar move.",
       "set": {
-       "own": 1
+       "q": 0.8
       },
+      "focus": "q",
+      "ms": 3400
+     },
+     {
+      "say": "This slider sets how sure you were to begin with.",
+      "set": {
+       "p": 0.3
+      },
+      "focus": "p",
+      "ms": 3000
+     },
+     {
+      "say": "The right bar is your belief after the clue, and this box shows how far it moved.",
       "focus": [
-       "adopt_bar",
-       "adopt_other_bar"
+       "after_bar",
+       "shift"
       ],
-      "ms": 6000
+      "ms": 3400
      }
     ]
    },
    "explore": {
-    "prompt": "You're somewhere in a queue, watching earlier choices. Arrange the queue so your own clue gets overruled.",
+    "prompt": "Play with how good the clue is and where you start. Can you make a clue that hardly matters, and one that changes your mind?",
     "goals": [
      {
-      "text": "Find a queue where you would adopt for sure, even though your own clue says bad.",
-      "when": "own == 0 && adopt == 1",
+      "text": "Starting from 50–50, make a 'good' clue that still nudges you the right way but moves you by no more than 6 points.",
+      "when": "abs(p - 0.5) < 0.001 && up == 1 && shift > 0.001 && shift <= 0.06",
       "solution": {
-       "g": 2,
-       "own": 0
+       "q": 0.55
       },
       "hints": [
-       "Your bad clue counts as one clue against adopting. What would the earlier choices need to show to beat it outright?",
-       "If the earlier adopters only cancel your bad clue, you land on 50–50 and toss a coin. Watch the 'Chance I adopt' bar.",
-       "Switch your clue to bad, keep the rejecters at zero, and add adopters one at a time until the adopt bar reaches 100%."
+       "Keep your starting belief at 50–50, with the clue saying 'good'.",
+       "From a 50–50 start, the after bar lands on the clue's accuracy.",
+       "You want a clue only slightly better than a coin flip, but not a coin flip itself."
       ]
      },
      {
-      "text": "Now the other direction. With earlier people rejecting, make your own clue make no difference at all, using as few earlier choices as possible.",
-      "when": "swing < 0.01 && lead < 0 && g + b <= 2 && p > 0.52",
+      "text": "Start fairly sure the place is bad, with only a 20% belief that it's good. Then find a 'good' clue accurate enough to tip you past 50%.",
+      "when": "abs(p - 0.2) < 0.001 && up == 1 && after > 0.5",
       "solution": {
-       "g": 0,
-       "b": 2,
-       "own": 1
+       "p": 0.2,
+       "q": 0.85
       },
       "hints": [
-       "This time the earlier people should mostly reject, and your switch should not change what you do.",
-       "Watch 'How much my clue swings my choice'. You want it at 0%. Flip your switch both ways to check.",
-       "Use only rejecters, add them one at a time, and stop at the first count where the swing drops to 0%."
+       "First set your starting belief to 20%, with the clue saying 'good'.",
+       "A doubtful start needs a much more accurate clue to cross the middle line.",
+       "Raise accuracy one notch at a time. A clue right four times out of five only brings you to a dead tie."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. Sharper clues make both sides sharper together, because each earlier choice is read as a clue as good as yours. The decision depends only on the count, so a lead of two overrules your one clue at any accuracy.",
-     "incorrect": "It's easy to think a very reliable clue should be harder to override. But here the earlier people's clues are exactly as reliable as yours, so accuracy cancels out. Two clues read from earlier choices beat your one clue whatever the accuracy."
+     "correct": "Right. A clue moves you toward what it says only if it is right more than half the time. Her 'good' is right just 40% of the time, so from 50–50 it should pull you down to 40%.",
+     "incorrect": "The size and direction of the push both come from how often the clue is right. At exactly 50% it is noise and moves nothing. Above 50% it pushes toward what it says. Below 50% it pushes the other way. From a 50–50 start you land on 40%."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start at the front of the queue. Nobody has chosen yet, so the lead is zero. Your good clue says adopt, and you adopt.",
+       "say": "Start at 50–50 with a clue that is right only half the time, which is no better than a coin flip. The after bar does not budge. A clue that is no better than chance tells you nothing.",
        "set": {
-        "g": 0,
-        "b": 0,
-        "own": 1
+        "q": 0.5,
+        "p": 0.5,
+        "up": 1
        },
-       "focus": "adopt_bar",
-       "ms": 3500
+       "focus": "after_bar",
+       "ms": 4200
       },
       {
-       "say": "Flip your clue to bad and you reject. When you go first, your clue decides everything: the swing is 100%.",
+       "say": "Now make the clue right 60% of the time. A 'good' clue lifts you to 60%. A clue that only you get to see is called a private signal.",
        "set": {
-        "own": 0
-       },
-       "focus": "swing",
-       "ms": 3500
-      },
-      {
-       "say": "Now one person adopted before you. They were following their own clue, so their adopting tells you their clue was good. Read their action as one good clue.",
-       "set": {
-        "g": 1,
-        "own": 1
-       },
-       "focus": "g",
-       "ms": 4000
-      },
-      {
-       "say": "Flip your clue to bad. Their good clue and your bad one cancel to 50–50, so you toss a coin. Your clue still matters, but only halfway.",
-       "set": {
-        "own": 0
-       },
-       "focus": "adopt_bar",
-       "ms": 4000
-      },
-      {
-       "say": "Two people adopted ahead of you. With a good clue you adopt, of course.",
-       "set": {
-        "g": 2,
-        "own": 1
-       },
-       "focus": "lead",
-       "ms": 3500
-      },
-      {
-       "say": "Now flip your clue to bad. Two good minus one bad still leaves good ahead, so you adopt anyway. Both decision bars sit at 100%, and your clue's swing is 0%.",
-       "set": {
-        "own": 0
+        "q": 0.6
        },
        "focus": [
-        "adopt_bar",
-        "adopt_other_bar",
-        "swing"
+        "after_bar",
+        "q"
        ],
-       "ms": 5000
+       "ms": 4200
       },
       {
-       "say": "This is an informational cascade: your choice no longer depends on your own clue. Since you adopt either way, anyone watching learns nothing about your clue. Everyone adopts here, so this is an up cascade.",
-       "focus": "swing",
-       "ms": 5000
-      },
-      {
-       "say": "It works in reverse too. After two rejections, even a good clue leads you to reject. That's a down cascade.",
+       "say": "Make it right 90% of the time and the bar jumps to 90%. How far you move depends on how often the clue is right, its signal accuracy.",
        "set": {
-        "g": 0,
-        "b": 2,
-        "own": 1
+        "q": 0.9
+       },
+       "focus": "shift",
+       "ms": 4200
+      },
+      {
+       "say": "Flip the clue to 'bad'. The accuracy is the same, so the push is the same size, but in the opposite direction: you drop to 10%.",
+       "set": {
+        "up": 0
+       },
+       "focus": "after_bar",
+       "ms": 3800
+      },
+      {
+       "say": "Now start doubtful. Your prior belief, your belief before the clue, is 20%. A 70%-accurate 'good' clue lifts you to only about 37%. You still lean towards 'bad'.",
+       "set": {
+        "up": 1,
+        "q": 0.7,
+        "p": 0.2
        },
        "focus": [
-        "adopt_bar",
-        "adopt_other_bar"
+        "before_bar",
+        "after_bar"
        ],
-       "ms": 4500
+       "ms": 4800
+      },
+      {
+       "say": "Start hopeful at 80%, and the same clue lifts you to about 90%. Your posterior belief, where you end up, blends where you started with what the clue says.",
+       "set": {
+        "p": 0.8
+       },
+       "focus": [
+        "before_bar",
+        "after_bar"
+       ],
+       "ms": 4600
+      },
+      {
+       "say": "Last, a strong doubt meets a strong clue. A 5% hunch plus a 95%-accurate 'good' clue lands exactly on 50%. One clue nudges your belief. It does not override everything you already believed.",
+       "set": {
+        "p": 0.05,
+        "q": 0.95
+       },
+       "focus": [
+        "after_bar",
+        "shift"
+       ],
+       "ms": 5200
       }
      ]
     },
-    "explanation": "In the paper's simple model, you see only what earlier people did, never their clues. While those people were following their own clues, each choice reveals a clue, so choices add up just like the clues in the last concept. Your private clue counts as exactly one clue of the same strength. So once adopters lead rejecters by two, your bad clue can only cut the lead to one, and you adopt either way. That is an up cascade; two more rejections than adoptions starts a down cascade in the same way. The authors stress that this copying is a rational use of the evidence you can see, not peer pressure or a taste for fitting in. They showed it by working through the choices person by person in a mathematical model. It is a theory result, not an experiment, and it assumes all clues are equally reliable.",
-    "quote": "The third individual is faced with one of three situations: (1) both predecessors have adopted (in which case even an L signal induces him to adopt and thus creates an up cascade)",
-    "quote_where": "Section II.A, A Specific Model",
-    "source_id": "s2",
+    "explanation": "A clue that is right more often than not should move your belief toward what it says. How far it moves you depends on two things: how accurate the clue is, and where you started. A clue right exactly half the time is noise and moves nothing. From a 50–50 start, you land on the clue's accuracy. In Anderson's urn experiment, urn A holds two 'a' balls and one 'b', so drawing an 'a' should take a 50–50 guesser to about 67% for urn A. In the basic cascade model of Bikhchandani, Hirshleifer and Welch (1992), the first person in line has nothing but this one clue, so 'the first individual adopts if his signal is H and rejects if it is L'. Wikipedia shows this step with Bayes' rule. The model assumes people know exactly how accurate their clue is and update perfectly. That is a simplifying assumption, not an observed fact about real people.",
+    "quote": "The equation says that, by virtue of the fact that q > 0.5, the first agent, acting only on his private signal, will always increase his estimate of p with an H signal.",
+    "quote_where": "Information cascade (Wikipedia), 'Quantitative description'",
+    "source_id": "s1",
     "source_ids": [
-     "s2",
-     "s1"
+     "s1",
+     "s2"
     ]
    },
    "connect": {
     "equation": [
      {
-      "text": "Chance it's good",
-      "link": "belief_good"
+      "text": "P(A|H)",
+      "link": "after"
      },
      {
-      "text": " = 1 / (1 + ((1 − "
-     },
-     {
-      "text": "p",
-      "link": "p"
-     },
-     {
-      "text": ") / "
+      "text": " = "
      },
      {
       "text": "p",
       "link": "p"
      },
      {
-      "text": ") raised to the power ("
+      "text": "·"
      },
      {
-      "text": "lead",
-      "link": "lead"
+      "text": "q",
+      "link": "q"
      },
      {
-      "text": " "
+      "text": " / ("
      },
      {
-      "text": "± 1",
-      "link": "own"
+      "text": "p",
+      "link": "p"
      },
      {
-      "text": ")),  adopt if above ½"
+      "text": "·"
+     },
+     {
+      "text": "q",
+      "link": "q"
+     },
+     {
+      "text": " + (1 − "
+     },
+     {
+      "text": "p",
+      "link": "p"
+     },
+     {
+      "text": ")(1 − "
+     },
+     {
+      "text": "q",
+      "link": "q"
+     },
+     {
+      "text": "))"
      }
     ],
-    "caption": "This is the model's rule. It matches the paper's Bayes calculation for its binary-clue case, with a 50–50 start and a cost of ½. p is how often a clue is right. The lead is earlier adopters minus rejecters, each read as one clue. ± 1 is your own clue: +1 if good, −1 if bad. Once the lead is two or more, ± 1 can't push the result across ½, so your clue stops mattering."
+    "caption": "This is Wikipedia's Bayes'-rule equation for the first person. A means 'accepting is right' (the place is good), H means the clue says 'good', p is your starting belief and q is how often the clue is right. The result is your after-belief. When the clue says 'bad', the model swaps q and 1 − q. Watch the notation: the 1992 paper uses p for the clue's accuracy and fixes the starting belief at 1/2."
    },
-   "recap": "Once earlier choices lead by two, your one clue can't tip the balance, so you copy and a cascade begins.",
+   "recap": "One clue moves you toward what it says. How far depends on how accurate the clue is and on how sure you were already. A coin-flip clue moves you not at all.",
    "activities": [
     {
      "id": "tour",
@@ -892,7 +449,8 @@
     },
     {
      "id": "use",
-     "kind": "predict"
+     "kind": "predict",
+     "hypothetical": true
     },
     {
      "id": "why",
@@ -902,352 +460,389 @@
      "id": "eq",
      "kind": "connect"
     }
-   ],
-   "builds_on": "clues_add_up"
+   ]
   },
   {
-   "id": "wrong_cascades",
-   "title": "Cascades stop learning, so they are often wrong",
-   "idea": "Once a cascade starts, later choices carry no information, so the crowd's final answer rests on a few early clues and ends up wrong surprisingly often, even when clues are fairly accurate.",
+   "id": "two_ahead_cascade",
+   "title": "When two earlier choices outvote your own clue",
+   "idea": "Once the choices you can read as clues lead by two in one direction, your single private clue can no longer change your best decision, so you copy: a cascade begins.",
    "role": "core",
    "predict": {
-    "question": "A town of 10,000 people try a new restaurant one at a time. Each sees only who went in, and each has a private clue that is right 80% of the time. Compare it with a village of 100 doing the same. What is the town's chance of locking onto the wrong answer?",
+    "question": "A new person reaches the restaurant. Ahead of her, in order, one person walked away, then two went in. Her own clue says 'bad'. Her starting belief is 50–50, and everyone's clue is equally reliable. What is her best choice?",
     "options": [
-     "Much lower: 10,000 clues should outvote a few bad early ones",
-     "About the same as the village, roughly 1 in 7",
-     "Higher: a longer line gives more chances to go wrong"
+     "Go in: the last two people in a row went in",
+     "She is exactly torn, so either choice is equally good (the model flips a coin)",
+     "Walk away: her own clue says bad, and she should trust it",
+     "Go in: three people have already decided, so she is surely in a cascade"
     ],
     "answer": 1,
     "why": [
-     "This is tempting because 10,000 clues really do exist. But once the line locks in, everyone copies, and copies reveal nothing. The extra clues are never pooled, so the answer still rests on the first few.",
-     "Right. In both places the line almost surely locks in within the first handful of people. What happens after that adds no evidence. With 80% clues, the paper's formula gives about a 14% chance of a wrong lock-in, whether 100 or 10,000 people follow.",
-     "This is tempting because more people means more decisions. But after the lock-in, every later person copies whatever came first, so a longer line cannot drift into a new mistake. It only repeats the old one."
+     "A run of two in a row feels decisive, but what counts is the net lead. One walk-away and two go-ins is a lead of only one, not two.",
+     "Correct. The lead is one toward going in, and her 'bad' clue cancels it exactly. Her belief is back at 50%, and the paper's tie rule is to flip a coin. She is in the same spot as the second person in the queue.",
+     "Her clue does count, but here it only balances the lead of one. It does not tip her toward walking away. Her belief lands at exactly 50%.",
+     "The number of people ahead does not matter. Only the lead does. One walk-away cancels one go-in, so the lead is one and her clue still matters."
     ]
    },
    "terms": [
     {
-     "term": "information aggregation",
-     "means": "Pooling many people's private clues so the group knows more than any one person"
+     "term": "information cascade",
+     "means": "The point where a person's best choice no longer depends on their own clue, so they copy the choices ahead of them, and everyone after them does the same"
     },
     {
-     "term": "reverse cascade",
-     "means": "A cascade in which everyone copies the wrong choice"
+     "term": "up cascade",
+     "means": "A cascade in which everyone goes in (adopts), whatever their own clues say"
+    },
+    {
+     "term": "down cascade",
+     "means": "A cascade in which everyone walks away (rejects), whatever their own clues say"
     }
    ],
    "model": {
-    "title": "Where does a line of choosers end up?",
-    "note": "Teaching model: these curves are the paper's exact formulas (its equation 3) for its simplest case. The choice is yes/no, and 'good' and 'bad' start equally likely. Everyone's clue is equally accurate, everyone sees all earlier choices, ties are broken by a coin flip, and the true answer is 'good'. As in the paper's formula, crowd size moves in even numbers. The percentages are calculated from that formula. They are not measurements of real crowds.",
+    "title": "Your belief that the restaurant is good, after a queue of earlier choices and your own clue",
+    "note": "Teaching model: one yes-or-no question (is the new restaurant good?). Everyone's clue is equally reliable, everyone sees every earlier choice, and the restaurant is equally good or bad for all. Each earlier choice in the lead is counted as revealing exactly one clue, as in the basic model of Bikhchandani, Hirshleifer and Welch (1992, Section II.A). There is one subtlety this leaves out. In the paper, a person who is exactly torn flips a coin, so their choice can be weaker evidence than a clue. The paper shows that two ahead still makes the third person copy. A lead of three cannot actually come from people who all followed their own clues when the start is 50–50; it is here only so you can explore. You go in when your belief is above 50%, walk away below it, and flip a coin at exactly 50%. Numbers are illustrative, not data from either source.",
     "controls": [
      {
-      "id": "p",
-      "label": "How often each private clue is right",
+      "id": "q",
+      "label": "How often this kind of clue is right",
       "kind": "slider",
       "min": 0.5,
-      "max": 1,
-      "step": 0.01,
-      "default": 0.7,
+      "max": 0.95,
+      "step": 0.05,
+      "default": 0.6,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "p",
+      "label": "Your belief it's good, before the clue",
+      "kind": "slider",
+      "min": 0.05,
+      "max": 0.95,
+      "step": 0.05,
+      "default": 0.5,
       "unit": "",
       "color": 0
      },
      {
-      "id": "n",
-      "label": "People who have chosen so far",
+      "id": "up",
+      "label": "The clue says 'good' (off: says 'bad')",
+      "kind": "toggle",
+      "default": 1,
+      "color": 2,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     },
+     {
+      "id": "lead",
+      "label": "Lead of earlier choices: went in minus walked away",
       "kind": "slider",
-      "min": 2,
-      "max": 20,
-      "step": 2,
-      "default": 10,
+      "min": -3,
+      "max": 3,
+      "step": 1,
+      "default": 0,
       "unit": "",
-      "color": 3
+      "color": 5
      }
     ],
     "outputs": [
      {
-      "id": "correct",
-      "label": "Locked onto the right answer",
-      "expr": "p * (p + 1) * (1 - (p - p^2)^(n / 2)) / (2 * (1 - p + p^2))",
+      "id": "crowd",
+      "label": "Belief from earlier choices only",
+      "expr": "p * pow(q, lead) / (p * pow(q, lead) + (1 - p) * pow(1 - q, lead))",
       "unit": "%",
       "scale": 100,
       "decimals": 1,
-      "color": 2
+      "color": 5
      },
      {
-      "id": "wrong",
-      "label": "Locked onto the wrong answer",
-      "expr": "(2 - p) * (1 - p) * (1 - (p - p^2)^(n / 2)) / (2 * (1 - p + p^2))",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 1,
-      "color": 1
-     },
-     {
-      "id": "none",
-      "label": "Not locked in yet",
-      "expr": "(p - p^2)^(n / 2)",
+      "id": "after",
+      "label": "Belief after your own clue too",
+      "expr": "p * pow(q, lead + (up ? 1 : -1)) / (p * pow(q, lead + (up ? 1 : -1)) + (1 - p) * pow(1 - q, lead + (up ? 1 : -1)))",
       "unit": "%",
       "scale": 100,
       "decimals": 1,
       "color": 3
+     },
+     {
+      "id": "go_good",
+      "label": "Chance you go in if your clue says good",
+      "expr": "abs(log(p / (1 - p)) + (lead + 1) * log(q / (1 - q))) < 0.000001 ? 0.5 : (log(p / (1 - p)) + (lead + 1) * log(q / (1 - q)) > 0 ? 1 : 0)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "go_bad",
+      "label": "Chance you go in if your clue says bad",
+      "expr": "abs(log(p / (1 - p)) + (lead - 1) * log(q / (1 - q))) < 0.000001 ? 0.5 : (log(p / (1 - p)) + (lead - 1) * log(q / (1 - q)) > 0 ? 1 : 0)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "go",
+      "label": "Chance you go in",
+      "expr": "up ? go_good : go_bad",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 6
+     },
+     {
+      "id": "swing",
+      "label": "How much flipping your clue changes your choice",
+      "expr": "go_good - go_bad",
+      "unit": " pts",
+      "scale": 100,
+      "decimals": 0,
+      "color": 4
      }
     ],
     "visual": {
-     "type": "curves",
-     "x": {
-      "label": "How often each private clue is right",
-      "min": 0.5,
-      "max": 1
-     },
-     "y": {
-      "label": "Chance",
-      "min": 0,
-      "max": 1
-     },
-     "series": [
+     "type": "bars",
+     "bars": [
       {
-       "id": "correct_curve",
-       "label": "Right answer",
-       "expr": "x * (x + 1) * (1 - (x - x^2)^(n / 2)) / (2 * (1 - x + x^2))",
-       "color": 2,
-       "dashed": false
-      },
-      {
-       "id": "wrong_curve",
-       "label": "Wrong answer",
-       "expr": "(2 - x) * (1 - x) * (1 - (x - x^2)^(n / 2)) / (2 * (1 - x + x^2))",
-       "color": 1,
-       "dashed": false
-      },
-      {
-       "id": "none_curve",
-       "label": "Not locked in yet",
-       "expr": "(x - x^2)^(n / 2)",
-       "color": 3,
-       "dashed": true
-      }
-     ],
-     "markers": [
-      {
-       "id": "you_marker",
-       "x": "p",
-       "label": "Your setting",
+       "id": "before_bar",
+       "label": "Before any clues",
+       "value": "p * 100",
        "color": 0
-      }
-     ],
-     "points": [
-      {
-       "id": "wrong_point",
-       "x": "p",
-       "y": "wrong",
-       "label": "Wrong",
-       "color": 1
       },
       {
-       "id": "correct_point",
-       "x": "p",
-       "y": "correct",
-       "label": "Right",
-       "color": 2
+       "id": "crowd_bar",
+       "label": "From earlier choices only",
+       "value": "crowd * 100",
+       "color": 5
+      },
+      {
+       "id": "after_bar",
+       "label": "After your clue too",
+       "value": "after * 100",
+       "color": 3
       }
-     ]
+     ],
+     "min": 0,
+     "max": 100,
+     "unit": "%",
+     "decimals": 0
     }
    },
    "animation": {
     "steps": [
      {
-      "say": "Picture a line of people choosing yes or no. Each sees only the earlier choices. This upper curve is the chance the line locks onto the right answer.",
-      "focus": "correct_curve",
-      "ms": 3200
+      "say": "Same picture as before: your belief that the new restaurant is good. Now there's a queue of people ahead of you, and a new middle bar shows what their choices alone suggest.",
+      "focus": [
+       "before_bar",
+       "crowd_bar",
+       "after_bar"
+      ],
+      "ms": 6000
      },
      {
-      "say": "This lower curve is the chance it locks onto the wrong answer.",
-      "focus": "wrong_curve",
-      "ms": 2400
-     },
-     {
-      "say": "Going left to right, private clues get more reliable: from a coin toss up to always right. This slider picks one accuracy, and the vertical line marks it.",
+      "say": "This new slider is the lead: how many more people ahead went in than walked away. Here, one more went in.",
       "set": {
-       "p": 0.8
+       "lead": 1
+      },
+      "focus": "lead",
+      "ms": 6000
+     },
+     {
+      "say": "Two new readouts: your chance of going in, and how much flipping your own clue changes that choice.",
+      "set": {
+       "lead": 0
       },
       "focus": [
-       "p",
-       "you_marker"
+       "go",
+       "swing"
       ],
-      "ms": 3400
-     },
-     {
-      "say": "This slider sets how many people have chosen so far. The dashed curve is the chance the line hasn't locked in yet.",
-      "set": {
-       "n": 4
-      },
-      "focus": [
-       "n",
-       "none_curve"
-      ],
-      "ms": 3400
-     },
-     {
-      "say": "These boxes read off all three chances at your setting.",
-      "set": {
-       "p": 0.7,
-       "n": 10
-      },
-      "focus": [
-       "correct",
-       "wrong",
-       "none"
-      ],
-      "ms": 2600
+      "ms": 6000
      }
     ]
    },
    "explore": {
-    "prompt": "You've seen that a locked-in line stops learning. Now find where the risk of a wrong answer really sits: in the clues, or in the size of the crowd?",
+    "prompt": "Flip your own clue back and forth at different leads. Watch when it stops mattering, and whether a sharper clue can save it.",
     "goals": [
      {
-      "text": "Find the least accurate clues at which a fully settled line locks onto the wrong answer less than 1 time in 10.",
-      "when": "wrong < 0.1 && none < 0.01 && p <= 0.86",
+      "text": "Keep the starting belief at 50%. Find the smallest lead toward going in at which flipping your own clue no longer changes what you do.",
+      "when": "swing < 0.01 && lead > 0 && lead < 3 && abs(p - 0.5) < 0.01 && q > 0.52",
       "solution": {
-       "p": 0.85
+       "lead": 2
       },
       "hints": [
-       "Once the line has settled, crowd size barely moves the wrong-answer chance. Which slider does?",
-       "Raise clue accuracy a step at a time from 70% and watch the wrong-answer box.",
-       "It drops under 1 in 10 somewhere in the mid-80s. Stop at the first step that gets there."
+       "Your clue matters as long as flipping it changes your chance of going in.",
+       "Step the lead up one at a time, and flip your clue at each step. Watch 'How much flipping your clue changes your choice'.",
+       "At one lead, flipping still turns a sure 'go in' into a coin flip. Go one step further."
       ]
      },
      {
-      "text": "Find a setting where the line has almost surely locked in, yet it lands on the wrong answer more than 1 time in 3.",
-      "when": "none < 0.01 && wrong > 0.333",
+      "text": "Show that a very reliable clue still gets outvoted. Keep the 50% start, make clues right nearly all the time, then make a 'bad' clue lose to the earlier choices using as small a lead as possible.",
+      "when": "q >= 0.85 && up == 0 && go > 0.99 && lead > 0 && lead < 3 && abs(p - 0.5) < 0.01",
       "solution": {
-       "p": 0.6
+       "q": 0.9,
+       "up": 0,
+       "lead": 2
       },
       "hints": [
-       "Wrong lock-ins get more likely as clues get worse.",
-       "Lower clue accuracy, but keep enough people in line that the dashed 'not locked in yet' chance stays under 1%.",
-       "Clues only a little better than a coin toss will do it. Check the dashed box stays tiny."
+       "Which slider sets how reliable the clues are? It sets theirs as well as yours.",
+       "Push clue reliability up, switch your clue to 'bad', then try small leads toward going in.",
+       "A sharper clue makes each earlier choice more convincing too, so the lead you need doesn't grow."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. After the first few choices the line locks in, and every later choice is a copy that reveals nothing. A town and a village end up resting on the same handful of early clues, so the wrong-answer risk is about the same.",
-     "incorrect": "You probably pictured each person adding their clue to a growing pile. When only choices can be seen, that pile stops growing as soon as the line locks in. More people just means more copies, not more evidence."
+     "correct": "Right. What matters is the net lead of choices you can read as clues, not the order or a recent streak. A lead of one, met by an opposite clue, leaves her exactly at 50%, torn between the two.",
+     "incorrect": "The pull to follow a streak, or to count heads, is natural. But each earlier choice counts as one clue for or against. One walk-away cancels one go-in, so the lead is just one, and her 'bad' clue cancels that, which leaves her at 50%."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start with useless clues, right only half the time. Ten people in, the line has almost surely locked in, but it's a coin flip: about 50% right, 50% wrong.",
+       "say": "Nobody ahead of you yet: the lead is zero. Your clue says good, so your belief rises to 60% and you go in.",
        "set": {
-        "p": 0.5,
-        "n": 10
+        "lead": 0,
+        "up": 1,
+        "q": 0.6,
+        "p": 0.5
        },
-       "focus": [
-        "correct",
-        "wrong"
-       ],
+       "focus": "after_bar",
        "ms": 3600
       },
       {
-       "say": "Rewind to just two people. Even here, three times in four the line has already locked in. Lock-ins happen fast.",
+       "say": "Flip your clue to 'bad': 40%, so you walk away. Here your clue decides everything. Flipping it swings your choice by 100 points.",
        "set": {
-        "n": 2
+        "up": 0
        },
-       "focus": "none",
-       "ms": 3200
-      },
-      {
-       "say": "Now give everyone clues that are right 70% of the time. Ten people in, the line is almost surely locked in. Yet about one time in four it has locked onto the wrong answer.",
-       "set": {
-        "p": 0.7,
-        "n": 10
-       },
-       "focus": "wrong_point",
+       "focus": "swing",
        "ms": 3800
       },
       {
-       "say": "Double the line to twenty people. The wrong-answer chance doesn't budge. Once the line locks in, each new choice is a copy, and a copy tells later people nothing about the copier's own clue.",
+       "say": "Now one person ahead went in. You can read that choice as their clue: they probably saw 'good'. Their choice alone puts you at 60%, and your own 'good' clue lifts you to about 69%.",
        "set": {
-        "n": 20
-       },
-       "focus": "wrong",
-       "ms": 3800
-      },
-      {
-       "say": "So twenty private clues exist, but only the first few ever count. Pooling everyone's clues is called information aggregation. Here it simply stops at the moment of lock-in.",
-       "focus": [
-        "n",
-        "wrong_curve"
-       ],
-       "ms": 3800
-      },
-      {
-       "say": "Sharpen the clues to 90% right. The wrong chance falls, but it is still about 6%. A whole crowd of good judges can still march off together in the wrong direction.",
-       "set": {
-        "p": 0.9
-       },
-       "focus": "wrong_point",
-       "ms": 3600
-      },
-      {
-       "say": "A line locked onto the wrong answer is called a reverse cascade. At 75%-accurate clues the formula gives about 81% right and 19% wrong. Notice how slowly the lower curve sinks as clues improve.",
-       "set": {
-        "p": 0.75
+        "lead": 1,
+        "up": 1
        },
        "focus": [
-        "wrong_curve",
-        "correct",
-        "wrong"
+        "crowd_bar",
+        "after_bar"
        ],
+       "ms": 4500
+      },
+      {
+       "say": "But if your clue says 'bad', it cancels theirs exactly: 50%. You're torn, so you flip a coin. Your clue still matters, but only half as much: the swing is 50 points.",
+       "set": {
+        "up": 0
+       },
+       "focus": [
+        "go",
+        "swing"
+       ],
+       "ms": 4500
+      },
+      {
+       "say": "Two more people went in than walked away. Their choices alone put you near 69%. Your 'bad' clue pulls you down only to 60%, which is still above half, so you go in anyway.",
+       "set": {
+        "lead": 2,
+        "up": 0
+       },
+       "focus": [
+        "after_bar",
+        "go"
+       ],
+       "ms": 4800
+      },
+      {
+       "say": "Flip your clue to 'good': about 77%. You go in either way. The swing is zero. Your own clue no longer changes what you do.",
+       "set": {
+        "up": 1
+       },
+       "focus": "swing",
        "ms": 4200
+      },
+      {
+       "say": "This is an information cascade: two clues ahead outweigh your one, so you copy. Your choice now ignores your clue, so the next person learns nothing new from it and copies too.",
+       "focus": [
+        "crowd_bar",
+        "go"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "When everyone goes in like this, it's an up cascade. A lead of two toward walking away would start a down cascade, the same thing in the other direction.",
+       "focus": "go",
+       "ms": 4500
       }
      ]
     },
-    "explanation": "When people can see only earlier choices, the first two or three choices decide where the line locks in. After that, everyone copies, so each new choice reveals nothing about that person's own clue, and learning stops. The crowd's answer therefore rests on a handful of early clues, and a handful of clues is often misleading. With 70%-accurate clues, the paper's formula gives roughly a 1-in-4 chance of locking onto the wrong answer, no matter how many people follow. The paper derives exact chances of right and wrong lock-ins for this yes/no model and shows the right-answer chance rises only gradually with clue accuracy. Its later table puts it at about 0.81 for 75%-accurate clues after 1,000 people. These are results of a stylised model with identical people and equally accurate clues, not measurements of real crowds.",
-    "quote": "The first expression is the probability of the correct cascade. It can be shown that this probability is increasing in p (see fig. 1) and n. Even for very informative signals (where p is far from 1/2), the probability of the wrong cascade is remarkably high.",
-    "quote_where": "Section II.A (A Specific Model), after equation (3)",
+    "explanation": "Each earlier choice is a clue you can read: someone who went in probably had a 'good' clue. When everyone's clue is equally reliable, your belief just counts clues, goods minus bads. With a lead of two, your one clue can at most cut that to one, which is still in favour, so you copy whatever your clue says. This is an information cascade: an up cascade if everyone goes in, a down cascade if everyone walks away. Copying here is a sensible reading of the evidence, not peer pressure, and because your choice now reveals nothing about your clue, the next person faces the same lead and copies too. Bikhchandani, Hirshleifer and Welch (1992) worked this out step by step for the first three people in their basic model and proved that, under mild assumptions, a cascade almost surely starts as the queue grows. These are theoretical results with strong assumptions (equally reliable clues, every earlier choice visible); in Anderson and Holt's urn experiment, as reported on Wikipedia, cascades appeared in 41 of 56 runs, so real people often but not always behave this way.",
+    "quote": "The third individual is faced with one of three situations: (1) both predecessors have adopted (in which case even an L signal induces him to adopt and thus creates an up cascade)",
+    "quote_where": "Section II.A, 'A Specific Model'",
     "source_id": "s2",
     "source_ids": [
-     "s2"
+     "s2",
+     "s1"
     ]
    },
    "check": {
     "kind": "model",
-    "task": "Put the model in a state where the line has almost surely locked in (under 1% not locked in yet) and a wrong lock-in is less likely than 1 in 20.",
-    "when": "none < 0.01 && wrong < 0.05",
+    "task": "Keep the starting belief at 50%. Put the model in a state where your own clue says 'good', yet your best choice is certainly to walk away.",
+    "when": "up == 1 && go < 0.01 && abs(p - 0.5) < 0.01",
     "solution": {
-     "p": 0.92
+     "lead": -2
     },
-    "hint": "Adding people only shrinks the dashed curve. Which slider actually lowers the solid wrong-answer curve, and how far must it go?",
-    "misconception": "A bigger crowd washes out early mistakes, so with enough people a wrong lock-in becomes rare. In fact, once the line has settled, only sharper private clues lower the risk."
+    "hint": "Earlier choices can lead in either direction. The lead slider goes below zero.",
+    "misconception": "A sensible person always follows their own evidence, so going against your own clue must be a mistake. In fact, when the choices ahead outweigh your single clue, ignoring it is the best use of all the evidence you have."
    },
    "connect": {
     "equation": [
      {
-      "text": "P(right lock-in)",
-      "link": "correct"
+      "text": "P(good | earlier choices, your clue)",
+      "link": "after"
      },
      {
       "text": " = "
      },
      {
-      "text": "p(p + 1)",
+      "text": "p",
       "link": "p"
      },
      {
-      "text": " × [1 − "
+      "text": " "
      },
      {
-      "text": "(p − p²)^{n/2}",
-      "link": "none"
+      "text": "q^{a}(1−q)^{b}",
+      "link": "q"
      },
      {
-      "text": "] ÷ 2(1 − p + p²)"
+      "text": " / ( "
+     },
+     {
+      "text": "p",
+      "link": "p"
+     },
+     {
+      "text": " "
+     },
+     {
+      "text": "q^{a}(1−q)^{b}",
+      "link": "q"
+     },
+     {
+      "text": " + (1−"
+     },
+     {
+      "text": "p",
+      "link": "p"
+     },
+     {
+      "text": ")(1−q)^{a}q^{b} )"
      }
     ],
-    "caption": "This is the paper's equation (3) for the case where the true answer is 'good'. p is how often a private clue is right (the paper's p), and n is how many people have chosen. The term (p − p²)^{n/2} is the chance the line hasn't locked in yet, which shrinks fast as n grows. That is why n barely matters once the line has settled. The wrong-lock-in chance has the same form with (2 − p)(1 − p) in place of p(p + 1)."
+    "caption": "Wikipedia's Bayes'-rule update for the n-th person. p is your starting belief and q is how often a clue is right, as on the sliders. a counts 'went in' choices plus your clue if good; b counts 'walked away' choices plus your clue if bad. Only a − b matters: the lead plus or minus one for your clue. The original paper (s2) writes clue accuracy as p, so watch the letters."
    },
-   "recap": "When only choices can be seen, a crowd's answer rests on its first few clues, so it can lock onto the wrong answer even with good clues and huge numbers.",
+   "recap": "When the choices ahead lead by two, your one clue can't change your best choice, so you copy, and a cascade begins.",
    "activities": [
     {
      "id": "tour",
@@ -1260,22 +855,6 @@
     {
      "id": "idea",
      "kind": "explain"
-    },
-    {
-     "id": "cmp",
-     "kind": "compare",
-     "prompt": "Same people, same private clues. The only difference is what later people can see. The paper notes the two worlds behave identically right up until a cascade begins.",
-     "cases": [
-      {
-       "label": "Everyone's clues are visible",
-       "text": "Each person's clue joins a shared pool, even if they don't act on it. A long enough run of opposing clues eventually flips behaviour, so as the line grows, the crowd heads toward the right answer."
-      },
-      {
-       "label": "Only choices are visible",
-       "text": "Once two more people have chosen one way than the other, everyone copies. Copies reveal nothing, so the pool stops at a few clues. In this basic model a lock-in, right or wrong, is never undone."
-      }
-     ],
-     "takeaway": "Seeing only actions makes the crowd more uniform, but it freezes the evidence early. That frozen early evidence is what makes wrong lock-ins common."
     },
     {
      "id": "goal_1",
@@ -1298,51 +877,456 @@
     {
      "id": "test",
      "kind": "check"
+    },
+    {
+     "id": "eq",
+     "kind": "connect"
+    }
+   ],
+   "builds_on": "one_clue_update"
+  },
+  {
+   "id": "wrong_cascades_common",
+   "title": "Cascades start fast and are often wrong",
+   "idea": "Because a cascade locks in after only a few clues, the chance it locks onto the wrong choice stays surprisingly high even when each person's clue is quite accurate.",
+   "role": "core",
+   "predict": {
+    "question": "A town's clues are each right 75% of the time. The line of people choosing one after another grows from 10 people to 1,000. What happens to the chance the town ends up all copying the wrong choice?",
+    "options": [
+     "It falls close to zero, because 1,000 clues are plenty to find the truth",
+     "It barely changes and stays near 19%, because the first few people already settled it",
+     "It rises, because more people means more copying"
+    ],
+    "answer": 1,
+    "why": [
+     "Tempting, since 1,000 pooled clues really would reveal the truth. But copiers ignore their clues, so their choices add nothing, and the extra 990 people never get counted.",
+     "Right. By about 10 people a cascade has almost surely begun, and once it has, later choices carry no new clues. The paper's formulas give about 19% wrong at 75% accuracy, however long the line.",
+     "More people do copy, but copying doesn't change which way the cascade already points. The wrong-choice chance was fixed when the cascade began."
+    ]
+   },
+   "terms": [
+    {
+     "term": "reverse cascade",
+     "means": "A cascade in which everyone ends up copying the wrong choice"
+    },
+    {
+     "term": "information aggregation",
+     "means": "Pooling many people's clues so the group knows more than any one person"
+    }
+   ],
+   "model": {
+    "title": "How often a line of people locks onto the right or wrong choice",
+    "note": "Teaching model: this is the paper's binary-clue example (Section II.A). Both choices start equally likely, each clue points the right way with chance equal to the accuracy, an undecided person flips a coin, and people are counted in pairs. The curves are the paper's exact formulas (eqs. 1 and 3), with 'adopt' taken as the right choice; the opposite case is a mirror image. The model leaves out clues of different quality and any new public facts. The numbers come from these formulas, not from data on real people.",
+    "controls": [
+     {
+      "id": "p",
+      "label": "Clue accuracy (chance a clue points the right way)",
+      "kind": "slider",
+      "min": 0.51,
+      "max": 0.99,
+      "step": 0.01,
+      "default": 0.6,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "n",
+      "label": "People who have chosen so far",
+      "kind": "slider",
+      "min": 2,
+      "max": 20,
+      "step": 2,
+      "default": 2,
+      "unit": "",
+      "color": 4
+     }
+    ],
+    "outputs": [
+     {
+      "id": "none",
+      "label": "No copying yet",
+      "expr": "pow(p - p * p, n / 2)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 3,
+      "color": 5
+     },
+     {
+      "id": "correct",
+      "label": "Locked on the right choice",
+      "expr": "p * (p + 1) * (1 - none) / (2 * (1 - p + p * p))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 1,
+      "color": 2
+     },
+     {
+      "id": "wrong",
+      "label": "Locked on the wrong choice",
+      "expr": "(2 - p) * (1 - p) * (1 - none) / (2 * (1 - p + p * p))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 1,
+      "color": 1
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Clue accuracy",
+      "min": 0.5,
+      "max": 1
+     },
+     "y": {
+      "label": "Chance",
+      "min": 0,
+      "max": 1
+     },
+     "series": [
+      {
+       "id": "right_curve",
+       "label": "Locked on the right choice",
+       "expr": "x * (x + 1) * (1 - pow(x - x * x, n / 2)) / (2 * (1 - x + x * x))",
+       "color": 2,
+       "dashed": false
+      },
+      {
+       "id": "wrong_curve",
+       "label": "Locked on the wrong choice",
+       "expr": "(2 - x) * (1 - x) * (1 - pow(x - x * x, n / 2)) / (2 * (1 - x + x * x))",
+       "color": 1,
+       "dashed": false
+      },
+      {
+       "id": "none_curve",
+       "label": "No copying yet",
+       "expr": "pow(x - x * x, n / 2)",
+       "color": 5,
+       "dashed": true
+      }
+     ],
+     "markers": [
+      {
+       "id": "acc_marker",
+       "x": "p",
+       "label": "Your clue accuracy",
+       "color": 0
+      }
+     ],
+     "hlines": [
+      {
+       "id": "tenth_line",
+       "y": 0.1,
+       "label": "One town in ten"
+      }
+     ],
+     "points": [
+      {
+       "id": "wrong_point",
+       "x": "p",
+       "y": "wrong",
+       "label": "Wrong",
+       "color": 1
+      },
+      {
+       "id": "right_point",
+       "x": "p",
+       "y": "correct",
+       "label": "Right",
+       "color": 2
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Picture a line of people choosing one after another, each with a private clue, just like before. Moving right along the bottom, the clues get more accurate.",
+      "focus": "acc_marker",
+      "ms": 4200
+     },
+     {
+      "say": "The green curve is the chance the whole line ends up copying the right choice.",
+      "focus": "right_curve",
+      "ms": 3400
+     },
+     {
+      "say": "The orange curve is the chance it locks onto the wrong choice. The dashed curve is the chance nobody has started copying yet.",
+      "focus": [
+       "wrong_curve",
+       "none_curve"
+      ],
+      "ms": 4600
+     },
+     {
+      "say": "This slider moves the clue accuracy along the bottom.",
+      "set": {
+       "p": 0.7
+      },
+      "focus": "p",
+      "ms": 3200
+     },
+     {
+      "say": "And this one sets how many people have chosen so far. Watch the dashed curve sink.",
+      "set": {
+       "n": 6
+      },
+      "focus": "n",
+      "ms": 3600
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with both sliders. Look for where the orange curve stops caring about the line length, and how high it stays.",
+    "goals": [
+     {
+      "text": "Once copying has almost surely started, find the least accurate clue that still keeps the wrong lock-in point below the horizontal reference line.",
+      "when": "none < 0.01 && wrong < 0.1 && p < 0.86",
+      "solution": {
+       "p": 0.85,
+       "n": 10
+      },
+      "hints": [
+       "First make the line long enough that the dashed curve lies almost flat on the floor.",
+       "Then slide the clue accuracy up slowly and watch the orange point cross the horizontal reference line.",
+       "The crossing lies between 80% and 90% accuracy. You want the first step just past it."
+      ]
+     },
+     {
+      "text": "With clues barely better than a coin flip, find the shortest line after which fewer than 1 in 1,000 towns have still not started copying.",
+      "when": "p <= 0.52 && none < 0.001 && n <= 10",
+      "solution": {
+       "p": 0.51,
+       "n": 10
+      },
+      "hints": [
+       "Push the clue accuracy down to the weakest clues the slider allows.",
+       "Now add people two at a time and watch the 'No copying yet' number.",
+       "Each extra pair cuts that number to about a quarter. It drops below 0.1% somewhere between 6 and 14 people."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. A cascade usually starts within the first handful of people. After that, copiers' choices reveal nothing, so 990 more people cannot pull the town back to the right answer. The wrong-choice chance stays near the paper's figure for 75% accuracy.",
+     "incorrect": "It's natural to think more people means more evidence. But in a cascade, everyone after the first few ignores their own clue, so their choices carry no information. The chance of a wrong lock-in was set by those first few clues and hardly moves as the line grows."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with clues right 60% of the time, and only two people so far. In 76% of towns those two choices already agree, so the next person copies whatever his clue says. Only the dashed 24% is still open.",
+       "set": {
+        "p": 0.6,
+        "n": 2
+       },
+       "focus": "none",
+       "ms": 5200
+      },
+      {
+       "say": "Now let ten people choose. The dashed curve sinks to the floor. Each extra pair of people shrinks 'no copying yet' by the same factor, so it vanishes fast.",
+       "set": {
+        "n": 10
+       },
+       "focus": "none_curve",
+       "ms": 5000
+      },
+      {
+       "say": "Look at the orange point. With 60% clues, about 37% of towns are all copying the wrong choice. It is locked in, because later choices add no new clues.",
+       "focus": "wrong_point",
+       "ms": 5000
+      },
+      {
+       "say": "A cascade that locks onto the wrong choice is called a reverse cascade. Raise accuracy to 75%. The wrong chance drops to about 19%, and the right one rises to about 81%. That 81% is the paper's own figure.",
+       "set": {
+        "p": 0.75
+       },
+       "focus": [
+        "wrong",
+        "correct"
+       ],
+       "ms": 5600
+      },
+      {
+       "say": "Push to 90% clues. If ten people's clues were pooled, they would almost never be wrong. Yet the town still locks onto the wrong choice about 6 times in 100, not far from one person's 10.",
+       "set": {
+        "p": 0.9
+       },
+       "focus": "wrong_point",
+       "ms": 5800
+      },
+      {
+       "say": "Pooling everyone's clues is called information aggregation. A cascade blocks it: after the first few choices, everyone else's clues stay hidden in their heads.",
+       "set": {
+        "n": 20
+       },
+       "focus": "wrong_curve",
+       "ms": 5200
+      },
+      {
+       "say": "So back at 75% clues with twenty people, the orange curve sits where it was at ten. A longer line doesn't rescue the town. Its fate was settled by its first few clues.",
+       "set": {
+        "p": 0.75,
+        "n": 20
+       },
+       "focus": [
+        "wrong_curve",
+        "wrong_point"
+       ],
+       "ms": 5600
+      }
+     ]
+    },
+    "explanation": "Once two choices lean the same way, everyone after them copies, so a cascade usually starts within the first handful of people. The paper shows that the chance of no cascade shrinks exponentially: even with nearly useless clues, it is under 0.1% after only 10 people. Because so few clues decide the outcome, the town's choice is only about as reliable as those first clues. The paper's formulas give about an 81% chance of the right cascade when each clue is 75% accurate, so roughly 19% lock onto the wrong one. Adding people doesn't help, because copiers' choices reveal nothing about their own clues: the cascade blocks information aggregation. This is a stylised model with perfectly rational people and equally good clues. In a lab version using balls drawn from urns, cascades appeared in 41 of 56 runs, though real people do not always reason this neatly.",
+    "quote": "Even for very informative signals (where p is far from 1/2), the probability of the wrong cascade is remarkably high. The problem with cascades is that they prevent the aggregation of information of numerous individuals.",
+    "quote_where": "Section II.A",
+    "source_id": "s2",
+    "source_ids": [
+     "s2",
+     "s1"
+    ]
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "P(right cascade)",
+      "link": "correct"
+     },
+     {
+      "text": " = "
+     },
+     {
+      "text": "p",
+      "link": "p"
+     },
+     {
+      "text": "("
+     },
+     {
+      "text": "p",
+      "link": "p"
+     },
+     {
+      "text": " + 1)[1 − ("
+     },
+     {
+      "text": "p",
+      "link": "p"
+     },
+     {
+      "text": " − "
+     },
+     {
+      "text": "p",
+      "link": "p"
+     },
+     {
+      "text": "²)"
+     },
+     {
+      "text": "^{n/2}",
+      "link": "n"
+     },
+     {
+      "text": "] / 2(1 − "
+     },
+     {
+      "text": "p",
+      "link": "p"
+     },
+     {
+      "text": " + "
+     },
+     {
+      "text": "p",
+      "link": "p"
+     },
+     {
+      "text": "²)"
+     }
+    ],
+    "caption": "This is the paper's equation 3, for the case where adopting is right. Blue p is the clue accuracy slider, the paper's p. The purple power n/2 is the people slider: the paper counts people in pairs. The bracket [1 − (p − p²)^{n/2}] is one minus the dashed 'no copying yet' curve, which vanishes quickly. Once it has, the green result depends on p alone, and the wrong-cascade chance is what is left over."
+   },
+   "recap": "A cascade is decided by its first few clues, so even with good clues it locks onto the wrong choice surprisingly often, and a longer line doesn't fix that.",
+   "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "use",
+     "kind": "predict"
+    },
+    {
+     "id": "why",
+     "kind": "reveal"
+    },
+    {
+     "id": "eq",
+     "kind": "connect"
     }
    ]
   },
   {
    "id": "herder_tipping_point",
-   "title": "Too many copiers: when a crowd can lock onto the wrong answer",
-   "idea": "With copiers who follow the majority of three earlier voters, raising their share past a critical point (2/3 in the simplest case) creates two stable outcomes: one mostly right, one mostly wrong.",
-   "role": "contribution",
+   "title": "Too many copiers: the crowd can settle on either answer",
+   "idea": "When voters copy the majority of a few earlier voters, raising the share of copiers past a tipping point turns one stable outcome (mostly right) into two (mostly right or mostly wrong).",
+   "role": "core",
    "predict": {
-    "question": "In this lesson each copier looked at three earlier votes picked at random. Now suppose copiers mostly look at a few popular 'hub' voters that many others also watch, like influencers on a social network. What happens to the copier share at which the mostly-wrong outcome first appears?",
+    "question": "Now give the independent voters a real lean: their own clue points to the right answer 80% of the time instead of half. Compared with the even case you explored, what happens as you add more and more copiers?",
     "options": [
-     "It stays the same. Hubs change how fast the vote settles, not where the split happens",
-     "It drops. A few hubs let the crowd lock onto the wrong answer with fewer copiers",
-     "It rises. Hubs spread more information, so more copiers are needed",
-     "It disappears. With hubs there is only ever one resting place"
+     "The switch to two resting places comes sooner: fewer copiers are needed",
+     "The switch happens at exactly the same copier share as before",
+     "The switch comes later, but past it a mostly-wrong resting place still appears",
+     "There is no switch: with a lean, the vote always ends up mostly right"
     ],
-    "answer": 0,
+    "answer": 2,
     "why": [
-     "This matches the paper. For hub-heavy networks (the Barabási–Albert and fitness models), the long-run balance equation came out identical to the random case, so the tipping point is the same. Hubs only made the vote settle more slowly.",
-     "Influencers seem powerful, so this is a natural guess. But in the paper, the votes a hub's followers see end up, over time, split the same way as the whole crowd. The same balance equation appears, and so does the same tipping point.",
-     "Hubs add no new independent information here: they are just voters whom others happen to watch. The paper found no shift in the tipping point in either direction.",
-     "The two-outcome split survived on hub networks, both in the math and in the simulations. The case with no split is different: copiers who look only at the most recent voters, in a chain."
+     "Tempting if you think any lean makes copying riskier. But the lean lifts the whole curve toward the right answer, so a low crossing needs a steeper S, and that takes more copiers, not fewer.",
+     "Tempting because the copiers' rule has not changed. But the resting places depend on the independent voters too. Their lean shifts the curve up, and that moves where the extra crossings first appear.",
+     "The lean lifts the curve, so the S must be steeper before it can dip back across the dashed line at the low end. In this model the switch moves from about 0.67 to about 0.85. Past it, a mostly-wrong resting place still sits beside the mostly-right one.",
+     "Tempting because the independent voters now push toward the truth. But with enough copiers the S gets steep enough to cross low anyway. A lean delays the split; it does not remove it. With every voter a copier, the independent voters have no say at all."
     ]
    },
    "terms": [
     {
      "term": "herder",
-     "means": "The paper's name for a copier: a voter who follows the majority of the earlier votes they look at"
+     "means": "A voter who copies: they pick whichever answer most of the earlier voters they look at chose (here, 2 or more out of 3)"
     },
     {
-     "term": "stable outcome",
-     "means": "A resting place the vote drifts back to after a small nudge. The paper calls the two of them good and bad equilibria"
+     "term": "independent voter",
+     "means": "A voter who ignores others and votes on their own clue, which picks the right answer with chance q"
     },
     {
      "term": "critical point",
-     "means": "The copier share at which one resting place splits into three (written p_c)"
+     "means": "The share of herders at which one resting place splits into two; the paper writes it p_c"
     },
     {
-     "term": "information cascade transition",
-     "means": "The paper's name for that split, from one likely outcome to two coexisting ones"
+     "term": "two-peaks phase",
+     "means": "The state past the critical point: if you rerun the same vote many times, the final shares bunch at two different places"
     }
    ],
    "model": {
-    "title": "Where the next vote's chance meets the vote so far",
-    "note": "Teaching model: this plots the paper's long-run balance equation for copiers who check three earlier votes picked at random (the random-graph case, r = 3). As in the paper, those three votes are treated as drawn with replacement, an averaged (mean-field) approximation. It shows where the vote can come to rest. It does not show how fast the vote gets there, or which resting place a particular crowd reaches. The curve follows the paper's equation; the slider settings are illustrative, not reported data.",
+    "title": "Where a long vote comes to rest",
+    "note": "Teaching model: the paper's random-graph case. Each copier looks at exactly three earlier voters picked at random, treated as independent draws, as in the paper's own approximation. Only the long-run vote share over a very long line of voters is shown, not the random ups and downs of any single run. The curve and resting points come from the paper's equation (59). The slider settings are illustrative, not the paper's data.",
     "controls": [
      {
       "id": "p",
@@ -1351,98 +1335,90 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.4,
+      "default": 0.3,
       "unit": "",
-      "color": 1
+      "color": 0
      },
      {
       "id": "q",
-      "label": "How often an independent voter is right",
+      "label": "How often own-clue voters pick right",
       "kind": "slider",
       "min": 0.5,
       "max": 1,
       "step": 0.05,
       "default": 0.5,
       "unit": "",
-      "color": 4
+      "color": 1
      }
     ],
     "outputs": [
      {
-      "id": "stable",
-      "label": "Places the vote can come to rest",
-      "expr": "(4 * pow((1 - 1.5 * p) / (2 * max(p, 0.001)), 3) + 27 * pow((q - 0.5) * (1 - p) / (2 * max(p, 0.001)), 2)) < 0 ? 2 : 1",
-      "unit": "",
-      "decimals": 0,
-      "color": 2
-     },
-     {
-      "id": "best",
-      "label": "Highest resting place (picking right)",
-      "expr": "clamp(0.5 + (stable == 2 ? (2 * sqrt(-min((1 - 1.5 * p) / (2 * max(p, 0.001)), -0.000001) / 3)) * cos((atan2(sqrt(max(1 - pow(clamp(-3 * (q - 0.5) * (1 - p) / (4 * max(p, 0.001) * min((1 - 1.5 * p) / (2 * max(p, 0.001)), -0.000001)) * sqrt(-3 / min((1 - 1.5 * p) / (2 * max(p, 0.001)), -0.000001)), -1, 1), 2), 0)), clamp(-3 * (q - 0.5) * (1 - p) / (4 * max(p, 0.001) * min((1 - 1.5 * p) / (2 * max(p, 0.001)), -0.000001)) * sqrt(-3 / min((1 - 1.5 * p) / (2 * max(p, 0.001)), -0.000001)), -1, 1)) / 3)) : sign(((q - 0.5) * (1 - p) / (4 * max(p, 0.001)) + sqrt(max(pow((q - 0.5) * (1 - p) / (4 * max(p, 0.001)), 2) + pow((1 - 1.5 * p) / (2 * max(p, 0.001)), 3) / 27, 0)))) * pow(abs(((q - 0.5) * (1 - p) / (4 * max(p, 0.001)) + sqrt(max(pow((q - 0.5) * (1 - p) / (4 * max(p, 0.001)), 2) + pow((1 - 1.5 * p) / (2 * max(p, 0.001)), 3) / 27, 0)))), 1 / 3) + sign(((q - 0.5) * (1 - p) / (4 * max(p, 0.001)) - sqrt(max(pow((q - 0.5) * (1 - p) / (4 * max(p, 0.001)), 2) + pow((1 - 1.5 * p) / (2 * max(p, 0.001)), 3) / 27, 0)))) * pow(abs(((q - 0.5) * (1 - p) / (4 * max(p, 0.001)) - sqrt(max(pow((q - 0.5) * (1 - p) / (4 * max(p, 0.001)), 2) + pow((1 - 1.5 * p) / (2 * max(p, 0.001)), 3) / 27, 0)))), 1 / 3)), 0, 1)",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 0,
-      "color": 2
-     },
-     {
-      "id": "worst",
-      "label": "Lowest resting place (picking right)",
-      "expr": "clamp(0.5 + (stable == 2 ? (2 * sqrt(-min((1 - 1.5 * p) / (2 * max(p, 0.001)), -0.000001) / 3)) * cos((atan2(sqrt(max(1 - pow(clamp(-3 * (q - 0.5) * (1 - p) / (4 * max(p, 0.001) * min((1 - 1.5 * p) / (2 * max(p, 0.001)), -0.000001)) * sqrt(-3 / min((1 - 1.5 * p) / (2 * max(p, 0.001)), -0.000001)), -1, 1), 2), 0)), clamp(-3 * (q - 0.5) * (1 - p) / (4 * max(p, 0.001) * min((1 - 1.5 * p) / (2 * max(p, 0.001)), -0.000001)) * sqrt(-3 / min((1 - 1.5 * p) / (2 * max(p, 0.001)), -0.000001)), -1, 1)) / 3) - 4 * pi / 3) : sign(((q - 0.5) * (1 - p) / (4 * max(p, 0.001)) + sqrt(max(pow((q - 0.5) * (1 - p) / (4 * max(p, 0.001)), 2) + pow((1 - 1.5 * p) / (2 * max(p, 0.001)), 3) / 27, 0)))) * pow(abs(((q - 0.5) * (1 - p) / (4 * max(p, 0.001)) + sqrt(max(pow((q - 0.5) * (1 - p) / (4 * max(p, 0.001)), 2) + pow((1 - 1.5 * p) / (2 * max(p, 0.001)), 3) / 27, 0)))), 1 / 3) + sign(((q - 0.5) * (1 - p) / (4 * max(p, 0.001)) - sqrt(max(pow((q - 0.5) * (1 - p) / (4 * max(p, 0.001)), 2) + pow((1 - 1.5 * p) / (2 * max(p, 0.001)), 3) / 27, 0)))) * pow(abs(((q - 0.5) * (1 - p) / (4 * max(p, 0.001)) - sqrt(max(pow((q - 0.5) * (1 - p) / (4 * max(p, 0.001)), 2) + pow((1 - 1.5 * p) / (2 * max(p, 0.001)), 3) / 27, 0)))), 1 / 3)), 0, 1)",
-      "unit": "%",
-      "scale": 100,
+      "id": "outcomes",
+      "label": "Places the vote can settle",
+      "expr": "(4*(1-1.5*p)^3 + 54*p*((1-p)*(q-0.5))^2 < 0) ? 2 : 1",
       "decimals": 0,
       "color": 3
+     },
+     {
+      "id": "hi",
+      "label": "Best case: share voting right",
+      "expr": "clamp(0.5+(outcomes>1.5?(2*sqrt(max(-((1-1.5*max(p,0.001))/(2*max(p,0.001)))/3,0)))*cos((atan2(sqrt(max(1-clamp((-3*((1-p)*(q-0.5)/(4*max(p,0.001)))/min(((1-1.5*max(p,0.001))/(2*max(p,0.001))),-0.000001))*sqrt(-3/min(((1-1.5*max(p,0.001))/(2*max(p,0.001))),-0.000001)),-1,1)^2,0)),clamp((-3*((1-p)*(q-0.5)/(4*max(p,0.001)))/min(((1-1.5*max(p,0.001))/(2*max(p,0.001))),-0.000001))*sqrt(-3/min(((1-1.5*max(p,0.001))/(2*max(p,0.001))),-0.000001)),-1,1))/3)):(sign(((1-p)*(q-0.5)/(4*max(p,0.001)))+sqrt(max(((1-p)*(q-0.5)/(4*max(p,0.001)))^2+((1-1.5*max(p,0.001))/(2*max(p,0.001)))^3/27,0)))*pow(abs(((1-p)*(q-0.5)/(4*max(p,0.001)))+sqrt(max(((1-p)*(q-0.5)/(4*max(p,0.001)))^2+((1-1.5*max(p,0.001))/(2*max(p,0.001)))^3/27,0))),1/3)+sign(((1-p)*(q-0.5)/(4*max(p,0.001)))-sqrt(max(((1-p)*(q-0.5)/(4*max(p,0.001)))^2+((1-1.5*max(p,0.001))/(2*max(p,0.001)))^3/27,0)))*pow(abs(((1-p)*(q-0.5)/(4*max(p,0.001)))-sqrt(max(((1-p)*(q-0.5)/(4*max(p,0.001)))^2+((1-1.5*max(p,0.001))/(2*max(p,0.001)))^3/27,0))),1/3))),0,1)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "lo",
+      "label": "Worst case: share voting right",
+      "expr": "clamp(0.5+(outcomes>1.5?(2*sqrt(max(-((1-1.5*max(p,0.001))/(2*max(p,0.001)))/3,0)))*cos((atan2(sqrt(max(1-clamp((-3*((1-p)*(q-0.5)/(4*max(p,0.001)))/min(((1-1.5*max(p,0.001))/(2*max(p,0.001))),-0.000001))*sqrt(-3/min(((1-1.5*max(p,0.001))/(2*max(p,0.001))),-0.000001)),-1,1)^2,0)),clamp((-3*((1-p)*(q-0.5)/(4*max(p,0.001)))/min(((1-1.5*max(p,0.001))/(2*max(p,0.001))),-0.000001))*sqrt(-3/min(((1-1.5*max(p,0.001))/(2*max(p,0.001))),-0.000001)),-1,1))/3)-4*pi/3):(sign(((1-p)*(q-0.5)/(4*max(p,0.001)))+sqrt(max(((1-p)*(q-0.5)/(4*max(p,0.001)))^2+((1-1.5*max(p,0.001))/(2*max(p,0.001)))^3/27,0)))*pow(abs(((1-p)*(q-0.5)/(4*max(p,0.001)))+sqrt(max(((1-p)*(q-0.5)/(4*max(p,0.001)))^2+((1-1.5*max(p,0.001))/(2*max(p,0.001)))^3/27,0))),1/3)+sign(((1-p)*(q-0.5)/(4*max(p,0.001)))-sqrt(max(((1-p)*(q-0.5)/(4*max(p,0.001)))^2+((1-1.5*max(p,0.001))/(2*max(p,0.001)))^3/27,0)))*pow(abs(((1-p)*(q-0.5)/(4*max(p,0.001)))-sqrt(max(((1-p)*(q-0.5)/(4*max(p,0.001)))^2+((1-1.5*max(p,0.001))/(2*max(p,0.001)))^3/27,0))),1/3))),0,1)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 5
      }
     ],
     "visual": {
      "type": "curves",
      "x": {
-      "label": "Share picking the right answer so far",
+      "label": "Share voting for the right answer so far",
       "min": 0,
       "max": 1
      },
      "y": {
-      "label": "Next voter's chance of picking right",
+      "label": "Chance the next voter picks the right answer",
       "min": 0,
       "max": 1
      },
      "series": [
       {
-       "id": "response",
-       "label": "Next voter's chance of picking right",
-       "expr": "q * (1 - p) + p * (3 * x^2 - 2 * x^3)",
-       "color": 0,
-       "dashed": false
-      },
-      {
-       "id": "diagonal",
-       "label": "No change: chance equals share so far",
+       "id": "same_line",
+       "label": "Where the share stays put",
        "expr": "x",
        "color": 7,
        "dashed": true
+      },
+      {
+       "id": "next_vote",
+       "label": "Chance the next voter picks right",
+       "expr": "(1-p)*q + p*(3*x^2 - 2*x^3)",
+       "color": 2,
+       "dashed": false
       }
      ],
      "points": [
       {
-       "id": "best_pt",
-       "x": "best",
-       "y": "best",
-       "label": "Rests here",
-       "color": 2
+       "id": "rest_high",
+       "x": "hi",
+       "y": "hi",
+       "label": "Resting point",
+       "color": 4
       },
       {
-       "id": "worst_pt",
-       "x": "stable == 2 ? worst : -1",
-       "y": "stable == 2 ? worst : -1",
-       "label": "…or here",
-       "color": 3
-      },
-      {
-       "id": "mid_pt",
-       "x": "stable == 2 ? 1.5 - best - worst : -1",
-       "y": "stable == 2 ? 1.5 - best - worst : -1",
-       "label": "Knife edge",
+       "id": "rest_low",
+       "x": "lo",
+       "y": "lo",
+       "label": "Resting point",
        "color": 5
       }
      ]
@@ -1451,155 +1427,132 @@
    "animation": {
     "steps": [
      {
-      "say": "The S-shaped curve gives the chance that the next voter picks the right answer. It depends on how the vote stands so far, read from left to right.",
-      "focus": "response",
-      "ms": 3500
+      "say": "Picture a long line of voters choosing between a right and a wrong answer. This curve says: if this share has voted right so far, how likely is the next voter to vote right?",
+      "focus": "next_vote",
+      "ms": 4000
      },
      {
-      "say": "The dashed line means 'no change'. Where the curve crosses it, the vote keeps its current share. That crossing is a place the vote can come to rest.",
-      "focus": "diagonal",
-      "ms": 3500
+      "say": "The dashed line marks 'no change': there, the next vote matches the share so far.",
+      "focus": "same_line",
+      "ms": 3000
      },
      {
-      "say": "This slider sets the share of copiers, who look at three earlier votes and follow the majority. Watch the curve bend.",
+      "say": "Some voters simply copy. Each looks at three earlier voters, picked at random, and goes with whatever two or more of them chose. This slider sets how many voters are copiers.",
       "set": {
-       "p": 0.6
+       "p": 0.5
       },
       "focus": "p",
+      "ms": 4500
+     },
+     {
+      "say": "Everyone else follows their own private clue. This slider sets how often that clue points to the right answer.",
+      "focus": "q",
       "ms": 3500
      },
      {
-      "say": "This one sets how often everyone else, who decides alone, picks the right answer.",
-      "set": {
-       "q": 0.7
-      },
-      "focus": "q",
-      "ms": 3200
-     },
-     {
-      "say": "These boxes count the resting places and show where the highest and lowest ones sit.",
+      "say": "The dots and these numbers show where the vote ends up resting after very many voters.",
       "focus": [
-       "stable",
-       "best",
-       "worst"
+       "rest_high",
+       "outcomes"
       ],
-      "ms": 3000
+      "ms": 3500
      }
     ]
    },
    "explore": {
-    "prompt": "Hunt down the tipping point, then see how it moves when the independent voters know more.",
+    "prompt": "Hunt for the exact copier share where one resting place splits into two. Then see how lopsided the mistaken outcome can get.",
     "goals": [
      {
-      "text": "Keep the independents as coin flips, and find the fewest copiers that still give the vote two places to rest.",
-      "when": "stable == 2 && p <= 0.7",
+      "text": "With independent voters split evenly, find the smallest copier share at which the vote can settle in two places (to within a couple of hundredths).",
+      "when": "abs(q - 0.5) < 0.01 && outcomes > 1.5 && p < 0.695",
       "solution": {
-       "p": 0.68
+       "p": 0.67
       },
       "hints": [
-       "The split happens when the middle of the S becomes steeper than the dashed line.",
-       "Start with plenty of copiers, where you can see two outer dots. Then lower the copier share one step at a time until they merge back into one.",
-       "Stop one step above where the outer dots merge. It lies between the two copier shares the walkthrough used with coin-flip independents."
+       "Move the copier share slowly and watch the count of places the vote can settle.",
+       "In the walkthrough, 40% copiers gave one resting place and 80% gave two. The switch lies somewhere between.",
+       "Step by 0.01 between 0.6 and 0.7. Watch for the first moment the S-curve crosses the dashed line three times."
       ]
      },
      {
-      "text": "Make the independents right at least three times in four, yet still leave room for a mostly-wrong outcome.",
-      "when": "q >= 0.75 && stable == 2 && worst < 0.5",
+      "text": "Make the mistaken outcome extreme: if the vote goes wrong, no more than 1 voter in 10 should end up picking the right answer.",
+      "when": "outcomes > 1.5 && lo <= 0.1",
       "solution": {
-       "q": 0.75,
-       "p": 0.9
+       "p": 0.85
       },
       "hints": [
-       "Better-informed independents lift the low end of the curve, which makes a low crossing harder to create.",
-       "Set the independents first. Then raise the copier share until a dot appears below the halfway mark.",
-       "Expect the tipping point to sit higher than it did with independents who were right 60% of the time."
+       "Which slider pushes the two resting points apart?",
+       "More herders make the S steeper, so the outer crossings slide toward the edges. Keep an eye on the worst-case number.",
+       "You need to go well past the switch, somewhere in the 0.8s."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Right. The paper re-derived the balance for copiers who watch popular voters (the Barabási–Albert and fitness models, which have strong hubs). The equation came out identical to the random case, and the simulations put the critical point in the same place. Hubs changed only how quickly the vote settled, which was always slower, so the authors conclude that hubs have limited influence.",
-     "incorrect": "It is tempting to think influencers swing the crowd. But in this model a copier's three votes, hub or not, end up split roughly the same way as the whole crowd. So the same balance equation and the same tipping point appear. The paper found that hubs affected only the speed of settling, and its simulations had to contend with large finite-size effects."
+     "correct": "Right. The independent voters' lean lifts the curve, so it takes a steeper S, meaning more herders, before a low crossing appears. In this model the switch moves from about 0.67 to about 0.85. Beyond that point, a mostly-wrong resting place still exists alongside the mostly-right one.",
+     "incorrect": "The resting points are where the curve meets the dashed line, and both kinds of voter shape that curve. A lean toward the truth lifts it, which delays the split rather than causing it sooner or removing it. With enough herders, the S always gets steep enough to cross low."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start with no copiers and independents who are pure coin flips. The curve is flat at 50%: whatever the count so far, the next voter is 50/50. It meets the dashed line once, at 50%.",
+       "say": "Start with no copiers at all. Everyone follows their own clue, and here those clues are coin tosses, so the curve is flat at one half. It meets the dashed line once: the vote settles at an even split.",
        "set": {
         "p": 0,
         "q": 0.5
        },
-       "focus": "response",
-       "ms": 4200
+       "focus": "next_vote",
+       "ms": 4500
       },
       {
-       "say": "Now add copiers, which the paper calls herders. The flat line bends into an S. When one answer leads, a herder usually sees a majority for it among the three votes they check, and adds one more.",
-       "set": {
-        "p": 0.5
-       },
-       "focus": "p",
-       "ms": 4600
+       "say": "Why is a crossing a resting place? Left of it, the curve is above the dashed line: the next vote is more likely right than the share so far, so the share creeps up. Right of it, the curve is below, so the share slips back.",
+       "focus": "same_line",
+       "ms": 6000
       },
       {
-       "say": "There is still one crossing. In the middle, the S is flatter than the dashed line. So if the vote drifts above 50%, the next voter's chance falls below the current share, and the vote slides back.",
+       "say": "Now make 40% of voters copiers. The paper calls them herders; a voter who follows their own clue is an independent voter. The curve bends into an S, because herders add weight to whichever answer is ahead. It still crosses only once.",
        "set": {
-        "p": 0.6
-       },
-       "focus": "best_pt",
-       "ms": 4800
-      },
-      {
-       "say": "Past two-thirds copiers, the middle of the S becomes steeper than the dashed line. The single crossing splits into three.",
-       "set": {
-        "p": 0.75
+        "p": 0.4
        },
        "focus": [
-        "best_pt",
-        "worst_pt",
-        "mid_pt"
+        "next_vote",
+        "outcomes"
+       ],
+       "ms": 6000
+      },
+      {
+       "say": "Push herders to 80%. The S is now so steep that it crosses the dashed line three times.",
+       "set": {
+        "p": 0.8
+       },
+       "focus": [
+        "next_vote",
+        "outcomes"
        ],
        "ms": 4500
       },
       {
-       "say": "Each outer crossing is a stable outcome: nudge the vote and it drifts back. The middle one is a knife edge, and the vote rolls off it to one side or the other.",
+       "say": "The middle crossing is a knife-edge: above it the share keeps climbing, below it the share keeps falling. The outer crossings pull the vote in, so the crowd settles mostly right or mostly wrong, as the first chance votes tip it.",
        "focus": [
-        "best_pt",
-        "worst_pt",
-        "mid_pt"
+        "rest_high",
+        "rest_low"
        ],
-       "ms": 4800
+       "ms": 6500
       },
       {
-       "say": "The copier share where the split first happens is the critical point. The paper calls the split the information cascade transition. Early luck now decides which side a crowd lands on.",
-       "focus": "stable",
-       "ms": 4600
-      },
-      {
-       "say": "Now let independents be right 60% of the time, with moderate copying. There is one resting place, near three-quarters right: the copiers amplify the truth.",
-       "set": {
-        "q": 0.6,
-        "p": 0.6
-       },
-       "focus": "best",
-       "ms": 4500
-      },
-      {
-       "say": "Push the copiers to 85%. A mostly-wrong resting place appears, where only about one voter in eight is right. It sits beside one where over nine in ten are right, even though every independent leans toward the truth.",
-       "set": {
-        "p": 0.85
-       },
+       "say": "The herder share where one resting place splits into two is the critical point. Past it, the vote is in the two-peaks phase: rerun the same election many times and the results bunch at these two places.",
        "focus": [
-        "worst_pt",
-        "best_pt"
+        "rest_high",
+        "rest_low",
+        "lo"
        ],
-       "ms": 5200
+       "ms": 6000
       }
      ]
     },
-    "explanation": "In Hisakado and Mori's voting model, independent voters pick the right answer with a fixed chance, while herders look at three earlier votes and follow their majority. Over a long run, the share voting right must reproduce itself, which happens where the S-curve meets the dashed line. With few herders there is one such place. Past a critical point (2/3 when independents are coin flips, and higher when they lean right), there are two, each a stable outcome: one mostly right and one mostly wrong, with a knife edge between them. As with the cascades you saw earlier, chance in the early votes decides which one a crowd reaches. The paper derives this from an averaged (mean-field) equation that treats the three votes as drawn with replacement. Its simulations locate the same tipping point, though finite-size effects near it are large, and copiers who look at only one or two votes produce no split at all.",
-    "quote": "If the voter obtains information from three of the above voters, as the number of herders increases, the model features a phase transition beyond which the state in which most voters make the correct choice coexists with one in which most of them are wrong.",
-    "quote_where": "Section 3 (Random Graph)",
+    "explanation": "Herders go with the majority of three earlier voters picked at random, so they add weight to whichever answer is already ahead. Each independent voter follows only their own clue. With few herders, those clues dominate and the long vote has one resting place: an even split when the clues are coin tosses, mostly right when they lean toward the truth. Past a critical share of herders, the self-reinforcement is strong enough to create two resting places, one mostly right and one mostly wrong, and chance early votes decide which one the crowd lands in. As with the cascades you met earlier, the trouble comes from copying what others did rather than what they knew. Hisakado and Mori showed this by solving an equation for the long-run vote share, which has one solution below the critical point and three above it, and checked it with computer simulations; with only one or two voters looked at there is no such switch, and this is a model of idealised voters, not a measurement of real elections.",
+    "quote": "Below the critical point pc, we can obtain one solution Fig7 (a). We refer to this phase as the one-peak phase. In contrast, above the critical point, we obtain three solutions.",
+    "quote_where": "Appendix C (Mean field approximation and Stochastic differential equation)",
     "source_id": "s3",
     "source_ids": [
      "s3"
@@ -1608,7 +1561,7 @@
    "connect": {
     "equation": [
      {
-      "text": "Z = "
+      "text": "Z_{∞} = "
      },
      {
       "text": "q",
@@ -1629,12 +1582,12 @@
       "link": "p"
      },
      {
-      "text": "·π(Z),   π(Z) = 3Z^{2} − 2Z^{3}"
+      "text": " · π(Z_{∞}),   π(Z) = 3Z^{2} − 2Z^{3}"
      }
     ],
-    "caption": "The paper's long-run balance (eq. 59) for r = 3. Z is the share picking right. The left side is the dashed line; the right side is the S-curve. Independents add q(1 − p), where q is the independents' accuracy and p is the copier share. Copiers add p·π(Z), where π(Z) is the chance that a random three-vote sample favours the right answer (eq. 3). Each crossing of the two sides is a solution."
+    "caption": "This is the paper's equation (59). Z_∞ is the long-run share voting right (candidate C1). The left side is the dashed line and the right side is the curve, so resting points are where they meet. q is how often an independent voter picks right; p is the herder share. π(Z) is the chance that at least two of three random earlier voters chose right: 3Z² − 2Z³, a case of the paper's general sum. For q = 1/2 the paper finds p_c = 2/3."
    },
-   "recap": "Past a critical share of copiers (2/3 with coin-flip independents and three-vote checks), a second, mostly-wrong resting place appears, and early luck picks which one the crowd reaches.",
+   "recap": "Herders reinforce whichever answer leads; past a critical share of herders, the same crowd can settle mostly right or mostly wrong, and early luck picks which.",
    "activities": [
     {
      "id": "tour",
@@ -1673,78 +1626,75 @@
    ]
   },
   {
-   "id": "fragile_cascades",
-   "title": "A whisper can topple millions",
-   "idea": "Because a cascade holds only about two people's worth of evidence however many follow it, one public clue weaker than a single private clue is enough to make the next person use their own clue again and possibly reverse the crowd.",
+   "id": "hubs_change_speed_only",
+   "title": "Influencers change the pace, not the tipping point",
+   "idea": "Making voters look at popular hubs rather than random earlier voters leaves the tipping point unchanged and only slows how quickly the vote settles.",
    "role": "contribution",
    "predict": {
-    "question": "Two towns each have an up cascade. In town A, 10 people have followed it. In town B, two million have. The same faint public news against adopting, weaker than one private clue, reaches the next person in each town. Where is that person more likely to start using their own clue again?",
+    "question": "The paper also tried a 'fitness' network. There, some voters get extra pull, so a few grow into giant hubs that are even more dominant than the popular voters behind your switch. Copiers still follow the majority of three voters they look at. Compared with random copying, what does the paper find?",
     "options": [
-     "Town A: a small cascade is easier to shake",
-     "Town B: a huge cascade looks suspicious",
-     "Equally likely in both towns",
-     "Neither: faint news can never break a cascade"
+     "The tipping point drops: fewer copiers are needed before the crowd can lock onto the wrong answer",
+     "The tipping point stays where it was, and the vote still settles more slowly than with random copying",
+     "The tipping point stays, and settling speeds back up to full speed because everyone watches the same few voters",
+     "The crowd always ends on the right answer, because the giant voters are better informed"
     ],
-    "answer": 2,
+    "answer": 1,
     "why": [
-     "It feels natural that more people means more evidence. But everyone after the first two choices was copying, so both cascades rest on the same thin evidence.",
-     "Size doesn't make a cascade look suspicious in this model. The two million extra choices carry no information either way, so they can't raise doubt or settle it.",
-     "Right. The followers revealed nothing, so each town's cascade holds the same less-than-two clues from its first two choices. The same news tips both by exactly the same amount.",
-     "This would be true if the news had to outweigh the whole crowd. It only has to outweigh the thin evidence of the first two choices, and a clue weaker than one private clue can do that."
+     "It feels natural that bigger influencers make a crowd easier to tip. But the paper's resting-point equation for the fitness network (36) is the same as the one for random copying, so the tipping point does not move.",
+     "Correct. The fitness network gives the same resting-point equation, so the tipping point is unchanged. The paper's simulations show no full-speed phase for it either: like the popular-voter network, it only slows settling.",
+     "Watching the same voters sounds like it should make people agree faster. In fact, reusing the same early votes again and again means old luck keeps echoing, so the wobble shrinks more slowly. The paper finds no full-speed phase with hubs.",
+     "Being popular here only means being looked at often. No voter in the model has a better clue, so hubs cannot steer the crowd toward the truth. They only change how long the tally keeps wobbling."
     ]
    },
    "terms": [
     {
-     "term": "public information",
-     "means": "A clue that everyone sees at once, such as a published study, as opposed to a private clue only one person has"
+     "term": "hub",
+     "means": "A voter whom many later voters look at, like an influencer with a huge following"
     },
     {
-     "term": "fragility",
-     "means": "A cascade's tendency to be overturned by a small amount of new information, because it rests on so little evidence"
+     "term": "convergence speed",
+     "means": "How fast the run-to-run wobble in the vote share dies away as more people vote (the 'settling speed' readout)"
+    },
+    {
+     "term": "normal diffusion",
+     "means": "Settling at full speed: the wobble shrinks as fast as it would for independent coin flips"
+    },
+    {
+     "term": "super diffusion",
+     "means": "Settling more slowly than coin flips: early luck lingers in the tally for a long time"
     }
    ],
    "model": {
-    "title": "Earlier choices plus your own clue: what changes after one piece of news?",
-    "note": "Teaching model: the binary-clue case of Bikhchandani, Hirshleifer and Welch (1992), as on the last screen. Everyone starts at 50–50, every private clue is right with the same chance, and ties are settled by a coin toss. 'Good clues' and 'Bad clues' count earlier adoptions and rejections, read the way the paper reads them. While the lead is one or less, each choice counts as a full clue. Once one side leads by two, the choice that made it two may have come from a coin toss, so it counts for less than a full clue. Every choice after that is a copy that reveals nothing, so a lead past two changes nothing. The news is fixed: it always points against the crowd's lead (there is none with no lead) and is worth half a private clue. For every clue accuracy on the slider, that is weaker than one private clue but stronger than the coin-toss choice, the window the paper's Result 3 describes. Settings are illustrative, not data from the paper.",
+    "title": "Where a long vote comes to rest, and how fast it gets there",
+    "note": "Teaching model: the paper's mean-field results for copiers who each look at three earlier voters (r = 3) and follow their majority. The switch chooses between two cases. When it is off, copiers look at random earlier voters (the paper's random graph). When it is on, copiers pick earlier voters in proportion to how many links they already have (the paper's Barabási–Albert network). The curve and resting points come from equations (59), (12) and (30), which are identical for both cases. Settling speed is 2 − 2L, capped at 100%, following Appendix B, with L taken from equations (15) and (33). Where there are two resting places, the readout uses the slower one. The mean-field approach treats the three looked-at voters as independent draws and ignores finite-run effects, which the paper's simulations show can be large. Slider settings are illustrative, not the paper's data.",
     "controls": [
      {
-      "id": "g",
-      "label": "Good clues",
+      "id": "p",
+      "label": "Share of copiers",
       "kind": "slider",
       "min": 0,
-      "max": 8,
-      "step": 1,
-      "default": 1,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.3,
       "unit": "",
       "color": 0
      },
      {
-      "id": "b",
-      "label": "Bad clues",
+      "id": "q",
+      "label": "How often own-clue voters pick right",
       "kind": "slider",
-      "min": 0,
-      "max": 8,
-      "step": 1,
-      "default": 0,
+      "min": 0.5,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.5,
       "unit": "",
       "color": 1
      },
      {
-      "id": "p",
-      "label": "How often a clue is right",
-      "kind": "slider",
-      "min": 0.5,
-      "max": 0.95,
-      "step": 0.05,
-      "default": 0.7,
-      "unit": "",
-      "color": 4
-     },
-     {
-      "id": "own",
-      "label": "My own clue says good",
+      "id": "hubs",
+      "label": "Copiers look at popular voters",
       "kind": "toggle",
-      "default": 1,
+      "default": 0,
       "color": 6,
       "min": 0,
       "max": 1,
@@ -1753,281 +1703,263 @@
     ],
     "outputs": [
      {
-      "id": "reveal",
-      "label": "Clues the earlier choices really reveal (good − bad)",
-      "expr": "abs(g - b) <= 1 ? (g - b) : sign(g - b) * (1 + ln((1 + p) / (2 - p)) / max(ln(p / (1 - p)), 0.000001))",
-      "unit": "",
-      "decimals": 2,
-      "color": 5
+      "id": "outcomes",
+      "label": "Places the vote can settle",
+      "expr": "(4*(1-1.5*p)^3 + 54*p*((1-p)*(q-0.5))^2 < 0) ? 2 : 1",
+      "decimals": 0,
+      "color": 3
      },
      {
-      "id": "adopt",
-      "label": "Chance I adopt (no news)",
-      "expr": "(ln(p / (1 - p)) * (reveal + 2 * own - 1)) > 0.0001 ? 1 : ((ln(p / (1 - p)) * (reveal + 2 * own - 1)) < -0.0001 ? 0 : 0.5)",
+      "id": "hi",
+      "label": "Best case: share voting right",
+      "expr": "clamp(0.5+(outcomes>1.5?(2*sqrt(max(-((1-1.5*max(p,0.001))/(2*max(p,0.001)))/3,0)))*cos((atan2(sqrt(max(1-clamp((-3*((1-p)*(q-0.5)/(4*max(p,0.001)))/min(((1-1.5*max(p,0.001))/(2*max(p,0.001))),-0.000001))*sqrt(-3/min(((1-1.5*max(p,0.001))/(2*max(p,0.001))),-0.000001)),-1,1)^2,0)),clamp((-3*((1-p)*(q-0.5)/(4*max(p,0.001)))/min(((1-1.5*max(p,0.001))/(2*max(p,0.001))),-0.000001))*sqrt(-3/min(((1-1.5*max(p,0.001))/(2*max(p,0.001))),-0.000001)),-1,1))/3)):(sign(((1-p)*(q-0.5)/(4*max(p,0.001)))+sqrt(max(((1-p)*(q-0.5)/(4*max(p,0.001)))^2+((1-1.5*max(p,0.001))/(2*max(p,0.001)))^3/27,0)))*pow(abs(((1-p)*(q-0.5)/(4*max(p,0.001)))+sqrt(max(((1-p)*(q-0.5)/(4*max(p,0.001)))^2+((1-1.5*max(p,0.001))/(2*max(p,0.001)))^3/27,0))),1/3)+sign(((1-p)*(q-0.5)/(4*max(p,0.001)))-sqrt(max(((1-p)*(q-0.5)/(4*max(p,0.001)))^2+((1-1.5*max(p,0.001))/(2*max(p,0.001)))^3/27,0)))*pow(abs(((1-p)*(q-0.5)/(4*max(p,0.001)))-sqrt(max(((1-p)*(q-0.5)/(4*max(p,0.001)))^2+((1-1.5*max(p,0.001))/(2*max(p,0.001)))^3/27,0))),1/3))),0,1)",
       "unit": "%",
       "scale": 100,
       "decimals": 0,
-      "color": 7
+      "color": 4
      },
      {
-      "id": "adopt_other",
-      "label": "Chance I'd adopt with the opposite clue (no news)",
-      "expr": "(ln(p / (1 - p)) * (reveal + 1 - 2 * own)) > 0.0001 ? 1 : ((ln(p / (1 - p)) * (reveal + 1 - 2 * own)) < -0.0001 ? 0 : 0.5)",
+      "id": "lo",
+      "label": "Worst case: share voting right",
+      "expr": "clamp(0.5+(outcomes>1.5?(2*sqrt(max(-((1-1.5*max(p,0.001))/(2*max(p,0.001)))/3,0)))*cos((atan2(sqrt(max(1-clamp((-3*((1-p)*(q-0.5)/(4*max(p,0.001)))/min(((1-1.5*max(p,0.001))/(2*max(p,0.001))),-0.000001))*sqrt(-3/min(((1-1.5*max(p,0.001))/(2*max(p,0.001))),-0.000001)),-1,1)^2,0)),clamp((-3*((1-p)*(q-0.5)/(4*max(p,0.001)))/min(((1-1.5*max(p,0.001))/(2*max(p,0.001))),-0.000001))*sqrt(-3/min(((1-1.5*max(p,0.001))/(2*max(p,0.001))),-0.000001)),-1,1))/3)-4*pi/3):(sign(((1-p)*(q-0.5)/(4*max(p,0.001)))+sqrt(max(((1-p)*(q-0.5)/(4*max(p,0.001)))^2+((1-1.5*max(p,0.001))/(2*max(p,0.001)))^3/27,0)))*pow(abs(((1-p)*(q-0.5)/(4*max(p,0.001)))+sqrt(max(((1-p)*(q-0.5)/(4*max(p,0.001)))^2+((1-1.5*max(p,0.001))/(2*max(p,0.001)))^3/27,0))),1/3)+sign(((1-p)*(q-0.5)/(4*max(p,0.001)))-sqrt(max(((1-p)*(q-0.5)/(4*max(p,0.001)))^2+((1-1.5*max(p,0.001))/(2*max(p,0.001)))^3/27,0)))*pow(abs(((1-p)*(q-0.5)/(4*max(p,0.001)))-sqrt(max(((1-p)*(q-0.5)/(4*max(p,0.001)))^2+((1-1.5*max(p,0.001))/(2*max(p,0.001)))^3/27,0))),1/3))),0,1)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "settle",
+      "label": "Settling speed",
+      "expr": "clamp(min(1, 2 - 2*(hubs > 0.5 ? 0.5*(1 + 1.5*p*max(1-(2*hi-1)^2, 1-(2*lo-1)^2)) : 1.5*p*max(1-(2*hi-1)^2, 1-(2*lo-1)^2))), 0, 1)",
       "unit": "%",
       "scale": 100,
       "decimals": 0,
       "color": 6
-     },
-     {
-      "id": "belief_news",
-      "label": "Chance it's good, after the news (with my clue)",
-      "expr": "1 / (1 + exp(ln(p / (1 - p)) * (0.5 * sign(g - b) + 1 - 2 * own - reveal)))",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 0,
-      "color": 2
-     },
-     {
-      "id": "adopt_news",
-      "label": "Chance I adopt, after the news",
-      "expr": "(ln(p / (1 - p)) * (reveal + 2 * own - 1 - 0.5 * sign(g - b))) > 0.0001 ? 1 : ((ln(p / (1 - p)) * (reveal + 2 * own - 1 - 0.5 * sign(g - b))) < -0.0001 ? 0 : 0.5)",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 0,
-      "color": 7
-     },
-     {
-      "id": "adopt_news_other",
-      "label": "Chance I'd adopt with the opposite clue, after the news",
-      "expr": "(ln(p / (1 - p)) * (reveal + 1 - 2 * own - 0.5 * sign(g - b))) > 0.0001 ? 1 : ((ln(p / (1 - p)) * (reveal + 1 - 2 * own - 0.5 * sign(g - b))) < -0.0001 ? 0 : 0.5)",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 0,
-      "color": 3
      }
     ],
     "visual": {
-     "type": "bars",
-     "bars": [
+     "type": "curves",
+     "x": {
+      "label": "Share voting for the right answer so far",
+      "min": 0,
+      "max": 1
+     },
+     "y": {
+      "label": "Chance the next voter picks the right answer",
+      "min": 0,
+      "max": 1
+     },
+     "series": [
       {
-       "id": "adopt_bar",
-       "label": "I adopt (no news)",
-       "value": "adopt * 100",
-       "color": 7
+       "id": "same_line",
+       "label": "Where the share stays put",
+       "expr": "x",
+       "color": 7,
+       "dashed": true
       },
       {
-       "id": "adopt_other_bar",
-       "label": "I'd adopt with the opposite clue (no news)",
-       "value": "adopt_other * 100",
-       "color": 6
-      },
-      {
-       "id": "good_news_bar",
-       "label": "Chance it's good, after the news",
-       "value": "belief_news * 100",
-       "color": 2
-      },
-      {
-       "id": "news_adopt_bar",
-       "label": "I adopt, after the news",
-       "value": "adopt_news * 100",
-       "color": 7
-      },
-      {
-       "id": "news_adopt_other_bar",
-       "label": "I'd adopt with the opposite clue, after the news",
-       "value": "adopt_news_other * 100",
-       "color": 3
+       "id": "next_vote",
+       "label": "Chance the next voter picks right",
+       "expr": "(1-p)*q + p*(3*x^2 - 2*x^3)",
+       "color": 2,
+       "dashed": false
       }
      ],
-     "min": 0,
-     "max": 100,
-     "unit": "%",
-     "decimals": 0
+     "points": [
+      {
+       "id": "rest_high",
+       "x": "hi",
+       "y": "hi",
+       "label": "Resting point",
+       "color": 4
+      },
+      {
+       "id": "rest_low",
+       "x": "lo",
+       "y": "lo",
+       "label": "Resting point",
+       "color": 5
+      }
+     ]
     }
    },
    "animation": {
     "steps": [
      {
-      "say": "Same sliders as before: earlier choices, how reliable clues are, and your own clue. The first two bars show what you'd do, and what you'd do with the opposite clue.",
+      "say": "This is the same picture as before. The solid curve gives the chance that the next voter picks right. Where it crosses the dashed line, the vote comes to rest.",
+      "set": {
+       "p": 0.3,
+       "q": 0.5,
+       "hubs": 0
+      },
       "focus": [
-       "adopt_bar",
-       "adopt_other_bar"
+       "next_vote",
+       "rest_high"
       ],
-      "ms": 6000
+      "ms": 6500
      },
      {
-      "say": "New: the last three bars show the same person after one piece of news that everyone sees. It always points against the crowd, and it's worth only half a private clue.",
-      "focus": [
-       "good_news_bar",
-       "news_adopt_bar",
-       "news_adopt_other_bar"
-      ],
+      "say": "Here is the one new switch. When it is off, copiers look at three random earlier voters. When it is on, they look at popular voters, the ones others have already looked at most.",
+      "set": {
+       "hubs": 1
+      },
+      "focus": "hubs",
+      "ms": 6500
+     },
+     {
+      "say": "Here is the new readout, settling speed. At 100%, the tally's wobble from run to run dies away as fast as it would for coin flips. Lower means early luck lingers longer.",
+      "set": {
+       "hubs": 0
+      },
+      "focus": "settle",
       "ms": 7000
-     },
-     {
-      "say": "And this box counts what the earlier choices really reveal, in private clues.",
-      "focus": "reveal",
-      "ms": 4500
      }
     ]
    },
    "explore": {
-    "prompt": "Your turn. Build cascades in both directions and check what half a clue of news does to each.",
+    "prompt": "Flip the switch at different shares of copiers and different clue qualities. Keep one eye on the curve and the 'places to settle' box, and the other on the settling speed.",
     "goals": [
      {
-      "text": "Build an up cascade where, without news, the next person copies whatever their clue says, but after the news their own clue decides.",
-      "when": "(g - b) >= 2 && abs(adopt - adopt_other) < 0.01 && abs(adopt_news - adopt_news_other) > 0.99",
+      "text": "With copiers looking at random earlier voters, find a crowd that has two possible resting places yet still settles at full speed.",
+      "when": "hubs < 0.5 && outcomes > 1.5 && settle > 0.99",
       "solution": {
-       "g": 2
+       "p": 0.9
       },
       "hints": [
-       "Copying starts at a certain lead of adopters over rejecters. What was it?",
-       "Without news, the first two bars should match. After the news, the two choice bars should split apart.",
-       "Raise the adopters one at a time from where they start, watching the opposite-clue bar with no news reach 100%."
+       "Copiers slow things down most when the three voters they look at often disagree. Where would they rarely disagree?",
+       "Beyond the tipping point, each resting place sits where almost everyone agrees. So copiers deep in that region are hardly ever torn.",
+       "Leave the switch off and push the share of copiers well past the tipping point, toward the far right of the slider."
       ]
      },
      {
-      "text": "Now build a long down cascade, with rejecters at least six ahead, where the news against the crowd still hands the choice back to the next person's own clue.",
-      "when": "(b - g) >= 6 && adopt < 0.01 && adopt_other < 0.01 && abs(adopt_news - adopt_news_other) > 0.99",
+      "text": "Make own-clue voters right 70% of the time. Then, with copiers looking at popular voters, give the crowd two possible resting places using as few copiers as you can (stay below 85%).",
+      "when": "hubs > 0.5 && abs(q - 0.7) < 0.01 && outcomes > 1.5 && p < 0.85",
       "solution": {
-       "b": 6,
-       "g": 0
+       "hubs": 1,
+       "q": 0.7,
+       "p": 0.83
       },
       "hints": [
-       "Which slider builds a crowd that rejects?",
-       "Without news, both no-news bars should sit at 0%. After the news, which here says 'good', your clue should matter again.",
-       "Make sure adopters don't eat into the rejecters' lead: the lead is what counts, not the totals."
+       "Watch the 'Places the vote can settle' box while you raise the share of copiers.",
+       "Better own clues make the crowd harder to tip, so expect the tipping point higher than it was with coin-flip clues.",
+       "It lies between 80% and 85%. Once you find it, flip the switch off and on there to check whether it moves."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. Everyone after the first two choices copied, so their choices revealed nothing. A cascade of two million holds exactly the same evidence as one of ten, and the same faint news tips both.",
-     "incorrect": "It's natural to treat a bigger crowd as more evidence, but in a cascade the followers ignore their own clues. Their choices add nothing, so the cascade's evidence stays at the first two choices however long it runs. The news has the same effect in both towns."
+     "correct": "Right. The paper's fitness network gives the same resting-point equation as random copying, so the tipping point stays put. Its giant hubs, like the popular voters behind the switch, only slow how fast the tally settles.",
+     "incorrect": "You probably expected bigger influencers to change where the crowd ends up, or to make it agree faster. In the paper's model, hubs leave the resting points and the tipping point untouched. Because they keep reusing the same early votes, they only make the wobble die out more slowly."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Two adopters, no rejecters. Without news this is an up cascade: even with a bad clue you'd adopt. See the second bar at 100%.",
+       "say": "Start with random copying and 30% copiers. There is one resting place, and settling speed is 100%. This full-speed settling is called normal diffusion.",
        "set": {
-        "g": 2,
-        "b": 0,
-        "p": 0.7,
-        "own": 1
+        "p": 0.3,
+        "q": 0.5,
+        "hubs": 0
        },
-       "focus": "adopt_other_bar",
+       "focus": [
+        "rest_high",
+        "settle"
+       ],
        "ms": 5000
       },
       {
-       "say": "How much do those two choices really reveal? About 1.32 clues, not 2. The second adopter might have had a bad clue and tossed a coin, so that choice counts for less.",
-       "focus": "reveal",
+       "say": "Now flip the switch so copiers look at popular voters. A voter whom many others look at is called a hub. Watch the curve and the resting point: neither moves.",
+       "set": {
+        "hubs": 1
+       },
+       "focus": [
+        "next_vote",
+        "rest_high"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "Only settling speed changed, to 55%. Hubs get re-read again and again, so early luck lingers. The paper calls this pace the convergence speed; settling slower than coin flips is called super diffusion.",
+       "focus": "settle",
+       "ms": 6500
+      },
+      {
+       "say": "Push copiers to 66%, just short of the tipping point you met before, with the switch off. Even random copying nearly stalls here, at about 2%.",
+       "set": {
+        "p": 0.66,
+        "hubs": 0
+       },
+       "focus": "settle",
+       "ms": 5000
+      },
+      {
+       "say": "Step to 70%. A second resting point appears, so the vote can settle in two places. That is the two-peaks phase.",
+       "set": {
+        "p": 0.7
+       },
+       "focus": [
+        "outcomes",
+        "rest_low"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "Flip to popular voters at the same 70%. Still two places, at exactly the same spots. The tipping point is the same with or without hubs.",
+       "set": {
+        "hubs": 1
+       },
+       "focus": [
+        "outcomes",
+        "rest_high",
+        "rest_low"
+       ],
        "ms": 5500
       },
       {
-       "say": "Now let six more people adopt. They were copying, so their choices reveal nothing. The box stays at 1.32.",
+       "say": "Last stop: 75% copiers. Both networks settle in the same two places, but hubs settle at 25% speed against 50% for random copying. Same destinations, slower journey.",
        "set": {
-        "g": 8
+        "p": 0.75
        },
        "focus": [
-        "g",
-        "reveal"
-       ],
-       "ms": 5000
-      },
-      {
-       "say": "Look right. After news worth just half a private clue, the opposite-clue bar drops to 0%: a bad clue would now make you reject. Your own clue decides again. News that everyone sees, like this, is what the paper calls public information.",
-       "focus": [
-        "news_adopt_bar",
-        "news_adopt_other_bar"
-       ],
-       "ms": 7000
-      },
-      {
-       "say": "Flip your own clue to bad. Without news you'd still adopt, but after the news you reject. Your choice now tells later people something, so the crowd can start to turn.",
-       "set": {
-        "own": 0
-       },
-       "focus": [
-        "adopt_bar",
-        "news_adopt_bar"
+        "rest_high",
+        "rest_low",
+        "settle"
        ],
        "ms": 6000
-      },
-      {
-       "say": "It works the other way too. Eight rejecters, and now the news says 'good'. Once again, half a clue gives your own clue back its say.",
-       "set": {
-        "g": 0,
-        "b": 8
-       },
-       "focus": [
-        "reveal",
-        "news_adopt_bar",
-        "news_adopt_other_bar"
-       ],
-       "ms": 6000
-      },
-      {
-       "say": "Here is the punchline. Eight followers, or eight million, rest on about 1.3 clues. That's why such crowds are wrong surprisingly often, and why news weaker than one person's clue can tip them. The paper calls this fragility.",
-       "focus": [
-        "reveal",
-        "news_adopt_other_bar"
-       ],
-       "ms": 7500
       }
      ]
     },
-    "explanation": "Once one choice leads by two, everyone after copies. Their choices add nothing, so the whole crowd rests on its first two choices, and because the second may have come from a coin toss, those two together are worth less than two clues. Public news only has to outweigh that thin layer of evidence, not the crowd. In their binary-clue model, the authors show that one public clue slightly less informative than a single private clue makes the next person go back to their own clue. Their choice then reveals that clue to later people, so the cascade may reverse. This holds however many have followed: the authors write 'even if millions subsequently imitated'. It is a theoretical result from a stylised model, and the paper offers cases such as the oat bran fad and hybrid corn adoption as possible illustrations, not as tests.",
-    "quote": "The release of a small amount of public information can shatter a long-lasting cascade, where a \"small amount\" refers to a signal less informative than the private signal of a single individual.",
-    "quote_where": "Section III.A.2, Result 3",
+    "explanation": "Switching copiers from random earlier voters to popular ones left the curve and its resting points exactly where they were, so the tipping point did not move. What changed was the pace. With hubs, the tally always settles more slowly than coin flips once anyone copies. Random copying, by contrast, reaches full speed both well below and well above the tipping point. The paper derived the long-run equations for a random network and for a popular-voter (Barabási–Albert) network. The resting-point equations came out identical (equations 12 and 30), and only the speed condition differed (15 versus 33). A 'fitness' network with even stronger hubs gave the same tipping point. Simulations of 32,000-voter runs agreed, although the authors note large finite-run effects and cannot rule out a full-speed phase in every setting (for example, when copiers look at nine voters). Their conclusion holds only within this simple majority-copying model: hubs change how much the vote wobbles, not where it ends.",
+    "quote": "In conclusion, the inﬂuence of hubs can only be seen in the convergence speed and cannot be seen in the phase transition between the one-peak and two-peaks phases.",
+    "quote_where": "Section 7, Concluding Remarks",
+    "source_id": "s3",
     "source_ids": [
-     "s2",
-     "s1"
-    ],
-    "source_id": "s2"
-   },
-   "check": {
-    "kind": "model",
-    "task": "Build an up cascade at least seven adopters long in which, after the news, the next person rejects.",
-    "when": "(g - b) >= 7 && adopt_news < 0.01",
-    "solution": {
-     "g": 7,
-     "own": 0
-    },
-    "hint": "The news alone doesn't decide; it hands the choice back to the person's own clue. What must that clue say for them to reject?",
-    "misconception": "That a long cascade needs evidence as big as the crowd to shake it. Half a clue of news hands the choice back to the person's own clue, however many copied, and a bad clue then means rejecting."
+     "s3"
+    ]
    },
    "connect": {
     "equation": [
      {
-      "text": "log-odds(good) = ("
-     },
-     {
-      "text": "R",
-      "link": "reveal"
-     },
-     {
-      "text": " ± "
-     },
-     {
-      "text": "1",
-      "link": "own"
-     },
-     {
-      "text": " ∓ ½) × ln("
+      "text": "L_{hub} = ½ [ 1 + (3/2) · "
      },
      {
       "text": "p",
       "link": "p"
      },
      {
-      "text": "/(1−p))"
+      "text": " · (1 − m²) ] ≥ ½   ⇒   "
+     },
+     {
+      "text": "settling speed",
+      "link": "settle"
+     },
+     {
+      "text": " = 2 − 2L_{hub} < 1"
      }
     ],
-    "caption": "This is the model's rule, built from the paper's binary-clue case; the paper argues Result 3 in words. R (teal) is what earlier choices reveal, capped at 1 + ln((1+p)/(2−p)) / ln(p/(1−p)) clues however long the queue. ±1 is your own clue, and ∓½ is the news, half a clue against the crowd's lead. p is clue accuracy, as in the paper. You adopt when the log-odds are above zero and toss a coin at zero."
+    "caption": "This is the paper's equation (33) for three looked-at voters. L is how strongly copiers pull the tally toward its own past, p is the share of copiers, and m = 2 × (share voting right) − 1 at a resting point. For random copying (equation 15) the '½[1 + …]' is missing, so L can fall below ½ and speed can reach 100%. With hubs, L never drops below ½, so full speed is impossible once anyone copies. Speed = 2 − 2L comes from Appendix B: variance shrinks like τ^{2L−2}."
    },
-   "recap": "A cascade of millions may rest on the first two choices, so it is often wrong, and news weaker than one person's clue can hand the choice back to private clues and overturn it.",
+   "recap": "Hubs leave the crowd's possible endings and its tipping point unchanged; they only make the vote take longer to settle.",
    "activities": [
     {
      "id": "tour",
@@ -2060,6 +1992,406 @@
      "kind": "reveal"
     },
     {
+     "id": "eq",
+     "kind": "connect"
+    }
+   ],
+   "builds_on": "herder_tipping_point"
+  },
+  {
+   "id": "fragile_cascade",
+   "title": "A crowd of millions, toppled by one small fact",
+   "idea": "Since a cascade rests only on the few clues before it started, its size adds no evidence, so one public clue weaker than a single private clue can make people use their own information again and reverse it.",
+   "role": "contribution",
+   "predict": {
+    "question": "A new restaurant has a long queue. The first two diners chose it, and 200 people have since joined only because they saw the queue. Then a critic posts a mildly negative review, about half as convincing as a diner's own glance at the menu. In the model, what does the next arrival do?",
+    "options": [
+     "Goes with their own impression: joins if the menu looks good, walks away if it doesn't",
+     "Joins anyway, because 200 people outweigh one mild review",
+     "Walks away no matter what, because the review sends everyone home",
+     "It depends on whether the queue holds 200 or 2,000 people"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. The queue rests on about 1.3 clues' worth of evidence. Half a clue against it drops the lean below one clue, so the arrival's own impression now tips the decision.",
+     "It feels as if 200 people are 200 votes. But they all copied without using their own clues, so together they add no evidence. Only the first two diners count.",
+     "Half a clue is far too weak to decide on its own. It only cancels part of the evidence for joining, so an arrival who likes the menu still joins.",
+     "Size is exactly what doesn't matter. Copiers reveal nothing, so 200 or 2,000 followers leave the evidence, and the effect of the review, unchanged."
+    ]
+   },
+   "terms": [
+    {
+     "term": "public information",
+     "means": "A clue everyone can see at the same time, such as a published study or an official report"
+    },
+    {
+     "term": "depth of a cascade",
+     "means": "How much real evidence a cascade rests on. It does not grow as more people copy"
+    },
+    {
+     "term": "fragile",
+     "means": "Easily broken: a small amount of new information can end the cascade"
+    }
+   ],
+   "model": {
+    "title": "What holds a copying crowd up, counted in private clues",
+    "note": "Teaching model of the paper's binary case (Bikhchandani, Hirshleifer and Welch, Sections II.A and III.A). There are two equally likely states, every private clue has the same accuracy, people reason as perfect Bayesians, and the crowd is in an adopt cascade started by two adopts. Ties are broken by a coin flip, as in the paper. Evidence is measured in units of one private clue (log-odds). The shared clue always points against adopting, and you set its strength freely. Accuracy, crowd size and clue strength are illustrative settings, not the paper's data.",
+    "controls": [
+     {
+      "id": "p",
+      "label": "How often one private clue is right",
+      "kind": "slider",
+      "min": 0.55,
+      "max": 0.95,
+      "step": 0.05,
+      "default": 0.7,
+      "unit": "",
+      "color": 4
+     },
+     {
+      "id": "followers",
+      "label": "People who copied after them",
+      "kind": "slider",
+      "min": 0,
+      "max": 1000,
+      "step": 10,
+      "default": 10,
+      "unit": " thousand",
+      "color": 1
+     },
+     {
+      "id": "public",
+      "label": "Shared clue against adopting (in private clues)",
+      "kind": "slider",
+      "min": 0,
+      "max": 2.5,
+      "step": 0.05,
+      "default": 0,
+      "unit": "",
+      "color": 3
+     }
+    ],
+    "outputs": [
+     {
+      "id": "casc",
+      "label": "Total evidence behind the crowd",
+      "expr": "ln(p * (1 + p) / ((1 - p) * (2 - p))) / ln(p / (1 - p)) + followers * 0",
+      "unit": " clues",
+      "decimals": 2,
+      "color": 0
+     },
+     {
+      "id": "net",
+      "label": "Lean toward adopting after the shared clue",
+      "expr": "casc - public",
+      "unit": " clues",
+      "decimals": 2,
+      "color": 5
+     },
+     {
+      "id": "belief_low",
+      "label": "Next person's belief that adopting is right, if their own clue says no",
+      "expr": "logistic((net - 1) * ln(p / (1 - p)))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 6
+     },
+     {
+      "id": "belief_high",
+      "label": "Next person's belief that adopting is right, if their own clue says yes",
+      "expr": "logistic((net + 1) * ln(p / (1 - p)))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 7
+     },
+     {
+      "id": "decides",
+      "label": "Own clue decides? (1 = yes)",
+      "expr": "(net < 1 && net > -1) ? 1 : 0",
+      "unit": "",
+      "decimals": 0,
+      "color": 2
+     }
+    ],
+    "visual": {
+     "type": "bars",
+     "bars": [
+      {
+       "id": "first_bar",
+       "label": "1st chooser's choice (for)",
+       "value": "1",
+       "color": 0
+      },
+      {
+       "id": "second_bar",
+       "label": "2nd chooser's choice (for)",
+       "value": "casc - 1",
+       "color": 4
+      },
+      {
+       "id": "crowd_bar",
+       "label": "Everyone who copied after (for)",
+       "value": "followers * 0",
+       "color": 1
+      },
+      {
+       "id": "public_bar",
+       "label": "Shared clue (against)",
+       "value": "public",
+       "color": 3
+      }
+     ],
+     "min": 0,
+     "max": 3,
+     "unit": "",
+     "decimals": 2
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Picture a crowd where everyone is copying and adopting. Each bar measures a reason for or against adopting, counted in private clues.",
+      "focus": "first_bar",
+      "ms": 3200
+     },
+     {
+      "say": "These two bars are what the first two people's choices reveal.",
+      "focus": [
+       "first_bar",
+       "second_bar"
+      ],
+      "ms": 3000
+     },
+     {
+      "say": "This slider sets how often one private clue is right. It changes how much the second choice is worth.",
+      "focus": "p",
+      "ms": 3400
+     },
+     {
+      "say": "This slider adds people who copied after them. Keep an eye on their bar.",
+      "set": {
+       "followers": 500
+      },
+      "focus": [
+       "followers",
+       "crowd_bar"
+      ],
+      "ms": 3600
+     },
+     {
+      "say": "This one adds a shared clue against adopting, like a report everyone reads.",
+      "set": {
+       "public": 0.2
+      },
+      "focus": [
+       "public",
+       "public_bar"
+      ],
+      "ms": 3400
+     },
+     {
+      "say": "These numbers show what the next person in line would believe, and whether their own clue still decides.",
+      "focus": [
+       "belief_low",
+       "decides"
+      ],
+      "ms": 3600
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Pile on copiers, then find out how small a shared clue can be and still get the next person to trust their own clue again.",
+    "goals": [
+     {
+      "text": "With at least half a million people copying, make the next person's own clue decide again, using a shared clue less than half as strong as one private clue",
+      "when": "followers >= 500 && decides == 1 && public < 0.5",
+      "solution": {
+       "followers": 1000,
+       "public": 0.35
+      },
+      "hints": [
+       "Copiers add nothing, so the size of the crowd won't help or hurt you. What else is on the 'for' side?",
+       "The shared clue doesn't have to beat the crowd. It only has to cancel the smaller of the two chooser bars.",
+       "Raise the shared clue one step at a time and watch 'Own clue decides'. It flips just after the shared clue bar grows taller than the second chooser's bar."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. The queue's evidence is set by the first two diners, about 1.3 clues. A review worth half a clue pulls the lean below one clue, so the next arrival's own impression decides. The 200 copiers never entered the calculation.",
+     "incorrect": "The pull of a big crowd is strong, but in this model copiers reveal nothing: each ignored their own clue. The queue rests on about 1.3 clues, so half a clue against it is enough for the arrival's own impression to decide again. That impression can point either way."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Here is a crowd in an adopt cascade. The first chooser followed their own clue, so their choice reveals exactly one private clue.",
+       "set": {
+        "p": 0.7,
+        "followers": 10,
+        "public": 0
+       },
+       "focus": "first_bar",
+       "ms": 3800
+      },
+      {
+       "say": "The second chooser's adopt is weaker evidence. On a yes clue they adopt, but on a no clue they were tied and flipped a coin. So their choice counts for only about a third of a clue.",
+       "focus": "second_bar",
+       "ms": 4600
+      },
+      {
+       "say": "Now add a million copiers. Their bar stays at zero, and the total stays at 1.32 clues. Copiers ignored their own clues, so their choices reveal nothing. The paper calls this total the depth of a cascade, and it does not grow with the crowd.",
+       "set": {
+        "followers": 1000
+       },
+       "focus": [
+        "crowd_bar",
+        "casc"
+       ],
+       "ms": 5600
+      },
+      {
+       "say": "With a lean of 1.32 clues, even someone whose own clue says no still leans yes, at 57%. So they copy, and their own clue doesn't decide.",
+       "focus": [
+        "net",
+        "belief_low",
+        "decides"
+       ],
+       "ms": 4600
+      },
+      {
+       "say": "Now publish a report everyone sees: public information against adopting, worth a fifth of one private clue. The lean drops to 1.12 clues. That is still above one, so people still copy.",
+       "set": {
+        "public": 0.2
+       },
+       "focus": [
+        "public_bar",
+        "net"
+       ],
+       "ms": 4800
+      },
+      {
+       "say": "At 0.3 of a clue the lean is 1.02, just above one. The next person still copies.",
+       "set": {
+        "public": 0.3
+       },
+       "focus": "net",
+       "ms": 3600
+      },
+      {
+       "say": "At 0.35 the report has just outweighed the second chooser's choice. The lean falls below one clue. A no clue now tips the next person to reject (belief 49%), and a yes clue still means adopt. Their own clue decides again.",
+       "set": {
+        "public": 0.35
+       },
+       "focus": [
+        "decides",
+        "belief_low",
+        "belief_high"
+       ],
+       "ms": 5600
+      },
+      {
+       "say": "The twist: a million followers rested on about 1.3 private clues, and a fact a third as strong as one hunch knocked them loose. Choices carry information again, so the crowd can turn. This is why the paper calls cascades fragile.",
+       "focus": [
+        "crowd_bar",
+        "second_bar",
+        "public_bar"
+       ],
+       "ms": 6200
+      }
+     ]
+    },
+    "explanation": "A cascade's evidence is fixed the moment it starts. The first chooser's choice reveals one private clue. The second chooser's adopt is weaker, because they might have adopted on a no clue plus a coin flip. Everyone after ignored their own clue, so a million copiers add nothing. A public clue therefore only has to cancel the second chooser's choice, worth well under one private clue here, for the next person's own clue to decide again. Once people act on their own clues, their choices carry information and the crowd can swing the other way. The paper proves this for its simple binary model (Result 3) and offers hybrid corn and the oat bran fad as possible illustrations, not tests. The model assumes identical, perfectly rational people and leaves out copying driven by social pressure.",
+    "quote": "Intuitively, cascades aggregate the information of only a few early individuals' actions. The public information thus needs only to offset the information conveyed by the action of the last individual before the start of the cascade, even if millions subsequently imitated.",
+    "quote_where": "Section III.A.2, after Result 3",
+    "source_id": "s2",
+    "source_ids": [
+     "s2",
+     "s1"
+    ]
+   },
+   "check": {
+    "kind": "model",
+    "task": "Show that a huge crowd is no harder to topple. With private clues right at least 90% of the time and at least half a million copiers, make the next person's own clue decide, using a shared clue less than a third as strong as one private clue.",
+    "when": "p >= 0.89 && followers >= 500 && decides == 1 && public < 0.34",
+    "solution": {
+     "p": 0.9,
+     "followers": 1000,
+     "public": 0.3
+    },
+    "hint": "The copiers add nothing, so set them as high as you like. With sharper clues, check how tall the second chooser's bar is: that is all the shared clue must cancel.",
+    "misconception": "A bigger crowd holds more evidence, so it takes a stronger fact to sway it."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "lean",
+      "link": "net"
+     },
+     {
+      "text": " = "
+     },
+     {
+      "text": "(1 + s_{2})",
+      "link": "casc"
+     },
+     {
+      "text": " + 0 × "
+     },
+     {
+      "text": "N",
+      "link": "followers"
+     },
+     {
+      "text": " − "
+     },
+     {
+      "text": "w",
+      "link": "public"
+     },
+     {
+      "text": ";  own clue decides when |lean| < 1, where s_{2} = ln[(1 + "
+     },
+     {
+      "text": "p",
+      "link": "p"
+     },
+     {
+      "text": ")/(2 − p)] ÷ ln[p/(1 − p)]"
+     }
+    ],
+    "caption": "The model's rule, built from the paper's binary model rather than printed in it. (1 + s₂) is the cascade's evidence: one clue from the first chooser plus s₂ from the second, whose adopt may hide a coin flip. Copiers N count zero because they reveal nothing. w is the public clue's strength and p is private-clue accuracy. Own clues decide once w exceeds s₂: the paper's point that public information need only offset the last action before the cascade."
+   },
+   "recap": "A cascade's size adds no evidence. It rests on the first few choices, so a public fact weaker than one person's hunch can make people think for themselves again and turn the crowd.",
+   "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "use",
+     "kind": "predict"
+    },
+    {
+     "id": "why",
+     "kind": "reveal"
+    },
+    {
      "id": "test",
      "kind": "check"
     },
@@ -2067,8 +2399,7 @@
      "id": "eq",
      "kind": "connect"
     }
-   ],
-   "builds_on": "cascade_starts"
+   ]
   }
  ],
  "omitted": [],
@@ -2097,7 +2428,7 @@
  ],
  "activity_plans": [
   {
-   "concept": "clues_add_up",
+   "concept": "one_clue_update",
    "chosen": "p1",
    "plan": {
     "blocks": [
@@ -2109,9 +2440,9 @@
      "reveal",
      "connect"
     ],
-    "why": "The learner moves the clue lead and the clue reliability, watches belief cross 50%, then predicts what one good and one bad clue together do."
+    "why": "The learner moves clue accuracy and the starting belief and watches the 'after' bar move. They practise making a clue barely matter (accuracy near 50%) or matter a lot."
    },
-   "confidence": 0.94,
+   "confidence": 0.56,
    "model": "jev-1.13.0",
    "options": [
     {
@@ -2124,24 +2455,23 @@
       "reveal",
       "connect"
      ],
-     "why": "The learner moves the clue lead and the clue reliability, watches belief cross 50%, then predicts what one good and one bad clue together do."
+     "why": "The learner moves clue accuracy and the starting belief and watches the 'after' bar move. They practise making a clue barely matter (accuracy near 50%) or matter a lot."
     },
     {
      "blocks": [
-      "watch",
-      "walk",
-      "explain",
       "worked",
+      "watch",
+      "walk",
+      "explain",
       "goal",
-      "predict",
-      "reveal"
+      "estimate"
      ],
-     "why": "A worked example of Bayes' rule for a single clue, with numbers, before the learner uses the sliders to reach a target belief."
+     "why": "A worked urn example (two balls 'a', one 'b') grounds the numbers first. The model then generalises it, and an estimate asks for the new belief in a fresh case."
     }
    ]
   },
   {
-   "concept": "cascade_starts",
+   "concept": "two_ahead_cascade",
    "chosen": "p1",
    "plan": {
     "blocks": [
@@ -2151,56 +2481,12 @@
      "goal",
      "predict",
      "reveal",
+     "check",
      "connect"
     ],
-    "why": "The learner sets the lead from earlier actions and flips their own clue, and finds the lead at which the clue stops mattering."
+    "why": "The learner flips their own clue at leads of 0, 1 and 2 and finds the lead at which flipping no longer changes the decision. That is the core mechanism, and the check targets the urge to 'trust yourself'."
    },
-   "confidence": 0.94,
-   "model": "jev-1.13.0",
-   "options": [
-    {
-     "blocks": [
-      "watch",
-      "walk",
-      "explain",
-      "goal",
-      "predict",
-      "reveal",
-      "connect"
-     ],
-     "why": "The learner sets the lead from earlier actions and flips their own clue, and finds the lead at which the clue stops mattering."
-    },
-    {
-     "blocks": [
-      "watch",
-      "walk",
-      "explain",
-      "stages",
-      "goal",
-      "predict",
-      "reveal"
-     ],
-     "why": "Stages replay person 1, 2 and 3 in the urn experiment before the learner reproduces the cascade on the model."
-    }
-   ]
-  },
-  {
-   "concept": "wrong_cascades",
-   "chosen": "p2",
-   "plan": {
-    "blocks": [
-     "watch",
-     "walk",
-     "explain",
-     "compare",
-     "goal",
-     "predict",
-     "reveal",
-     "check"
-    ],
-    "why": "A comparison between a world where earlier clues are visible and one where only earlier actions are visible, then the model shows the cost of seeing actions only."
-   },
-   "confidence": 0.53,
+   "confidence": 0.98,
    "model": "jev-1.13.0",
    "options": [
     {
@@ -2214,7 +2500,51 @@
       "check",
       "connect"
      ],
-     "why": "The learner pushes clue accuracy up and finds how accurate clues must be before wrong cascades drop below a target, which corrects the belief that big crowds are always right."
+     "why": "The learner flips their own clue at leads of 0, 1 and 2 and finds the lead at which flipping no longer changes the decision. That is the core mechanism, and the check targets the urge to 'trust yourself'."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "worked",
+      "goal",
+      "order",
+      "check"
+     ],
+     "why": "A worked line of four people (H, then L with a coin flip, and so on) is traced step by step. The learner then orders the moments: first chooser, inferring second, copying third."
+    }
+   ]
+  },
+  {
+   "concept": "wrong_cascades_common",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "connect"
+    ],
+    "why": "The learner sweeps clue accuracy and finds how accurate clues must be before wrong cascades drop below a given share. They also see that after about 10 people a cascade has almost surely begun."
+   },
+   "confidence": 0.8,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner sweeps clue accuracy and finds how accurate clues must be before wrong cascades drop below a given share. They also see that after about 10 people a cascade has almost surely begun."
     },
     {
      "blocks": [
@@ -2223,11 +2553,9 @@
       "explain",
       "compare",
       "goal",
-      "predict",
-      "reveal",
-      "check"
+      "choice"
      ],
-     "why": "A comparison between a world where earlier clues are visible and one where only earlier actions are visible, then the model shows the cost of seeing actions only."
+     "why": "A comparison of seeing earlier actions versus seeing earlier clues shows that only action-watching freezes errors in place. The model then quantifies how often that happens."
     }
    ]
   },
@@ -2244,9 +2572,9 @@
      "reveal",
      "connect"
     ],
-    "why": "The learner raises the copier share until a second stable crossing appears, then predicts whether a network with big hubs moves this point."
+    "why": "The learner raises the herder share and watches the crossings change from one to three, finding the tipping point near 2/3 for r = 3 and q = 0.5. They then predict what happens when independents lean toward the right answer."
    },
-   "confidence": 0.43,
+   "confidence": 0.66,
    "model": "jev-1.13.0",
    "options": [
     {
@@ -2259,7 +2587,7 @@
       "reveal",
       "connect"
      ],
-     "why": "The learner raises the copier share until a second stable crossing appears, then predicts whether a network with big hubs moves this point."
+     "why": "The learner raises the herder share and watches the crossings change from one to three, finding the tipping point near 2/3 for r = 3 and q = 0.5. They then predict what happens when independents lean toward the right answer."
     },
     {
      "blocks": [
@@ -2267,16 +2595,57 @@
       "walk",
       "explain",
       "goal",
-      "passage",
-      "predict",
-      "reveal"
+      "sort"
      ],
-     "why": "After finding the tipping point, the learner picks the passage that supports the claim that hubs change only how fast the vote settles, not where it tips."
+     "why": "After exploring, the learner sorts crowd scenarios (few copiers, many copiers, everyone sees only one other voter) into 'one outcome' or 'right-or-wrong outcomes'."
     }
    ]
   },
   {
-   "concept": "fragile_cascades",
+   "concept": "hubs_change_speed_only",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "connect"
+    ],
+    "why": "The learner toggles between networks at several herder shares and finds the tipping point never moves, while 'normal' fast settling exists only without hubs."
+   },
+   "confidence": 0.69,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner toggles between networks at several herder shares and finds the tipping point never moves, while 'normal' fast settling exists only without hubs."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "compare",
+      "passage",
+      "choice"
+     ],
+     "why": "A side-by-side of random and hub networks is followed by finding the passage that supports 'hubs have limited influence', then weighing its caveats (approximations, finite simulations)."
+    }
+   ]
+  },
+  {
+   "concept": "fragile_cascade",
    "chosen": "p1",
    "plan": {
     "blocks": [
@@ -2289,9 +2658,9 @@
      "check",
      "connect"
     ],
-    "why": "The learner adds a weak public clue to a long-running cascade and finds a state where the person's own clue decides again, then predicts what millions of extra followers would change (nothing)."
+    "why": "The learner piles on followers and sees the belief bar stay put, then finds a public clue weaker than one private clue that still makes the next person's own clue decisive. The check targets the belief that bigger crowds are harder to sway."
    },
-   "confidence": 0.95,
+   "confidence": 0.94,
    "model": "jev-1.13.0",
    "options": [
     {
@@ -2305,20 +2674,19 @@
       "check",
       "connect"
      ],
-     "why": "The learner adds a weak public clue to a long-running cascade and finds a state where the person's own clue decides again, then predicts what millions of extra followers would change (nothing)."
+     "why": "The learner piles on followers and sees the belief bar stay put, then finds a public clue weaker than one private clue that still makes the next person's own clue decisive. The check targets the belief that bigger crowds are harder to sway."
     },
     {
      "blocks": [
       "watch",
       "walk",
       "explain",
-      "sort",
+      "stages",
       "goal",
-      "predict",
-      "reveal",
+      "choice",
       "check"
      ],
-     "why": "The learner sorts sanctions, conformity preference, payoff benefits and informational cascades by whether conformity grows sturdier or stays brittle over time, then breaks a cascade on the model."
+     "why": "Staged evidence from the hybrid-corn and oat-bran cases (labelled as illustrations, not proof) follows the model and asks the learner what a cascade view predicts at each stage."
     }
    ]
   }
@@ -2330,18 +2698,18 @@
   },
   "secondary": null,
   "probabilities": {
-   "economics": 0.93,
-   "sociology_anthropology": 0.04,
-   "psychology": 0.02
+   "economics": 0.96,
+   "sociology_anthropology": 0.03,
+   "psychology": 0.01
   },
-  "confidence": 0.93,
+  "confidence": 0.96,
   "model": "jev-1.13.0"
  },
  "generation": {
   "provider": "claude",
   "model": "claude-opus-5-5",
-  "pipeline": "lemma.generate.make_outline + build_lesson",
   "source_chars": 180421,
-  "omitted": 0
+  "omitted": 0,
+  "pipeline": "brought sources → subjects + make_outline + build_lesson (2026-10-23)"
  }
 }

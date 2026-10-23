@@ -30,10 +30,10 @@ class GalleryActivitiesTests(unittest.TestCase):
         }]
         self.concept = self.lesson["concepts"][0]
 
-    def test_all_eighteen_use_one_catalogue_and_activity_format(self):
+    def test_all_nineteen_use_one_catalogue_and_activity_format(self):
         entries = server.gallery_index()
-        self.assertEqual(len(entries), 18)
-        self.assertEqual(len({e["slug"] for e in entries}), 18)
+        self.assertEqual(len(entries), 19)
+        self.assertEqual(len({e["slug"] for e in entries}), 19)
         files = {p.stem for p in (ROOT / "lemma/examples/gallery").glob("*.json") if p.stem != "index"}
         self.assertEqual(files, {e["slug"] for e in entries})
         cards = server.api_gallery({})
@@ -223,7 +223,7 @@ class GalleryActivitiesTests(unittest.TestCase):
             self.assertEqual(set(metadata), {"provider", "model", "pipeline", "source_chars", "omitted"})
             self.assertEqual(metadata["model"], lesson["provider"]["model"])
             self.assertEqual(metadata["provider"], "claude")
-            self.assertEqual(metadata["pipeline"], "lemma.generate.make_outline + build_lesson")
+            self.assertIn("make_outline + build_lesson", metadata["pipeline"])
             self.assertGreater(metadata["source_chars"], 0)
             self.assertEqual(metadata["omitted"], len(lesson["omitted"]))
 
@@ -259,7 +259,8 @@ class GalleryActivitiesTests(unittest.TestCase):
                 self.assertIn(card["cover"]["quote"].rstrip("…"), cover["understand"]["quote"])  # verbatim, maybe shortened
                 self.assertNotIn("activity", card["cover"])  # nothing to fill in on a card
             if lesson.get("generation"):
-                self.assertEqual(lesson["generation"]["model"], "claude-opus-5-5")
+                self.assertIn(lesson["generation"]["model"], ("claude-opus-5-5", "gpt-6.1-sol"))
+                self.assertEqual(lesson["generation"]["model"], lesson["provider"]["model"])
                 self.assertEqual(lesson["generation"]["omitted"], len(lesson["omitted"]))
 
     @unittest.skipUnless(shutil.which("node"), "node is needed to exercise activity event handlers")

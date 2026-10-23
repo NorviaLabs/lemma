@@ -1,52 +1,67 @@
 {
  "version": 1,
  "id": "gallery-schelling-segregation",
- "title": "Nobody Asked for This: How Mild Preferences Build a Segregated City",
- "audience": "A curious adult with no background in this field",
- "created": "2026-10-19T02:40:25",
+ "title": "How Mild Preferences Can Sort a Whole City: Exploring Schelling's Segregation Model",
+ "level": "beginner",
+ "created": "2026-10-23T04:43:12",
  "source": {
   "title": "Understanding the social context of the Schelling segregation model",
   "authors": "William A V Clark, Mark Fossett",
   "year": 2008,
-  "venue": "Proceedings of the National Academy of Sciences (PNAS)",
+  "venue": "Proc Natl Acad Sci USA",
   "url": ""
  },
  "intro": {
-  "summary": "This lesson draws on four sources about Thomas Schelling's segregation model: an encyclopedia overview, Clark and Fossett's 2008 PNAS paper on its social meaning, Gauvin, Vannimenus and Nadal's physics-style phase diagram, and Rogers and McKane's unified mathematical framework. They ask one question: can households that are content to live in mixed neighbourhoods still produce a highly segregated city with no outside force pushing them apart? Simulations, formal proofs and survey data all say yes. Once the share of like neighbours people want reaches their group's share of the city, small moves trigger a chain of further moves, and neighbourhoods drift toward being all one group. The result holds across many versions of the model. The main limitation is that these are toy worlds. They show that preferences could produce segregation, not that preferences do produce it in real cities, where discrimination, income and history also act, and where the authors stress that separate effects are hard to measure. The lesson leaves out cluster-size and entropy measures, the physics analogies in depth (Ising and Blume–Capel models), Schelling games from game theory, and income or price extensions. These are good follow-up topics.",
+  "summary": "This lesson draws on four sources about Thomas Schelling's model of segregation. The sources are a Wikipedia overview, Clark and Fossett's 2008 review linking the model to survey data, Gauvin and colleagues' physics-style map of the model's behaviour, and Rogers and McKane's framework that unites its many variants. Together they ask how a city can become highly segregated when each household holds only a mild preference for similar neighbours. Simulations and mathematics show that segregation appears once the share of like neighbours people want passes a threshold (about one third for two equal groups, and about a group's own share of the city in Clark and Fossett's three-group runs), that it appears sharply rather than gradually, and that this holds across many model versions. The main limitation is that these are deliberately simplified models: they show that preferences can produce segregation, not that they do in real cities, and the sources stress that non-experimental data cannot separate the effects of preferences from those of housing discrimination; the sources also disagree on how much the physics analogies (Ising and spin models) add compared with the model's social content. The lesson does not cover the Ising and statistical-mechanics mapping, entropy measures, game-theoretic 'Schelling games', or extensions with income and housing prices, which are good follow-up topics.",
   "background": [
-   "An agent-based model is a computer simulation where many simple 'agents' each follow a rule, and we watch what pattern the whole group forms.",
-   "In Schelling's model, households are coloured squares on a grid, and each one looks at its eight surrounding squares to decide whether to stay or move.",
-   "De facto segregation means separation that arises from people's own choices and moves, rather than from laws that require it.",
-   "Through the 1980s and 1990s, social scientists debated whether US residential segregation came mainly from housing discrimination or partly from household preferences."
+   "Residential segregation means different groups living in separate neighbourhoods, even within one city.",
+   "An agent-based model is a computer simulation in which many simple 'agents' (here, households) each follow their own small rule, and we watch what pattern the whole group makes.",
+   "Schelling first ran his model by hand in the 1970s, moving coins on a checkerboard, long before such simulations were common.",
+   "Social scientists have long debated how much segregation comes from discrimination and how much comes from people's own choices about neighbours."
   ],
   "known": [],
-  "aha": "Households who would be perfectly happy as a minority on their street still sort themselves into a city far more segregated than any of them wanted, so in these models tolerance alone does not bring integration."
+  "aha": "Households that would happily live as a one-third minority among their neighbours still end up in a city where most people's neighbours are just like them: the city becomes far more segregated than anyone asked for.",
+  "assumes": [
+   "Agent-based model",
+   "Residential segregation",
+   "In-group favoritism",
+   "Computer simulation",
+   "Emergence",
+   "Complex system",
+   "Phase transition",
+   "Homophily",
+   "Statistical mechanics",
+   "Ising model"
+  ]
  },
  "primer": [
   {
    "heading": "The question",
-   "body": "Many cities are sharply divided by race or ethnicity. One easy explanation is that people strongly dislike living near other groups, or are forced apart. In 1971 the economist Thomas Schelling asked a quieter question: what if people are only mildly picky? Suppose they would happily be a minority on their street, as long as they are not almost alone. Could the city still end up split?",
-   "quote": "Schelling's work does demonstrate that having people with \"mild\" in-group preference towards their own group could still lead to a highly segregated society via de facto segregation.",
-   "quote_where": "Introduction",
+   "body": "Many cities are split into neighbourhoods where one group dominates. One explanation is discrimination: people are kept out. Schelling asked a different question. Could ordinary, fairly mild preferences, such as 'I'd like at least some neighbours like me', sort a city on their own, even with no one being forced?",
+   "quote": "Is it reasonable to entertain the hypothesis that social distance and preference dynamics could generate and sustain significant levels of segregation in the absence of discrimination",
+   "quote_where": "Preferences, Tolerance, and the Basis of Simulation Models",
    "source_ids": [
-    "s1"
+    "s2"
    ],
-   "source_id": "s1"
+   "source_id": "s2"
   },
   {
    "heading": "What they did",
-   "body": "Schelling placed two colours of households at random on a grid with some empty squares. Each household looked at its neighbours. If too few were its own colour, it moved to an empty square. Later researchers built on this. Clark and Fossett ran a richer city simulation with three groups, house quality and income, using preference levels taken from real Los Angeles surveys. Gauvin and colleagues mapped which settings give mixed, segregated or 'frozen' cities. Rogers and McKane showed that five quite different versions of the model segregate along the same curve, and they wrote a simple equation that fits that curve.",
+   "body": "Schelling imagined a checkerboard. Each square is a home, and each home is empty or holds a household from one of two groups. A household looks at its eight surrounding squares. If too few of those neighbours are from its own group, it is unhappy and moves to an empty square. Later researchers ran this on computers, varied the rules, measured how segregated the board becomes, added survey data on real preferences, and wrote equations for it. The versions differ in their details: one source describes Schelling's rule as wanting half or more like neighbours, others as wanting at least one third.",
+   "quote": "It posited that an agent, a model representation of a household that could be white or black, preferred to be on a square on a checkerboard in which half or more of the eight adjacent neighbors were of a similar color.",
+   "quote_where": "Introduction",
    "source_ids": [
     "s1",
     "s2",
     "s3",
     "s4"
-   ]
+   ],
+   "source_id": "s2"
   },
   {
    "heading": "What they found",
-   "body": "With two equal groups, the city stays mixed if households want fewer than about a third of their neighbours to be like them. Above that, it segregates strongly. The key point is a tipping rule: segregation takes off once the share of like neighbours people want reaches their group's share of the city. The reason is a feedback loop. Each move makes the old neighbourhood less attractive to the mover's group and the new one less attractive to the other group, which triggers more moves.",
-   "quote": "The resulting neighborhood structure is more segregated than most individual households would find “ideal.”",
+   "body": "A board that starts well mixed sorts itself into large one-group areas, even when every household would be content as a minority in its neighbourhood. The change is not gradual. Below a certain level of pickiness the city stays mixed, and just above it the city segregates strongly; asking for even more like neighbours adds little. In Clark and Fossett's three-group simulations, the jump came when the share of like neighbours people wanted rose past their group's share of the city. Gauvin and colleagues found that the number of empty homes also matters: the model can be frozen, segregated or mixed. Rogers and McKane showed that very different versions of the model segregate along the same early curve.",
+   "quote": "Thus, high levels of segregation emerge when targets for same-group contact shift from 20% to 40%.",
    "quote_where": "Simulations",
    "source_ids": [
     "s1",
@@ -58,307 +73,242 @@
   },
   {
    "heading": "Why it matters, and its limits",
-   "body": "If mild preferences alone can sort a city, then ending discrimination may not bring quick integration. Clark and Fossett argue this, while noting that the fixes for preferences would be very different from anti-discrimination law. There are big caveats. The models show what could happen, not what did happen in any real city. Several causes act at once and are hard to separate with real data. Rogers and McKane quote Schelling's own warning that the model's numbers refer to an artificial checkerboard. Scholars who stress housing discrimination dispute how much weight preferences deserve.",
-   "quote": "They suggest that mere tolerance and the absence of virulent housing discrimination will not produce integration under prevailing patterns of ethnic preference, at least, not in the short run.",
+   "body": "If mild preferences alone can segregate a city, then removing discrimination may not by itself produce integration, and the policy tools for the two causes are very different. But a model shows what is possible, not what actually happened. Real cities have many forces acting at once, and observational data cannot cleanly separate the effects of preferences from those of discrimination. The authors argue that both probably work together.",
+   "quote": "Because neither group can establish empirically grounded evaluations of the effects of either preferences or discrimination, recent work has focused on the logical standing of explanations based on social distance",
+   "quote_where": "Preferences, Tolerance, and the Basis of Simulation Models",
+   "source_ids": [
+    "s2"
+   ],
+   "source_id": "s2"
+  },
+  {
+   "heading": "Where the sources disagree",
+   "body": "Physicists have noticed that the model behaves like models of magnets and alloys, and they borrow their tools to map its behaviour. Clark and Fossett grant that this is interesting, but they argue that the model's real value lies in how household choices play out in society. Rogers and McKane add that the many versions of the model make the literature fragmented, which is why they propose a single framework.",
+   "quote": "That the Schelling model has a physical analogue is interesting and theoretically illuminating is without question, but it is the social content of the Schelling model that gives it its power and importance.",
    "quote_where": "Observations and Conclusions",
    "source_ids": [
     "s2",
+    "s3",
     "s4"
    ],
    "source_id": "s2"
   }
  ],
  "provider": {
-  "name": "Claude",
+  "name": "Claude subscription",
   "model": "claude-opus-5-5"
  },
  "concepts": [
   {
-   "id": "one_household_rule",
-   "title": "One household's rule: stay or move",
-   "idea": "A household stays if the share of its occupied neighbouring squares holding its own group meets its required share, and moves otherwise.",
+   "id": "rules_on_a_grid",
+   "title": "A city of simple rules",
+   "idea": "Each household follows one rule (if too few neighbours are like me, move to an empty home), and the computer applies that rule to everyone, round after round.",
    "role": "prerequisite",
    "predict": {
-    "question": "A household needs at least one third of its neighbours to be alike. Around it are 2 alike neighbours, 4 unlike neighbours and 2 empty squares. What does it do?",
+    "question": "Picture the same rule in a city where every single home is taken: no empty homes at all. Households want about a third of their neighbours to be like them. After 40 rounds, what do you expect?",
     "options": [
-     "It stays: 2 of its 6 occupied neighbours is exactly one third",
-     "It moves: 2 of 8 squares is only a quarter",
-     "It moves: unlike neighbours outnumber alike ones",
-     "It waits until the empty squares fill up before deciding"
+     "The households that started out unhappy are still unhappy, and nothing has changed",
+     "Everyone ends up content, because the computer keeps applying the rule",
+     "Unhappy households swap homes with each other until they are content",
+     "Unhappy households lower what they want until they are content"
     ],
     "answer": 0,
     "why": [
-     "Correct. Empty squares are ignored, so the share alike is 2 out of 6 occupied neighbours. That equals one third, and meeting the threshold is enough to stay.",
-     "Tempting if you count the empty squares, but the rule ignores them. Only the 6 squares that hold someone are counted.",
-     "Being outnumbered feels like it should matter, but the rule only compares the share alike with the threshold. One third alike meets a one-third threshold, even as a local minority.",
-     "The rule is checked against the neighbours who are there now. Empty squares neither help nor hurt until someone moves in."
+     "Right: the rule's only action is moving into an empty home. With none available, an unhappy household has nowhere to go, so the grid stays as it began.",
+     "Repeating the rule only helps if it can do something. Here the rule's one action, moving to an empty home, is impossible, so more rounds change nothing.",
+     "Swapping is a different rule. Some variants allow it, but the rule here only lets a household move into an empty home, and there are none.",
+     "In this rule what a household wants is fixed. Only where it lives can change, and here even that is blocked."
     ]
    },
    "terms": [
     {
-     "term": "threshold",
-     "means": "The share of alike neighbours a household requires before it is content to stay, written B_a"
-    },
-    {
-     "term": "in-group preference",
-     "means": "Wanting at least some of your neighbours to be from your own group"
-    },
-    {
      "term": "Moore neighbourhood",
-     "means": "The eight squares around a square on the grid: up, down, left, right and the four diagonals"
+     "means": "The eight homes touching yours: left, right, above, below and the four diagonals"
+    },
+    {
+     "term": "satisfaction threshold",
+     "means": "The smallest share of like neighbours a household accepts before it decides to move; Wikipedia writes it B_a"
     }
    ],
    "model": {
-    "title": "One household and its eight neighbouring squares",
-    "note": "Teaching model: one household, its eight surrounding squares, and a single stay-or-move check. It follows the rule as Wikipedia describes Schelling's model: empty squares are ignored, and the household stays if the share alike B is at least its requirement B_a. Variants differ. Schelling's original used 'half or more' alike, as Clark and Fossett describe it. Gauvin et al. state the rule as a cap on unlike neighbours. If alike neighbours plus empty squares would exceed 8, the empty count is trimmed to fit. Numbers are illustrative, not data from any paper.",
+    "title": "A small city: two groups of households, some empty homes, one rule",
+    "note": "Teaching model: a 20×20 grid with two equal groups and 10% of homes empty. Only unhappy households move, and each one jumps to a random empty home whether or not it will be content there. In Wikipedia's description a household picks an empty home where it would be content, and Schelling moved it to the nearest such home, so real versions settle faster than this one. Numbers are illustrative, not the sources' data.",
     "controls": [
      {
-      "id": "like",
-      "label": "Neighbours from its own group",
+      "id": "want",
+      "label": "Share of like neighbours each household wants",
       "kind": "slider",
       "min": 0,
-      "max": 8,
-      "step": 1,
-      "default": 3,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.8,
       "unit": "",
       "color": 0
      },
      {
-      "id": "empty",
-      "label": "Empty neighbouring squares",
+      "id": "rounds",
+      "label": "Rounds the computer runs",
       "kind": "slider",
-      "min": 0,
-      "max": 8,
+      "min": 1,
+      "max": 60,
       "step": 1,
-      "default": 0,
+      "default": 40,
       "unit": "",
-      "color": 2
-     },
-     {
-      "id": "need",
-      "label": "How much alike it wants",
-      "kind": "slider",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "default": 50,
-      "unit": "%",
       "color": 1
      }
     ],
     "outputs": [
      {
-      "id": "unlike",
-      "label": "Neighbours from the other group",
-      "expr": "8 - like - min(empty, 8 - like)",
-      "unit": "",
+      "id": "unhappy",
+      "label": "Households still unhappy at the end",
+      "expr": "sim_unhappy",
+      "unit": "%",
+      "scale": 100,
       "decimals": 0,
       "color": 3
      },
      {
-      "id": "occupied",
-      "label": "Occupied neighbouring squares",
-      "expr": "like + unlike",
+      "id": "rounds_run",
+      "label": "Rounds actually run",
+      "expr": "sim_rounds",
       "unit": "",
       "decimals": 0,
-      "color": 4
-     },
-     {
-      "id": "share",
-      "label": "Alike among occupied neighbours",
-      "expr": "occupied > 0 ? like / max(occupied, 1) : 1",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 1,
-      "color": 0
-     },
-     {
-      "id": "stays",
-      "label": "Stays? (1 = stays, 0 = moves)",
-      "expr": "share + 0.000001 >= need / 100 ? 1 : 0",
-      "unit": "",
-      "decimals": 0,
-      "color": 5
+      "color": 2
      }
     ],
     "visual": {
-     "type": "bars",
-     "bars": [
-      {
-       "id": "like_bar",
-       "label": "Alike among occupied neighbours",
-       "value": "share * 100",
-       "color": 0
-      },
-      {
-       "id": "need_bar",
-       "label": "How much alike it wants",
-       "value": "need",
-       "color": 1
-      }
-     ],
-     "min": 0,
-     "max": 100,
-     "unit": "%",
-     "decimals": 1
+     "type": "agents",
+     "kernel": "schelling",
+     "params": {
+      "size": 20,
+      "density": 0.9,
+      "share_a": 0.5,
+      "tolerance": "want",
+      "steps": "rounds",
+      "seed": 7
+     }
     }
    },
    "animation": {
     "steps": [
      {
-      "say": "Picture one household on a city grid, with eight squares around it.",
-      "focus": "occupied",
-      "ms": 2800
+      "say": "This grid is a small city. Each square is a home. The two colours are two groups of households, and blank squares are empty homes.",
+      "ms": 3800
      },
      {
-      "say": "This slider sets how many neighbours belong to the household's own group. The rest belong to the other group.",
+      "say": "This slider sets how many of its neighbours each household wants to be like itself.",
       "set": {
-       "like": 5
+       "want": 0.3
       },
-      "focus": "like",
+      "focus": "want",
       "ms": 3600
      },
      {
-      "say": "This slider leaves some squares empty. Empty squares count for neither group.",
+      "say": "This slider sets how many times the computer lets every household look around and, if it wants, move.",
       "set": {
-       "empty": 2
+       "rounds": 1
       },
-      "focus": "empty",
+      "focus": "rounds",
+      "ms": 3800
+     },
+     {
+      "say": "This box shows the share of households still unhappy when the computer stops.",
+      "focus": "unhappy",
+      "ms": 3200
+     },
+     {
+      "say": "This box counts the rounds that actually ran: the computer stops early once everyone is content.",
+      "focus": "rounds_run",
       "ms": 3400
-     },
-     {
-      "say": "The left bar shows what share of the neighbours actually there are alike.",
-      "focus": "like_bar",
-      "ms": 3000
-     },
-     {
-      "say": "The right bar is how much alike the household wants. The last box says whether it stays or moves.",
-      "set": {
-       "like": 3,
-       "empty": 0
-      },
-      "focus": [
-       "need_bar",
-       "stays"
-      ],
-      "ms": 4200
      }
     ]
    },
    "explore": {
-    "prompt": "Play with the household's surroundings and its demands. Find exactly where 'stay' flips to 'move'.",
+    "prompt": "The households start out very picky, and many end up unhappy. Change what they want, and let the computer apply the rule, so that almost everyone settles down, while households still care who their neighbours are.",
     "goals": [
      {
-      "text": "Keep the requirement at half or more, and make the household content even though it has fewer than 4 alike neighbours.",
-      "when": "like < 4 && need >= 50 && stays == 1",
+      "text": "Get fewer than 5% of households unhappy at the end, while each household still wants at least a quarter of its neighbours to be like it",
+      "when": "unhappy < 0.05 && want > 0.24",
       "solution": {
-       "empty": 2
+       "want": 0.3
       },
       "hints": [
-       "Alike neighbours stay below 4 here. What else changes the share alike?",
-       "Empty squares drop out of the count. Try leaving some neighbouring squares empty.",
-       "You need as many alike as unlike among the neighbours who are actually there."
-      ]
-     },
-     {
-      "text": "With 3 alike and 5 unlike neighbours and no empty squares, raise the requirement as high as it can go while the household still stays.",
-      "when": "like == 3 && empty == 0 && stays == 1 && need >= 37",
-      "solution": {
-       "need": 37
-      },
-      "hints": [
-       "Leave the neighbours as they are and work only on the requirement.",
-       "The household stays while its requirement is at or below its share alike. What is 3 out of 8 as a percentage?",
-       "The highest whole-percent requirement sits just under 3/8 written as a percentage."
+       "Which setting decides who counts as unhappy in the first place?",
+       "Lower the share of like neighbours wanted, a little at a time, and watch the unhappy box after each change.",
+       "Stay at a quarter or above: the unhappy share collapses somewhere between a quarter and one half."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Right. Empty squares are ignored, so the share alike is 2 of 6 occupied neighbours, exactly one third. Meeting the threshold is enough, so the household stays even though its group is the local minority.",
-     "incorrect": "The rule counts only occupied neighbouring squares and asks one question: is the share alike at least the threshold? Here it is 2 of 6, which is one third, so the household stays."
+     "correct": "Yes. The rule has exactly one action, moving into an empty home. Take away the empty homes and the rule can do nothing, however many rounds the computer runs.",
+     "incorrect": "It is tempting to think repeating the rule always fixes things. But the rule only says 'if unhappy, move to an empty home'. With no empty homes, no household can act, so the city stays exactly as it started."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start with Schelling's original rule: the household wants half or more of its neighbours alike. With 4 alike and 4 unlike, the share is exactly 50%, so it stays.",
+       "say": "Start gentle: each household wants only 20% of its neighbours to be like it, and the computer runs a single round.",
        "set": {
-        "like": 4,
-        "empty": 0,
-        "need": 50
+        "want": 0.2,
+        "rounds": 1
        },
-       "focus": "stays",
-       "ms": 4200
-      },
-      {
-       "say": "Swap one alike neighbour for an unlike one. Now 3 of 8 is 37.5%, below the bar, and the household moves.",
-       "set": {
-        "like": 3
-       },
-       "focus": [
-        "like_bar",
-        "stays"
-       ],
-       "ms": 4000
-      },
-      {
-       "say": "The household's requirement is called its threshold, written B_a. Wanting some neighbours from your own group is called in-group preference.",
-       "focus": "need_bar",
-       "ms": 4200
-      },
-      {
-       "say": "The eight squares around it form its Moore neighbourhood. Now leave two of them empty. Only 6 occupied squares are counted, and 3 of 6 is 50%, so the household stays.",
-       "set": {
-        "empty": 2
-       },
-       "focus": [
-        "occupied",
-        "like_bar"
-       ],
-       "ms": 5000
-      },
-      {
-       "say": "Fill the empty squares with unlike neighbours again, and lower the threshold to one third, the level some later studies use.",
-       "set": {
-        "empty": 0,
-        "need": 33
-       },
-       "focus": "need",
-       "ms": 4200
-      },
-      {
-       "say": "Now 3 alike of 8 is 37.5%. That clears one third, so the household stays.",
-       "focus": [
-        "like_bar",
-        "need_bar"
-       ],
+       "focus": "want",
        "ms": 3800
       },
       {
-       "say": "Drop to 2 alike: 25% is below one third, so it moves.",
-       "set": {
-        "like": 2
-       },
-       "focus": "stays",
-       "ms": 3400
+       "say": "Each household looks only at the eight homes touching it, its Moore neighbourhood. Empty homes there don't count either way.",
+       "focus": "want",
+       "ms": 4000
       },
       {
-       "say": "Back to 3 alike. With a one-third threshold, this household is content even though its own group is the minority around it. That is a very mild wish.",
-       "set": {
-        "like": 3
-       },
-       "focus": [
-        "like_bar",
-        "stays"
-       ],
+       "say": "It works out what share of those occupied neighbours are like it. If that share is below the wanted share, its satisfaction threshold, the household is unhappy and moves to a random empty home.",
+       "focus": "want",
        "ms": 4800
+      },
+      {
+       "say": "One round means every household checks once. A move can land a household somewhere no better, so a single round may not settle everyone. Check the unhappy box.",
+       "focus": "unhappy",
+       "ms": 4200
+      },
+      {
+       "say": "Let the computer repeat the rule. Each round, everyone checks again, and the unhappy ones move again.",
+       "set": {
+        "rounds": 40
+       },
+       "focus": "rounds",
+       "ms": 3800
+      },
+      {
+       "say": "With modest wants, the unhappy share falls to about zero, and the computer stops early. See how few rounds it needed.",
+       "focus": [
+        "unhappy",
+        "rounds_run"
+       ],
+       "ms": 4200
+      },
+      {
+       "say": "Now make households picky: each wants 80% of its neighbours like it. Same rule, same city.",
+       "set": {
+        "want": 0.8
+       },
+       "focus": "want",
+       "ms": 3800
+      },
+      {
+       "say": "Now many cannot find a home that pleases them. The computer uses every round and still leaves a big share unhappy. One simple rule, applied over and over, gives very different cities.",
+       "focus": [
+        "unhappy",
+        "rounds_run"
+       ],
+       "ms": 5200
       }
      ]
     },
-    "explanation": "Schelling's model gives each household one simple test. It looks at its neighbouring squares and ignores the empty ones. Then it works out what share of the rest belong to its own group. If that share meets its threshold, it stays. If not, it moves to a vacant spot that would satisfy it. In Schelling's original version the threshold was half or more alike. Later variants, such as the one Gauvin and colleagues study, use one third, where 3 alike out of 8 is already enough. This is a teaching rule, not a portrait of real families: real households also weigh price, schools and much more.",
-    "quote": "It posited that an agent, a model representation of a household that could be white or black, preferred to be on a square on a checkerboard in which half or more of the eight adjacent neighbors were of a similar color. In the economic context, this was seen as having utility one compared with having utility zero.",
-    "quote_where": "Introduction (unnumbered), paragraph on the original Schelling agent model",
+    "explanation": "Schelling's model gives every household the same single rule. Look at the occupied homes around you, and if too small a share are like you, move to an empty home. The computer applies that rule to everyone, then does it again, round after round, until everyone is content or it is told to stop. Schelling first did this by hand, moving pawns on a chessboard. The sources describe his setting differently: one says households wanted half or more of their neighbours alike, another says at least a third. The rule is the same; only the number differs. The model is deliberately bare: no prices, no discrimination, no other reasons to move, so it can show only what this one rule can do on its own.",
+    "quote": "It posited that an agent, a model representation of a household that could be white or black, preferred to be on a square on a checkerboard in which half or more of the eight adjacent neighbors were of a similar color.",
+    "quote_where": "Introduction (unnumbered), second paragraph",
+    "quote_source_id": "s2",
     "source_id": "s2",
     "source_ids": [
      "s1",
@@ -369,47 +319,19 @@
    "connect": {
     "equation": [
      {
-      "text": "B = "
-     },
-     {
-      "text": "like",
-      "link": "like"
-     },
-     {
-      "text": " ÷ ("
-     },
-     {
-      "text": "like",
-      "link": "like"
-     },
-     {
-      "text": " + "
-     },
-     {
-      "text": "unlike",
-      "link": "unlike"
-     },
-     {
-      "text": ");   stay if "
-     },
-     {
-      "text": "B",
-      "link": "share"
-     },
-     {
-      "text": " ≥ "
+      "text": "move if  B < "
      },
      {
       "text": "B_{a}",
-      "link": "need"
+      "link": "want"
      },
      {
-      "text": ", otherwise move"
+      "text": ",  where B = like neighbours ÷ occupied neighbours"
      }
     ],
-    "caption": "This is the model's rule written out; Wikipedia states it in words with the same symbols. B, the left bar, is the share of occupied neighbours from the household's own group, with empty squares left out of the bottom of the fraction. B_a, the right bar, is the household's threshold. The household stays when B is at least B_a, and otherwise moves to a vacant spot that would satisfy it."
+    "caption": "This is the rule as Wikipedia writes it. B_{a} (blue) is the wanted share, the satisfaction threshold set by the first slider. B is the share of a household's occupied neighbours that are like it; empty homes are ignored. If B falls below B_{a}, the household moves; otherwise it stays."
    },
-   "recap": "Each household compares the share alike among its occupied neighbours with its threshold: at or above, it stays; below, it moves.",
+   "recap": "One rule for everyone: count your like neighbours, and move if there are too few. The computer repeats it round after round, and how picky the rule is decides whether the city settles.",
    "activities": [
     {
      "id": "tour",
@@ -429,11 +351,6 @@
      "i": 0
     },
     {
-     "id": "goal_2",
-     "kind": "goal",
-     "i": 1
-    },
-    {
      "id": "use",
      "kind": "predict"
     },
@@ -448,27 +365,272 @@
    ]
   },
   {
-   "id": "feedback_cascade",
-   "title": "Why one move triggers the next",
-   "idea": "When a household leaves a mixed area for one where its group is larger, both neighbourhoods tilt further toward one group, which makes more households unhappy and sets off more moves.",
-   "role": "core",
-   "terms": [
-    {
-     "term": "feedback loop",
-     "means": "A chain where the result of one step feeds back and causes more of the same step"
-    }
-   ],
-   "recap": "Every move takes a like neighbour away from the people left behind and adds an unlike neighbour for the other group where it lands, so one move can push others below their rule and set off the next.",
-   "understand": {
-    "explanation": "In the last concept, one household followed a simple rule: stay if enough of its neighbours are like it, and move if not. But a move is never private. When a household leaves a mixed area for one where its group is larger, it takes one like neighbour away from the people it left behind. Where it arrives, it adds one unlike neighbour for the other group. Some of those people may now fall below their own required share and move too, which tilts more areas and unsettles more households. This is a feedback loop: each step's result feeds the next step. Clark and Fossett describe this loop in the standard two-group model and note that it stops only if most households strongly dislike being in the majority. It is a mechanism shown in models, not on its own proof of how real neighbourhoods change.",
-    "quote": "The neighborhood they leave becomes less attractive to members of their group and the neighborhood they enter becomes less attractive to members of the other group. Over successive iterations, homogeneous neighborhoods emerge.",
-    "quote_where": "Section 'Preferences, Tolerance, and the Basis of Simulation Models'",
-    "source_id": "s2",
-    "source_ids": [
-     "s2"
+   "id": "measuring_segregation",
+   "title": "Measuring how sorted a city is",
+   "idea": "Segregation can be measured as the average share of a household's neighbours who are from its own group: about 50% in a randomly mixed two-group city, rising toward 100% as the city sorts.",
+   "role": "prerequisite",
+   "predict": {
+    "question": "A different two-group city, also with equal groups, is simulated for many rounds. At the end, its average share of same-group neighbours reads 51%. What does that tell you?",
+    "options": [
+     "The city is about as mixed as if households had been placed at random",
+     "About half of the households live in segregated areas",
+     "About half of the households are still unhappy",
+     "The city is moderately segregated, halfway to complete sorting"
+    ],
+    "answer": 0,
+    "why": [
+     "Right: with two equal groups placed at random, each neighbour is close to a coin flip, so about 50% is the starting level. A reading of 51% means almost no sorting has happened.",
+     "Tempting, because 51% sounds like 'half the city'. But the measure is an average over every household. It does not split households into segregated and not segregated, and 50% is exactly what pure chance gives.",
+     "Tempting, because both numbers are shares of households. But happiness is a separate output. A city can read near 50% with everyone content (when nobody cares) or with many unhappy (when nobody can settle).",
+     "Tempting if you read the scale as running from 0% to 100%. For two equal groups, though, the measure starts near 50% when nothing has sorted. Halfway to complete sorting would be about 75%, not 51%."
     ]
    },
+   "terms": [
+    {
+     "term": "random baseline",
+     "means": "The value a measure takes when households are placed purely at random: here about 50% for two equal groups"
+    },
+    {
+     "term": "interface density",
+     "means": "The share of neighbour pairs that are from different groups; it is roughly 100% minus the same-group share"
+    }
+   ],
+   "model": {
+    "title": "The same small city, now with a score for how sorted it is",
+    "note": "Teaching model: the same 20×20 grid as before, with two equal groups and 10% of homes empty. Only unhappy households move, and each jumps to a random empty home. The score looks at every household, takes the share of its occupied neighbouring homes (up to eight) that hold its own group, and averages that share over the city; empty homes are ignored. Rogers and McKane's interface density counts neighbour pairs rather than households, so 100% minus the score is close to their measure but not identical. Numbers are illustrative, not the sources' data.",
+    "controls": [
+     {
+      "id": "want",
+      "label": "Share of like neighbours each household wants",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.8,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "rounds",
+      "label": "Rounds the computer runs",
+      "kind": "slider",
+      "min": 1,
+      "max": 60,
+      "step": 1,
+      "default": 40,
+      "unit": "",
+      "color": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "sorted",
+      "label": "Average share of neighbours from the same group",
+      "expr": "sim_segregation",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "unlike",
+      "label": "Average share of neighbours from the other group",
+      "expr": "1 - sorted",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "unhappy",
+      "label": "Households still unhappy at the end",
+      "expr": "sim_unhappy",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "rounds_run",
+      "label": "Rounds actually run",
+      "expr": "sim_rounds",
+      "unit": "",
+      "decimals": 0,
+      "color": 2
+     }
+    ],
+    "visual": {
+     "type": "agents",
+     "kernel": "schelling",
+     "params": {
+      "size": 20,
+      "density": 0.9,
+      "share_a": 0.5,
+      "tolerance": "want",
+      "steps": "rounds",
+      "seed": 7
+     }
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This is the same city as before: two groups of households in two colours, a few empty homes, and the same two sliders.",
+      "focus": [
+       "want",
+       "rounds"
+      ],
+      "ms": 5500
+     },
+     {
+      "say": "Here is what's new. This number visits every household, works out what share of its neighbours are its own colour, and averages that over the whole city.",
+      "focus": "sorted",
+      "ms": 7500
+     },
+     {
+      "say": "This one is its mirror image: the average share of neighbours from the other group. The two always add up to 100%.",
+      "focus": "unlike",
+      "ms": 6000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Use the score to read the city. First catch it while it is only lightly sorted, then push it to be clearly sorted.",
+    "goals": [
+     {
+      "text": "Let households want between a quarter and a little over half like neighbours, yet keep the city only lightly sorted: a same-group share under 65%.",
+      "when": "want >= 0.25 && want <= 0.55 && sorted < 0.65",
+      "solution": {
+       "want": 0.3,
+       "rounds": 1
+      },
+      "hints": [
+       "The score only changes when households move.",
+       "One slider decides how long households have had to move. What if they have barely started?",
+       "Keep the wish near the low end of the allowed band and pull the rounds slider right down toward its minimum."
+      ]
+     },
+     {
+      "text": "Sort the city so that more than 75% of the average household's neighbours are its own group, while households ask for no more than 55% like neighbours.",
+      "when": "sorted > 0.75 && want <= 0.55",
+      "solution": {
+       "want": 0.5,
+       "rounds": 60
+      },
+      "hints": [
+       "Two things push the score up: how picky households are, and how long they have to move.",
+       "Sorting needs time. Give households plenty of rounds before you read the score.",
+       "With plenty of rounds, try wishes in the upper part of the allowed range and watch the score clear 75%."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. For two equal groups, about 50% is the random baseline: the level chance alone produces. A reading of 51% means the city has barely sorted at all.",
+     "incorrect": "You probably read 51% on a scale where 0% means 'not sorted'. For two equal groups, though, pure chance already gives about 50%. The score climbs from there toward 100% as like settles beside like, so 51% means almost no sorting."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Begin with households that don't care at all, and give them all 60 rounds. Nobody is ever unhappy, so nobody moves.",
+       "set": {
+        "want": 0,
+        "rounds": 60
+       },
+       "focus": [
+        "want",
+        "unhappy"
+       ],
+       "ms": 6000
+      },
+      {
+       "say": "The city is just as it was dealt out: at random. Look at the score. It sits close to 50%.",
+       "focus": "sorted",
+       "ms": 5500
+      },
+      {
+       "say": "Why half? With two equal groups placed at random, each neighbour is close to a coin flip: equally likely to be either colour. This chance level is called the random baseline.",
+       "focus": "sorted",
+       "ms": 7500
+      },
+      {
+       "say": "Now let households want at least 30% like neighbours, but stop after a single round. The unhappy ones have made one move each, and the score has already risen above the baseline.",
+       "set": {
+        "want": 0.3,
+        "rounds": 1
+       },
+       "focus": [
+        "rounds",
+        "sorted"
+       ],
+       "ms": 7000
+      },
+      {
+       "say": "Give them 10 rounds. Unhappy households keep moving, and the score climbs further.",
+       "set": {
+        "rounds": 10
+       },
+       "focus": "sorted",
+       "ms": 5500
+      },
+      {
+       "say": "Its mirror image falls at the same time. Researchers call the share of neighbour pairs that come from different groups the interface density. It starts near one half and drops as the city sorts.",
+       "focus": "unlike",
+       "ms": 7500
+      },
+      {
+       "say": "Now run all 60 rounds. Same wish, more time to move. The same-group share has climbed well above half, and clumps of one colour are easy to see on the grid.",
+       "set": {
+        "rounds": 60
+       },
+       "focus": [
+        "sorted",
+        "unlike"
+       ],
+       "ms": 7000
+      }
+     ]
+    },
+    "explanation": "The measure looks at each household, finds the share of its occupied neighbouring homes that hold its own group, and averages that share over the whole city. When two equal groups are placed at random, each neighbour is close to a coin flip, so the average starts near 50%: the random baseline. As unhappy households move, like settles beside like, so the average climbs toward 100% and its mirror image, the interface density, falls toward 0. Rogers and McKane tracked interface density over time in five quite different versions of Schelling's model, all starting from random arrangements. Early on, all five followed one shared curve down. This is one way to measure sorting, not the only one: Gauvin and colleagues measure the size of single-colour clusters instead, and Schelling warned that such numbers describe an artificial checkerboard, not a real city.",
+    "quote": "If such a local measurement is taken at each site and the result averaged over the whole network, one obtains an aggregate measure for the level of segregation in the system.",
+    "quote_where": "Section 3.1, Measuring segregation",
+    "source_id": "s4",
+    "source_ids": [
+     "s4",
+     "s3",
+     "s1"
+    ]
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "x",
+      "link": "unlike"
+     },
+     {
+      "text": " = (edges between agents of opposite types) ÷ (edges between agents of any type),    "
+     },
+     {
+      "text": "same-group share",
+      "link": "sorted"
+     },
+     {
+      "text": " ≈ 1 − x"
+     }
+    ],
+    "caption": "The first part is Rogers and McKane's equation (3) for the interface density x. An 'edge' is a pair of next-door homes, both occupied. x matches the other-group share in the model. The second part is this model's reading: the same-group share is about 1 − x. It is only approximately equal because the model averages household by household, while x counts neighbour pairs."
+   },
+   "recap": "Average the share of each household's neighbours who are its own group: about 50% means randomly mixed (for two equal groups), and climbing toward 100% means the city is sorting.",
    "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
+    },
     {
      "id": "idea",
      "kind": "explain"
@@ -476,446 +638,463 @@
     {
      "id": "ex",
      "kind": "worked",
+     "title": "Scoring one household, then a whole city",
      "hypothetical": true,
-     "title": "One move on a small patch of the city",
      "steps": [
       {
-       "text": "Set the rule. Every household wants at least half of its occupied neighbouring squares to hold its own group. This is the 'half or more' rule from Schelling's original checkerboard. Empty squares don't count.",
-       "result": "Required share: 1/2"
+       "text": "Pick one household. Around it are eight homes: 5 hold its own group, 2 hold the other group, and 1 is empty."
       },
       {
-       "text": "Household M is Blue and lives in area A. Of its 8 neighbours, 3 are Blue and 5 are Orange.",
-       "result": "3 of 8 = 37.5%, below 1/2, so M moves"
+       "text": "Empty homes are ignored, so only 7 neighbours count.",
+       "result": "7 occupied neighbours"
       },
       {
-       "text": "M moves into an empty square in area B. Its new neighbours are 5 Blue and 3 Orange.",
-       "result": "5 of 8 = 62.5%, so M is now content"
+       "text": "Its same-group share is 5 out of 7.",
+       "result": "5 ÷ 7 ≈ 71%"
       },
       {
-       "text": "Back in A, Blue household X was one of M's neighbours. Before the move, X had 4 Blue and 4 Orange neighbours, and M was one of the Blues. M's square is now empty.",
-       "result": "Before: 4/8 = 50%, so X stays. After: 3/7 ≈ 43%, so X now wants to move"
+       "text": "A second household has 3 of its own group among 8 occupied neighbours.",
+       "result": "3 ÷ 8 ≈ 38%"
       },
       {
-       "text": "In B, Orange household Y sits beside M's new square. Before the move, Y had 3 Orange and 3 Blue neighbours, plus 2 empty squares. One of those empty squares now holds M.",
-       "result": "Before: 3/6 = 50%, so Y stays. After: 3/7 ≈ 43%, so Y now wants to move"
+       "text": "Do this for every household in the city and take the average. That single number is the city's score."
       },
       {
-       "text": "One unhappy household has become two. If X moves to a more Blue area and Y to a more Orange one, each of those moves can unsettle someone else in the same way.",
-       "result": "The chain can keep going"
+       "text": "In a city of two equal groups placed at random, each neighbour is about a coin flip, so these shares scatter around one half.",
+       "result": "City average ≈ 50%"
       }
      ],
-     "takeaway": "M's move solved M's own problem, but it pushed one Blue in A and one Orange in B below the line. Neither X nor Y changed what they wanted. Their neighbourhood changed around them."
+     "takeaway": "One household's share can be high or low by luck. The city's average is what tells you whether like has gathered with like beyond what chance gives."
     },
     {
-     "id": "who_next",
-     "kind": "choice",
-     "mode": "determinate",
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "est",
+     "kind": "estimate",
      "hypothetical": true,
-     "multi": true,
-     "question": "Stay with the same patch. Besides X and Y, M's move changed the neighbourhood for other households too. Select every group whose share of like neighbours went DOWN because of the move.",
-     "options": [
+     "question": "Now imagine a made-up city where one group is 80% of households and the other is 20%, all placed at random. For a household in the smaller group, about what share of its neighbours would be its own group?",
+     "answer": 20,
+     "tolerance": 5,
+     "unit": "%",
+     "explanation": "At random, each neighbour is a draw from the whole city, and 20% of the city is the smaller group, so its random baseline is about 20%. A household in the larger group would see about 80%. The 50% baseline holds only when the two groups are equal. So before you call a reading 'sorted', always compare it with what chance gives for that city."
+    }
+   ],
+   "builds_on": "rules_on_a_grid"
+  },
+  {
+   "id": "chain_reaction",
+   "title": "One move tips two neighbourhoods",
+   "idea": "When an unhappy household moves, its old neighbourhood loses one of its group and its new neighbourhood gains one, which can make other households unhappy and set off further moves.",
+   "role": "core",
+   "terms": [
+    {
+     "term": "feedback loop",
+     "means": "A chain in which the result of one step causes more of the same step, which causes more again"
+    },
+    {
+     "term": "cascade",
+     "means": "A run of moves in which each move triggers the next, like falling dominoes"
+    }
+   ],
+   "recap": "A move changes the mix in two places at once, so one household's choice can make others unhappy and keep the moving going.",
+   "understand": {
+    "explanation": "On the street you just watched, one household's move changed the mix of two blocks at once. Its old block lost one of its group, so the rest of that group there were more outnumbered. Its new block gained one, so the other group there were more outnumbered. When that pushes someone below the share they want, they move too, and their move changes two more blocks. A loop like this, where each step causes more of the same step, is called a feedback loop, and the run of moves it sets off is called a cascade. Clark and Fossett describe this loop in Schelling-style simulations, and Gauvin and colleagues note that one move can cost the old and new neighbours more than it gains the mover. This is how the model's rules behave: it shows how mild preferences could snowball, not proof that real households move this way.",
+    "quote": "However, their moves to satisfy this objective—that is, moving from an area where their group is in the minority to one where it is at least half—change the ethnic mix in both locations in a way that precipitates further movement. The neighborhood they leave becomes less attractive to members of their group and the neighborhood they enter becomes less attractive to members of the other group.",
+    "quote_where": "Section 'Preferences, Tolerance, and the Basis of Simulation Models'",
+    "source_id": "s2",
+    "source_ids": [
+     "s2",
+     "s3"
+    ]
+   },
+   "activities": [
+    {
+     "id": "street",
+     "kind": "stages",
+     "hypothetical": true,
+     "prompt": "Here is a made-up town with two blocks, Ash and Birch. Each has 10 homes. Some households are Blue and some are Orange. Each household follows one rule: it stays content if its colour makes up at least half of its block, counting itself. If its colour drops below half, it is unhappy and moves to the other block. This is far simpler than Schelling's grid, where each home has eight neighbours. Reveal the snapshots one at a time and watch who becomes unhappy.",
+     "stages": [
       {
-       "text": "Orange households in A, next to M's old square",
-       "feedback": "Not these. They lost an unlike (Blue) neighbour. With fewer Blues counted around them, their Orange share stays the same or rises. Area A tilts toward Orange, which suits them."
+       "label": "Start",
+       "text": "Ash: 3 Blue, 3 Orange, 4 empty homes. Every household there is content, because each colour is exactly half. Birch: 3 Blue, 4 Orange, 3 empty homes. The Oranges are 4 of 7 (57%), so they are content. The Blues are 3 of 7 (43%), so all three Blues in Birch are unhappy."
       },
       {
-       "text": "Blue households in A, next to M's old square",
-       "feedback": "Yes. They lost a like neighbour, just as X did. The area they live in becomes less attractive to their own group, so some of them may now fall below 1/2."
+       "label": "One move",
+       "text": "One unhappy Blue leaves Birch for Ash. Ash is now 4 Blue and 3 Orange, so the Oranges in Ash are 3 of 7 (43%). All three Ash Oranges, content a moment ago, are now unhappy. Birch is now 2 Blue and 4 Orange, so the two Blues left behind are 2 of 6 (33%): even more outnumbered than before."
       },
       {
-       "text": "Orange households in B, next to M's new square",
-       "feedback": "Yes. They gained an unlike neighbour, just as Y did. The area M entered becomes less attractive to the other group, so some Oranges there may now fall below 1/2."
+       "label": "The reply",
+       "text": "One unhappy Orange leaves Ash for Birch. Ash is now 4 Blue and 2 Orange, so the two remaining Oranges are 33%: worse off. Birch is now 2 Blue and 5 Orange, so the two Blues there are 2 of 7 (29%): worse off again. Each move made the next one more likely."
       },
       {
-       "text": "Blue households in B, next to M's new square",
-       "feedback": "Not these. They gained a like neighbour, so their Blue share rises. Area B tilts toward Blue, which suits them and makes it more appealing to other Blues."
+       "label": "The end",
+       "text": "Everyone who is outnumbered keeps moving. Finally Ash holds 6 Blue and no Orange, and Birch holds 7 Orange and no Blue. Every household is content, and the two blocks are completely sorted by colour."
+      },
+      {
+       "label": "Look back",
+       "text": "Ash began as a 50/50 block where nobody wanted to leave. Nobody in Ash changed their rule. Ash fell apart only because of moves that started in Birch."
       }
      ],
-     "answers": [
-      1,
-      2
+     "takeaway": "A single move changed two blocks at once: the block it left and the block it entered. Each change pushed other households below the share they wanted, so they moved too."
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "loop_order",
+     "kind": "order",
+     "prompt": "Put the steps of the loop you watched in order, starting from one unhappy household.",
+     "items": [
+      "A household finds that its group is below the share it wants nearby, so it becomes unhappy",
+      "It moves to a place where its group makes up a bigger share",
+      "The mix changes in both places: the old place has one fewer of its group, and the new place has one more",
+      "Some other households, in the old place or the new one, now fall below the share they want",
+      "Those households move too, and the loop starts again"
      ],
+     "explanation": "The loop closes because the last step feeds back into the first: the households that become unhappy are the next ones to move. The third step is the key one. A move never touches just one neighbourhood; it changes the mix where the household leaves and where it arrives. That is why Clark and Fossett say these moves 'precipitate further movement'.",
      "hints": [
-      "For each group, ask: did it lose a neighbour like itself, or gain a neighbour unlike itself?",
-      "M is Blue. Removing a Blue hurts the Blues left behind, and adding a Blue hurts the Oranges where M lands."
+      "Start with the feeling that makes someone want to move, and end with the step that brings you back to the start.",
+      "The change in the mix has to happen before anyone else becomes unhappy."
      ]
     },
     {
-     "id": "loop",
-     "kind": "trace",
+     "id": "why_ash",
+     "kind": "choice",
+     "mode": "determinate",
      "hypothetical": true,
-     "prompt": "Trace the route the moving rule takes, from one unhappy household to areas made up mostly of one group. Follow the arrows and skip the dead ends.",
-     "nodes": [
+     "question": "In the town of Ash and Birch, every Orange household in Ash was content at the start, yet they all left. What drove them out?",
+     "options": [
       {
-       "id": "u",
-       "label": "A household is below its required share",
-       "x": 12,
-       "y": 20
+       "text": "A Blue household arrived from Birch, which pushed the Orange share in Ash below half",
+       "feedback": "Right. The Ash Oranges kept the same rule throughout. The arrival changed the mix of their block, which put them below the share they wanted. That is the 'new neighbourhood' half of the loop."
       },
       {
-       "id": "m",
-       "label": "It moves where its group is larger",
-       "x": 40,
-       "y": 20
+       "text": "The Ash Oranges became less tolerant over time",
+       "feedback": "Not in this model. Every household kept the same rule from start to finish. What changed was the block around them, not their preference. The cascade needs no change of heart, only moves that change the mix."
       },
       {
-       "id": "d1",
-       "label": "The city becomes more mixed",
-       "x": 40,
-       "y": 50
+       "text": "Someone forced them out of Ash",
+       "feedback": "Nothing in these rules forces anyone to move. Each household moves only by its own choice. Clark and Fossett stress that such voluntary moves are a different thing from discrimination, though in real cities both can act together."
       },
       {
-       "id": "t",
-       "label": "Both areas tilt toward one group",
-       "x": 68,
-       "y": 20
-      },
-      {
-       "id": "d2",
-       "label": "Everyone is content after one move",
-       "x": 90,
-       "y": 20
-      },
-      {
-       "id": "n",
-       "label": "More households fall below their share",
-       "x": 85,
-       "y": 55
-      },
-      {
-       "id": "r",
-       "label": "Those households move too",
-       "x": 60,
-       "y": 82
-      },
-      {
-       "id": "h",
-       "label": "Areas drift toward one group",
-       "x": 28,
-       "y": 82
+       "text": "Ash was badly mixed from the start, so it was always going to sort",
+       "feedback": "Ash started as a 50/50 block where everyone was content and nobody wanted to leave. It sorted only after moves that began in Birch reached it. That is the point of the loop: a stable block can be tipped from outside."
       }
      ],
-     "edges": [
-      {
-       "from": "u",
-       "to": "m"
-      },
-      {
-       "from": "m",
-       "to": "d1"
-      },
-      {
-       "from": "m",
-       "to": "t"
-      },
-      {
-       "from": "t",
-       "to": "d2"
-      },
-      {
-       "from": "t",
-       "to": "n"
-      },
-      {
-       "from": "n",
-       "to": "r"
-      },
-      {
-       "from": "r",
-       "to": "t"
-      },
-      {
-       "from": "r",
-       "to": "h"
-      }
-     ],
-     "answer": [
-      "u",
-      "m",
-      "t",
-      "n",
-      "r",
-      "h"
-     ],
-     "path": true,
-     "explanation": "The move goes toward the household's own group, so it makes areas less mixed, not more. Each move tilts both the old and the new area, which pushes other households below their share, so contentment does not arrive after one move. Those households then move, and the arrow from 'move too' back to 'tilt' is the feedback loop that repeats. Clark and Fossett note that the drift toward one group stops only if most households strongly dislike being in the majority, and surveys suggest few do. This chain shows how preferences could drive segregation. It does not show that this is the only cause in real cities.",
+     "answer": 0,
      "hints": [
-      "Ask whether a move toward your own group makes either area more mixed.",
-      "One of the arrows loops back: moves cause tilting, and tilting causes more moves."
+      "Did any household's rule change during the story?",
+      "Look at the 'One move' snapshot: what happened to Ash's mix?"
+     ]
+    },
+    {
+     "id": "chain_stops",
+     "kind": "choice",
+     "mode": "determinate",
+     "hypothetical": true,
+     "question": "A new case: in another made-up town, households are content as long as their colour makes up at least 20% of their block. One Blue household moves into a block of 3 Blue and 3 Orange. Will a cascade start?",
+     "options": [
+      {
+       "text": "No. The Oranges become 3 of 7 (43%), still above 20%, so nobody else becomes unhappy and the chain stops",
+       "feedback": "Right. A move changes two places, but the loop only continues if that change pushes someone below the share they want. Here the Oranges are still well above 20%, so nobody else moves. The chain needs each step to tip someone over their limit."
+      },
+      {
+       "text": "Yes. Every move changes the mix in two places, so a chain always follows",
+       "feedback": "Every move does change the mix in two places, but a change only matters if it pushes someone below the share they want. At a 20% limit, one new arrival leaves the Oranges at 43%, still content. A changed mix is not enough on its own to keep the chain going."
+      },
+      {
+       "text": "Yes, but only the Blues will move, because their block got more crowded",
+       "feedback": "In this model the rule is about the share of your own colour, not about crowding. The Blues gained a member, which only makes them more content. Nobody's share falls below 20%, so nobody moves."
+      }
+     ],
+     "answer": 0,
+     "hints": [
+      "Work out the Orange share after the Blue household arrives.",
+      "Compare that share with the 20% the households want."
      ]
     }
    ]
   },
   {
-   "id": "tipping_at_group_share",
-   "title": "The tipping line: wanting more than your group's share",
-   "idea": "In a perfectly mixed city each household's like share equals its group's share of the city, so everyone can be satisfied only while the required share stays at or below that group share.",
+   "id": "tipping_threshold",
+   "title": "The tipping point near one third",
+   "idea": "As the share of like neighbours each household wants rises past about one third, the city flips sharply from staying mixed to segregating strongly; it does not change gradually.",
    "role": "core",
    "predict": {
-    "question": "A new city has three groups making up 65%, 25% and 10% of households. Every household wants at least 30% like neighbours. If this city were perfectly mixed, which groups would be left discontent?",
+    "question": "Two made-up towns each have two equal-sized groups. In Town A, the share of like neighbours households want rises from 20% to 40%. In Town B, it rises from 50% to 70%. Both wishes rose by 20 points. According to the sources' models, which town's sorting rises more?",
     "options": [
-     "Only the 10% group",
-     "The 10% group and the 25% group",
-     "Nobody, because 30% is a mild wish",
-     "Only the 65% group"
+     "Town A",
+     "Town B",
+     "Both rise by about the same amount",
+     "Neither changes much"
     ],
-    "answer": 1,
+    "answer": 0,
     "why": [
-     "The smallest group stands out, but the 25% group also gets only 25% like neighbours in a mixed city, which is still below the 30% it wants.",
-     "Correct: in a perfectly mixed city each household's like share equals its group's share. 10% and 25% both fall short of 30%, and only the 65% group clears it.",
-     "Whether a wish is mild depends on the group's size. 30% is easy for a group that is 65% of the city and impossible to meet by mixing for groups of 25% or 10%.",
-     "The big group is the one with room to spare: mixing gives it 65% like neighbours, far above 30%. The trouble is with the smaller groups."
+     "Correct: Town A's change crosses the threshold near one third, where the city flips from mixed to strongly sorted. Town B was already past it, and in the sources extra wishes there add little.",
+     "It is tempting to think stronger wishes always do more harm. Town B was already past the threshold and already sorted, so it has little room left to change.",
+     "This is the 'gradual dial' picture: equal steps in the wish give equal steps in sorting. The sources find a jump near the threshold and small changes beyond it.",
+     "Town B does change little, but Town A crosses the threshold, and its sorting leaps."
     ]
    },
    "terms": [
     {
-     "term": "preference target",
-     "means": "The share of like neighbours a household is aiming for before it is content"
+     "term": "tipping point",
+     "means": "The setting where a small change in individual wishes flips the whole city from one pattern (mixed) to another (sorted)"
     },
     {
-     "term": "population representation",
-     "means": "A group's share of all the households in the city"
-    },
-    {
-     "term": "even distribution",
-     "means": "A perfectly mixed city, where every neighbourhood has the same group mix as the city as a whole"
+     "term": "segregation threshold",
+     "means": "The share of like neighbours wanted at which the tipping point happens; Schelling found it near one third for two equal groups"
     }
    ],
    "model": {
-    "title": "Like neighbours you'd get in a perfectly mixed city vs. like neighbours wanted",
-    "note": "Teaching model: it assumes a perfectly mixed city where every household's neighbourhood exactly matches the citywide mix, and that every household in the group wants the same share. Real neighbourhoods are small and their mix wobbles around the city average, so this shows only the arithmetic ceiling, not what a simulation would do. The 33%, 20% and 40% figures are Clark and Fossett's simulation settings. Other numbers are illustrative.",
+    "title": "The same small city, now with a score for how sorted it is",
+    "note": "Teaching model: the same 20×20 grid as before, with two equal groups and 10% of homes empty. Only unhappy households move, and each jumps to a random empty home. Schelling moved them to the nearest home that would satisfy them, and Gauvin and colleagues let anyone move, but only to a satisfying home. The score averages, over all households, the share of occupied neighbouring homes (up to eight) that hold the household's own group. Because a household has at most eight neighbours, only certain wishes really differ: wanting 30% and wanting 35% often mean the same thing, at least 3 like neighbours out of 8. On this small grid with random moves, the score already rises somewhat at low wishes, so the jump is softer than in the sources' models. Where the jump falls also depends on the rules: it is near one third in Schelling's classic set-up and near one quarter in Gauvin and colleagues' variant. At very high wishes, households in this simplified model can keep moving without settling; this concept does not look at that range. Numbers are illustrative, not the sources' data.",
     "controls": [
      {
-      "id": "share",
-      "label": "Your group's share of the city",
+      "id": "want",
+      "label": "Share of like neighbours each household wants",
       "kind": "slider",
-      "min": 5,
-      "max": 95,
-      "step": 1,
-      "default": 33,
-      "unit": "%",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.8,
+      "unit": "",
       "color": 0
      },
      {
-      "id": "need",
-      "label": "Like neighbours each household wants",
+      "id": "rounds",
+      "label": "Rounds the computer runs",
       "kind": "slider",
-      "min": 0,
-      "max": 80,
-      "step": 5,
-      "default": 20,
-      "unit": "%",
+      "min": 1,
+      "max": 60,
+      "step": 1,
+      "default": 40,
+      "unit": "",
       "color": 1
      }
     ],
     "outputs": [
      {
-      "id": "gap",
-      "label": "Room to spare (percentage points)",
-      "expr": "share - need",
+      "id": "sorted",
+      "label": "Average share of neighbours from the same group",
+      "expr": "sim_segregation",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "unlike",
+      "label": "Average share of neighbours from the other group",
+      "expr": "1 - sorted",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "gain",
+      "label": "Sorting above a random mix",
+      "expr": "sorted - 0.5",
+      "unit": " pts",
+      "scale": 100,
+      "decimals": 0,
+      "color": 6
+     },
+     {
+      "id": "unhappy",
+      "label": "Households still unhappy at the end",
+      "expr": "sim_unhappy",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 3
+     },
+     {
+      "id": "rounds_run",
+      "label": "Rounds actually run",
+      "expr": "sim_rounds",
       "unit": "",
       "decimals": 0,
       "color": 2
-     },
-     {
-      "id": "content",
-      "label": "Everyone in the group content? (1 yes, 0 no)",
-      "expr": "need <= share ? 1 : 0",
-      "unit": "",
-      "decimals": 0,
-      "color": 3
      }
     ],
     "visual": {
-     "type": "bars",
-     "bars": [
-      {
-       "id": "mixed_bar",
-       "label": "Like neighbours in a perfectly mixed city",
-       "value": "share",
-       "color": 0
-      },
-      {
-       "id": "want_bar",
-       "label": "Like neighbours wanted",
-       "value": "need",
-       "color": 1
-      }
-     ],
-     "min": 0,
-     "max": 100,
-     "unit": "%",
-     "decimals": 0
+     "type": "agents",
+     "kernel": "schelling",
+     "params": {
+      "size": 20,
+      "density": 0.9,
+      "share_a": 0.5,
+      "tolerance": "want",
+      "steps": "rounds",
+      "seed": 7
+     }
     }
    },
    "animation": {
     "steps": [
      {
-      "say": "Picture a city where every neighbourhood has exactly the same mix of groups as the whole city.",
-      "focus": "mixed_bar",
-      "ms": 3500
+      "say": "Same city as before: two equal groups, a few empty homes, and the score for how sorted the city ends up.",
+      "focus": "sorted",
+      "ms": 5000
      },
      {
-      "say": "This slider sets how big your group is. In that mixed city, your like neighbours simply equal your group's share, so the first bar follows it.",
+      "say": "This slider is still how many like neighbours each household wants. This time we will sweep it slowly, from low to high.",
       "set": {
-       "share": 50
+       "want": 0.1
       },
-      "focus": "share",
-      "ms": 4500
+      "focus": "want",
+      "ms": 5500
      },
      {
-      "say": "This slider sets how many like neighbours each household wants. That is the second bar.",
-      "set": {
-       "need": 40
-      },
-      "focus": "need",
-      "ms": 4000
-     },
-     {
-      "say": "These boxes show how much room is left over, and whether everyone in the group would be content.",
-      "focus": [
-       "gap",
-       "content"
-      ],
-      "ms": 4000
-     },
-     {
-      "say": "Let's go back to the city from the paper.",
-      "set": {
-       "share": 33,
-       "need": 20
-      },
-      "focus": "mixed_bar",
-      "ms": 2500
+      "say": "One new box: how many points the score sits above a randomly mixed city. A random mix scores about 50%, so this box shows how far the city has sorted beyond that.",
+      "focus": "gain",
+      "ms": 5500
      }
     ]
    },
    "explore": {
-    "prompt": "Find the line where a perfectly mixed city stops working for this group, from both sides: by changing the wish, then by changing the group's size.",
+    "prompt": "Sweep the wish slider one notch at a time and watch the sorting score. Look for the stretch where the score climbs fastest, and compare it with how much the later notches add.",
     "goals": [
      {
-      "text": "Leave the group at one third of the city. Make the wish just too strict for a perfectly mixed city, using the smallest step past the line that you can.",
-      "when": "abs(share - 33) < 0.5 && need > share && need <= 35",
+      "text": "Give households a modest but real wish for like neighbours (not a tiny one), and keep the city under 65% sorted. Then see how high the wish can go before this fails.",
+      "when": "want >= 0.15 && want < 0.3 && sorted < 0.65",
       "solution": {
-       "need": 35
+       "want": 0.2
       },
       "hints": [
-       "Which bar has to end up taller than the other for the mixed city to fail?",
-       "Raise the wish one notch at a time and watch the content box.",
-       "Stop at the first notch where the second bar just pokes above the first."
+       "Start low and raise the wish one notch at a time.",
+       "Watch the sorting score. It stays fairly close to the random mix only while the wish is small.",
+       "The settings that keep the score under 65% sit well below one third."
       ]
      },
      {
-      "text": "Put the wish back where it started and leave it there. Change the group's size so a perfectly mixed city contents the group with nothing at all to spare.",
-      "when": "abs(need - 20) < 0.5 && abs(gap) < 0.5",
+      "text": "Make the city strongly sorted (more than 70% like neighbours), while every household would still be content to be outnumbered on its own block.",
+      "when": "want < 0.5 && sorted > 0.7",
       "solution": {
-       "share": 20
+       "want": 0.45
       },
       "hints": [
-       "Room to spare is the gap between the two bars.",
-       "Move the group-size slider, not the wish.",
-       "You want the first bar exactly level with the second."
+       "'Content to be outnumbered' means wanting less than half of your neighbours to be like you. Which side of the threshold do you need?",
+       "Go past one third, but keep the wish under half.",
+       "Try wishes in the upper part of the range between one third and one half."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Right. A mixed city hands every household its group's share of like neighbours, so any group smaller than 30% falls short. Clark and Fossett note that unequal group sizes like 65/25/10 produced higher segregation in their simulations than equal groups did.",
-     "incorrect": "The test is not whether a wish sounds mild. It is whether the wish fits under the group's share of the city. In a perfectly mixed city the 25% and 10% groups get only 25% and 10% like neighbours, both short of 30%. Clark and Fossett report higher segregation with a 65/25/10 split than with equal groups."
+     "correct": "Right. In the sources' models, sorting is not a dial that turns smoothly with the wish. The big change happens when the wish crosses the threshold near one third. Town A crosses it; Town B was already past it.",
+     "incorrect": "You probably pictured sorting rising steadily with how much people want. In the sources' models it stays low at small wishes, jumps near the threshold, and then changes little. So a 20-point rise that crosses the threshold matters far more than one that starts beyond it."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Here is Clark and Fossett's city: three equal groups, each about one third. Each household wants 20% like neighbours. In a perfectly mixed city it gets 33%, so it is content with 13 points to spare.",
+       "say": "Start with nobody caring who lives next door. No one is unhappy, no one moves, and the score sits at the random baseline of about 50%.",
        "set": {
-        "share": 33,
-        "need": 20
+        "want": 0,
+        "rounds": 40
        },
-       "focus": "gap",
-       "ms": 4500
+       "focus": "sorted",
+       "ms": 3200
       },
       {
-       "say": "The paper calls that 20% wish a preference target: the share of like neighbours a household is aiming for.",
-       "focus": "want_bar",
-       "ms": 3500
+       "say": "Now each household wants a fifth of its neighbours to be like it. A few households move, and the score rises somewhat above 50%. The grid still looks well mixed.",
+       "set": {
+        "want": 0.2
+       },
+       "focus": "gain",
+       "ms": 3600
       },
       {
-       "say": "Raise the target to 30%. It is still under 33%, so mixing still works, but the spare room has shrunk to 3 points.",
+       "say": "A quarter. Watch the score and the grid: some sorting, but no large one-colour areas yet.",
        "set": {
-        "need": 30
+        "want": 0.25
        },
-       "focus": "gap",
+       "focus": "sorted",
+       "ms": 3400
+      },
+      {
+       "say": "Now just past one third. Many more households start out unhappy, their moves trigger other moves, and one-colour patches spread across the grid.",
+       "set": {
+        "want": 0.35
+       },
+       "focus": "sorted",
+       "ms": 4200
+      },
+      {
+       "say": "When a small change in wishes flips the whole city, that is a tipping point. Schelling found this segregation threshold near one third for two equal groups. Here the flip is softer than in his models.",
+       "focus": "gain",
+       "ms": 5000
+      },
+      {
+       "say": "Now ask for half. Compare how much the score changes here with how much it changed around one third.",
+       "set": {
+        "want": 0.5
+       },
+       "focus": "sorted",
        "ms": 4000
       },
       {
-       "say": "Now 40%, close to what surveys find. The wanted bar passes the mixed-city bar. In a perfectly mixed city nobody in this group gets what they want, and with three equal groups that means nobody at all.",
+       "say": "Go back to just past one third. Nobody here asked to be in the majority, yet the city is clearly sorted. A modest wish was enough.",
        "set": {
-        "need": 40
+        "want": 0.35
        },
-       "focus": "content",
-       "ms": 5000
-      },
-      {
-       "say": "The group's share of the city is its population representation. A city where every neighbourhood matches that mix is an even distribution. The line sits where the target equals the population representation.",
-       "focus": [
-        "mixed_bar",
-        "want_bar"
-       ],
-       "ms": 5000
-      },
-      {
-       "say": "Make the group 40% of the city with a 40% target. The bars are level: content, with zero to spare. Any wobble in a real neighbourhood would push some under, and the paper counts reaching the share as tipping.",
-       "set": {
-        "share": 40,
-        "need": 40
-       },
-       "focus": "gap",
-       "ms": 5500
-      },
-      {
-       "say": "Same 40% target, bigger group: at half the city the bar clears it easily. Whether a wish can be met by mixing depends on the group's size, not just on the wish.",
-       "set": {
-        "share": 50,
-        "need": 40
-       },
-       "focus": "mixed_bar",
-       "ms": 5000
+       "focus": "gain",
+       "ms": 4400
       }
      ]
     },
-    "explanation": "If a city is perfectly mixed, every household's share of like neighbours is simply its group's share of the city. So mixing can satisfy a group only while its target is no higher than that share. Clark and Fossett used this to explain their three-group simulations, with each group about a third of the city. Targets of 20% left segregation low, because households could be content in neighbourhoods that matched the city's mix. Targets of 40% or more sent it high. This is only a ceiling: real neighbourhoods are small and never exactly match the citywide average, so a city can drift apart even below the line, and the simulations also built in income and housing-quality goals.",
-    "quote": "The crucial transition occurs when preference targets reach or exceed a group's population representation (22). Thus, high levels of segregation emerge when targets for same-group contact shift from 20% to 40%. Segregation is low when households seek 20% same-group contact because all households can be satisfied in neighborhoods that match the city's ethnic mix.",
-    "quote_where": "Simulations section",
+    "explanation": "At low wishes, few households are unhappy, so the city stays fairly mixed. Once the wish nears and passes about one third, many households start out unhappy at once. Their moves set off further moves, and the city sorts strongly. In the sources, asking for more past that point adds comparatively little. Schelling found this threshold near one third for two equal groups. Clark and Fossett's three-group simulations found high segregation appearing when targets rose from 20% to 40%, with little extra from higher targets, and Gauvin and colleagues found sharp jumps in their own variant. Where the jump falls, and how sharp it looks, depends on the rules: in Gauvin's variant it sits nearer one quarter, and on this small grid with random moves it is softer. These are simulations of imagined cities, not measurements of real ones.",
+    "quote": "Perhaps surprising to some, raising targets for same-group contact to even higher levels has minimal additional impact on the overall level of segregation or the speed with which it emerges. This is anticipated by previous studies (2, 10, 11, 12, 22) that note that, once certain critical thresholds are crossed, preferences tend to drive local areas toward homogeneity.",
+    "quote_where": "Clark & Fossett, Simulations section",
     "source_id": "s2",
     "source_ids": [
-     "s2"
+     "s1",
+     "s2",
+     "s3"
     ]
+   },
+   "check": {
+    "kind": "model",
+    "task": "Put the model in a state where households ask for no more than about a third of like neighbours, yet the city is more than 65% sorted.",
+    "when": "want <= 0.35 && sorted > 0.65",
+    "solution": {
+     "want": 0.35
+    },
+    "hint": "Don't look for a high wish. Look for the notch near one third where one-colour patches spread across the grid.",
+    "misconception": "Strong segregation needs strong wishes, with sorting growing step by step as households ask for more. In fact a modest wish near the threshold is already enough to sort the city strongly."
    },
    "connect": {
     "equation": [
      {
-      "text": "everyone content in a perfectly mixed city",
-      "link": "content"
+      "text": "B_{a}",
+      "link": "want"
      },
      {
-      "text": "  ⟺  "
+      "text": " ≥ B_{seg} ≈ 1/3  ⇒  "
      },
      {
-      "text": "share wanted",
-      "link": "need"
+      "text": "segregated",
+      "link": "sorted"
      },
      {
-      "text": " ≤ "
-     },
-     {
-      "text": "group's share of the city",
-      "link": "share"
+      "text": ";   B_{a} < B_{seg}  ⇒  stays close to random"
      }
     ],
-    "caption": "This is the model's rule; the paper states it in words, not as an equation. The second bar is the preference target and the first is the population representation. The content box turns to 1 exactly when the target fits under the group's share."
+    "caption": "B_{a} is the share of like neighbours each household wants: the wish slider. B_{seg} is the segregation threshold Schelling found for two equal groups, about one third. Below the threshold the city stays near random; past it, the sorting score jumps. The rule follows the Wikipedia summary of Schelling's result; the exact threshold shifts in other variants."
    },
-   "recap": "A perfectly mixed city can content a group only if the share of like neighbours it wants is no bigger than the group's share of the city.",
+   "recap": "In Schelling-style models, sorting does not grow smoothly with what people want: it stays low at small wishes, jumps once wishes pass about one third, and then changes little.",
    "activities": [
     {
      "id": "tour",
@@ -924,6 +1103,32 @@
     {
      "id": "how",
      "kind": "walk"
+    },
+    {
+     "id": "cmp",
+     "kind": "compare",
+     "prompt": "Three cities, identical except for the wish. Look at the grid and the sorting score in each.",
+     "cases": [
+      {
+       "label": "Wanting a quarter",
+       "values": {
+        "want": 0.25
+       }
+      },
+      {
+       "label": "Wanting just over a third",
+       "values": {
+        "want": 0.35
+       }
+      },
+      {
+       "label": "Wanting half",
+       "values": {
+        "want": 0.5
+       }
+      }
+     ],
+     "takeaway": "Compare the change from a quarter to just over a third with the change from a third to a half. The sources find that the big change happens around the threshold, not steadily along the way."
     },
     {
      "id": "idea",
@@ -941,79 +1146,323 @@
     },
     {
      "id": "use",
-     "kind": "predict"
+     "kind": "predict",
+     "hypothetical": true
     },
     {
      "id": "why",
      "kind": "reveal"
     },
     {
-     "id": "eq",
-     "kind": "connect"
+     "id": "test",
+     "kind": "check"
+    }
+   ],
+   "builds_on": "measuring_segregation"
+  },
+  {
+   "id": "three_regimes",
+   "title": "Frozen, segregated or mixed: two settings decide together",
+   "idea": "Whether the city freezes, segregates or stays mixed depends on two settings together: how many unlike neighbours households tolerate and how many homes are empty.",
+   "role": "contribution",
+   "terms": [
+    {
+     "term": "tolerance",
+     "means": "The largest share of unlike neighbours a household accepts before it wants to move. Accepting at most half unlike is the same as wanting at least half alike."
+    },
+    {
+     "term": "vacancy density",
+     "means": "The share of homes in the simulated city that are empty"
+    },
+    {
+     "term": "frozen state",
+     "means": "A city that stays mixed because no empty home is acceptable to its households, so nobody can move"
+    },
+    {
+     "term": "dilute segregation",
+     "means": "Small one-group patches scattered among many empty homes, with the two groups still kept apart"
+    }
+   ],
+   "recap": "Tolerance and empty homes act together: very strict freezes the city, middling segregates it, very tolerant keeps it mixed, and many empty homes thin segregation into patches.",
+   "understand": {
+    "explanation": "Gauvin and colleagues simulated a city in which each household caps the share of unlike neighbours it will accept, which they call its tolerance, and moves only into an empty home that meets that cap. They also varied the share of homes left empty, the vacancy density. When few homes are empty and tolerance is low, no empty home is acceptable, so nobody can move and the city stays mixed even though clusters would suit households better: a frozen state. At middle tolerance households can relocate, and the city splits into two large one-colour regions; at high tolerance almost every empty home is acceptable, the moves leave the city disordered, and it stays mixed. More empty homes lower the tolerance at which segregation appears, and at high vacancy densities the groups form many small one-colour patches in a sea of empty homes, which is dilute segregation. These are simulation results for one set of rules, mostly on a 50 by 50 grid, and the authors suggest the frozen state would probably be unstable in a more realistic model where discontented households could move to other cities.",
+    "quote": "For not too large values of the vacancy density there are two such transitions: At low tolerance, the system goes from a frozen state due to the dynamics that does not allow any movement, to a segregated state. At higher tolerance the system becomes mixed again.",
+    "quote_where": "Section 2.2 (Gauvin, Vannimenus & Nadal)",
+    "source_id": "s3",
+    "source_ids": [
+     "s3",
+     "s4"
+    ]
+   },
+   "activities": [
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "cmp_tolerance",
+     "kind": "compare",
+     "prompt": "Hold the share of empty homes low and change only how tolerant households are. These three cases summarise what Gauvin and colleagues report.",
+     "cases": [
+      {
+       "label": "Low tolerance",
+       "text": "Households accept very few unlike neighbours. In the randomly mixed starting city, no empty home is acceptable to them, so they cannot move. The city stays close to how it began: mixed, with no large one-colour clusters, even though such clusters would suit the households better. This is the frozen state."
+      },
+      {
+       "label": "Middle tolerance",
+       "text": "Now about half of the empty homes are acceptable to a given group, so households can relocate. The city separates into two large one-colour regions. In the paper's example, with 5% of homes empty and a tolerance of 0.5, the share of satisfied households was very close to 1 after about 10 time steps, and two large, convoluted clusters had already formed. The authors report that the segregated region reaches tolerances as high as 3/4."
+      },
+      {
+       "label": "High tolerance",
+       "text": "Almost every empty home is acceptable. In this version even satisfied households can move, and when almost all moves are permitted the city ends up disordered and mixed. This mixed city differs from the frozen one: here moving is easy, not impossible."
+      }
+     ],
+     "takeaway": "Segregation sits in a middle band of tolerance. Very low tolerance blocks movement; very high tolerance lets moves leave the city disordered. Both ends look mixed, but for opposite reasons."
+    },
+    {
+     "id": "cmp_vacancies",
+     "kind": "compare",
+     "prompt": "Now change how many homes stand empty and see how the regions shift.",
+     "cases": [
+      {
+       "label": "Few empty homes",
+       "text": "With few vacancies, households need a relatively high tolerance before any empty home becomes acceptable. Below that, the city stays frozen."
+      },
+      {
+       "label": "More empty homes (under 46%)",
+       "text": "The paper found that the more homes are empty, the lower the tolerance at which segregation appears and the wider the range of tolerance over which it lasts. Above 46% empty, the line between frozen and segregated no longer exists. Near that line, the same settings could end either frozen or segregated, depending on the order in which households were chosen to move."
+      },
+      {
+       "label": "High share of empty homes",
+       "text": "At high vacancy densities, the groups are not mixed, but they form many small one-colour clusters in a sea of vacancies: dilute segregation. The switch from segregated to mixed was abrupt below 26% empty, and it became continuous at about 50% empty. Above about 56%, the authors found no clear transition: only a gradual change from dilute segregation to mixing as tolerance rises."
+      }
+     ],
+     "takeaway": "Neither setting decides on its own. The same tolerance can freeze, segregate or thin into scattered patches, depending on how many homes are empty."
+    },
+    {
+     "id": "match_regimes",
+     "kind": "match",
+     "prompt": "Match each pair of settings to the outcome Gauvin and colleagues report, and to the reason for it.",
+     "pairs": [
+      {
+       "id": "p1",
+       "text": "Very low tolerance, few empty homes",
+       "target": "Frozen: no empty home is acceptable, so nobody moves and the city stays mixed",
+       "feedback": "Right. The city looks mixed only because no move is possible, not because households want it that way."
+      },
+      {
+       "id": "p2",
+       "text": "Middle tolerance, few empty homes",
+       "target": "Segregated: households can find acceptable homes, and the city splits into two big one-colour regions",
+       "feedback": "Right. In this band about half of the empty homes are acceptable to a given group, and segregation emerges."
+      },
+      {
+       "id": "p3",
+       "text": "Very high tolerance",
+       "target": "Mixed: almost every empty home is acceptable, and the moves leave the city disordered",
+       "feedback": "Right. When almost all moves are permitted, the typical arrangement is a disordered, mixed one."
+      },
+      {
+       "id": "p4",
+       "text": "Low tolerance, a high share of empty homes (well over half)",
+       "target": "Dilute segregation: many small one-colour clusters in a sea of vacancies",
+       "feedback": "Right. With so many empty homes, large clusters do not form, but the two groups still do not mix."
+      }
+     ],
+     "takeaway": "Together these four pairs form a rough map: tolerance on one side, empty homes on the other, and a different outcome in each region.",
+     "hints": [
+      "Ask first whether households can find any empty home they accept.",
+      "Very low tolerance blocks moves; very high tolerance allows almost all of them.",
+      "A very high share of empty homes stops large clusters from forming."
+     ]
+    },
+    {
+     "id": "choice_unfreeze",
+     "kind": "choice",
+     "mode": "determinate",
+     "hypothetical": true,
+     "question": "A simulated city has few empty homes, and its households' tolerance is just low enough to leave it frozen. According to Gauvin and colleagues, which single change is most likely to let it segregate?",
+     "options": [
+      {
+       "text": "Leave more homes empty, while keeping it below 46%",
+       "feedback": "Supported. The paper reports that as the share of empty homes rises, the frozen-to-segregated transition occurs at lower tolerance. A city just on the frozen side can cross into segregation."
+      },
+      {
+       "text": "Make households even less tolerant",
+       "feedback": "Not supported. Stricter households find even fewer acceptable empty homes, so the city stays frozen."
+      },
+      {
+       "text": "Make households tolerate almost any mix of neighbours",
+       "feedback": "Not supported. This overshoots. At very high tolerance almost every move is permitted and the city ends up mixed. A moderate rise in tolerance could produce segregation, but near-total tolerance skips past the segregated band."
+      },
+      {
+       "text": "Nothing: a frozen city can never segregate",
+       "feedback": "Not supported. Freezing depends on the settings. Changing tolerance or the share of empty homes can move the city into the segregated region."
+      }
+     ],
+     "answer": 0,
+     "hints": [
+      "Freezing happens because no empty home is acceptable.",
+      "How does the share of empty homes shift the tolerance at which segregation appears?"
+     ]
+    },
+    {
+     "id": "choice_two_mixed",
+     "kind": "choice",
+     "mode": "determinate",
+     "hypothetical": true,
+     "question": "Two simulated cities, both with few empty homes, end up looking equally mixed. One has very low tolerance and the other very high tolerance. What does the paper say about them?",
+     "options": [
+      {
+       "text": "They are the same: a mixed city is a mixed city",
+       "feedback": "Not supported. The authors write that even if both final arrangements are mixed, the nature of the two states is not the same. That is why they added a second measure to tell them apart."
+      },
+      {
+       "text": "In the strict city no empty home is acceptable, so nobody can move; in the tolerant city almost every move is permitted, and the result is disordered",
+       "feedback": "Supported. The paper tracked the share of empty homes a group would refuse. It is near 1 below the first transition and near 0 at high tolerance, which separates the two mixed cases."
+      },
+      {
+       "text": "The strict city is mixed because its households prefer diversity",
+       "feedback": "Not supported. The paper notes that large one-colour clusters would be more satisfactory for these households. They stay mixed because they cannot reach any acceptable home."
+      }
+     ],
+     "answer": 1,
+     "hints": [
+      "Ask whether each city's households could move if they wanted to.",
+      "One city blocks almost every move; the other permits almost every move."
+     ]
+    },
+    {
+     "id": "choice_real_cities",
+     "kind": "choice",
+     "mode": "interpretive",
+     "question": "What, if anything, does the frozen state tell us about real neighbourhoods?",
+     "options": [
+      {
+       "text": "Strict preferences could keep a mixed neighbourhood stuck in place",
+       "feedback": "This is a fair reading of the simulation: very low tolerance did leave the city stuck in a mixed state. Limits: it comes from one rule set on an artificial grid. Gauvin and colleagues themselves say the frozen state would probably be unstable in a more realistic model that allows discontented households to move to other cities."
+      },
+      {
+       "text": "It mostly reflects the model's moving rule, not people",
+       "feedback": "This reading is well supported. The paper attributes freezing to 'the dynamics that does not allow any movement': households move only to empty homes they find acceptable. Rogers and McKane note there is no single definitive Schelling model, and variants differ in how moves are chosen. The grid model earlier in this lesson sends unhappy households to any empty home, so it does not freeze. Limit: a rule-dependent result still shows what such a rule would produce."
+      },
+      {
+       "text": "It proves that very prejudiced cities stay integrated",
+       "feedback": "This goes beyond the evidence. The frozen city is mixed only because households cannot move, not because they chose integration. It is a simulation result, not an observation of real cities, and the authors suggest it would probably not last if discontented households could leave for other cities."
+      }
+     ],
+     "hints": [
+      "Ask what would have to be true about real households for the freezing to happen.",
+      "Compare the moving rule here with the one in the earlier grid model."
+     ]
     }
    ]
   },
   {
-   "id": "mild_preference_segregation",
-   "title": "Mild wishes, segregated city",
-   "idea": "Running the moving rule across a whole grid makes neighbourhoods far more alike than anyone required, and the jump starts near a required share of about one third for two equal groups.",
-   "role": "core",
+   "id": "targets_vs_group_share",
+   "title": "When wanting outruns your group's share",
+   "idea": "A group starts to segregate once the share of like neighbours its members want exceeds that group's share of the city, because then no evenly mixed neighbourhood can give them enough.",
+   "role": "contribution",
    "predict": {
-    "question": "Clark and Fossett also simulated a city with three equal-sized groups instead of two. Suppose every household there asks for 40% like neighbours, a little above what tipped our two-group city. What would you expect?",
+    "question": "Clark and Fossett mention a more realistic city split 65%, 25% and 10% between three groups. Suppose every household wants 30% of its neighbours to be like it. Which groups are pushed to sort by this wish, because no even mix of the city gives them enough?",
     "options": [
-     "It stays mixed: 40% still means accepting a minority of like neighbours, so it is a mild wish",
-     "It sorts into clusters: 40% is more than each group's one-third share of the city",
-     "It sorts, but only about half as much as a two-group city, because three groups dilute each other",
-     "Nothing can be said without knowing the households' incomes"
+     "Only the 65% group",
+     "The 25% and the 10% groups",
+     "Only the 10% group",
+     "None of them: 30% is a mild wish"
     ],
     "answer": 1,
     "why": [
-     "The wish does sound mild. But with three equal groups, a mixed neighbourhood gives each household only about a third like neighbours, so 40% cannot be met everywhere and moves cascade.",
-     "Right. In a mixed three-group city each household's like share is about one third. A 40% target is above that, so not everyone can be content in a mix. Clark and Fossett saw high segregation emerge at 40%, but not at 20%.",
-     "More groups do not soften the effect. Each group is a smaller share of the city, so the same target is harder to meet in a mix. Clark and Fossett found minorities ended up apart from the majority and also from each other.",
-     "Their simulated households did have incomes and housing-quality goals, weighted equally with the neighbour goal. Ethnic segregation still jumped at 40%, so the preference alone was enough to drive it."
+     "The biggest group might seem to drive things, but an even mix gives it about 65% like neighbours, far more than the 30% it wants. It can be content in a mixed city.",
+     "Right. An even mix gives each group its own share of like neighbours: 25% and 10% both fall short of the 30% wanted, so both are pushed to gather. Only the 65% group gets enough from an even mix.",
+     "The 10% group is the furthest short, but the 25% group is short too: 25% is still less than 30%. Every group whose share is below the wish is pushed to sort.",
+     "A 30% wish is mild for a group making up 65% of the city. For a group making up 25% or 10%, even a mixed city can't deliver it. Whether a wish is mild depends on the group's share."
     ]
    },
    "terms": [
     {
-     "term": "emergent effect",
-     "means": "A pattern of the whole city that no single household asked for or would choose on its own"
+     "term": "preference target",
+     "means": "The share of like neighbours a household wants before it is content where it lives"
+    },
+    {
+     "term": "population share",
+     "means": "The fraction of all households in the city that belong to a given group"
     }
    ],
    "model": {
-    "title": "A city of two groups sorting itself",
-    "note": "Teaching model: a 30 × 30 grid with two equal groups and about 10% empty squares, starting from a random mix. Each round, every household with fewer like neighbours than required (as a share of its occupied neighbouring squares) moves to a random empty square. The run lasts up to 100 rounds. This is close to, but not the same as, the papers' variants. Schelling moved households to the nearest square that satisfied them. Gauvin et al. let content households move too, but only into squares that satisfy them, which can freeze the city at very strict demands; this model does not show that. Numbers are illustrative, not the papers' data.",
+    "title": "The same small city, now with a slider for how big each group is",
+    "note": "Teaching model: the same 20×20 grid as before with 10% of homes empty, but the split between the two groups can now be changed. Only unhappy households move, and each jumps to a random empty home. Each household looks only at its eight neighbouring homes. Clark and Fossett used a richer simulation (SimSeg) with three groups, neighbourhoods of 40 nearby homes, and households that also cared about housing quality and income. This two-group grid is a simplified stand-in for their central result. The score averages over all households, so when one group is small, the big group dominates it. That is why the model also shows the score a random mix would give. With only eight neighbours, the mix around each home varies a lot, so sorting here can begin a little below a group's share rather than exactly at it. Numbers are illustrative, not the sources' data.",
     "controls": [
      {
-      "id": "tol",
-      "label": "Required share of like neighbours",
+      "id": "want",
+      "label": "Share of like neighbours each household wants",
       "kind": "slider",
       "min": 0,
-      "max": 0.8,
+      "max": 1,
       "step": 0.05,
-      "default": 0.05,
+      "default": 0.8,
       "unit": "",
       "color": 0
+     },
+     {
+      "id": "rounds",
+      "label": "Rounds the computer runs",
+      "kind": "slider",
+      "min": 1,
+      "max": 60,
+      "step": 1,
+      "default": 40,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "share_a",
+      "label": "Share of households in group A",
+      "kind": "slider",
+      "min": 0.05,
+      "max": 0.95,
+      "step": 0.05,
+      "default": 0.5,
+      "unit": "",
+      "color": 7
      }
     ],
     "outputs": [
      {
-      "id": "like_share",
-      "label": "Neighbours who are like me (city average)",
+      "id": "sorted",
+      "label": "Average share of neighbours from the same group",
       "expr": "sim_segregation",
       "unit": "%",
       "scale": 100,
       "decimals": 0,
-      "color": 1
+      "color": 4
      },
      {
-      "id": "extra",
-      "label": "More alike than a random mix",
-      "expr": "sim_segregation - 0.5",
-      "unit": " pts",
+      "id": "mix_level",
+      "label": "Same-group share a random mix would give",
+      "expr": "share_a * share_a + (1 - share_a) * (1 - share_a)",
+      "unit": "%",
       "scale": 100,
       "decimals": 0,
       "color": 2
+     },
+     {
+      "id": "gain",
+      "label": "Sorting above a random mix",
+      "expr": "sorted - mix_level",
+      "unit": " pts",
+      "scale": 100,
+      "decimals": 0,
+      "color": 6
+     },
+     {
+      "id": "small_share",
+      "label": "Smaller group's share of the city",
+      "expr": "min(share_a, 1 - share_a)",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 7
      },
      {
       "id": "unhappy",
@@ -1029,11 +1478,11 @@
      "type": "agents",
      "kernel": "schelling",
      "params": {
-      "tolerance": "tol",
+      "size": 20,
       "density": 0.9,
-      "share_a": 0.5,
-      "size": 30,
-      "steps": 100,
+      "share_a": "share_a",
+      "tolerance": "want",
+      "steps": "rounds",
       "seed": 7
      }
     }
@@ -1041,181 +1490,155 @@
    "animation": {
     "steps": [
      {
-      "say": "Each square is a home. The two colours are two equal-sized groups, and blank squares are empty. The run starts with everyone scattered at random.",
-      "ms": 3800
+      "say": "This is the same city as before: two colours of households on a grid, a slider for how many like neighbours each wants, and one for how many rounds run.",
+      "focus": [
+       "want",
+       "rounds"
+      ],
+      "ms": 5500
      },
      {
-      "say": "This slider sets the share of like neighbours every household wants. A household below it packs up and moves to a random empty square.",
+      "say": "New: this slider sets how much of the city belongs to group A. Watch the grid as group A shrinks to a fifth of all households.",
       "set": {
-       "tol": 0.05
+       "share_a": 0.2
       },
-      "focus": "tol",
-      "ms": 4000
+      "focus": "share_a",
+      "ms": 6500
      },
      {
-      "say": "This box shows the end result: on average, what share of a household's neighbours are its own colour.",
-      "focus": "like_share",
-      "ms": 3400
-     },
-     {
-      "say": "This one compares that with a random mix, which gives about 50% for two equal groups.",
-      "focus": "extra",
-      "ms": 3200
-     },
-     {
-      "say": "And this one counts households still unhappy when the run stops.",
-      "focus": "unhappy",
-      "ms": 2800
+      "say": "And a new yardstick: the same-group share you'd get by pure chance in a random mix. With a small group, it is no longer 50%.",
+      "focus": [
+       "mix_level",
+       "small_share"
+      ],
+      "ms": 6000
      }
     ]
    },
    "explore": {
-    "prompt": "Play with the requirement. Look for where the city stays a random jumble, where it suddenly sorts, and how far the result overshoots the wish.",
+    "prompt": "Use group size to make a mild wish bite. Try different splits and compare the score with what a random mix would give.",
     "goals": [
      {
-      "text": "Make households genuinely choosy (a requirement above 10%) while the city still ends up close to a random mix: like share under 60%.",
-      "when": "tol > 0.1 && like_share < 0.6",
+      "text": "Keep each household's wish at 25% or lower, but change the size of the groups so that one group is short of like neighbours and the city sorts clearly beyond a random mix.",
+      "when": "want > 0 && want <= 0.25 && small_share < want && gain > 0.03",
       "solution": {
-       "tol": 0.2
+       "want": 0.2,
+       "share_a": 0.15
       },
       "hints": [
-       "Think about where the switch sits for two equal groups.",
-       "Stay clearly below one third. There, only a few unlucky households fall short, and their moves don't set off a chain.",
-       "Try something between a tenth and a quarter."
-      ]
-     },
-     {
-      "text": "Get neighbourhoods at least three-quarters alike, while no household asks for more than half of its neighbours to be like it.",
-      "when": "like_share >= 0.75 && tol <= 0.5",
-      "solution": {
-       "tol": 0.5
-      },
-      "hints": [
-       "Crossing the switch sorts the city. Going further past it sorts the city a bit more.",
-       "The lowest setting that tips may not reach three-quarters. Look higher in the allowed range.",
-       "Stay at or under one half, near the top of that limit."
+       "Which group gets too few like neighbours in a random mix: a big one or a small one?",
+       "Keep the wish low and move the group-A slider. In a random mix, a household's like neighbours roughly match its group's share of the city.",
+       "Make one group's share smaller than the wish setting, then check that the score sits well above the random-mix line."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. The switch comes when the required share can't be met by everyone in a mixed city. With three equal groups that happens above about one third, so 40% sorts the city. Clark and Fossett saw high segregation emerge when targets rose from 20% to 40%.",
-     "incorrect": "The trap is judging the wish by how mild it sounds. What matters is whether the city's own mix can satisfy it. With three equal groups a mixed neighbourhood offers each household only about a third like neighbours. A 40% target can't be met everywhere, so moves cascade, and Clark and Fossett saw high segregation emerge at 40%."
+     "correct": "Yes. An even mix gives every group exactly its own share of like neighbours. Any group whose share is below the wish (here the 25% and 10% groups) can't be satisfied by mixing, so it is pushed to gather.",
+     "incorrect": "It is tempting to judge a wish as mild or strong on its own. The idea compares it with each group's share of the city: an even mix hands each group its share of like neighbours, so every group whose share is below the wish (25% and 10% here) is pushed to sort."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start with households that don't care at all. Nobody moves, and the like share sits near 50%, which is just what a random mix of two equal groups gives.",
+       "say": "Start where the last lesson found a calm city: two equal halves, each household wanting 20% like neighbours. The score sits only a little above its random-mix level.",
        "set": {
-        "tol": 0
+        "want": 0.2,
+        "share_a": 0.5,
+        "rounds": 40
        },
-       "focus": "like_share",
-       "ms": 3600
+       "focus": "gain",
+       "ms": 4500
       },
       {
-       "say": "Now each household wants at least a fifth of its neighbours to be like it. By chance a few fall short and move, but the city barely changes. It still looks like a jumble.",
+       "say": "Same mild wish, but now group A is just 15 households in every 100. Look at the grid: group A's households start to bunch together.",
        "set": {
-        "tol": 0.2
+        "share_a": 0.15
        },
+       "focus": "sorted",
+       "ms": 5000
+      },
+      {
+       "say": "First, a fair yardstick. With one small group, big-group households are mostly surrounded by their own kind even in a random mix. So the random-mix level is now well above 50%, and the gain line measures sorting beyond it.",
        "focus": [
-        "like_share",
-        "extra"
+        "mix_level",
+        "gain"
        ],
-       "ms": 4200
+       "ms": 6000
       },
       {
-       "say": "Raise it to a quarter. Still little change: with about seven neighbours, very few households have only one like neighbour or none.",
-       "set": {
-        "tol": 0.25
-       },
-       "focus": "like_share",
-       "ms": 3800
-      },
-      {
-       "say": "Now go to about one third. A random city is lumpier than a perfectly mixed one, so quite a few households now fall short. Each move tilts two neighbourhoods, and the chain you met earlier takes off. Watch clusters form.",
-       "set": {
-        "tol": 0.35
-       },
-       "focus": "like_share",
-       "ms": 5200
-      },
-      {
-       "say": "When it settles, nearly everyone is content, yet neighbourhoods are far more alike than the one third anyone asked for. That gap is an emergent effect: a pattern of the whole city that no household demanded.",
+       "say": "Why does group A sort? In a random mix, about 15% of an A household's neighbours are A, its share of the city. It wants 20%. An evenly mixed neighbourhood simply can't give it enough, so it moves.",
        "focus": [
-        "extra",
-        "unhappy"
+        "small_share",
+        "want"
        ],
-       "ms": 5200
+       "ms": 6500
       },
       {
-       "say": "Push the requirement much higher. The city sorts a little more, but the big switch from jumble to clusters already happened near one third.",
-       "set": {
-        "tol": 0.6
-       },
-       "focus": "like_share",
-       "ms": 4200
-      },
-      {
-       "say": "Come back to one third and look again. These households would accept being outnumbered by their neighbours, yet they live in a city of clusters. Schelling found this switch at about one third for two equal groups.",
-       "set": {
-        "tol": 0.35
-       },
+       "say": "Let's name the two numbers. The share a household wants is its preference target. The share of the city its group makes up is the group's population share. Sorting is pushed along once the target is above the share.",
        "focus": [
-        "tol",
-        "like_share"
+        "want",
+        "share_a"
        ],
-       "ms": 5200
+       "ms": 6500
+      },
+      {
+       "say": "Now make group A the big one. Group B is the 15% group now, short of its 20% target, and B's households bunch up instead. What matters is the smaller group's share.",
+       "set": {
+        "share_a": 0.85
+       },
+       "focus": "small_share",
+       "ms": 5500
+      },
+      {
+       "say": "A wrinkle: with only eight neighbours, the mix near each home varies, so sorting here can start below a group's share. The equal city tipped near a third. Clark and Fossett's 40-home neighbourhoods put the jump near the share.",
+       "set": {
+        "share_a": 0.15
+       },
+       "focus": "sorted",
+       "ms": 7000
       }
      ]
     },
-    "explanation": "Run the one-household rule across a whole grid, and the city ends up far more alike than anyone asked for. A random start is not perfectly mixed: by chance some households have fewer like neighbours than others. Once the requirement nears one third, enough of them fall short to set off the chain of moves. Schelling found that for two equal groups the city stays random below about one third and sorts itself above it. Gauvin and colleagues mapped sharp switches between mixed and segregated states in their variant. Clark and Fossett saw a three-group city segregate when targets rose from 20% to 40%, with little extra change from raising them further. The exact switch point depends on rule details such as vacancies and how households search, and these are models: they show what mild preferences can produce, not what caused segregation in any real city.",
-    "quote": "The crucial point is that segregation appears as an emergent phenomenon, in the sense that the collective eﬀect is much stronger than what would be naively expected, as individual agents are happy to live in a mixed neighborhood.",
-    "quote_where": "Section 1, Model and qualitative analysis",
-    "source_id": "s3",
+    "explanation": "In an evenly mixed city, a household can expect its share of like neighbours to equal its group's share of the city. If a group's members want more than that, no evenly mixed neighbourhood gives them enough, so they move and gather, and sorting follows. That is why a wish that left two equal halves mixed sorts a city where one group is small. Clark and Fossett showed this with their SimSeg simulations of three equal groups (about a third each), where households looked at 40 nearby homes and also cared about housing quality and income: segregation stayed low when households wanted 20% like neighbours and rose to high levels at 40%. They also note that more realistic, unequal sizes such as 65%, 25% and 10% gave even more segregation. Two caveats: with only eight neighbours, this small grid can start sorting somewhat below a group's share, and any simulation shows what preferences could produce, not what real cities actually do.",
+    "quote": "The crucial transition occurs when preference targets reach or exceed a group's population representation (22). Thus, high levels of segregation emerge when targets for same-group contact shift from 20% to 40%. Segregation is low when households seek 20% same-group contact because all households can be satisfied in neighborhoods that match the city's ethnic mix.",
+    "quote_where": "Simulations",
+    "source_id": "s2",
     "source_ids": [
-     "s1",
      "s2",
-     "s3"
+     "s1"
     ]
-   },
-   "check": {
-    "kind": "model",
-    "task": "Put the model in the state of Schelling's headline finding: a requirement no stricter than 35%, yet neighbourhoods end up at least two-thirds alike.",
-    "when": "tol <= 0.35 && like_share >= 0.65",
-    "solution": {
-     "tol": 0.35
-    },
-    "hint": "Below about a quarter, the city stays a jumble. Look between a quarter and the 35% cap, where the chain of moves takes off.",
-    "misconception": "That a strongly sorted city must come from households who strongly want to live among their own group."
    },
    "connect": {
     "equation": [
      {
-      "text": "move if B < "
+      "text": "sorting is pushed when  "
      },
      {
-      "text": "B_{a}",
-      "link": "tol"
+      "text": "T",
+      "link": "want"
      },
      {
-      "text": "   ⇒   city average of B = "
+      "text": " > "
      },
      {
-      "text": "like share",
-      "link": "like_share"
+      "text": "p_{small}",
+      "link": "small_share"
      },
      {
-      "text": " ≫ "
+      "text": " = min("
      },
      {
-      "text": "B_{a}",
-      "link": "tol"
+      "text": "p_{A}",
+      "link": "share_a"
+     },
+     {
+      "text": ", 1 − p_{A})"
      }
     ],
-    "caption": "In Wikipedia's notation, B is one household's share of like neighbours (ignoring empty squares), and B_a is the share it requires: the slider. A household relocates when B < B_a. The final city average of B (the like-share box) ends up far above B_a once B_a passes about one third. The '≫' is the model's lesson, not part of the paper's rule."
+    "caption": "This is the lesson's statement of Clark and Fossett's rule, which they give in words, not as an equation. T (coloured like the wish slider) is the preference target: the share of like neighbours wanted. p_{small} is the smaller group's population share, set by the group-A slider p_{A}. An even mix gives each group its own share of like neighbours, so the group is short whenever T is above its share. The random-mix yardstick in the model is p_{A}² + (1 − p_{A})²."
    },
-   "recap": "Mild individual wishes, about one third like neighbours for two equal groups, can sort a whole city far more than anyone asked for.",
+   "recap": "A group is pushed to sort once it wants more like neighbours than its share of the city, because an even mix can only ever give it its share.",
    "activities": [
     {
      "id": "tour",
@@ -1230,30 +1653,394 @@
      "kind": "explain"
     },
     {
-     "id": "cmp",
-     "kind": "compare",
-     "prompt": "Three cities, identical except for how many like neighbours households require. Compare the like share and the picture in each.",
-     "cases": [
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "sort_cases",
+     "kind": "sort",
+     "hypothetical": true,
+     "title": "Could an even mix satisfy them?",
+     "prompt": "Each card describes a group and the share of like neighbours its members want. In an evenly mixed city, each group's like neighbours match its share of the city. Sort each card by whether that is enough.",
+     "groups": [
       {
-       "label": "Requirement 20%",
-       "values": {
-        "tol": 0.2
-       }
+       "id": "enough",
+       "label": "An evenly mixed city gives them enough"
       },
       {
-       "label": "Requirement 35%",
-       "values": {
-        "tol": 0.35
-       }
-      },
-      {
-       "label": "Requirement 60%",
-       "values": {
-        "tol": 0.6
-       }
+       "id": "short",
+       "label": "No evenly mixed city gives them enough"
       }
      ],
-     "takeaway": "The big change, from jumble to clusters, happens crossing roughly one third. Above that, this model sorts a little further. Clark and Fossett likewise report that raising targets past the critical level had minimal additional impact on their segregation index."
+     "cards": [
+      {
+       "id": "c1",
+       "text": "Two equal halves; everyone wants 20% like neighbours.",
+       "group": "enough",
+       "feedback": "An even mix gives each household about 50% like neighbours, well above the 20% wanted."
+      },
+      {
+       "id": "c2",
+       "text": "Three equal groups, a third each; everyone wants 20%.",
+       "group": "enough",
+       "feedback": "A third is more than 20%. This mirrors Clark and Fossett's case where segregation stayed low."
+      },
+      {
+       "id": "c3",
+       "text": "Three equal groups, a third each; everyone wants 40%.",
+       "group": "short",
+       "feedback": "40% is more than a third, so even a perfect mix leaves everyone short. In Clark and Fossett's simulations, high segregation emerged here."
+      },
+      {
+       "id": "c4",
+       "text": "A group that is 10% of the city; members want at least 3 of their 8 neighbours to be like them.",
+       "group": "short",
+       "feedback": "3 of 8 is 37.5%, far above the 10% an even mix would give."
+      },
+      {
+       "id": "c5",
+       "text": "A group that is 70% of the city; members want half their neighbours to be like them.",
+       "group": "enough",
+       "feedback": "An even mix gives this group about 70% like neighbours, more than the half it wants."
+      },
+      {
+       "id": "c6",
+       "text": "A group that is 25% of the city; members want half their neighbours to be like them.",
+       "group": "short",
+       "feedback": "An even mix gives only about 25% like neighbours, half of what is wanted."
+      },
+      {
+       "id": "c7",
+       "text": "A group that is 40% of the city; members want 30%.",
+       "group": "enough",
+       "feedback": "On average an even mix gives 40%, above the 30% wanted. With small neighbourhoods, though, chance variation can still leave some households short."
+      }
+     ],
+     "takeaway": "Compare the wish with the group's share of the city, not with some fixed idea of a mild wish. 'Enough' only means an even mix could work on average: in small neighbourhoods, chance variation can still set off some sorting."
+    },
+    {
+     "id": "use",
+     "kind": "predict"
+    },
+    {
+     "id": "why",
+     "kind": "reveal"
+    }
+   ],
+   "builds_on": "tipping_threshold"
+  },
+  {
+   "id": "wanted_vs_got",
+   "title": "More segregated than anyone wanted",
+   "idea": "Households content to be a one-third minority still end up surrounded mostly by their own group, so the city is far more segregated than any individual asked for; this shows that preferences could produce segregation, not that they do.",
+   "role": "contribution",
+   "predict": {
+    "question": "Picture a new town. Most households want about a third of their neighbours to be like them. A sizeable minority are far more open and would happily be one of very few of their kind. Following the sources' argument, what happens to the open households and the town?",
+    "options": [
+     "The town still sorts, and the open households end up living in sorted neighbourhoods too",
+     "The open households settle in mixed areas and keep those areas mixed",
+     "The town ends up exactly halfway between the two groups' wishes",
+     "The most open households decide the outcome for everyone"
+    ],
+    "answer": 0,
+    "why": [
+     "Correct. Clark and Fossett argue that the most tolerant members don't set the outcome. Each arrival makes an area more attractive to the newcomer's own group, so areas drift toward sameness, and the open households end up there too.",
+     "It is tempting to think open households can hold mixed areas together. But everyone else's moves keep pulling each area toward one group, and the open households have no reason to leave.",
+     "It sounds fair to average the wishes. But moves feed on each other, so the city overshoots the wishes rather than landing between them.",
+     "One very open household doesn't set the pattern. The result comes from everyone's moves interacting, not from any single household's choice."
+    ]
+   },
+   "terms": [
+    {
+     "term": "macro outcome",
+     "means": "The pattern of the whole city, such as how sorted it is, as opposed to what each household wants"
+    },
+    {
+     "term": "de facto segregation",
+     "means": "Separation that comes about through people's choices and moves, not because a law or rule requires it"
+    }
+   ],
+   "model": {
+    "title": "The same small city, now comparing what households wanted with what they got",
+    "note": "Teaching model: the same 20×20 grid as before, with two equal groups and 10% of homes empty. Only unhappy households move, and each jumps to a random empty home. Schelling moved them to the nearest home that would satisfy them. The score averages, over all households, the share of occupied neighbouring homes (up to eight) that hold the household's own group. The new box, result minus wish, is this lesson's own measure, not one the sources use. A wish of about a third means being content with 3 like neighbours out of 8, a minority. Real survey wishes reported by Clark and Fossett are higher, around 40–60%, and their simulations used three groups, housing quality and income; this model leaves all of that out. Numbers are illustrative, not the sources' data.",
+    "controls": [
+     {
+      "id": "want",
+      "label": "Share of like neighbours each household wants",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.8,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "rounds",
+      "label": "Rounds the computer runs",
+      "kind": "slider",
+      "min": 1,
+      "max": 60,
+      "step": 1,
+      "default": 40,
+      "unit": "",
+      "color": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "sorted",
+      "label": "Average share of neighbours from the same group",
+      "expr": "sim_segregation",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "unlike",
+      "label": "Average share of neighbours from the other group",
+      "expr": "1 - sorted",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "gap",
+      "label": "Result minus wish: how far the city overshoots what households asked for",
+      "expr": "sorted - want",
+      "unit": " pts",
+      "scale": 100,
+      "decimals": 0,
+      "color": 7
+     },
+     {
+      "id": "gain",
+      "label": "Sorting above a random mix",
+      "expr": "sorted - 0.5",
+      "unit": " pts",
+      "scale": 100,
+      "decimals": 0,
+      "color": 6
+     },
+     {
+      "id": "unhappy",
+      "label": "Households still unhappy at the end",
+      "expr": "sim_unhappy",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 3
+     }
+    ],
+    "visual": {
+     "type": "agents",
+     "kernel": "schelling",
+     "params": {
+      "size": 20,
+      "density": 0.9,
+      "share_a": 0.5,
+      "tolerance": "want",
+      "steps": "rounds",
+      "seed": 7
+     }
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "It's the same small city as before: two equal groups of households on a grid, with one home in ten empty. The two sliders work just as they did.",
+      "focus": [
+       "want",
+       "rounds"
+      ],
+      "ms": 5500
+     },
+     {
+      "say": "This is the score you know: on average, what share of a household's neighbours are from its own group.",
+      "focus": "sorted",
+      "ms": 4500
+     },
+     {
+      "say": "New here: this box subtracts what each household asked for from what it ended up with. A big number means the city went far past anyone's wish.",
+      "focus": "gap",
+      "ms": 5500
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Now try it yourself: find mild wishes that still leave the city heavily sorted, and watch how far the result runs past the wish.",
+    "goals": [
+     {
+      "text": "Give households a wish mild enough that they would accept being outnumbered by their neighbours, yet still end with at least three in five of their neighbours from their own group, on average",
+      "when": "want <= 0.36 && sorted >= 0.6",
+      "solution": {
+       "want": 0.35,
+       "rounds": 60
+      },
+      "hints": [
+       "Too mild, and almost nobody moves. Too strong, and households no longer accept being outnumbered.",
+       "Think back to where the city tipped in the earlier lesson. The wish has to sit on the sorting side of that point but stay below half. Give the computer plenty of rounds to settle.",
+       "Out of eight neighbours, being outnumbered but content means being fine with three like neighbours. Pick the lowest slider setting that asks for exactly that."
+      ]
+     },
+     {
+      "text": "Make the city end up at least 25 points more sorted than households asked for, while it is also clearly sorted, at least 10 points above a random mix",
+      "when": "gap >= 0.25 && gain >= 0.1",
+      "solution": {
+       "want": 0.35,
+       "rounds": 60
+      },
+      "hints": [
+       "A tiny wish makes the result-minus-wish box large, but is the city actually sorted then? Check the box for sorting above a random mix.",
+       "A random mix already gives about 50% like neighbours. The wish must be strong enough to tip the city and still leave a lot of room above it.",
+       "Look just past the tipping point you found in the earlier lesson, not far above it."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. Outcomes come from everyone's moves interacting, not from the most tolerant members. Each arrival makes an area more attractive to the newcomer's own group, so areas drift toward sameness, and open-minded households end up in sorted areas too.",
+     "incorrect": "You probably expected the outcome to mirror what people want, either an average of the wishes or the most open households' wishes. In Schelling-style dynamics, moves feed on each other, so the city overshoots the wishes. Even very open households end up in sorted neighbourhoods."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with almost no wish: households only mind being nearly alone among the other group. Very few move, and the score stays near 50%, the level of a random mix.",
+       "set": {
+        "want": 0.05,
+        "rounds": 40
+       },
+       "focus": "sorted",
+       "ms": 4200
+      },
+      {
+       "say": "Now set a wish of about a third. In everyday terms, each household is content with 3 like neighbours out of 8. It would happily live outnumbered, 5 to 3.",
+       "set": {
+        "want": 0.35
+       },
+       "focus": "want",
+       "ms": 4500
+      },
+      {
+       "say": "Look at the result. The average household now has most of its neighbours from its own group, well over half, not the third it asked for.",
+       "focus": "sorted",
+       "ms": 4200
+      },
+      {
+       "say": "This box measures the overshoot: tens of points of sorting that nobody asked for. Compare it with the sorting-above-random box to see that this is real sorting, not the random starting mix.",
+       "focus": [
+        "gap",
+        "gain"
+       ],
+       "ms": 4800
+      },
+      {
+       "say": "And few or no households are left unhappy. Nobody's wish was broken. Each got what it wanted, and the moves of everyone together delivered far more.",
+       "focus": "unhappy",
+       "ms": 4200
+      },
+      {
+       "say": "The sorted city is a macro outcome: a pattern of the whole city that no single household chose. No law forced it, so it is de facto segregation.",
+       "focus": "sorted",
+       "ms": 4500
+      },
+      {
+       "say": "A caution: the model shows that mild preferences could produce this. It does not show that real cities sorted this way, or that sorted cities hold prejudiced people.",
+       "focus": "want",
+       "ms": 4800
+      },
+      {
+       "say": "So here is the punchline. Households happy to be a one-third minority still end up in a city where most neighbours are just like them, far more segregated than anyone asked for.",
+       "focus": [
+        "want",
+        "sorted"
+       ],
+       "ms": 5200
+      }
+     ]
+    },
+    "explanation": "Even when every household would gladly be outnumbered, about 3 like neighbours out of 8, the city ends up with most people living mainly among their own group. Each move makes the old area less attractive to the mover's group and the new area less attractive to the other group, so neighbourhoods drift toward sameness. Schelling showed this with hand-run simulations. Clark and Fossett repeated it with a richer simulation that used three groups, income and housing quality, and wishes set at levels found in surveys. Segregation rose quickly and stayed high, more than most households would call ideal. But the authors frame this as a test of what preferences can do, not proof of what happened in real cities. Real data cannot separate preferences from discrimination and income gaps, and these likely act together.",
+    "quote": "Unless most households are strongly averse to majority status—and surveys indicate this is not the case, local neighborhoods will drift toward ethnic homogeneity. The resulting neighborhood structure is more segregated than most individual households would find “ideal.”",
+    "quote_where": "Simulations section (Clark and Fossett, 2008)",
+    "source_id": "s2",
+    "source_ids": [
+     "s2",
+     "s1",
+     "s3"
+    ]
+   },
+   "check": {
+    "kind": "choice",
+    "question": "A student watches this model turn mild wishes into a highly sorted city. Then they read that a real city is highly segregated. Which conclusion is justified?",
+    "options": [
+     {
+      "text": "The real city's residents must be strongly prejudiced, because sorting this strong needs strong dislike.",
+      "correct": false,
+      "why": "The model shows the opposite: mild wishes are enough to produce strong sorting. A sorted outcome tells you little about how strong anyone's wishes are."
+     },
+     {
+      "text": "Mild preferences could be enough to produce that pattern, but the model alone can't say whether they did. Discrimination, income gaps and history may also be at work, possibly together.",
+      "correct": true,
+      "why": "This matches the sources: the models show preferences have the logical capacity to produce segregation, while real causes are hard to separate and likely combine."
+     },
+     {
+      "text": "The real city's segregation was caused by preferences, not by discrimination.",
+      "correct": false,
+      "why": "A model reproducing a pattern shows one possible cause, not the actual one. Clark and Fossett stress that the factors are not mutually exclusive and that nonexperimental data make them hard to separate."
+     },
+     {
+      "text": "If residents report only mild wishes, their choices can't be what keeps the city segregated.",
+      "correct": false,
+      "why": "This is exactly what the model refutes: mild wishes, acted on by everyone, can still leave a city heavily sorted."
+     }
+    ],
+    "multi": false,
+    "hint": "Ask two separate questions: what does the outcome say about individuals' wishes, and can a model that reproduces a pattern say what caused it in a real city?",
+    "misconception": "That a segregated city reveals strongly prejudiced residents, or that a model which reproduces segregation proves what caused it in a real city."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "result − wish = "
+     },
+     {
+      "text": "⟨B⟩",
+      "link": "sorted"
+     },
+     {
+      "text": " − "
+     },
+     {
+      "text": "B_{a}",
+      "link": "want"
+     },
+     {
+      "text": ",  where each household stays only if B ≥ "
+     },
+     {
+      "text": "B_{a}",
+      "link": "want"
+     }
+    ],
+    "caption": "The rule is Schelling's, in the notation of the Wikipedia summary. B is the share of a household's neighbours from its own group, and B_{a} (blue, the wish slider) is the share it wants; it moves while B < B_{a}. ⟨B⟩ (the sorting score) is the city-wide average of B after the moves. The overshoot ⟨B⟩ − B_{a} is this lesson's own measure, not one the sources define. It comes out large even though every household only asked for B_{a}."
+   },
+   "recap": "Mild wishes, acted on by everyone, can sort a city far beyond what anyone asked for. That shows preferences could cause segregation, not that they did.",
+   "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
     },
     {
      "id": "goal_1",
@@ -1276,608 +2063,13 @@
     {
      "id": "test",
      "kind": "check"
-    }
-   ]
-  },
-  {
-   "id": "robust_slight_bias",
-   "title": "Same curve, many models: a slight bias is enough",
-   "idea": "Rogers and McKane's simple equation shows that when unlike neighbour pairs are broken up faster than they form, the share of unlike pairs falls steeply and then levels off, and this one curve fits five quite different Schelling-type models.",
-   "role": "contribution",
-   "predict": {
-    "question": "Imagine a variant in which a broken-up mixed pair never forms again: the forming rate is exactly zero, while the break-up rate stays positive. What does the equation predict for the share of unlike pairs?",
-    "options": [
-     "It keeps falling toward zero, but more and more slowly",
-     "It levels off at about 0.06, like the paper's fit",
-     "It stays at 0.5, because nothing new forms",
-     "It drops to zero almost at once"
-    ],
-    "answer": 0,
-    "why": [
-     "Correct. With nothing forming, only the break-up term is left, so the share can only shrink. The paper notes it then falls like 1/t: always heading for zero, never quite arriving.",
-     "Tempting, because the fit levels off there. But that plateau is where forming and breaking up balance. With no forming at all there is nothing to balance, so there is no plateau above zero.",
-     "Nothing new forms, but existing mixed pairs still break up at rate β. So the share must fall. It only stays at 0.5 when the two rates are equal.",
-     "Break-ups happen at a finite rate, and fewer mixed pairs are left to break as the share falls. So the fall slows down rather than happening in one jump."
-    ]
-   },
-   "terms": [
-    {
-     "term": "interface density",
-     "means": "Out of all pairs of next-door neighbours, the share that belong to different groups. 0.5 means randomly mixed; near 0 means sorted."
     },
     {
-     "term": "equilibrium",
-     "means": "The level the curve settles at, where mixed pairs form and break up equally often"
-    },
-    {
-     "term": "effective theory",
-     "means": "A deliberately stripped-down model whose simple equation still reproduces what bigger, messier models do"
+     "id": "eq",
+     "kind": "connect"
     }
    ],
-   "model": {
-    "title": "How the share of mixed neighbour pairs falls over time",
-    "note": "Teaching model: this plots the paper's exact solution for its stripped-down pair model (each site has one neighbour, there are no empty sites, and agents swap places). It is not the five full simulations. Time is in the paper's rescaled units. The slider ranges are illustrative. Only the dashed curve (α = 0.0002, β = 0.05) is the authors' fitted result.",
-    "controls": [
-     {
-      "id": "alpha",
-      "label": "How fast mixed pairs form (α)",
-      "kind": "slider",
-      "min": 0.0001,
-      "max": 0.05,
-      "step": 0.0001,
-      "default": 0.01,
-      "unit": "",
-      "color": 0
-     },
-     {
-      "id": "beta",
-      "label": "How fast mixed pairs break up (β)",
-      "kind": "slider",
-      "min": 0.001,
-      "max": 0.1,
-      "step": 0.001,
-      "default": 0.01,
-      "unit": "",
-      "color": 1
-     }
-    ],
-    "outputs": [
-     {
-      "id": "ratio",
-      "label": "Break-ups happen this many times faster",
-      "expr": "beta / alpha",
-      "unit": "×",
-      "decimals": 0,
-      "color": 4
-     },
-     {
-      "id": "at100",
-      "label": "Share of mixed pairs at time 100",
-      "expr": "(sqrt(alpha*beta) + alpha*(1 - exp(-200*sqrt(alpha*beta)))/(1 + exp(-200*sqrt(alpha*beta)))) / (2*sqrt(alpha*beta) + (alpha+beta)*(1 - exp(-200*sqrt(alpha*beta)))/(1 + exp(-200*sqrt(alpha*beta))))",
-      "unit": "",
-      "decimals": 3,
-      "color": 2
-     },
-     {
-      "id": "end_share",
-      "label": "Long-run share of mixed pairs",
-      "expr": "1 / (1 + sqrt(beta / alpha))",
-      "unit": "",
-      "decimals": 3,
-      "color": 3
-     }
-    ],
-    "visual": {
-     "type": "curves",
-     "x": {
-      "label": "Time (rescaled units)",
-      "min": 0,
-      "max": 600
-     },
-     "y": {
-      "label": "Share of neighbour pairs that are mixed",
-      "min": 0,
-      "max": 0.6
-     },
-     "series": [
-      {
-       "id": "yours",
-       "label": "Your rates",
-       "expr": "(sqrt(alpha*beta) + alpha*(1 - exp(-2*x*sqrt(alpha*beta)))/(1 + exp(-2*x*sqrt(alpha*beta)))) / (2*sqrt(alpha*beta) + (alpha+beta)*(1 - exp(-2*x*sqrt(alpha*beta)))/(1 + exp(-2*x*sqrt(alpha*beta))))",
-       "color": 2,
-       "dashed": false
-      },
-      {
-       "id": "paper_fit",
-       "label": "Authors' fit to five models",
-       "expr": "(0.0031623 + 0.0002*(1 - exp(-0.0063246*x))/(1 + exp(-0.0063246*x))) / (0.0063246 + 0.0502*(1 - exp(-0.0063246*x))/(1 + exp(-0.0063246*x)))",
-       "color": 5,
-       "dashed": true
-      }
-     ],
-     "hlines": [
-      {
-       "id": "start_line",
-       "y": 0.5,
-       "label": "Random start"
-      },
-      {
-       "id": "end_line",
-       "y": "end_share",
-       "label": "Where your curve settles"
-      }
-     ],
-     "markers": [
-      {
-       "id": "t100",
-       "x": 100,
-       "label": "Time 100",
-       "color": 6
-      }
-     ]
-    }
-   },
-   "animation": {
-    "steps": [
-     {
-      "say": "This curve tracks one number over time. Take every pair of next-door neighbours: what share of those pairs come from different groups?",
-      "focus": "yours",
-      "ms": 3400
-     },
-     {
-      "say": "It starts at 0.5. That is what you get when the two groups are scattered at random.",
-      "focus": "start_line",
-      "ms": 2800
-     },
-     {
-      "say": "This slider sets how fast new mixed pairs form as people move around.",
-      "focus": "alpha",
-      "ms": 2800
-     },
-     {
-      "say": "This one sets how fast mixed pairs break up. Push it up and watch the curve.",
-      "set": {
-       "beta": 0.03
-      },
-      "focus": "beta",
-      "ms": 3200
-     },
-     {
-      "say": "The dashed curve is the fit the authors found for five published versions of Schelling's model.",
-      "focus": "paper_fit",
-      "ms": 3200
-     }
-    ]
-   },
-   "explore": {
-    "prompt": "Play with the two rates. Notice that one thing decides where the curve settles and another decides how fast it gets there.",
-    "goals": [
-     {
-      "text": "Make the long-run share of mixed pairs settle below 0.2",
-      "when": "end_share < 0.2",
-      "solution": {
-       "alpha": 0.001,
-       "beta": 0.05
-      },
-      "hints": [
-       "What decides where the curve ends: how big the rates are, or how they compare?",
-       "Watch the 'this many times faster' box while you move both sliders.",
-       "The long-run share drops under 0.2 once break-ups are well over ten times as fast as forming."
-      ]
-     },
-     {
-      "text": "Keep the authors' long-run level (a final share between 0.05 and 0.07), but make segregation arrive faster: below 0.12 by time 100",
-      "when": "end_share > 0.05 && end_share < 0.07 && at100 < 0.12",
-      "solution": {
-       "alpha": 0.0004,
-       "beta": 0.1
-      },
-      "hints": [
-       "The final level depends only on the ratio of the two rates. Speed depends on something else.",
-       "Keep the ratio near the authors' value, but make both rates bigger together.",
-       "Scale both of the authors' rates up by the same factor. The break-up slider can't go much past double their value."
-      ]
-     }
-    ]
-   },
-   "understand": {
-    "feedback": {
-     "correct": "Right. With the forming rate at zero, only break-ups remain, so the mixed share can only shrink. The paper says it then falls like 1/t: always toward zero, ever more slowly, with no plateau above zero.",
-     "incorrect": "The plateau you saw is a balance between forming and breaking up. Remove forming entirely and nothing balances the break-ups. The share keeps falling toward zero. It slows down because fewer mixed pairs are left to break, but it never stops at a fixed level above zero."
-    },
-    "walkthrough": {
-     "steps": [
-      {
-       "say": "Start with the two rates equal. Mixed pairs break up exactly as often as they form, so the share stays at 0.5. This share of mixed pairs has a name: the interface density.",
-       "set": {
-        "alpha": 0.01,
-        "beta": 0.01
-       },
-       "focus": "yours",
-       "ms": 4200
-      },
-      {
-       "say": "Make break-ups twice as common as forming. The curve dips, then levels off near 0.41. A mild imbalance in rates gives mild sorting.",
-       "set": {
-        "alpha": 0.01,
-        "beta": 0.02
-       },
-       "focus": "end_share",
-       "ms": 4000
-      },
-      {
-       "say": "Now make forming very rare: break-ups are 50 times as common. The curve sinks a long way, but slowly. It is still falling at the right edge.",
-       "set": {
-        "alpha": 0.0002,
-        "beta": 0.01
-       },
-       "focus": "yours",
-       "ms": 4200
-      },
-      {
-       "say": "These are the authors' fitted values: α = 0.0002, β = 0.05. Your curve now sits on the dashed one: a steep early fall, then a long flattening near 0.06.",
-       "set": {
-        "alpha": 0.0002,
-        "beta": 0.05
-       },
-       "focus": [
-        "yours",
-        "paper_fit"
-       ],
-       "ms": 4600
-      },
-      {
-       "say": "The level where it flattens is the equilibrium. Its height depends only on the ratio of the two rates, here 250.",
-       "focus": [
-        "ratio",
-        "end_line"
-       ],
-       "ms": 4000
-      },
-      {
-       "say": "Halve both rates. The ratio is unchanged, so the curve ends at the same level, but it gets there more slowly. The ratio sets where it ends; the overall size of the rates sets how fast.",
-       "set": {
-        "alpha": 0.0001,
-        "beta": 0.025
-       },
-       "focus": [
-        "end_share",
-        "at100"
-       ],
-       "ms": 4800
-      },
-      {
-       "say": "Back to the fit. The authors call this an effective theory: a toy model of pairs whose one equation tracks how segregation first emerges in five much richer models.",
-       "set": {
-        "alpha": 0.0002,
-        "beta": 0.05
-       },
-       "focus": "paper_fit",
-       "ms": 4400
-      }
-     ]
-    },
-    "explanation": "Rogers and McKane simulated five published Schelling-type models with different grids, networks, satisfaction rules and moving rules, and tracked the interface density. For short to medium times, after rescaling and shifting time to line the runs up, all five fell along one characteristic curve. That includes a model whose agents would be happiest in a mixed area. They then built a stripped-down pair model whose interface density obeys one equation, with α the rate mixed pairs form and β the rate they break up. With α = 0.0002 and β = 0.05 it fits all five. In the pair model those rates mean agents are only 0.0249 more satisfied with a like neighbour than an unlike one, though the authors note this gap looks small partly because each site has just one neighbour. The fit covers only the early emergence of segregation: at long times the models disagree. Like any checkerboard measure, it says nothing directly about real cities.",
-    "quote": "Simulation results for the time evolution of interface density in five different models taken from several disciplines were presented, each displaying the same characteristic form in short to medium timescales.",
-    "quote_where": "Section 5 (Conclusion)",
-    "source_id": "s4",
-    "source_ids": [
-     "s4"
-    ]
-   },
-   "connect": {
-    "equation": [
-     {
-      "text": "dx/dt = "
-     },
-     {
-      "text": "α",
-      "link": "alpha"
-     },
-     {
-      "text": "(1 − x)^{2} − "
-     },
-     {
-      "text": "β",
-      "link": "beta"
-     },
-     {
-      "text": "x^{2},  x(0) = 1/2"
-     }
-    ],
-    "caption": "This is the paper's equation (7). x is the interface density (the curve). α (blue slider) adds mixed pairs, and does so most when few remain; β (orange slider) removes them, and does so most when many remain. The curve settles where the two terms cancel: x = 1/(1 + √(β/α)), the 'long-run share' box. The paper writes α = 2(1 − u)v and β = 2(1 − v)u, where u and v are an agent's satisfaction with a like and an unlike neighbour."
-   },
-   "recap": "If mixed pairs break up faster than they form, their share falls steeply and then levels off, and one such curve fits the early stage of five quite different Schelling models.",
-   "activities": [
-    {
-     "id": "tour",
-     "kind": "watch"
-    },
-    {
-     "id": "how",
-     "kind": "walk"
-    },
-    {
-     "id": "idea",
-     "kind": "explain"
-    },
-    {
-     "id": "ev",
-     "kind": "stages",
-     "prompt": "How the authors showed that very different models share one curve, step by step.",
-     "stages": [
-      {
-       "label": "Five rulebooks",
-       "text": "Schelling's original grid; Pancs and Vriend's 'best response' agents, whose happiness actually peaks in a mixed neighbourhood; Gauvin et al.'s random jumpers who tolerate up to 60% unlike neighbours; Laurie and Jaggi's agents who look two squares away; and Fagiolo et al.'s agents on a small-world network. Each run had 10,000 sites with 10% empty."
-      },
-      {
-       "label": "One yardstick",
-       "text": "For each run they tracked a single number over time: the share of neighbour pairs that are mixed. Time was rescaled for system size and shifted so the curves could be compared."
-      },
-      {
-       "label": "One curve",
-       "text": "Despite their different rules, all five fell along a single characteristic curve until the mixed share dropped below about 0.1, by which point the grid is already strongly segregated. Even agents who prefer mixed areas segregated."
-      },
-      {
-       "label": "Where they part",
-       "text": "At long times the models disagree. Some freeze in a fixed layout, while others keep reshuffling around a steady state. The shared curve covers only the emergence of segregation."
-      },
-      {
-       "label": "One equation",
-       "text": "A toy model with one neighbour per site, no empty squares and simple swaps gives an exact equation for the curve. With α = 0.0002 and β = 0.05 it traces all five simulations over four powers of ten in time."
-      }
-     ],
-     "takeaway": "The steep early fall in mixed pairs does not depend on the fine print of the rules. It looks like a generic result of mixed pairs breaking up faster than they form, even when the underlying preference gap is slight."
-    },
-    {
-     "id": "goal_1",
-     "kind": "goal",
-     "i": 0
-    },
-    {
-     "id": "goal_2",
-     "kind": "goal",
-     "i": 1
-    },
-    {
-     "id": "use",
-     "kind": "predict"
-    },
-    {
-     "id": "why",
-     "kind": "reveal"
-    }
-   ]
-  },
-  {
-   "id": "preferences_not_proof",
-   "title": "What the model shows, and what it doesn't",
-   "idea": "The models and surveys show that preferences alone could produce and sustain segregation even without discrimination, which challenges the hope of quick integration. They do not prove that preferences are the main cause in real cities.",
-   "role": "contribution",
-   "terms": [
-    {
-     "term": "social distance",
-     "means": "How strongly people prefer neighbours from their own group over neighbours from other groups"
-    },
-    {
-     "term": "nonexperimental evidence",
-     "means": "Data observed in real cities, where causes such as discrimination, income and preferences all act at once and cannot be switched on and off one at a time"
-    },
-    {
-     "term": "stochastically stable state",
-     "means": "An arrangement that a random process keeps returning to and staying near over the long run, whatever it started from"
-    }
-   ],
-   "recap": "Models show preferences could create and sustain segregation without discrimination, so tolerance alone may not integrate a city. They can't measure how much preferences cause in real cities.",
-   "understand": {
-    "explanation": "The models and surveys establish a possibility, not a verdict. Formal proofs show that segregation is a stochastically stable state: a Schelling-type housing market keeps returning to it and stays there. Simulations add that preferences for similar neighbours, which the paper calls social distance, can create segregation with no discrimination at all, at the strengths people report in surveys. That is why Clark and Fossett doubt that ending discrimination alone would bring quick integration. Real cities, though, give only nonexperimental evidence: discrimination, income gaps and preferences act together and cannot be switched off one at a time, so the models cannot say how much of real segregation each one causes. Rogers and McKane add a warning that numbers from an artificial grid need great care before they are read as facts about real societies.",
-    "quote": "The visual outcomes and quantitative results constitute powerful evidence that social distance and preference dynamics do have the logical capacity to combine with socioeconomic inequality between groups to create relatively high levels of ethnic and class segregation.",
-    "quote_where": "Clark & Fossett (2008), Simulations section",
-    "source_id": "s2",
-    "source_ids": [
-     "s2",
-     "s4"
-    ]
-   },
-   "activities": [
-    {
-     "id": "idea",
-     "kind": "explain"
-    },
-    {
-     "id": "ev",
-     "kind": "stages",
-     "prompt": "Clark and Fossett build their case in layers. Reveal each layer, and notice both what it adds and where it stops.",
-     "stages": [
-      {
-       "label": "1. The debate they enter",
-       "text": "Through the 1980s, most social scientists explained residential segregation mainly by housing discrimination, principally by white residents. Clark and Fossett ask a narrower question: could social distance alone generate and sustain segregation even with no discrimination? They also stress that law treats the two differently. Discrimination is illegal and has legal remedies, while preferences are voluntary choices that fair-housing law does not reach."
-      },
-      {
-       "label": "2. Mathematical proofs",
-       "text": "Zhang proved that in a Schelling-type housing market, segregation is a stochastically stable state. The model drifts back to it and stays there, whatever the starting arrangement, even with no discrimination and even when only one group has a mild preference. In his case white agents had a modest preference for white neighbours (around 60–70%) and black agents were neutral. This shows segregation is possible. It does not show how often it happens in reality."
-      },
-      {
-       "label": "3. What people say they want",
-       "text": "In a Los Angeles survey, people filled in an 'ideal' neighbourhood grid. The share choosing at least 3 of their 8 nearest neighbours from their own group was 60% for Black respondents, 66% for Hispanic, 72% for white and 75% for Asian respondents. No group preferred being a minority, so no single neighbourhood mix could satisfy every group at once. These are stated wishes in one city, not observed moves."
-      },
-      {
-       "label": "4. Three-group simulations",
-       "text": "The authors' SimSeg model ran 500 replications of each design for a city with three equal-sized groups. When households wanted 20% of their neighbours from their own group, segregation stayed low. At 40%, close to survey levels, it rose fast and stayed high, and raising the target further changed little. Minority groups also ended up separated from each other, which theories of white discrimination do not predict. The authors note that equal group sizes are the setting most favourable to integration."
-      },
-      {
-       "label": "5. Where the evidence stops",
-       "text": "Real cities give only nonexperimental evidence, so neither side of the debate can measure how much preferences or discrimination actually contribute. The authors agree that several factors probably act together. In their simulations, one factor's apparent effect is large when it is the only one switched on, but usually small when others are already active. Rogers and McKane also warn that numbers from an artificial checkerboard need great care before being applied to real societies."
-      },
-      {
-       "label": "6. Why tolerance is not enough",
-       "text": "In every group, a sizeable share of respondents would accept fewer same-group neighbours. About 40% of Black respondents, for example, chose fewer than 3 of 8. Yet every household that arrives makes a neighbourhood more attractive to its own group and less attractive to the others. Unless most households actively avoid being in the majority, and the surveys say they don't, neighbourhoods drift toward sameness. The final pattern is more segregated than most households themselves would call ideal."
-      }
-     ],
-     "takeaway": "Households who would be perfectly happy as a minority on their street still sort themselves into a city far more segregated than any of them wanted. In these models, tolerance alone does not bring integration. This describes what could happen, not a measurement of what does happen in real cities."
-    },
-    {
-     "id": "s",
-     "kind": "sort",
-     "title": "How far does the evidence reach?",
-     "prompt": "Sort each claim by how the sources stand on it.",
-     "groups": [
-      {
-       "id": "supported",
-       "label": "Supported by the models and surveys"
-      },
-      {
-       "id": "overreach",
-       "label": "Goes beyond the evidence"
-      },
-      {
-       "id": "disputed",
-       "label": "Open or debated"
-      }
-     ],
-     "cards": [
-      {
-       "id": "c1",
-       "text": "In Schelling-type models, mild preferences for similar neighbours can produce high segregation with no discrimination at all.",
-       "group": "supported",
-       "feedback": "Supported. Zhang's proofs and the simulations in all four sources show this across many model variants."
-      },
-      {
-       "id": "c2",
-       "text": "In the Los Angeles survey, no racial or ethnic group expressed a preference for being a minority in its own neighbourhood.",
-       "group": "supported",
-       "feedback": "Supported. This is a direct survey finding, though it covers stated wishes in one metropolitan area."
-      },
-      {
-       "id": "c3",
-       "text": "In these models, removing discrimination alone does not quickly produce integration when preferences are like those in the surveys.",
-       "group": "supported",
-       "feedback": "Supported. The simulations contained no discrimination at all, and segregation still emerged."
-      },
-      {
-       "id": "c4",
-       "text": "Preferences are the main cause of segregation in today's US cities.",
-       "group": "overreach",
-       "feedback": "Overreach. The authors show preferences cannot be dismissed, but they admit that nonexperimental data cannot separate the effects of preferences from those of discrimination."
-      },
-      {
-       "id": "c5",
-       "text": "Discrimination never played a real role in creating segregated neighbourhoods.",
-       "group": "overreach",
-       "feedback": "Overreach, and contradicted. Clark and Fossett themselves say past coercion and race-restricted covenants produced involuntary separation."
-      },
-      {
-       "id": "c6",
-       "text": "How much of real-world segregation comes from preferences, from discrimination and from income gaps.",
-       "group": "disputed",
-       "feedback": "Open. The sources describe a 'contentious debate' that neither side can settle with nonexperimental data. The factors probably combine."
-      },
-      {
-       "id": "c7",
-       "text": "Where neighbourhood preferences come from: group identity, stereotypes, practical benefits or fears about home values.",
-       "group": "disputed",
-       "feedback": "Open. The paper calls this an ongoing debate and lists many plausible origins. It argues that the origin does not change what the preferences do in the models."
-      },
-      {
-       "id": "c8",
-       "text": "Treating the Schelling model like a physics model of magnets deepens our understanding of social segregation.",
-       "group": "disputed",
-       "feedback": "Debated. Gauvin and colleagues find the physics tools reveal sharp transitions and a 'tipping' jump. Clark and Fossett reply that the analogy leaves out the social choices that give the model its importance."
-      }
-     ],
-     "takeaway": "The models firmly support a possibility: preferences could segregate a city with no discrimination. How much they do so in real cities is not settled, and neither is where the preferences come from.",
-     "hints": [
-      "Ask whether the claim is about what models can do, or about how much something matters in real cities.",
-      "Claims with 'main cause' or 'never' need evidence that separates causes, and nonexperimental data cannot do that."
-     ]
-    },
-    {
-     "id": "p",
-     "kind": "passage",
-     "question": "Which passage shows the authors admitting that real-city evidence cannot settle how much preferences matter compared with discrimination?",
-     "options": [
-      {
-       "quote": "Because neither group can establish empirically grounded evaluations of the effects of either preferences or discrimination, recent work has focused on the logical standing of explanations based on social distance",
-       "source_id": "s2",
-       "feedback": "Correct. Neither side can measure the real effects, so the work asks whether a preference explanation is logically possible, not how large its effect is."
-      },
-      {
-       "quote": "Thus, high levels of segregation emerge when targets for same-group contact shift from 20% to 40%.",
-       "source_id": "s2",
-       "feedback": "This is a simulation result about what happens inside the model. It says nothing about how preferences and discrimination compare in real cities."
-      },
-      {
-       "quote": "Because no group expresses a preference for minority status, no conceivable neighborhood ethnic mix can satisfy the preferences of all groups.",
-       "source_id": "s2",
-       "feedback": "This is a survey-based argument that preferences conflict. It supports the possibility of segregation rather than marking a limit of the evidence."
-      },
-      {
-       "quote": "Practices of legal, institutional race exclusion have been substantially dismantled, but stereotypes and prejudice remain and can promote residential separation in the absence of housing discrimination.",
-       "source_id": "s2",
-       "feedback": "This argues that preferences can still matter without discrimination. It makes a claim and admits no limit on measuring it."
-      }
-     ],
-     "answer": 0,
-     "hints": [
-      "Look for a passage about what can and cannot be established with real data."
-     ]
-    },
-    {
-     "id": "q_aha",
-     "kind": "choice",
-     "mode": "determinate",
-     "question": "In every surveyed group, a sizeable share of people would accept fewer same-group neighbours. Why, according to Clark and Fossett, don't their choices produce integrated neighbourhoods?",
-     "options": [
-      {
-       "text": "Each arrival makes a neighbourhood more attractive to the newcomer's group and less attractive to others, so neighbourhoods drift toward sameness unless most people actively avoid being in the majority.",
-       "feedback": "Right. Outcomes come from the sorting process as a whole, not from the most tolerant individuals. The result is more segregated than most households find ideal."
-      },
-      {
-       "text": "Discrimination stops the tolerant households from moving where they would like.",
-       "feedback": "This is not the explanation given here. The simulations contained no discrimination, and segregation still emerged."
-      },
-      {
-       "text": "The tolerant households secretly hold stronger preferences than they report.",
-       "feedback": "The paper makes no such claim. Its argument works even when the stated preferences are taken at face value."
-      },
-      {
-       "text": "The outcome is set by the most tolerant members of each group, and they are too few.",
-       "feedback": "The paper says the opposite: outcomes are not decided by one group's choices, or by the choices of its most tolerant members."
-      }
-     ],
-     "answer": 0
-    },
-    {
-     "id": "q_policy",
-     "kind": "choice",
-     "mode": "determinate",
-     "hypothetical": true,
-     "question": "A city council member says: 'Once we fully enforce fair-housing law, our neighbourhoods will integrate on their own within a few years.' What do the sources in this lesson support?",
-     "options": [
-      {
-       "text": "They cast doubt on it. With preferences like those in the surveys, the models drift toward segregation even without discrimination, at least in the short run. They cannot say exactly how this particular city will behave.",
-       "feedback": "Supported. This matches the paper's conclusion that tolerance and the absence of discrimination will not produce integration under current preferences, 'at least, not in the short run'. It also keeps the limits of model evidence in view."
-      },
-      {
-       "text": "They prove the council member wrong, because preferences are the main cause of segregation in that city.",
-       "feedback": "Overreach. The models show what preferences could do. They cannot measure how much of any real city's segregation preferences cause."
-      },
-      {
-       "text": "They support the claim: once discrimination ends, tolerant households will mix.",
-       "feedback": "Contradicted. Clark and Fossett say formal theory and simulations go against the idea that removing discrimination alone would allow substantial integration."
-      },
-      {
-       "text": "They show that enforcing fair-housing law is pointless.",
-       "feedback": "Not supported. The authors say several factors probably act together, and discrimination is illegal with legal remedies. Doubting quick integration is not the same as calling enforcement useless."
-      }
-     ],
-     "answer": 0,
-     "hints": [
-      "Separate two questions: what the models predict, and how much they can say about one real city.",
-      "The authors' own conclusion includes the phrase 'at least, not in the short run'."
-     ]
-    }
-   ]
+   "builds_on": "tipping_threshold"
   }
  ],
  "omitted": [],
@@ -1913,7 +2105,7 @@
  ],
  "activity_plans": [
   {
-   "concept": "one_household_rule",
+   "concept": "rules_on_a_grid",
    "chosen": "p1",
    "plan": {
     "blocks": [
@@ -1925,9 +2117,9 @@
      "reveal",
      "connect"
     ],
-    "why": "The learner changes the number of like neighbours and the required share and sees exactly when a household becomes unhappy, including the surprise that 3 of 8 like neighbours is enough at a one-third requirement."
+    "why": "The learner watches one round of checking and moving, then changes the wanted share until almost everyone is content, which ties the rule to its effect on single households."
    },
-   "confidence": 0.82,
+   "confidence": 0.33,
    "model": "jev-1.13.0",
    "options": [
     {
@@ -1940,86 +2132,7 @@
       "reveal",
       "connect"
      ],
-     "why": "The learner changes the number of like neighbours and the required share and sees exactly when a household becomes unhappy, including the surprise that 3 of 8 like neighbours is enough at a one-third requirement."
-    },
-    {
-     "blocks": [
-      "watch",
-      "walk",
-      "explain",
-      "worked",
-      "goal",
-      "predict",
-      "reveal"
-     ],
-     "why": "A worked example counts the neighbours on a real 3×3 patch, ignoring empty squares, before the learner practises on the sliders."
-    }
-   ]
-  },
-  {
-   "concept": "feedback_cascade",
-   "chosen": "p2",
-   "plan": {
-    "blocks": [
-     "explain",
-     "worked",
-     "choice",
-     "trace"
-    ],
-    "why": "A worked example of a single move on a small patch, followed by a choice about who becomes unhappy next and a trace of the feedback loop."
-   },
-   "confidence": 0.3,
-   "model": "jev-1.13.0",
-   "options": [
-    {
-     "blocks": [
-      "explain",
-      "stages",
-      "trace",
-      "order"
-     ],
-     "why": "Staged pictures follow one move and its knock-on effects, then the learner traces the loop from 'one unhappy household' back to 'more unhappy households' and orders the steps."
-    },
-    {
-     "blocks": [
-      "explain",
-      "worked",
-      "choice",
-      "trace"
-     ],
-     "why": "A worked example of a single move on a small patch, followed by a choice about who becomes unhappy next and a trace of the feedback loop."
-    }
-   ]
-  },
-  {
-   "concept": "tipping_at_group_share",
-   "chosen": "p1",
-   "plan": {
-    "blocks": [
-     "watch",
-     "walk",
-     "explain",
-     "goal",
-     "predict",
-     "reveal",
-     "connect"
-    ],
-    "why": "The learner moves the group share and the required share to find the line where a perfectly mixed city stops satisfying everyone, then applies it to an unequal city with groups of 65%, 25% and 10%."
-   },
-   "confidence": 0.91,
-   "model": "jev-1.13.0",
-   "options": [
-    {
-     "blocks": [
-      "watch",
-      "walk",
-      "explain",
-      "goal",
-      "predict",
-      "reveal",
-      "connect"
-     ],
-     "why": "The learner moves the group share and the required share to find the line where a perfectly mixed city stops satisfying everyone, then applies it to an unequal city with groups of 65%, 25% and 10%."
+     "why": "The learner watches one round of checking and moving, then changes the wanted share until almost everyone is content, which ties the rule to its effect on single households."
     },
     {
      "blocks": [
@@ -2031,27 +2144,104 @@
       "predict",
       "reveal"
      ],
-     "why": "A side-by-side comparison of the 20% and 40% targets from the three-group simulation anchors the rule before practice."
+     "why": "A side-by-side view of a relaxed rule and a demanding rule shows how the same city behaves under each before the learner tunes it."
     }
    ]
   },
   {
-   "concept": "mild_preference_segregation",
+   "concept": "measuring_segregation",
    "chosen": "p2",
    "plan": {
     "blocks": [
      "watch",
      "walk",
      "explain",
+     "worked",
+     "goal",
+     "estimate"
+    ],
+    "why": "A worked count of one household's eight neighbours grounds the measure before the learner reads it off the whole city and estimates the random baseline."
+   },
+   "confidence": 0.88,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner runs the city for one round and then for many, and watches the like-neighbour share move away from the random baseline of about one half."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "worked",
+      "goal",
+      "estimate"
+     ],
+     "why": "A worked count of one household's eight neighbours grounds the measure before the learner reads it off the whole city and estimates the random baseline."
+    }
+   ]
+  },
+  {
+   "concept": "chain_reaction",
+   "chosen": "p2",
+   "plan": {
+    "blocks": [
+     "stages",
+     "explain",
+     "order",
+     "choice"
+    ],
+    "why": "Staged snapshots of a small street reveal the cascade one step at a time, then the learner puts the steps of the feedback loop in order."
+   },
+   "confidence": 0.51,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "worked",
+      "explain",
+      "trace",
+      "choice"
+     ],
+     "why": "A worked story follows one move and its knock-on effects, then the learner traces the chain from one unhappy household to a homogeneous block."
+    },
+    {
+     "blocks": [
+      "stages",
+      "explain",
+      "order",
+      "choice"
+     ],
+     "why": "Staged snapshots of a small street reveal the cascade one step at a time, then the learner puts the steps of the feedback loop in order."
+    }
+   ]
+  },
+  {
+   "concept": "tipping_threshold",
+   "chosen": "p2",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
      "compare",
+     "explain",
      "goal",
      "predict",
      "reveal",
      "check"
     ],
-    "why": "Side-by-side runs at requirements of 0.2, 0.35 and 0.6 show the tipping and the flattening above it, as Clark and Fossett report, before free practice."
+    "why": "A comparison of cities just below and just above the threshold dramatises the jump before the learner locates it."
    },
-   "confidence": 0.52,
+   "confidence": 0.3,
    "model": "jev-1.13.0",
    "options": [
     {
@@ -2065,39 +2255,74 @@
       "check",
       "connect"
      ],
-     "why": "The learner finds a mild requirement (under one half) that still produces a city where most neighbours match, and compares what was required with what resulted."
+     "why": "The learner sweeps the wanted share, finds where the city tips, and is then checked on the common belief that the outcome grows in step with the preference."
     },
     {
      "blocks": [
       "watch",
       "walk",
-      "explain",
       "compare",
+      "explain",
       "goal",
       "predict",
       "reveal",
       "check"
      ],
-     "why": "Side-by-side runs at requirements of 0.2, 0.35 and 0.6 show the tipping and the flattening above it, as Clark and Fossett report, before free practice."
+     "why": "A comparison of cities just below and just above the threshold dramatises the jump before the learner locates it."
     }
    ]
   },
   {
-   "concept": "robust_slight_bias",
+   "concept": "three_regimes",
+   "chosen": "p2",
+   "plan": {
+    "blocks": [
+     "explain",
+     "compare",
+     "match",
+     "choice"
+    ],
+    "why": "Contrasting low-, middle- and high-tolerance cities side by side, then matching each setting to its regime and reason, builds a mental phase map."
+   },
+   "confidence": 0.72,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "stages",
+      "explain",
+      "sort",
+      "choice"
+     ],
+     "why": "The learner sees the paper's three regimes revealed in turn and then sorts described city states into frozen, segregated and mixed."
+    },
+    {
+     "blocks": [
+      "explain",
+      "compare",
+      "match",
+      "choice"
+     ],
+     "why": "Contrasting low-, middle- and high-tolerance cities side by side, then matching each setting to its regime and reason, builds a mental phase map."
+    }
+   ]
+  },
+  {
+   "concept": "targets_vs_group_share",
    "chosen": "p2",
    "plan": {
     "blocks": [
      "watch",
      "walk",
      "explain",
-     "stages",
      "goal",
+     "sort",
      "predict",
      "reveal"
     ],
-    "why": "Staged evidence first shows five different models falling along one curve, including agents who prefer mixed areas, and then the equation that captures it."
+    "why": "After tuning group size, the learner sorts survey-style preference cases by whether a city-wide mix could satisfy them."
    },
-   "confidence": 0.4,
+   "confidence": 0.28,
    "model": "jev-1.13.0",
    "options": [
     {
@@ -2110,59 +2335,74 @@
       "reveal",
       "connect"
      ],
-     "why": "The learner changes the creation rate α and destruction rate β, watches the unlike share settle at 1/(1+√(β/α)), and finds that equal rates keep the city mixed while a tilt does not."
+     "why": "The learner makes one group a minority and finds that a wanted share the majority can satisfy now pushes the minority to cluster."
     },
     {
      "blocks": [
       "watch",
       "walk",
       "explain",
-      "stages",
       "goal",
+      "sort",
       "predict",
       "reveal"
      ],
-     "why": "Staged evidence first shows five different models falling along one curve, including agents who prefer mixed areas, and then the equation that captures it."
+     "why": "After tuning group size, the learner sorts survey-style preference cases by whether a city-wide mix could satisfy them."
     }
    ]
   },
   {
-   "concept": "preferences_not_proof",
+   "concept": "wanted_vs_got",
    "chosen": "p1",
    "plan": {
     "blocks": [
+     "watch",
+     "walk",
      "explain",
-     "stages",
-     "sort",
-     "passage",
-     "choice"
+     "goal",
+     "predict",
+     "reveal",
+     "check",
+     "connect"
     ],
-    "why": "Staged evidence (proofs, survey data showing no group prefers minority status, three-group simulations) builds the argument. The learner then sorts claims by how well they are supported, matches a claim to its supporting passage, and judges a policy claim."
+    "why": "The learner sets a mild preference, sees the city end up far more sorted than that preference, and is checked on the inference that segregated outcomes prove prejudiced people."
    },
-   "confidence": 0.34,
+   "confidence": 0.82,
    "model": "jev-1.13.0",
    "options": [
     {
      "blocks": [
+      "watch",
+      "walk",
       "explain",
-      "stages",
-      "sort",
-      "passage",
-      "choice"
+      "goal",
+      "predict",
+      "reveal",
+      "check",
+      "connect"
      ],
-     "why": "Staged evidence (proofs, survey data showing no group prefers minority status, three-group simulations) builds the argument. The learner then sorts claims by how well they are supported, matches a claim to its supporting passage, and judges a policy claim."
+     "why": "The learner sets a mild preference, sees the city end up far more sorted than that preference, and is checked on the inference that segregated outcomes prove prejudiced people."
     },
     {
      "blocks": [
-      "choice",
+      "watch",
+      "walk",
       "explain",
-      "compare",
-      "sort",
-      "choice"
+      "goal",
+      "passage",
+      "choice",
+      "check"
      ],
-     "why": "An opening judgment ('if discrimination ended, would cities integrate?'), then a comparison of the preference and discrimination explanations, a sort of claims, and a revisit of the opening choice."
+     "why": "After seeing the gap, the learner picks the passage that supports the claim and weighs what the model can and cannot say about real cities."
     }
    ]
+  }
+ ],
+ "flags": [
+  {
+   "concept": "three_regimes",
+   "kind": "fabricated_finding",
+   "certainty": 0.77
   }
  ],
  "category": {
@@ -2172,21 +2412,21 @@
   },
   "secondary": null,
   "probabilities": {
-   "sociology_anthropology": 0.83,
+   "sociology_anthropology": 0.86,
    "geography_urban": 0.08,
-   "physics_astronomy": 0.05,
-   "mathematics": 0.02,
+   "physics_astronomy": 0.03,
+   "mathematics": 0.01,
    "computer_science": 0.01,
    "economics": 0.01
   },
-  "confidence": 0.82,
+  "confidence": 0.86,
   "model": "jev-1.13.0"
  },
  "generation": {
   "provider": "claude",
   "model": "claude-opus-5-5",
-  "pipeline": "lemma.generate.make_outline + build_lesson",
   "source_chars": 161686,
-  "omitted": 0
+  "omitted": 0,
+  "pipeline": "brought sources → subjects + make_outline + build_lesson (2026-10-23)"
  }
 }

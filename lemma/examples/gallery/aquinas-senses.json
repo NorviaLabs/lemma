@@ -1,999 +1,1720 @@
 {
  "version": 1,
  "id": "gallery-aquinas-senses",
- "title": "Can Faith Be a Science? Aquinas on Borrowed First Principles",
- "audience": "A curious adult with no background in this field",
- "created": "2026-10-19T02:28:52",
+ "title": "Can Theology Be a Science? Aquinas on Borrowed Starting Points",
+ "level": "beginner",
+ "created": "2026-10-23T01:53:01",
  "source": {
   "title": "Summa Theologiae, First Part, Question 1: The nature and extent of sacred doctrine",
-  "authors": "St. Thomas Aquinas (literally translated by Fathers of the English Dominican Province)",
-  "year": 1920,
-  "venue": "The Summa Theologiæ of St. Thomas Aquinas, Second and Revised Edition (online edition, New Advent)",
+  "authors": "St. Thomas Aquinas",
+  "year": null,
+  "venue": "Second and Revised Edition, 1920, literally translated by Fathers of the English Dominican Province (New Advent online edition)",
   "url": "https://www.newadvent.org/summa/1001.htm"
  },
  "intro": {
-  "summary": "Thomas Aquinas, a 13th-century friar and teacher, opens his great textbook of theology by asking what kind of knowledge theology is. Is it needed at all, given philosophy? Can it be a 'science', a body of knowledge reasoned out from first principles, when those principles are taken on faith? Working through objections and replies, he argues that a teaching revealed by God is needed. He then argues that it is a genuine science because, like music borrowing its principles from arithmetic, it reasons from principles supplied by a higher knowledge. The main limitation is that the argument works only from inside a faith commitment: it shows how theology could be a science if its principles really are revealed, not that they are.",
+  "summary": "Thomas Aquinas asks whether, besides philosophy built by human reason, people need a 'sacred doctrine' taught by divine revelation. He also asks whether that doctrine counts as a real science and how it may argue. He works through ten short debates, each answering objections. He concludes that revelation is needed, even for truths reason could reach. He holds that sacred doctrine is a genuine science, because it starts from principles borrowed from a higher knowledge, just as music borrows from arithmetic, and it argues from those principles rather than proving them. The main limitation is that the whole case rests on premises the text takes from faith, such as that Scripture is revealed by God, so it persuades only readers who grant them; many modern philosophers reject both those premises and his older, Aristotelian sense of 'science'. This lesson leaves out several articles that would make good follow-ups: whether the doctrine is speculative or practical (Article 4), its rank and its relation to wisdom (Articles 5–6), why Scripture uses lowly metaphors (Article 9), and the four senses of Scripture (Article 10).",
   "background": [
-   "Thomas Aquinas (about 1225–1274) was a Dominican friar who wrote the Summa Theologiae as a textbook for students of theology.",
-   "In his time 'science' (Latin scientia) meant any organized body of knowledge that draws conclusions by strict reasoning from first principles, an idea taken from Aristotle. It did not mean laboratory experiment.",
-   "'Sacred doctrine' is Aquinas's name for teaching based on what he holds God has revealed, mainly in Scripture. Today we would roughly call it theology.",
-   "Each 'article' of the Summa is a small structured debate: objections first, then a contrary authority, then Aquinas's own answer, then replies to each objection."
+   "Aquinas was a 13th-century Christian friar and teacher who tried to show how faith and Aristotle's philosophy fit together.",
+   "In his time, 'science' (Latin scientia) meant any organised body of knowledge that reasons from first principles to conclusions, not only lab experiments.",
+   "'Revelation' means truths that Christians believe God made known, mainly through the Bible, rather than truths people worked out for themselves.",
+   "The Summa Theologiae is written as a long series of short debates, each called an 'article'."
   ],
   "known": [],
-  "aha": "Aquinas claims that theology counts as a real science even though its starting points cannot be proved by reason, because every science starts from unproved principles, and some sciences, like music relying on arithmetic, simply borrow theirs from a higher one."
+  "aha": "Aquinas claims theology can be a real science without proving its own starting points, just as music borrows from arithmetic, so it argues from them, not to them, and against someone who grants none of them it can only answer objections.",
+  "assumes": [
+   "Christianity",
+   "Philosophy",
+   "Faith and rationality",
+   "God in Christianity",
+   "Scholasticism",
+   "Bible",
+   "Revelation",
+   "Aristotle",
+   "Natural theology"
+  ]
  },
  "primer": [
   {
    "heading": "The question",
-   "body": "Before teaching theology, Aquinas asks whether it should exist at all. Philosophy already uses human reason to study everything that exists, even God. So why would anyone need a further kind of knowledge on top of philosophy?",
+   "body": "Philosophy uses human reason to study everything, and it even includes a branch about God. So why would anyone need a second kind of knowledge on top of it? Aquinas opens his great textbook by testing that challenge. He states the objection in its strongest form before answering it.",
    "quote": "It seems that, besides philosophical science, we have no need of any further knowledge.",
-   "quote_where": "Article 1, Objection 1"
+   "quote_where": "Article 1, Objection 1",
+   "source_ids": [
+    "s1"
+   ],
+   "source_id": "s1"
   },
   {
    "heading": "What he did",
-   "body": "Aquinas works through ten short debates, called articles. Each one first states the strongest objections against his view. Then it cites a contrary authority, gives his own answer, and replies to each objection in turn. He asks whether this teaching is needed, whether it is a science, whether it is one science, how it uses argument and metaphor, and how Scripture should be read."
+   "body": "Aquinas splits the big question into ten smaller ones, called articles. Examples are: is this doctrine necessary, is it a science, is God its subject, may it use argument? Each article lists objections, gives a counter-authority, states his own answer and then replies to each objection in turn. His tools are everyday comparisons: an astronomer and a physicist proving the same fact, a musician trusting a mathematician, eyes that see every coloured thing.",
+   "source_ids": [
+    "s1"
+   ]
   },
   {
-   "heading": "What he found",
-   "body": "He argues that revelation is needed for two reasons. Some truths lie beyond reason. Even the truths about God that reason can reach would otherwise be found by only a few people, late in life, and mixed with errors. His most surprising move is to call this teaching a true science even though its starting points cannot be proved. A musician also takes his principles on trust from the mathematician, and theology takes its principles from God's own knowledge.",
+   "heading": "What he found: revelation is needed",
+   "body": "Some truths about God lie beyond reason entirely, so they must be revealed. Aquinas adds a less obvious point. Even truths that reason could reach would, left to reason alone, reach too few people, too late and mixed with mistakes.",
+   "quote": "because the truth about God such as reason could discover, would only be known by a few, and that after a long time, and with the admixture of many errors.",
+   "quote_where": "Article 1, I answer that",
+   "source_ids": [
+    "s1"
+   ],
+   "source_id": "s1"
+  },
+  {
+   "heading": "What he found: a science with borrowed starting points",
+   "body": "An objector says a science must start from self-evident truths, and articles of faith are not self-evident. Aquinas answers that some sciences start from principles proven elsewhere. Music, for example, takes its principles from arithmetic. Sacred doctrine is that kind of science: it takes its starting points from God's own knowledge and reasons onward from them.",
    "quote": "So it is that sacred doctrine is a science because it proceeds from principles established by the light of a higher science, namely, the science of God and the blessed.",
-   "quote_where": "Article 2, I answer that"
+   "quote_where": "Article 2, I answer that",
+   "source_ids": [
+    "s1"
+   ],
+   "source_id": "s1"
   },
   {
    "heading": "Why it matters, and its limits",
-   "body": "The text shaped centuries of debate about how faith and reason relate. It also gives a careful picture of how any field rests on starting points it does not prove itself. But the argument assumes from the start that its principles come from God. A reader who does not share that faith can still follow the logic without accepting the premises. Here we read an English translation from 1920 of a medieval Latin text, so some key words, such as 'science', do not mean what they mean today."
+   "body": "This sets a rule for debate. Theology argues from its principles, not to them. With someone who accepts some revealed truths, you can argue from those. With someone who accepts none, you can only answer their objections. Aquinas thinks no objection can ever be a true proof against faith. That last step assumes faith is true, so it convinces only those who already grant his starting points. Critics then and now dispute it.",
+   "quote": "Since faith rests upon infallible truth, and since the contrary of a truth can never be demonstrated, it is clear that the arguments brought against faith cannot be demonstrations, but are difficulties that can be answered.",
+   "quote_where": "Article 8, I answer that",
+   "source_ids": [
+    "s1"
+   ],
+   "source_id": "s1"
   }
  ],
  "provider": {
-  "name": "Claude",
+  "name": "Claude subscription",
   "model": "claude-opus-5-5"
  },
  "concepts": [
   {
-   "id": "reading_a_disputed_article",
-   "title": "How an article argues: objections first",
-   "idea": "Each article is a mini-debate that states the opposing view at its strongest, cites a contrary authority, gives an answer, and then replies to each objection one by one.",
+   "id": "how_an_article_works",
+   "title": "How a medieval debate is built",
+   "idea": "Each article tests a yes/no question by stating objections, citing a counter-authority, giving the author's answer, and then replying to each objection one by one.",
    "role": "prerequisite",
    "terms": [
     {
+     "term": "article",
+     "means": "One short unit of the Summa that settles a single yes-or-no question, such as 'Whether sacred doctrine is a science?'"
+    },
+    {
      "term": "objection",
-     "means": "An argument for the view Aquinas will reject, opening with 'It seems that…' and put as strongly as he can"
+     "means": "An argument for the view the author will end up rejecting, set out fairly at the start and usually opening with 'It seems that…'"
     },
     {
-     "term": "on the contrary",
-     "means": "A short appeal to an authority, such as Scripture or a respected writer, that points the other way from the objections"
+     "term": "On the contrary (sed contra)",
+     "means": "A short citation of an authority, often a Bible verse, that points the other way from the objections"
     },
     {
-     "term": "I answer that",
-     "means": "The body of the article, where Aquinas gives his own position and his reasons"
-    },
-    {
-     "term": "reply to objection",
-     "means": "A closing answer to one objection, often granting what is right in it and showing why it still fails"
+     "term": "reply to an objection",
+     "means": "The author's answer to one particular objection, given after his main answer, so each opposing point is dealt with in turn"
     }
    ],
-   "recap": "Read an article as a debate in five moves: question, objections, a contrary authority, Aquinas's answer, then replies that settle each objection. His own view is in 'I answer that'.",
+   "recap": "An article runs question → objections → 'On the contrary' → 'I answer that' → replies, so the other side's best arguments are heard first and then each one is answered.",
    "understand": {
-    "explanation": "Each article in the Summa is built like a small, staged debate. It poses a yes-or-no question, then lets the other side speak first, in objections that begin 'It seems that…'. A single contrary authority follows, marked 'On the contrary'. Then comes 'I answer that', where Aquinas sets out his own position and his reasons. Last, each reply to objection returns to one objection by number. It often grants what is true in that objection and shows why it does not overturn the answer. So the first thing you read is usually what he will reject, and his own view is found in 'I answer that' and the replies.",
-    "quote": "Reply to Objection 1. Although those things which are beyond man's knowledge may not be sought for by man through his reason, nevertheless, once they are revealed by God, they must be accepted by faith.",
-    "quote_where": "Article 1, Reply to Objection 1"
+    "explanation": "Each article of the Summa takes one yes-or-no question and tests it in a fixed order, a debating format of the medieval schools (scholasticism). First come the objections: arguments for the view Aquinas will reject, stated before he says anything, and usually opening with 'It seems that'. Then a passage marked On the contrary (sed contra) cites an authority, often a Bible verse, that points the other way; it signals a direction but is not yet his full argument. Next, 'I answer that' gives Aquinas's own position and his reasons, and this can be more careful than either side: in Article 4 the objections say sacred doctrine is practical, 'On the contrary' says it is speculative, and his answer is that it includes both but is mainly speculative. Finally each objection gets its own reply to an objection, much as a careful judge answers every point the losing side raised, though sometimes (as in Article 4) one sentence covers them all.",
+    "quote": "Article 1. Whether, besides philosophy, any further doctrine is required? Objection 1. It seems that, besides philosophical science, we have no need of any further knowledge.",
+    "quote_where": "Question 1, Article 1 (opening)",
+    "source_id": "s1",
+    "source_ids": [
+     "s1"
+    ]
    },
    "activities": [
     {
-     "id": "ev",
-     "kind": "stages",
-     "prompt": "Here is Article 1 of the Summa, one part at a time. For each part, notice what job it does in the debate.",
-     "stages": [
-      {
-       "label": "1. The question",
-       "text": "The article opens with one yes-or-no question: 'Whether, besides philosophy, any further doctrine is required?' In other words: is human reasoning (philosophy) enough, or do we also need teaching that God reveals?"
-      },
-      {
-       "label": "2. Objections",
-       "text": "Aquinas does not begin with his own view. He begins with the other side, and each argument opens with 'It seems that…'. Objection 1 says we should not seek what is above reason, and whatever is not above reason is already covered by philosophy. Objection 2 says philosophy studies everything that exists, even God. These are called objections. They are put strongly because they are the arguments he must defeat."
-      },
-      {
-       "label": "3. On the contrary",
-       "text": "Next comes one short appeal to authority that points the other way. Here it is 2 Timothy 3:16: Scripture inspired by God is 'profitable to teach'. Since Scripture is not part of philosophy, some knowledge beyond philosophy is useful. This 'on the contrary' only shows that the question is truly open. It is not yet the full argument."
-      },
-      {
-       "label": "4. I answer that",
-       "text": "Now Aquinas speaks for himself: 'I answer that, It was necessary for man's salvation that there should be a knowledge revealed by God besides philosophical science built up by human reason.' He then gives his reasons, which the next concept examines. This part is his own position."
-      },
-      {
-       "label": "5. Replies to the objections",
-       "text": "Last, he goes back to each objection by number. Each part is headed 'Reply to Objection 1', 'Reply to Objection 2', and so on. In the reply to objection 1 he grants its point: reason should not pry into what is beyond it. Then he adds that once such things are revealed, they are accepted by faith. The reply to objection 2 answers with a distinction about how sciences differ, which a later concept covers. No objection is left unanswered."
-      }
-     ],
-     "takeaway": "Every article moves the same way: question, objections, a contrary authority, Aquinas's answer, then a reply to each objection."
-    },
-    {
      "id": "idea",
      "kind": "explain"
+    },
+    {
+     "id": "ex",
+     "kind": "worked",
+     "title": "Article 1, part by part",
+     "steps": [
+      {
+       "text": "The question. The article opens: 'Whether, besides philosophy, any further doctrine is required?' Philosophy here means knowledge built by human reason alone. The question can only be answered yes or no.",
+       "result": "One yes/no question to test"
+      },
+      {
+       "text": "Objection 1. 'It seems that, besides philosophical science, we have no need of any further knowledge.' The reason given: Scripture says not to seek things too high for us, and everything not above reason is already covered by philosophy.",
+       "result": "An argument for 'No', which Aquinas will answer"
+      },
+      {
+       "text": "Objection 2 opens with 'Further'. Everything that exists is studied by philosophy, even God, since Aristotle described a philosophical 'theology'. So again, nothing more is needed.",
+       "result": "A second argument for 'No'"
+      },
+      {
+       "text": "On the contrary (sed contra). Aquinas quotes 2 Timothy 3:16: 'All Scripture, inspired of God is profitable to teach…' Scripture inspired by God is not part of philosophy, so some other knowledge is useful.",
+       "result": "An authority pointing to 'Yes', short and not yet the full case"
+      },
+      {
+       "text": "I answer that. Now Aquinas speaks in his own voice: 'It was necessary for man's salvation that there should be a knowledge revealed by God besides philosophical science built up by human reason.' He then gives his reasons. (Later concepts look at those reasons in detail.)",
+       "result": "His own position, with reasons: 'Yes'"
+      },
+      {
+       "text": "Each reply to an objection comes last. Reply to Objection 1 answers the first objection: things beyond reason should not be hunted for by reason, but once God reveals them they are accepted by faith. Reply to Objection 2 answers the second: sciences differ by how they know, not only by what they study.",
+       "result": "Each 'No' argument gets its own answer, in order"
+      }
+     ],
+     "takeaway": "The article never starts with Aquinas's view. It starts with the case against it, and it is only finished once every one of those arguments has been answered."
     },
     {
      "id": "o",
      "kind": "order",
-     "prompt": "Put these pieces of Article 1 into the order in which they appear.",
+     "prompt": "Put the five parts of an article in the order Aquinas always uses.",
      "items": [
-      "Whether, besides philosophy, any further doctrine is required?",
-      "It seems that, besides philosophical science, we have no need of any further knowledge.",
-      "On the contrary, Scripture inspired by God is 'profitable to teach', and it is no part of philosophy.",
-      "I answer that, it was necessary for salvation that there be knowledge revealed by God besides philosophy.",
-      "Reply to Objection 1: things beyond reason may not be sought by reason, but once revealed they are accepted by faith."
+      "The question, phrased 'Whether…?'",
+      "The objections ('It seems that…', then 'Further…')",
+      "On the contrary: an authority pointing the other way",
+      "I answer that: Aquinas's own position and reasons",
+      "Replies to the objections, one by one"
      ],
-     "explanation": "The question comes first. The opposing view follows ('It seems that…'), then the contrary authority. Aquinas's own answer comes next, and the replies close the article by going back over the objections. The objections must come before the answer because the replies at the end refer to them by number.",
      "hints": [
-      "Which piece is phrased as a question rather than a claim?",
-      "'It seems that…' always marks the side Aquinas will argue against, and it comes early.",
-      "A reply can only answer an objection that has already been stated, so the replies come last."
-     ]
-    },
-    {
-     "id": "q_own_view",
-     "kind": "choice",
-     "mode": "determinate",
-     "question": "In Article 1, which part tells you Aquinas's own position on the question?",
-     "options": [
-      {
-       "text": "Objection 1, because it comes first",
-       "feedback": "Coming first does not make it his view. 'It seems that…' introduces the opposing side, the one he goes on to reject."
-      },
-      {
-       "text": "On the contrary, because it quotes Scripture",
-       "feedback": "This part cites one authority against the objections and shows the question is open. It is not where Aquinas argues his case. In some articles it does not even match his final view exactly."
-      },
-      {
-       "text": "I answer that",
-       "feedback": "Correct. This is the body of the article. Here Aquinas states that revealed knowledge was necessary besides philosophy, and he gives his reasons."
-      },
-      {
-       "text": "Reply to Objection 2",
-       "feedback": "The replies defend the answer against each objection, so they show his view at work. But they rely on the position already set out in 'I answer that'. They do not state it in full."
-      }
+      "Aquinas lets the opposing side speak before he does.",
+      "His own answer has to come before he can reply to anyone, because the replies lean on it.",
+      "The short authority sits between the case against and Aquinas's own answer."
      ],
-     "answer": 2,
-     "hints": [
-      "Which part is written in Aquinas's own voice from the start: 'I…'?"
-     ]
-    },
-    {
-     "id": "q_contrary_not_answer",
-     "kind": "choice",
-     "mode": "determinate",
-     "question": "Article 4 asks whether sacred doctrine is a practical science. Its 'On the contrary' ends: 'Therefore it is not a practical but a speculative science.' The 'I answer that' says sacred doctrine 'includes both', though 'it is speculative rather than practical'. What does this show about the structure?",
-     "options": [
-      {
-       "text": "The 'On the contrary' is only a counterweight to the objections. The final, more careful position is in 'I answer that'.",
-       "feedback": "Correct. The contrary authority pushes against the objections, which said 'practical'. But Aquinas's own answer is more nuanced: it covers both kinds of science and leans toward speculative. Always read the answer, not just the 'On the contrary'."
-      },
-      {
-       "text": "Aquinas contradicts himself between the two parts.",
-       "feedback": "No. The 'On the contrary' is not his considered answer, so there is nothing to contradict. It balances the objections. His answer then refines the question rather than simply picking a side."
-      },
-      {
-       "text": "The objections were right after all, since sacred doctrine is partly practical.",
-       "feedback": "Partly, and that is the point. Aquinas grants that it treats human acts, so the objections have something true in them. But he concludes that it is speculative rather than practical, so the objections' claim that it is a practical science still fails."
-      }
-     ],
-     "answer": 0,
-     "hints": [
-      "Compare how strong each part's claim is: 'not a practical' versus 'includes both… rather than'."
-     ]
-    }
-   ]
-  },
-  {
-   "id": "why_revelation_is_needed",
-   "title": "Two reasons reason is not enough",
-   "idea": "Revelation is needed both for truths beyond reason and for truths reason could reach but would reach only for a few, late, and with errors.",
-   "role": "core",
-   "terms": [
-    {
-     "term": "revelation",
-     "means": "Knowledge that God makes known to people, as opposed to knowledge they work out by their own reasoning"
-    },
-    {
-     "term": "philosophical science",
-     "means": "Aquinas's name for all the knowledge human reason builds up on its own, including reasoning about God"
-    },
-    {
-     "term": "salvation",
-     "means": "For Aquinas, reaching God as the final goal of human life; he holds that this depends on knowing truths about God"
-    }
-   ],
-   "recap": "Aquinas gives two reasons for revelation: some truths lie beyond reason, and the truths reason can reach would reach only a few, late, and mixed with errors.",
-   "understand": {
-    "explanation": "In the answer section of Article 1, Aquinas gives two separate reasons why human reasoning alone (philosophical science) is not enough. First, people are directed toward a goal, God, that is beyond what reason can grasp, and you must know a goal before you can steer toward it, so some truths have to be revealed. Second, even truths about God that reason could in principle work out would, left to reason alone, be known by only a few people, only after a long time, and mixed with many errors. Since he holds that salvation depends on this knowledge, he concludes it should also be taught by revelation, so that more people know it sooner and more surely. The argument rests on premises he takes from faith, such as that human life is directed to God. The 'few, late, with errors' point is a general claim about how human thinking goes, not something he measures.",
-    "quote": "Hence it was necessary for the salvation of man that certain truths which exceed human reason should be made known to him by divine revelation. Even as regards those truths about God which human reason could have discovered, it was necessary that man should be taught by a divine revelation;",
-    "quote_where": "Article 1, I answer that"
-   },
-   "activities": [
-    {
-     "id": "cmp",
-     "kind": "compare",
-     "prompt": "Article 1 asks whether people need any knowledge besides what human reasoning builds up on its own. Aquinas calls that home-made knowledge 'philosophical science'. He calls knowledge that God makes known 'revelation'. His answer gives two different reasons for revelation. Read them side by side.",
-     "cases": [
-      {
-       "label": "Reason 1: truths beyond reason",
-       "text": "Aquinas holds that people are directed to God 'as to an end that surpasses the grasp of his reason'. You have to know a goal before you can aim your thoughts and actions at it. If the goal lies beyond what reason can reach, reason alone can never supply it. So some truths 'which exceed human reason' must be revealed. Without revelation they would not be known at all."
-      },
-      {
-       "label": "Reason 2: truths reason could reach, but badly",
-       "text": "Some truths about God are within reason's reach in principle. Left to reason alone, though, they would be known 'by a few', only 'after a long time', and 'with the admixture of many errors'. Aquinas holds that salvation, which for him means reaching God as life's final goal, depends on this knowledge. So he says these truths too should be revealed, so that people learn them 'more fitly and more surely'."
-      }
-     ],
-     "takeaway": "Reason 1 is about truths reason cannot reach at all. Reason 2 is about truths reason can reach, but too rarely, too slowly, and too unreliably. A truth can need revelation for either reason."
-    },
-    {
-     "id": "idea",
-     "kind": "explain"
+     "explanation": "The question sets the yes/no issue. The objections state the case Aquinas will reject, so it is heard first and in its strongest form. 'On the contrary' gives a short authority for the other side. 'I answer that' is the heart of the article, where Aquinas argues his own position. The replies come last because each one applies that answer to a specific objection."
     },
     {
      "id": "s",
      "kind": "sort",
-     "hypothetical": true,
-     "title": "Which reason applies?",
-     "prompt": "Sort each truth by the reason Aquinas would give for revealing it. Some cards draw on the text, and their location is given. Cards marked 'Made-up case' are invented to illustrate and are not from the paper.",
+     "title": "Which part is this?",
+     "prompt": "These sentences come from other articles of the same Question. The labels have been removed. Sort each one into the part of the article it comes from.",
      "groups": [
       {
-       "id": "beyond",
-       "label": "Beyond reason (Reason 1)"
+       "id": "objection",
+       "label": "Objection"
       },
       {
-       "id": "hard",
-       "label": "Reachable by reason, but only for a few, late, with errors (Reason 2)"
+       "id": "contrary",
+       "label": "On the contrary"
+      },
+      {
+       "id": "answer",
+       "label": "I answer that"
+      },
+      {
+       "id": "reply",
+       "label": "Reply to an objection"
       }
      ],
      "cards": [
       {
        "id": "c1",
-       "text": "What God has prepared for those who wait for Him, which 'the eye hath not seen' (Article 1, quoting Isaiah)",
-       "group": "beyond",
-       "feedback": "Beyond reason. Aquinas uses this verse to show that our final goal surpasses the grasp of reason, so reason could never find it alone."
+       "text": "It seems that sacred doctrine is not a science. For every science proceeds from self-evident principles.",
+       "group": "objection",
+       "feedback": "Objection (Article 2). The signal 'It seems that' opens an argument for the view Aquinas goes on to reject. He concludes that sacred doctrine is a science."
       },
       {
        "id": "c2",
-       "text": "Things 'shown to thee above the understanding of man' (Article 1, Reply to Objection 1)",
-       "group": "beyond",
-       "feedback": "Beyond reason. 'Above the understanding of man' is exactly Reason 1. Such things can only be accepted by faith once God reveals them."
+       "text": "Further, no science deals with individual facts. But this sacred science treats of individual facts, such as the deeds of Abraham, Isaac and Jacob and such like.",
+       "group": "objection",
+       "feedback": "Objection (Article 2, Objection 2). 'Further' is how each objection after the first begins, adding one more argument against Aquinas's view."
       },
       {
        "id": "c3",
-       "text": "What philosophers knew of God 'through creatures' (Article 6)",
-       "group": "hard",
-       "feedback": "Reachable by reason. Philosophers did reach these truths by reasoning from the world. That is why they belong to Reason 2, not Reason 1. Reason can get there, but in Aquinas's view only some people do, slowly, and with mistakes."
+       "text": "Holy Scripture speaks of it as one science: \"Wisdom gave him the knowledge [scientiam] of holy things\" (Wisdom 10:10).",
+       "group": "contrary",
+       "feedback": "On the contrary (Article 3). It is a short appeal to an authority, a Bible verse, with no extended argument. That is the mark of the 'On the contrary'."
       },
       {
        "id": "c4",
-       "text": "God as 'known to Himself alone and revealed to others' (Article 6)",
-       "group": "beyond",
-       "feedback": "Beyond reason. What God alone knows of Himself is, by definition, out of reason's reach. People can have it only if it is revealed."
+       "text": "Other sciences are called the handmaidens of this one: \"Wisdom sent her maids to invite to the tower\" (Proverbs 9:3).",
+       "group": "contrary",
+       "feedback": "On the contrary (Article 5). Again it is a single cited verse pointing against the objections, not Aquinas's own reasoning."
       },
       {
        "id": "c5",
-       "text": "Made-up case: a truth about God that one gifted thinker works out after decades of study, still mixed with a few mistakes",
-       "group": "hard",
-       "feedback": "Reachable but hard. This case shows all three of Aquinas's worries at once: few people (one thinker), late (decades), and with errors. Reason did reach it, so this is Reason 2."
+       "text": "Sacred doctrine is a science. We must bear in mind that there are two kinds of sciences.",
+       "group": "answer",
+       "feedback": "I answer that (Article 2). It states a yes, so it can look like 'On the contrary', but it cites no authority. Aquinas speaks in his own voice and begins to explain ('We must bear in mind…'). That makes it his main answer."
       },
       {
        "id": "c6",
-       "text": "Made-up case: a truth about God that no amount of careful reasoning, by anyone, could ever arrive at",
-       "group": "beyond",
-       "feedback": "Beyond reason. If no reasoning could ever reach it, then being slow or rare is not the issue. It is simply out of reach, which is Reason 1."
+       "text": "It is befitting Holy Writ to put forward divine and spiritual truths by means of comparisons with material things.",
+       "group": "answer",
+       "feedback": "I answer that (Article 9). It is Aquinas's own position on whether Scripture should use metaphors, and he goes on to give his reasons. It answers the whole question, not one particular objection."
+      },
+      {
+       "id": "c7",
+       "text": "Individual facts are treated of in sacred doctrine, not because it is concerned with them principally, but they are introduced rather both as examples to be followed in our lives (as in moral sciences)…",
+       "group": "reply",
+       "feedback": "Reply (Article 2, Reply to Objection 2). It takes up the exact point of one objection, about individual facts such as Abraham's deeds, and shows why that point fails. A reply aims at one objection, not at the whole question."
+      },
+      {
+       "id": "c8",
+       "text": "Poetry makes use of metaphors to produce a representation, for it is natural to man to be pleased with representations. But sacred doctrine makes use of metaphors as both necessary and useful.",
+       "group": "reply",
+       "feedback": "Reply (Article 9, Reply to Objection 1). That objection said metaphors belong to poetry, 'the least of all the sciences'. This sentence answers that specific claim, so it is a reply."
       }
      ],
-     "takeaway": "Ask one question: could reason reach this truth at all? If not, it falls under Reason 1. If it could, but only for a few, late and with errors, it falls under Reason 2."
-    },
-    {
-     "id": "p",
-     "kind": "passage",
-     "question": "Which passage states the second reason: that truths reason could reach would still be reached poorly without revelation?",
-     "options": [
-      {
-       "quote": "because the truth about God such as reason could discover, would only be known by a few, and that after a long time, and with the admixture of many errors.",
-       "feedback": "Correct. This is Reason 2. The truth is one reason 'could discover', yet it would be known by few, late, and with many errors."
-      },
-      {
-       "quote": "Firstly, indeed, because man is directed to God, as to an end that surpasses the grasp of his reason",
-       "feedback": "This is Reason 1. It is about a goal that 'surpasses the grasp' of reason. Reason 2 is about truths reason can grasp, but poorly."
-      },
-      {
-       "quote": "Although those things which are beyond man's knowledge may not be sought for by man through his reason, nevertheless, once they are revealed by God, they must be accepted by faith.",
-       "feedback": "This is Aquinas's reply to Objection 1, about things 'beyond man's knowledge'. That makes it Reason 1 territory. It says nothing about truths reason reaches only slowly or with errors."
-      },
-      {
-       "quote": "But whatever is not above reason is fully treated of in philosophical science. Therefore any other knowledge besides philosophical science is superfluous.",
-       "feedback": "This is Objection 1, the view Aquinas argues against. Reason 2 is his answer to it: even truths 'not above reason' are not adequately known through philosophy alone."
-      }
+     "hints": [
+      "Look for signals: 'It seems that' and 'Further' open objections, and a lone cited verse usually means 'On the contrary'.",
+      "If a sentence answers the whole question in Aquinas's own voice, it is 'I answer that'. If it answers one particular argument, it is a reply.",
+      "Two cards argue against sacred doctrine being a science. They are the objections Aquinas is about to answer."
      ],
-     "answer": 0
+     "takeaway": "Each part has a job. Objections argue for the view to be rejected. 'On the contrary' cites an authority for the other side. 'I answer that' gives Aquinas's reasoned position. Each reply answers one objection. Once you can spot the job, you can read any article."
     }
    ]
   },
   {
-   "id": "same_conclusion_different_route",
-   "title": "Sciences differ by how they know",
-   "idea": "Two sciences can reach the same conclusion and still be different sciences, because a science is defined by its means of knowing, not by its conclusions.",
-   "role": "core",
+   "id": "same_truth_different_means",
+   "title": "Same fact, different route",
+   "idea": "Sciences are told apart by how they know, not by what they study, so the same truth can belong to two different sciences.",
+   "role": "prerequisite",
    "terms": [
     {
-     "term": "means of knowing",
-     "means": "The route a science takes to reach its conclusions, such as mathematics, the study of matter, or revelation"
+     "term": "science (scientia)",
+     "means": "For Aquinas, any organised body of knowledge that reasons from its own starting points. It is wider than today's laboratory science."
     },
     {
-     "term": "philosophical theology",
-     "means": "The part of philosophy that studies God using human reason alone (Aristotle called it the divine science)"
+     "term": "means of knowing",
+     "means": "The route by which a science reaches its conclusions, such as mathematics, observing matter, natural reason or revelation"
+    },
+    {
+     "term": "sacred doctrine",
+     "means": "Aquinas's name for the body of knowledge received through God's revelation, as opposed to knowledge built up by human reason alone"
     }
    ],
-   "recap": "A science is marked by its route to knowledge, so reason and revelation can be different sciences even where they agree.",
+   "recap": "What makes two sciences different is the route each takes to its knowledge. So reason and revelation can teach the same truth and still be different sciences.",
    "understand": {
-    "explanation": "Objection 2 of Article 1 argued that philosophy already studies everything, even God, so no further knowledge is needed. Aquinas replies that a science is defined not by the conclusions it reaches but by its means of knowing: the route it takes to get there. His example is that the astronomer proves the earth is round by mathematics that sets matter aside, while the physicist proves the same thing by studying matter itself. In the same way, philosophical theology reaches truths about God by natural reason, while sacred doctrine reaches them by revelation. So even where the two overlap, Aquinas says the theology inside sacred doctrine \"differs in kind\" from the theology that is part of philosophy. This is Aquinas's own argument by analogy, and readers still debate whether the analogy fully holds.",
+    "explanation": "In Article 1, an objector argues that philosophy already studies everything, even God, so a second body of knowledge about God would be pointless. Aquinas answers that a science (scientia), meaning any organised body of knowledge that reasons from its own starting points rather than only laboratory science, is told apart by its means of knowing: the route it takes to reach its conclusions, not just the topic it talks about. His example is the astronomer and the physicist: both can prove the earth is round, one by mathematics and the other by studying physical matter. In the same way, a truth about God can be reached by human reason, in the theology that is part of philosophy, and also taught by revelation, in sacred doctrine, and these two are different kinds of science. This is Aquinas's way of dividing the sciences, not a rule that everyone accepts; many today group fields by their subject instead.",
     "quote": "Sciences are differentiated according to the various means through which knowledge is obtained. For the astronomer and the physicist both may prove the same conclusion: that the earth, for instance, is round: the astronomer by means of mathematics (i.e. abstracting from matter), but the physicist by means of matter itself.",
-    "quote_where": "Article 1, Reply to Objection 2"
+    "quote_where": "Article 1, Reply to Objection 2",
+    "source_id": "s1",
+    "source_ids": [
+     "s1"
+    ]
    },
    "activities": [
     {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
      "id": "cmp_earth",
      "kind": "compare",
-     "prompt": "Two experts both arrive at the same conclusion: the earth is round. Look at how each one gets there.",
+     "prompt": "Two experts reach one conclusion: the earth is round. Look at how each one gets there.",
      "cases": [
       {
        "label": "The astronomer",
-       "text": "Proves the earth is round by mathematics. In Aquinas's words, the astronomer reasons by \"abstracting from matter\": shapes and quantities are considered, and what things are made of is set aside."
+       "text": "Proves the earth is round by mathematics. They reason about shape and figure while setting aside what the earth is made of. Aquinas calls this 'abstracting from matter'."
       },
       {
        "label": "The physicist",
-       "text": "Proves the very same conclusion \"by means of matter itself\": by reasoning about material bodies and how they behave."
+       "text": "Proves the same thing 'by means of matter itself', reasoning from the physical stuff of the earth. Aquinas gives no further detail of the proof here."
       }
      ],
-     "takeaway": "The conclusion is identical, but the route differs. Aquinas calls this route the means of knowing. He says the route, not the conclusion, is what makes astronomy and physics two different sciences."
+     "takeaway": "The conclusion is the same, but the means of knowing is different. For Aquinas, that is what makes astronomy and physics two separate sciences. Medieval scholars already took the earth's roundness as known, so this is his illustration, not a new discovery."
     },
     {
-     "id": "cmp_god",
+     "id": "cmp_theology",
      "kind": "compare",
-     "prompt": "Now Aquinas applies the same move to knowledge about God. Recall the objection: philosophy already has a part that studies God, so why would anything more be needed?",
+     "prompt": "Now apply the same test to knowledge about God.",
      "cases": [
       {
        "label": "Theology inside philosophy",
-       "text": "This part of philosophy studies God by human reason alone. Aquinas notes that it knows God \"so far as He can be known through creatures just as philosophers knew Him.\" This is philosophical theology."
+       "text": "Reaches truths about God by natural reason alone. Following Aristotle, the objector calls it 'theology, or the divine science', a part of philosophy."
       },
       {
-       "label": "Theology inside sacred doctrine",
-       "text": "This studies God by revelation. It covers what reason could reach, and also God \"as far as He is known to Himself alone and revealed to others.\""
+       "label": "Sacred doctrine",
+       "text": "Receives truths about God through revelation and accepts them by faith. Aquinas grants that some of these truths are ones reason could also reach."
       }
      ],
-     "takeaway": "Even where the two reach the same truths about God, their means of knowing differ. So Aquinas concludes that the theology in sacred doctrine \"differs in kind\" from philosophical theology, just as astronomy differs from physics."
-    },
-    {
-     "id": "idea",
-     "kind": "explain"
+     "takeaway": "Even where the two teach the same truth, Aquinas concludes they 'differ in kind', because one knows by reason and the other by revelation. Why revelation was needed at all is the next concept."
     },
     {
      "id": "sort_routes",
      "kind": "sort",
-     "title": "Which route reaches it?",
-     "prompt": "Using only what Aquinas says in this question, sort each claim by the route that reaches it: natural reason only, revelation only, or both routes, so that the same conclusion is reached two ways.",
+     "hypothetical": true,
+     "title": "How do you know that?",
+     "prompt": "Each card is an everyday claim and the way someone came to know it. Sort each card by its route, not by its topic.",
      "groups": [
       {
-       "id": "reason",
-       "label": "Natural reason only"
+       "id": "measured",
+       "label": "Measured directly"
       },
       {
-       "id": "revelation",
-       "label": "Revelation only (beyond reason)"
+       "id": "calculated",
+       "label": "Calculated from other facts"
       },
       {
-       "id": "both",
-       "label": "Both routes reach it"
+       "id": "told",
+       "label": "Told by a trusted source"
       }
      ],
      "cards": [
       {
        "id": "c1",
-       "text": "The earth is round.",
-       "group": "reason",
-       "feedback": "Two sciences prove this, and both work by natural reason: the astronomer through mathematics, the physicist through matter. Different routes do not always mean reason versus revelation. Here they are two routes within reason itself."
+       "text": "The table is 2 metres long: I ran a tape measure along it.",
+       "group": "measured",
+       "feedback": "The tape touches the table itself. This is direct measurement, a little like the physicist working 'by means of matter itself'."
       },
       {
        "id": "c2",
-       "text": "God is the highest cause of the whole universe.",
-       "group": "both",
-       "feedback": "In Article 6 Aquinas says philosophers knew God as the highest cause \"through creatures\". Sacred doctrine also treats God as the highest cause. It is one conclusion reached by two routes, like the round earth."
+       "text": "The table is 2 metres long: it covers 8 floor tiles, each 25 cm, and 8 × 25 cm = 2 m.",
+       "group": "calculated",
+       "feedback": "It is the same fact as the tape-measure card, but reached by arithmetic from other facts. The route differs even though the conclusion does not."
       },
       {
        "id": "c3",
-       "text": "Something of God can be known from the things he has made.",
-       "group": "both",
-       "feedback": "Philosophers reached this by reasoning from creatures. Aquinas also cites Scripture saying it: \"That which is known of God is manifest in them\" (Romans 1:19). A revealed text affirms what reason can reach, so both routes arrive at it."
+       "text": "The table is 2 metres long: the shop's catalogue says so.",
+       "group": "told",
+       "feedback": "It is the same fact a third time, now accepted on the word of a source you trust. The topic never changed. Only the route did."
       },
       {
        "id": "c4",
-       "text": "What God has prepared for those who wait for him.",
-       "group": "revelation",
-       "feedback": "Aquinas quotes Isaiah 64:4 (\"The eye hath not seen...\") to show that man's end \"surpasses the grasp of his reason.\" Truths like this \"exceed human reason\" and must be made known by revelation."
+       "text": "The bath water is 40 °C: I read it off a thermometer.",
+       "group": "measured",
+       "feedback": "A thermometer reads the water directly, so this is measurement."
       },
       {
        "id": "c5",
-       "text": "Christ rose from the dead.",
-       "group": "revelation",
-       "feedback": "This is one of the articles of faith, the principles of sacred doctrine. Aquinas holds that such articles are received by revelation and are not proved by natural reason."
+       "text": "My phone bill is €30: I added up the three charges on it.",
+       "group": "calculated",
+       "feedback": "You worked the total out from other numbers. The total comes from calculation, even though the charges themselves came from the bill."
       },
       {
        "id": "c6",
-       "text": "The truths about God that reason could discover, though only a few would find them, after a long time and with errors.",
-       "group": "both",
-       "feedback": "Aquinas says that even these were taught by revelation, so that salvation would come \"more fitly and more surely.\" Reason can reach them, and revelation also teaches them. That overlap is exactly why he needs the idea that sciences differ by route."
+       "text": "Sunset is at 18:40 today: the weather service announced it.",
+       "group": "told",
+       "feedback": "You did not observe or compute this yourself. You accepted it from a source you trust."
       }
      ],
+     "takeaway": "The table's length appeared in all three groups. What decided the group was how it was known, which is Aquinas's test in miniature. This is only an everyday analogy: his 'sciences' are whole organised bodies of knowledge, not single claims.",
      "hints": [
-      "Ask first: could a philosopher with no Scripture reach this? Then ask: does Aquinas say revelation teaches it?",
-      "Two different routes can both be natural reason, as with the astronomer and the physicist.",
-      "Aquinas says truths about God that reason can reach were also revealed, so those belong in the overlap."
+      "Ignore what the claim is about and ask how the person came to know it.",
+      "Did they touch the thing, work it out from other facts, or take someone's word?"
+     ]
+    },
+    {
+     "id": "q_objection",
+     "kind": "choice",
+     "mode": "determinate",
+     "question": "The objector says philosophy already treats of God, so a second science of God is superfluous. Which reply matches Aquinas's answer in Article 1?",
+     "options": [
+      {
+       "text": "The same truths can be reached by a different means, revelation rather than reason, so the second science is a different kind and not redundant.",
+       "feedback": "Correct. He grants the overlap in subject and locates the difference in the means of knowing: theology in sacred doctrine 'differs in kind' from the theology that is part of philosophy."
+      },
+      {
+       "text": "Philosophy gets God wrong, so it must be replaced by revelation.",
+       "feedback": "Aquinas does not say this here. He allows that things 'may be learned from philosophical science, so far as they can be known by natural reason'. His point is about a different route, not about replacing philosophy."
+      },
+      {
+       "text": "Sacred doctrine studies a completely different topic from philosophy, so the two never overlap.",
+       "feedback": "This misses his point. The astronomer and the physicist prove the very same conclusion. The overlap is allowed, and the difference lies in how each knows."
+      },
+      {
+       "text": "Two sciences can never prove the same conclusion, so one of them must be dropped.",
+       "feedback": "This is the opposite of his example. He says both may prove the same conclusion, that the earth is round, by different means."
+      }
      ],
-     "takeaway": "The \"both\" pile is the key one. These conclusions are shared by philosophical theology and sacred doctrine, and they show why sharing a conclusion does not make two sciences one. This sorting follows Aquinas's own view. Which truths about God reason can really reach is a question philosophers have long disputed."
+     "answer": 0,
+     "hints": [
+      "Recall the astronomer and the physicist. Did they disagree about the conclusion?"
+     ]
+    },
+    {
+     "id": "q_new_case",
+     "kind": "choice",
+     "mode": "determinate",
+     "hypothetical": true,
+     "question": "A letter is shown to date from about 1850. A historian proves it from the events the letter mentions. A chemist proves it by testing the ink. By Aquinas's test, what follows?",
+     "options": [
+      {
+       "text": "They work in different sciences, because each reaches the date by a different means.",
+       "feedback": "Correct. This is the astronomer and physicist pattern again: one conclusion reached by two routes, so two sciences."
+      },
+      {
+       "text": "They work in the same science, because they reach the same conclusion.",
+       "feedback": "This sorts by conclusion, not by route. Aquinas's test looks at the means through which knowledge is obtained, and these means differ."
+      },
+      {
+       "text": "One of them must be mistaken, because two sciences cannot prove the same thing.",
+       "feedback": "Aquinas says plainly that two sciences 'may prove the same conclusion'. Agreement between different routes is no sign of error."
+      },
+      {
+       "text": "Only the chemist counts as a science, because only the chemist measures something physical.",
+       "feedback": "This uses today's narrow sense of 'science'. For Aquinas, mathematics-based astronomy is a science too, and so is any organised reasoning from its own starting points."
+      }
+     ],
+     "answer": 0,
+     "hints": [
+      "Which matters for Aquinas: the conclusion, or the route to it?"
+     ]
     }
    ]
   },
   {
-   "id": "arguing_from_principles",
-   "title": "Every science argues from its principles, not to them",
-   "idea": "A science does not prove its own starting principles; it reasons from them to new conclusions and, against someone who concedes nothing, can only answer objections.",
+   "id": "why_revelation_needed",
+   "title": "Why reason alone was not enough",
+   "idea": "Revelation is needed both for truths beyond reason and for truths within reason that would otherwise be known only by a few, after a long time, and mixed with errors.",
    "role": "core",
    "terms": [
     {
-     "term": "principles",
-     "means": "The starting points a science takes as given and reasons from, rather than proving them inside that science"
+     "term": "end",
+     "means": "In Aquinas's usage, the final goal something is aimed at, like the finish line of a race"
     },
     {
-     "term": "articles of faith",
-     "means": "The core beliefs of the Christian creed, such as Christ's resurrection, which Aquinas treats as theology's principles"
-    },
-    {
-     "term": "demonstration",
-     "means": "A strict proof that forces its conclusion from premises both sides accept"
-    },
-    {
-     "term": "metaphysics",
-     "means": "For Aquinas, the highest branch of philosophy, which studies being as such"
+     "term": "salvation",
+     "means": "In Christian belief, being brought safely to that final goal: life with God"
     }
    ],
-   "recap": "Proof starts from principles and does not end in them: theology argues from shared articles of faith, and against someone who shares none it can only answer objections.",
+   "recap": "Revelation was needed twice over: for truths reason can never reach, and for truths reason could reach but only for a few, slowly and with errors.",
    "understand": {
-    "explanation": "In Article 8, Aquinas says no science proves its own principles: it takes them as given and reasons from them to new conclusions, the way Paul reasons from Christ's resurrection to the resurrection of everyone. So arguing only works where the two sides share some starting point. With a heretic who accepts some of scripture, you can argue from the parts he accepts. With someone who accepts nothing of revelation, you cannot prove the articles of faith at all; you can only show that his objections fail, just as metaphysics, the highest branch of philosophy, can only answer the objections of an opponent who concedes nothing. Aquinas adds that such objections can never be a demonstration, a strict proof, but this rests on his own premise that faith is infallibly true, which the objector does not share.",
-    "quote": "As other sciences do not argue in proof of their principles, but argue from their principles to demonstrate other truths in these sciences: so this doctrine does not argue in proof of its principles, which are the articles of faith, but from them it goes on to prove something else",
-    "quote_where": "Article 8, I answer that"
+    "explanation": "In Article 1, Aquinas asks whether people need any knowledge besides philosophy, and he answers yes for two separate reasons. First, he says humans are directed to God as their \"end\", meaning the final goal of their life, and this goal lies beyond what reason can grasp; since you must know a goal before you can steer your thoughts and actions toward it, truths beyond reason had to be revealed. Second, even truths about God that reason could in principle work out would, left to reason alone, be known only by a few people, after a long time, and mixed with many errors. Because \"salvation\", in Christian belief being brought safely to that final goal, depends on this knowledge, Aquinas concludes that revelation brings it to people \"more fitly and more surely\". Keep in mind what kind of claim this is: an argument made from inside Christian faith, not a measured finding, and a reader who does not grant its first step (that humans are directed to God) will not be bound by its conclusion.",
+    "quote": "Hence it was necessary for the salvation of man that certain truths which exceed human reason should be made known to him by divine revelation. Even as regards those truths about God which human reason could have discovered, it was necessary that man should be taught by a divine revelation; because the truth about God such as reason could discover, would only be known by a few, and that after a long time, and with the admixture of many errors.",
+    "quote_where": "Article 1, \"I answer that\"",
+    "source_id": "s1",
+    "source_ids": [
+     "s1"
+    ]
    },
    "activities": [
-    {
-     "id": "cmp_direction",
-     "kind": "compare",
-     "prompt": "An argument can do two different things with a starting point. Compare them.",
-     "cases": [
-      {
-       "label": "Arguing TO a starting point",
-       "text": "You try to prove the starting point itself. Aquinas says no science does this for its own starting points, which he calls its principles. A science leaves the defence of its principles to someone else, or to no one, and does not prove them inside itself."
-      },
-      {
-       "label": "Arguing FROM a starting point",
-       "text": "You take the starting point as given and draw new conclusions from it. Aquinas's example: Paul takes Christ's resurrection as settled. It is one of the core creed beliefs Aquinas calls articles of faith. From it Paul argues to the general resurrection of all the dead (1 Corinthians 15)."
-      }
-     ],
-     "takeaway": "Every science moves from its principles to its conclusions. Principles are where a proof begins, not what it proves."
-    },
-    {
-     "id": "cmp_opponents",
-     "kind": "compare",
-     "prompt": "Now suppose someone denies theology's principles. What happens next depends on how much he still accepts. Compare Aquinas's two cases.",
-     "cases": [
-      {
-       "label": "The heretic: accepts some revelation",
-       "text": "He accepts some texts of scripture or some articles of faith, but denies others. You share some starting points, so you can still argue. You quote the texts he accepts, or reason from one article he holds to the one he denies. A real proof is possible because it runs from common ground."
-      },
-      {
-       "label": "The unbeliever: accepts none",
-       "text": "He accepts nothing of divine revelation. There is no shared starting point, so nothing can be proved to him. What remains is defence: if he raises objections against faith, you can show where they go wrong. Aquinas holds that such objections are never strict proofs, which he calls demonstrations. To him they are only difficulties that can be answered."
-      }
-     ],
-     "takeaway": "Agreement on some principles makes proof possible. With no agreement at all, you can only answer objections. Aquinas notes that metaphysics, the highest branch of philosophy, is in the same position against someone who concedes nothing."
-    },
     {
      "id": "idea",
      "kind": "explain"
     },
     {
-     "id": "q_one_article",
-     "kind": "choice",
-     "mode": "determinate",
-     "hypothetical": true,
-     "question": "Imagine Maria. She accepts the Gospels as revealed and believes Christ rose from the dead, but she denies that the rest of the dead will rise. On Aquinas's account, what can a theologian do with her?",
-     "options": [
+     "id": "chain",
+     "kind": "trace",
+     "prompt": "Trace Aquinas's first reason, step by step, from where he starts to his conclusion. Some boxes are side roads: they appear in the article but are not steps of this argument.",
+     "nodes": [
       {
-       "text": "Prove the general resurrection to her, arguing from the articles and texts she already accepts.",
-       "feedback": "Right. Maria is like Aquinas's heretic: she shares some principles. Aquinas says that against someone who denies one article you can argue from another, just as Paul argues from Christ's resurrection to the general resurrection."
+       "id": "start",
+       "label": "We are directed to God as our end",
+       "x": 8,
+       "y": 50
       },
       {
-       "text": "Only answer her objections, since she denies a principle of theology.",
-       "feedback": "That is the unbeliever case, where nothing is shared. Maria still accepts a lot of revelation, so real argument from that common ground is possible. You are not limited to defence."
+       "id": "beyond",
+       "label": "That end surpasses reason's grasp",
+       "x": 28,
+       "y": 50
       },
       {
-       "text": "Prove the general resurrection from pure reason, without appeal to anything revealed.",
-       "feedback": "Aquinas says arguments from human reason cannot prove what must be received on faith. The proof has to start from revealed principles she accepts, not from reason alone."
+       "id": "know_end",
+       "label": "An end must be known to aim at it",
+       "x": 50,
+       "y": 50
       },
       {
-       "text": "Nothing at all: once someone denies any article, discussion is over.",
-       "feedback": "Too strong. For Aquinas, denying one article leaves the others standing. Those shared articles are exactly what makes argument possible."
+       "id": "made_known",
+       "label": "Truths beyond reason must be made known",
+       "x": 72,
+       "y": 50
+      },
+      {
+       "id": "conclusion",
+       "label": "So revelation is necessary",
+       "x": 92,
+       "y": 50
+      },
+      {
+       "id": "philo_all",
+       "label": "Philosophy already covers all being",
+       "x": 30,
+       "y": 15
+      },
+      {
+       "id": "too_high",
+       "label": "Do not seek things too high for you",
+       "x": 50,
+       "y": 85
+      },
+      {
+       "id": "reason_enough",
+       "label": "Reason alone can reach every truth",
+       "x": 62,
+       "y": 15
       }
      ],
-     "answer": 0,
-     "hints": [
-      "How much does Maria still accept?",
-      "Aquinas: against those who deny one article of faith, we can argue from another."
-     ]
-    },
-    {
-     "id": "q_concedes_nothing",
-     "kind": "choice",
-     "mode": "determinate",
-     "hypothetical": true,
-     "question": "Imagine Sam. He accepts no scripture and no article of faith. He offers an argument that one Christian doctrine is self-contradictory. On Aquinas's account, what can the theologian do?",
-     "options": [
+     "edges": [
       {
-       "text": "Prove the doctrine to Sam by reasoning from premises he accepts.",
-       "feedback": "Sam concedes nothing of revelation, and the doctrine is an article of faith. Aquinas says there is then 'no longer any means of proving the articles of faith by reasoning.'"
+       "from": "start",
+       "to": "beyond"
       },
       {
-       "text": "Quote scripture as conclusive proof.",
-       "feedback": "Scripture only works as proof against someone who accepts it, like the heretic. Sam rejects it, so quoting it proves nothing to him."
+       "from": "beyond",
+       "to": "know_end"
       },
       {
-       "text": "Examine Sam's argument and show where it fails, without proving the doctrine itself.",
-       "feedback": "Right. With no shared principles, the only move left is defence: answering his objections. Showing that his argument fails is not the same as proving the doctrine true."
+       "from": "know_end",
+       "to": "made_known"
       },
       {
-       "text": "Admit that Sam may have strictly proved the doctrine false.",
-       "feedback": "Aquinas rules this out. He holds that arguments against faith 'cannot be demonstrations, but are difficulties that can be answered.' Keep in mind that this follows from his premise that faith rests on infallible truth, which Sam does not grant."
+       "from": "made_known",
+       "to": "conclusion"
+      },
+      {
+       "from": "start",
+       "to": "philo_all"
+      },
+      {
+       "from": "philo_all",
+       "to": "reason_enough"
+      },
+      {
+       "from": "reason_enough",
+       "to": "conclusion"
+      },
+      {
+       "from": "beyond",
+       "to": "too_high"
+      },
+      {
+       "from": "too_high",
+       "to": "conclusion"
       }
      ],
-     "answer": 2,
+     "answer": [
+      "start",
+      "beyond",
+      "know_end",
+      "made_known",
+      "conclusion"
+     ],
+     "path": true,
      "hints": [
-      "Sam shares no starting point with the theologian.",
-      "Without shared principles, can anything be proved, or only defended?"
-     ]
+      "Aquinas's key move is about goals: what must be true of a goal before you can head toward it?",
+      "The route stays on the middle row. The boxes above and below come from the objections, not from Aquinas's answer.",
+      "After 'That end surpasses reason's grasp', the next step is about knowing an end before aiming at it."
+     ],
+     "explanation": "The route is: we are directed to God as our end → that end surpasses reason's grasp → an end must be known before we can direct our thoughts and actions to it → so truths beyond reason must be made known → so revelation is necessary. The upper detour ('Philosophy already covers all being' → 'Reason alone can reach every truth') is Objection 2's line of thought. It leads the other way, to the claim that no further knowledge is needed, so it cannot support Aquinas's conclusion. The lower detour ('Do not seek things too high for you') is the Bible verse quoted in Objection 1. In his reply Aquinas agrees that reason should not go hunting for such things, but he adds that once God reveals them they must be accepted by faith. That is a reply to the objection, not a step of this argument. Note that this route is only his first reason. The second reason (few people, long time, many errors) is a separate route to the same conclusion."
     },
     {
-     "id": "q_why_answerable",
-     "kind": "choice",
-     "mode": "determinate",
-     "question": "Why does Aquinas say every argument against faith can be answered rather than being a true proof?",
-     "options": [
+     "id": "kinds",
+     "kind": "sort",
+     "title": "Two kinds of truth about God",
+     "prompt": "Aquinas's two reasons cover two kinds of truth. Sort each one: is it beyond reason altogether, or within reason's reach but hard to get to?",
+     "groups": [
       {
-       "text": "Because faith rests on infallible truth, and the opposite of a truth can never be strictly proved.",
-       "feedback": "Right. This is his reason in Article 8. Note that it is conditional on his starting premise: it convinces someone who already grants that faith is true, not an outsider who doubts that premise."
+       "id": "beyond",
+       "label": "Beyond reason: only revelation can tell us"
       },
       {
-       "text": "Because he had checked every possible objection and found each one flawed.",
-       "feedback": "He makes no such survey. His claim follows from a general principle about truth, not from testing objections one by one."
-      },
-      {
-       "text": "Because people who object to faith are always uneducated.",
-       "feedback": "Aquinas says nothing like this here. His point concerns the logic of truth and proof, not the character of objectors."
-      },
-      {
-       "text": "Because theology is allowed to ignore arguments it dislikes.",
-       "feedback": "The opposite: he says the theologian should answer objections. He just denies that they can succeed as strict proofs."
+       "id": "within",
+       "label": "Within reason, but hard to reach"
       }
      ],
-     "answer": 0,
-     "hints": [
-      "Look for a reason about truth, not about people.",
-      "What can never be demonstrated, according to Aquinas?"
-     ]
+     "cards": [
+      {
+       "id": "c1",
+       "text": "What God has prepared for those who wait for Him (the verse from Isaiah that Aquinas quotes)",
+       "group": "beyond",
+       "feedback": "Beyond reason. Aquinas quotes this verse because no eye has seen it: it is the clearest example of the end that 'surpasses the grasp of his reason'."
+      },
+      {
+       "id": "c2",
+       "text": "What the philosophers knew of God by studying the things He made (Article 6)",
+       "group": "within",
+       "feedback": "Within reason. Article 6 says God can be known 'through creatures just as philosophers knew Him'. Reason reached this, but by Aquinas's second reason only a few reached it, slowly and with errors."
+      },
+      {
+       "id": "c3",
+       "text": "The truths about God in the part of philosophy Aristotle called theology",
+       "group": "within",
+       "feedback": "Within reason. Objection 2 points to this 'divine science' to argue that philosophy is enough. Aquinas does not deny it exists. He says revelation is still needed, because few reach it unaided."
+      },
+      {
+       "id": "c4",
+       "text": "That Christ rose from the dead, an article of faith (Article 8)",
+       "group": "beyond",
+       "feedback": "Beyond reason. Article 8 says the articles of faith cannot be proved by human reason. They are received from revelation and then used as starting points for further argument."
+      },
+      {
+       "id": "c5",
+       "text": "God as He is known to Himself alone (Article 6)",
+       "group": "beyond",
+       "feedback": "Beyond reason. Article 6 sets this apart from what philosophers could know through creatures. It reaches us only if it is 'revealed to others'."
+      },
+      {
+       "id": "c6",
+       "text": "A truth about God that reason can prove, though few would ever work it out",
+       "group": "within",
+       "feedback": "Within reason. This is exactly the second kind. Reason could discover it, so it is not beyond reason. Aquinas still thinks revelation is needed so that it reaches everyone, sooner and without errors."
+      }
+     ],
+     "takeaway": "The first reason covers truths reason can never reach. The second covers truths reason can reach, but only for a few, after a long time and with mistakes. Revelation is needed for both, for different reasons."
     },
     {
-     "id": "p_support",
+     "id": "source",
      "kind": "passage",
-     "question": "Which passage most directly supports what the theologian can, and cannot, do with Sam, who accepts nothing of revelation?",
+     "question": "Which passage gives Aquinas's second reason: that even truths reason could reach would, without revelation, be known by few, late and with errors?",
      "options": [
       {
-       "quote": "If our opponent believes nothing of divine revelation, there is no longer any means of proving the articles of faith by reasoning, but only of answering his objections — if he has any — against faith.",
-       "feedback": "Yes. This states both halves of Sam's case: no proof of the articles is possible, and answering objections is all that remains."
+       "quote": "Firstly, indeed, because man is directed to God, as to an end that surpasses the grasp of his reason",
+       "source_id": "s1",
+       "feedback": "This is the first reason. It is about truths beyond reason, not about truths reason could reach but rarely does."
       },
       {
-       "quote": "thus we can argue with heretics from texts in Holy Writ, and against those who deny one article of faith, we can argue from another.",
-       "feedback": "This is about the heretic, who shares some texts. It fits Maria's case, not Sam's."
+       "quote": "because the truth about God such as reason could discover, would only be known by a few, and that after a long time, and with the admixture of many errors.",
+       "source_id": "s1",
+       "feedback": "Correct. It names truths 'reason could discover' and lists the three problems: few people, a long time, and many errors."
       },
       {
-       "quote": "Hence Sacred Scripture, since it has no science above itself, can dispute with one who denies its principles only if the opponent admits some at least of the truths obtained through divine revelation",
-       "feedback": "Close. It implies that proof needs some shared ground, but it does not say what is left when there is none. The correct passage adds that answering objections remains."
+       "quote": "Although those things which are beyond man's knowledge may not be sought for by man through his reason, nevertheless, once they are revealed by God, they must be accepted by faith.",
+       "source_id": "s1",
+       "feedback": "This is the reply to Objection 1. It concerns truths beyond reason and how to receive them, so it does not give the second reason."
       },
       {
-       "quote": "Since faith rests upon infallible truth, and since the contrary of a truth can never be demonstrated, it is clear that the arguments brought against faith cannot be demonstrations, but are difficulties that can be answered.",
-       "feedback": "This explains why Sam's objections can be answered, but it does not say that proving the articles to him is impossible. It supports only half of the case."
+       "quote": "Hence there is no reason why those things which may be learned from philosophical science, so far as they can be known by natural reason, may not also be taught us by another science so far as they fall within revelation.",
+       "source_id": "s1",
+       "feedback": "This is from the reply to Objection 2, the earlier idea that one truth can be known by two routes. It shows that revelation can teach what reason also knows, but not why that is needed. The 'few, long time, errors' passage gives the why."
       }
      ],
-     "answer": 0
+     "answer": 1,
+     "hints": [
+      "Look for a passage about truths reason could discover, not truths beyond reason.",
+      "The right passage lists three problems with leaving such truths to reason alone."
+     ]
     }
    ]
   },
   {
    "id": "borrowed_principles",
-   "title": "A science on borrowed principles",
-   "idea": "Some sciences take their principles on trust from a higher science, as music takes them from arithmetic, and Aquinas argues theology is a genuine science in exactly this way, taking its principles from God's own knowledge.",
-   "role": "contribution",
+   "title": "A science can borrow its starting points",
+   "idea": "A science may start from principles proven by a higher science and take them on trust, as music does from arithmetic, and sacred doctrine takes its principles from God's knowledge in the same way.",
+   "role": "core",
    "terms": [
     {
-     "term": "natural light of intelligence",
-     "means": "The mind's own power to see that something is true without needing a proof"
+     "term": "principle",
+     "means": "A starting point of a science: something it assumes and reasons from, rather than proves"
+    },
+    {
+     "term": "self-evident",
+     "means": "Seen to be true as soon as it is understood, by the mind's own 'natural light', with no proof needed"
     },
     {
      "term": "higher science",
-     "means": "A science whose proved results serve as the starting points of another, lower science"
+     "means": "A science whose proven results another science takes as its own starting points"
     },
     {
      "term": "articles of faith",
-     "means": "The core revealed truths that sacred doctrine takes as its starting principles"
+     "means": "The core beliefs of the Christian creed, which Aquinas treats as the principles of sacred doctrine"
     }
    ],
-   "recap": "A science need not prove its own starting points. Music borrows them from arithmetic, and Aquinas argues theology borrows them, through revelation, from God's own knowledge.",
+   "recap": "A science's starting points need not be obvious: it can borrow them from a higher science, as music trusts arithmetic, and Aquinas says sacred doctrine borrows from God's knowledge.",
    "understand": {
-    "explanation": "Aquinas sorts sciences into two kinds. Some, like arithmetic and geometry, start from principles known by the natural light of intelligence: the mind sees for itself that they are true. Others start from principles proved by a higher science: the science of perspective (roughly, optics) takes its principles from geometry, and music takes its principles from arithmetic. The musician accepts these on the mathematician's authority and is no less a scientist for it. Aquinas argues that sacred doctrine is a science of this second kind: its principles, the articles of faith, are established in a higher science, God's own knowledge shared with the blessed, and reach us by revelation. This is an argument by analogy made from inside a faith tradition. It shows that theology has the shape of a science only if you grant that this higher knowledge exists and was truly revealed, and that premise is exactly what a sceptic would deny.",
+    "explanation": "In this text a 'science' means any organised body of knowledge that reasons from starting points to conclusions; it does not mean lab work, and each starting point is called a principle. Some sciences, like arithmetic and geometry, start from self-evident principles, which the mind sees are true as soon as it understands them. Others start from results proven in a higher science and simply take them on trust: music (in the Middle Ages, the study of harmony as number ratios) borrows from arithmetic, and perspective (the study of sight lines) borrows from geometry. Aquinas says sacred doctrine is the second kind: its principles, the articles of faith, come from the knowledge God has and shares with the blessed in heaven, and they reach us by revelation. This is his answer to the worry that faith's starting points are not obvious to everyone. Keep in mind that this is Aquinas's argument, not a settled result, and the analogy has a limit: a musician could go and study arithmetic, but on Aquinas's view no one in this life can check God's knowledge directly, which is one reason later thinkers argued over whether theology is a science in the strict sense.",
     "quote": "So it is that sacred doctrine is a science because it proceeds from principles established by the light of a higher science, namely, the science of God and the blessed. Hence, just as the musician accepts on authority the principles taught him by the mathematician, so sacred science is established on principles revealed by God.",
-    "quote_where": "Article 2, \"I answer that\""
+    "quote_where": "Article 2, 'I answer that'",
+    "source_id": "s1",
+    "source_ids": [
+     "s1"
+    ]
    },
    "activities": [
-    {
-     "id": "opening",
-     "kind": "choice",
-     "mode": "opening",
-     "question": "Before we start, give your gut answer. A field takes its starting points on trust and never proves them itself. Can it still count as a real science?",
-     "options": [
-      {
-       "text": "No. A real science must prove everything it relies on.",
-       "feedback": "This is a common intuition, and Aquinas's first objection in Article 2 makes much the same point. Keep it in mind: the next screens test whether any science actually meets this standard."
-      },
-      {
-       "text": "Yes, if those starting points were properly established somewhere else, by someone in a position to establish them.",
-       "feedback": "This is close to the line Aquinas takes. Watch for what he thinks that 'somewhere else' is, and for the assumption the whole argument rests on."
-      },
-      {
-       "text": "Only if anyone could check those starting points for themselves.",
-       "feedback": "This puts the weight on public checkability. Aquinas's musician example will test the idea: the musician does not check everything himself, yet we still call music a science."
-      }
-     ]
-    },
-    {
-     "id": "musician",
-     "kind": "worked",
-     "title": "The musician and the mathematician",
-     "steps": [
-      {
-       "text": "In Article 2, Aquinas begins by sorting sciences into two kinds, according to where their starting principles come from.",
-       "result": "Two kinds of science"
-      },
-      {
-       "text": "Kind one starts from what the mind can see directly. Arithmetic and geometry rest on principles known 'by the natural light of intelligence': the mind's own power to see that something is true without a proof.",
-       "result": "Arithmetic, geometry: principles seen by the mind itself"
-      },
-      {
-       "text": "Kind two starts from results that were proved somewhere else. The science of perspective (roughly, optics) uses results proved in geometry. Music uses results proved in arithmetic. The science that supplies the results is called the higher science.",
-       "result": "Perspective ← geometry; music ← arithmetic"
-      },
-      {
-       "text": "Picture the musician. He does not prove again the facts about number that his craft relies on. In Aquinas's words, he 'accepts on authority' the principles the mathematician teaches him.",
-       "result": "The musician trusts the mathematician"
-      },
-      {
-       "text": "Does that make music unscientific? Aquinas says no. Music's principles were proved, just not by the musician and not inside music. Music reasons rigorously from them.",
-       "result": "Borrowed principles are still principles"
-      },
-      {
-       "text": "Now comes Aquinas's move. Sacred doctrine sits where the musician sits. Its principles come from a higher science, which he calls 'the science of God and the blessed', meaning God's own knowledge, shared by those who see God.",
-       "result": "Theology is to God's knowledge as music is to arithmetic"
-      }
-     ],
-     "takeaway": "Every science starts from principles it does not prove. The question is only where the principles come from: the mind's own natural light, or a higher science."
-    },
     {
      "id": "idea",
      "kind": "explain"
     },
     {
-     "id": "pairs",
-     "kind": "match",
-     "prompt": "Match each science to the place where, according to Aquinas, its starting principles come from.",
-     "pairs": [
+     "id": "musician",
+     "kind": "worked",
+     "title": "The musician trusts the mathematician",
+     "steps": [
       {
-       "id": "p_music",
-       "text": "Music",
-       "target": "Arithmetic",
-       "feedback": "Right. Music 'proceeds from principles established by arithmetic'. The musician takes them on the mathematician's authority."
+       "text": "Start at the top. Arithmetic begins from points the mind sees directly, by its 'natural light'. Nothing above it has to prove them for it.",
+       "result": "Arithmetic: self-evident principles"
       },
       {
-       "id": "p_perspective",
-       "text": "The science of perspective (optics)",
-       "target": "Geometry",
-       "feedback": "Right. Aquinas's other example: perspective proceeds 'from principles established by geometry'."
+       "text": "From those starting points, arithmetic proves results about numbers and the ratios between them."
       },
       {
-       "id": "p_sacred",
-       "text": "Sacred doctrine",
-       "target": "The science of God and the blessed",
-       "feedback": "Right. This is Aquinas's central claim. Sacred doctrine's principles are established in God's own knowledge and come to us by revelation. In Article 5 he adds that it takes them 'not from other sciences, but immediately from God'."
+       "text": "Medieval music studied harmonies as ratios of numbers. It does not prove arithmetic's results again. It takes them as its own starting points.",
+       "result": "Music: borrowed principles"
       },
       {
-       "id": "p_arith",
-       "text": "Arithmetic",
-       "target": "The mind's own natural light",
-       "feedback": "Right. Arithmetic is a science of the first kind. Its principles are seen 'by the natural light of intelligence', so it borrows from no higher science."
+       "text": "In Aquinas's words, the musician 'accepts on authority the principles taught him by the mathematician'. Music is still a real science, because it reasons carefully from those borrowed points to its own conclusions."
+      },
+      {
+       "text": "The same shape shows up elsewhere. Perspective, the study of sight lines, borrows its starting points from geometry.",
+       "result": "Perspective: borrows from geometry"
+      },
+      {
+       "text": "Aquinas then applies the shape to faith. Sacred doctrine takes its principles, the articles of faith, from 'the science of God and the blessed', and these are made known to us by revelation.",
+       "result": "Sacred doctrine: borrows from God's knowledge"
+      },
+      {
+       "text": "So 'not self-evident to us' need not mean 'not a science'. It can mean 'borrowed from higher up'."
       }
      ],
-     "takeaway": "The lower sciences lean on higher ones in the same way, and Aquinas places theology at the end of the longest reach: its higher science is God's own knowledge.",
+     "takeaway": "Aquinas names two ways for a science to get its starting points: see them directly, or take them from a higher science. Sacred doctrine, he argues, takes the second way, and its higher science is God's own knowledge."
+    },
+    {
+     "id": "everyday",
+     "kind": "worked",
+     "hypothetical": true,
+     "title": "An everyday version: the builder and the engineer's table",
+     "steps": [
+      {
+       "text": "An engineer uses heavy maths to work out how much weight each kind of beam can carry, and prints the results as a table."
+      },
+      {
+       "text": "A builder planning a roof looks up the table and picks a beam. The builder has not checked the maths."
+      },
+      {
+       "text": "Still, the plan is reasoned, not guessed. The builder reasons correctly from the table to a safe roof."
+      },
+      {
+       "text": "But the roof is only as safe as the table. Borrowed starting points are only as reliable as their source."
+      }
+     ],
+     "takeaway": "Borrowing starting points from someone who knows more is normal and can still give real knowledge. Its strength depends on the source. That is why Aquinas stresses that sacred doctrine's source is God's knowledge, not a human expert."
+    },
+    {
+     "id": "who_borrows",
+     "kind": "match",
+     "prompt": "Match each science to where its starting points come from, as Aquinas describes it in Article 2.",
+     "pairs": [
+      {
+       "id": "p1",
+       "text": "Music",
+       "target": "Arithmetic",
+       "feedback": "Right. Aquinas says music proceeds 'from principles established by arithmetic'. The musician takes them on the mathematician's authority."
+      },
+      {
+       "id": "p2",
+       "text": "Perspective (the science of sight lines)",
+       "target": "Geometry",
+       "feedback": "Right. Aquinas says perspective 'proceeds from principles established by geometry'. It is his second example of a borrowing science."
+      },
+      {
+       "id": "p3",
+       "text": "Sacred doctrine",
+       "target": "The science of God and the blessed",
+       "feedback": "Right. Its principles are not proven by any human science. They come from the knowledge God has and shares with the blessed, and reach us by revelation."
+      },
+      {
+       "id": "p4",
+       "text": "Arithmetic and geometry",
+       "target": "The mind's natural light (nothing higher)",
+       "feedback": "Right. These are Aquinas's examples of sciences whose principles are 'known by the natural light of intelligence'. They borrow from no higher science."
+      }
+     ],
+     "takeaway": "Two sciences borrow from human sciences above them, two start from what the mind sees directly, and sacred doctrine borrows from a source above every human science.",
      "hints": [
-      "Ask whether each science starts from what the mind sees for itself, or from results proved by another science.",
-      "Only one of these sciences needs no higher science at all."
+      "Ask of each one: does it prove its own starting points, or take them from somewhere above it?",
+      "Music deals with number ratios, and perspective deals with lines and angles.",
+      "Only one item on the left needs a source above every human science."
      ]
     },
     {
      "id": "chain",
      "kind": "trace",
-     "prompt": "Trace the route by which, on Aquinas's account, sacred doctrine gets its starting points and then puts them to work. Some arrows are tempting dead ends.",
+     "prompt": "Trace where sacred doctrine's starting points come from, step by step, from the bottom up to their highest source. Some routes are tempting but are not Aquinas's account.",
      "nodes": [
       {
-       "id": "god",
-       "label": "God's own knowledge",
-       "x": 8,
-       "y": 45
+       "id": "sd",
+       "label": "Sacred doctrine",
+       "x": 50,
+       "y": 90
       },
       {
-       "id": "reveal",
-       "label": "Revealed to prophets and apostles",
-       "x": 30,
-       "y": 22
-      },
-      {
-       "id": "reason",
-       "label": "Human reason proves the articles",
-       "x": 30,
-       "y": 72
+       "id": "aof",
+       "label": "Its principles: the articles of faith",
+       "x": 50,
+       "y": 68
       },
       {
        "id": "phil",
-       "label": "Philosophy supplies the principles",
-       "x": 52,
-       "y": 88
+       "label": "Philosophy built by human reason",
+       "x": 15,
+       "y": 62
       },
       {
-       "id": "articles",
-       "label": "Articles of faith (principles)",
-       "x": 52,
-       "y": 45
+       "id": "self",
+       "label": "Truths self-evident to everyone",
+       "x": 85,
+       "y": 50
       },
       {
-       "id": "doctrine",
-       "label": "Sacred doctrine reasons from them",
-       "x": 74,
-       "y": 45
+       "id": "doctors",
+       "label": "Later Church teachers",
+       "x": 15,
+       "y": 35
       },
       {
-       "id": "concl",
-       "label": "New conclusions",
-       "x": 94,
-       "y": 45
+       "id": "rev",
+       "label": "Revelation to prophets and apostles",
+       "x": 50,
+       "y": 40
+      },
+      {
+       "id": "god",
+       "label": "Knowledge of God and the blessed",
+       "x": 50,
+       "y": 10
       }
      ],
      "edges": [
       {
-       "from": "god",
-       "to": "reveal"
+       "from": "sd",
+       "to": "aof"
       },
       {
-       "from": "god",
-       "to": "reason"
-      },
-      {
-       "from": "reveal",
-       "to": "articles"
-      },
-      {
-       "from": "reason",
-       "to": "articles"
+       "from": "sd",
+       "to": "phil"
       },
       {
        "from": "phil",
-       "to": "articles"
+       "to": "god"
       },
       {
-       "from": "articles",
-       "to": "doctrine"
+       "from": "aof",
+       "to": "self"
       },
       {
-       "from": "doctrine",
-       "to": "concl"
+       "from": "aof",
+       "to": "doctors"
+      },
+      {
+       "from": "doctors",
+       "to": "god"
+      },
+      {
+       "from": "aof",
+       "to": "rev"
+      },
+      {
+       "from": "rev",
+       "to": "god"
       }
      ],
      "answer": [
-      "god",
-      "reveal",
-      "articles",
-      "doctrine",
-      "concl"
+      "sd",
+      "aof",
+      "rev",
+      "god"
      ],
      "path": true,
-     "explanation": "On Aquinas's account the principles start in God's knowledge and reach us by revelation. In Article 8 he says 'our faith rests upon the revelation made to the apostles and prophets who wrote the canonical books.' They become the articles of faith, and sacred doctrine argues from them to new conclusions, as Paul argues from Christ's resurrection to the general resurrection. The route through human reason is a dead end, because 'arguments from human reason cannot avail to prove what must be received on faith' (Article 8). The route through philosophy is a dead end too: theology accepts its principles 'not from other sciences, but immediately from God, by revelation' (Article 5). It uses philosophy only to make its teaching clearer.",
+     "explanation": "Sacred doctrine reasons from the articles of faith. These are not self-evident to everyone, and Objection 1 points this out: 'all men have not faith'. They are made known by revelation, and their highest source is the science of God and the blessed. Going through philosophy is the wrong route: Aquinas says sacred doctrine 'accepts its principles not from other sciences, but immediately from God, by revelation' (Article 5). It may use philosophy to explain things more clearly, but it does not get its starting points there. Going through later Church teachers is also wrong: in Article 8 he says faith rests on the revelation made to the apostles and prophets, not on revelations to other teachers.",
      "hints": [
-      "Start where the principles are first known, not where they are first argued about.",
-      "Aquinas denies both that reason proves the articles of faith and that philosophy supplies them. How do they reach us, then?"
+      "Sacred doctrine reasons from its principles. What are they called?",
+      "Objection 1 already says these principles are not admitted by all, and Article 5 rules out borrowing them from other sciences.",
+      "The route runs through what was revealed to the writers of Scripture."
      ]
     },
     {
-     "id": "return",
+     "id": "answer_obj1",
      "kind": "choice",
      "mode": "determinate",
-     "revisits": "opening",
-     "question": "Look back at your first answer. Why does Aquinas hold that a field built on trusted starting points can still be a real science?",
+     "question": "Objection 1 in Article 2 says: every science starts from self-evident principles. The articles of faith are not self-evident, since not everyone accepts them. So sacred doctrine is not a science. Which reply matches Aquinas's own answer?",
      "options": [
       {
-       "text": "Every science starts from principles it does not prove itself, and some, like music relying on arithmetic, borrow theirs from a higher science. Theology borrows its principles from God's own knowledge.",
-       "feedback": "Yes. This is the heart of Article 2. The demand that a science prove everything it uses fails for every science, not only theology. Note what the argument assumes: it works only if a higher divine knowledge exists and was truly revealed. A sceptic who denies that premise would not be moved."
+       "text": "A science's principles are either self-evident or taken from a higher science. Sacred doctrine's principles are taken from God's knowledge, just as music takes its principles from arithmetic.",
+       "feedback": "Correct. This is his Reply to Objection 1: principles are 'either in themselves self-evident, or reducible to the conclusions of a higher science', and sacred doctrine's are the second kind. He rejects the objection's first claim that every science must start from self-evident principles."
       },
       {
-       "text": "Faith makes the articles of faith self-evident to everyone, so nothing needs to be borrowed.",
-       "feedback": "Aquinas does not claim this. Objection 1 of Article 2 points out that the articles are not admitted by all, and his reply grants that they are not self-evident to us. Instead he treats them as 'reducible to the conclusions of a higher science'."
+       "text": "The articles of faith really are self-evident to anyone who thinks carefully enough.",
+       "feedback": "Not his answer. Aquinas grants that the articles are not admitted by all. He does not claim they are obvious. He claims they are borrowed from a higher science."
       },
       {
-       "text": "Theology can prove its articles of faith by careful reasoning, just as a mathematician proves theorems.",
-       "feedback": "No. Article 8 says theology does not argue in proof of its principles, and that 'arguments from human reason cannot avail to prove what must be received on faith.' It argues from them, not to them."
+       "text": "Sacred doctrine is not strictly a science, but that does not matter for faith.",
+       "feedback": "Not his answer. Aquinas opens Article 2 with 'Sacred doctrine is a science.' He keeps the label and widens the idea of where a science's principles can come from."
       },
       {
-       "text": "Theology covers the same subjects as philosophy, so it inherits philosophy's status as a science.",
-       "feedback": "No. Article 1 says sciences differ by their means of knowing, not by their subject. Article 5 adds that theology takes its principles 'not from other sciences, but immediately from God'. Its status as a science rests on that higher source, not on sharing philosophy's topics."
+       "text": "Philosophy proves the articles of faith, so sacred doctrine borrows its principles from philosophy.",
+       "feedback": "Not his answer. The borrowing pattern is right, but the source is wrong. In Article 5 he says sacred doctrine accepts its principles 'not from other sciences, but immediately from God, by revelation'. Philosophy only helps make its teaching clearer."
       }
      ],
      "answer": 0,
      "hints": [
-      "Recall the musician: does he prove the facts about number he uses?",
-      "Aquinas's answer applies to every science, not just theology."
+      "Does Aquinas deny that the articles are not obvious to everyone, or does he accept it?",
+      "Look again at what he says the musician does with the mathematician's results.",
+      "His reply names two possible sources for a science's principles, not one."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "one_formal_aspect",
+   "title": "One science, one way of looking",
+   "idea": "A science is one when it treats everything under one aspect, just as sight takes in a man, a donkey and a stone because all are coloured, so sacred doctrine is one because it treats everything as revealed and as related to God.",
+   "role": "core",
+   "terms": [
+    {
+     "term": "habit",
+     "means": "A settled, learned ability of the mind, such as knowing a science; Aquinas pairs it with 'faculty', a natural power like sight"
+    },
+    {
+     "term": "material object",
+     "means": "The things themselves that a power or science deals with, such as men, donkeys and stones"
+    },
+    {
+     "term": "formal object",
+     "means": "The one aspect under which a power or science takes in all its things, such as 'being coloured' for sight"
+    }
+   ],
+   "recap": "A science is unified by the one aspect it looks through, not by how many kinds of thing it covers, so sacred doctrine stays one by treating everything as revealed and related to God.",
+   "understand": {
+    "explanation": "You might think a science is one because it studies one kind of thing, but Aquinas says a natural power or a habit (a settled, learned ability, such as knowing a science) is unified differently. What counts is not the heap of things it covers, its material object, but the single aspect under which it takes them in, its formal object. Your eyes see a man, a donkey and a stone, three very different things, yet sight is one power because it grasps all three only as coloured. In the same way, sacred doctrine covers God, angels, bodies and human conduct, but it treats each only as divinely revealed and as related to God, who is their beginning and end, so it stays one science. This is an argument by analogy, not a test, and it only works if you grant Aquinas's starting point that revelation is a real source of knowledge.",
+    "quote": "The unity of a faculty or habit is to be gauged by its object, not indeed, in its material aspect, but as regards the precise formality under which it is an object. For example, man, ass, stone agree in the one precise formality of being colored; and color is the formal object of sight.",
+    "quote_where": "Article 3, I answer that",
+    "source_id": "s1",
+    "source_ids": [
+     "s1"
+    ]
+   },
+   "activities": [
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "cmp",
+     "kind": "compare",
+     "prompt": "Put the three cases from Article 3 side by side. In each one, look at two things: the many items covered, and the single aspect that holds them together.",
+     "cases": [
+      {
+       "label": "Sight",
+       "text": "Covers: a man, a donkey (the translation says 'ass'), a stone. These are a person, an animal and a lifeless thing. One aspect: all three are coloured. Sight takes in nothing except as coloured, so it is one power."
+      },
+      {
+       "label": "The 'common sense'",
+       "text": "Aquinas's name for the inner power that gathers what all five senses report. Covers: colours, sounds, smells, tastes, textures. One aspect: whatever affects the senses. It is one power, yet it reaches the objects of five different senses."
+      },
+      {
+       "label": "Sacred doctrine",
+       "text": "Covers: God, angels, bodies, human morals, even the deeds of Abraham. One aspect: each is treated as divinely revealed and as related to God, its beginning or end. It treats God first, and creatures only so far as they point to him."
+      }
+     ],
+     "takeaway": "In every case the list of things is long and mixed, but the way of looking is single. Unity sits in the way of looking."
+    },
+    {
+     "id": "cmp_everyday",
+     "kind": "compare",
+     "hypothetical": true,
+     "prompt": "An everyday picture, made up only to illustrate (it is not from the text): two books that both mention eggs, fire and knives.",
+     "cases": [
+      {
+       "label": "A cookbook",
+       "text": "It mentions eggs (biology), heat (physics) and knife skills (craft). Yet it is clearly one book, because it treats every item only as something used for cooking."
+      },
+      {
+       "label": "A random scrapbook",
+       "text": "It holds a page on eggs, a page on fire safety and a page on knife collecting, each written for its own reason. Nothing ties the pages together, so it feels like three books glued into one cover."
+      }
+     ],
+     "takeaway": "The cookbook is like sacred doctrine in Aquinas's argument: mixed topics, one angle. The analogy is loose: Aquinas is speaking of a science, not a book."
+    },
+    {
+     "id": "sort_topics",
+     "kind": "sort",
+     "title": "Same topic, which way of looking?",
+     "prompt": "Sort each card by the aspect under which the topic is being treated. The same subject can turn up in both groups; what decides is the angle.",
+     "groups": [
+      {
+       "id": "revealed",
+       "label": "Treated as revealed and related to God (sacred doctrine)"
+      },
+      {
+       "id": "reason_only",
+       "label": "Treated by natural reason alone (a philosophical science)"
+      }
+     ],
+     "cards": [
+      {
+       "id": "c1",
+       "text": "Angels, as Scripture makes them known",
+       "group": "revealed",
+       "feedback": "Article 3 names angels as a topic of sacred doctrine. Here they are taken up because they are revealed, which is its one aspect."
+      },
+      {
+       "id": "c2",
+       "text": "The shape of the earth and the stars, worked out by an astronomer using mathematics",
+       "group": "reason_only",
+       "feedback": "Article 1 uses the astronomer as an example of a science that knows by natural reason. Nothing here is treated as revealed."
+      },
+      {
+       "id": "c3",
+       "text": "Human acts, studied as the way a person is directed toward God as their end",
+       "group": "revealed",
+       "feedback": "Article 4 says sacred doctrine treats human acts 'inasmuch as man is ordained by them to the perfect knowledge of God'. That reference to God is its aspect."
+      },
+      {
+       "id": "c4",
+       "text": "Human acts, analysed by a moral philosopher from reason and experience alone",
+       "group": "reason_only",
+       "feedback": "Same topic as the previous card, but a different angle. Moral philosophy belongs to the 'separate philosophical sciences' mentioned in Article 3."
+      },
+      {
+       "id": "c5",
+       "text": "God's existence, reasoned out by a philosopher from the world he made",
+       "group": "reason_only",
+       "feedback": "Even God can be studied this way: Article 1 calls it the theology that is 'part of philosophy' and says it 'differs in kind' from sacred doctrine, because the route is reason, not revelation."
+      },
+      {
+       "id": "c6",
+       "text": "Bodies and the material world, as made by God and pointing back to him",
+       "group": "revealed",
+       "feedback": "Article 3 lists 'corporeal creatures' as a topic. Creatures belong here only 'so far as they are referable to God as their beginning or end'."
+      },
+      {
+       "id": "c7",
+       "text": "The deeds of Abraham, told as examples for living and as a link in the chain of revelation",
+       "group": "revealed",
+       "feedback": "Article 2 says such individual facts enter as examples to follow and to establish the authority of those through whom revelation came, so they fall under the revealed aspect."
+      }
+     ],
+     "hints": [
+      "Ignore the subject named on the card and ask how it is being looked at.",
+      "If the card mentions Scripture, revelation or a relation to God as beginning or end, it is the sacred aspect."
+     ],
+     "takeaway": "Angels, bodies, human acts and even God can each be studied in more than one way. A science's unity comes from the angle it takes, not from owning a list of subjects."
+    },
+    {
+     "id": "unity_choice",
+     "kind": "choice",
+     "mode": "determinate",
+     "question": "An objector in Article 3 says: sacred doctrine deals with angels, bodies and human morals, which belong to separate philosophical sciences, so it cannot be one science. How does Aquinas answer?",
+     "options": [
+      {
+       "text": "It treats all of them under one aspect, so far as they can be included in revelation, so its unity is not broken.",
+       "feedback": "Correct. Like the 'common sense', which is one power reaching the objects of all five senses, sacred doctrine reaches many topics through one aspect: their being revealed and related to God."
+      },
+      {
+       "text": "It treats God and creatures equally, so it is simply a larger science that contains all the smaller ones.",
+       "feedback": "Not quite. Aquinas says it does 'not treat of God and creatures equally, but of God primarily'. Unity comes from the shared aspect, not from adding sciences together."
+      },
+      {
+       "text": "It does not really deal with angels, bodies or morals; the objector has misread it.",
+       "feedback": "No. Aquinas accepts that it treats these topics. He denies only that covering them splits the science, because it treats them from one angle."
+      },
+      {
+       "text": "Angels, bodies and morals are really one kind of thing, so the science studies only one kind of thing.",
+       "feedback": "This has the test backwards. A man, a donkey and a stone are not one kind of thing either. Unity comes from the formal object, the shared aspect, not from the things being alike."
+      }
+     ],
+     "answer": 0,
+     "hints": [
+      "Recall the man, the donkey and the stone: are they one kind of thing?",
+      "Look for the option that puts unity in the way of looking, not in the things looked at."
+     ]
+    },
+    {
+     "id": "rival_views",
+     "kind": "choice",
+     "mode": "determinate",
+     "question": "Article 7 reports that some teachers said this science's subject was 'things and signs', or 'the works of salvation', or 'the whole Christ'. Where does Aquinas say they went wrong?",
+     "options": [
+      {
+       "text": "They looked at what is treated in the science, not at the aspect under which it is treated.",
+       "feedback": "Correct. Aquinas says the science does treat all those things, 'but so far as they have reference to God'. They named the material object, the things covered, and missed the formal object."
+      },
+      {
+       "text": "Those topics never appear in sacred doctrine at all.",
+       "feedback": "No. Aquinas says plainly: 'Of all these things, in truth, we treat in this science.' His quarrel is about the angle, not the list."
+      },
+      {
+       "text": "They were right, and Aquinas agrees that the subject is not God.",
+       "feedback": "No. Aquinas concludes that 'God is in very truth the object of this science', because all things are treated under the aspect of God. This is a real disagreement in the text, and he takes a side."
+      }
+     ],
+     "answer": 0,
+     "hints": [
+      "Recall the two kinds of object: the things covered, and the aspect they are seen under."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "authority_ranks",
+   "title": "Not all authorities weigh the same",
+   "idea": "An argument from human authority is the weakest kind, but one from divine revelation is the strongest, so Scripture counts as decisive, Church teachers as probable, and philosophers as outside but probable support.",
+   "role": "core",
+   "terms": [
+    {
+     "term": "argument from authority",
+     "means": "Accepting a claim because of who vouches for it, not because you checked it yourself"
+    },
+    {
+     "term": "canonical Scriptures",
+     "means": "The books the Church accepts as belonging to the inspired Bible"
+    },
+    {
+     "term": "incontrovertible",
+     "means": "Settling a question so that it cannot be overturned"
+    },
+    {
+     "term": "probable",
+     "means": "Likely and worth real weight, but not final; it could in principle be wrong"
+    }
+   ],
+   "recap": "Who vouches decides the weight: God's revelation in canonical Scripture is decisive, while Church teachers and philosophers, being human, give only probable support.",
+   "understand": {
+    "explanation": "An argument from authority means accepting a claim because of who vouches for it, the way you trust a doctor's word about a medicine without testing it yourself. Aquinas grants that when the one vouching is only human, this is the weakest kind of argument, because humans can be wrong; but when God vouches through revelation (God making truths known), it is the strongest, because God cannot be wrong. So he ranks his sources: the canonical Scriptures, the books the Church accepts as the inspired Bible, are incontrovertible, meaning they settle a question for good. The doctors of the Church (its great teachers, such as Augustine) may properly be used but are only probable: likely and weighty, yet not final. Philosophers such as Aristotle also count where natural reason let them see the truth, but only as extrinsic (coming from outside sacred doctrine) and probable support. The reason given is that faith rests on the revelation made to the writers of Scripture, not on any later teacher, however holy; this ranking is argued from inside Christian belief, so following its logic does not require sharing that belief.",
+    "quote": "Nevertheless, sacred doctrine makes use of these authorities as extrinsic and probable arguments; but properly uses the authority of the canonical Scriptures as an incontrovertible proof, and the authority of the doctors of the Church as one that may properly be used, yet merely as probable.",
+    "quote_where": "Article 8, Reply to Objection 2",
+    "source_ids": [
+     "s1"
+    ],
+    "source_id": "s1"
+   },
+   "activities": [
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "rank_sources",
+     "kind": "order",
+     "prompt": "Put these three kinds of authority in order, from the most weight Aquinas gives them to the least.",
+     "items": [
+      "The canonical Scriptures: used as an incontrovertible proof",
+      "The doctors of the Church: may properly be used, yet merely as probable",
+      "The philosophers: used as extrinsic and probable arguments"
+     ],
+     "explanation": "Scripture comes first because it carries God's revelation, which cannot mislead, so it is decisive. Church teachers and philosophers are both only probable, because both are human. Aquinas still sets them apart: the Church's teachers may 'properly' be used, since they work inside sacred doctrine, while philosophers are 'extrinsic', helpers from outside who count only on questions natural reason can reach. The gap between the first rung and the other two is a gap in kind (divine against human), not just in size.",
+     "hints": [
+      "Ask who ultimately vouches for each source: God, or a human being.",
+      "Two of the three are called 'probable'. What word does Aquinas add to tell them apart?",
+      "'Properly used' marks a source inside sacred doctrine; 'extrinsic' marks one from outside it."
+     ]
+    },
+    {
+     "id": "sort_sources",
+     "kind": "sort",
+     "title": "Decisive or probable?",
+     "prompt": "Each card is a source Aquinas actually quotes somewhere in Question 1. Using his own rule, sort each by the weight it would carry as an argument.",
+     "groups": [
+      {
+       "id": "incontrovertible",
+       "label": "Incontrovertible (canonical Scripture)"
+      },
+      {
+       "id": "probable",
+       "label": "Probable (human authority)"
+      }
+     ],
+     "cards": [
+      {
+       "id": "c1",
+       "text": "2 Timothy 3:16: \"All Scripture, inspired of God is profitable to teach, to reprove, to correct, to instruct in justice.\"",
+       "group": "incontrovertible",
+       "feedback": "A letter in the New Testament, so it is canonical Scripture and counts as decisive."
+      },
+      {
+       "id": "c2",
+       "text": "Isaiah 64:4: \"The eye hath not seen, O God, besides Thee, what things Thou hast prepared for them that wait for Thee.\"",
+       "group": "incontrovertible",
+       "feedback": "A book of the prophets, one of the writers to whom Aquinas says revelation was made, so it is canonical and decisive."
+      },
+      {
+       "id": "c3",
+       "text": "Titus 1:9: a bishop should be able \"to convince the gainsayers.\"",
+       "group": "incontrovertible",
+       "feedback": "Another New Testament letter, so it is canonical Scripture. Being short or practical in tone does not lower its weight; what counts is where it comes from."
+      },
+      {
+       "id": "c4",
+       "text": "Augustine (De Trin. xiv, 1): \"to this science alone belongs that whereby saving faith is begotten, nourished, protected and strengthened.\"",
+       "group": "probable",
+       "feedback": "Augustine is a doctor of the Church. He may properly be used, but merely as probable. Aquinas quotes Augustine himself saying that only the canonical books are free of error, while other authors must be read critically."
+      },
+      {
+       "id": "c5",
+       "text": "Ambrose (De Fide 1): \"Put arguments aside where faith is sought.\"",
+       "group": "probable",
+       "feedback": "Ambrose is a Church teacher, so he counts as probable. This quote appears in an objection, and Aquinas goes on to answer it: a holy teacher's words can still be weighed and qualified."
+      },
+      {
+       "id": "c6",
+       "text": "Dionysius (Coel. Hier. i): \"We cannot be enlightened by the divine rays except they be hidden within the covering of many sacred veils.\"",
+       "group": "probable",
+       "feedback": "Aquinas leans on Dionysius often and with great respect, but Dionysius is a Christian writer, not a canonical author. Frequent use does not lift a source to the level of Scripture."
+      },
+      {
+       "id": "c7",
+       "text": "Aristotle (Metaph. vi): there is a part of philosophy called theology, or the divine science.",
+       "group": "probable",
+       "feedback": "Aristotle is a philosopher, so his authority is extrinsic and probable. It counts only on matters natural reason can reach, and Aquinas uses it here inside an objection that he later answers."
+      },
+      {
+       "id": "c8",
+       "text": "Aratus, as quoted by Paul: \"For we are also His offspring.\"",
+       "group": "probable",
+       "feedback": "This is the tricky one. The line appears in Acts 17:28, but Aquinas offers it as his example of using 'the authority of philosophers' who knew a truth by natural reason. The words are a pagan poet's, so as Aratus's authority they count only as probable, even though Paul repeats them."
+      }
+     ],
+     "takeaway": "The test is not how wise, holy or often cited a source is, but whether it carries God's revelation. Only canonical Scripture settles a question; every human voice, saint or pagan, supports it only probably.",
+     "hints": [
+      "For each card, ask: is this a book of the Bible, or a human writer?",
+      "Holiness and fame do not move a card into the decisive group in Aquinas's scheme.",
+      "One card is a poet's line that a Bible writer quotes. Whose authority is Aquinas pointing to when he cites it?"
+     ]
+    },
+    {
+     "id": "find_reason",
+     "kind": "passage",
+     "question": "Which passage explains why even a holy Church teacher counts only as probable, while Scripture counts as decisive?",
+     "options": [
+      {
+       "quote": "For our faith rests upon the revelation made to the apostles and prophets who wrote the canonical books, and not on the revelations (if any such there are) made to other doctors.",
+       "source_id": "s1",
+       "feedback": "Correct. This places the revelation that faith rests on in the canonical writers alone. A later teacher, however holy, is not where that revelation lives, so his word stays human and probable."
+      },
+      {
+       "quote": "for although the argument from authority based on human reason is the weakest, yet the argument from authority based on divine revelation is the strongest.",
+       "source_id": "s1",
+       "feedback": "Close, and it is the root principle of the ranking: human authority is weakest, divine authority strongest. But on its own it does not say where divine revelation is found, so it cannot yet explain why Augustine falls below Scripture. The chosen passage supplies that missing step."
+      },
+      {
+       "quote": "Hence the fact that some happen to doubt about articles of faith is not due to the uncertain nature of the truths, but to the weakness of human intelligence",
+       "source_id": "s1",
+       "feedback": "This passage, from Article 5, explains why people doubt the articles of faith, not how to weigh different sources against each other. It says nothing about Church teachers or Scripture."
+      },
+      {
+       "quote": "Since therefore grace does not destroy nature but perfects it, natural reason should minister to faith as the natural bent of the will ministers to charity.",
+       "source_id": "s1",
+       "feedback": "This explains why sacred doctrine may use human reason at all, which is why philosophers get a place. It does not explain the gap between Scripture and the Church's teachers."
+      }
+     ],
+     "answer": 0,
+     "hints": [
+      "Look for a passage that names where the revelation behind faith was given.",
+      "The right passage mentions both the writers of the canonical books and 'other doctors'."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "arguing_from_principles",
+   "title": "Argue from your principles, not to them",
+   "idea": "Sacred doctrine reasons from its principles to new conclusions; it can argue with someone who grants some revealed truths, but with someone who grants none it can only answer objections, which are never real proofs against faith.",
+   "role": "contribution",
+   "terms": [
+    {
+     "term": "articles of faith",
+     "means": "The basic truths of the Christian creed, received from revelation. They are the starting points (principles) of sacred doctrine."
+    },
+    {
+     "term": "demonstration",
+     "means": "A strict proof from true premises whose conclusion must follow, so it cannot be wrong."
+    },
+    {
+     "term": "metaphysics",
+     "means": "The highest branch of philosophy, which studies being itself. No philosophical science sits above it."
+    },
+    {
+     "term": "heretic",
+     "means": "Someone who accepts Scripture but rejects some teaching drawn from it."
+    }
+   ],
+   "recap": "Theology, like music, starts from principles it does not prove. It argues from them, not to them, and with someone who grants none of them it can only answer objections.",
+   "understand": {
+    "explanation": "Every science starts from principles it does not prove inside itself. Sacred doctrine takes its principles, the articles of faith, on trust from God's knowledge, as music takes its rules from arithmetic. So Aquinas says it argues from its principles, not to them, as Paul argues from Christ's resurrection to the resurrection of all the dead. When someone denies a principle, sacred doctrine is placed like metaphysics, the highest branch of philosophy: no higher science defends its principles, so it can debate only an opponent who concedes something. With a heretic, who accepts Scripture but rejects some teaching, it argues from Scripture texts; with someone who grants no revealed truth, it cannot prove the articles by reasoning and can only answer objections. Aquinas adds that such an objection is never a demonstration, a strict proof whose conclusion must follow, because faith rests on infallible truth, a reason that only works for someone who already accepts that premise.",
+    "quote": "As other sciences do not argue in proof of their principles, but argue from their principles to demonstrate other truths in these sciences: so this doctrine does not argue in proof of its principles, which are the articles of faith, but from them it goes on to prove something else",
+    "quote_where": "Article 8, I answer that",
+    "source_id": "s1",
+    "source_ids": [
+     "s1"
+    ]
+   },
+   "activities": [
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "paul",
+     "kind": "worked",
+     "title": "Paul's resurrection argument, step by step",
+     "steps": [
+      {
+       "text": "Start with a principle that Paul's readers already accept from revelation: Christ rose from the dead.",
+       "result": "Principle: taken on faith, not proved here"
+      },
+      {
+       "text": "Paul does not try to prove Christ's resurrection from something more basic. In this argument it is the fixed starting point, one of the articles of faith."
+      },
+      {
+       "text": "From it he draws a new conclusion: the dead in general will rise. Aquinas only names this argument (1 Corinthians 15). One way to spell out the link: if no dead person could rise, Christ could not have risen; Christ did rise; so the dead can rise.",
+       "result": "Conclusion: the general resurrection"
+      },
+      {
+       "text": "Compare an everyday science. A geometry class proves theorems from axioms, but it never proves the axioms in that class. Music, as we saw, takes its rules from arithmetic on trust."
+      },
+      {
+       "text": "So the argument runs in one direction: from the principles down to new conclusions. It never runs back up to prove the principles themselves."
+      }
+     ],
+     "takeaway": "Sacred doctrine argues from the articles of faith to further truths. It does not argue to the articles of faith."
+    },
+    {
+     "id": "branches",
+     "kind": "worked",
+     "title": "When someone denies a principle",
+     "steps": [
+      {
+       "text": "A lower science does not defend its own principles. It leaves that job to the higher science it borrows them from, as music would leave a dispute about numbers to arithmetic."
+      },
+      {
+       "text": "Metaphysics, the highest branch of philosophy, has no science above it to pass the job to. It can debate someone who denies its principles, but only if that person concedes something to start from."
+      },
+      {
+       "text": "If the opponent concedes nothing at all, metaphysics cannot argue with them. It can still answer their objections.",
+       "result": "Grants nothing → answer objections only"
+      },
+      {
+       "text": "Sacred doctrine also has no science above it, so it is in the same position. With a heretic, who accepts Scripture but rejects some teaching, it argues from texts of Scripture. Against someone who denies one article of faith, it argues from another article they still accept.",
+       "result": "Grants some revelation → real argument"
+      },
+      {
+       "text": "With someone who believes nothing of revelation, there is no shared starting point. It cannot prove the articles by reasoning. It can only answer the objections they raise."
+      },
+      {
+       "text": "Aquinas's last step: faith rests on infallible truth, and the opposite of a truth can never be demonstrated. So an argument against faith is never a demonstration, a strict proof. It is only a difficulty that can be answered.",
+       "result": "Objections = answerable difficulties"
+      }
+     ],
+     "takeaway": "This is the lesson's main point. Theology can be a real science without proving its own starting points, just as music borrows from arithmetic. It argues from those starting points, not to them, and against someone who grants none of them it can only answer objections."
+    },
+    {
+     "id": "trace_skeptic",
+     "kind": "trace",
+     "prompt": "An opponent believes nothing of divine revelation and raises an objection to an article of faith. Trace, in order, the route Aquinas says sacred doctrine must take.",
+     "nodes": [
+      {
+       "id": "a",
+       "label": "Opponent denies an article of faith",
+       "x": 8,
+       "y": 50
+      },
+      {
+       "id": "b",
+       "label": "Do they grant any revealed truth?",
+       "x": 26,
+       "y": 50
+      },
+      {
+       "id": "c",
+       "label": "Yes: argue from what they grant",
+       "x": 44,
+       "y": 20
+      },
+      {
+       "id": "d",
+       "label": "Heretic: argue from Scripture texts",
+       "x": 72,
+       "y": 20
+      },
+      {
+       "id": "e",
+       "label": "No: they grant nothing revealed",
+       "x": 44,
+       "y": 72
+      },
+      {
+       "id": "i",
+       "label": "Prove the article by pure reason",
+       "x": 58,
+       "y": 92
+      },
+      {
+       "id": "f",
+       "label": "Cannot prove the articles by reason",
+       "x": 64,
+       "y": 58
+      },
+      {
+       "id": "g",
+       "label": "Can only answer their objections",
+       "x": 80,
+       "y": 72
+      },
+      {
+       "id": "h",
+       "label": "Objections: answerable difficulties",
+       "x": 92,
+       "y": 88
+      }
+     ],
+     "edges": [
+      {
+       "from": "a",
+       "to": "b"
+      },
+      {
+       "from": "b",
+       "to": "c"
+      },
+      {
+       "from": "c",
+       "to": "d"
+      },
+      {
+       "from": "b",
+       "to": "e"
+      },
+      {
+       "from": "e",
+       "to": "i"
+      },
+      {
+       "from": "e",
+       "to": "f"
+      },
+      {
+       "from": "f",
+       "to": "g"
+      },
+      {
+       "from": "g",
+       "to": "h"
+      }
+     ],
+     "answer": [
+      "a",
+      "b",
+      "e",
+      "f",
+      "g",
+      "h"
+     ],
+     "path": true,
+     "explanation": "This opponent grants no revealed truth, so the upper branch is closed. That branch means arguing from shared texts, as with a heretic. The branch 'Prove the article by pure reason' is a trap: Aquinas says there is 'no longer any means of proving the articles of faith by reasoning'. What is left is answering objections, and he holds that those objections are never demonstrations, only difficulties that can be answered.",
+     "hints": [
+      "First ask: what does this opponent grant?",
+      "They grant nothing revealed, so you go down, not up.",
+      "Avoid the branch that claims reason alone can prove an article of faith."
+     ]
+    },
+    {
+     "id": "sort_opponents",
+     "kind": "sort",
+     "hypothetical": true,
+     "title": "What can be done with each person?",
+     "prompt": "These people are made up to illustrate Aquinas's rule. Sort each one by what sacred doctrine can do with them.",
+     "groups": [
+      {
+       "id": "derive",
+       "label": "No dispute: reason from principles to new truths"
+      },
+      {
+       "id": "argue",
+       "label": "Argue from revealed truths they grant"
+      },
+      {
+       "id": "answer",
+       "label": "Only answer their objections"
+      }
+     ],
+     "cards": [
+      {
+       "id": "c1",
+       "text": "A believer asks what follows from Christ's resurrection for everyone else.",
+       "group": "derive",
+       "feedback": "No principle is under attack. This is the normal work of the science, going from an article of faith to a new conclusion, as Paul did."
+      },
+      {
+       "id": "c2",
+       "text": "Someone accepts the Gospels as revealed but denies one article of faith.",
+       "group": "argue",
+       "feedback": "They still grant other articles. Aquinas says that 'against those who deny one article of faith, we can argue from another.'"
+      },
+      {
+       "id": "c3",
+       "text": "A heretic who reads Scripture as God's word but rejects one teaching drawn from it.",
+       "group": "argue",
+       "feedback": "Scripture is common ground, so this is Aquinas's own example: 'we can argue with heretics from texts in Holy Writ.'"
+      },
+      {
+       "id": "c4",
+       "text": "A sceptic who accepts no revelation at all and says miracles are impossible.",
+       "group": "answer",
+       "feedback": "There is no shared revealed premise to argue from. Aquinas says one can then only answer the objections, not prove the articles."
+      },
+      {
+       "id": "c5",
+       "text": "A philosopher who trusts natural reason only and grants no revealed truth.",
+       "group": "answer",
+       "feedback": "Being clever or reasonable does not create common ground. What matters is whether they grant any revealed truth, and this one grants none."
+      },
+      {
+       "id": "c6",
+       "text": "Someone who accepts the Old Testament as revealed but not the New.",
+       "group": "argue",
+       "feedback": "They admit 'some at least of the truths obtained through divine revelation', which is Aquinas's condition for real argument. This case is our application of his rule, not an example he gives here."
+      }
+     ],
+     "takeaway": "The deciding question is not how intelligent or hostile the person is. It is whether they grant any revealed truth: some means argue, none means only answer objections.",
+     "hints": [
+      "For each person, ask: is anyone denying a principle at all?",
+      "If someone is, ask whether they grant any revealed truth, even just a part of it."
+     ]
+    },
+    {
+     "id": "reach_claim",
+     "kind": "choice",
+     "mode": "determinate",
+     "question": "Aquinas says arguments against faith 'cannot be demonstrations, but are difficulties that can be answered.' What does this claim actually establish?",
+     "options": [
+      {
+       "text": "That reason can prove the articles of faith true to anyone.",
+       "feedback": "No. In the same passage he says that against someone who believes nothing of revelation there is 'no longer any means of proving the articles of faith by reasoning'."
+      },
+      {
+       "text": "That if faith rests on infallible truth, no sound strict proof can conclude against it, so every objection must contain a flaw somewhere.",
+       "feedback": "Yes. The claim is conditional. It follows from his premise that 'faith rests upon infallible truth' together with the rule that the contrary of a truth cannot be demonstrated. It is a defence, not a proof of the articles."
+      },
+      {
+       "text": "That every sceptic will be persuaded once their objections are answered.",
+       "feedback": "No. Answering an objection removes one difficulty. It does not supply the missing premise. Aquinas never promises the sceptic will come to believe."
+      },
+      {
+       "text": "That everyone, believer or not, must accept that objections to faith are weak.",
+       "feedback": "No. The claim rests on a premise, that faith is infallible truth, which someone who rejects revelation does not grant. So its force reaches only those who accept that premise."
+      }
+     ],
+     "answer": 1,
+     "hints": [
+      "Look at the reason Aquinas gives: what premise does it rest on?",
+      "Ask whether a person who rejects revelation shares that premise."
+     ]
+    },
+    {
+     "id": "who_rejects",
+     "kind": "choice",
+     "mode": "interpretive",
+     "hypothetical": true,
+     "question": "An imagined reader who does not accept revelation says: 'Claiming every objection can be answered assumes the very thing we disagree about.' How should we read Aquinas's claim in light of this?",
+     "options": [
+      {
+       "text": "As a claim made from inside the faith. It tells the believing theologian how to treat objections, not why a sceptic should accept the articles.",
+       "feedback": "Well supported. His reason, that faith rests on infallible truth, is a premise only believers grant. His own scheme says that with such an opponent he can only answer objections, so he does not claim to convince them. Limit: Aquinas does not see it as a mere rule of thumb. He holds it to be true."
+      },
+      {
+       "text": "As circular, and therefore worthless.",
+       "feedback": "Partly supported. The reader is right that the claim depends on the premise in dispute. But Aquinas does not offer it as a proof to the sceptic, so the charge of circular proof misses what he claims. It still does real work: it tells the theologian to examine each objection for a flaw rather than simply accept it."
+      },
+      {
+       "text": "As a promise that every objection has already been answered.",
+       "feedback": "Not supported by the text. Aquinas says the objections 'are difficulties that can be answered', meaning in principle. He does not say answers already exist for all of them, or that they will satisfy everyone. This misreads his words."
+      }
+     ],
+     "hints": [
+      "Separate two questions: is the claim true for Aquinas, and should a sceptic be moved by it?",
+      "Recall what Aquinas says is possible with someone who grants no revealed truth."
      ]
     }
    ]
   }
  ],
  "omitted": [],
+ "sources": [
+  {
+   "id": "s1",
+   "title": "Summa Theologiae, First Part, Question 1: The nature and extent of sacred doctrine",
+   "url": "https://www.newadvent.org/summa/1001.htm",
+   "authors": "",
+   "year": null
+  }
+ ],
  "activity_plans": [
   {
-   "concept": "reading_a_disputed_article",
+   "concept": "how_an_article_works",
    "chosen": "p1",
    "plan": {
     "blocks": [
-     "stages",
      "explain",
+     "worked",
      "order",
-     "choice"
-    ],
-    "why": "Reveal the parts of Article 1 one at a time, explain what each part does, then have the learner order the parts and decide which part holds Aquinas's own view."
-   },
-   "confidence": 0.23,
-   "model": "jev-1.13.0",
-   "options": [
-    {
-     "blocks": [
-      "stages",
-      "explain",
-      "order",
-      "choice"
-     ],
-     "why": "Reveal the parts of Article 1 one at a time, explain what each part does, then have the learner order the parts and decide which part holds Aquinas's own view."
-    },
-    {
-     "blocks": [
-      "worked",
-      "explain",
-      "match"
-     ],
-     "why": "Walk through one short article step by step, then match each section label to the job it does in the debate."
-    }
-   ]
-  },
-  {
-   "concept": "why_revelation_is_needed",
-   "chosen": "p1",
-   "plan": {
-    "blocks": [
-     "compare",
-     "explain",
-     "sort",
-     "passage"
-    ],
-    "why": "Set the two reasons side by side, explain them, have the learner sort example truths into 'beyond reason' or 'reachable but hard', then pick the passage that states the second reason."
-   },
-   "confidence": 1.0,
-   "model": "jev-1.13.0",
-   "options": [
-    {
-     "blocks": [
-      "compare",
-      "explain",
-      "sort",
-      "passage"
-     ],
-     "why": "Set the two reasons side by side, explain them, have the learner sort example truths into 'beyond reason' or 'reachable but hard', then pick the passage that states the second reason."
-    },
-    {
-     "blocks": [
-      "stages",
-      "explain",
-      "choice"
-     ],
-     "why": "Build the argument stage by stage (our end exceeds reason, we must know our end, so revelation is needed), then ask which reason answers a new objection."
-    }
-   ]
-  },
-  {
-   "concept": "same_conclusion_different_route",
-   "chosen": "p2",
-   "plan": {
-    "blocks": [
-     "compare",
-     "explain",
      "sort"
     ],
-    "why": "Compare the astronomer's and physicist's routes, explain the principle, then sort claims about God by whether they come through natural reason, revelation, or both."
-   },
-   "confidence": 0.28,
-   "model": "jev-1.13.0",
-   "options": [
-    {
-     "blocks": [
-      "worked",
-      "explain",
-      "match",
-      "choice"
-     ],
-     "why": "Work through the round-earth example, explain how it answers the objection that philosophy already covers God, match each knower to their route, then apply the idea to theology versus philosophical theology."
-    },
-    {
-     "blocks": [
-      "compare",
-      "explain",
-      "sort"
-     ],
-     "why": "Compare the astronomer's and physicist's routes, explain the principle, then sort claims about God by whether they come through natural reason, revelation, or both."
-    }
-   ]
-  },
-  {
-   "concept": "arguing_from_principles",
-   "chosen": "p2",
-   "plan": {
-    "blocks": [
-     "compare",
-     "explain",
-     "choice",
-     "passage"
-    ],
-    "why": "Compare a debate with a heretic, who accepts some texts, and with an unbeliever, who accepts none. Explain, ask what kind of argument is possible in a new case, then find the supporting passage."
+    "why": "Walk through Article 1 part by part, then have the learner put the five parts in order and sort sample sentences into 'objection', 'on the contrary', 'I answer that' and 'reply'."
    },
    "confidence": 0.62,
    "model": "jev-1.13.0",
    "options": [
     {
      "blocks": [
-      "stages",
       "explain",
-      "trace",
+      "worked",
+      "order",
       "sort"
      ],
-     "why": "Reveal how geometry and metaphysics handle their starting points, explain the parallel for theology, trace Paul's argument from Christ's resurrection to the general resurrection, then sort opponents by what can be done with them."
+     "why": "Walk through Article 1 part by part, then have the learner put the five parts in order and sort sample sentences into 'objection', 'on the contrary', 'I answer that' and 'reply'."
     },
     {
      "blocks": [
-      "compare",
-      "explain",
       "choice",
+      "explain",
+      "stages",
+      "match"
+     ],
+     "why": "An opening guess about whose view an 'Objection' states, then reveal an article stage by stage, then match each reply to the objection it answers."
+    }
+   ]
+  },
+  {
+   "concept": "same_truth_different_means",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "explain",
+     "compare",
+     "sort",
+     "choice"
+    ],
+    "why": "Compare the astronomer and the physicist proving the earth is round, then sort everyday claims by how they are known (measured, calculated, told by a trusted source)."
+   },
+   "confidence": 0.7,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "explain",
+      "compare",
+      "sort",
+      "choice"
+     ],
+     "why": "Compare the astronomer and the physicist proving the earth is round, then sort everyday claims by how they are known (measured, calculated, told by a trusted source)."
+    },
+    {
+     "blocks": [
+      "choice",
+      "worked",
+      "match",
+      "explain"
+     ],
+     "why": "An opening guess at whether two fields can share one conclusion, a worked example, then match each science to its means of knowing."
+    }
+   ]
+  },
+  {
+   "concept": "why_revelation_needed",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "explain",
+     "trace",
+     "sort",
+     "passage"
+    ],
+    "why": "Trace the chain from 'the end surpasses reason' to 'revelation is necessary', sort truths into 'beyond reason' or 'within reason but hard to reach', then find the passage that gives the 'few, long time, errors' reason."
+   },
+   "confidence": 0.97,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "explain",
+      "trace",
+      "sort",
       "passage"
      ],
-     "why": "Compare a debate with a heretic, who accepts some texts, and with an unbeliever, who accepts none. Explain, ask what kind of argument is possible in a new case, then find the supporting passage."
+     "why": "Trace the chain from 'the end surpasses reason' to 'revelation is necessary', sort truths into 'beyond reason' or 'within reason but hard to reach', then find the passage that gives the 'few, long time, errors' reason."
+    },
+    {
+     "blocks": [
+      "choice",
+      "stages",
+      "choice"
+     ],
+     "why": "An opening judgment on whether truths reason can reach need revealing, then the argument unfolds in stages, then a revisit of that first judgment."
     }
    ]
   },
@@ -1002,37 +1723,140 @@
    "chosen": "p1",
    "plan": {
     "blocks": [
-     "choice",
-     "worked",
      "explain",
+     "worked",
      "match",
      "trace",
      "choice"
     ],
-    "why": "Open with an unscored question: can a field built on trusted starting points be a science? Then work through the musician–mathematician example, explain the two kinds of science, match lower sciences to their higher ones, trace theology's chain of dependence, and return to the opening question."
+    "why": "Work through the musician trusting the mathematician, match lower sciences to the higher ones they borrow from, trace the chain up to God's knowledge, then answer Objection 1 in Aquinas's terms."
    },
-   "confidence": 0.7,
+   "confidence": 0.83,
    "model": "jev-1.13.0",
    "options": [
     {
      "blocks": [
-      "choice",
-      "worked",
       "explain",
+      "worked",
       "match",
       "trace",
       "choice"
      ],
-     "why": "Open with an unscored question: can a field built on trusted starting points be a science? Then work through the musician–mathematician example, explain the two kinds of science, match lower sciences to their higher ones, trace theology's chain of dependence, and return to the opening question."
+     "why": "Work through the musician trusting the mathematician, match lower sciences to the higher ones they borrow from, trace the chain up to God's knowledge, then answer Objection 1 in Aquinas's terms."
     },
     {
      "blocks": [
-      "stages",
+      "choice",
+      "compare",
+      "sort",
+      "explain"
+     ],
+     "why": "An opening guess at whether a science must prove its own starting points, compare self-evident principles with borrowed ones, then sort principles into the two kinds."
+    }
+   ]
+  },
+  {
+   "concept": "one_formal_aspect",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "explain",
+     "compare",
+     "sort",
+     "choice"
+    ],
+    "why": "Compare sight and colour with sacred doctrine and revelation, sort topics (angels, stars, human acts) by whether a science treats them 'as revealed', then judge why topics from many sciences do not break its unity."
+   },
+   "confidence": 0.82,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
       "explain",
+      "compare",
       "sort",
       "choice"
      ],
-     "why": "Reveal the objection (science needs self-evident principles), the two kinds of science, and the reply. Have the learner sort sciences into self-standing or borrowing, then test them on a misreading such as 'so theology is less certain'."
+     "why": "Compare sight and colour with sacred doctrine and revelation, sort topics (angels, stars, human acts) by whether a science treats them 'as revealed', then judge why topics from many sciences do not break its unity."
+    },
+    {
+     "blocks": [
+      "worked",
+      "match",
+      "explain"
+     ],
+     "why": "A worked example of the 'common sense' that unites the five senses, then match each faculty or science to the single aspect that unifies it."
+    }
+   ]
+  },
+  {
+   "concept": "authority_ranks",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "explain",
+     "order",
+     "sort",
+     "passage"
+    ],
+    "why": "Rank Scripture, Church teachers and philosophers by the weight Aquinas gives them, sort quoted sources into 'incontrovertible' and 'probable', then pick the passage that justifies the ranking."
+   },
+   "confidence": 0.97,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "explain",
+      "order",
+      "sort",
+      "passage"
+     ],
+     "why": "Rank Scripture, Church teachers and philosophers by the weight Aquinas gives them, sort quoted sources into 'incontrovertible' and 'probable', then pick the passage that justifies the ranking."
+    },
+    {
+     "blocks": [
+      "choice",
+      "compare",
+      "choice"
+     ],
+     "why": "An opening judgment on whether citing authority is weak proof, compare a human-authority argument with a revealed one, then revisit the judgment."
+    }
+   ]
+  },
+  {
+   "concept": "arguing_from_principles",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "explain",
+     "worked",
+     "trace",
+     "sort",
+     "choice"
+    ],
+    "why": "Work through Paul's resurrection argument, trace the branches by what an opponent grants, sort opponents by what is possible, then judge how far the 'objections can always be answered' claim reaches and who rejects it."
+   },
+   "confidence": 0.66,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "explain",
+      "worked",
+      "trace",
+      "sort",
+      "choice"
+     ],
+     "why": "Work through Paul's resurrection argument, trace the branches by what an opponent grants, sort opponents by what is possible, then judge how far the 'objections can always be answered' claim reaches and who rejects it."
+    },
+    {
+     "blocks": [
+      "choice",
+      "stages",
+      "compare",
+      "choice"
+     ],
+     "why": "An opening guess at whether theology can prove its principles, the argument unfolds in stages, compare metaphysics with sacred doctrine against a denier, then revisit the opening guess."
     }
    ]
   }
@@ -1052,8 +1876,8 @@
  "generation": {
   "provider": "claude",
   "model": "claude-opus-5-5",
-  "pipeline": "lemma.generate.make_outline + build_lesson",
-  "source_chars": 35636,
-  "omitted": 0
+  "source_chars": 36125,
+  "omitted": 0,
+  "pipeline": "brought sources → subjects + make_outline + build_lesson (2026-10-23)"
  }
 }

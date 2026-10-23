@@ -1,0 +1,2778 @@
+{
+ "version": 1,
+ "id": "gallery-stress-sickness",
+ "title": "Why Stress Can Make You Sick: The Body's Brake on Its Own Defenses",
+ "level": "beginner",
+ "created": "2026-10-23T00:45:14",
+ "source": {
+  "title": "Immune system; Cortisol; Fight-or-flight response; Autonomic nervous system",
+  "authors": "Wikipedia contributors",
+  "year": null,
+  "venue": "Wikipedia, the free encyclopedia",
+  "url": ""
+ },
+ "intro": {
+  "summary": "These four encyclopedia articles together sketch an answer to 'why does stress make you sick?'. A perceived threat sets off the fight-or-flight response, which ends with the adrenal glands releasing cortisol. Cortisol is the body's own brake on inflammation, and it shifts immune defenses away from the cell-killing arm that fights viruses and tumors. Sustained stress keeps cortisol high, and the immune article reports that sleep deprivation lowers antibody responses to vaccines. The main limitation is that the sources build the answer as a chain of mechanisms. None of them directly shows that stressed people catch more infections. They also disagree in emphasis: the fight-or-flight article says cortisol 'suppresses the immune system', while the cortisol article calls the effect 'a shift toward a Th2 immune response rather than general immunosuppression', and the evidence that exercise opens a window for infection is called inconclusive. Gaps worth following up are the human studies of psychoneuroimmunology, how chronic stress drives long-term inflammation, and how large these effects really are in everyday life.",
+  "background": [
+   "Your immune system is the set of cells and molecules that finds and destroys germs, damaged cells and other things that don't belong in your body.",
+   "Hormones are chemical messages released into the blood that change how distant organs behave; cortisol is one, made by the adrenal glands on top of your kidneys.",
+   "Much of your body runs on autopilot (heartbeat, digestion, sweating), steered by nerves you don't consciously control.",
+   "In biology, 'stress' means any threat or demand that pushes the body to react, from a charging lion to an exam deadline to an infection."
+  ],
+  "known": [],
+  "aha": "Stress doesn't break your immune system: the stress hormone cortisol is the body's own brake on inflammation, and when stress holds that brake down it shifts your defenses away from the cell-killing arm that fights viruses and tumors.",
+  "assumes": [
+   "Stress (biology)",
+   "Inflammation",
+   "Psychological stress",
+   "Chronic stress",
+   "Psychoneuroimmunology",
+   "Psychosomatic medicine"
+  ],
+  "question": "Why does stress make you sick?",
+  "bridge": "sustained_stress"
+ },
+ "primer": [
+  {
+   "heading": "The question",
+   "body": "Many people notice they catch a cold right after an exam week or a crisis at work. Is that real, and if so, how can a feeling of pressure in your mind change how well your body fights germs? To answer this you need to know three things: how the immune system defends you, how the body reacts to a threat, and the hormone that links the two.",
+   "quote": "The immune system protects its host from infection with layered defenses of increasing specificity.",
+   "quote_where": "Immune system, Layered defense",
+   "source_id": "s1",
+   "source_ids": [
+    "s1"
+   ]
+  },
+  {
+   "heading": "What the sources describe",
+   "body": "The four articles cover separate pieces. One describes the immune system: a fast general first layer, and a slower layer that learns each germ. Two describe the stress reaction, in which the brain sounds an alarm, nerves speed up the heart, and a chain of hormones ends with the adrenal glands releasing cortisol. The fourth describes what cortisol does once it is in the blood, including its effects on immune cells.",
+   "quote": "The release of chemical messengers results in the production of the hormone cortisol, which increases blood pressure, blood sugar, and suppresses the immune system.",
+   "quote_where": "Fight-or-flight response, Reaction",
+   "source_id": "s3",
+   "source_ids": [
+    "s1",
+    "s2",
+    "s3",
+    "s4"
+   ]
+  },
+  {
+   "heading": "What they found",
+   "body": "Cortisol is not an enemy of the immune system. It is the brake the body normally uses to stop inflammation from overshooting. But cortisol does not simply switch defenses off. It turns down the cell-killing arm (killer cells and the signals that drive them) and turns up the antibody-making arm. Sustained stress keeps cortisol high, and losing sleep has been linked to weaker responses to vaccines.",
+   "quote": "This change results in a shift toward a Th2 immune response rather than general immunosuppression.",
+   "quote_where": "Cortisol, Immune response",
+   "source_id": "s2",
+   "source_ids": [
+    "s1",
+    "s2"
+   ]
+  },
+  {
+   "heading": "Why it matters, and its limits",
+   "body": "This explains how a mind under pressure can reach the immune system: through a hormone the body uses every day. It also explains why cortisol-like drugs calm allergies and rashes. But these are encyclopedia summaries of a mechanism, not a study of stressed people. They don't measure how much more often stressed people fall ill, and some related claims (such as exercise opening a 'window' for infection) are described as uncertain.",
+   "quote": "In people with sleep deprivation, active immunizations may have a diminished effect and may result in lower antibody production, and a lower immune response, than would be noted in a well-rested individual.",
+   "quote_where": "Immune system, Sleep and rest",
+   "source_id": "s1",
+   "source_ids": [
+    "s1",
+    "s2"
+   ]
+  }
+ ],
+ "provider": {
+  "name": "Claude subscription",
+  "model": "claude-opus-5-5"
+ },
+ "concepts": [
+  {
+   "id": "immune_layers",
+   "title": "Two layers of defense: fast guards and slow specialists",
+   "idea": "The innate immune system responds at once to anything that looks foreign, while the adaptive system takes days to build an attack tailored to one specific germ.",
+   "role": "prerequisite",
+   "predict": {
+    "question": "Some children are born with fast-guard cells that can swallow germs but cannot kill them well. The source describes this as an inherited condition. When such a child meets a brand-new germ, what happens in the first few days?",
+    "options": [
+     "The germ meets little effective resistance for days, until the specialists are ready",
+     "The specialists step in at once and cover for the weak fast guards",
+     "Nothing much changes, because the specialists do most of the early fighting anyway"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. The specialists need days to build a response tailored to a new germ, so the first days depend on the fast guards. If the guards cannot kill, the germ has a head start. Real disease is more complex than this two-curve picture.",
+     "It seems natural that a backup would jump in. But the specialists' delay comes from having to build a germ-specific attack, and a weak first layer does not make that building faster.",
+     "On the model, the specialists are barely active on day 3. In the early days the fast guards do almost all of the work, so losing them matters most then."
+    ]
+   },
+   "terms": [
+    {
+     "term": "pathogen",
+     "means": "A germ that can cause disease, such as a virus, a bacterium or a parasite"
+    },
+    {
+     "term": "innate immune system",
+     "means": "The fast first layer: cells and molecules that attack anything that looks foreign, in the same general way every time"
+    },
+    {
+     "term": "adaptive immune system",
+     "means": "The slow second layer: cells that learn to recognise one specific germ and build an attack tailored to it"
+    },
+    {
+     "term": "lag time",
+     "means": "The delay between a germ getting in and the specialists reaching full strength"
+    }
+   ],
+   "model": {
+    "title": "Two layers of defense over the days after a germ gets in",
+    "note": "Teaching model: each layer is one smooth curve. The fast guards rise within hours and slowly fade. The specialists follow an S-shaped rise centred on the day they are half-ready. Real responses vary with the germ, the person and how the response is measured, and this model ignores any memory from earlier meetings with the germ. The source gives no day counts, so all shapes and numbers are illustrative, not the paper's data.",
+    "controls": [
+     {
+      "id": "lag",
+      "label": "Days the specialists need to get going",
+      "kind": "slider",
+      "min": 2,
+      "max": 14,
+      "step": 1,
+      "default": 5,
+      "unit": "days",
+      "color": 1
+     },
+     {
+      "id": "strength",
+      "label": "Fast guards' strength",
+      "kind": "slider",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 50,
+      "unit": "",
+      "color": 0
+     }
+    ],
+    "outputs": [
+     {
+      "id": "fast_d3",
+      "label": "Fast guards, day 3",
+      "expr": "strength * (1 - exp(-6)) * exp(-3/12)",
+      "unit": "",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "spec_d3",
+      "label": "Specialists, day 3",
+      "expr": "100 * logistic(1.2 * (3 - lag))",
+      "unit": "",
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "fast_d5",
+      "label": "Fast guards, day 5",
+      "expr": "strength * (1 - exp(-10)) * exp(-5/12)",
+      "unit": "",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "spec_d5",
+      "label": "Specialists, day 5",
+      "expr": "100 * logistic(1.2 * (5 - lag))",
+      "unit": "",
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "full_day",
+      "label": "Specialists near full strength by day",
+      "expr": "lag + ln(9) / 1.2",
+      "unit": "",
+      "decimals": 1,
+      "color": 1
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Days after the germ gets in",
+      "min": 0,
+      "max": 21
+     },
+     "y": {
+      "label": "Strength of the response",
+      "min": 0,
+      "max": 110
+     },
+     "series": [
+      {
+       "id": "fast",
+       "label": "Fast guards (first layer)",
+       "expr": "strength * (1 - exp(-2 * x)) * exp(-x / 12)",
+       "color": 0,
+       "dashed": false
+      },
+      {
+       "id": "spec",
+       "label": "Specialists (second layer)",
+       "expr": "100 * logistic(1.2 * (x - lag))",
+       "color": 1,
+       "dashed": false
+      }
+     ],
+     "fills": [
+      {
+       "series": 0,
+       "from": 0,
+       "to": "lag",
+       "label": "Fast guards mostly alone",
+       "color": 0
+      }
+     ],
+     "markers": [
+      {
+       "id": "arrive",
+       "x": "lag",
+       "label": "Specialists half-ready",
+       "color": 1
+      },
+      {
+       "id": "day3",
+       "x": 3,
+       "label": "Day 3",
+       "color": 7
+      },
+      {
+       "id": "day5",
+       "x": 5,
+       "label": "Day 5",
+       "color": 7
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Time runs left to right: the days after a germ slips into your body. Higher means a stronger defense.",
+      "focus": [
+       "fast",
+       "spec"
+      ],
+      "ms": 3200
+     },
+     {
+      "say": "This curve is the fast guards. They start fighting within hours.",
+      "focus": "fast",
+      "ms": 2800
+     },
+     {
+      "say": "This curve is the specialists. They start slowly, then climb high.",
+      "focus": "spec",
+      "ms": 2800
+     },
+     {
+      "say": "This slider sets how many days the specialists need to get going. Watch their curve slide right.",
+      "set": {
+       "lag": 9
+      },
+      "focus": "lag",
+      "ms": 3400
+     },
+     {
+      "say": "This slider sets how hard the fast guards fight. Watch their curve grow.",
+      "set": {
+       "strength": 80
+      },
+      "focus": "strength",
+      "ms": 3200
+     },
+     {
+      "say": "The shaded stretch is the time the fast guards fight mostly alone.",
+      "set": {
+       "lag": 5,
+       "strength": 50
+      },
+      "focus": "arrive",
+      "ms": 3000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Now you run the infection. Change how long the specialists need and how hard the fast guards fight, and watch who carries the fight on each day.",
+    "goals": [
+     {
+      "text": "On day 5, make the fast guards still the bigger response, ahead of the specialists",
+      "when": "fast_d5 > spec_d5",
+      "solution": {
+       "lag": 7
+      },
+      "hints": [
+       "Who is ahead on day 5 right now? Which curve would have to change?",
+       "You could make the fast guards fight harder, or give the specialists more time before they get going.",
+       "Delaying the specialists by just a day or two is enough to change the day 5 lead."
+      ]
+     },
+     {
+      "text": "Picture specialists almost as quick as the guards: make the specialists at least as strong as the fast guards very early in the infection, by the day 3 line",
+      "when": "spec_d3 >= fast_d3",
+      "solution": {
+       "lag": 2
+      },
+      "hints": [
+       "Early on, the specialists are far behind. What would have to change for them to catch up so soon?",
+       "Shorten the time the specialists need to get going, and compare the two early-day boxes.",
+       "The specialists' half-ready line has to sit at or before the early marker, not after it."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. In the first days of a new infection, the fast layer is all there is. Specialists need days to build a germ-specific attack, so a weak first layer leaves an open window.",
+     "incorrect": "You may have pictured the two layers as interchangeable backups. They work on different clocks: the specialists cannot speed up, because tailoring an attack to one new germ takes days. The early days depend on the fast guards."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "A germ gets past the skin on day 0. Within hours the fast guards are fighting, and by day 3 they are close to their peak.",
+       "set": {
+        "lag": 5,
+        "strength": 50
+       },
+       "focus": "fast_d3",
+       "ms": 3200
+      },
+      {
+       "say": "The fast guards are the innate immune system. They react to broad features shared by many germs. So they need no warm-up, but they treat every pathogen in much the same general way.",
+       "focus": "fast",
+       "ms": 4200
+      },
+      {
+       "say": "On day 3 the specialists barely register. Something is happening, though: they are getting ready.",
+       "focus": "spec_d3",
+       "ms": 3200
+      },
+      {
+       "say": "The specialists are the adaptive immune system. They build an attack tailored to this one germ, and that takes days. This delay is the lag time.",
+       "focus": "arrive",
+       "ms": 4200
+      },
+      {
+       "say": "Make the lag longer and the shaded stretch grows. That means more days when the fast guards hold the line almost by themselves.",
+       "set": {
+        "lag": 10
+       },
+       "focus": "arrive",
+       "ms": 3800
+      },
+      {
+       "say": "Back to a shorter lag. Once the specialists are ready, they climb far higher than the fast guards ever did.",
+       "set": {
+        "lag": 5
+       },
+       "focus": [
+        "spec",
+        "full_day"
+       ],
+       "ms": 3800
+      },
+      {
+       "say": "Look at day 5: the specialists have overtaken the fast guards. There are two layers on two clocks, one immediate and general, the other slow, precise and stronger.",
+       "focus": [
+        "fast_d5",
+        "spec_d5"
+       ],
+       "ms": 4400
+      }
+     ]
+    },
+    "explanation": "Your body defends itself in layers. Germs that get past barriers such as skin first meet the innate immune system. It responds right away, but in the same general way to many kinds of germ, and it keeps no lasting memory. The adaptive immune system is slower. The source's comparison table lists a 'lag time between exposure and maximal response', because it has to build a response tailored to the specific germ. It is also switched on by the innate response. Once it is ready, its attack is more precise, and it can leave a memory for next time. The source is an encyclopedia overview of textbook immunology, not a single experiment. It gives no day counts, so the timings in the model are made up to show the shape, and real timings vary with the germ and the person.",
+    "quote": "If a pathogen breaches these barriers, the innate immune system provides an immediate, but non-specific response.",
+    "quote_where": "Layered defense",
+    "source_id": "s1",
+    "source_ids": [
+     "s1"
+    ]
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "fast guards(t) = "
+     },
+     {
+      "text": "S",
+      "link": "strength"
+     },
+     {
+      "text": " × (1 − e^{−2t}) × e^{−t/12}     specialists(t) = 100 / (1 + e^{−1.2(t − "
+     },
+     {
+      "text": "L",
+      "link": "lag"
+     },
+     {
+      "text": ")})"
+     }
+    ],
+    "caption": "These are the teaching model's own rules; the source has no equation. t is days since the germ got in. S (the fast guards' strength slider) sets how high the first curve rises within hours. L (the days-to-get-going slider) is the day the specialists reach half strength, so it sets the lag time. The rates 2, 12 and 1.2 are illustrative choices."
+   },
+   "recap": "The fast guards fight from the first hours, in a general way. The specialists need days to build a stronger attack tailored to one germ, so the fast layer must cover the gap.",
+   "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "use",
+     "kind": "predict"
+    },
+    {
+     "id": "why",
+     "kind": "reveal"
+    },
+    {
+     "id": "eq",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "accelerator_brake",
+   "title": "Accelerator and brake: the body's autopilot",
+   "idea": "Two branches of the autonomic nervous system pull organs in opposite directions: the sympathetic branch speeds the heart and halts digestion for action, and the parasympathetic branch does the reverse for rest.",
+   "role": "prerequisite",
+   "predict": {
+    "question": "You stand up quickly from lying on the sofa. There is no danger at all, but blood would pool in your legs and your blood pressure would drop. Which push nudges up to stop the drop?",
+    "options": [
+     "The action branch (accelerator) rises a little",
+     "The rest branch (brake) rises a little",
+     "Neither: the autopilot only works in emergencies",
+     "Both branches switch off until you sit down"
+    ],
+    "answer": 0,
+    "why": [
+     "Right: the source says standing up would cause an unsustainable drop in blood pressure without a compensating rise in sympathetic (accelerator) tone. The accelerator raises blood pressure even when nothing is scary.",
+     "You might pick this because standing up is calm and ordinary. But the brake slows the heart and would make the drop worse. The fix needs the side that raises blood pressure.",
+     "It is tempting to link the accelerator only with danger. The source says both branches adjust vital functions all the time, second by second, not just in a crisis.",
+     "Switching off would leave nothing to correct the drop. The autopilot never pauses: it keeps adjusting the balance between its two branches."
+    ]
+   },
+   "terms": [
+    {
+     "term": "autonomic nervous system",
+     "means": "The body's autopilot: nerves that run the heart, gut, pupils, glands and other organs without conscious control"
+    },
+    {
+     "term": "sympathetic branch",
+     "means": "The autopilot's accelerator: it readies the body for action (fight or flight), speeding the heart and pausing digestion"
+    },
+    {
+     "term": "parasympathetic branch",
+     "means": "The autopilot's brake: it calms the body for 'rest and digest', slowing the heart and restarting digestion"
+    }
+   ],
+   "model": {
+    "title": "Two pushes, five organs",
+    "note": "Teaching model: the two pushes combine into one balance (action minus rest), and every organ moves in a straight line with that balance. Real organs respond unevenly. Some, such as the liver and sweat glands, get only the action signal, and in a few acts both branches work together. All numbers are illustrative, not data from the sources.",
+    "controls": [
+     {
+      "id": "gas",
+      "label": "Action push (accelerator)",
+      "kind": "slider",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 3,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "brake",
+      "label": "Rest push (brake)",
+      "kind": "slider",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "unit": "",
+      "color": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "balance",
+      "label": "Balance (action minus rest)",
+      "expr": "gas - brake",
+      "unit": "",
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "heart_rate",
+      "label": "Heart rate",
+      "expr": "70 + 3 * (gas - brake)",
+      "unit": "bpm",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "digestion",
+      "label": "Digestion activity",
+      "expr": "clamp(50 - 5 * (gas - brake), 0, 100)",
+      "unit": "%",
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "pupil",
+      "label": "Pupil width",
+      "expr": "4 + 0.3 * (gas - brake)",
+      "unit": "mm",
+      "decimals": 1,
+      "color": 0
+     }
+    ],
+    "visual": {
+     "type": "bars",
+     "bars": [
+      {
+       "id": "heart_bar",
+       "label": "Heart pace",
+       "value": "clamp(50 + 5 * (gas - brake), 0, 100)",
+       "color": 0
+      },
+      {
+       "id": "pupil_bar",
+       "label": "Pupil opening",
+       "value": "clamp(50 + 5 * (gas - brake), 0, 100)",
+       "color": 0
+      },
+      {
+       "id": "airway_bar",
+       "label": "Airway opening",
+       "value": "clamp(50 + 5 * (gas - brake), 0, 100)",
+       "color": 0
+      },
+      {
+       "id": "digest_bar",
+       "label": "Digestion",
+       "value": "clamp(50 - 5 * (gas - brake), 0, 100)",
+       "color": 1
+      },
+      {
+       "id": "saliva_bar",
+       "label": "Saliva and tears",
+       "value": "clamp(50 - 5 * (gas - brake), 0, 100)",
+       "color": 1
+      }
+     ],
+     "min": 0,
+     "max": 100,
+     "unit": "%",
+     "decimals": 0
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "These five bars are jobs your body does without you thinking: heart pace, pupils, airways, digestion and saliva.",
+      "focus": [
+       "heart_bar",
+       "pupil_bar",
+       "digest_bar",
+       "saliva_bar"
+      ],
+      "ms": 4000
+     },
+     {
+      "say": "This slider is the action push. Slide it up and the heart, pupil and airway bars climb, while digestion and saliva sink.",
+      "set": {
+       "gas": 8
+      },
+      "focus": "gas",
+      "ms": 4500
+     },
+     {
+      "say": "This slider is the rest push. It pulls every bar back the other way.",
+      "set": {
+       "brake": 9
+      },
+      "focus": "brake",
+      "ms": 4000
+     },
+     {
+      "say": "These numbers show the heart rate and how busy digestion is, so you can read the effect exactly.",
+      "focus": [
+       "heart_rate",
+       "digestion"
+      ],
+      "ms": 3500
+     },
+     {
+      "say": "Back to an ordinary quiet moment. Next, let's see what the two pushes really are.",
+      "set": {
+       "gas": 3,
+       "brake": 5
+      },
+      "focus": "balance",
+      "ms": 3000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with the two pushes. Can you make the heart race without letting go of the brake, or keep it calm while both sides push hard?",
+    "goals": [
+     {
+      "text": "Get the heart rate above 85 beats a minute while keeping the rest push at 3 or more",
+      "when": "heart_rate > 85 && brake >= 3",
+      "solution": {
+       "gas": 10,
+       "brake": 4
+      },
+      "hints": [
+       "Heart rate depends on the gap between the two pushes, not on either one alone.",
+       "Push the accelerator high, then ease the brake down until the heart number passes 85. Don't take the brake below 3.",
+       "Watch the balance number: the accelerator has to lead the brake by a gap of six or more."
+      ]
+     },
+     {
+      "text": "Make both pushes strong (8 or more each) yet keep the heart within 3 beats of 70",
+      "when": "gas >= 8 && brake >= 8 && abs(heart_rate - 70) <= 3",
+      "solution": {
+       "gas": 9,
+       "brake": 9
+      },
+      "hints": [
+       "Hard pushing on both sides doesn't have to mean a fast heart.",
+       "Look at the balance number. What is the heart rate when the balance is zero?",
+       "Keep the two pushes equal, or within one step of each other, and slide them both up together."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. The accelerator is not only for danger. Standing up would make blood pressure fall, so the sympathetic side nudges up to hold it steady. The autopilot keeps adjusting its balance all day.",
+     "incorrect": "You may have linked the accelerator only with fear and the brake with anything calm. But each branch is defined by what it does to organs, not by your mood. Raising blood pressure is an accelerator job, so the sympathetic side rises even in a calm moment."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Picture yourself on the sofa after a big dinner. The rest push is strong and the action push is weak: heart slow, digestion busy, saliva flowing.",
+       "set": {
+        "gas": 2,
+        "brake": 7
+       },
+       "focus": "digestion",
+       "ms": 4500
+      },
+      {
+       "say": "That rest push is the parasympathetic branch, often called 'rest and digest'. It slows the heart and keeps digestion going.",
+       "focus": "brake",
+       "ms": 4000
+      },
+      {
+       "say": "Suddenly there's a loud bang outside. The action push jumps up.",
+       "set": {
+        "gas": 9
+       },
+       "focus": "gas",
+       "ms": 3500
+      },
+      {
+       "say": "That action push is the sympathetic branch, the fight-or-flight side. Heart pace, pupils and airways go up, and digestion and saliva go down, all from one push.",
+       "focus": [
+        "heart_bar",
+        "pupil_bar",
+        "airway_bar",
+        "digest_bar"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "But the heart is only a little faster, because the brake is still on. What each organ does depends on the balance between the two.",
+       "focus": "balance",
+       "ms": 4500
+      },
+      {
+       "say": "Now the brake lets go as well. Full alarm: heart racing, pupils wide, airways open, digestion almost stopped, mouth dry.",
+       "set": {
+        "brake": 1
+       },
+       "focus": "heart_rate",
+       "ms": 4500
+      },
+      {
+       "say": "Together, these two branches make up the autonomic nervous system, the body's autopilot. One setting readies every organ at once for running or fighting, and none of it needs your conscious decision.",
+       "focus": [
+        "heart_bar",
+        "digest_bar",
+        "saliva_bar",
+        "pupil_bar"
+       ],
+       "ms": 5500
+      }
+     ]
+    },
+    "explanation": "Your body has an autopilot, the autonomic nervous system, that runs organs you never consciously control. It has two branches that pull most organs in opposite directions. The sympathetic branch acts like an accelerator: it speeds the heart, widens the pupils and airways, and pauses digestion so the body is ready for action. The parasympathetic branch acts like a brake: it slows the heart and restarts digestion for 'rest and digest'. What an organ does depends on the balance between the two, and both are active all day, not only in emergencies. The sources build this picture from textbook tables of each branch's effects, not from one experiment. They also warn that the push-pull story is a simplification: some organs, such as the liver and sweat glands, get only the sympathetic signal, and in some acts, such as sexual arousal, both branches work together.",
+    "quote": "Sympathetic and parasympathetic divisions typically function in opposition to each other. But this opposition is better termed complementary in nature rather than antagonistic. For an analogy, one may think of the sympathetic division as the accelerator and the parasympathetic division as the brake.",
+    "quote_where": "Autonomic nervous system, section 'Function'",
+    "source_id": "s4",
+    "source_ids": [
+     "s4",
+     "s3"
+    ]
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "heart rate",
+      "link": "heart_rate"
+     },
+     {
+      "text": " = 70 + 3 × ("
+     },
+     {
+      "text": "accelerator",
+      "link": "gas"
+     },
+     {
+      "text": " − "
+     },
+     {
+      "text": "brake",
+      "link": "brake"
+     },
+     {
+      "text": ")"
+     }
+    ],
+    "caption": "The sources give no equation, so this is the teaching model's own rule. Heart rate (output) rises with the accelerator, the sympathetic push, and falls with the brake, the parasympathetic push. Only their difference, the balance, matters. Digestion follows the mirror rule: 50 − 5 × (accelerator − brake). The numbers are illustrative."
+   },
+   "recap": "The autopilot has two branches pulling against each other: the sympathetic accelerator readies the body for action, and the parasympathetic brake brings it back to rest and digestion.",
+   "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "cmp",
+     "kind": "compare",
+     "prompt": "Compare two bodies: a zebra that has just spotted a lion closing in, and you dozing after a big dinner. Look at which bars are high in each.",
+     "cases": [
+      {
+       "label": "Zebra fleeing a lion: accelerator floored, brake off",
+       "values": {
+        "gas": 10,
+        "brake": 1
+       }
+      },
+      {
+       "label": "You after dinner: accelerator low, brake strong",
+       "values": {
+        "gas": 1,
+        "brake": 9
+       }
+      }
+     ],
+     "takeaway": "The same five organs flip together. For the zebra, the sympathetic accelerator sends blood and energy to running, so digestion can wait. After dinner, the parasympathetic brake puts digestion first and lets the heart slow down."
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "m",
+     "kind": "match",
+     "prompt": "The source lists what the accelerator (sympathetic branch) does to each organ. Match each organ to its effect.",
+     "pairs": [
+      {
+       "id": "p1",
+       "text": "Heart",
+       "target": "Beats faster",
+       "feedback": "The table says sympathetic activity increases heart rate, which pumps more blood to the muscles."
+      },
+      {
+       "id": "p2",
+       "text": "Lungs",
+       "target": "Airways widen",
+       "feedback": "The sympathetic side dilates the bronchioles (small airways), letting in more oxygen."
+      },
+      {
+       "id": "p3",
+       "text": "Eye (iris)",
+       "target": "Pupils widen",
+       "feedback": "It stimulates the dilator muscle, so more light gets in."
+      },
+      {
+       "id": "p4",
+       "text": "Digestive system",
+       "target": "Slows down",
+       "feedback": "Digestion can wait in an emergency, so its activity is decreased."
+      },
+      {
+       "id": "p5",
+       "text": "Salivary and tear glands",
+       "target": "Dry mouth and dry eyes",
+       "feedback": "These glands are inhibited. That is why your mouth feels dry when you're nervous."
+      },
+      {
+       "id": "p6",
+       "text": "Liver",
+       "target": "Releases sugar into the blood",
+       "feedback": "The liver releases glucose (sugar) for fuel. The table lists no parasympathetic effect here, a reminder that not every organ is a strict tug of war."
+      }
+     ],
+     "takeaway": "Every sympathetic effect points the same way: fuel, oxygen and alertness for action, with slow jobs like digestion paused. The brake mostly reverses these effects, but not for every organ."
+    }
+   ]
+  },
+  {
+   "id": "stress_chain",
+   "title": "From a threat to cortisol: the hormone relay",
+   "idea": "A perceived threat sets off a relay (hypothalamus, then pituitary releasing ACTH, then the adrenal glands) that ends in cortisol entering the blood, alongside the faster adrenaline burst.",
+   "role": "core",
+   "predict": {
+    "question": "A person is sitting calmly, with no threat at all. A doctor injects a dose of ACTH, the messenger hormone, straight into their blood. What should happen?",
+    "options": [
+     "Cortisol rises, but adrenaline stays low",
+     "Cortisol and adrenaline both rise, because they are one stress response",
+     "Nothing happens, because the brain has to notice a threat first",
+     "Adrenaline rises, but cortisol stays low"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. The injection enters the relay partway down, at the ACTH link. The adrenal glands' outer layer answers ACTH by making cortisol. The nerve route to adrenaline starts in the brain's alarm centre, and nothing set that off.",
+     "They often happen together, so they feel like one response. But they travel by separate routes. ACTH acts only on the hormone route. Nothing in the injection fires the alarm nerves that trigger adrenaline.",
+     "In daily life the chain does start with the brain. But each link only answers the link just above it. The adrenal glands cannot tell whether the ACTH came from the pituitary or from a syringe.",
+     "This mixes up the two routes. Adrenaline comes from the inner core of the adrenal glands, and nerves trigger it. ACTH is the signal for the outer layer, which makes cortisol."
+    ]
+   },
+   "terms": [
+    {
+     "term": "hypothalamus",
+     "means": "A small region deep in the brain that works as its alarm and control centre. It starts the hormone relay."
+    },
+    {
+     "term": "pituitary gland",
+     "means": "A pea-sized gland just below the brain. When the hypothalamus signals it, it releases hormones into the blood."
+    },
+    {
+     "term": "ACTH",
+     "means": "The messenger hormone the pituitary sends through the blood. It tells the adrenal glands to make cortisol."
+    },
+    {
+     "term": "cortisol",
+     "means": "A stress hormone made by the outer layer of the adrenal glands, which sit on top of the kidneys. It raises blood sugar and acts on the immune system."
+    }
+   ],
+   "model": {
+    "title": "Two routes from a scare to the blood",
+    "note": "Teaching model. Each link is a single 0–100% level. Each hormone rises toward its target along a simple curve, and the model leaves out how the hormones fade away again. The minute-by-minute timings are illustrative and are not taken from the sources. The sources describe adrenaline as an 'immediate' reaction and the slow hormone as the end of a relay carried in the blood, but they give no timings. Numbers are illustrative, not data.",
+    "controls": [
+     {
+      "id": "threat",
+      "label": "How scary the threat is",
+      "kind": "slider",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "time",
+      "label": "Minutes since the threat",
+      "kind": "slider",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "default": 0,
+      "unit": " min",
+      "color": 3
+     },
+     {
+      "id": "pit",
+      "label": "Gland below the brain working",
+      "kind": "toggle",
+      "default": 1,
+      "color": 2,
+      "min": 0,
+      "max": 1,
+      "step": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "alarm",
+      "label": "Brain alarm signal",
+      "expr": "threat",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "adrenaline",
+      "label": "Adrenaline in blood",
+      "expr": "threat * (1 - exp(-time / 0.4))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "messenger",
+      "label": "Messenger hormone in blood",
+      "expr": "pit * threat * (1 - exp(-time / 4))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "cortisol",
+      "label": "Slow stress hormone in blood",
+      "expr": "pit * threat * (1 - exp(-time / 12))",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 4
+     }
+    ],
+    "visual": {
+     "type": "causal",
+     "nodes": [
+      {
+       "id": "n_threat",
+       "label": "Threat you notice",
+       "x": 8,
+       "y": 50,
+       "value": "threat"
+      },
+      {
+       "id": "n_brain",
+       "label": "Brain's alarm centre",
+       "x": 28,
+       "y": 50,
+       "value": "alarm"
+      },
+      {
+       "id": "n_nerves",
+       "label": "Alarm nerves",
+       "x": 52,
+       "y": 20,
+       "value": "alarm"
+      },
+      {
+       "id": "n_adren",
+       "label": "Adrenaline (kidney-top glands, core)",
+       "x": 86,
+       "y": 20,
+       "value": "adrenaline"
+      },
+      {
+       "id": "n_gland",
+       "label": "Gland below the brain",
+       "x": 46,
+       "y": 80,
+       "value": "pit * alarm"
+      },
+      {
+       "id": "n_msg",
+       "label": "Messenger hormone in blood",
+       "x": 68,
+       "y": 80,
+       "value": "messenger"
+      },
+      {
+       "id": "n_slow",
+       "label": "Slow stress hormone",
+       "x": 90,
+       "y": 80,
+       "value": "cortisol"
+      }
+     ],
+     "edges": [
+      {
+       "from": "n_threat",
+       "to": "n_brain",
+       "strength": "threat",
+       "label": "noticed"
+      },
+      {
+       "from": "n_brain",
+       "to": "n_nerves",
+       "strength": "alarm",
+       "label": "nerve signal"
+      },
+      {
+       "from": "n_nerves",
+       "to": "n_adren",
+       "strength": "adrenaline",
+       "label": "fast"
+      },
+      {
+       "from": "n_brain",
+       "to": "n_gland",
+       "strength": "alarm",
+       "label": "releasing hormone"
+      },
+      {
+       "from": "n_gland",
+       "to": "n_msg",
+       "strength": "messenger",
+       "label": "into blood"
+      },
+      {
+       "from": "n_msg",
+       "to": "n_slow",
+       "strength": "cortisol",
+       "label": "slow"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Follow a scare from left to right. It starts with a threat you notice: a barking dog, a near-miss in traffic.",
+      "focus": "n_threat",
+      "ms": 3200
+     },
+     {
+      "say": "Two routes leave the brain. The top route runs through nerves to adrenaline. The bottom route is a chain of glands that ends in a slow stress hormone.",
+      "focus": [
+       "n_adren",
+       "n_slow"
+      ],
+      "ms": 4200
+     },
+     {
+      "say": "This slider sets how scary the threat is.",
+      "set": {
+       "threat": 0.8
+      },
+      "focus": "threat",
+      "ms": 2800
+     },
+     {
+      "say": "This one moves the clock forward. Watch which end of the picture lights up first.",
+      "set": {
+       "time": 3
+      },
+      "focus": "time",
+      "ms": 3600
+     },
+     {
+      "say": "This switch keeps the gland below the brain working. Leave it on for now.",
+      "focus": "pit",
+      "ms": 2800
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "You now have a threat, a clock and a switch. Try to make the two routes come apart: one racing ahead, or one never arriving.",
+    "goals": [
+     {
+      "text": "Catch a moment when adrenaline is already above 80% but the slow stress hormone is still under 20%",
+      "when": "adrenaline > 0.8 && cortisol < 0.2",
+      "solution": {
+       "threat": 1,
+       "time": 2
+      },
+      "hints": [
+       "One route is wired with nerves. The other has to pass hormones through the blood. Which slider shows that difference?",
+       "Adrenaline can only get high if the threat is strong. After that, the clock decides how far the slow hormone has got.",
+       "Keep the threat near the top and look at the first few minutes. The slow hormone passes 20% before five minutes are up."
+      ]
+     },
+     {
+      "text": "Make the threat hit hard and wait at least 20 minutes, yet end with no slow stress hormone in the blood at all",
+      "when": "adrenaline > 0.7 && time >= 20 && cortisol < 0.01",
+      "solution": {
+       "threat": 1,
+       "time": 25,
+       "pit": 0
+      },
+      "hints": [
+       "Waiting longer always lets the slow hormone catch up, unless something breaks its route.",
+       "You need to cut a link that only the bottom route uses, so the nerve route keeps working.",
+       "Look at the switch for the gland below the brain. Without its messenger, what can the kidney-top glands' outer layer respond to?"
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "source_ids": [
+     "s2",
+     "s3"
+    ],
+    "feedback": {
+     "correct": "Yes. Each link answers only the one above it. ACTH injected into the blood skips the brain and goes straight to the adrenal glands' outer layer, so cortisol rises. The nerve route to adrenaline is never triggered.",
+     "incorrect": "It is easy to treat 'the stress response' as one switch. In fact it is two separate routes. Nerves trigger adrenaline. A relay of blood-borne hormones (hypothalamus → pituitary → ACTH → adrenal glands) triggers cortisol. Entering the relay at the ACTH link sets off only the steps below it."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Take a medium scare. At the very instant it happens, nothing has reached the blood yet. The only thing lit up is the brain's alarm centre, called the hypothalamus.",
+       "set": {
+        "threat": 0.6,
+        "time": 0,
+        "pit": 1
+       },
+       "focus": "n_brain",
+       "ms": 4200
+      },
+      {
+       "say": "One minute later, adrenaline is already over half its level. The alarm nerves (the sympathetic 'accelerator' from the last concept) fire straight into the core of the adrenal glands, which sit on top of the kidneys. Wires are fast.",
+       "set": {
+        "time": 1
+       },
+       "focus": "adrenaline",
+       "ms": 5200
+      },
+      {
+       "say": "At the same time, the hypothalamus sends a releasing hormone down to the pituitary gland. That is the pea-sized gland just below the brain.",
+       "focus": "n_gland",
+       "ms": 4200
+      },
+      {
+       "say": "The pituitary answers by pouring a messenger hormone, ACTH, into the blood. The blood has to carry it all the way down to the outer layer of the adrenal glands.",
+       "set": {
+        "time": 5
+       },
+       "focus": "messenger",
+       "ms": 4800
+      },
+      {
+       "say": "Only when ACTH arrives does the outer layer make cortisol, the slow stress hormone. After 20 minutes it has climbed to about half, close to adrenaline's level.",
+       "set": {
+        "time": 20
+       },
+       "focus": "cortisol",
+       "ms": 4800
+      },
+      {
+       "say": "A bigger threat drives every link harder. The whole relay carries more signal, and cortisol ends higher.",
+       "set": {
+        "threat": 1
+       },
+       "focus": [
+        "n_msg",
+        "n_slow"
+       ],
+       "ms": 4400
+      },
+      {
+       "say": "Here is the full picture: one scare, two routes into the blood. Nerves bring adrenaline almost at once. A relay of three hormone steps brings cortisol later.",
+       "set": {
+        "time": 30
+       },
+       "focus": [
+        "adrenaline",
+        "cortisol"
+       ],
+       "ms": 5000
+      }
+     ]
+    },
+    "explanation": "When you notice a threat, your brain sends the alarm two ways. The fast way is through nerves. The sympathetic branch triggers the core of the adrenal glands, which release adrenaline almost at once. The slow way is a relay: the hypothalamus signals the pituitary, the pituitary releases ACTH into the blood, and when ACTH reaches the adrenal glands' outer layer, that layer makes cortisol. Because each link must wait for the one before it, cortisol arrives later than adrenaline. The sources do not give exact timings, so the minutes in the model are illustrative. These sources are encyclopedia summaries of physiology, not single experiments: the cortisol article traces the relay, and the fight-or-flight article adds that nerves activate the adrenal glands 'almost simultaneously' to release adrenaline.",
+    "quote": "The release of cortisol is controlled by the hypothalamus of a brain. Secretion of corticotropin-releasing hormone by the hypothalamus triggers cells in its neighboring anterior pituitary to secrete adrenocorticotropic hormone (ACTH) into the vascular system, through which blood carries it to the adrenal cortex.",
+    "quote_where": "Cortisol article, section 'Synthesis and release'",
+    "source_id": "s2"
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "cortisol",
+      "link": "cortisol"
+     },
+     {
+      "text": " = "
+     },
+     {
+      "text": "pituitary on",
+      "link": "pit"
+     },
+     {
+      "text": " × "
+     },
+     {
+      "text": "threat",
+      "link": "threat"
+     },
+     {
+      "text": " × (1 − e^{−"
+     },
+     {
+      "text": "t",
+      "link": "time"
+     },
+     {
+      "text": "/12});   "
+     },
+     {
+      "text": "adrenaline",
+      "link": "adrenaline"
+     },
+     {
+      "text": " = threat × (1 − e^{−t/0.4})"
+     }
+    ],
+    "caption": "This is the teaching model's own rule. The sources give no equation, and the time constants (12 minutes and 0.4 minutes) are made up to show 'slow' against 'fast'. The threat (colour 0) feeds both routes. The pituitary switch (colour 2) multiplies only the cortisol route, so cutting it stops cortisol but leaves adrenaline untouched. The clock t (colour 3) shows that cortisol, the end of a blood-borne relay, rises far more slowly than adrenaline, which nerves trigger directly."
+   },
+   "recap": "A threat travels two ways: nerves fire adrenaline almost at once, while a hormone relay (hypothalamus → pituitary → ACTH → adrenal glands) delivers cortisol more slowly.",
+   "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "relay_order",
+     "kind": "order",
+     "prompt": "Put the slow route in order, from the moment you notice a threat to cortisol in the blood.",
+     "items": [
+      "You notice a threat",
+      "The hypothalamus sends a releasing hormone to the pituitary gland",
+      "The pituitary gland releases ACTH into the blood",
+      "The blood carries ACTH down to the adrenal glands",
+      "The outer layer of the adrenal glands makes cortisol"
+     ],
+     "explanation": "Each link only answers the one above it. The brain's alarm centre signals the pituitary, the pituitary's ACTH travels in the blood, and only then do the adrenal glands make cortisol. Adrenaline is not on this list: it takes the separate, faster nerve route.",
+     "hints": [
+      "Start in the brain and end in the blood.",
+      "The gland just below the brain comes before the glands on top of the kidneys."
+     ]
+    },
+    {
+     "id": "use",
+     "kind": "predict",
+     "hypothetical": true
+    },
+    {
+     "id": "why",
+     "kind": "reveal"
+    },
+    {
+     "id": "eq",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "cortisol_brake",
+   "title": "Cortisol: the brake that stops inflammation overshooting",
+   "idea": "Immune alarm signals (such as IL-1) raise cortisol through the brain's hormone relay, and cortisol in turn damps those signals: a negative feedback loop that holds inflammation near the right level.",
+   "role": "core",
+   "predict": {
+    "question": "Someone's adrenal glands can only make about half the usual cortisol. Cortisol's push-back for each bit of inflammation is normal, but its ceiling is much lower. They catch an infection that their body used to handle easily. What does the loop predict?",
+    "options": [
+     "Nothing changes: the brake works the same, so inflammation settles where it always did",
+     "The loop can now be overwhelmed by a smaller germ load, so an infection it once held might run away",
+     "Inflammation settles lower, because less cortisol means less stress",
+     "Nothing changes, because germs alone decide how much inflammation there is"
+    ],
+    "answer": 1,
+    "why": [
+     "Tempting, because the push-back per bit of inflammation is unchanged. That only holds while inflammation stays below the new, lower ceiling. Once cortisol maxes out sooner, a bigger infection outruns it.",
+     "Right. Germs swamp the loop when cortisol hits its ceiling before it can balance the germs' push. A lower ceiling means a smaller infection is enough. The cortisol source notes that a lack of cortisol can impair the ability to cope with stress and infections.",
+     "This mixes up the hormone with the feeling. In the loop, cortisol is the brake on inflammation, so less cortisol means less braking, not calmer immune cells.",
+     "Germs supply the push, but the level where inflammation settles is set by the push and cortisol's pull together. Change the pull and the level changes."
+    ]
+   },
+   "terms": [
+    {
+     "term": "cytokine",
+     "means": "A chemical message that immune cells release to signal to each other and to the rest of the body. IL-1 is one example."
+    },
+    {
+     "term": "negative feedback",
+     "means": "A loop in which a result turns down the very thing that produced it, so a level stays steady instead of running away."
+    },
+    {
+     "term": "set point",
+     "means": "The level that a feedback loop settles at and holds."
+    }
+   ],
+   "model": {
+    "title": "Inflammation after an infection, with and without cortisol's brake",
+    "note": "Teaching model: inflammation is a single number. Germs push it up at a steady rate. It boosts itself by half its own level per day, standing in for alarm signals that call in more cells. Cortisol pulls it down in proportion to how much inflammation there is, until cortisol reaches a fixed ceiling. Real cortisol works with delays, a daily rhythm and many targets (the source names TNF-alpha and IL-1). The harmful line, the ceiling and every other number are illustrative, not data from the sources.",
+    "controls": [
+     {
+      "id": "brake",
+      "label": "Cortisol push-back strength",
+      "kind": "slider",
+      "min": 0.2,
+      "max": 3,
+      "step": 0.1,
+      "default": 1.5,
+      "unit": "",
+      "color": 2
+     },
+     {
+      "id": "germs",
+      "label": "Germ load",
+      "kind": "slider",
+      "min": 0.2,
+      "max": 4,
+      "step": 0.2,
+      "default": 1,
+      "unit": "",
+      "color": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "hold",
+      "label": "Biggest germ load the brake can hold",
+      "expr": "max(0, 3 - 1.5 / brake)",
+      "decimals": 1,
+      "color": 1
+     },
+     {
+      "id": "day10",
+      "label": "Inflammation on day 10",
+      "expr": "((germs > 3 - 1.5 / brake) && (10 > -ln(max(1 - (abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5) * 3 / brake / germs, 0.000001)) / (abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5))) ? (3 / brake + 2 * germs - 6) * exp(0.5 * (10 + ln(max(1 - (abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5) * 3 / brake / germs, 0.000001)) / (abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5))) - (2 * germs - 6) : germs * (1 - exp(-(abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5) * 10)) / (abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5)",
+      "decimals": 1,
+      "color": 0
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Days since germs got in",
+      "min": 0,
+      "max": 10
+     },
+     "y": {
+      "label": "Level (arbitrary units)",
+      "min": 0,
+      "max": 6
+     },
+     "series": [
+      {
+       "id": "braked",
+       "label": "Inflammation",
+       "expr": "((germs > 3 - 1.5 / brake) && (x > -ln(max(1 - (abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5) * 3 / brake / germs, 0.000001)) / (abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5))) ? (3 / brake + 2 * germs - 6) * exp(0.5 * (x + ln(max(1 - (abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5) * 3 / brake / germs, 0.000001)) / (abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5))) - (2 * germs - 6) : germs * (1 - exp(-(abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5) * x)) / (abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5)",
+       "color": 0,
+       "dashed": false
+      },
+      {
+       "id": "nobrake",
+       "label": "Inflammation with no brake",
+       "expr": "2 * germs * (exp(0.5 * x) - 1)",
+       "color": 3,
+       "dashed": true
+      },
+      {
+       "id": "cortisol",
+       "label": "Cortisol pushing back",
+       "expr": "min(brake * (((germs > 3 - 1.5 / brake) && (x > -ln(max(1 - (abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5) * 3 / brake / germs, 0.000001)) / (abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5))) ? (3 / brake + 2 * germs - 6) * exp(0.5 * (x + ln(max(1 - (abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5) * 3 / brake / germs, 0.000001)) / (abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5))) - (2 * germs - 6) : germs * (1 - exp(-(abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5) * x)) / (abs(brake - 0.5) < 0.001 ? 0.001 : brake - 0.5)), 3)",
+       "color": 2,
+       "dashed": false
+      }
+     ],
+     "hlines": [
+      {
+       "id": "harm",
+       "y": 4,
+       "label": "Harmful level"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Time runs left to right, in days after germs get in. Height shows how much inflammation there is. The solid curve is inflammation in this body.",
+      "focus": "braked",
+      "ms": 3500
+     },
+     {
+      "say": "The dashed curve is the same body with no brake. Alarm signals call in more cells, those cells send more alarms, and inflammation climbs off the chart.",
+      "focus": "nobrake",
+      "ms": 3500
+     },
+     {
+      "say": "The third curve is cortisol pushing back. It rises as inflammation rises.",
+      "focus": "cortisol",
+      "ms": 3000
+     },
+     {
+      "say": "This slider sets how hard cortisol pushes back for each bit of inflammation.",
+      "set": {
+       "brake": 2.5
+      },
+      "focus": "brake",
+      "ms": 3000
+     },
+     {
+      "say": "This one sets how many germs keep arriving. Watch where the solid curve levels off.",
+      "set": {
+       "germs": 1.6
+      },
+      "focus": "germs",
+      "ms": 3000
+     },
+     {
+      "say": "Above this line, inflammation starts harming the body's own tissue.",
+      "focus": "harm",
+      "ms": 2800
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with the brake and the germ load. Weaken the brake and watch inflammation overshoot; strengthen it and watch the loop take back control.",
+    "goals": [
+     {
+      "text": "Keep the germ load as it is, and change the brake so inflammation settles at about double its current level, without running away.",
+      "when": "abs(germs - 1) < 0.01 && abs(day10 - 2) < 0.15 && germs <= 3 - 1.5 / brake",
+      "solution": {
+       "brake": 1.0
+      },
+      "hints": [
+       "Which slider decides how much inflammation it takes before cortisol balances the germs?",
+       "A weaker brake lets inflammation climb higher before cortisol catches up. Lower it step by step and watch the 'Inflammation on day 10' box.",
+       "You won't need to go anywhere near the bottom of the slider. The answer is a modest step below the starting setting."
+      ]
+     },
+     {
+      "text": "Keep inflammation below the harmful line on day 10 while facing more than twice today's germ load.",
+      "when": "germs > 2.1 && day10 < 4",
+      "solution": {
+       "germs": 2.2,
+       "brake": 2.0
+      },
+      "hints": [
+       "First raise the germ load past double and look at the solid curve. What happens to cortisol's curve?",
+       "When the germ load is bigger than the 'Biggest germ load the brake can hold' box, cortisol maxes out and inflammation takes off. Which slider raises that box?",
+       "Strengthen the brake only until that box reads just above your germ load. Then check the solid curve levels off."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. The loop breaks when cortisol reaches its ceiling before it balances the germs' push. Lower the ceiling and a smaller infection is enough to do that, even though the push-back per bit of inflammation is unchanged.",
+     "incorrect": "You may have pictured the brake as just its strength per bit of inflammation, or pictured cortisol as 'stress' that makes things worse. In the loop, cortisol is the pull that balances the germs. A lower ceiling means that pull runs out sooner, so a smaller infection can outrun it."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with a modest infection. Germs keep arriving, and inflammation rises fast at first. Then it levels off, well below the harmful line.",
+       "set": {
+        "brake": 1.5,
+        "germs": 1
+       },
+       "focus": "braked",
+       "ms": 4500
+      },
+      {
+       "say": "Why does it stop? Inflamed tissue sends out alarm signals. Each kind of alarm signal is a cytokine; IL-1 is one. They reach the brain, and the hormone relay you met earlier turns them into cortisol. More inflammation means more cortisol.",
+       "focus": "cortisol",
+       "ms": 6000
+      },
+      {
+       "say": "Cortisol pushes back. It makes immune cells produce fewer alarm signals and respond less to IL-1. Inflammation stops where the germs' push is matched by cortisol's pull. That steady level is the set point.",
+       "focus": [
+        "braked",
+        "cortisol"
+       ],
+       "ms": 5500
+      },
+      {
+       "say": "A result that turns down its own cause is negative feedback. Compare the dashed curve: with no brake, alarms call in cells that send more alarms, and inflammation runs away.",
+       "focus": "nobrake",
+       "ms": 5000
+      },
+      {
+       "say": "Weaken the brake. Cortisol now needs much more inflammation before it balances the germs. Inflammation overshoots, settles slowly, and creeps up toward the harmful line.",
+       "set": {
+        "brake": 0.8
+       },
+       "focus": "day10",
+       "ms": 5000
+      },
+      {
+       "say": "Strengthen it instead. Cortisol catches up sooner, so inflammation settles lower and faster.",
+       "set": {
+        "brake": 2.5
+       },
+       "focus": "braked",
+       "ms": 4000
+      },
+      {
+       "say": "Now a flood of germs, with the brake at full strength. Cortisol climbs, hits its ceiling and goes flat. The germs' push wins, and inflammation shoots past the harmful line. The loop has been swamped.",
+       "set": {
+        "brake": 3,
+        "germs": 3.2
+       },
+       "focus": [
+        "cortisol",
+        "braked",
+        "hold"
+       ],
+       "ms": 6500
+      }
+     ]
+    },
+    "explanation": "Each of inflammation's alarm signals is a cytokine, such as IL-1. Together these signals call in more immune cells, and they also reach the brain, where the hypothalamus–pituitary–adrenal relay turns them into more cortisol. Cortisol then pushes back: it cuts immune cells' output of signals such as TNF-alpha and makes them less responsive to IL-1. So inflammation settles where the germs' push is matched by cortisol's pull, and the source describes this negative feedback as a protective mechanism that keeps inflammation from over-activating. The loop has limits. The source says that in a severe infection, an over-sensitized immune system, or a massive flood of germs, the right level may never be reached. In this model, a brake too weak to beat inflammation's own self-boosting also loses, even to a small infection. The sources are encyclopedia summaries that describe this loop by citing earlier research (Besedovsky and colleagues, 1986); they report no new experiment, and the article flags parts of this passage as needing clarification.",
+    "quote": "Through this system, as long as an immune stressor is small, the response will be regulated to the correct level.",
+    "quote_where": "Cortisol article, 'Immune response' section",
+    "source_id": "s2",
+    "source_ids": [
+     "s2",
+     "s1"
+    ]
+   },
+   "check": {
+    "kind": "model",
+    "task": "Make inflammation cross the harmful line by day 10 even though the germ load is smaller than today's.",
+    "when": "germs < 0.95 && day10 > 4",
+    "solution": {
+     "germs": 0.6,
+     "brake": 0.4
+    },
+    "hint": "A small infection can only run away if something other than the germs is wrong. Think about what the dashed curve shows happens when the brake is missing.",
+    "misconception": "That runaway inflammation only happens with a big germ load. Inflammation also boosts itself, so if cortisol's push-back is too weak to beat that self-boost, even a small infection runs away."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "dI/dt = "
+     },
+     {
+      "text": "S",
+      "link": "germs"
+     },
+     {
+      "text": " + 0.5·I − min("
+     },
+     {
+      "text": "k",
+      "link": "brake"
+     },
+     {
+      "text": "·I, 3)"
+     }
+    ],
+    "caption": "This is the teaching model's rule; the sources give no equation. I is inflammation and dI/dt is how fast it changes each day. S is the germ load slider: the steady push from germs. 0.5·I is inflammation boosting itself as alarm signals call in more cells. k·I is cortisol's pull: it grows with inflammation, scaled by the push-back strength slider, and it can never exceed the ceiling of 3. Inflammation settles where the push equals the pull, and runs away if the pull hits its ceiling first."
+   },
+   "recap": "Inflammation's alarm signals raise cortisol, and cortisol damps those signals: a negative feedback loop that holds inflammation near a safe level, unless the germs outrun cortisol's ceiling.",
+   "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "use",
+     "kind": "predict"
+    },
+    {
+     "id": "why",
+     "kind": "reveal"
+    },
+    {
+     "id": "test",
+     "kind": "check"
+    },
+    {
+     "id": "eq",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "th1_th2_shift",
+   "title": "A shift, not a shutdown",
+   "idea": "As cortisol rises it turns down the cell-killing arm of defense (Th1 signals, killer T cells and natural killer cells) while turning up the antibody-making (Th2) arm.",
+   "role": "core",
+   "predict": {
+    "question": "Someone has had high cortisol for a while and then catches an infection. Given the shift you just saw, which invader is likely to gain the most from it?",
+    "options": [
+     "A virus that hides inside the person's own cells",
+     "A bacterial toxin floating free in the blood",
+     "Both gain equally, because cortisol weakens every defense by the same amount",
+     "Neither gains, because the extra antibody signals make up for everything"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. Antibodies cannot reach a germ while it is shielded inside a cell. Clearing it depends mostly on killer T cells and natural killer cells destroying the infected cells, and those are the arms cortisol turns down.",
+     "A toxin seems easy to pick because it is free in the blood. But antibodies handle toxins by binding them directly, and the antibody arm is the one cortisol turns up, so the toxin gains the least.",
+     "This is the 'total shutdown' picture. The bars did not all fall together: three went down and one went up, so the effect depends on which defense the germ is vulnerable to.",
+     "More antibody signalling helps against germs outside cells. It cannot do the job of killing infected cells, so a germ hiding inside cells still gains from the drop in cell-killing defense."
+    ]
+   },
+   "terms": [
+    {
+     "term": "helper T cell",
+     "means": "An immune 'coordinator' cell. It does not kill germs itself; it sends signals telling other cells which kind of attack to make."
+    },
+    {
+     "term": "Th1 response",
+     "means": "Helper T cells steering the body toward cell-killing defenses, which suit germs hiding inside the body's own cells"
+    },
+    {
+     "term": "Th2 response",
+     "means": "Helper T cells steering the body toward antibody-making defenses, which suit germs and toxins outside cells"
+    },
+    {
+     "term": "immunosuppression",
+     "means": "A general turning-down of the whole immune system, every part at once"
+    }
+   ],
+   "model": {
+    "title": "What rising cortisol does to four parts of defense",
+    "note": "Teaching model: each bar is one number, shown as a percentage of its normal resting strength and driven by cortisol alone. Real immune signals affect one another, change over time and differ between people, and splitting helper signals into two arms is itself a simplification. The directions (three bars down, one up) follow the sources. The curve shapes and sizes are invented to show direction and are not measured data.",
+    "controls": [
+     {
+      "id": "c",
+      "label": "Cortisol level (1 = a normal resting day)",
+      "kind": "slider",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "default": 1,
+      "unit": "",
+      "color": 4
+     }
+    ],
+    "outputs": [
+     {
+      "id": "kill_sig",
+      "label": "Cell-killing alarm signals",
+      "expr": "100 * exp(-0.25 * (c - 1))",
+      "unit": "%",
+      "decimals": 0,
+      "color": 0
+     },
+     {
+      "id": "killer_t",
+      "label": "Killer T cell growth",
+      "expr": "100 * exp(-0.22 * (c - 1))",
+      "unit": "%",
+      "decimals": 0,
+      "color": 6
+     },
+     {
+      "id": "nk",
+      "label": "Natural killer cells",
+      "expr": "100 * exp(-0.18 * (c - 1))",
+      "unit": "%",
+      "decimals": 0,
+      "color": 1
+     },
+     {
+      "id": "ab_sig",
+      "label": "Antibody-making signals",
+      "expr": "100 + 12 * (c - 1)",
+      "unit": "%",
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "lean",
+      "label": "Lean toward antibodies",
+      "expr": "ab_sig / kill_sig",
+      "unit": "×",
+      "decimals": 1,
+      "color": 5
+     }
+    ],
+    "visual": {
+     "type": "bars",
+     "bars": [
+      {
+       "id": "kill_bar",
+       "label": "Cell-killing alarm signals",
+       "value": "kill_sig",
+       "color": 0
+      },
+      {
+       "id": "killer_t_bar",
+       "label": "Killer T cell growth",
+       "value": "killer_t",
+       "color": 6
+      },
+      {
+       "id": "nk_bar",
+       "label": "Natural killer cells",
+       "value": "nk",
+       "color": 1
+      },
+      {
+       "id": "ab_bar",
+       "label": "Antibody-making signals",
+       "value": "ab_sig",
+       "color": 2
+      }
+     ],
+     "min": 0,
+     "max": 220,
+     "unit": "%",
+     "decimals": 0
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "Four bars, four parts of your defense. Each shows its strength as a percentage of normal, so 100% is an ordinary day.",
+      "set": {
+       "c": 1
+      },
+      "focus": [
+       "kill_bar",
+       "ab_bar"
+      ],
+      "ms": 3200
+     },
+     {
+      "say": "First: alarm signals that call up attacks on infected cells. Next: how fast killer T cells, the hunters of infected cells, multiply.",
+      "focus": [
+       "kill_bar",
+       "killer_t_bar"
+      ],
+      "ms": 3800
+     },
+     {
+      "say": "Natural killer cells are roaming guards that destroy infected or cancerous body cells on sight. The last bar shows signals that switch on antibody-making.",
+      "focus": [
+       "nk_bar",
+       "ab_bar"
+      ],
+      "ms": 4200
+     },
+     {
+      "say": "This slider sets cortisol, the stress hormone you met earlier. 1 is a calm resting day. Watch the bars as it climbs.",
+      "set": {
+       "c": 4
+      },
+      "focus": "c",
+      "ms": 3800
+     },
+     {
+      "say": "This number compares the antibody bar with the cell-killing alarm bar.",
+      "focus": "lean",
+      "ms": 2600
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Now you steer. Tilt the defense toward antibodies, but keep an eye on what that costs the roaming guards.",
+    "goals": [
+     {
+      "text": "Make antibody-making signals at least twice as strong as cell-killing alarm signals, while natural killer cells keep at least half their normal strength",
+      "when": "lean >= 2 && nk >= 50",
+      "solution": {
+       "c": 3.5
+      },
+      "hints": [
+       "One bar moves the way you want as cortisol changes, and another bar sets a limit. Which is which?",
+       "Raising cortisol tilts the balance toward antibodies, but the natural killer bar keeps sinking the whole time. You need a middle ground, not an end of the slider.",
+       "Raise cortisol until 'Lean toward antibodies' first reaches 2, then stop before the natural killer bar falls under 50%. Only a narrow band of settings does both."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. A germ hiding inside cells is out of reach of antibodies. It is cleared mainly by killer T cells and natural killer cells destroying the infected cells, and those are exactly what cortisol turns down. This is reasoning from the mechanism, not a measured result, but the cortisol source makes a similar point: a cellular attack is the one needed against bacteria such as tuberculosis.",
+     "incorrect": "You may have pictured cortisol as a single dial that weakens everything, or as a boost that helps everything. The model shows a tilt instead: defenses that kill infected cells go down and antibody-making goes up. So the invader that gains is the one antibodies cannot reach, a virus hiding inside cells."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start on a calm day, with cortisol at its resting level. All four bars sit at 100%, so the defense is balanced and the lean is 1 to 1.",
+       "set": {
+        "c": 1
+       },
+       "focus": [
+        "kill_bar",
+        "lean"
+       ],
+       "ms": 3200
+      },
+      {
+       "say": "Add a little cortisol. The cell-killing alarm bar drops first. Cortisol blocks signals such as IL-12, interferon gamma and TNF-alpha, which call up attacks on infected cells.",
+       "set": {
+        "c": 2
+       },
+       "focus": "kill_bar",
+       "ms": 3800
+      },
+      {
+       "say": "Many of those signals come from the helper T cell, a coordinator that kills nothing itself but tells other cells which attack to make. When helper T cells push for cell-killing attacks, that is a Th1 response. Cortisol turns it down.",
+       "set": {
+        "c": 3
+       },
+       "focus": "kill_bar",
+       "ms": 4600
+      },
+      {
+       "say": "Killer T cells need a growth signal called IL-2 to multiply. Cortisol leaves helper T cells unable to make it, so killer T cell growth sinks too.",
+       "set": {
+        "c": 4
+       },
+       "focus": "killer_t_bar",
+       "ms": 4000
+      },
+      {
+       "say": "Natural killer cells fall as well. One study found cortisol 'disarmed' them by stripping away the receptors they use to recognise targets.",
+       "set": {
+        "c": 5
+       },
+       "focus": "nk_bar",
+       "ms": 4000
+      },
+      {
+       "say": "Now look at the last bar: it rises. Cortisol boosts IL-4, IL-10 and IL-13, which push helper T cells toward an antibody-making Th2 response.",
+       "set": {
+        "c": 6
+       },
+       "focus": "ab_bar",
+       "ms": 4200
+      },
+      {
+       "say": "Push cortisol high. Three bars are low, one is high, and the lean toward antibodies nears 8 to 1. The kind of defense has changed: this is a shift, not a total shutdown, or immunosuppression.",
+       "set": {
+        "c": 7
+       },
+       "focus": [
+        "ab_bar",
+        "lean"
+       ],
+       "ms": 4800
+      }
+     ]
+    },
+    "explanation": "Cortisol does not simply switch the immune system off. It changes the orders given by the helper T cell, the coordinator that tells other immune cells which kind of attack to make. It turns down the defenses that kill infected body cells: the Th1 alarm signals, the growth of killer T cells, and natural killer cells. At the same time it turns up the Th2 signals that drive antibody-making. The sources are encyclopedia articles summarising lab and clinical studies; the cortisol article calls this a shift rather than general immunosuppression and suggests it may protect the body by stopping inflammation from running out of control during an infection. There are caveats: the same article also says cortisol 'can weaken the activity of the immune system', the two-arm Th1/Th2 split is a simplification, and the natural killer finding comes from one study.",
+    "quote": "Cortisol inhibits production of interleukin 12 (IL-12), interferon gamma (IFN-gamma), IFN-alpha, and tumor necrosis factor alpha (TNF-alpha) by antigen-presenting cells (APCs) and T helper cells (Th1 cells), but upregulates interleukin 4, interleukin 10, and interleukin 13 by Th2 cells. This change results in a shift toward a Th2 immune response rather than general immunosuppression.",
+    "quote_where": "Cortisol article, 'Immune response' section",
+    "source_id": "s2",
+    "source_ids": [
+     "s2",
+     "s1"
+    ]
+   },
+   "check": {
+    "kind": "model",
+    "task": "Put the model in a state where natural killer cells have lost more than half their normal strength, yet antibody-making signals are above their normal level.",
+    "when": "nk < 50 && ab_sig > 100",
+    "solution": {
+     "c": 5
+    },
+    "hint": "Do all four bars move the same way when cortisol rises? Follow the natural killer bar and the antibody bar separately.",
+    "misconception": "Cortisol shuts down every part of immune defense at once, so no defense could be above normal while killer cells are badly weakened."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "lean",
+      "link": "lean"
+     },
+     {
+      "text": " = "
+     },
+     {
+      "text": "A",
+      "link": "ab_sig"
+     },
+     {
+      "text": " ÷ "
+     },
+     {
+      "text": "K",
+      "link": "kill_sig"
+     },
+     {
+      "text": ",   A = 100 + 12 × ("
+     },
+     {
+      "text": "c",
+      "link": "c"
+     },
+     {
+      "text": " − 1),   K = 100 × exp(−0.25 × ("
+     },
+     {
+      "text": "c",
+      "link": "c"
+     },
+     {
+      "text": " − 1))"
+     }
+    ],
+    "caption": "The sources give no equation, so this is the teaching model's own rule, with illustrative numbers. c is the cortisol slider. A, the antibody-making signals, rises with c. K, the cell-killing alarm signals, shrinks with c. Their ratio is the 'Lean toward antibodies' readout. Only the directions come from the sources: cortisol lowers the Th1 signals and raises the Th2 signals."
+   },
+   "recap": "Cortisol tilts your defense away from killing infected cells and toward making antibodies: a shift, not a shutdown.",
+   "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "use",
+     "kind": "predict"
+    },
+    {
+     "id": "why",
+     "kind": "reveal"
+    },
+    {
+     "id": "test",
+     "kind": "check"
+    },
+    {
+     "id": "eq",
+     "kind": "connect"
+    }
+   ]
+  },
+  {
+   "id": "sustained_stress",
+   "title": "When the brake stays on: how stress can leave you open to illness",
+   "idea": "A brief scare makes cortisol rise and fall back within its daily rhythm, but sustained stress keeps it high, so the cell-killing defenses stay turned down for much longer.",
+   "role": "contribution",
+   "predict": {
+    "question": "Picture two people over one month. Alex has one terrifying near-miss in traffic that is over in minutes. Sam has a mild money worry that never lets up. Going by this idea, whose cell-killing defenses spend more time turned down?",
+    "options": [
+     "Sam, with the mild worry that never lets up",
+     "Alex, because the scare sends cortisol far higher",
+     "Both about the same, since both are stressed",
+     "Neither: cortisol doesn't reach immune cells"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. A mild push that lasts lifts every morning's natural rise above the high level, day after day, so the hours pile up. Your first goal showed this.",
+     "A higher peak feels like it should matter most. But a scare fades back onto the normal rhythm within hours, so for the defenses total time matters more than height.",
+     "Being stressed is not one setting. How long cortisol stays raised decides how long the cell-killing defenses stay turned down.",
+     "The sources say cortisol stops T cells multiplying and disarms natural killer cells, so it does reach the immune system."
+    ]
+   },
+   "terms": [
+    {
+     "term": "circadian rhythm",
+     "means": "The body's roughly 24-hour cycle. For cortisol, levels are high around waking and low late in the evening."
+    },
+    {
+     "term": "cortisol awakening response",
+     "means": "The natural rise in cortisol early in the morning, just before or at waking"
+    },
+    {
+     "term": "nadir",
+     "means": "The lowest point of a cycle. Cortisol reaches its nadir late in the evening."
+    }
+   ],
+   "model": {
+    "title": "Cortisol over three days: a brief scare or stress that keeps going",
+    "note": "Teaching model, simplified on purpose. Cortisol follows a smooth 24-hour wave that peaks at 8 am and is lowest at 8 pm. The real low point is later, in the late evening, and real cortisol also comes in hourly pulses that are not shown. Stress starts at 10 am on day 1, adds a fixed amount while it lasts, then fades over about 6 hours. The model ignores how immune signals can shift the body's cortisol set point. The 'high' line is invented. It stands in for 'enough cortisol to clearly turn down cell-killing defenses', but real effects are gradual, not an on/off switch. Hours are counted on the hour. All numbers are illustrative, not data from the sources.",
+    "controls": [
+     {
+      "id": "s",
+      "label": "Stress strength",
+      "kind": "slider",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 6,
+      "unit": "",
+      "color": 1
+     },
+     {
+      "id": "dur",
+      "label": "How long the stress lasts",
+      "kind": "slider",
+      "min": 1,
+      "max": 72,
+      "step": 1,
+      "default": 2,
+      "unit": "h",
+      "color": 2
+     }
+    ],
+    "outputs": [
+     {
+      "id": "day1",
+      "label": "Day 1: hours above the line",
+      "expr": "(10 + 6*cos(pi*(11 - 8)/12) + s*clamp(min(11 - 10, (16 + dur - 11)/6), 0, 1) > 18) + (10 + 6*cos(pi*(12 - 8)/12) + s*clamp(min(12 - 10, (16 + dur - 12)/6), 0, 1) > 18) + (10 + 6*cos(pi*(13 - 8)/12) + s*clamp(min(13 - 10, (16 + dur - 13)/6), 0, 1) > 18) + (10 + 6*cos(pi*(14 - 8)/12) + s*clamp(min(14 - 10, (16 + dur - 14)/6), 0, 1) > 18) + (10 + 6*cos(pi*(15 - 8)/12) + s*clamp(min(15 - 10, (16 + dur - 15)/6), 0, 1) > 18)",
+      "unit": "h",
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "day2",
+      "label": "Day 2: hours above the line",
+      "expr": "(10 + 6*cos(pi*(25 - 8)/12) + s*clamp(min(25 - 10, (16 + dur - 25)/6), 0, 1) > 18) + (10 + 6*cos(pi*(26 - 8)/12) + s*clamp(min(26 - 10, (16 + dur - 26)/6), 0, 1) > 18) + (10 + 6*cos(pi*(27 - 8)/12) + s*clamp(min(27 - 10, (16 + dur - 27)/6), 0, 1) > 18) + (10 + 6*cos(pi*(28 - 8)/12) + s*clamp(min(28 - 10, (16 + dur - 28)/6), 0, 1) > 18) + (10 + 6*cos(pi*(29 - 8)/12) + s*clamp(min(29 - 10, (16 + dur - 29)/6), 0, 1) > 18) + (10 + 6*cos(pi*(30 - 8)/12) + s*clamp(min(30 - 10, (16 + dur - 30)/6), 0, 1) > 18) + (10 + 6*cos(pi*(31 - 8)/12) + s*clamp(min(31 - 10, (16 + dur - 31)/6), 0, 1) > 18) + (10 + 6*cos(pi*(32 - 8)/12) + s*clamp(min(32 - 10, (16 + dur - 32)/6), 0, 1) > 18) + (10 + 6*cos(pi*(33 - 8)/12) + s*clamp(min(33 - 10, (16 + dur - 33)/6), 0, 1) > 18) + (10 + 6*cos(pi*(34 - 8)/12) + s*clamp(min(34 - 10, (16 + dur - 34)/6), 0, 1) > 18) + (10 + 6*cos(pi*(35 - 8)/12) + s*clamp(min(35 - 10, (16 + dur - 35)/6), 0, 1) > 18) + (10 + 6*cos(pi*(36 - 8)/12) + s*clamp(min(36 - 10, (16 + dur - 36)/6), 0, 1) > 18) + (10 + 6*cos(pi*(37 - 8)/12) + s*clamp(min(37 - 10, (16 + dur - 37)/6), 0, 1) > 18) + (10 + 6*cos(pi*(38 - 8)/12) + s*clamp(min(38 - 10, (16 + dur - 38)/6), 0, 1) > 18) + (10 + 6*cos(pi*(39 - 8)/12) + s*clamp(min(39 - 10, (16 + dur - 39)/6), 0, 1) > 18)",
+      "unit": "h",
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "day3",
+      "label": "Day 3: hours above the line",
+      "expr": "(10 + 6*cos(pi*(49 - 8)/12) + s*clamp(min(49 - 10, (16 + dur - 49)/6), 0, 1) > 18) + (10 + 6*cos(pi*(50 - 8)/12) + s*clamp(min(50 - 10, (16 + dur - 50)/6), 0, 1) > 18) + (10 + 6*cos(pi*(51 - 8)/12) + s*clamp(min(51 - 10, (16 + dur - 51)/6), 0, 1) > 18) + (10 + 6*cos(pi*(52 - 8)/12) + s*clamp(min(52 - 10, (16 + dur - 52)/6), 0, 1) > 18) + (10 + 6*cos(pi*(53 - 8)/12) + s*clamp(min(53 - 10, (16 + dur - 53)/6), 0, 1) > 18) + (10 + 6*cos(pi*(54 - 8)/12) + s*clamp(min(54 - 10, (16 + dur - 54)/6), 0, 1) > 18) + (10 + 6*cos(pi*(55 - 8)/12) + s*clamp(min(55 - 10, (16 + dur - 55)/6), 0, 1) > 18) + (10 + 6*cos(pi*(56 - 8)/12) + s*clamp(min(56 - 10, (16 + dur - 56)/6), 0, 1) > 18) + (10 + 6*cos(pi*(57 - 8)/12) + s*clamp(min(57 - 10, (16 + dur - 57)/6), 0, 1) > 18) + (10 + 6*cos(pi*(58 - 8)/12) + s*clamp(min(58 - 10, (16 + dur - 58)/6), 0, 1) > 18) + (10 + 6*cos(pi*(59 - 8)/12) + s*clamp(min(59 - 10, (16 + dur - 59)/6), 0, 1) > 18) + (10 + 6*cos(pi*(60 - 8)/12) + s*clamp(min(60 - 10, (16 + dur - 60)/6), 0, 1) > 18) + (10 + 6*cos(pi*(61 - 8)/12) + s*clamp(min(61 - 10, (16 + dur - 61)/6), 0, 1) > 18) + (10 + 6*cos(pi*(62 - 8)/12) + s*clamp(min(62 - 10, (16 + dur - 62)/6), 0, 1) > 18) + (10 + 6*cos(pi*(63 - 8)/12) + s*clamp(min(63 - 10, (16 + dur - 63)/6), 0, 1) > 18)",
+      "unit": "h",
+      "decimals": 0,
+      "color": 4
+     },
+     {
+      "id": "hours_total",
+      "label": "Total hours above the line",
+      "expr": "day1 + day2 + day3",
+      "unit": "h",
+      "decimals": 0,
+      "color": 5
+     },
+     {
+      "id": "share",
+      "label": "Share of the 3 days spent above the line",
+      "expr": "hours_total / 72",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 5
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Hours from midnight on day 1",
+      "min": 0,
+      "max": 72
+     },
+     "y": {
+      "label": "Cortisol (illustrative units)",
+      "min": 0,
+      "max": 28
+     },
+     "series": [
+      {
+       "id": "rhythm",
+       "label": "Normal daily rhythm",
+       "expr": "10 + 6*cos(pi*(x - 8)/12)",
+       "color": 0,
+       "dashed": true
+      },
+      {
+       "id": "cortisol",
+       "label": "Cortisol with stress",
+       "expr": "10 + 6*cos(pi*(x - 8)/12) + s*clamp(min(x - 10, (16 + dur - x)/6), 0, 1)",
+       "color": 1,
+       "dashed": false
+      }
+     ],
+     "markers": [
+      {
+       "id": "start",
+       "x": 10,
+       "label": "Stress starts",
+       "color": 2
+      },
+      {
+       "id": "end",
+       "x": "min(10 + dur, 72)",
+       "label": "Stress stops",
+       "color": 2
+      }
+     ],
+     "hlines": [
+      {
+       "id": "high_line",
+       "y": 18,
+       "label": "High level (invented)"
+      }
+     ]
+    }
+   },
+   "animation": {
+    "steps": [
+     {
+      "say": "This picture follows cortisol, the stress hormone, across three days, hour by hour from midnight.",
+      "focus": "cortisol",
+      "ms": 3000
+     },
+     {
+      "say": "The dashed line is the normal daily rhythm with no stress: up in the morning, down at night.",
+      "focus": "rhythm",
+      "ms": 3000
+     },
+     {
+      "say": "The flat line marks an invented 'high' level. Every hour cortisol spends above it is counted here.",
+      "focus": [
+       "high_line",
+       "hours_total"
+      ],
+      "ms": 3400
+     },
+     {
+      "say": "This slider sets how strong the stress is. Watch the curve lift.",
+      "set": {
+       "s": 9
+      },
+      "focus": "s",
+      "ms": 3000
+     },
+     {
+      "say": "This one sets how long the stress lasts. It always starts at 10 am on day 1.",
+      "set": {
+       "dur": 12
+      },
+      "focus": [
+       "dur",
+       "end"
+      ],
+      "ms": 3400
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Play with strength and duration. Can a weak stress that lasts beat a strong one that doesn't? Can a big surge come and go without touching the next days?",
+    "goals": [
+     {
+      "text": "Use a milder stress than the starting one, yet keep cortisol above the line for at least 14 hours in total.",
+      "when": "s < 6 && hours_total >= 14",
+      "solution": {
+       "s": 4,
+       "dur": 72
+      },
+      "hints": [
+       "Strength is not the only way to pile up hours above the line.",
+       "Turn the strength down a little, then use the other slider so that later mornings cross the line too.",
+       "Let the stress run deep into day 3, so every morning's natural rise gets the extra push."
+      ]
+     },
+     {
+      "text": "Give day 1 at least 4 hours above the line while days 2 and 3 stay at zero.",
+      "when": "day1 >= 4 && day2 + day3 < 0.5",
+      "solution": {
+       "s": 10,
+       "dur": 6
+      },
+      "hints": [
+       "You need a bigger surge on day 1, and it must be over before the next morning.",
+       "Day 1's afternoon cortisol is sinking with the daily rhythm, so only a strong push keeps it above the line for long.",
+       "Use strong stress that lasts a few hours, not two. If it runs on overnight, check that day 2 stays at zero."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. A short scare is a spike that fades back onto the daily rhythm. A mild worry that never ends is a plateau: every morning's rise lands on top of it, so the hours of damped cell-killing defense keep adding up. This is a prediction from the mechanism, not a measured result for real people.",
+     "incorrect": "It is tempting to judge stress by how intense it feels. But the brake on the cell-killing defenses depends on how long cortisol stays high. A brief scare falls back within hours, while a lasting worry keeps lifting it day after day."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with no stress at all. Cortisol just follows its daily cycle, the circadian rhythm: up every morning, down every night, and never up to the high line.",
+       "set": {
+        "s": 0,
+        "dur": 2
+       },
+       "focus": "rhythm",
+       "ms": 4400
+      },
+      {
+       "say": "The morning peak has a name: the cortisol awakening response. The low point late in the day is the nadir. Hours above the line so far: zero.",
+       "focus": "hours_total",
+       "ms": 4000
+      },
+      {
+       "say": "Now a brief scare at 10 am on day 1, a strong push lasting two hours. Cortisol jumps over the line, then slides back onto the normal rhythm by mid-afternoon. That makes 2 high hours.",
+       "set": {
+        "s": 6,
+        "dur": 2
+       },
+       "focus": [
+        "cortisol",
+        "day1"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "Look at days 2 and 3: zero. The scare is over and the daily rhythm is back in charge, so the brake on the cell-killing defenses lifted almost at once.",
+       "focus": [
+        "day2",
+        "day3"
+       ],
+       "ms": 4400
+      },
+      {
+       "say": "Same strength, but now the stress lasts a whole day. Day 2's natural morning rise stacks on top of it, and the count jumps to 10 hours.",
+       "set": {
+        "dur": 24
+       },
+       "focus": [
+        "cortisol",
+        "day2"
+       ],
+       "ms": 4800
+      },
+      {
+       "say": "Now let the stress keep going for all three days. Every morning climbs over the line. It is the same strength as the scare, with ten times the high hours: 20 in total.",
+       "set": {
+        "dur": 72
+       },
+       "focus": "hours_total",
+       "ms": 5000
+      },
+      {
+       "say": "So why does stress make you sick? It doesn't break your immune system. Cortisol is the body's brake on inflammation. Held down by stress, it shifts your defenses away from the cell-killing arm that fights viruses and tumors.",
+       "focus": [
+        "cortisol",
+        "high_line"
+       ],
+       "ms": 7000
+      }
+     ]
+    },
+    "explanation": "After a brief scare, cortisol shoots up but falls back onto its normal daily rhythm within hours, so it spends little extra time high. When stress keeps going, every morning's natural rise lands on top of the extra push, and the high hours pile up day after day. The sources state that sustained stress can lead to high levels of circulating cortisol. They also state that cortisol stops T cells multiplying, turns down Th1 signals and disarms natural killer cells (the last in one study), which damps the cell-killing defenses you met earlier. The same brake that normally stops inflammation from overshooting is simply held down for longer. Caution: these are encyclopedia summaries of many studies, not one experiment. They give no number of high hours that makes illness likely, and catching a cold after a stressful week does not by itself prove the stress caused it.",
+    "quote": "Sustained stress can lead to high levels of circulating cortisol (regarded as one of the more important of the several \"stress hormones\").",
+    "quote_where": "Cortisol article, section 'Stress'",
+    "source_id": "s2",
+    "source_ids": [
+     "s2",
+     "s1"
+    ]
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "cortisol(t) = 10 + 6·cos(π(t − 8)/12) + "
+     },
+     {
+      "text": "s",
+      "link": "s"
+     },
+     {
+      "text": " × on(t, "
+     },
+     {
+      "text": "dur",
+      "link": "dur"
+     },
+     {
+      "text": ");   high hours = number of hours with cortisol(t) > 18 = "
+     },
+     {
+      "text": "total",
+      "link": "hours_total"
+     }
+    ],
+    "caption": "The sources give no equation, so this is the model's own rule. The first part is the normal daily rhythm (the dashed line), which peaks at 8 am and is lowest at 8 pm. s, the stress strength, is added while on(t, dur) is 1: from 10 am on day 1 for dur hours, after which it fades over about 6 hours. The total counts the hours spent above the invented high line at 18."
+   },
+   "recap": "A scare is a spike that fades. Ongoing stress is a plateau that keeps cortisol's brake on the cell-killing defenses for days.",
+   "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
+    },
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "goal_1",
+     "kind": "goal",
+     "i": 0
+    },
+    {
+     "id": "goal_2",
+     "kind": "goal",
+     "i": 1
+    },
+    {
+     "id": "use",
+     "kind": "predict",
+     "hypothetical": true
+    },
+    {
+     "id": "why",
+     "kind": "reveal"
+    },
+    {
+     "id": "s",
+     "kind": "sort",
+     "title": "What do the sources actually say?",
+     "prompt": "Sort each claim: is it stated by these sources, or not established by them?",
+     "groups": [
+      {
+       "id": "stated",
+       "label": "Stated by the sources"
+      },
+      {
+       "id": "not_established",
+       "label": "Not established by these sources"
+      }
+     ],
+     "cards": [
+      {
+       "id": "c1",
+       "text": "Sustained stress can lead to high levels of cortisol in the blood.",
+       "group": "stated",
+       "feedback": "Stated in the Cortisol article's section on stress."
+      },
+      {
+       "id": "c2",
+       "text": "Cortisol can weaken the immune system, for example by stopping T cells from multiplying.",
+       "group": "stated",
+       "feedback": "Stated: cortisol leaves the T cells that make IL-2 unresponsive to IL-1 and unable to make that growth signal."
+      },
+      {
+       "id": "c3",
+       "text": "In one study, cortisol disarmed natural killer cells by lowering their killing receptors.",
+       "group": "stated",
+       "feedback": "Stated, and the source attributes it to a separate study, so it is one line of evidence, not a settled rule for everyone."
+      },
+      {
+       "id": "c4",
+       "text": "Losing sleep harms immune function and can weaken the response to vaccines.",
+       "group": "stated",
+       "feedback": "Stated in the Immune system article's section on sleep and rest."
+      },
+      {
+       "id": "c5",
+       "text": "Past a known number of high-cortisol hours, a person will fall ill.",
+       "group": "not_established",
+       "feedback": "No source gives such a threshold. The high line in this lesson's model is invented for teaching."
+      },
+      {
+       "id": "c6",
+       "text": "If you catch a cold after a stressful week, the stress caused it.",
+       "group": "not_established",
+       "feedback": "One case cannot show cause. The cold could come from exposure, poor sleep or chance, and the sources make no such claim."
+      },
+      {
+       "id": "c7",
+       "text": "Products that 'boost' the immune system cancel out the effects of stress.",
+       "group": "not_established",
+       "feedback": "The Immune system article says claims to 'boost' the immune system generally lack meaningful explanation and evidence."
+      },
+      {
+       "id": "c8",
+       "text": "A single short scare does lasting damage to your defenses.",
+       "group": "not_established",
+       "feedback": "The sources describe cortisol following a daily rhythm and stress responses fading. Nothing here shows lasting harm from one brief scare."
+      }
+     ],
+     "takeaway": "The sources support a chain: sustained stress raises cortisol, and cortisol damps the cell-killing defenses. They do not say how much stress makes a person ill, and they do not let you blame any single illness on stress."
+    },
+    {
+     "id": "eq",
+     "kind": "connect"
+    }
+   ]
+  }
+ ],
+ "omitted": [],
+ "sources": [
+  {
+   "id": "s1",
+   "title": "Immune system",
+   "url": "https://en.wikipedia.org/wiki/Immune_system",
+   "authors": "Wikipedia contributors",
+   "year": null
+  },
+  {
+   "id": "s2",
+   "title": "Cortisol",
+   "url": "https://en.wikipedia.org/wiki/Cortisol",
+   "authors": "Wikipedia contributors",
+   "year": null
+  },
+  {
+   "id": "s3",
+   "title": "Fight-or-flight response",
+   "url": "https://en.wikipedia.org/wiki/Fight-or-flight_response",
+   "authors": "Wikipedia contributors",
+   "year": null
+  },
+  {
+   "id": "s4",
+   "title": "Autonomic nervous system",
+   "url": "https://en.wikipedia.org/wiki/Autonomic_nervous_system",
+   "authors": "Wikipedia contributors",
+   "year": null
+  }
+ ],
+ "activity_plans": [
+  {
+   "concept": "immune_layers",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "connect"
+    ],
+    "why": "The learner moves the adaptive lag and sees the gap the fast layer has to cover, which makes the timing difference concrete."
+   },
+   "confidence": 0.37,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner moves the adaptive lag and sees the gap the fast layer has to cover, which makes the timing difference concrete."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "sort",
+      "goal",
+      "predict",
+      "reveal"
+     ],
+     "why": "After the model, sorting traits (non-specific, memory, found in all animals) into innate or adaptive fixes the distinction that later concepts rely on."
+    }
+   ]
+  },
+  {
+   "concept": "accelerator_brake",
+   "chosen": "p2",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "compare",
+     "goal",
+     "match"
+    ],
+    "why": "Comparing the zebra-chased-by-a-lion state with an after-dinner state, then matching organs to their sympathetic effects, ties the model to everyday experience."
+   },
+   "confidence": 0.35,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner tips the balance toward 'threat' and watches the organs change together, then predicts a new case such as dry mouth before a speech."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "compare",
+      "goal",
+      "match"
+     ],
+     "why": "Comparing the zebra-chased-by-a-lion state with an after-dinner state, then matching organs to their sympathetic effects, ties the model to everyday experience."
+    }
+   ]
+  },
+  {
+   "concept": "stress_chain",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "order",
+     "predict",
+     "reveal",
+     "connect"
+    ],
+    "why": "The learner raises the threat and follows the signal down the relay, then orders the steps from memory, which suits a chain of causes."
+   },
+   "confidence": 0.48,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "order",
+      "predict",
+      "reveal",
+      "connect"
+     ],
+     "why": "The learner raises the threat and follows the signal down the relay, then orders the steps from memory, which suits a chain of causes."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "trace",
+      "goal",
+      "predict",
+      "reveal"
+     ],
+     "why": "Tracing the path from 'sees a threat' to 'cortisol in blood' on a node map checks the route itself, then the model shows what a weak link would do."
+    }
+   ]
+  },
+  {
+   "concept": "cortisol_brake",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "check",
+     "connect"
+    ],
+    "why": "The learner weakens and strengthens the feedback and watches inflammation overshoot or settle. Feedback loops are counterintuitive, so a model check follows."
+   },
+   "confidence": 0.33,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "check",
+      "connect"
+     ],
+     "why": "The learner weakens and strengthens the feedback and watches inflammation overshoot or settle. Feedback loops are counterintuitive, so a model check follows."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "stages",
+      "goal",
+      "predict",
+      "reveal",
+      "check"
+     ],
+     "why": "Staging the loop one link at a time (immune cells, brain, adrenal, back to immune cells) before playing with it helps a beginner see the circle, not just a line."
+    }
+   ]
+  },
+  {
+   "concept": "th1_th2_shift",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "check",
+     "connect"
+    ],
+    "why": "The learner raises cortisol and sees that not every defense drops, then predicts which kind of germ (a virus hiding inside cells versus a free-floating toxin) would benefit most."
+   },
+   "confidence": 0.88,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "check",
+      "connect"
+     ],
+     "why": "The learner raises cortisol and sees that not every defense drops, then predicts which kind of germ (a virus hiding inside cells versus a free-floating toxin) would benefit most."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "compare",
+      "goal",
+      "choice",
+      "check"
+     ],
+     "why": "Comparing the two sources' wording ('suppresses the immune system' versus 'rather than general immunosuppression') against the model teaches the learner to read the disagreement honestly."
+    }
+   ]
+  },
+  {
+   "concept": "sustained_stress",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "sort",
+     "connect"
+    ],
+    "why": "The learner turns a one-off scare into ongoing stress and watches the high-cortisol hours pile up. Then they sort claims into 'stated by the sources' and 'not established by these sources', which keeps the mind-to-body link honest."
+   },
+   "confidence": 0.88,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "sort",
+      "connect"
+     ],
+     "why": "The learner turns a one-off scare into ongoing stress and watches the high-cortisol hours pile up. Then they sort claims into 'stated by the sources' and 'not established by these sources', which keeps the mind-to-body link honest."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "stages",
+      "choice",
+      "predict",
+      "reveal"
+     ],
+     "why": "After the model, staged evidence (sustained stress raises cortisol; cortisol damps cell-killing defenses; sleep loss lowers vaccine responses) builds the answer step by step. The learner then judges how far that chain actually reaches."
+    }
+   ]
+  }
+ ],
+ "category": {
+  "primary": {
+   "id": "biology",
+   "name": "Biology"
+  },
+  "secondary": null,
+  "probabilities": {
+   "biology": 0.96,
+   "medicine": 0.04
+  },
+  "confidence": 0.96,
+  "model": "jev-1.13.0"
+ },
+ "generation": {
+  "provider": "claude",
+  "model": "claude-opus-5-5",
+  "source_chars": 247603,
+  "omitted": 0,
+  "pipeline": "search question → subjects + make_outline + build_lesson (2026-10-23)"
+ }
+}

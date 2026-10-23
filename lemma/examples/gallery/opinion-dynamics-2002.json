@@ -1,631 +1,384 @@
 {
  "version": 1,
  "id": "gallery-opinion-dynamics-2002",
- "title": "Why Listening Only to Nearby Opinions Splits a Crowd",
- "audience": "A curious adult with no background in this field",
- "created": "2026-10-19T02:02:43",
+ "title": "Why Open Minds Can Still Split Into Two Camps",
+ "level": "beginner",
+ "created": "2026-10-23T01:44:42",
  "source": {
   "title": "Opinion Dynamics and Bounded Confidence: Models, Analysis, and Simulation",
   "authors": "Rainer Hegselmann, Ulrich Krause",
   "year": 2002,
-  "venue": "Journal of Artificial Societies and Social Simulation (JASSS), vol. 5, no. 3",
+  "venue": "Journal of Artificial Societies and Social Simulation (JASSS) vol. 5, no. 3",
   "url": "https://www.jasss.org/5/3/2/2.pdf"
  },
  "intro": {
-  "summary": "The paper asks when a group of people who keep averaging each other's opinions ends up agreeing, splitting into two camps, or breaking into many small groups. The authors review simple 'everyone averages everyone' models, then study a new rule called bounded confidence: each person only averages the opinions that sit close enough to their own. Computer simulations show three phases. A narrow listening range leaves many opinions, a middle range produces two camps, and a wide range gives consensus. A bias toward one's own side can break a consensus and push the camps to the extremes. These are idealised models explored mostly by simulation, with one-dimensional opinions and everyone able to hear everyone. They are not tested against real survey data, and the authors note that restricting who talks to whom may change the picture.",
+  "summary": "The paper asks when a group of people who keep adjusting their opinions to each other ends up agreeing, splitting into two camps, or breaking into many small groups. It first reviews older models in which everyone averages everyone else's opinion, which usually leads to agreement. It then studies a model of 'bounded confidence', in which people only listen to others whose opinions are already close to their own, using some mathematical proofs and many computer simulations. The main finding is that as people's open-mindedness grows, the group does not drift smoothly toward agreement: it passes through distinct phases, from many opinions, to two camps, to consensus. The two camps form because people at the edges are pulled only toward the middle. The main limitations are that these are idealised models: opinions are a single number, everyone can hear everyone, and the results come from simulations and proofs, not from data on real people. This lesson does not cover the Friedkin–Johnsen model of stubborn agents, the model in which weights change over time, or the paper's work on lopsided confidence, including the case where people listen more to their own side. These, along with the paper's early finding that local neighbourhoods may prevent polarisation, are good topics to study next.",
   "background": [
-   "An opinion here is a single number between 0 and 1, like a position on a left–right scale or an expert's estimate.",
-   "Older models assumed that people take a weighted average of others' opinions over and over, which usually ends in agreement.",
-   "A 'nonlinear' model is one where who influences whom depends on the opinions themselves, so the rules change as opinions move.",
-   "When the maths gets too hard, researchers run many computer simulations and look for patterns that hold across runs."
+   "An opinion here is a number on a line, for example an estimate between 0 and 1, so that 'closer' and 'further apart' have a clear meaning.",
+   "A weighted average is an average where some values count more than others, like a final grade where the exam counts more than the homework.",
+   "A model that repeats the same rule round after round is called a dynamical system, and the question is where it settles in the end.",
+   "When a rule's own inputs decide whom it listens to, small differences can change the outcome sharply; mathematicians call such a rule nonlinear."
   ],
   "known": [],
-  "aha": "If people simply lean toward listening to their own side, a crowd that would otherwise agree breaks into two camps, and these camps end up at the very extremes rather than in the middle."
+  "aha": "Making everyone a bit more open-minded does not bring a group steadily closer to agreement: at medium open-mindedness the group reliably splits into two camps, because the people at the edges are pulled only inward and drag the middle apart.",
+  "assumes": [
+   "Social influence",
+   "Dynamical system",
+   "Nonlinear system",
+   "Group polarization",
+   "Consensus decision-making",
+   "Weighted arithmetic mean",
+   "Computer simulation",
+   "Matrix (mathematics)",
+   "Stochastic matrix",
+   "Markov chain"
+  ]
  },
  "primer": [
   {
    "heading": "The question",
-   "body": "Groups sometimes reach agreement, sometimes split into two hostile camps, and sometimes scatter into many small factions. The authors want a simple mathematical account of which of these happens and why. Earlier models almost always predicted agreement, which does not match the splits seen in real communities.",
+   "body": "Picture a group of experts trying to agree on one estimate, or a whole society talking about an issue. Each person listens to others and nudges their own view. Sometimes this ends in agreement, sometimes in two opposed camps, sometimes in many scattered groups. The paper asks what decides which of these happens.",
    "quote": "When does opinion formation within an interacting group lead to consensus, polarization or fragmentation?",
-   "quote_where": "Abstract"
+   "quote_where": "Abstract",
+   "source_id": "s1",
+   "source_ids": [
+    "s1"
+   ]
+  },
+  {
+   "heading": "The older answer: averaging leads to agreement",
+   "body": "Earlier models assumed that each person replaces their opinion with a weighted average of everyone's opinions, round after round. Under fairly mild conditions this always ends in consensus. That left a puzzle that researchers had already noticed: real communities often split in two, yet these models kept predicting agreement.",
+   "quote": "Since universal ultimate agree-ment is an ubiquitous outcome of a very broad class of mathematical models, we are naturally led to inquire what on earth one must a ssume in order to generate th e bimodal outcome of community cleavage studies.",
+   "quote_where": "Section 1 (quoting Abelson 1964)",
+   "source_id": "s1",
+   "source_ids": [
+    "s1"
+   ]
   },
   {
    "heading": "What they did",
-   "body": "They first set out the classic model, in which every person repeatedly replaces their opinion with a weighted average of everyone's opinions, and stated its known results. They then studied 'bounded confidence': a person only averages the opinions within a distance ε (epsilon) of their own and ignores everyone further away. This rule is simple, but its maths is hard. So they ran large computer simulations with 625 people starting at random opinions, varying ε and later making the listening window lopsided."
+   "body": "The authors added one realistic twist: each person only takes seriously those whose opinions lie within a set distance of their own. This distance is called the confidence level. Because whom you listen to now depends on what everyone currently thinks, the maths becomes much harder. The authors proved some general results, then ran many computer simulations. In each one, 625 random opinions update at the same moment, round after round, at many different confidence levels.",
+   "quote": "We will randomly generate a start distribution of 625 opinions. Updating is simultaneous.",
+   "quote_where": "Section 4.1",
+   "source_id": "s1",
+   "source_ids": [
+    "s1"
+   ]
   },
   {
    "heading": "What they found",
-   "body": "A small window leaves many surviving opinions. A middle-sized window leaves two camps, and a large window brings everyone together. Polarisation happens because people at the edges are only pulled inward, so they bunch up. These bunches pull in their neighbours until the crowd tears apart, and once torn it never rejoins. When people listen more to their own side, the pull toward the centre fades at the edges, and even a wide window can end in two extreme camps.",
-   "quote": "More exactly, we step from fragmentation (plurality) over polarisation (polarity) to consensus (conformity).",
-   "quote_where": "Section 4.1"
+   "body": "With tiny confidence, many separate opinions survive. In one example run with a confidence of 0.01, exactly 38 opinions remained. With medium confidence (0.15 in one run), the group ends in two camps. With large confidence (0.25), everyone agrees. The camps form because people at the extremes have others on only one side, so they are pulled toward the centre and bunch up. Once two groups drift out of each other's reach, they never interact again.",
+   "quote": "As the homogeneous and symmetric confidence interval increases we transit from phase to phase. More exactly, we step from fragmentation (plurality) over polarisation (polarity) to consensus (conformity).",
+   "quote_where": "Section 4.1",
+   "source_id": "s1",
+   "source_ids": [
+    "s1"
+   ]
   },
   {
-   "heading": "Why it matters",
-   "body": "The model shows that two camps can form without anyone being stubborn or extreme to begin with. A mild limit on whom people take seriously is enough. The results come from idealised simulations, not from data on real groups. The authors' first tests suggest that letting people talk only with close neighbours may make polarisation disappear.",
-   "quote": "Thus, instead of a drive direction centre the opinion based bias generates a drift to the extremes.",
-   "quote_where": "Section 4.2.2"
+   "heading": "Why it matters, and its limits",
+   "body": "The work shows that two camps can form even when nobody is stubborn or hostile, simply because people ignore views that are too far from their own. It also argues that computer simulation is needed when rules are nonlinear, because proofs become hard to find. The opinions are single numbers and everyone can in principle hear everyone, so the results describe a teaching world, not measured societies. Early simulations reported at the end suggest that talking only to neighbours may remove the two-camp phase altogether.",
+   "quote": "At least under bounded confidence locality of interactions may prevent societies from sharp polarisation.",
+   "quote_where": "Section 4.3",
+   "source_id": "s1",
+   "source_ids": [
+    "s1"
+   ]
   }
  ],
  "provider": {
-  "name": "Claude",
+  "name": "Claude subscription",
   "model": "claude-opus-5-5"
  },
  "concepts": [
   {
-   "id": "averaging_to_consensus",
-   "title": "Keep averaging and everyone meets in the middle",
-   "idea": "When every person repeatedly replaces their opinion with the average of everyone's opinions, the spread of opinions shrinks until all agree.",
+   "id": "repeated_averaging",
+   "title": "Averaging round after round pulls opinions together",
+   "idea": "If each person repeatedly replaces their opinion with a weighted average of their own and others' opinions, the gap between them shrinks every round until they agree.",
    "role": "prerequisite",
    "predict": {
-    "question": "A new case with unequal trust. Ann listens only to herself. Ben and Cara each give half their trust to themselves and half to Ann. Nobody else is involved. After many rounds of updating, what happens?",
+    "question": "New case: Ana never listens to Ben. She keeps 100% of her own view, starting at 20. Ben keeps half of his own view (starting at 80) and takes half from Ana. What happens over many rounds?",
     "options": [
-     "All three end up at Ann's starting opinion",
-     "All three meet at the average of their three starting opinions",
-     "Ben and Cara agree with each other, but Ann stays apart",
-     "They never agree, because Ann refuses to listen"
+     "They never agree, because Ana refuses to budge",
+     "They agree, at Ana's opinion of 20",
+     "They agree in the middle, at 50",
+     "Ben swings past Ana and ends up below 20"
     ],
-    "answer": 0,
+    "answer": 1,
     "why": [
-     "Right. Ann never moves, and each round Ben and Cara halve their gap to her. Every pair shares trust in Ann, so the paper's condition for agreement holds, and she sets the meeting point.",
-     "Tempting, since equal trust gave the plain average. But the meeting point depends on who trusts whom, and here all trust flows to Ann.",
-     "That would need Ben and Cara to listen only to each other. Both listen to Ann, who never moves, so both are pulled all the way to her.",
-     "One stubborn person doesn't block agreement; she fixes where it lands. The paper only asks that any two people share trust in some third, and everyone trusts Ann."
+     "Tempting, because full stubbornness froze the lines in the model. But that needed both people to ignore each other. Here Ben still listens to Ana, so the gap halves every round.",
+     "Correct. Ana stays at 20 and Ben moves halfway to her each round: 50, 35, 27.5 and so on. The gap shrinks toward zero at Ana's opinion. In the paper's terms, both people give positive weight to the same person (Ana), so consensus is approached.",
+     "The meeting point was 50 in the model only because both people listened to each other equally. Here all the pull comes from Ana, so the shared opinion ends up where she stands.",
+     "Taking half from Ana puts Ben exactly halfway between himself and her. That point is always above 20, so he gets closer every round but never passes her."
     ]
    },
    "terms": [
     {
-     "term": "weighted average",
-     "means": "An average where each opinion is counted with its own share of trust, and the shares add up to 1"
+     "term": "self-weight",
+     "means": "The share of your new opinion that comes from your own current opinion; the rest comes from others"
     },
     {
-     "term": "weight",
-     "means": "How much one person counts another person's opinion when forming their own"
+     "term": "convergence",
+     "means": "Opinions getting closer and closer to one shared value, round after round"
     },
     {
-     "term": "consensus",
-     "means": "Everyone in the group holding the same opinion"
+     "term": "classical model",
+     "means": "The paper's name for repeated averaging where everyone's weights stay fixed over time (studied by De Groot and Lehrer)"
     }
    ],
    "model": {
-    "title": "A crowd that talks in rounds",
-    "note": "Teaching model: the paper's averaging rule in its simplest case. With the switch on, every person gives equal weight to everyone. The paper's classical model also allows unequal weights, which make agreement arrive gradually rather than in one round. With the switch off, each person listens only to opinions within 0.01 of their own. That is the simulation's narrowest setting, standing in for 'listen only to yourself'. Starting opinions are random, and updates happen simultaneously, as in the paper. Numbers are illustrative, not the paper's data.",
+    "title": "Two people averaging their views, round after round",
+    "note": "Teaching model: only two people. Both keep the same fixed share of their own view, they start at 20 and 80 on a 0–100 scale, and both update at the same moment in whole rounds. This is the paper's fixed-weights averaging rule (eq. 2.1) with two agents. The paper allows any number of agents and unequal weights. The numbers are illustrative, not the paper's data.",
     "controls": [
      {
-      "id": "rounds",
-      "label": "Rounds of talking",
+      "id": "w",
+      "label": "Share of their own view each person keeps",
       "kind": "slider",
-      "min": 1,
-      "max": 20,
-      "step": 1,
-      "default": 1,
-      "unit": "",
-      "color": 0
-     },
-     {
-      "id": "n",
-      "label": "People in the crowd",
-      "kind": "slider",
-      "min": 10,
-      "max": 300,
-      "step": 10,
-      "default": 100,
-      "unit": "",
-      "color": 1
-     },
-     {
-      "id": "listen",
-      "label": "Everyone listens to everyone",
-      "kind": "toggle",
-      "default": 1,
-      "color": 2,
-      "min": 0,
+      "min": 0.5,
       "max": 1,
-      "step": 1
+      "step": 0.05,
+      "default": 0.8,
+      "unit": "",
+      "color": 2
      }
     ],
     "outputs": [
      {
-      "id": "spread",
-      "label": "Gap between the two most extreme opinions",
-      "expr": "sim_spread",
-      "unit": "",
-      "decimals": 2,
+      "id": "keep",
+      "label": "Share of the gap left after each round",
+      "expr": "2 * w - 1",
+      "unit": "%",
+      "scale": 100,
+      "decimals": 0,
+      "color": 2
+     },
+     {
+      "id": "gap5",
+      "label": "Gap after 5 rounds",
+      "expr": "60 * pow(2 * w - 1, 5)",
+      "unit": " pts",
+      "decimals": 1,
       "color": 3
      },
      {
-      "id": "groups",
-      "label": "Separate opinion groups",
-      "expr": "sim_clusters",
-      "unit": "",
-      "decimals": 0,
+      "id": "gap10",
+      "label": "Gap after 10 rounds",
+      "expr": "60 * pow(2 * w - 1, 10)",
+      "unit": " pts",
+      "decimals": 1,
       "color": 4
      }
     ],
     "visual": {
-     "type": "agents",
-     "kernel": "opinion",
-     "params": {
-      "rule": 1,
-      "confidence": "listen == 1 ? 1 : 0.01",
-      "agents": "n",
-      "rounds": "rounds",
-      "convergence": 0.5,
-      "seed": 7
-     }
-    }
-   },
-   "animation": {
-    "steps": [
-     {
-      "say": "Here is a crowd of people. Each holds an opinion somewhere on a scale from 0 to 1.",
-      "ms": 3200
+     "type": "curves",
+     "x": {
+      "label": "Round of talking",
+      "min": 0,
+      "max": 15
      },
-     {
-      "say": "This slider sets how many people are in the crowd.",
-      "set": {
-       "n": 150
-      },
-      "focus": "n",
-      "ms": 2800
+     "y": {
+      "label": "Opinion (0–100)",
+      "min": 0,
+      "max": 100
      },
-     {
-      "say": "This one sets how many rounds of talking happen. In each round, everyone updates their opinion at the same moment.",
-      "set": {
-       "rounds": 3
-      },
-      "focus": "rounds",
-      "ms": 3400
-     },
-     {
-      "say": "This switch decides who people listen to: everyone, or only those who already think almost exactly as they do.",
-      "set": {
-       "listen": 0
-      },
-      "focus": "listen",
-      "ms": 3600
-     },
-     {
-      "say": "These two boxes report how far apart the two most extreme people are, and how many separate groups of opinion remain.",
-      "focus": [
-       "spread",
-       "groups"
-      ],
-      "ms": 3600
-     }
-    ]
-   },
-   "explore": {
-    "prompt": "Play with the switch, the rounds and the crowd size. When does talking bring everyone together, and when does it change nothing?",
-    "goals": [
-     {
-      "text": "Keep the crowd almost as divided as it started, even after a long run of talking.",
-      "when": "rounds >= 15 && spread > 0.8",
-      "solution": {
-       "rounds": 15,
-       "listen": 0
-      },
-      "hints": [
-       "What has to happen for anyone's opinion to move at all?",
-       "If people only hear near-copies of their own view, do extra rounds of talking change much?",
-       "Turn the listening switch off, then push the rounds slider well into the upper part of its range."
-      ]
-     },
-     {
-      "text": "Show that a bigger crowd does not slow agreement: get more than 250 people to full agreement in a single round.",
-      "when": "n > 250 && rounds == 1 && spread < 0.01",
-      "solution": {
-       "n": 260
-      },
-      "hints": [
-       "What must every person do for the whole crowd to land on the same number?",
-       "Make sure everyone listens to everyone, and bring the rounds slider back to its lowest setting.",
-       "Then grow the crowd until it passes the target size, and watch the gap box."
-      ]
-     }
-    ]
-   },
-   "understand": {
-    "feedback": {
-     "correct": "Yes. Repeated averaging still yields agreement under unequal trust, as long as every pair shares trust in someone. Ann is trusted by all and never moves, so the group closes in on her opinion. The paper notes that which consensus you reach depends on the starting opinions and the weights.",
-     "incorrect": "You may have assumed that agreement always lands on the plain average, or that one person who won't budge blocks it. In the paper's classical model, agreement comes whenever any two people both put some weight on a common third person. Here that person is Ann. She never moves, so the others are pulled all the way to her."
-    },
-    "walkthrough": {
-     "steps": [
+     "series": [
       {
-       "say": "Start with nobody really listening: each person hears only opinions almost identical to their own. After one round, the gap between the most extreme people is still close to the full scale.",
-       "set": {
-        "listen": 0,
-        "rounds": 1,
-        "n": 100
-       },
-       "focus": "spread",
-       "ms": 3600
+       "id": "ana",
+       "label": "Ana",
+       "expr": "50 - 30 * pow(2 * w - 1, floor(x))",
+       "color": 0,
+       "dashed": false
       },
       {
-       "say": "Let them talk for twenty rounds. The crowd barely changes: with no one to listen to, repeating the process does almost nothing.",
-       "set": {
-        "rounds": 20
-       },
-       "focus": "rounds",
-       "ms": 3600
+       "id": "ben",
+       "label": "Ben",
+       "expr": "50 + 30 * pow(2 * w - 1, floor(x))",
+       "color": 1,
+       "dashed": false
+      }
+     ],
+     "markers": [
+      {
+       "id": "round5",
+       "x": 5,
+       "label": "Round 5",
+       "color": 3
       },
       {
-       "say": "Now flip the switch so that everyone listens to everyone. Each person replaces their opinion with the average of all opinions, and after a single round the gap is zero.",
-       "set": {
-        "listen": 1,
-        "rounds": 1
-       },
-       "focus": "spread",
-       "ms": 4000
-      },
+       "id": "round10",
+       "x": 10,
+       "label": "Round 10",
+       "color": 4
+      }
+     ],
+     "hlines": [
       {
-       "say": "This is the classical model of opinion formation. Each person forms a weighted average: they give every other person a weight, a share of trust, and the shares add up to 1. Here every weight is equal, one share per person.",
-       "focus": "listen",
-       "ms": 4400
-      },
-      {
-       "say": "Does a bigger crowd take longer? Double it. Everyone still holds the same opinion after one round, because each person averages the very same list of opinions.",
-       "set": {
-        "n": 200
-       },
-       "focus": "n",
-       "ms": 3800
-      },
-      {
-       "say": "Everyone sharing one opinion is called consensus. Only one opinion group is left, and it sits at the crowd's starting average.",
-       "focus": "groups",
-       "ms": 3600
-      },
-      {
-       "say": "With unequal weights, the gap would shrink round by round instead of all at once. The paper proves consensus still comes, as long as any two people both give some weight to a common third person.",
-       "set": {
-        "rounds": 5
-       },
-       "focus": "spread",
-       "ms": 4400
+       "id": "middle",
+       "y": 50,
+       "label": "Halfway"
       }
      ]
-    },
-    "explanation": "In the classical model, each person's new opinion is a weighted average of everyone's current opinions, and this repeats round after round. An average always lies between the most extreme opinions, so the gap between them can only shrink. When everyone listens to everyone, the gap shrinks to nothing and the group reaches consensus: in one round with equal weights, as in the model, or gradually with unequal weights. The paper proves (Result 1) that consensus comes from every starting point whenever any two people both give weight to a common third, and that where it lands depends on where they started. If everyone sticks to their own view, nothing ever changes. This is a property of a mathematical model, not a measured fact about real groups, and the rest of the paper shows how easily it breaks.",
-    "quote": "If any two agents put jointly a positive weight on a third one then for every initial opinion profile a consensus will be approached (which consensus, of course, depends on the initial profile).",
-    "quote_where": "Section 3A, Result 1 (the classical model)"
-   },
-   "connect": {
-    "equation": [
-     {
-      "text": "x_{i}("
-     },
-     {
-      "text": "t + 1",
-      "link": "rounds"
-     },
-     {
-      "text": ") = "
-     },
-     {
-      "text": "a_{i1}x_{1}(t) + a_{i2}x_{2}(t)",
-      "link": "listen"
-     },
-     {
-      "text": " + … + "
-     },
-     {
-      "text": "a_{in}x_{n}(t)",
-      "link": "n"
-     }
-    ],
-    "caption": "The paper's equation (2.1). Person i's opinion in the next round (t + 1, the rounds slider) is a weighted average of all n current opinions (n, the crowd size). The weights a_{ij} say how much i trusts j and add up to 1. With the switch on, every a_{ij} equals 1/n. With it off, nearly all of a person's weight sits on themselves, which the paper notes gives no consensus."
-   },
-   "recap": "Repeatedly averaging opinions that everyone listens to shrinks the spread until all agree. Where they agree depends on where they started and whom they trust.",
-   "activities": [
-    {
-     "id": "tour",
-     "kind": "watch"
-    },
-    {
-     "id": "how",
-     "kind": "walk"
-    },
-    {
-     "id": "idea",
-     "kind": "explain"
-    },
-    {
-     "id": "goal_1",
-     "kind": "goal",
-     "i": 0
-    },
-    {
-     "id": "goal_2",
-     "kind": "goal",
-     "i": 1
-    },
-    {
-     "id": "use",
-     "kind": "predict"
-    },
-    {
-     "id": "why",
-     "kind": "reveal"
-    },
-    {
-     "id": "eq",
-     "kind": "connect"
-    }
-   ]
-  },
-  {
-   "id": "window_and_phases",
-   "title": "A listening window: many groups, two camps, or one",
-   "idea": "If people only average opinions within a distance ε of their own, small ε leaves many groups, middle ε leaves two camps, and large ε gives consensus.",
-   "role": "core",
-   "predict": {
-    "question": "Take the middle-sized window that split the full crowd into two camps. Now start a different crowd whose opinions all lie in a narrow band, from 0.4 to 0.6, instead of across the whole scale from 0 to 1. Everyone uses that same window. What is the most likely ending?",
-    "options": [
-     "One group: a consensus",
-     "Two camps again, as before",
-     "Many small groups",
-     "Nobody moves at all"
-    ],
-    "answer": 0,
-    "why": [
-     "Right. What matters is how wide the window is compared with the spread of opinions. In a band only 0.2 wide, a window of about 0.15 on each side reaches across most of the crowd. Chains of overlapping listeners pull everyone together.",
-     "It is tempting to think a window size always gives the same outcome. But 'middle-sized' only means middle-sized relative to the spread. Here the window covers most of the band, which puts this crowd in the consensus zone.",
-     "Many groups appear when the window is small compared with the spread of opinions. Squeezing the opinions together makes the window relatively larger, not smaller.",
-     "People stop moving only when nobody else is inside their window. In this band almost everyone has many neighbours within reach, so they keep averaging."
-    ]
-   },
-   "terms": [
-    {
-     "term": "confidence level",
-     "means": "How far from your own opinion, on either side, you are still willing to listen. The paper writes it as ε"
-    },
-    {
-     "term": "bounded confidence",
-     "means": "The rule that each person averages only the opinions inside their confidence level and ignores the rest"
-    },
-    {
-     "term": "fragmentation",
-     "means": "The ending where many separate opinion groups survive (the paper also calls it plurality)"
-    },
-    {
-     "term": "polarisation",
-     "means": "The ending where the crowd settles into two opposing camps (the paper also calls it polarity)"
-    }
-   ],
-   "model": {
-    "title": "A crowd that only listens to nearby opinions",
-    "note": "Teaching model: the paper's bounded-confidence rule (Hegselmann–Krause). Each round, everyone at once moves to the plain average of all opinions within the listening distance of their own, as in the paper's simulations with a symmetric window that is the same for everyone. Starting opinions are random and uniform, as in the paper, but there are far fewer people than the paper's 625 and only one random start, whereas the paper averaged 50 runs. The group counter treats opinions closer than 0.1 as one group, so at the narrowest windows it can undercount; the picture shows the true clusters. With the switch on, everyone listens to everyone and the slider is ignored. Numbers are illustrative, not the paper's data.",
-    "controls": [
-     {
-      "id": "rounds",
-      "label": "Rounds of talking",
-      "kind": "slider",
-      "min": 1,
-      "max": 20,
-      "step": 1,
-      "default": 20,
-      "unit": "",
-      "color": 0
-     },
-     {
-      "id": "n",
-      "label": "People in the crowd",
-      "kind": "slider",
-      "min": 10,
-      "max": 300,
-      "step": 10,
-      "default": 100,
-      "unit": "",
-      "color": 1
-     },
-     {
-      "id": "listen",
-      "label": "Everyone listens to everyone",
-      "kind": "toggle",
-      "default": 0,
-      "color": 2,
-      "min": 0,
-      "max": 1,
-      "step": 1
-     },
-     {
-      "id": "eps",
-      "label": "How far each person listens (either side)",
-      "kind": "slider",
-      "min": 0.05,
-      "max": 0.4,
-      "step": 0.01,
-      "default": 0.3,
-      "unit": "",
-      "color": 5
-     }
-    ],
-    "outputs": [
-     {
-      "id": "spread",
-      "label": "Gap between the two most extreme opinions",
-      "expr": "sim_spread",
-      "unit": "",
-      "decimals": 2,
-      "color": 3
-     },
-     {
-      "id": "groups",
-      "label": "Separate opinion groups",
-      "expr": "sim_clusters",
-      "unit": "",
-      "decimals": 0,
-      "color": 4
-     }
-    ],
-    "visual": {
-     "type": "agents",
-     "kernel": "opinion",
-     "params": {
-      "rule": 1,
-      "confidence": "listen == 1 ? 1 : eps",
-      "agents": "n",
-      "rounds": "rounds",
-      "convergence": 0.5,
-      "seed": 7
-     }
     }
    },
    "animation": {
     "steps": [
      {
-      "say": "Same crowd as before. Each dot is a person, its height is their opinion from 0 to 1, and the rounds of talking run left to right.",
-      "set": {
-       "listen": 0,
-       "eps": 0.3,
-       "rounds": 20
-      },
-      "focus": "rounds",
-      "ms": 5500
+      "say": "Meet Ana. Her opinion is on a 0–100 scale, say how good a new film is. She starts at 20.",
+      "focus": "ana",
+      "ms": 3500
      },
      {
-      "say": "The 'everyone listens to everyone' switch is now off. The new slider sets how far each person listens. They average only the opinions within that distance above or below their own, and ignore everyone further away.",
+      "say": "Meet Ben. He starts far away, at 80. Each step to the right is one round of talking.",
+      "focus": "ben",
+      "ms": 3500
+     },
+     {
+      "say": "Each round, both of them blend their own view with the other's. This slider sets how much of their own view each one keeps. Watch the lines stretch out as it rises.",
+      "set": {
+       "w": 0.9
+      },
+      "focus": "w",
+      "ms": 4000
+     },
+     {
+      "say": "This box shows how much of the gap between them is left after each round.",
+      "focus": "keep",
+      "ms": 3500
+     },
+     {
+      "say": "These two boxes tell you how far apart they still are at rounds 5 and 10.",
+      "set": {
+       "w": 0.8
+      },
       "focus": [
-       "eps",
-       "listen"
+       "gap5",
+       "gap10"
       ],
-      "ms": 8000
-     },
-     {
-      "say": "Watch the group count as people's reach gets shorter.",
-      "set": {
-       "eps": 0.15
-      },
-      "focus": "groups",
-      "ms": 5000
+      "ms": 3500
      }
     ]
    },
    "explore": {
-    "prompt": "Slide the listening distance back and forth and hunt for the boundaries between the three kinds of ending.",
+    "prompt": "Play with how much each person holds on to their own view. Can you make them agree fast without making them push-overs? Then can you make them close in slowly?",
     "goals": [
      {
-      "text": "Make the crowd end in at least four separate opinion groups",
-      "when": "groups >= 4 && listen == 0",
+      "text": "Get Ana and Ben within 1 point of each other by round 5, while each still keeps more of their own view than they take from the other",
+      "when": "gap5 < 1 && w > 0.5",
       "solution": {
-       "eps": 0.07
+       "w": 0.7
       },
       "hints": [
-       "Does a shorter or a longer reach leave more groups behind?",
-       "Shrink the listening distance well below the point where two camps appeared.",
-       "Look between the narrowest setting and about a tenth of the scale."
+       "Should each person keep more of their own view, or less, to close the gap faster?",
+       "Each round the gap is multiplied by the share in the first box. By round 5 that has happened five times, and 60 times that result must fall below 1.",
+       "Lower the slider one notch at a time from where it starts. Stop before you reach an even split, because an even split breaks the 'keeps more of their own view' rule."
       ]
      },
      {
-      "text": "Find a middle-sized reach where the crowd ends in just two or three camps: not many groups, not one",
-      "when": "groups >= 2 && groups <= 3 && listen == 0",
+      "text": "Make them close in slowly: after 10 rounds they should still be more than 5 points apart, but less than 10",
+      "when": "gap10 > 5 && gap10 < 10",
       "solution": {
-       "eps": 0.15
+       "w": 0.9
       },
       "hints": [
-       "Consensus lives at the wide end and many groups at the narrow end. The camps are in between.",
-       "Start from the consensus setting and narrow the reach a little at a time, watching the group count.",
-       "The two-camp zone sits somewhere between a tenth and a fifth of the scale."
+       "Slower agreement means each person holds on to their own view more strongly.",
+       "Raise the slider one notch at a time and watch the 'Gap after 10 rounds' box.",
+       "The setting you want sits one notch below the one where they are still about 21 points apart."
       ]
      }
     ]
    },
    "understand": {
+    "source_ids": [
+     "s1"
+    ],
+    "source_id": "s1",
     "feedback": {
-     "correct": "Yes. The outcome depends on the window compared with how spread out the opinions are. A window that splits a crowd spread over 0 to 1 covers most of a crowd squeezed into 0.4 to 0.6, so that crowd reaches consensus.",
-     "incorrect": "You probably treated a window size as fixing the outcome on its own. In the bounded-confidence model, what counts is how far the window reaches compared with the spread of opinions. Squeeze the opinions into a narrow band and the same window behaves like a wide one, which leads to consensus."
+     "correct": "Right. Agreement does not need both people to move. It is enough that everyone gives some weight to a common person. Ben keeps moving toward a fixed Ana, so the gap halves each round and they meet at her opinion.",
+     "incorrect": "You may have carried over the frozen lines from full stubbornness. Those needed both people to ignore each other. Here Ben still takes half his view from Ana, so each round he gets halfway closer to her. They meet at Ana's opinion, not in the middle."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start with a long reach: each person listens to anyone within 0.4 of their own view. This distance is what the paper calls the confidence level, written ε. Averaging only inside it is called bounded confidence.",
+       "say": "Each person keeps 80% of their own view and takes 20% of the other's. After round 1, Ana is at 0.8×20 + 0.2×80 = 32, and Ben is at 68.",
        "set": {
-        "listen": 0,
-        "eps": 0.4,
-        "rounds": 20
+        "w": 0.8
        },
-       "focus": "eps",
-       "ms": 6500
+       "focus": "ana",
+       "ms": 4500
       },
       {
-       "say": "With a reach this long, chains of overlapping listeners link the whole crowd. They end in one group: consensus, just as when everyone listened to everyone.",
-       "focus": "groups",
+       "say": "The gap went from 60 to 36, so 60% of it survived. The 80% each keeps is called their self-weight. Every round the same share of the gap survives: 36, then about 22, then 13.",
+       "focus": "keep",
        "ms": 5000
       },
       {
-       "say": "Lower the confidence level to 0.3. Still one group, and the gap between the extremes still closes.",
+       "say": "Now lower the self-weight so they listen to each other more. Only 20% of the gap survives each round, and by round 5 they are practically identical.",
        "set": {
-        "eps": 0.3
+        "w": 0.6
+       },
+       "focus": "gap5",
+       "ms": 4500
+      },
+      {
+       "say": "At an even split, each person takes exactly half from the other. Both jump to 50 in a single round.",
+       "set": {
+        "w": 0.5
+       },
+       "focus": "middle",
+       "ms": 4000
+      },
+      {
+       "say": "Raise the self-weight high. Now 90% of the gap survives each round, and after 10 rounds they are still about 21 points apart. It is slower, but the lines still bend toward 50. This steady closing-in is called convergence.",
+       "set": {
+        "w": 0.95
+       },
+       "focus": "gap10",
+       "ms": 5500
+      },
+      {
+       "say": "Here is the one exception. If each keeps 100% of their own view, nobody listens, the gap never shrinks, and the lines stay flat at 20 and 80 forever.",
+       "set": {
+        "w": 1
        },
        "focus": [
-        "groups",
-        "spread"
+        "ana",
+        "ben"
        ],
        "ms": 5000
       },
       {
-       "say": "Now the narrow end: 0.07. Most people hear only a handful of others, so small local groups form and stop talking to each other. Many groups survive. The paper calls this fragmentation.",
-       "set": {
-        "eps": 0.07
-       },
-       "focus": "groups",
-       "ms": 7000
-      },
-      {
-       "say": "Narrower still, 0.05: even more little groups. Some sit so close together that the counter lumps them as one, but the picture shows them apart.",
-       "set": {
-        "eps": 0.05
-       },
-       "focus": "groups",
-       "ms": 6000
-      },
-      {
-       "say": "These groups settle within a few rounds. After that nothing changes, because no group sits inside another's window.",
-       "set": {
-        "rounds": 6
-       },
-       "focus": "rounds",
-       "ms": 5000
-      },
-      {
-       "say": "Now the surprise, in the middle: 0.15. Not many groups, not one, but a couple of big camps facing each other. This is polarisation. Why a middle reach makes camps is the puzzle the next concepts open up.",
-       "set": {
-        "eps": 0.15,
-        "rounds": 20
-       },
-       "focus": "groups",
-       "ms": 7500
+       "say": "So any listening at all, even a little, eventually pulls them together. Only total stubbornness stops it. With fixed weights like these, the paper calls this the classical model.",
+       "focus": "keep",
+       "ms": 4500
       }
      ]
     },
-    "explanation": "When people average only the opinions within a distance ε of their own (their confidence level), the size of that window decides how the crowd ends. A very short reach leaves many separate groups. A middle reach usually leaves two camps. A long reach pulls everyone into one consensus. The paper showed this by simulation, not by proof: 625 random opinions, ε stepped from 0.01 to 0.4, and 50 runs at each step. Single runs gave 38 surviving opinions at ε = 0.01, two camps at 0.15 and consensus at 0.25. Individual runs vary, so these phases describe typical outcomes, averaged over many random starting crowds.",
-    "quote": "Summing up and generalising what we see in Figure 3 one might say: As the homogeneous and symmetric confidence interval increases we transit from phase to phase. More exactly, we step from fragmentation (plurality) over polarisation (polarity) to consensus (conformity)",
-    "quote_where": "Section 4.1"
+    "explanation": "Each round, every person's new opinion is a weighted average: part their own current view, part everyone else's. With two people who each keep the same self-weight, the gap between them is multiplied by the same share every round, so it shrinks steadily toward zero. Strictly, it approaches zero rather than hitting it, except at an even split. A high self-weight only slows this convergence down; only a self-weight of 100% stops it completely. The paper reviews this classical model (from De Groot and Lehrer) and states the result as a theorem: if any two people both give some weight to a common third person, the group approaches a consensus from any starting opinions. This is a mathematical result about the model with fixed weights, not an observation of real groups. Where the group ends up depends on the starting opinions and on who listens to whom.",
+    "quote": "A special case of Result 1 is given if every agent puts a positive weight on any other agent. This corresponds to the intuition that the group should approach a consensus if every agent takes the opinion of any other agent into account. On the other extreme is the case where every agent sticks to his opinion without taking care of any other opinion.",
+    "quote_where": "Section 3, part A (The classical model)"
    },
    "connect": {
     "equation": [
      {
-      "text": "x_{i}(t+1) = (1 / |I|) × Σ_{j ∈ I} x_{j}(t),   where I = { j between 1 and "
+      "text": "x_{1}(t+1) = "
      },
      {
-      "text": "n",
-      "link": "n"
+      "text": "a_{11}",
+      "link": "w"
      },
      {
-      "text": " : |x_{i}(t) − x_{j}(t)| ≤ "
+      "text": " x_{1}(t) + "
      },
      {
-      "text": "ε",
-      "link": "eps"
+      "text": "a_{12}"
      },
      {
-      "text": " }"
+      "text": " x_{2}(t)"
      }
     ],
-    "caption": "This is the paper's bounded-confidence model (BC). Person i's next opinion is the plain average of everyone whose current opinion lies within ε of theirs. The set I is the people inside the window and |I| is how many there are. ε is the listening-distance slider and n is the crowd-size slider. Turning the switch on is the same as making ε big enough to include everyone."
+    "caption": "This is the paper's eq. 2.1 written for two agents. x_{1}(t) is Ana's opinion in round t and x_{2}(t) is Ben's. a_{11} is Ana's self-weight, set by the slider. a_{12} = 1 − a_{11} is the weight she gives Ben, and Ben uses the same weights in mirror image. Subtracting Ben's rule from Ana's shows that the gap is multiplied by a_{11} + a_{22} − 1 = 2w − 1 each round, which is the 'share of the gap left' box."
    },
-   "recap": "How far people listen sets the ending: a short reach leaves many groups, a middle reach leaves two camps, and a long reach brings consensus.",
+   "recap": "Repeated averaging with fixed weights shrinks the gap by the same share every round, so any listening at all leads toward agreement; only total stubbornness prevents it.",
    "activities": [
     {
      "id": "tour",
@@ -638,38 +391,6 @@
     {
      "id": "idea",
      "kind": "explain"
-    },
-    {
-     "id": "cmp",
-     "kind": "compare",
-     "prompt": "The same random crowd, three listening distances. Count the groups in each.",
-     "cases": [
-      {
-       "label": "Short reach",
-       "values": {
-        "eps": 0.05,
-        "listen": 0,
-        "rounds": 20
-       }
-      },
-      {
-       "label": "Middle reach",
-       "values": {
-        "eps": 0.15,
-        "listen": 0,
-        "rounds": 20
-       }
-      },
-      {
-       "label": "Long reach",
-       "values": {
-        "eps": 0.3,
-        "listen": 0,
-        "rounds": 20
-       }
-      }
-     ],
-     "takeaway": "One rule, three endings: fragmentation, polarisation, consensus. Only the size of the window changed."
     },
     {
      "id": "goal_1",
@@ -689,165 +410,196 @@
     {
      "id": "why",
      "kind": "reveal"
+    },
+    {
+     "id": "eq",
+     "kind": "connect"
     }
-   ],
-   "builds_on": "averaging_to_consensus"
+   ]
   },
   {
-   "id": "edges_pull_inward",
-   "title": "The edges move first, the middle waits",
-   "idea": "For an evenly spread crowd, people near the ends see neighbours on only one side, so their average pulls them inward, while people in the middle are pulled equally both ways and at first do not move.",
+   "id": "bounded_confidence",
+   "title": "Only listening to people who are already close",
+   "idea": "Under bounded confidence, each person averages only the opinions within a distance ε of their own, so the set of people they listen to changes as opinions move.",
    "role": "core",
    "predict": {
-    "question": "A new crowd is spread evenly, but only from 0.2 to 0.8. Nobody holds a view below 0.2 or above 0.8. Everyone listens within a window of 0.1. Who moves in the first round?",
+    "question": "A new case. Mia holds 0.30 and Raj holds 0.50, so they are 0.20 apart. Mia listens up to 0.25 away, but Raj only listens up to 0.10 away. Both use the same rule: average everyone you hear, yourself included. Where are they after one round?",
     "options": [
-     "Everyone moves a little toward 0.5",
-     "Only people within 0.1 of the crowd's ends (0.2 and 0.8) move, inward; the rest stay put",
-     "Nobody moves, because nobody is near the ends of the scale at 0 and 1",
-     "Everyone moves toward the nearer end of the crowd"
+     "Both move to 0.40, the midpoint",
+     "Mia moves to 0.40 and Raj stays at 0.50",
+     "Raj moves to 0.40 and Mia stays at 0.30",
+     "Neither moves, because they disagree"
     ],
     "answer": 1,
     "why": [
-     "Tempting if averaging feels like a general pull to the centre. But a person whose window holds equal crowds on both sides averages back to their own view, so the middle stays put.",
-     "Right. What matters is where the crowd runs out, not where the scale ends. People near 0.2 hear only people above them and move up. People near 0.8 hear only people below and move down. Everyone from 0.3 to 0.7 is balanced and waits.",
-     "Tempting if the ends of the scale seem to cause the pull. The pull comes from an empty side of the window. Here the window is empty below 0.2 and above 0.8, so the crowd's own ends move.",
-     "Tempting if the edges seem to attract people. The one-sided pull points toward where the neighbours are, which is inward toward the middle of the crowd, never outward."
+     "This assumes listening always goes both ways. Here each person checks the gap against their own range. The 0.20 gap is inside Mia's 0.25 but outside Raj's 0.10, so only Mia averages.",
+     "Correct. Mia hears herself and Raj, so she moves to (0.30 + 0.50) / 2 = 0.40. Raj hears only himself, so his average is his own 0.50 and he stays put.",
+     "This swaps the two people. The one with the wider range is the one who hears the other, and that is Mia, not Raj.",
+     "Disagreeing is not what blocks influence. What matters is whether the gap fits inside a person's range. It fits Mia's range, so Mia moves."
     ]
    },
    "terms": [
     {
-     "term": "regular profile",
-     "means": "A starting crowd whose neighbouring opinions are all the same distance apart, so it is perfectly evenly spread"
+     "term": "confidence level ε",
+     "means": "How far away someone's opinion can be from yours and still be listened to: half the width of your listening window"
     },
     {
-     "term": "one-sided influence",
-     "means": "Being pulled by neighbours on one side only, because nobody sits on the other side of your window"
+     "term": "bounded confidence",
+     "means": "The rule that you only take into account opinions within ε of your own and ignore everyone further away"
     }
    ],
    "model": {
-    "title": "How far each person moves in the first round",
-    "note": "Teaching model: an idealised, infinitely large crowd spread perfectly evenly from 0 to 1. This is a smooth version of the paper's evenly spaced start, with a symmetric window and the paper's bounded-confidence rule (everyone averages all views within ε, all at once). Only the first round is shown. With a finite crowd the curve becomes a small staircase, and in later rounds the change spreads inward. Numbers are illustrative, not the paper's data.",
+    "title": "Who you hear on the opinion line, and where that sends you next",
+    "note": "Teaching model: one person's next step on an opinion line from 0 to 1. Five other people stay frozen in place, everyone shares one listening range, and everyone heard counts equally. This is the paper's bounded-confidence rule with a single shared ε. In the paper every opinion updates at the same time each round, and the simulations use up to 625 people. The positions here are illustrative, not the paper's data.",
     "controls": [
      {
       "id": "eps",
-      "label": "Listening window ε",
+      "label": "Listening range",
       "kind": "slider",
-      "min": 0.02,
-      "max": 0.4,
-      "step": 0.02,
-      "default": 0.1,
+      "min": 0.01,
+      "max": 0.6,
+      "step": 0.01,
+      "default": 0.05,
       "unit": "",
-      "color": 0
+      "color": 1
      },
      {
-      "id": "p0",
-      "label": "Marked person's starting opinion",
+      "id": "y",
+      "label": "Your opinion",
       "kind": "slider",
       "min": 0,
       "max": 1,
-      "step": 0.05,
-      "default": 0.5,
+      "step": 0.01,
+      "default": 0.4,
       "unit": "",
-      "color": 3
+      "color": 0
      }
     ],
     "outputs": [
      {
-      "id": "edge_pull",
-      "label": "Step of the person at the very end",
-      "expr": "eps / 2",
+      "id": "heard",
+      "label": "People heard (incl. you)",
+      "expr": "1 + (abs(0.05 - y) <= eps + 0.0001) + (abs(0.22 - y) <= eps + 0.0001) + (abs(0.52 - y) <= eps + 0.0001) + (abs(0.68 - y) <= eps + 0.0001) + (abs(0.92 - y) <= eps + 0.0001)",
       "unit": "",
-      "decimals": 3,
+      "decimals": 0,
       "color": 1
      },
      {
-      "id": "still_share",
-      "label": "Share of the crowd that stays put",
-      "expr": "max(0, 1 - 2 * eps)",
-      "unit": "%",
-      "scale": 100,
-      "decimals": 0,
+      "id": "next",
+      "label": "Your next opinion",
+      "expr": "(y + 0.05 * (abs(0.05 - y) <= eps + 0.0001) + 0.22 * (abs(0.22 - y) <= eps + 0.0001) + 0.52 * (abs(0.52 - y) <= eps + 0.0001) + 0.68 * (abs(0.68 - y) <= eps + 0.0001) + 0.92 * (abs(0.92 - y) <= eps + 0.0001)) / heard",
+      "unit": "",
+      "decimals": 3,
       "color": 2
      },
      {
-      "id": "probe_shift",
-      "label": "Marked person's step",
-      "expr": "(max(0, p0 - eps) + min(1, p0 + eps)) / 2 - p0",
+      "id": "shift",
+      "label": "Your next move",
+      "expr": "next - y",
       "unit": "",
       "decimals": 3,
-      "color": 3
+      "color": 2
      }
     ],
     "visual": {
-     "type": "curves",
-     "x": {
-      "label": "Starting opinion",
-      "min": 0,
-      "max": 1
-     },
-     "y": {
-      "label": "Change after one round (+ means moving up)",
-      "min": -0.22,
-      "max": 0.22
-     },
-     "series": [
+     "type": "geometry",
+     "xmin": -0.05,
+     "xmax": 1.05,
+     "ymin": -0.25,
+     "ymax": 0.4,
+     "polygons": [
       {
-       "id": "shift_curve",
-       "label": "Step taken in round one",
-       "expr": "(max(0, x - eps) + min(1, x + eps)) / 2 - x",
-       "color": 0,
-       "dashed": false
-      }
-     ],
-     "fills": [
-      {
-       "series": 0,
-       "from": 0,
-       "to": "eps",
-       "label": "Pulled up",
-       "color": 1
-      },
-      {
-       "series": 0,
-       "from": "1 - eps",
-       "to": 1,
-       "label": "Pulled down",
+       "points": [
+        [
+         "y - eps",
+         -0.08
+        ],
+        [
+         "y + eps",
+         -0.08
+        ],
+        [
+         "y + eps",
+         0.08
+        ],
+        [
+         "y - eps",
+         0.08
+        ]
+       ],
+       "label": "Who you hear",
        "color": 1
       }
      ],
-     "markers": [
+     "segments": [
       {
-       "id": "left_reach",
-       "x": "eps",
-       "label": "Window stops touching 0",
-       "color": 0
+       "id": "line",
+       "x1": 0,
+       "y1": 0,
+       "x2": 1,
+       "y2": 0,
+       "label": "Opinion (0 to 1)",
+       "color": 7
       },
       {
-       "id": "right_reach",
-       "x": "1 - eps",
-       "label": "Window stops touching 1",
-       "color": 0
-      },
-      {
-       "id": "probe_marker",
-       "x": "p0",
-       "label": "Marked person",
-       "color": 3
-      }
-     ],
-     "hlines": [
-      {
-       "id": "no_move",
-       "y": 0,
-       "label": "No move"
+       "id": "move_line",
+       "x1": "y",
+       "y1": 0.22,
+       "x2": "next",
+       "y2": 0.22,
+       "label": "Next move",
+       "color": 2
       }
      ],
      "points": [
       {
-       "id": "probe_point",
-       "x": "p0",
-       "y": "(max(0, p0 - eps) + min(1, p0 + eps)) / 2 - p0",
-       "label": "Marked person's step"
+       "id": "ana",
+       "x": 0.05,
+       "y": 0,
+       "label": "Ana",
+       "color": 7
+      },
+      {
+       "id": "ben",
+       "x": 0.22,
+       "y": 0,
+       "label": "Ben",
+       "color": 7
+      },
+      {
+       "id": "dev",
+       "x": 0.52,
+       "y": 0,
+       "label": "Dev",
+       "color": 7
+      },
+      {
+       "id": "eli",
+       "x": 0.68,
+       "y": 0,
+       "label": "Eli",
+       "color": 7
+      },
+      {
+       "id": "fay",
+       "x": 0.92,
+       "y": 0,
+       "label": "Fay",
+       "color": 7
+      },
+      {
+       "id": "you",
+       "x": "y",
+       "y": 0,
+       "label": "You",
+       "color": 0
+      },
+      {
+       "id": "next_pt",
+       "x": "next",
+       "y": 0.22,
+       "label": "Your next opinion",
+       "color": 2
       }
      ]
     }
@@ -855,166 +607,190 @@
    "animation": {
     "steps": [
      {
-      "say": "Picture a crowd spread evenly along an opinion line from 0 to 1. Each spot along the bottom is one person's starting view.",
-      "focus": "shift_curve",
+      "say": "Six people sit on an opinion line from 0 to 1. You are the coloured dot at 0.40. Ana, Ben, Dev, Eli and Fay hold other views.",
+      "set": {
+       "eps": 0.05,
+       "y": 0.4
+      },
+      "focus": "you",
+      "ms": 3400
+     },
+     {
+      "say": "The shaded band around you shows how far you listen. Anyone inside it is heard. Anyone outside it is ignored.",
+      "focus": [
+       "you",
+       "heard"
+      ],
       "ms": 3200
      },
      {
-      "say": "The curve shows how far each person moves after one round of averaging. Above the flat line means moving up; below means moving down.",
-      "focus": "no_move",
-      "ms": 3600
-     },
-     {
-      "say": "This slider is the listening window ε from the last lesson. Watch the curve change as it widens.",
+      "say": "This slider widens the band. Watch Dev slip inside it.",
       "set": {
-       "eps": 0.2
+       "eps": 0.12
       },
       "focus": "eps",
-      "ms": 3000
-     },
-     {
-      "say": "This slider marks one person. The dot and the box show that person's step.",
-      "set": {
-       "p0": 0.1
-      },
-      "focus": [
-       "p0",
-       "probe_point"
-      ],
       "ms": 3200
      },
      {
-      "say": "These boxes show the step of the very last person and the share of the crowd that doesn't move at all.",
+      "say": "This slider moves your own opinion along the line.",
+      "set": {
+       "y": 0.3
+      },
+      "focus": "y",
+      "ms": 2800
+     },
+     {
+      "say": "The raised dot shows where you would move next: the plain average of everyone you hear, you included.",
+      "set": {
+       "y": 0.4
+      },
       "focus": [
-       "edge_pull",
-       "still_share"
+       "next_pt",
+       "next"
       ],
-      "ms": 3000
+      "ms": 3600
      }
     ]
    },
    "explore": {
-    "prompt": "Play with the window and the marked person. Can you shape who moves and who waits in round one?",
+    "prompt": "Now steer it yourself. Each person counts only while they sit inside your band. Work out from the gaps who enters when, then check whether your next opinion lands where you expect.",
     "goals": [
      {
-      "text": "Make roughly the middle half of the crowd stay put in the first round",
-      "when": "abs(still_share - 0.5) < 0.05",
+      "text": "Stay at your starting opinion and hear exactly four people in all (you plus three others)",
+      "when": "heard > 3.5 && heard < 4.5 && abs(y - 0.4) < 0.005",
       "solution": {
-       "eps": 0.24
+       "eps": 0.3
       },
       "hints": [
-       "Each end has its own pulled zone. How wide is each one?",
-       "Each pulled zone is exactly as wide as the window, and there are two of them, one at each end.",
-       "Together the two pulled zones need to cover about half the line, so each one covers about a quarter."
+       "A person enters the band when the range reaches their distance from you.",
+       "List the others by how far they are from 0.40. Dev is closest, then Ben.",
+       "The third-closest person is Eli. Widen the band until Eli is just inside but Ana is still outside."
       ]
      },
      {
-      "text": "Mark the person who starts at 0.30, then find a window just wide enough that this person moves in the first round",
-      "when": "abs(p0 - 0.3) < 0.01 && probe_shift > 0.005",
+      "text": "Hear at least two other people, yet barely move: your next move should be smaller than 0.005 either way",
+      "when": "heard >= 3 && abs(shift) < 0.005",
       "solution": {
-       "p0": 0.3,
-       "eps": 0.32
+       "y": 0.37,
+       "eps": 0.16
       },
       "hints": [
-       "This person moves only if their window runs off an edge of the line.",
-       "The nearest edge is 0. How far is the person from it?",
-       "The window has to reach strictly past 0, so it must be a little wider than this person's distance from 0."
+       "You stay put when the pull from the left exactly balances the pull from the right.",
+       "Try hearing one person on each side and standing the same distance from both.",
+       "Ben and Dev make a good pair. Move to the point halfway between them, then widen the band just enough to reach both, but not Ana or Eli."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. The pull comes from an empty side of the window. In this crowd the window is empty below 0.2 and above 0.8, so only people within 0.1 of those ends move, inward. The balanced middle waits.",
-     "incorrect": "Averaging does not pull everyone to the centre at once. A person moves only when one side of their window holds fewer people than the other. In an evenly spread crowd that happens only near where the crowd runs out, here at 0.2 and 0.8."
+     "correct": "Right. Each person checks the gap against their own range. Mia hears Raj and moves to the average, 0.40. Raj hears no one but himself and stays at 0.50. Who you hear depends only on distance and your range.",
+     "incorrect": "You may have assumed that influence is mutual, or that disagreement blocks it. Under bounded confidence, each person counts the others whose opinions lie within their own ε. The 0.20 gap fits Mia's 0.25 range but not Raj's 0.10, so only Mia averages."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start with a small window. The crowd is perfectly evenly spread, which the paper calls a regular profile. Look at the middle: the curve lies flat on the no-move line.",
+       "say": "Start narrow. The band holds only you, so People heard reads 1. Your next opinion is just your own, 0.40: you don't move.",
        "set": {
-        "eps": 0.1,
-        "p0": 0.5
+        "eps": 0.05,
+        "y": 0.4
        },
-       "focus": "no_move",
+       "focus": "heard",
        "ms": 3400
       },
       {
-       "say": "Why? The person at 0.5 hears everyone from 0.4 to 0.6, with as many people above as below. The average of a balanced window is their own view, so they stay put.",
-       "focus": "probe_point",
-       "ms": 3800
+       "say": "Widen the band until it reaches Dev, 0.12 away. Now you average two opinions, 0.40 and 0.52, and your next opinion jumps right to 0.46.",
+       "set": {
+        "eps": 0.12
+       },
+       "focus": "next",
+       "ms": 4000
       },
       {
-       "say": "Now mark someone near the bottom at 0.05. Their window would reach down to −0.05, but nobody holds a view below 0. They hear only people above them, so their average sits above them and they move up, toward the centre.",
+       "say": "Widen a little more and Ben, 0.18 away on the left, joins. With three voices the average swings back left, to 0.38.",
        "set": {
-        "p0": 0.05
+        "eps": 0.18
        },
-       "focus": "probe_point",
+       "focus": [
+        "ben",
+        "next"
+       ],
+       "ms": 4000
+      },
+      {
+       "say": "This half-width has a name: the confidence level ε. Listening only to opinions within ε of your own is called bounded confidence.",
+       "focus": "eps",
+       "ms": 4000
+      },
+      {
+       "say": "Lower ε by just 0.01 and Ben drops out. You jump straight back to 0.46. One small notch removed a whole person, so the next step changes in a jump, not smoothly.",
+       "set": {
+        "eps": 0.17
+       },
+       "focus": "shift",
        "ms": 4200
       },
       {
-       "say": "The very last person, at 0, hears only people above and takes the biggest step: half the window. This pull from one side only is what the paper calls one-sided influence.",
+       "say": "Now fix ε at 0.15 and move instead. Suppose you took your step to 0.46. Ben is now 0.24 away and out of range. Dev is still in.",
        "set": {
-        "p0": 0
+        "eps": 0.15,
+        "y": 0.46
        },
-       "focus": "edge_pull",
-       "ms": 3800
+       "focus": "you",
+       "ms": 4000
       },
       {
-       "say": "The top end is the mirror image. People near 1 hear only people below them and move down. Both ends move inward.",
+       "say": "Drift on to 0.55, and Eli, whom you ignored at the start, comes into range. Your circle changed only because your own opinion moved.",
        "set": {
-        "p0": 0.95
+        "y": 0.55
        },
        "focus": [
-        "probe_point",
-        "right_reach"
+        "eli",
+        "heard"
        ],
-       "ms": 3400
+       "ms": 4200
       },
       {
-       "say": "Each pulled zone is exactly as wide as the window. Past the line where the window stops touching the edge, the curve goes flat.",
-       "focus": "left_reach",
-       "ms": 3400
-      },
-      {
-       "say": "Widen the window. The pulled zones grow, the end steps get bigger, and the flat middle shrinks.",
-       "set": {
-        "eps": 0.3
-       },
-       "focus": "still_share",
-       "ms": 3600
-      },
-      {
-       "say": "Even now, a big block in the middle does not move in round one. It feels the pull only later, after the ends have moved in and changed what the middle hears. Change starts at the edges and travels inward.",
-       "set": {
-        "p0": 0.5
-       },
+       "say": "So who you listen to depends on what everyone currently thinks. In the paper all opinions move at once, so everyone's circle shifts every round.",
        "focus": [
-        "no_move",
-        "still_share"
+        "you",
+        "heard",
+        "next_pt"
        ],
        "ms": 4200
       }
      ]
     },
-    "explanation": "In an evenly spread crowd, a person in the middle has as many neighbours above as below inside their window. Their average equals their own view, so they do not move in the first round. Near an end, the window runs off the opinion line. Nobody sits beyond 0 or 1, so that person hears only people on the inward side, and the average pulls them toward the centre. The pulled zone at each end is exactly as wide as the window, and the very last person moves furthest. The paper showed this with simulations of 50 and 500 evenly spaced opinions at ε = 0.2: changes start at the extremes, reach the centre only after a delay, and the central opinions are the last to move. Our curve shows only the first round of an idealised, infinitely large crowd. The paper also notes that random, uneven starts add bumps in density that can make middle opinions move right away.",
-    "quote": "From period 0 to 1 nothing changes more in the middle of the opinion space. But as times goes by changes work through the opinion space direction centre. The opinions directly in the centre are the last to be affected.",
-    "quote_where": "Section 4.1 (discussion of Figure 5)"
-   },
-   "check": {
-    "kind": "model",
-    "task": "Mark a person who is clearly left of centre but who does not move at all in the first round.",
-    "when": "p0 < 0.45 && abs(probe_shift) < 0.001",
-    "solution": {
-     "p0": 0.3
-    },
-    "hint": "A person stays put when their whole window fits inside the line, with as many people above as below. Keep them left of centre but out of the pulled zone near 0.",
-    "misconception": "That averaging pulls everyone toward the centre from the first round, so anyone left of centre must move up. In fact only people whose window runs off an edge feel a pull at first."
+    "explanation": "In the averaging model you just met, the weights people give each other stay fixed. Hegselmann and Krause change one thing. Each person gives equal weight to everyone whose opinion lies within ε of their own, themselves included, and gives zero weight to everyone else. Because opinions move each round, the set of people inside each window keeps changing too. Someone can enter or drop out, and the next step then jumps. That feedback, where opinions decide the weights and the weights move the opinions, makes the model nonlinear. The paper notes that this rules out the tidy matrix tools that work for the fixed-weight model, so it studies the model mainly by computer simulation.",
+    "quote": "Though elementary, the model is nonlinear in that the structure of the model changes with the states of the model given by the opinions of the agents",
+    "quote_where": "Section 1 (Introduction)",
+    "source_ids": [
+     "s1"
+    ],
+    "source_id": "s1"
    },
    "connect": {
     "equation": [
      {
-      "text": "x_{i}(t+1) = |I(i, x(t))|^{−1} Σ_{j ∈ I(i, x(t))} x_{j}(t),   I(i, x) = { j : |x_{i} − x_{j}| ≤ "
+      "text": "x_{i}(t+1)",
+      "link": "next"
+     },
+     {
+      "text": " = "
+     },
+     {
+      "text": "|I(i, x(t))|",
+      "link": "heard"
+     },
+     {
+      "text": "^{−1} Σ_{j ∈ I(i, x(t))} x_{j}(t),   where  I(i, x) = { j : |"
+     },
+     {
+      "text": "x_{i}",
+      "link": "y"
+     },
+     {
+      "text": " − x_{j}| ≤ "
      },
      {
       "text": "ε",
@@ -1024,9 +800,8 @@
       "text": " }"
      }
     ],
-    "caption": "The paper's bounded-confidence rule (BC): each person's next view is the plain average of everyone within ε, and all update at once. The coloured ε is the window slider. For a crowd spread evenly from 0 to 1, that average is the midpoint of the window clipped to the line. The model's curve, (max(0, x − ε) + min(1, x + ε))/2 − x, is zero where the window fits inside and ε/2 at the very ends. It is the model's version, not a formula in the paper."
+    "caption": "This is the paper's bounded-confidence model (BC) with one shared ε. I(i, x) is the set of people inside your band. Its size |I| is People heard, and you are always in it. Your next opinion x_{i}(t+1) is the plain average of the opinions in that set. Your opinion x_{i} and the listening range ε decide who belongs to the set. The paper also allows each person their own ε_{i}."
    },
-   "recap": "In an evenly spread crowd, only people within ε of an end feel a one-sided pull inward at first; the balanced middle waits until the change works its way in.",
    "activities": [
     {
      "id": "tour",
@@ -1059,41 +834,567 @@
      "kind": "reveal"
     },
     {
-     "id": "test",
-     "kind": "check"
-    },
-    {
      "id": "eq",
      "kind": "connect"
+    }
+   ],
+   "recap": "Under bounded confidence you average only the opinions within ε of yours. As opinions move, people enter and leave that window, so who influences whom keeps changing."
+  },
+  {
+   "id": "permanent_splits",
+   "title": "Once groups drift apart, they never reconnect",
+   "idea": "When the gap between two neighbouring opinions grows beyond ε, nobody on one side is reachable through any chain of trust from the other side, so the two groups stop influencing each other forever.",
+   "role": "core",
+   "terms": [
+    {
+     "term": "split",
+     "means": "A gap wider than ε between two people who sit next to each other when everyone is lined up by opinion"
+    },
+    {
+     "term": "chain of confidence",
+     "means": "A relay of listening: you listen to someone close to you, who listens to someone close to them, and so on"
+    },
+    {
+     "term": "opinion world",
+     "means": "A group cut off by splits on both sides. Its members influence each other but nobody outside it"
+    },
+    {
+     "term": "one-sided split",
+     "means": "A gap that only one side can see across, because windows reach farther in one direction than the other"
+    }
+   ],
+   "recap": "A gap wider than ε between neighbours cuts every chain of confidence, and each side can then only average its own members, so the gap can never close again.",
+   "understand": {
+    "explanation": "Recall the rule from the last concept: each person averages only the opinions within distance ε of their own. Line everyone up by opinion. If two neighbours in that line end up more than ε apart, nobody below the gap listens to anyone above it, and nobody above listens to anyone below. The paper calls this a split. On each side, influence can still travel step by step, from you to someone close to you to someone close to them. That relay is a chain of confidence, but no chain crosses a split. So each side only ever averages its own members: the lower side's highest opinion cannot rise, the upper side's lowest cannot fall, and the gap cannot shrink back under ε. Each side becomes its own opinion world, a group whose members influence each other and nobody outside it. The paper states this as a basic property of the model when windows are equally wide on both sides. When windows reach farther in one direction, a one-sided split can close again. This is a property of the model's rules; real people may change whom they listen to for other reasons.",
+    "quote": "If a split between two agents occurs at some time it will remain a split forever.",
+    "quote_where": "Section 3, part D, Properties (II)",
+    "source_ids": [
+     "s1"
+    ],
+    "source_id": "s1"
+   },
+   "activities": [
+    {
+     "id": "idea",
+     "kind": "explain"
+    },
+    {
+     "id": "ex",
+     "kind": "worked",
+     "hypothetical": true,
+     "title": "Five neighbours, one gap",
+     "steps": [
+      {
+       "text": "Five people rate a new town policy from 0 (hate it) to 1 (love it). Each listens only to opinions within ε = 0.2 of their own. Lined up, they are A = 0.10, B = 0.25, C = 0.40, D = 0.70 and E = 0.85.",
+       "result": "Gaps between neighbours: 0.15, 0.15, 0.30, 0.15"
+      },
+      {
+       "text": "Find who listens to whom. A and B are 0.15 apart, so they listen to each other. B and C are 0.15 apart, so they do too. A and C are 0.30 apart, so A does not listen to C directly.",
+       "result": "A → B → C is a chain of confidence: C's view reaches A through B"
+      },
+      {
+       "text": "Now look at C and D. They are 0.30 apart, more than ε. Everyone below C is even farther from D, and everyone above D is even farther from C.",
+       "result": "A split: no chain links {A, B, C} with {D, E}"
+      },
+      {
+       "text": "Round 1: everyone averages the opinions inside their window. A averages A and B: 0.175. B averages A, B and C: 0.25. C averages B and C: 0.325. D and E average each other: 0.775.",
+       "result": "Lower group: 0.175, 0.25, 0.325. Upper group: 0.775, 0.775"
+      },
+      {
+       "text": "Check the gap. An average can never be bigger than the largest number in it. The lower group averages only its own members, so its top opinion can only stay put or fall. By the same logic, the upper group's bottom opinion can only stay put or rise.",
+       "result": "Gap was 0.30; now 0.775 − 0.325 = 0.45"
+      },
+      {
+       "text": "Round 2: A, B and C are now all within 0.15 of each other, so each averages all three: 0.25. D and E stay at 0.775.",
+       "result": "Final: one camp at 0.25, one at 0.775"
+      }
+     ],
+     "takeaway": "Once a gap wider than ε opens between neighbours, each side only averages itself. The gap can grow or stay the same, but it can never shrink, so {A, B, C} and {D, E} each become a separate opinion world."
+    },
+    {
+     "id": "reach",
+     "kind": "trace",
+     "hypothetical": true,
+     "prompt": "Six people with ε = 0.2. A line joins two people when their opinions are within 0.2 of each other, so they listen to each other. Select everyone in Ann's opinion world: Ann herself plus everyone her influence can reach through a chain of confidence.",
+     "nodes": [
+      {
+       "id": "ann",
+       "label": "Ann (0.05)",
+       "x": 6,
+       "y": 40
+      },
+      {
+       "id": "ben",
+       "label": "Ben (0.20)",
+       "x": 22,
+       "y": 62
+      },
+      {
+       "id": "cal",
+       "label": "Cal (0.35)",
+       "x": 38,
+       "y": 40
+      },
+      {
+       "id": "dee",
+       "label": "Dee (0.50)",
+       "x": 54,
+       "y": 62
+      },
+      {
+       "id": "eli",
+       "label": "Eli (0.80)",
+       "x": 78,
+       "y": 40
+      },
+      {
+       "id": "fay",
+       "label": "Fay (0.95)",
+       "x": 94,
+       "y": 62
+      }
+     ],
+     "edges": [
+      {
+       "from": "ann",
+       "to": "ben"
+      },
+      {
+       "from": "ben",
+       "to": "cal"
+      },
+      {
+       "from": "cal",
+       "to": "dee"
+      },
+      {
+       "from": "eli",
+       "to": "fay"
+      }
+     ],
+     "answer": [
+      "ann",
+      "ben",
+      "cal",
+      "dee"
+     ],
+     "path": false,
+     "hints": [
+      "Ann listens directly only to Ben. Who does Ben listen to?",
+      "Keep following the lines until you hit a pair with no line between them.",
+      "Dee (0.50) and Eli (0.80) are 0.30 apart, which is more than ε."
+     ],
+     "explanation": "Ann does not listen to Cal or Dee directly, but influence relays along Ann–Ben–Cal–Dee, so all four share one opinion world. Dee and Eli are 0.30 apart, so there is a split between them. Everyone in Ann's group is even farther from Eli and Fay, so no chain crosses the gap. Eli and Fay form a second opinion world, and the two groups will never influence each other again."
+    },
+    {
+     "id": "heal",
+     "kind": "choice",
+     "mode": "determinate",
+     "hypothetical": true,
+     "question": "In the trace above, after a few rounds Ann's group has settled around 0.29 and Eli and Fay around 0.875. Under the model's rules (same window size on both sides), could the two groups ever start influencing each other again?",
+     "options": [
+      {
+       "text": "No. Each group averages only its own members, so Ann's group can never rise above its own top opinion and Eli's group can never fall below its own bottom one. The gap cannot shrink below ε.",
+       "feedback": "Right. An average never goes past the largest or smallest number in it. With no chain across the split, each side stays boxed in by its own members, so the gap stays wider than ε for good."
+      },
+      {
+       "text": "Yes. Everyone keeps averaging, and averaging always pulls opinions together in the end.",
+       "feedback": "That held in the first concept, where everyone listened to everyone. Here averaging only pulls together people inside the same window. Across a split nobody is inside anyone's window, so there is nothing to pull the two groups together."
+      },
+      {
+       "text": "Yes, if Ann's group drifts upward far enough to come within ε of Eli.",
+       "feedback": "Ann's group can only average values it already holds, all at or below its current top opinion. Nothing pulls it upward, because the only people above it are out of reach."
+      },
+      {
+       "text": "Only if Eli and Fay change their minds first and move down toward Ann's group.",
+       "feedback": "Eli and Fay average only each other, so their opinions stay between their own values and cannot move down past them. Inside this model nobody chooses to change; the rules decide, and they keep the gap open."
+      }
+     ],
+     "answer": 0,
+     "hints": [
+      "Can an average be larger than the largest number you averaged?",
+      "What is the highest opinion anyone in Ann's group listens to?"
+     ]
+    },
+    {
+     "id": "lopsided",
+     "kind": "choice",
+     "mode": "determinate",
+     "question": "The paper also studies windows that reach farther to the right than to the left. Suppose a gap is within one person's longer reach but outside the other person's shorter reach. What does the paper say about such a split?",
+     "options": [
+      {
+       "text": "It can close again, unlike a split that neither side can see across.",
+       "feedback": "Correct. In a one-sided split one side still listens across the gap and keeps being pulled toward the other side, so the gap can narrow. The paper notes that one-sided splits can close again, while two-sided splits never do."
+      },
+      {
+       "text": "It can never close, just like any other split.",
+       "feedback": "The never-close rule depends on nobody on either side listening across the gap. In a one-sided split one side still does, so that guarantee breaks. The paper reports that one-sided splits can close."
+      },
+      {
+       "text": "It closes immediately in the next round.",
+       "feedback": "The paper says one-sided splits can close, not that they must, and not straight away. Whether one closes depends on how the opinions keep moving."
+      }
+     ],
+     "answer": 0,
+     "hints": [
+      "The argument for permanence needed both sides to be out of each other's reach.",
+      "In a one-sided split, does anyone still listen across the gap?"
+     ]
     }
    ]
   },
   {
-   "id": "clumps_tear_apart",
-   "title": "From clumps at the edges to a permanent split",
-   "idea": "Opinions bunch up at the edges, the bunches pull in nearby opinions, a gap wider than ε opens, and the two sides never influence each other again.",
+   "id": "edge_pull",
+   "title": "The edges get pulled in and the middle gets torn apart",
+   "idea": "People near the extremes have others on only one side of their window, so they move inward and bunch up, and these bunches then pull nearby opinions away from the centre in opposite directions.",
    "role": "core",
+   "predict": {
+    "question": "New case: everyone starts evenly spread, but only between 0.3 and 0.7, so nobody holds an extreme view. Everyone listens within 0.1 of their own opinion. In the first round, who moves?",
+    "options": [
+     "The people nearest 0.3 and 0.7 move inward; the rest stay put",
+     "Nobody moves, because nobody is near 0 or 1",
+     "The people near 0.5 move first",
+     "Everyone moves toward 0.5 at the same speed"
+    ],
+    "answer": 0,
+    "why": [
+     "Right. What matters is the edge of where people actually are, not the ends of the scale. Someone at 0.3 finds others only on their right within 0.1, so the average pulls them inward. People deeper inside have balanced windows.",
+     "Tempting if you tie the effect to the numbers 0 and 1. But the person at 0.3 has nobody below them, so their window is just as one-sided as it would be at 0.",
+     "The centre is actually the last place to feel anything. A person at 0.5 has equal crowds on both sides within 0.1, so their average is their own opinion.",
+     "Averaging only moves you when your window is lopsided. Only people within 0.1 of the occupied edges have lopsided windows, so only they move at first."
+    ]
+   },
    "terms": [
     {
-     "term": "condensing",
-     "means": "Opinions piling up into a dense bunch in one part of the opinion line"
+     "term": "regular start profile",
+     "means": "A starting spread where every pair of neighbouring opinions is the same distance apart"
     },
     {
-     "term": "split",
-     "means": "A gap between two neighbouring opinions that is wider than ε, so neither listens to the other"
+     "term": "one-sided influence",
+     "means": "When everyone you listen to sits on the same side of you, so averaging can only pull you that way"
     },
     {
-     "term": "sub-profile",
-     "means": "The group of opinions on one side of a split, which now changes only from inside itself"
+     "term": "condensed region",
+     "means": "A crowded spot where many opinions have piled up close together"
     }
    ],
-   "recap": "Inward pull at the ends makes dense clumps, the clumps drain the middle, a gap wider than ε opens, and from then on the two sides are cut off for good: that is how two camps form.",
-   "understand": {
-    "explanation": "In the last concept the ends of an evenly spread crowd moved inward first while the middle stayed put. If you keep watching, opinions near each end pile up into dense bunches, which the paper calls condensing. A dense bunch acts like a magnet: it pulls in opinions from thinner areas within its listening window ε, so the middle drains toward the two bunches, with opinions above 0.5 moving up and those below 0.5 moving down. In the end two neighbouring opinions sit more than ε apart. That gap is a split, and nobody on one side listens to anyone on the other, not even through a chain of friends, so each side, now a separate sub-profile, settles into its own camp. In the paper's Figure 4 (50 evenly spaced opinions, ε = 0.2) the split appears in period 6. This comes from computer runs of a simple model, not from measuring real people, and random starting opinions add further splits through chance bunching.",
-    "quote": "In the symmetric case the major causes for polarisation are splits in the opinion profiles. They are caused by shrinking and condensing at the extremes, condensing induced by condensing, and condensing induced by density fluctuations in randomly generated start profiles.",
-    "quote_where": "Section 4.3, Main Results"
+   "model": {
+    "title": "How far each person moves in the next round",
+    "note": "Teaching model: an evenly spread population on the 0–1 scale, using the paper's symmetric rule (everyone averages all opinions within ε of their own, all updating at once). The second slider stands in for time passing: it replaces everyone who started within that distance of an edge with one crowd sitting at that distance. This simplifies how real crowds form and keep moving. The flat stretch to the left of the left crowd (and to the right of the right crowd) shows the crowd's own move. Only one round of moves is shown. Numbers are illustrative, not the paper's data.",
+    "controls": [
+     {
+      "id": "eps",
+      "label": "Listening range ε",
+      "kind": "slider",
+      "min": 0.02,
+      "max": 0.4,
+      "step": 0.01,
+      "default": 0.2,
+      "unit": "",
+      "color": 0
+     },
+     {
+      "id": "s",
+      "label": "How far the edges have moved in and piled up",
+      "kind": "slider",
+      "min": 0,
+      "max": 0.35,
+      "step": 0.01,
+      "default": 0,
+      "unit": "",
+      "color": 1
+     }
+    ],
+    "outputs": [
+     {
+      "id": "quarter_move",
+      "label": "Next move of the person at 0.25",
+      "expr": "(max(0, min(1 - s, clamp(0.25, s, 1 - s) + eps) - max(s, clamp(0.25, s, 1 - s) - eps)) * (min(1 - s, clamp(0.25, s, 1 - s) + eps) + max(s, clamp(0.25, s, 1 - s) - eps)) / 2 + s * s * (clamp(0.25, s, 1 - s) - s <= eps ? 1 : 0) + s * (1 - s) * (1 - s - clamp(0.25, s, 1 - s) <= eps ? 1 : 0)) / (max(0, min(1 - s, clamp(0.25, s, 1 - s) + eps) - max(s, clamp(0.25, s, 1 - s) - eps)) + s * (clamp(0.25, s, 1 - s) - s <= eps ? 1 : 0) + s * (1 - s - clamp(0.25, s, 1 - s) <= eps ? 1 : 0)) - clamp(0.25, s, 1 - s)",
+      "unit": "",
+      "decimals": 3,
+      "color": 4
+     },
+     {
+      "id": "left_mid",
+      "label": "Next move of the person at 0.48 (just left of centre)",
+      "expr": "(max(0, min(1 - s, 0.48 + eps) - max(s, 0.48 - eps)) * (min(1 - s, 0.48 + eps) + max(s, 0.48 - eps)) / 2 + s * s * (0.48 - s <= eps ? 1 : 0) + s * (1 - s) * (1 - s - 0.48 <= eps ? 1 : 0)) / (max(0, min(1 - s, 0.48 + eps) - max(s, 0.48 - eps)) + s * (0.48 - s <= eps ? 1 : 0) + s * (1 - s - 0.48 <= eps ? 1 : 0)) - 0.48",
+      "unit": "",
+      "decimals": 3,
+      "color": 2
+     },
+     {
+      "id": "right_mid",
+      "label": "Next move of the person at 0.52 (just right of centre)",
+      "expr": "(max(0, min(1 - s, 0.52 + eps) - max(s, 0.52 - eps)) * (min(1 - s, 0.52 + eps) + max(s, 0.52 - eps)) / 2 + s * s * (0.52 - s <= eps ? 1 : 0) + s * (1 - s) * (1 - s - 0.52 <= eps ? 1 : 0)) / (max(0, min(1 - s, 0.52 + eps) - max(s, 0.52 - eps)) + s * (0.52 - s <= eps ? 1 : 0) + s * (1 - s - 0.52 <= eps ? 1 : 0)) - 0.52",
+      "unit": "",
+      "decimals": 3,
+      "color": 3
+     }
+    ],
+    "visual": {
+     "type": "curves",
+     "x": {
+      "label": "Opinion now (0 to 1)",
+      "min": 0,
+      "max": 1
+     },
+     "y": {
+      "label": "Move in the next round (up = toward 1)",
+      "min": -0.22,
+      "max": 0.22
+     },
+     "series": [
+      {
+       "id": "moves",
+       "label": "Next move now",
+       "expr": "(max(0, min(1 - s, clamp(x, s, 1 - s) + eps) - max(s, clamp(x, s, 1 - s) - eps)) * (min(1 - s, clamp(x, s, 1 - s) + eps) + max(s, clamp(x, s, 1 - s) - eps)) / 2 + s * s * (clamp(x, s, 1 - s) - s <= eps ? 1 : 0) + s * (1 - s) * (1 - s - clamp(x, s, 1 - s) <= eps ? 1 : 0)) / (max(0, min(1 - s, clamp(x, s, 1 - s) + eps) - max(s, clamp(x, s, 1 - s) - eps)) + s * (clamp(x, s, 1 - s) - s <= eps ? 1 : 0) + s * (1 - s - clamp(x, s, 1 - s) <= eps ? 1 : 0)) - clamp(x, s, 1 - s)",
+       "color": 0,
+       "dashed": false
+      },
+      {
+       "id": "start",
+       "label": "Next move at the even start",
+       "expr": "(max(0, x - eps) + min(1, x + eps)) / 2 - x",
+       "color": 5,
+       "dashed": true
+      }
+     ],
+     "markers": [
+      {
+       "id": "left_bunch",
+       "x": "s",
+       "label": "Left edge of the spread",
+       "color": 1
+      },
+      {
+       "id": "right_bunch",
+       "x": "1 - s",
+       "label": "Right edge of the spread",
+       "color": 1
+      }
+     ],
+     "hlines": [
+      {
+       "id": "no_move",
+       "y": 0,
+       "label": "No move"
+      }
+     ],
+     "points": [
+      {
+       "id": "quarter_pt",
+       "x": "clamp(0.25, s, 1 - s)",
+       "y": "quarter_move",
+       "label": "Person at 0.25",
+       "color": 4
+      },
+      {
+       "id": "left_pt",
+       "x": 0.48,
+       "y": "left_mid",
+       "label": "Just left of centre",
+       "color": 2
+      },
+      {
+       "id": "right_pt",
+       "x": 0.52,
+       "y": "right_mid",
+       "label": "Just right of centre",
+       "color": 3
+      }
+     ]
+    }
    },
+   "animation": {
+    "steps": [
+     {
+      "say": "Each spot on this solid curve is one person. Across is where their opinion sits now. Up or down is how far it moves next round.",
+      "focus": "moves",
+      "ms": 3800
+     },
+     {
+      "say": "Above this line means moving up toward 1. Below means moving down toward 0. On the line means staying put.",
+      "focus": "no_move",
+      "ms": 3200
+     },
+     {
+      "say": "This slider sets ε, how far each person listens. Watch the curve change shape.",
+      "set": {
+       "eps": 0.3
+      },
+      "focus": "eps",
+      "ms": 3600
+     },
+     {
+      "say": "This slider lets time pass: the outermost people move inward and pile up at the edges you see marked.",
+      "set": {
+       "s": 0.1
+      },
+      "focus": [
+       "s",
+       "left_bunch",
+       "right_bunch"
+      ],
+      "ms": 4200
+     },
+     {
+      "say": "The dashed curve keeps the starting picture, so you can compare.",
+      "focus": "start",
+      "ms": 3000
+     }
+    ]
+   },
+   "explore": {
+    "prompt": "Now steer the model yourself: first find out how far the edge pull reaches at the start, then tear the middle apart under new conditions.",
+    "goals": [
+     {
+      "text": "Before the edges pile up at all, make the person a quarter of the way along start to move.",
+      "when": "s < 0.005 && quarter_move > 0.005",
+      "solution": {
+       "eps": 0.27,
+       "s": 0
+      },
+      "hints": [
+       "At the start, who moves at all? Only people whose window spills over an edge of the spread.",
+       "Keep the piling-up slider at zero. Ask yourself how wide a window must be for the person at 0.25 to reach past 0.",
+       "That person's distance from 0 is the threshold. Go one or two notches past it and watch their point lift off the line."
+      ]
+     },
+     {
+      "text": "Using a wider listening range than the walkthrough did, tear the middle apart: the person just left of centre moves left and the person just right of centre moves right.",
+      "when": "eps > 0.205 && left_mid < -0.02 && right_mid > 0.02",
+      "solution": {
+       "eps": 0.25,
+       "s": 0.25
+      },
+      "hints": [
+       "The middle tears when each person beside the centre can reach a different crowd.",
+       "A crowd reaches as far as its own position plus the listening range. Widen the range first, then move the crowds.",
+       "Slide the crowds in until the left crowd's reach ends right around the centre. With a wider range, they need to march in less far than before."
+      ]
+     }
+    ]
+   },
+   "understand": {
+    "feedback": {
+     "correct": "Yes. The pull comes from lopsided windows, and windows are lopsided at the edges of wherever people actually are. With everyone between 0.3 and 0.7, the people at 0.3 and 0.7 have company on one side only, so they move inward first, and the change works toward the centre from there.",
+     "incorrect": "You may have tied the effect to the ends of the scale, or to the centre. The rule only moves someone when the people within their range are not balanced around them. Inside an even crowd, windows are balanced. At the edges of the crowd, wherever those edges are, they are not."
+    },
+    "walkthrough": {
+     "steps": [
+      {
+       "say": "Start with everyone spread evenly from 0 to 1, each listening within 0.2. Neighbours all sit the same distance apart. The paper calls this a regular start profile.",
+       "set": {
+        "eps": 0.2,
+        "s": 0
+       },
+       "focus": "moves",
+       "ms": 4200
+      },
+      {
+       "say": "Look at the person at 0. Everyone in their window, from 0 to 0.2, is on their right. The average is 0.1, so they jump up by 0.1. This is one-sided influence: nobody sits on the other side to pull back.",
+       "focus": "moves",
+       "ms": 5200
+      },
+      {
+       "say": "From 0.2 to 0.8 the curve sits flat on the line. Each of these people has an equal crowd on both sides, so their average is their own opinion. The middle does not move yet.",
+       "focus": "no_move",
+       "ms": 4600
+      },
+      {
+       "say": "Widen the range to 0.3. Now the edge pull reaches 0.3 in from each side, and the quiet middle shrinks.",
+       "set": {
+        "eps": 0.3
+       },
+       "focus": [
+        "eps",
+        "moves"
+       ],
+       "ms": 4200
+      },
+      {
+       "say": "Back to 0.2, and let time pass. Everyone who started within 0.15 of an edge has piled into one crowd at 0.15 (and at 0.85). A crowded spot like this is a condensed region.",
+       "set": {
+        "eps": 0.2,
+        "s": 0.15
+       },
+       "focus": [
+        "s",
+        "left_bunch",
+        "right_bunch"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "See the dip just inside the crowd's reach. People about 0.1 to 0.2 away from the crowd now move down, toward it. That is away from the centre. The crowd pulls in thinly populated opinions within its range.",
+       "focus": "moves",
+       "ms": 5200
+      },
+      {
+       "say": "Let the crowds march further in, to 0.3 and 0.7. Their reach now ends right at the centre. The person just left of centre can reach only the left crowd, and the person just right can reach only the right crowd.",
+       "set": {
+        "s": 0.3
+       },
+       "focus": [
+        "left_pt",
+        "right_pt"
+       ],
+       "ms": 5200
+      },
+      {
+       "say": "So the middle is torn: one side is yanked down and the other yanked up, by the biggest moves on the screen. Soon a gap wider than 0.2 opens there, a split that, as you saw earlier, never heals.",
+       "focus": [
+        "left_mid",
+        "right_mid"
+       ],
+       "ms": 5000
+      }
+     ]
+    },
+    "explanation": "People near the edges of the spread find others only on their inner side, so averaging pushes them inward, while people in the middle have balanced windows and stay put. As the edges move in, they pile up into crowds. A crowd pulls everyone within its reach toward itself, and near the centre that means pulling outward. When the crowds' reach meets in the middle, the person just left of centre is dragged left and the one just right is dragged right, so the middle tears and a split opens. The paper traced this in a run with 50 evenly spaced opinions and ε = 0.2 (Figures 4 and 5): changes start at the edges, reach the centre last with the biggest jumps, and the profile splits in period 6. With random starting opinions, chance crowding creates extra crowds and splits inside the population from the very first round. These are simulation results for one simple rule, not measurements of real groups.",
+    "quote": "In the symmetric case the major causes for polarisation are splits in the opinion profiles. They are caused by shrinking and condensing at the extremes, condensing induced by condensing, and condensing induced by density fluctuations in randomly generated start profiles.",
+    "quote_where": "Section 4.3 (Main results)",
+    "source_id": "s1",
+    "source_ids": [
+     "s1"
+    ]
+   },
+   "check": {
+    "kind": "model",
+    "task": "Keep the edges piled up into crowds, but make those crowds pull the people beside the centre toward the centre instead of tearing them apart.",
+    "when": "s >= 0.05 && left_mid > 0.005 && right_mid < -0.005",
+    "solution": {
+     "eps": 0.3,
+     "s": 0.25
+    },
+    "hint": "The tearing happened because each person beside the centre could reach only one crowd. What changes if they can reach both crowds at once?",
+    "misconception": "That crowds always tear the middle apart. A crowd pulls whoever is within its reach toward itself. A person beside the centre who can reach both equal crowds is pulled toward their midpoint, which is the centre."
+   },
+   "connect": {
+    "equation": [
+     {
+      "text": "x_{i}(t+1) = |I(i, x(t))|^{−1} Σ_{j ∈ I(i, x(t))} x_{j}(t),   I(i, x) = {j : |x_{i} − x_{j}| ≤ "
+     },
+     {
+      "text": "ε",
+      "link": "eps"
+     },
+     {
+      "text": "}"
+     }
+    ],
+    "caption": "This is the paper's bounded-confidence rule (BC) with one shared confidence level. Each person's next opinion is the plain average of everyone within ε of them, including themselves. The coloured ε is the listening-range slider. The curve plots this average minus the person's current opinion. A crowd simply counts as many people j sitting at the same spot, which is why it pulls so hard on the average."
+   },
+   "recap": "People at the edges feel pull from only one side, so they move inward and pile up; those crowds then drag nearby opinions toward themselves, tearing the middle in two.",
    "activities": [
+    {
+     "id": "tour",
+     "kind": "watch"
+    },
+    {
+     "id": "how",
+     "kind": "walk"
+    },
     {
      "id": "idea",
      "kind": "explain"
@@ -1101,555 +1402,34 @@
     {
      "id": "ev",
      "kind": "stages",
-     "prompt": "Follow the paper's reading of Figure 4: 50 opinions, evenly spaced from 0 to 1, everyone with the same window ε = 0.2, all updating at once. Reveal the stages one at a time.",
+     "prompt": "Follow the paper's own run (Figures 4 and 5): 50 evenly spaced opinions, everyone listening within 0.2, all updating at the same time.",
      "stages": [
       {
-       "label": "1. Pull from one side",
-       "text": "People at the very ends have neighbours on only one side, so their average lies toward the centre. They move inward, and the whole range of opinions shrinks."
+       "label": "Round 0: even spacing",
+       "text": "Every opinion is within 0.2 of its neighbours, so the whole population is one connected chain of people who listen to each other."
       },
       {
-       "label": "2. Bunching at the edges",
-       "text": "Because the end opinions move in faster than their neighbours, they catch up with them. Opinions near each end condense into a dense bunch."
+       "label": "The edges move in",
+       "text": "The most extreme opinions feel pull from only one side and move toward the centre, so the range of opinions shrinks. From round 0 to 1, nothing in the middle changes."
       },
       {
-       "label": "3. Bunches act as magnets",
-       "text": "A dense bunch weighs heavily in the average of anyone within ε of it. Opinions in thinly populated areas nearby get pulled toward it, which makes the bunch denser still. The paper calls this condensing induced by condensing."
+       "label": "The edges pile up",
+       "text": "Near each end, opinions bunch together into dense crowds."
       },
       {
-       "label": "4. The middle drains away",
-       "text": "The pull finally reaches the centre. Opinions just above 0.5 are drawn upward and those just below 0.5 downward, toward the two bunches. The middle empties out."
+       "label": "Crowds recruit their neighbours",
+       "text": "Each crowd attracts opinions from thinner areas within its reach. Round by round the changes work inward toward the centre."
       },
       {
-       "label": "5. A gap wider than ε opens",
-       "text": "In period 6 two neighbouring opinions in the middle end up more than ε apart. That is a split. The two halves are now separate sub-profiles that no longer interact."
+       "label": "The centre is torn",
+       "text": "In the centre, opinions above 0.5 move up and those below 0.5 move down. The centre opinions are the last to be affected, and they make the biggest jumps."
       },
       {
-       "label": "6. Two camps settle",
-       "text": "Each sub-profile keeps averaging only within itself and collapses to one opinion. In the paper's Figure 5, from period 7 to 8 onward nothing changes any more: two camps remain."
+       "label": "The split",
+       "text": "In round 6 the chain breaks. From then on the two halves are separate communities that no longer interact, and from round 7 to 8 onwards nothing changes at all."
       }
      ],
-     "takeaway": "Polarisation is not built in at the start. It grows step by step from the one-sided pull at the ends, and the split is the moment it becomes permanent."
-    },
-    {
-     "id": "t",
-     "kind": "trace",
-     "prompt": "Trace the causal route that turns an evenly spread crowd into two permanent camps. Click the boxes in order, following the arrows. Some boxes are tempting dead ends.",
-     "nodes": [
-      {
-       "id": "a",
-       "label": "Ends see neighbours on one side only",
-       "x": 10,
-       "y": 20
-      },
-      {
-       "id": "b",
-       "label": "Edge opinions move inward",
-       "x": 30,
-       "y": 20
-      },
-      {
-       "id": "c",
-       "label": "Opinions bunch up at the edges",
-       "x": 50,
-       "y": 20
-      },
-      {
-       "id": "d",
-       "label": "Bunches pull in nearby opinions",
-       "x": 70,
-       "y": 20
-      },
-      {
-       "id": "e",
-       "label": "Middle drains toward both bunches",
-       "x": 85,
-       "y": 50
-      },
-      {
-       "id": "f",
-       "label": "A gap wider than ε opens",
-       "x": 65,
-       "y": 80
-      },
-      {
-       "id": "g",
-       "label": "Two camps that never interact",
-       "x": 35,
-       "y": 80
-      },
-      {
-       "id": "h",
-       "label": "Middle opinions move first",
-       "x": 20,
-       "y": 55
-      },
-      {
-       "id": "i",
-       "label": "All drift to the overall average",
-       "x": 45,
-       "y": 50
-      }
-     ],
-     "edges": [
-      {
-       "from": "a",
-       "to": "b"
-      },
-      {
-       "from": "a",
-       "to": "h"
-      },
-      {
-       "from": "h",
-       "to": "f"
-      },
-      {
-       "from": "b",
-       "to": "c"
-      },
-      {
-       "from": "b",
-       "to": "i"
-      },
-      {
-       "from": "i",
-       "to": "g"
-      },
-      {
-       "from": "c",
-       "to": "d"
-      },
-      {
-       "from": "d",
-       "to": "e"
-      },
-      {
-       "from": "e",
-       "to": "f"
-      },
-      {
-       "from": "f",
-       "to": "g"
-      }
-     ],
-     "answer": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e",
-      "f",
-      "g"
-     ],
-     "path": true,
-     "explanation": "The chain starts at the ends: one-sided neighbours pull edge opinions inward, they bunch up, the bunches attract nearby opinions, the middle drains toward both bunches, a gap wider than ε opens, and the two sides stop influencing each other. 'Middle opinions move first' is a dead end because the paper shows the centre is the last to be affected: it is pulled equally both ways until the change reaches it. 'All drift to the overall average' is a dead end because that describes everyone listening to everyone. With a middle-sized window the crowd does not end at a single average. It tears into two camps.",
-     "hints": [
-      "Where does movement begin in an evenly spread crowd: at the ends or in the middle?",
-      "After the ends move inward, what happens to the density of opinions near them?",
-      "The gap comes only after the middle has been emptied toward the two bunches."
-     ]
-    },
-    {
-     "id": "p",
-     "kind": "passage",
-     "question": "Once the split has opened, why can the two sides never pull each other back together? Which passage explains this?",
-     "options": [
-      {
-       "quote": "Under simultaneous updating cracked profiles can never get connected again. Agents/opinions outside ones own sub profile are ‘out of range/reach’ in a quite severe sense: They are not only outside ones own confidence interval, but also outside the confidence intervals of all others one takes seriously, outside the confidence intervals of all others which those others take seriously etc.",
-       "feedback": "Correct. Each person averages only opinions inside their own group, so every new opinion stays inside the range that group already covers. No one inside can reach across the gap, and no chain of 'friends of friends' crosses it either. With nothing pulling the sides together, the gap can only stay open."
-      },
-      {
-       "quote": "Extreme opinions are under a one sided influence and move direction centre. As a consequence the range of the profile shrinks.",
-       "feedback": "This is a true passage, but it describes the first stage of the chain: the ends moving inward. It says nothing about what happens after a split, so it cannot explain why split groups stay apart."
-      },
-      {
-       "quote": "What irregularity adds are density fluctuations in the initial distribution of opinions. They are additional causes for splits and induce opinion changes deep inside the start–profile without any delay right at the beginning of the process.",
-       "feedback": "This passage is about what causes splits when starting opinions are random: chance bunching creates extra splits early on. It explains how more splits form, not why a split, once formed, never closes."
-      }
-     ],
-     "answer": 0,
-     "hints": [
-      "You want a passage about what happens after the crack, not before it.",
-      "Look for the passage that talks about who is in or out of reach, including indirectly."
-     ]
-    }
-   ]
-  },
-  {
-   "id": "lopsided_window",
-   "title": "A lopsided window drags everyone one way",
-   "idea": "If everyone looks further to the right than to the left, each person's average sits to their right, so the whole crowd drifts toward the favoured side.",
-   "role": "core",
-   "terms": [
-    {
-     "term": "asymmetric confidence",
-     "means": "A listening window that reaches further on one side of your own opinion than on the other (in the paper, ε_l ≠ ε_r)"
-    },
-    {
-     "term": "favoured direction",
-     "means": "The side the window reaches further toward; the crowd drifts that way"
-    }
-   ],
-   "model": {
-    "title": "How far each person moves in the first round, with a lopsided window",
-    "note": "Teaching model: the same idealised, perfectly even crowd from 0 to 1. It uses the paper's bounded-confidence rule: everyone averages all views in their window, all at once. The window now reaches ε to the right and only a fraction of ε to the left, the same for every person whatever their opinion. This matches the paper's 'opinion independent' case. Only round one is shown. The paper finds that in later rounds one-sided splits make the drift stronger, and this picture leaves that out. Numbers are illustrative, not the paper's data.",
-    "controls": [
-     {
-      "id": "eps",
-      "label": "Listening window ε",
-      "kind": "slider",
-      "min": 0.02,
-      "max": 0.4,
-      "step": 0.02,
-      "default": 0.1,
-      "unit": "",
-      "color": 0
-     },
-     {
-      "id": "p0",
-      "label": "Marked person's starting opinion",
-      "kind": "slider",
-      "min": 0,
-      "max": 1,
-      "step": 0.05,
-      "default": 0.5,
-      "unit": "",
-      "color": 3
-     },
-     {
-      "id": "k",
-      "label": "Left reach compared with right reach",
-      "kind": "slider",
-      "min": 0.1,
-      "max": 1,
-      "step": 0.05,
-      "default": 1,
-      "unit": "× ε",
-      "color": 4
-     }
-    ],
-    "outputs": [
-     {
-      "id": "left_reach_out",
-      "label": "Reach to the left",
-      "expr": "k * eps",
-      "unit": "",
-      "decimals": 3,
-      "color": 4
-     },
-     {
-      "id": "mid_shift",
-      "label": "Step of a person in the middle",
-      "expr": "(eps - k * eps) / 2",
-      "unit": "",
-      "decimals": 3,
-      "color": 2
-     },
-     {
-      "id": "edge_up",
-      "label": "Step of the person at 0",
-      "expr": "eps / 2",
-      "unit": "",
-      "decimals": 3,
-      "color": 1
-     },
-     {
-      "id": "edge_down",
-      "label": "Step of the person at 1",
-      "expr": "-(k * eps) / 2",
-      "unit": "",
-      "decimals": 3,
-      "color": 1
-     },
-     {
-      "id": "probe_shift",
-      "label": "Marked person's step",
-      "expr": "(max(0, p0 - k * eps) + min(1, p0 + eps)) / 2 - p0",
-      "unit": "",
-      "decimals": 3,
-      "color": 3
-     },
-     {
-      "id": "crowd_shift",
-      "label": "Crowd's average opinion moves by",
-      "expr": "(eps - k * eps) * (2 - eps - k * eps) / 4",
-      "unit": "",
-      "decimals": 3,
-      "color": 5
-     }
-    ],
-    "visual": {
-     "type": "curves",
-     "x": {
-      "label": "Starting opinion",
-      "min": 0,
-      "max": 1
-     },
-     "y": {
-      "label": "Change after one round (+ means moving up)",
-      "min": -0.22,
-      "max": 0.22
-     },
-     "series": [
-      {
-       "id": "shift_curve",
-       "label": "Step taken in round one",
-       "expr": "(max(0, x - k * eps) + min(1, x + eps)) / 2 - x",
-       "color": 0,
-       "dashed": false
-      },
-      {
-       "id": "even_curve",
-       "label": "Even window, same ε (for comparison)",
-       "expr": "(max(0, x - eps) + min(1, x + eps)) / 2 - x",
-       "color": 7,
-       "dashed": true
-      }
-     ],
-     "fills": [
-      {
-       "series": 0,
-       "from": 0,
-       "to": "k * eps",
-       "label": "Bottom pushed up",
-       "color": 1
-      },
-      {
-       "series": 0,
-       "from": "k * eps",
-       "to": "1 - eps",
-       "label": "Whole middle nudged",
-       "color": 2
-      },
-      {
-       "series": 0,
-       "from": "1 - eps",
-       "to": 1,
-       "label": "Top end",
-       "color": 1
-      }
-     ],
-     "markers": [
-      {
-       "id": "left_reach",
-       "x": "k * eps",
-       "label": "Window stops touching 0",
-       "color": 4
-      },
-      {
-       "id": "right_reach",
-       "x": "1 - eps",
-       "label": "Window stops touching 1",
-       "color": 0
-      },
-      {
-       "id": "probe_marker",
-       "x": "p0",
-       "label": "Marked person",
-       "color": 3
-      }
-     ],
-     "hlines": [
-      {
-       "id": "no_move",
-       "y": 0,
-       "label": "No move"
-      },
-      {
-       "id": "mid_level",
-       "y": "(eps - k * eps) / 2",
-       "label": "Middle step"
-      }
-     ],
-     "points": [
-      {
-       "id": "probe_point",
-       "x": "p0",
-       "y": "(max(0, p0 - k * eps) + min(1, p0 + eps)) / 2 - p0",
-       "label": "Marked person's step"
-      }
-     ]
-    }
-   },
-   "animation": {
-    "steps": [
-     {
-      "say": "Same picture as last time. Each person's step in round one is plotted against where they start. The middle sits flat on the no-move line.",
-      "focus": "shift_curve",
-      "ms": 6500
-     },
-     {
-      "say": "One new slider sets how far people look to the left, compared with how far they look to the right. At 1 they look equally far both ways. ε is now the reach to the right.",
-      "focus": "k",
-      "ms": 7500
-     },
-     {
-      "say": "Lower it and watch the flat middle of the curve lift off the no-move line.",
-      "set": {
-       "k": 0.4
-      },
-      "focus": "mid_level",
-      "ms": 6000
-     }
-    ]
-   },
-   "explore": {
-    "prompt": "Tilt the window and see who moves which way. Can you make the middle march upward? Can you still find someone who goes down?",
-    "goals": [
-     {
-      "text": "Make a person in the middle of the crowd step up by at least 0.05 in round one",
-      "when": "mid_shift >= 0.05",
-      "solution": {
-       "eps": 0.3,
-       "k": 0.5
-      },
-      "hints": [
-       "Tilting the window may not be enough on its own. How wide is the window too?",
-       "The middle step is half the gap between the right reach and the left reach. Make that gap big.",
-       "Pull the left reach well below the right reach, and widen ε to several times its starting value."
-      ]
-     },
-     {
-      "text": "With the window tilted toward the right, find a person who still steps down in round one",
-      "when": "k < 1 && probe_shift < -0.01",
-      "solution": {
-       "k": 0.5,
-       "p0": 1
-      },
-      "hints": [
-       "A tilted window doesn't move everyone up. Look at the right-hand end of the curve.",
-       "Who has more people below them than above? Someone near the top, where the upward part of their window runs past 1.",
-       "Tilt the window first, then move the marked person close to the top end, past the 'Window stops touching 1' line."
-      ]
-     }
-    ]
-   },
-   "predict": {
-    "question": "In a new town the crowd is spread just as evenly and uses the same averaging rule. But everyone looks twice as far to the left as to the right. In round one, what does the crowd's average opinion do?",
-    "options": [
-     "It moves down",
-     "It moves up",
-     "It stays at 0.5, because the two ends still pull inward",
-     "Nothing moves until a gap opens in the crowd"
-    ],
-    "answer": 0,
-    "why": [
-     "Right: now each person's window holds more people below them than above, so their average sits below them. The drift goes to the left, toward the side the window favours.",
-     "You may have remembered 'the crowd drifts up' from the walkthrough. The drift follows the tilt, though, and this window leans left, so the crowd goes down.",
-     "The ends do still pull inward, but now unevenly: the top is pushed down hard and the bottom only gently. The middle is nudged down too, so the average cannot stay put.",
-     "Drift needs no split. In round one the whole middle already moves together, because every window is lopsided. Splits come later and, the paper says, make the drift stronger."
-    ]
-   },
-   "understand": {
-    "feedback": {
-     "correct": "Yes. The drift follows the tilt. A window that reaches further left puts more people below each person than above, so averages land lower and the crowd moves down. The paper notes that every effect of a right bias has a mirror image for a left bias.",
-     "incorrect": "The direction isn't fixed: it comes from which way the window leans. Every person moves toward the side where their window reaches further. With a left-leaning window, the middle and the crowd's average move down."
-    },
-    "walkthrough": {
-     "steps": [
-      {
-       "say": "Start with an even window that reaches 0.2 both ways. The middle of the curve lies on the no-move line, because each person there is pulled equally up and down.",
-       "set": {
-        "eps": 0.2,
-        "k": 1,
-        "p0": 0.5
-       },
-       "focus": "shift_curve",
-       "ms": 3200
-      },
-      {
-       "say": "Now people look only half as far left as right: 0.1 down, 0.2 up. Each person in the middle now sees more people above them than below.",
-       "set": {
-        "k": 0.5
-       },
-       "focus": "left_reach_out",
-       "ms": 3600
-      },
-      {
-       "say": "So their average lands above them. The middle step is half the gap between the two reaches: (0.2 − 0.1)/2 = 0.05. The raised flat stretch is the whole middle moving up together.",
-       "focus": [
-        "mid_level",
-        "mid_shift"
-       ],
-       "ms": 4200
-      },
-      {
-       "say": "Look at the ends. The person at 0 jumps up 0.1, but the person at 1 drops only 0.05. The bottom is pushed up hard, while the top is pulled down only gently.",
-       "focus": [
-        "edge_up",
-        "edge_down"
-       ],
-       "ms": 4000
-      },
-      {
-       "say": "Add it up and the crowd's average opinion moves up. A window that reaches further one way is called asymmetric confidence, and the side it favours, here the right, is the favoured direction.",
-       "focus": "crowd_shift",
-       "ms": 4600
-      },
-      {
-       "say": "Shrink the left reach to a sliver. The middle step nearly doubles and the average climbs further. Little listening in the other direction makes the drift strong.",
-       "set": {
-        "k": 0.1
-       },
-       "focus": [
-        "mid_shift",
-        "crowd_shift"
-       ],
-       "ms": 4000
-      },
-      {
-       "say": "Now widen the window as well. Almost the whole crowd steps up together. Only a thin strip at the very top still edges down.",
-       "set": {
-        "eps": 0.4
-       },
-       "focus": "shift_curve",
-       "ms": 4400
-      }
-     ]
-    },
-    "explanation": "When everyone's window reaches further right than left, each person's average lies above their own opinion, so in an even crowd the whole middle moves up together. The person at the bottom is pushed up hard, while the one at the top is pulled down only a little. The crowd's average therefore moves toward the favoured direction. The paper tested this by walking through many window shapes, with the left reach set to fractions of the right reach, and running 625 random opinions many times at each setting. It found that the final average opinion shifts the way the window leans: strongly when there is little listening in the other direction, more mildly as that listening grows. This picture shows only round one. The paper adds that in later rounds one-sided splits amplify the drift, and that a left-leaning window gives the mirror-image result.",
-    "quote": "With asymmetric confidence mean and median move into the favoured direction. This effect is extreme if there is only little confidence in the non favoured direction. The effect becomes milder as the confidence in the non favoured direction increases.",
-    "quote_where": "Section 4.3 (Main results)"
-   },
-   "connect": {
-    "equation": [
-     {
-      "text": "x_{i}(t+1) = average of all x_{j}(t) with −"
-     },
-     {
-      "text": "ε_{l}",
-      "link": "left_reach_out"
-     },
-     {
-      "text": " ≤ x_{j} − x_{i} ≤ "
-     },
-     {
-      "text": "ε_{r}",
-      "link": "eps"
-     },
-     {
-      "text": ";   middle step = "
-     },
-     {
-      "text": "(ε_{r} − ε_{l})/2",
-      "link": "mid_shift"
-     }
-    ],
-    "caption": "The first part is the paper's bounded-confidence rule with a lopsided window (Section 3D). Agent i averages everyone whose opinion lies between ε_l below and ε_r above their own. In the model, ε_r is the ε slider and ε_l is ε times the left-reach slider. The last part is the model's own consequence, not an equation from the paper. In an even crowd, anyone whose window doesn't touch 0 or 1 moves up by half the gap between the two reaches."
-   },
-   "recap": "Look further one way than the other and your average lands on that side, so the whole crowd drifts in the favoured direction, most strongly when the other side gets little attention.",
-   "activities": [
-    {
-     "id": "tour",
-     "kind": "watch"
-    },
-    {
-     "id": "how",
-     "kind": "walk"
-    },
-    {
-     "id": "idea",
-     "kind": "explain"
+     "takeaway": "Two camps come from a chain of events: one-sided pull at the edges, piling up, crowds recruiting inward, and finally a tear in the middle. The paper notes that a random start works the same way, plus chance crowding that triggers extra splits from the start."
     },
     {
      "id": "goal_1",
@@ -1670,387 +1450,271 @@
      "kind": "reveal"
     },
     {
-     "id": "eq",
-     "kind": "connect"
+     "id": "test",
+     "kind": "check"
     }
-   ],
-   "builds_on": "edges_pull_inward"
+   ]
   },
   {
-   "id": "own_side_bias",
-   "title": "Listening to your own side breaks consensus",
-   "idea": "When people further right look more to the right and people further left look more to the left (bias slope m), the inward pull at the edges vanishes and the middle drifts outward, so even a wide window can end in two extreme camps.",
+   "id": "three_phases",
+   "title": "Many opinions, then two camps, then consensus",
+   "idea": "As the confidence level ε grows, a population passes through sharp phases: many surviving opinions at small ε, two camps at medium ε, and one consensus at large ε.",
    "role": "contribution",
    "predict": {
-    "question": "In the paper's runs, a fairly narrow window with no lean left many small groups scattered across the scale. Now give that same narrow-window crowd a strong lean toward their own side. What does the paper report?",
+    "question": "Take a range that split the full crowd (opinions spread from 0 to 1) into two camps. Keep that exact range, but start a new crowd whose opinions only spread from 0.2 to 0.8. What is the most likely end?",
     "options": [
-     "Still many small groups: with a narrow window, a lean can't change much",
-     "Two big camps form, pushed out toward 0 and 1",
-     "Everyone ends up agreeing in the middle",
-     "The whole crowd slides together toward one end"
+     "Still two camps, just a little closer together",
+     "One shared opinion for everyone",
+     "Many small groups",
+     "Nobody moves at all"
     ],
     "answer": 1,
     "why": [
-     "It is tempting to think a narrow window limits everything. But the lean still removes the inward pull at the ends and drags nearby views outward. The paper found that a strong lean produces clear polarisation even with a small window.",
-     "Right. The lean stops the ends from moving in, and the outer views pull their neighbours outward. The paper reports that a strong enough lean turns plurality into two camps. With the strongest lean these camps sit at 0 and 1.",
-     "Consensus needs a wide window and an inward pull at the ends. Here the window is narrow and the lean removes the inward pull, so agreement becomes even less likely.",
-     "That is what a window tilted the same way for everyone does (the previous lesson). Here the window tilts up for people above the middle and down for people below, so the two halves move apart, not together."
+     "This is tempting if you think the range alone decides the outcome. What matters is the range compared with how spread out the crowd is. In a crowd only 0.6 wide, the same range acts like a much wider one on the full scale, which falls in the agreement phase.",
+     "Correct. The rule only uses distances and averages, so squeezing the crowd is the same as widening the range. A two-camp range divided by 0.6 lands in the consensus phase, so the edges are pulled together before a gap can open.",
+     "Many groups come from a range that is small compared with the crowd's width. Here the range is relatively larger, not smaller, so you get fewer groups.",
+     "Each person still has others within their range, so averaging still moves them. Only a range far smaller than the gaps between people would freeze everyone."
     ]
    },
    "terms": [
     {
-     "term": "bias slope m",
-     "means": "How strongly each person's window leans toward their own side: 0 means no lean, 1 means the people at the very ends look only outward"
+     "term": "plurality",
+     "means": "The paper's name for the outcome where many different opinions survive at the end"
     },
     {
-     "term": "opinion-dependent bias",
-     "means": "A lean in the listening window whose direction depends on where you stand: up for people above the middle, down for people below"
+     "term": "polarisation",
+     "means": "Here: the crowd ends in two separate camps, one on each side, with an empty middle"
+    },
+    {
+     "term": "phase",
+     "means": "A stretch of settings that all give the same kind of outcome, with sudden switches between stretches"
     }
    ],
    "model": {
-    "title": "How far each person moves in the first round",
-    "note": "Teaching model: an idealised, infinitely large crowd spread evenly from 0 to 1, a smooth version of the paper's regular profile. It uses the paper's bounded-confidence rule (everyone averages all views inside their window, all at once) with the paper's opinion-dependent lean: the share of the window pointing up is (1−m)/2 + m·x. The ε slider is the reach on each side when there is no lean, so the total window is 2ε; the paper's total window of 0.6 is ε = 0.3 here. Only the first round is shown. The split into camps happens over later rounds, which the paper found by simulation. Numbers are illustrative, not the paper's data.",
+    "title": "A whole crowd averaging with the people in range, from a random start",
+    "note": "Teaching model: runs the paper's bounded-confidence rule (Hegselmann–Krause: everyone updates at once to the average of all opinions within ε of their own, one equal range for all). It uses 200 people with random starting opinions on a 0–1 scale, not the paper's 625. Groups are counted as clumps separated by gaps wider than 0.1. At very small ranges the surviving opinions sit closer than that, so the counter merges neighbours and reads too low. With so few people, a tiny leftover group sometimes lingers between two camps. The exact switch points shift with crowd size and the random start. Numbers are illustrative, not the paper's data.",
     "controls": [
      {
       "id": "eps",
-      "label": "Listening window ε",
+      "label": "Listening range ε",
       "kind": "slider",
       "min": 0.02,
       "max": 0.4,
-      "step": 0.02,
-      "default": 0.1,
+      "step": 0.01,
+      "default": 0.08,
       "unit": "",
       "color": 0
      },
      {
-      "id": "p0",
-      "label": "Marked person's starting opinion",
+      "id": "start",
+      "label": "Random starting crowd",
       "kind": "slider",
-      "min": 0,
-      "max": 1,
-      "step": 0.05,
-      "default": 0.5,
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 1,
       "unit": "",
       "color": 3
-     },
-     {
-      "id": "m",
-      "label": "Lean toward your own side m",
-      "kind": "slider",
-      "min": 0,
-      "max": 1,
-      "step": 0.05,
-      "default": 0,
-      "unit": "",
-      "color": 5
      }
     ],
     "outputs": [
      {
-      "id": "edge_pull",
-      "label": "Inward step of the person at either end",
-      "expr": "eps * (1 - m) / 2",
+      "id": "groups",
+      "label": "Separate groups at the end",
+      "expr": "sim_clusters",
+      "decimals": 0,
       "unit": "",
-      "decimals": 3,
       "color": 1
      },
      {
-      "id": "look_right",
-      "label": "How far the marked person looks up",
-      "expr": "eps * (1 - m + 2 * m * p0)",
+      "id": "spread",
+      "label": "Gap between the two most extreme people",
+      "expr": "sim_spread",
+      "decimals": 2,
       "unit": "",
-      "decimals": 3,
-      "color": 4
-     },
-     {
-      "id": "look_left",
-      "label": "How far the marked person looks down",
-      "expr": "eps * (1 + m - 2 * m * p0)",
-      "unit": "",
-      "decimals": 3,
-      "color": 6
-     },
-     {
-      "id": "probe_shift",
-      "label": "Marked person's step (+ means up)",
-      "expr": "(max(0, p0 - look_left) + min(1, p0 + look_right)) / 2 - p0",
-      "unit": "",
-      "decimals": 3,
-      "color": 3
-     },
-     {
-      "id": "probe_out",
-      "label": "Marked person's step away from the middle",
-      "expr": "sign(p0 - 0.5) * probe_shift",
-      "unit": "",
-      "decimals": 3,
       "color": 2
      }
     ],
     "visual": {
-     "type": "curves",
-     "x": {
-      "label": "Starting opinion",
-      "min": 0,
-      "max": 1
-     },
-     "y": {
-      "label": "Change after one round (+ means moving up)",
-      "min": -0.22,
-      "max": 0.22
-     },
-     "series": [
-      {
-       "id": "shift_curve",
-       "label": "Step taken in round one",
-       "expr": "(max(0, x - eps * (1 + m - 2 * m * x)) + min(1, x + eps * (1 - m + 2 * m * x))) / 2 - x",
-       "color": 0,
-       "dashed": false
-      },
-      {
-       "id": "no_lean_curve",
-       "label": "Same window, no lean",
-       "expr": "(max(0, x - eps) + min(1, x + eps)) / 2 - x",
-       "color": 7,
-       "dashed": true
-      }
-     ],
-     "fills": [
-      {
-       "series": 0,
-       "from": 0,
-       "to": "eps * (1 + m) / (1 + 2 * eps * m)",
-       "label": "Window reaches 0",
-       "color": 1
-      },
-      {
-       "series": 0,
-       "from": "1 - eps * (1 + m) / (1 + 2 * eps * m)",
-       "to": 1,
-       "label": "Window reaches 1",
-       "color": 1
-      }
-     ],
-     "markers": [
-      {
-       "id": "left_reach",
-       "x": "eps * (1 + m) / (1 + 2 * eps * m)",
-       "label": "Window stops touching 0",
-       "color": 0
-      },
-      {
-       "id": "right_reach",
-       "x": "1 - eps * (1 + m) / (1 + 2 * eps * m)",
-       "label": "Window stops touching 1",
-       "color": 0
-      },
-      {
-       "id": "probe_marker",
-       "x": "p0",
-       "label": "Marked person",
-       "color": 3
-      }
-     ],
-     "hlines": [
-      {
-       "id": "no_move",
-       "y": 0,
-       "label": "No move"
-      }
-     ],
-     "points": [
-      {
-       "id": "probe_point",
-       "x": "p0",
-       "y": "(max(0, p0 - eps * (1 + m - 2 * m * p0)) + min(1, p0 + eps * (1 - m + 2 * m * p0))) / 2 - p0",
-       "label": "Marked person's step"
-      }
-     ]
+     "type": "agents",
+     "kernel": "opinion",
+     "params": {
+      "agents": 200,
+      "confidence": "eps",
+      "rounds": 50,
+      "rule": 1,
+      "seed": "start"
+     }
     }
    },
    "animation": {
     "steps": [
      {
-      "say": "Same picture as before: the solid curve is each person's step in round one. The new dashed curve shows the same window with no lean. Right now the two lie on top of each other.",
-      "focus": [
-       "shift_curve",
-       "no_lean_curve"
-      ],
-      "ms": 6500
+      "say": "Each dot is one person, holding an opinion somewhere between 0 and 1. They start scattered at random.",
+      "ms": 3200
      },
      {
-      "say": "New slider: people lean toward their own side. Those above the middle look further up, those below look further down. Watch the solid curve peel away from the dashed one.",
-      "set": {
-       "m": 0.6
-      },
-      "focus": "m",
-      "ms": 7000
+      "say": "Every round, everyone at once moves to the average of the opinions within their listening range. The run plays on until opinions stop moving.",
+      "ms": 3800
      },
      {
-      "say": "These two numbers show how far the marked person looks up and down. The total stays the same, only its split changes.",
+      "say": "This slider sets the listening range ε: how far away an opinion can be and still be heard.",
       "set": {
-       "p0": 0.7
+       "eps": 0.12
       },
-      "focus": [
-       "look_right",
-       "look_left"
-      ],
-      "ms": 6000
+      "focus": "eps",
+      "ms": 3400
+     },
+     {
+      "say": "This box counts the separate groups left at the end.",
+      "focus": "groups",
+      "ms": 2800
+     },
+     {
+      "say": "This one shows how far apart the two most extreme people end up.",
+      "focus": "spread",
+      "ms": 2800
+     },
+     {
+      "say": "And this slider swaps in a different random starting crowd.",
+      "set": {
+       "start": 2
+      },
+      "focus": "start",
+      "ms": 2800
      }
     ]
    },
    "explore": {
-    "prompt": "Recreate the paper's surprise: start from a crowd that ought to agree, then let people lean toward their own side until the ends stop moving in and the middle starts moving out.",
+    "prompt": "You start in the many-groups setting with crowd 1. Move the listening range to find the other two kinds of outcome.",
     "goals": [
      {
-      "text": "Choose a window wide enough that the crowd would normally reach consensus, then make the people at the very ends stop being pulled toward the middle.",
-      "when": "eps > 0.25 && edge_pull < 0.01",
+      "text": "Get crowd 1 to settle into exactly two camps with an empty middle",
+      "when": "sim_clusters == 2 && sim_spread > 0.2",
       "solution": {
-       "eps": 0.3,
-       "m": 1
+       "eps": 0.17
       },
       "hints": [
-       "First make the window wide. Recall how wide it had to be for consensus in the earlier lesson: a bit more than a quarter of the scale on each side.",
-       "Then turn up the lean and watch the box for the inward step of the person at either end.",
-       "That box shrinks as the lean grows, but it only gets close to zero when the lean slider is almost all the way up."
+       "From the many-groups start, should the range get narrower or wider?",
+       "Widen it a little at a time and watch the group counter. Stop before everyone merges into one.",
+       "Two camps live in a fairly narrow band below a quarter of the scale. Edge up slowly from where you are."
       ]
      },
      {
-      "text": "Keep the window wide, place the marked person above the middle, and make them take a clear step away from the middle in round one.",
-      "when": "eps > 0.25 && p0 > 0.5 && probe_out > 0.03",
+      "text": "Bring the whole of crowd 1 to one shared opinion while each person still ignores anyone more than a third of the scale away",
+      "when": "sim_spread < 0.05 && eps < 0.34",
       "solution": {
-       "eps": 0.3,
-       "m": 1,
-       "p0": 0.7
+       "eps": 0.3
       },
       "hints": [
-       "With no lean, a person in the upper half either stays put or is pulled down. What does the lean add?",
-       "Turn the lean up strongly, then slide the marked person around the upper half while you watch the step away from the middle.",
-       "If the marked person sits too close to the top end, there is little room left above them. Try somewhere between the middle and the top."
+       "What does a wider range do to the gap between the most extreme people?",
+       "Go wider than the two-camp band until the gap box drops to nearly zero, but stay under the goal's limit.",
+       "Agreement arrives well before people listen to the whole scale. Look just below the limit."
       ]
      }
     ]
    },
    "understand": {
     "feedback": {
-     "correct": "Yes. The lean does not need a wide window to work. It removes the inward pull at the ends and makes outer views attract their neighbours outward. So even a crowd that would have stayed in many small groups gathers into two camps near the extremes.",
-     "incorrect": "You may have thought a narrow window, or the lean alone, decides the outcome by itself. The lean changes the direction of the pull at the edges: instead of moving inward, the ends hold still and draw nearby views outward. In the paper this produced two camps near 0 and 1."
+     "correct": "Right. The outcome depends on the range compared with how wide the crowd is. A crowd squeezed into 0.6 of the scale behaves like the full crowd with a range about 1.7 times wider, and that lands in the consensus phase.",
+     "incorrect": "You probably treated the range as if it decided the outcome alone. The averaging rule only looks at distances, so a narrower crowd with the same range is the same as the full crowd with a wider range. That moves it from the two-camp phase into the agreement phase."
     },
     "walkthrough": {
      "steps": [
       {
-       "say": "Start with a wide window: 0.3 on each side, a total of 0.6, the paper's own case. With no lean, the people at the ends feel one-sided influence and step inward by 0.15. That inward pull is what brings this crowd to consensus.",
+       "say": "Walk the range from narrow to wide on crowd 2. A tiny range first: people hear only near neighbours, so many small clumps survive. The paper calls this plurality. (The counter undercounts here.)",
        "set": {
-        "eps": 0.3,
-        "m": 0,
-        "p0": 0.5
+        "eps": 0.03,
+        "start": 2
        },
-       "focus": "edge_pull",
-       "ms": 6500
+       "focus": "groups",
+       "ms": 5500
       },
       {
-       "say": "Now let people lean toward their own side: the further up you sit, the further up you look. The paper calls the strength of this lean the bias slope m. Because its direction depends on where you stand, it is an opinion-dependent bias.",
+       "say": "Widen it: the clumps merge into fewer, bigger groups, but they still stretch from edge to edge.",
        "set": {
-        "m": 0.4
-       },
-       "focus": "m",
-       "ms": 7000
-      },
-      {
-       "say": "The marked person at 0.7 now looks up about 0.35 and down about 0.25. The total is still 0.6, just shifted upward. More of what they hear lies above them, so they take a small step up, away from the middle.",
-       "set": {
-        "p0": 0.7
+        "eps": 0.08
        },
        "focus": [
-        "look_right",
-        "look_left",
-        "probe_point"
+        "groups",
+        "spread"
        ],
-       "ms": 7500
+       "ms": 4200
       },
       {
-       "say": "Raise the lean further. The inward step at the ends shrinks, because each end person now looks mostly outward, where nobody is.",
+       "say": "Wider again, and the picture snaps into a new pattern: two big camps, one on each side, with the middle emptied out. This is polarisation in the paper's sense.",
        "set": {
-        "m": 0.8
+        "eps": 0.15
        },
-       "focus": "edge_pull",
+       "focus": "groups",
+       "ms": 5000
+      },
+      {
+       "say": "Keep widening and it snaps once more: one group near the middle, and the gap between the most extreme people shrinks to almost nothing. Consensus.",
+       "set": {
+        "eps": 0.3
+       },
+       "focus": "spread",
+       "ms": 4800
+      },
+      {
+       "say": "These three outcomes are phases: whole stretches of ranges give the same kind of result, with sudden jumps between them rather than a smooth slide.",
+       "focus": "eps",
+       "ms": 4600
+      },
+      {
+       "say": "Now go back to the middle. Making everyone more open-minded did not bring the crowd steadily closer to agreement. At medium range it reliably split in two.",
+       "set": {
+        "eps": 0.15
+       },
+       "focus": [
+        "groups",
+        "spread"
+       ],
+       "ms": 5000
+      },
+      {
+       "say": "Why? Edge people hear others only on their inner side, so they move inward and bunch up. The bunches pull the middle apart in opposite directions, and once a gap exceeds the range it never closes.",
+       "focus": "groups",
        "ms": 6000
-      },
-      {
-       "say": "At full lean, the person at the very top looks only upward and finds no one above. Their inward step is zero, so they stay put. The paper saw exactly this in its run with a very strong lean.",
-       "set": {
-        "m": 1
-       },
-       "focus": "edge_pull",
-       "ms": 6500
-      },
-      {
-       "say": "Now compare the two curves. The dashed one, with no lean, pulls the ends inward. The solid one is positive above the middle and negative below it, so almost everyone moves outward.",
-       "focus": [
-        "shift_curve",
-        "no_lean_curve"
-       ],
-       "ms": 7000
-      },
-      {
-       "say": "The twist: this window was wide enough to agree, yet a person at 0.3 now steps down toward 0. Leaning to your own side turns the pull to the centre into a drift outward, and the crowd splits into two camps at the extremes.",
-       "set": {
-        "p0": 0.3
-       },
-       "focus": [
-        "probe_out",
-        "shift_curve"
-       ],
-       "ms": 8500
       }
      ]
     },
-    "explanation": "Earlier, the ends of the crowd felt only one-sided influence and were pulled inward, and that inward pull is what brought a wide-window crowd together. Now each person's window leans toward their own side. The total width stays the same, but people above the middle look further up and people below look further down, and the further out they sit, the stronger the lean. As the lean m grows, the people at the ends look mostly outward, where there is no one, so the inward pull fades and at m = 1 disappears. Meanwhile people nearer the middle see more views on their own side and drift outward. The paper simulated this with a total window of 0.6 (our ε = 0.3). Consensus held for a mild lean but broke down at about m ≈ 0.4, and stronger leans gave sharper polarisation, with the camps further apart. These are results from a simulated model in which everyone has the same window, not observations of real groups. Our picture also shows only the first round of an infinitely large, evenly spread crowd.",
-    "quote": "Thus, instead of a drive direction centre the opinion based bias generates a drift to the extremes.",
-    "quote_where": "Section 4.2.2"
+    "explanation": "As the listening range ε widens, the end result does not change smoothly. It jumps between three phases: many surviving opinions (plurality), two camps (polarisation), then one consensus. The paper showed this by running 625 randomly placed opinions, all updating at once. It stepped ε from 0.01 to 0.4 in 40 steps and repeated each step 50 times with fresh random starts. With ε = 0.01, 38 opinions survived. With ε = 0.15 the agents ended in two camps, and with ε = 0.25 everyone agreed. Above 0.4 the result was always consensus. The middle phase is the surprise, and the earlier ideas explain it: the edges are pulled only inward, bunch up and drag the middle apart, and gaps wider than ε are permanent. Caveats: this is a model in which everyone can hear everyone within range and all ranges are equal, and the exact switch points depend on the start. The authors' first simulations with only local neighbours suggest the two-camp phase can disappear there.",
+    "quote": "Summing up and generalising what we see in Figure 3 one might say: As the homogeneous and symmetric confidence interval increases we transit from phase to phase. More exactly, we step from fragmentation (plurality) over polarisation (polarity) to consensus (conformity).",
+    "quote_where": "Section 4.1 (Symmetric confidence)",
+    "source_ids": [
+     "s1"
+    ],
+    "source_id": "s1"
    },
    "check": {
     "kind": "model",
-    "task": "Someone claims that a wide enough window always pulls everyone toward the middle. Prove them wrong: with a window at least as wide as the paper's 0.6 case, put the marked person below the middle and make them step away from the middle in round one.",
-    "when": "eps >= 0.29 && p0 < 0.5 && probe_out > 0.02",
+    "task": "Show that the split is not a fluke of one start. Choose a starting crowd numbered 3 or higher and get it to end in two big camps far apart. A tiny leftover group between them is allowed.",
+    "when": "start >= 3 && sim_clusters >= 2 && sim_clusters <= 3 && sim_spread > 0.3",
     "solution": {
-     "eps": 0.3,
-     "m": 1,
-     "p0": 0.3
+     "start": 4,
+     "eps": 0.17
     },
-    "hint": "Widening the window alone keeps pulling people inward. Something else has to change, and the marked person must sit in the lower half, not too close to 0.",
-    "misconception": "A wide enough listening window always guarantees consensus, whatever else people do."
+    "hint": "Change the crowd slider first. Then search the middle band of ranges, between many groups and agreement, until two or three groups remain and the extreme people are still far apart.",
+    "misconception": "That the two camps came from one lucky random start, rather than being the typical outcome at medium range (the paper found it across 50 random starts per setting)."
    },
    "connect": {
     "equation": [
      {
-      "text": "β_{r}(x) = (1 − "
+      "text": "x_{i}(t+1) = |I(i, x(t))|^{−1} Σ_{j ∈ I(i, x(t))} x_{j}(t),   where I(i, x) = {1 ≤ j ≤ n : |x_{i} − x_{j}| ≤ "
      },
      {
-      "text": "m",
-      "link": "m"
+      "text": "ε",
+      "link": "eps"
      },
      {
-      "text": ")/2 + "
-     },
-     {
-      "text": "m",
-      "link": "m"
-     },
-     {
-      "text": " · "
-     },
-     {
-      "text": "x",
-      "link": "p0"
-     },
-     {
-      "text": "     ε_{r} = β_{r} · ε,   ε_{l} = (1 − β_{r}) · ε"
+      "text": "}"
      }
     ],
-    "caption": "This is the paper's rule for the lean. β_{r} is the share of the window pointing up (to the right) for a person at opinion x, and m is the slope of the lean. At m = 0 the split is half and half. At x = 0.5 it is always half and half, whatever m is. The paper's ε is the total window, so it equals 2 × the ε slider here: ε_{r} matches 'How far the marked person looks up' and ε_{l} matches 'How far the marked person looks down'."
+    "caption": "This is the paper's bounded-confidence model (BC), the rule the simulation runs. Each person i moves to the plain average of everyone j whose opinion lies within ε of their own; I(i, x) is that set of people. The coloured ε is the listening-range slider. Sweeping it is the paper's walk along the diagonal, and the group counter shows which phase you land in."
    },
-   "recap": "When people lean toward their own side, the ends stop moving in and the middle drifts out, so even a window wide enough for agreement can end in two extreme camps.",
+   "recap": "Widening the listening range moves a crowd through sharp phases: many groups, then two camps, then one. So more open-mindedness can split a group before it unites it.",
    "activities": [
     {
      "id": "tour",
@@ -2090,14 +1754,22 @@
      "id": "eq",
      "kind": "connect"
     }
-   ],
-   "builds_on": "edges_pull_inward"
+   ]
   }
  ],
  "omitted": [],
+ "sources": [
+  {
+   "id": "s1",
+   "title": "Opinion Dynamics and Bounded Confidence: Models, Analysis, and Simulation",
+   "url": "https://www.jasss.org/5/3/2/2.pdf",
+   "authors": "",
+   "year": null
+  }
+ ],
  "activity_plans": [
   {
-   "concept": "averaging_to_consensus",
+   "concept": "repeated_averaging",
    "chosen": "p1",
    "plan": {
     "blocks": [
@@ -2109,9 +1781,9 @@
      "reveal",
      "connect"
     ],
-    "why": "Learner moves the rounds and crowd-size sliders and watches the spread fall to zero, which sets the baseline that later concepts break."
+    "why": "The learner moves the self-weight slider and watches the two opinion lines meet faster or slower, then applies the idea to a case where one person ignores the other."
    },
-   "confidence": 0.46,
+   "confidence": 0.58,
    "model": "jev-1.13.0",
    "options": [
     {
@@ -2124,7 +1796,7 @@
       "reveal",
       "connect"
      ],
-     "why": "Learner moves the rounds and crowd-size sliders and watches the spread fall to zero, which sets the baseline that later concepts break."
+     "why": "The learner moves the self-weight slider and watches the two opinion lines meet faster or slower, then applies the idea to a case where one person ignores the other."
     },
     {
      "blocks": [
@@ -2136,26 +1808,26 @@
       "predict",
       "reveal"
      ],
-     "why": "A three-person worked averaging example makes the arithmetic concrete before the learner runs the crowd."
+     "why": "A worked example computes two rounds of averaging by hand before the learner uses the model to make the pair agree within a set number of rounds."
     }
    ]
   },
   {
-   "concept": "window_and_phases",
-   "chosen": "p2",
+   "concept": "bounded_confidence",
+   "chosen": "p1",
    "plan": {
     "blocks": [
      "watch",
      "walk",
      "explain",
-     "compare",
      "goal",
      "predict",
-     "reveal"
+     "reveal",
+     "connect"
     ],
-    "why": "A side-by-side view of ε = 0.05, 0.15 and 0.3 shows the phases at once, then the learner hunts for the boundaries."
+    "why": "The learner widens or narrows the confidence window until a chosen number of people are inside, and sees that person's next opinion jump as someone enters or leaves."
    },
-   "confidence": 0.46,
+   "confidence": 0.61,
    "model": "jev-1.13.0",
    "options": [
     {
@@ -2164,12 +1836,11 @@
       "walk",
       "explain",
       "goal",
-      "goal",
       "predict",
       "reveal",
       "connect"
      ],
-     "why": "Learner tunes ε to produce exactly two camps, then exactly one, and so finds the three phases by hand."
+     "why": "The learner widens or narrows the confidence window until a chosen number of people are inside, and sees that person's next opinion jump as someone enters or leaves."
     },
     {
      "blocks": [
@@ -2181,108 +1852,62 @@
       "predict",
       "reveal"
      ],
-     "why": "A side-by-side view of ε = 0.05, 0.15 and 0.3 shows the phases at once, then the learner hunts for the boundaries."
+     "why": "Two window sizes are shown side by side so the learner sees the same person move to different places, then sets ε to reach a target new opinion."
     }
    ]
   },
   {
-   "concept": "edges_pull_inward",
+   "concept": "permanent_splits",
    "chosen": "p1",
    "plan": {
     "blocks": [
-     "watch",
-     "walk",
      "explain",
-     "goal",
-     "predict",
-     "reveal",
-     "check",
-     "connect"
+     "worked",
+     "trace",
+     "choice"
     ],
-    "why": "Learner widens ε and sees the pulled zone at each edge grow while the flat middle shrinks; a model check catches the belief that everyone moves toward the centre at once."
+    "why": "The learner follows a worked example of a chain of confidence, traces which people can still reach each other after a gap opens, and then judges whether a split can heal."
    },
-   "confidence": 0.77,
+   "confidence": 0.88,
    "model": "jev-1.13.0",
    "options": [
     {
      "blocks": [
-      "watch",
-      "walk",
       "explain",
-      "goal",
-      "predict",
-      "reveal",
-      "check",
-      "connect"
+      "worked",
+      "trace",
+      "choice"
      ],
-     "why": "Learner widens ε and sees the pulled zone at each edge grow while the flat middle shrinks; a model check catches the belief that everyone moves toward the centre at once."
+     "why": "The learner follows a worked example of a chain of confidence, traces which people can still reach each other after a gap opens, and then judges whether a split can heal."
     },
     {
      "blocks": [
-      "watch",
-      "walk",
       "explain",
-      "worked",
-      "goal",
-      "predict",
-      "reveal",
-      "check"
-     ],
-     "why": "A worked example computes the shift for a person at 0.05 and at 0.5 before the learner explores the whole curve."
-    }
-   ]
-  },
-  {
-   "concept": "clumps_tear_apart",
-   "chosen": "p2",
-   "plan": {
-    "blocks": [
-     "explain",
-     "stages",
-     "trace",
-     "passage"
-    ],
-    "why": "Learner traces the cause chain from one-sided pull to split, then picks the passage that explains why split groups stay apart."
-   },
-   "confidence": 0.37,
-   "model": "jev-1.13.0",
-   "options": [
-    {
-     "blocks": [
       "stages",
-      "explain",
       "order",
       "choice"
      ],
-     "why": "Learner sees the paper's five observations revealed in turn, then puts them in order and judges why a split can never close."
-    },
-    {
-     "blocks": [
-      "explain",
-      "stages",
-      "trace",
-      "passage"
-     ],
-     "why": "Learner traces the cause chain from one-sided pull to split, then picks the passage that explains why split groups stay apart."
+     "why": "Staged snapshots show a group stretching until a gap appears, and the learner orders the steps of the argument for why the two sides stay apart."
     }
    ]
   },
   {
-   "concept": "lopsided_window",
-   "chosen": "p1",
+   "concept": "edge_pull",
+   "chosen": "p2",
    "plan": {
     "blocks": [
      "watch",
      "walk",
      "explain",
+     "stages",
      "goal",
      "predict",
      "reveal",
-     "connect"
+     "check"
     ],
-    "why": "Learner sets unequal left and right reach and makes the middle shift positive, linking the window's tilt to the drift the paper reports."
+    "why": "After using the model, staged descriptions of the paper's Figure 4 walk through how bunching at the edges turns into a split in the middle."
    },
-   "confidence": 0.76,
+   "confidence": 0.23,
    "model": "jev-1.13.0",
    "options": [
     {
@@ -2290,60 +1915,13 @@
       "watch",
       "walk",
       "explain",
-      "goal",
-      "predict",
-      "reveal",
-      "connect"
-     ],
-     "why": "Learner sets unequal left and right reach and makes the middle shift positive, linking the window's tilt to the drift the paper reports."
-    },
-    {
-     "blocks": [
-      "watch",
-      "walk",
-      "explain",
-      "compare",
-      "goal",
-      "predict",
-      "reveal"
-     ],
-     "why": "A comparison of symmetric and lopsided windows shows the centre shift appear before the learner tunes it."
-    }
-   ]
-  },
-  {
-   "concept": "own_side_bias",
-   "chosen": "p1",
-   "plan": {
-    "blocks": [
-     "watch",
-     "walk",
-     "explain",
-     "goal",
-     "goal",
-     "predict",
-     "reveal",
-     "check",
-     "connect"
-    ],
-    "why": "Learner raises m at ε = 0.6 until the edge stops being pulled in and the middle drifts outward; a model check targets the belief that wide confidence always guarantees consensus."
-   },
-   "confidence": 0.94,
-   "model": "jev-1.13.0",
-   "options": [
-    {
-     "blocks": [
-      "watch",
-      "walk",
-      "explain",
-      "goal",
       "goal",
       "predict",
       "reveal",
       "check",
       "connect"
      ],
-     "why": "Learner raises m at ε = 0.6 until the edge stops being pulled in and the middle drifts outward; a model check targets the belief that wide confidence always guarantees consensus."
+     "why": "The learner adjusts ε to see how wide the zone of inward pull is, then predicts which people move first and which move last, as the paper's Figure 5 shows."
     },
     {
      "blocks": [
@@ -2356,7 +1934,54 @@
       "reveal",
       "check"
      ],
-     "why": "The paper's Figure 18 runs (m = 0 to 0.99) are staged first, then the learner reproduces the flip on the curve."
+     "why": "After using the model, staged descriptions of the paper's Figure 4 walk through how bunching at the edges turns into a split in the middle."
+    }
+   ]
+  },
+  {
+   "concept": "three_phases",
+   "chosen": "p1",
+   "plan": {
+    "blocks": [
+     "watch",
+     "walk",
+     "explain",
+     "goal",
+     "predict",
+     "reveal",
+     "check",
+     "connect"
+    ],
+    "why": "The learner finds an ε that gives many groups, one that gives exactly two camps and one that gives consensus, then predicts what happens in a case between phases."
+   },
+   "confidence": 0.27,
+   "model": "jev-1.13.0",
+   "options": [
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "goal",
+      "predict",
+      "reveal",
+      "check",
+      "connect"
+     ],
+     "why": "The learner finds an ε that gives many groups, one that gives exactly two camps and one that gives consensus, then predicts what happens in a case between phases."
+    },
+    {
+     "blocks": [
+      "watch",
+      "walk",
+      "explain",
+      "compare",
+      "goal",
+      "predict",
+      "reveal",
+      "check"
+     ],
+     "why": "Three model states side by side (the paper's single runs at 0.01, 0.15 and 0.25) set up the phases before the learner hunts for the boundaries between them."
     }
    ]
   }
@@ -2366,27 +1991,22 @@
    "id": "sociology_anthropology",
    "name": "Sociology & anthropology"
   },
-  "secondary": {
-   "id": "mathematics",
-   "name": "Mathematics"
-  },
+  "secondary": null,
   "probabilities": {
-   "sociology_anthropology": 0.62,
-   "mathematics": 0.27,
+   "sociology_anthropology": 0.66,
+   "mathematics": 0.24,
    "computer_science": 0.06,
    "psychology": 0.02,
-   "ai_ml": 0.01,
-   "political_science": 0.01,
-   "communication_media": 0.01
+   "political_science": 0.01
   },
-  "confidence": 0.61,
+  "confidence": 0.65,
   "model": "jev-1.13.0"
  },
  "generation": {
   "provider": "claude",
   "model": "claude-opus-5-5",
-  "pipeline": "lemma.generate.make_outline + build_lesson",
-  "source_chars": 71848,
-  "omitted": 0
+  "source_chars": 73358,
+  "omitted": 0,
+  "pipeline": "brought sources → subjects + make_outline + build_lesson (2026-10-23)"
  }
 }
