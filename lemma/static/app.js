@@ -1517,9 +1517,9 @@
   }
 
   /* The film: embedded in the hero, loaded and played only when the visitor presses play. */
-  const FILM = { hd: "static/film-v5-1080.mp4", sd: "static/film-v5-720.mp4", poster: "static/film-v5-poster.jpg" };
+  const FILM = { hd: "static/film-v6-1080.mp4", sd: "static/film-v6-720.mp4", poster: "static/film-v6-poster.jpg" };
   function filmPlayer() {
-    const video = h("video", { class: "film-video", preload: "none", poster: FILM.poster, playsinline: true, "aria-label": "OpenLemma film, 32 seconds, with music" });
+    const video = h("video", { class: "film-video", preload: "none", poster: FILM.poster, playsinline: true, "aria-label": "OpenLemma film, 37 seconds, with music" });
     const status = h("p", { class: "film-status", role: "status" });
     const start = () => {
       if (!video.src) video.src = matchMedia("(max-width: 900px)").matches ? FILM.sd : FILM.hd;
@@ -1527,7 +1527,7 @@
       cover.hidden = after.hidden = true;
       video.play().catch(() => {});  // some browsers refuse; the native controls are there now
     };
-    const cover = h("button", { type: "button", class: "film-cover", onclick: start, "aria-label": "Play the 32-second OpenLemma film (with music)" },
+    const cover = h("button", { type: "button", class: "film-cover", onclick: start, "aria-label": "Play the 37-second OpenLemma film (with music)" },
       h("span", { class: "film-disc", "aria-hidden": "true" }, icon("play")));
     const after = h("div", { class: "film-after", hidden: true },
       h("p", { class: "film-after-title" }, "Now try it on something you want to understand."),
