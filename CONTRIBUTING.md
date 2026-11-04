@@ -17,7 +17,7 @@ Install Node.js 22 if you change the expression or simulation engines, so the Py
 
 ## Rules that keep OpenLemma honest
 
-- **One behaviour everywhere.** OpenLemma behaves the same on your own computer as hosted; the only difference is the ChatGPT subscription. Don't branch on where it runs. `tests/test_one_behaviour.py` fails if you do.
+- **One behaviour everywhere.** OpenLemma behaves the same on your own computer as hosted, the subscriptions included. Don't branch on where it runs. `tests/test_one_behaviour.py` fails if you do.
 - **Safe defaults.** Limits default to the values a public server needs; development lifts them through `local.env`. A missing setting must never make a public server more permissive.
 - **Quality gates stay.** A lesson that fails `lemma/lesson.py`'s checks (word-for-word quotes, finite models, reachable goals, complete structure, labelled teaching models) is never shown. Don't loosen a check to make a lesson pass.
 - **Two engines, one behaviour.** Keep `lemma/expr.py` with `lemma/static/expr.js`, and `lemma/kernels.py` with `lemma/static/kernels.js`, in step.

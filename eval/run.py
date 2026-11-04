@@ -40,7 +40,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from lemma import generate, ingest, jev, lesson as L  # noqa: E402
+from lemma import generate, ingest, jev, lesson as L, store  # noqa: E402
 from lemma.llm import PROVIDERS, ProviderError, make_provider  # noqa: E402
 
 import jev_judge  # noqa: E402
@@ -60,16 +60,29 @@ EXCLUDED = ("galton_1886", "galton-1886")
 
 
 def provider_for(spec: str):
-    """`claude:claude-opus-5-5` -> a provider using LEMMA_EVAL_KEY_CLAUDE; `chatgpt:...` uses the ChatGPT
-    subscription signed in on this computer, and needs no key."""
+    """`claude:claude-opus-5-5` -> a provider using LEMMA_EVAL_KEY_CLAUDE; `chatgpt:...` and `claude-subscription:...`
+    borrow a subscription signed in on this computer's Lemma: the one account signed in to it, or the account
+    LEMMA_EVAL_ACCOUNT names (a folder under $LEMMA_HOME/users/)."""
     pid, _, model = spec.partition(":")
     if pid not in PROVIDERS:
         sys.exit(f"Unknown provider {pid!r}. Choose from: {', '.join(PROVIDERS)}")
+    if not PROVIDERS[pid].key_url:
+        return make_provider(pid, "", model, signed_in_account(f"{'chatgpt' if pid == 'chatgpt' else 'claude'}-auth.json"))
     env = "LEMMA_EVAL_KEY_" + pid.upper().replace("-", "_")
     key = os.environ.get(env, "")
-    if not key and pid != "chatgpt":
+    if not key:
         sys.exit(f"Set {env} to use {pid}.")
     return make_provider(pid, key, model)
+
+
+def signed_in_account(auth_file: str) -> str:
+    if chosen := os.environ.get("LEMMA_EVAL_ACCOUNT"):
+        return chosen
+    accounts = sorted(p.parent.name for p in (store.home() / "users").glob(f"*/{auth_file}"))
+    if len(accounts) != 1:
+        sys.exit(f"{len(accounts)} accounts are signed in to this subscription on this computer's Lemma; "
+                 "sign in on your account page, or set LEMMA_EVAL_ACCOUNT to the one to use.")
+    return accounts[0]
 
 
 def pick(spec: str | None) -> list[dict]:

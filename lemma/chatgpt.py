@@ -2,12 +2,13 @@
 
 This signs in the way the Codex CLI's device sign-in does: Lemma asks OpenAI for a one-time code, the learner
 enters it on OpenAI's sign-in page, and Lemma, checking back meanwhile, swaps the result for tokens that it keeps
-in ``~/.lemma/chatgpt-auth.json`` (readable only by the learner). Nothing listens on the learner's computer.
-Requests go to the ChatGPT backend that Codex uses, and count against the learner's plan.
+in the learner's account folder, ``$LEMMA_HOME/users/<account>/chatgpt-auth.json`` (readable only by the server's
+user). Nothing listens on the learner's computer. Requests go to the ChatGPT backend that Codex uses, and count
+against the learner's plan.
 
-It is for one person using Lemma on their own computer, with their own subscription. A hosted
-Lemma serving other people must not offer it: that is what OpenAI's "Sign in with ChatGPT"
-program is for.
+Every function takes the account (``owner``) whose sign-in it reads: each account signs in and out on its own,
+on the learner's own computer and hosted alike. ``None`` is nobody, as for a visitor who hasn't signed in to
+OpenLemma; tools outside any account, such as eval/run.py, pass the account whose sign-in they borrow.
 """
 
 from __future__ import annotations
@@ -20,6 +21,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from pathlib import Path
 
 from . import __version__, store
 from .llm import Conversation, Provider, ProviderError, Reply, REQUEST_TIMEOUT
@@ -36,11 +38,15 @@ DEFAULT_MODEL = "gpt-6.1-sol"
 SIGN_IN_WAIT = 15 * 60  # seconds a code lasts
 
 _lock = threading.Lock()
-_login: dict = {}  # the sign-in in progress: {"code", "url", "stop"}, or {"error": str} once it fails
+_logins: dict[str, dict] = {}  # per account, the sign-in in progress: {"code", "url", "stop"}, or {"error": str} once it fails
 
 
-def _auth_file():
-    return store.home() / "chatgpt-auth.json"
+def _auth_file(owner: str | None) -> Path | None:
+    return store.account(owner) / "chatgpt-auth.json" if owner else None
+
+
+def _login(owner: str | None) -> dict:
+    return _logins.setdefault(owner or "", {})
 
 
 def _claims(jwt: str) -> dict:
@@ -51,14 +57,17 @@ def _claims(jwt: str) -> dict:
         return {}
 
 
-def load() -> dict | None:
+def load(owner: str | None) -> dict | None:
+    path = _auth_file(owner)
+    if path is None:
+        return None
     try:
-        return json.loads(_auth_file().read_text())
+        return json.loads(path.read_text())
     except (OSError, ValueError):
         return None
 
 
-def _save(tokens: dict, refresh: str = ""):
+def _save(owner: str, tokens: dict, refresh: str = ""):
     access = tokens["access_token"]
     claims = _claims(tokens.get("id_token") or "") or _claims(access)
     auth = {
@@ -68,19 +77,21 @@ def _save(tokens: dict, refresh: str = ""):
         "account_id": (_claims(access).get("https://api.openai.com/auth") or {}).get("chatgpt_account_id", ""),
         "email": claims.get("email", ""),
     }
-    store.write_private(_auth_file(), json.dumps(auth))
+    store.write_private(_auth_file(owner), json.dumps(auth))
 
 
-def sign_out():
-    _cancel_sign_in()
-    _auth_file().unlink(missing_ok=True)
+def sign_out(owner: str | None):
+    _cancel_sign_in(owner)
+    if path := _auth_file(owner):
+        path.unlink(missing_ok=True)
 
 
-def status() -> dict:
-    auth = load()
-    waiting = "stop" in _login
-    return {"signed_in": bool(auth), "email": (auth or {}).get("email", ""), "error": _login.get("error", ""), "waiting": waiting,
-            "code": _login.get("code", "") if waiting else "", "url": _login.get("url", "") if waiting else ""}
+def status(owner: str | None) -> dict:
+    auth = load(owner)
+    login = _login(owner)
+    waiting = "stop" in login
+    return {"signed_in": bool(auth), "email": (auth or {}).get("email", ""), "error": login.get("error", ""), "waiting": waiting,
+            "code": login.get("code", "") if waiting else "", "url": login.get("url", "") if waiting else ""}
 
 
 def _token_request(fields: dict) -> dict:
@@ -116,24 +127,26 @@ def _device_request(url: str, body: dict) -> tuple[int, dict]:
     return status, reply if isinstance(reply, dict) else {}
 
 
-def access_token() -> tuple[str, str]:
+def access_token(owner: str | None) -> tuple[str, str]:
     """(access token, account id), refreshed first if it's about to expire."""
     with _lock:
-        auth = load()
+        auth = load(owner)
         if not auth:
             raise ProviderError("Sign in with your ChatGPT account on your account page to build lessons.")
         if auth["expires"] - time.time() < 120:
-            _save(_token_request({"grant_type": "refresh_token", "refresh_token": auth["refresh"], "client_id": CLIENT_ID}), auth["refresh"])
-            auth = load()
+            _save(owner, _token_request({"grant_type": "refresh_token", "refresh_token": auth["refresh"], "client_id": CLIENT_ID}), auth["refresh"])
+            auth = load(owner)
         return auth["access"], auth["account_id"]
 
 
 # ---------------------------------------------------------------- signing in
 
 
-def start_sign_in() -> dict:
+def start_sign_in(owner: str | None) -> dict:
     """Asks OpenAI for a code and checks back in the background until the learner has entered it.
     Returns the status, with the code and the page to enter it on."""
+    if not owner:
+        raise ProviderError("Sign in to OpenLemma first.")
     got, reply = _device_request(DEVICE_CODE_URL, {"client_id": CLIENT_ID})
     if not 200 <= got < 300 or not reply.get("device_auth_id") or not reply.get("user_code"):
         raise ProviderError(f"OpenAI didn't start a sign-in ({got}). Try again in a moment.")
@@ -141,15 +154,16 @@ def start_sign_in() -> dict:
         interval = max(1.0, float(reply.get("interval") or 5))
     except ValueError:
         interval = 5.0
-    _cancel_sign_in()
+    _cancel_sign_in(owner)
     stop = threading.Event()
-    _login.clear()
-    _login.update(code=reply["user_code"], url=VERIFY_URL, stop=stop)
-    threading.Thread(target=_wait_for_code, args=(stop, reply["device_auth_id"], reply["user_code"], interval), daemon=True).start()
-    return status()
+    login = _login(owner)
+    login.clear()
+    login.update(code=reply["user_code"], url=VERIFY_URL, stop=stop)
+    threading.Thread(target=_wait_for_code, args=(owner, stop, reply["device_auth_id"], reply["user_code"], interval), daemon=True).start()
+    return status(owner)
 
 
-def _wait_for_code(stop: threading.Event, device_id: str, code: str, interval: float):
+def _wait_for_code(owner: str, stop: threading.Event, device_id: str, code: str, interval: float):
     deadline = time.time() + SIGN_IN_WAIT
     error = "The sign-in code expired. Start again from your account page."
     while not stop.wait(interval):
@@ -168,22 +182,23 @@ def _wait_for_code(stop: threading.Event, device_id: str, code: str, interval: f
             error = f"ChatGPT sign-in failed ({status}). Start again from your account page."
             break
         try:
-            _save(_token_request({"grant_type": "authorization_code", "code": reply["authorization_code"],
-                                  "code_verifier": reply.get("code_verifier", ""), "redirect_uri": DEVICE_REDIRECT_URI, "client_id": CLIENT_ID}))
+            _save(owner, _token_request({"grant_type": "authorization_code", "code": reply["authorization_code"],
+                                         "code_verifier": reply.get("code_verifier", ""), "redirect_uri": DEVICE_REDIRECT_URI, "client_id": CLIENT_ID}))
             error = ""
         except ProviderError as e:
             error = str(e)
         break
     else:
         return  # cancelled, by a new sign-in or signing out
-    if _login.get("stop") is stop:
-        _login.clear()
+    login = _login(owner)
+    if login.get("stop") is stop:
+        login.clear()
         if error:
-            _login["error"] = error
+            login["error"] = error
 
 
-def _cancel_sign_in():
-    if stop := _login.pop("stop", None):
+def _cancel_sign_in(owner: str | None):
+    if stop := _login(owner).pop("stop", None):
         stop.set()
 
 
@@ -194,21 +209,22 @@ class ChatGPTProvider(Provider):
     id = "chatgpt"
     name = "ChatGPT"
 
-    def __init__(self, model: str = ""):
+    def __init__(self, model: str = "", owner: str | None = None):
         self.model = model or DEFAULT_MODEL
+        self.owner = owner  # whose sign-in builds with
 
     @property
     def label(self) -> str:
         return f"{self.name} ({self.model}) with your subscription"
 
     def available(self) -> tuple[bool, str]:
-        if not load():
+        if not load(self.owner):
             return False, "Sign in with your ChatGPT account on your account page to build lessons."
         return True, ""
 
     def request(self, method: str, path: str, body=None, timeout: float = 60, on_line=None):
         """Returns the raw response body, passing each line to ``on_line`` as it arrives when given."""
-        token, account = access_token()
+        token, account = access_token(self.owner)
         headers = {"Authorization": "Bearer " + token, "chatgpt-account-id": account, "OpenAI-Beta": "responses=experimental",
                    "originator": "codex_cli_rs", "User-Agent": f"Lemma/{__version__}", "Content-Type": "application/json"}
         if body is not None:
@@ -244,6 +260,9 @@ class ChatGPTProvider(Provider):
         return f"ChatGPT returned an error ({status}): {msg or 'no details'}"
 
     def models(self) -> list[dict]:
+        ok, msg = self.available()
+        if not ok:
+            raise ProviderError(msg)
         try:
             data = json.loads(self.request("GET", "/models?client_version=1.0.0"))
         except (ProviderError, ValueError):

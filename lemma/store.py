@@ -49,17 +49,23 @@ def library(owner: str | None = None) -> Path:
     return lib
 
 
+def account(owner: str | None) -> Path:
+    """An account's own folder, beside its library: settings and provider sign-ins. `None` is the folder for tools
+    that work outside any account, such as eval/run.py."""
+    return library(owner).parent
+
+
 def settings(owner: str) -> dict:
     """What an account chose last time, such as its level."""
     try:
-        data = json.loads((library(owner).parent / "settings.json").read_text(encoding="utf-8"))
+        data = json.loads((account(owner) / "settings.json").read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return {}
     return data if isinstance(data, dict) else {}
 
 
 def save_settings(owner: str, **changes):
-    path = library(owner).parent / "settings.json"
+    path = account(owner) / "settings.json"
     write_private(path, json.dumps({**settings(owner), **changes}))
 
 

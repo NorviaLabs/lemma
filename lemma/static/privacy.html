@@ -29,7 +29,7 @@
   <h2 id="short">In short</h2>
   <ul>
     <li>OpenLemma keeps your Google name, email address and picture, and the lessons and builds you make.</li>
-    <li>Your AI provider key is never stored. It stays in your browser, which sends it only with each request that needs it.</li>
+    <li>Your AI provider key is never stored. It stays in your browser, which sends it only with each request that needs it. If you sign in with a ChatGPT or Claude subscription instead, OpenLemma keeps that sign-in with your account until you sign out.</li>
     <li>No advertising, no tracking cookies and no request logs. Nothing is sold.</li>
     <li>OpenLemma's code is public, so you can <a href="https://github.com/NorviaLabs/lemma" rel="noopener">read exactly what it does with your data</a>.</li>
     <li>Delete lessons from your library at any time; email contact@openlemma.org to delete your whole account.</li>
@@ -45,6 +45,8 @@
     <dd>A cookie keeps you signed in for up to 30 days. The server stores only a fingerprint (hash) of it.</dd>
     <dt>Lessons and builds</dt>
     <dd>Lesson requests, the text of the sources you choose, and build progress are saved so you can leave and come back. Finished lessons are saved to your library automatically, and an interrupted build can be retried. Only your account can open them. Delete stopped builds and lessons from your library to remove them.</dd>
+    <dt>A subscription sign-in</dt>
+    <dd>If you sign in with your ChatGPT or Claude subscription instead of a key, OpenLemma keeps the sign-in tokens OpenAI or Anthropic issue, with your account, in a file only the server can read, and uses them only to build your lessons. It renews them when they expire. <strong>Sign out</strong> on your account page deletes them; a key is never kept this way.</dd>
     <dt>Daily usage</dt>
     <dd>How many searches, lesson builds and source reads your account started each day, and how many pieces of feedback it sent, to apply the daily limits. These counts are deleted after seven days.</dd>
     <dt>Feedback</dt>
@@ -58,7 +60,7 @@
   <h2 id="never">What OpenLemma doesn't keep</h2>
   <dl class="doc-list">
     <dt>Your AI provider key</dt>
-    <dd>It is never saved in OpenLemma's storage: not with your account, your lessons or your builds. Your browser keeps it and sends it with each request that needs it. The server holds it in memory only while that request or build runs, and never writes it to disk. If a provider's error message repeats the key, OpenLemma removes it before saving the build. To retry a build, your browser sends the key again.</dd>
+    <dd>It is never saved in OpenLemma's storage: not with your account, your lessons or your builds. Your browser keeps it and sends it with each request that needs it. The server holds it in memory only while that request or build runs, and never writes it to disk. If a provider's error message repeats the key, OpenLemma removes it before saving the build. To retry a build, your browser sends the key again. (A subscription sign-in is different: see above.)</dd>
     <dt>Usage logs</dt>
     <dd>The server writes no request logs. When something inside OpenLemma breaks, it records an error id, the time and which part of its code failed, but not who you are, what you asked for, your sources or your key.</dd>
     <dt>Your network address</dt>

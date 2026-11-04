@@ -18,7 +18,7 @@ from unittest.mock import patch
 
 import hosting  # noqa: F401  a temporary LEMMA_HOME and the Jev stand-in
 from test_lemma import SOURCE, TESTER, FakeConversation, FakeProvider, reset_server, session_cookie, sign_in
-from lemma import categorize, chatgpt, generate, ingest, jev, metrics, search, server, store
+from lemma import auth, categorize, chatgpt, generate, ingest, jev, metrics, search, server, store
 from lemma.llm import ProviderError
 
 
@@ -170,15 +170,19 @@ class LocalOnlyEndpoints(unittest.TestCase):
     def test_chatgpt_sign_in_reports_when_openai_wont_start_it_and_sign_out_forgets_the_account(self):
         with LocalServer() as site:
             with patch.object(chatgpt, "_device_request", return_value=(503, {})):
-                s, body, _ = site.req("POST", "/api/chatgpt/login", {})
+                s, body, _ = site.req("POST", "/api/signin/chatgpt/login", {})
             self.assertEqual(s, 409)
             self.assertIn("OpenAI didn't start a sign-in (503)", body["error"])
 
-            store.write_private(chatgpt._auth_file(), json.dumps({"access": "a", "refresh": "r", "expires": time.time() + 3600, "account_id": "", "email": "me@example.com"}))
-            self.assertEqual(site.req("GET", "/api/chatgpt")[1]["email"], "me@example.com")
-            s, body, _ = site.req("POST", "/api/chatgpt/logout", {})
+            me = auth.upsert_user("google", "tester", "tester", "tester@example.com", "")["id"]  # the account behind site.cookie
+            store.write_private(chatgpt._auth_file(me), json.dumps({"access": "a", "refresh": "r", "expires": time.time() + 3600, "account_id": "", "email": "me@example.com"}))
+            self.assertEqual(site.req("GET", "/api/signin/chatgpt")[1]["email"], "me@example.com")
+            other = session_cookie("someone-else")  # another account doesn't see this sign-in
+            self.assertEqual(site.req("GET", "/api/signin/chatgpt", headers={"Cookie": other})[1]["signed_in"], False)
+            self.assertEqual(site.req("GET", "/api/signin/chatgpt", headers={"Cookie": ""})[0], 401)  # nor does a visitor
+            s, body, _ = site.req("POST", "/api/signin/chatgpt/logout", {})
             self.assertEqual((s, body["signed_in"], body["email"]), (200, False, ""))
-            self.assertFalse(chatgpt._auth_file().exists())
+            self.assertFalse(chatgpt._auth_file(me).exists())
 
 
 class Searches(unittest.TestCase):

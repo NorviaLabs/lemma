@@ -1,12 +1,12 @@
-"""OpenLemma behaves the same on your own computer as hosted for others, except for the ChatGPT subscription.
+"""OpenLemma behaves the same on your own computer as hosted for others.
 
-Only a server bound to this computer offers the ChatGPT subscription. Nothing else may differ, sign-in included
-(Google OAuth both ways). Two checks hold that in place:
+Nothing may differ: sign-in (Google OAuth both ways), the providers (the ChatGPT and Claude subscriptions
+included, each signed in per account) and every page. Two checks hold that in place:
 
-* the structure: the switch for it, ``server.ON_THIS_COMPUTER``, is read only where that offer is made and where
-  the server binds, and the old mode switches are gone;
+* the structure: the switch ``server.ON_THIS_COMPUTER`` is read only where the server binds, and the old mode
+  switches are gone;
 * the behaviour: the same requests to a server on this computer and to one on a public address get the same
-  answers, apart from the ChatGPT endpoints.
+  answers.
 """
 
 from __future__ import annotations
@@ -26,8 +26,8 @@ from lemma import server
 
 ROOT = Path(__file__).resolve().parent.parent / "lemma"
 SWITCHES = {"ON_THIS_COMPUTER"}
-# Where the switch may be read: the ChatGPT offer itself, and binding (address, port, browser, live reload).
-ALLOWED = {("server.py", "providers"), ("server.py", "_chatgpt_only"), ("server.py", "make_server"), ("__main__.py", "main")}
+# Where the switch may be read: binding (address, port, browser, live reload).
+ALLOWED = {("server.py", "make_server"), ("__main__.py", "main")}
 
 
 class Structure(unittest.TestCase):
@@ -49,7 +49,7 @@ class Structure(unittest.TestCase):
 
     def test_the_switch_is_read_only_where_this_computer_offers_differ(self):
         stray = [r for r in self.reads() if (r[0], r[1]) not in ALLOWED]
-        self.assertEqual(stray, [], "only the offers that need a shared machine may depend on where OpenLemma runs")
+        self.assertEqual(stray, [], "only how the server binds may depend on where OpenLemma runs")
 
     def test_the_old_mode_switches_are_gone(self):
         python = "\n".join(p.read_text(encoding="utf-8") for p in ROOT.glob("*.py"))
@@ -81,7 +81,8 @@ class Behaviour(unittest.TestCase):
             ("GET", "/api/lessons", None), ("GET", "/api/requests", None), ("GET", "/api/stats", None),
             ("POST", "/api/event", {"name": "lesson_open"}), ("POST", "/api/papers", upload),
             ("POST", "/api/requests", {"sources": []}), ("GET", "/api/lessons/nope", None),
-            ("GET", "/api/chatgpt", None), ("GET", "/", None), ("GET", "/privacy", None),
+            ("GET", "/api/signin/chatgpt", None), ("GET", "/api/signin/claude-subscription", None),
+            ("POST", "/api/signin/claude-subscription/login", {}), ("GET", "/", None), ("GET", "/privacy", None),
         ]
         out = {}
         with patch.dict(os.environ, env):
@@ -104,16 +105,16 @@ class Behaviour(unittest.TestCase):
                 out[(method, path)] = (r.status, shape, {k: r.getheader(k) for k in kept})
         return out
 
-    def test_the_same_requests_get_the_same_answers_apart_from_chatgpt(self):
+    def test_the_same_requests_get_the_same_answers(self):
         try:
             for who in ("signed out", "signed in"):
                 with self.subTest(who=who):
                     cookie = session_cookie() if who == "signed in" else ""
                     here, public = self.script(False, cookie), self.script(True, cookie)
-                    offers = {("GET", "/api/chatgpt")}
                     differ = sorted(k for k in here if here[k] != public[k])
-                    self.assertTrue(set(differ) <= offers, [(k, here[k], public[k]) for k in differ if k not in offers])
-                    self.assertEqual(public[("GET", "/api/chatgpt")][0], 404)  # the ChatGPT subscription needs this computer
+                    self.assertEqual(differ, [], [(k, here[k], public[k]) for k in differ])
+                    expect = 200 if who == "signed in" else 401  # the subscriptions are offered everywhere, to signed-in accounts
+                    self.assertEqual([public[("GET", f"/api/signin/{p}")][0] for p in ("chatgpt", "claude-subscription")], [expect] * 2)
         finally:
             reset_server()
 

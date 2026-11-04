@@ -1363,6 +1363,9 @@ class FakeChatGPT(BaseHTTPRequestHandler):
         self._send(200, "".join(f"event: {e['type']}\ndata: {json.dumps(e)}\n\n" for e in events).encode(), "text/event-stream")
 
 
+OWNER = "acct-tester"  # the account whose subscription sign-ins the tests use
+
+
 class ChatGPTTests(unittest.TestCase):
     """The subscription provider, against FakeChatGPT and a stubbed token endpoint."""
 
@@ -1405,53 +1408,60 @@ class ChatGPTTests(unittest.TestCase):
 
     def tearDown(self):
         chatgpt._token_request, chatgpt._device_request = self.orig_token, self.orig_device
-        chatgpt.sign_out()
+        chatgpt.sign_out(OWNER)
 
     def sign_in(self, *replies):
         self.device_replies[:] = replies or [(200, {"authorization_code": "the-code", "code_verifier": "the-verifier"})]
-        started = chatgpt.start_sign_in()
+        started = chatgpt.start_sign_in(OWNER)
         deadline = time.time() + 10
-        while chatgpt.status()["waiting"] and time.time() < deadline:
+        while chatgpt.status(OWNER)["waiting"] and time.time() < deadline:
             time.sleep(0.05)
         return started
 
     def test_device_sign_in_then_refresh(self):
-        self.assertFalse(chatgpt.status()["signed_in"])
+        self.assertFalse(chatgpt.status(OWNER)["signed_in"])
         started = self.sign_in((403, {}), (400, {"error": "authorization_pending"}), (200, {"authorization_code": "the-code", "code_verifier": "the-verifier"}))
         self.assertEqual((started["waiting"], started["code"], started["url"]), (True, "ABCD-1234", chatgpt.VERIFY_URL))
         self.assertEqual(self.device_calls[0], (chatgpt.DEVICE_CODE_URL, {"client_id": chatgpt.CLIENT_ID}))
         self.assertEqual(self.device_calls[1:], [(chatgpt.DEVICE_TOKEN_URL, {"device_auth_id": "dev-1", "user_code": "ABCD-1234"})] * 3)
         self.assertEqual(self.token_calls, [{"grant_type": "authorization_code", "code": "the-code", "code_verifier": "the-verifier",
                                              "redirect_uri": chatgpt.DEVICE_REDIRECT_URI, "client_id": chatgpt.CLIENT_ID}])
-        st = chatgpt.status()
+        st = chatgpt.status(OWNER)
         self.assertEqual((st["signed_in"], st["email"], st["waiting"], st["code"]), (True, "me@example.com", False, ""))
-        self.assertEqual(oct(os.stat(chatgpt._auth_file()).st_mode & 0o777), "0o600")
-        token, account = chatgpt.access_token()
+        self.assertEqual(oct(os.stat(chatgpt._auth_file(OWNER)).st_mode & 0o777), "0o600")
+        token, account = chatgpt.access_token(OWNER)
         self.assertEqual((account, len(self.token_calls)), ("acct-1", 1))  # still fresh: no refresh
-        auth = chatgpt.load()
+        self.assertEqual(chatgpt._auth_file(OWNER), store.home() / "users" / OWNER / "chatgpt-auth.json")  # kept with the account
+        self.assertFalse(chatgpt.status("someone-else")["signed_in"])  # another account's sign-in is its own
+        self.assertFalse(chatgpt.status(None)["signed_in"])  # a visitor who hasn't signed in to OpenLemma has none
+        with self.assertRaisesRegex(llm.ProviderError, "Sign in to OpenLemma first"):
+            chatgpt.start_sign_in(None)
+        auth = chatgpt.load(OWNER)
         auth["expires"] = time.time()
-        store.write_private(chatgpt._auth_file(), json.dumps(auth))
-        chatgpt.access_token()
+        store.write_private(chatgpt._auth_file(OWNER), json.dumps(auth))
+        chatgpt.access_token(OWNER)
         self.assertEqual(self.token_calls[1], {"grant_type": "refresh_token", "refresh_token": "refresh-1", "client_id": chatgpt.CLIENT_ID})
-        self.assertEqual(chatgpt.load()["refresh"], "refresh-1")
+        self.assertEqual(chatgpt.load(OWNER)["refresh"], "refresh-1")
 
     def test_a_refused_code_is_reported_and_signing_out_stops_a_sign_in(self):
         self.sign_in((400, {"error": "expired_token"}))
-        st = chatgpt.status()
+        st = chatgpt.status(OWNER)
         self.assertEqual((st["signed_in"], st["waiting"]), (False, False))
         self.assertIn("sign-in failed (400)", st["error"])
         self.assertEqual(self.token_calls, [])
         self.device_replies[:] = []
-        chatgpt.start_sign_in()
-        self.assertTrue(chatgpt.status()["waiting"])
-        chatgpt.sign_out()
-        self.assertEqual((chatgpt.status()["waiting"], chatgpt.status()["code"]), (False, ""))
+        chatgpt.start_sign_in(OWNER)
+        self.assertTrue(chatgpt.status(OWNER)["waiting"])
+        chatgpt.sign_out(OWNER)
+        self.assertEqual((chatgpt.status(OWNER)["waiting"], chatgpt.status(OWNER)["code"]), (False, ""))
 
     def test_conversation_models_and_errors(self):
-        p = llm.make_provider("chatgpt")
+        p = llm.make_provider("chatgpt", owner=OWNER)
         self.assertFalse(p.available()[0])
         with self.assertRaisesRegex(llm.ProviderError, "Sign in"):
             p.conversation("S", "<paper>x</paper>").send("task")
+        with self.assertRaisesRegex(llm.ProviderError, "Sign in"):
+            p.models()
         self.sign_in()
         self.assertEqual(p.available(), (True, ""))
         self.assertEqual([m["id"] for m in p.models()], ["gpt-6.1-sol"])
@@ -1477,7 +1487,8 @@ def caps(adaptive=True, effort=True):
 class FakeAnthropic(BaseHTTPRequestHandler):
     """A stand-in for the Anthropic Messages and Models APIs. Records each call."""
 
-    calls: list = []
+    calls: list = []  # each POST: {"headers", "body"}
+    gets: list = []  # each GET's headers
     MODELS = {"claude-opus-5-5": caps(), "claude-haiku-4-5": caps(adaptive=False, effort=False), "claude-sonnet-4-6": caps(effort=False)}
 
     def log_message(self, *args):
@@ -1495,7 +1506,8 @@ class FakeAnthropic(BaseHTTPRequestHandler):
                 "max_input_tokens": 1000000, "max_tokens": 128000, "capabilities": self.MODELS[mid]}
 
     def do_GET(self):
-        if self.headers.get("x-api-key") != "good-key":
+        FakeAnthropic.gets.append({k.lower(): v for k, v in self.headers.items()})
+        if self.headers.get("x-api-key") != "good-key" and self.headers.get("authorization") != "Bearer good-token":
             return self._send(401, json.dumps({"type": "error", "error": {"type": "authentication_error", "message": "invalid x-api-key"}}).encode())
         path = urllib.parse.urlsplit(self.path).path
         if path == "/v1/models":
@@ -1604,6 +1616,125 @@ class ClaudeTests(unittest.TestCase):
             conv.send("task", cancelled)
 
 
+class ClaudeSubscriptionTests(unittest.TestCase):
+    """Signing in with a Claude subscription, and building with its token, against FakeAnthropic and a stubbed token endpoint."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.httpd = ThreadingHTTPServer(("127.0.0.1", 0), FakeAnthropic)
+        threading.Thread(target=cls.httpd.serve_forever, daemon=True).start()
+        claude.BASE_URL = f"http://127.0.0.1:{cls.httpd.server_address[1]}"
+
+    @classmethod
+    def tearDownClass(cls):
+        claude.BASE_URL = None
+        cls.httpd.shutdown()
+        cls.httpd.server_close()
+
+    def setUp(self):
+        FakeAnthropic.calls.clear()
+        self.token_calls = []
+        self.orig_token = claude._token_request
+
+        def fake_token(fields):
+            self.token_calls.append(fields)
+            n = len(self.token_calls)
+            tokens = {"access_token": "good-token", "expires_in": 3600, "account": {"email_address": "me@example.com"}}
+            if fields["grant_type"] == "authorization_code":
+                tokens["refresh_token"] = f"refresh-{n}"  # a refresh keeps the old one
+            return tokens
+
+        claude._token_request = fake_token
+
+    def tearDown(self):
+        claude._token_request = self.orig_token
+        claude.sign_out(OWNER)
+
+    def sign_in(self):
+        started = claude.start_sign_in(OWNER)
+        state = urllib.parse.parse_qs(urllib.parse.urlsplit(started["url"]).query)["state"][0]
+        return started, claude.finish_sign_in(OWNER, f"the-code#{state}")
+
+    def test_code_sign_in_then_refresh(self):
+        self.assertFalse(claude.status(OWNER)["signed_in"])
+        with self.assertRaisesRegex(llm.ProviderError, "Start the sign-in"):
+            claude.finish_sign_in(OWNER, "code#state")
+        started = claude.start_sign_in(OWNER)
+        self.assertEqual((started["waiting"], started["signed_in"], started["code"]), (True, False, ""))
+        url = urllib.parse.urlsplit(started["url"])
+        query = {k: v[0] for k, v in urllib.parse.parse_qs(url.query).items()}
+        self.assertEqual(f"{url.scheme}://{url.netloc}{url.path}", claude.AUTHORIZE_URL)
+        self.assertEqual((query["client_id"], query["redirect_uri"], query["scope"], query["code_challenge_method"], query["code"]),
+                         (claude.CLIENT_ID, claude.REDIRECT_URI, claude.SCOPES, "S256", "true"))
+        with self.assertRaisesRegex(llm.ProviderError, "different sign-in"):
+            claude.finish_sign_in(OWNER, "the-code#not-this-state")
+        with self.assertRaisesRegex(llm.ProviderError, "Paste the code"):
+            claude.finish_sign_in(OWNER, "  ")
+        self.assertTrue(claude.status(OWNER)["waiting"])  # a bad paste doesn't end the sign-in
+        st = claude.finish_sign_in(OWNER, f"the-code#{query['state']}")
+        self.assertEqual((st["signed_in"], st["email"], st["waiting"]), (True, "me@example.com", False))
+        self.assertEqual(self.token_calls, [{"grant_type": "authorization_code", "code": "the-code", "state": query["state"], "client_id": claude.CLIENT_ID,
+                                             "redirect_uri": claude.REDIRECT_URI, "code_verifier": self.token_calls[0]["code_verifier"]}])
+        verifier = self.token_calls[0]["code_verifier"]
+        self.assertEqual(query["code_challenge"], base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest()).rstrip(b"=").decode())
+        self.assertEqual(claude._auth_file(OWNER), store.home() / "users" / OWNER / "claude-auth.json")  # kept with the account
+        self.assertEqual(oct(os.stat(claude._auth_file(OWNER)).st_mode & 0o777), "0o600")
+        self.assertFalse(claude.status("someone-else")["signed_in"])
+        self.assertFalse(claude.status(None)["signed_in"])
+        token, _ = claude.access_token(OWNER)
+        self.assertEqual((token, len(self.token_calls)), ("good-token", 1))  # still fresh: no refresh
+        auth = claude.load(OWNER)
+        auth["expires"] = time.time()
+        store.write_private(claude._auth_file(OWNER), json.dumps(auth))
+        claude.access_token(OWNER)
+        self.assertEqual(self.token_calls[1], {"grant_type": "refresh_token", "refresh_token": "refresh-1", "client_id": claude.CLIENT_ID})
+        self.assertEqual(claude.load(OWNER)["refresh"], "refresh-1")
+        claude.sign_out(OWNER)
+        self.assertEqual((claude.status(OWNER)["signed_in"], claude._auth_file(OWNER).exists()), (False, False))
+
+    def test_a_refused_code_is_reported_and_an_old_sign_in_expires(self):
+        claude.start_sign_in(OWNER)
+        with patch.object(claude, "_token_request", side_effect=llm.ProviderError("Claude sign-in failed (400). Sign in again on your account page.")):
+            with self.assertRaisesRegex(llm.ProviderError, "failed \\(400\\)"):
+                claude.finish_sign_in(OWNER, "bad-code")
+        st = claude.status(OWNER)
+        self.assertEqual((st["signed_in"], st["waiting"]), (False, False))
+        self.assertIn("sign-in failed (400)", st["error"])
+        claude.start_sign_in(OWNER)
+        claude._login(OWNER)["started"] -= claude.SIGN_IN_WAIT + 1
+        st = claude.status(OWNER)
+        self.assertEqual((st["waiting"], st["url"]), (False, ""))
+        self.assertIn("expired", st["error"])
+
+    def test_builds_with_the_token_in_place_of_a_key(self):
+        p = llm.make_provider("claude-subscription", owner=OWNER)
+        self.assertEqual((p.id, p.model, p.label), ("claude-subscription", "claude-opus-5-5", "Claude (claude-opus-5-5) with your subscription"))
+        self.assertFalse(p.available()[0])
+        with self.assertRaisesRegex(llm.ProviderError, "Sign in with your Claude account"):
+            p.models()
+        self.assertFalse(llm.make_provider("claude-subscription").available()[0])  # nobody
+        self.sign_in()
+        self.assertEqual(p.available(), (True, ""))
+        self.assertEqual([m["id"] for m in p.models()], ["claude-opus-5-5", "claude-sonnet-4-6"])
+        listed = FakeAnthropic.gets[-1]
+        self.assertEqual((listed["authorization"], listed["anthropic-beta"], "x-api-key" in listed), ("Bearer good-token", claude.OAUTH_BETA, False))
+        conv = p.conversation("SYSTEM", "<paper>text</paper>")
+        self.assertEqual(json.loads(conv.send("task").text), {"turn": 1, "model": "claude-opus-5-5"})
+        sent = FakeAnthropic.calls[-1]
+        self.assertEqual(sent["headers"]["authorization"], "Bearer good-token")
+        self.assertEqual(sent["headers"]["anthropic-beta"].split(","), [claude.OAUTH_BETA, claude.FALLBACK_BETA])  # the sign-in beta goes with the request's own
+        self.assertEqual((sent["body"]["fallbacks"], sent["body"]["thinking"]), ("default", {"type": "adaptive"}))  # otherwise the same request as with a key
+        plain = llm.make_provider("claude-subscription", model="claude-sonnet-4-6", owner=OWNER)
+        plain.conversation("SYSTEM", "<paper>text</paper>").send("task")
+        self.assertEqual(FakeAnthropic.calls[-1]["headers"]["anthropic-beta"], claude.OAUTH_BETA)  # no fallbacks: the client's own header
+        with patch.object(claude.time, "time", return_value=time.time() + 3600):  # an hour on: the token has expired
+            conv.send("repair")  # so it's refreshed between requests, and the new one sent
+        self.assertEqual(self.token_calls[-1]["grant_type"], "refresh_token")
+        self.assertEqual(FakeAnthropic.calls[-1]["headers"]["authorization"], "Bearer good-token")
+        with self.assertRaisesRegex(llm.ProviderError, "usage limit"):
+            conv.send("LIMIT")
+
+
 class ServerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -1659,7 +1790,7 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(s, 200)
         st = json.loads(raw)
         self.assertIn("library_count", st)
-        self.assertEqual({p["id"]: p["sign_in"] for p in st["providers"]}, {"opencode-go": False, "openai": False, "claude": False, "chatgpt": True})
+        self.assertEqual({p["id"]: p["sign_in"] for p in st["providers"]}, {"opencode-go": False, "openai": False, "claude": False, "chatgpt": True, "claude-subscription": True})
         self.assertFalse(st["provider"]["ok"])  # no key sent
         st = json.loads(self.req("GET", "/api/status", headers={"X-Lemma-Provider": "openai", "X-Lemma-Key": "sk-secret-123", "X-Lemma-Model": "m"})[1])
         self.assertEqual((st["provider"]["id"], st["provider"]["model"], st["provider"]["ok"]), ("openai", "m", True))
@@ -1783,7 +1914,7 @@ class HostedServerTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             server.make_server(0, host="0.0.0.0")
 
-    def test_answers_its_domain_and_drops_chatgpt_sign_in(self):
+    def test_answers_its_domain_and_offers_every_provider(self):
         httpd = server.make_server(0, host="0.0.0.0", allowed_hosts=("tools.example.com",))
         port = httpd.server_address[1]
         threading.Thread(target=httpd.serve_forever, daemon=True).start()
@@ -1801,12 +1932,11 @@ class HostedServerTests(unittest.TestCase):
             s, raw = req("GET", "/api/status", site)
             self.assertEqual(s, 200)
             offered = {p["id"] for p in json.loads(raw)["providers"]}
-            self.assertNotIn("chatgpt", offered)  # the one thing a hosted server leaves out
-            self.assertIn("claude", offered)  # the keyed providers are all still there
+            self.assertEqual(offered, set(llm.PROVIDERS))  # the subscriptions too: nothing is local-only
             self.assertEqual(req("GET", "/api/status", {"Host": "evil.example"})[0], 403)
-            self.assertEqual(req("GET", "/api/chatgpt", site)[0], 404)
-            self.assertEqual(req("POST", "/api/chatgpt/login", dict(site, Origin="https://tools.example.com"))[0], 404)
-            self.assertEqual(req("GET", "/api/models", dict(site, **{"X-Lemma-Provider": "chatgpt"}))[0], 400)
+            self.assertEqual(req("GET", "/api/signin/chatgpt", site)[0], 401)  # a sign-in belongs to an account
+            self.assertEqual(req("POST", "/api/signin/claude-subscription/login", dict(site, Origin="https://tools.example.com"))[0], 401)
+            self.assertEqual(req("GET", "/api/models", dict(site, **{"X-Lemma-Provider": "chatgpt"}))[0], 400)  # nobody's sign-in
         finally:
             httpd.shutdown()
             httpd.server_close()

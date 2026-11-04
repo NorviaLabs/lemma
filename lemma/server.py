@@ -20,7 +20,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib import resources
 from urllib.parse import parse_qs, quote, urlsplit
 
-from . import __version__, auth, categorize, chatgpt, export, feedback, generate, ingest, jev, levels, logs, metrics, search, store
+from . import __version__, auth, categorize, chatgpt, claude, export, feedback, generate, ingest, jev, levels, logs, metrics, search, store
 from . import lesson as L
 from .llm import DEFAULT_PROVIDER, PROVIDERS, ProviderError, make_provider
 
@@ -29,10 +29,9 @@ STATIC = resources.files("lemma").joinpath("static")
 EXAMPLES = resources.files("lemma").joinpath("examples")
 
 DEV = False  # set by `lemma --dev`: live-reload script and /api/dev/events
-# The one difference between running on your own computer and hosting for others: the ChatGPT subscription, offered
-# only by a server bound to this computer, since it keeps one person's ChatGPT tokens on the server's disk. Everything
-# else behaves the same either way, so this is read only by providers(), _chatgpt_only() and make_server (which binds
-# the address and port and allows live reload); tests/test_one_behaviour.py fails if it is read anywhere else.
+# Whether the server is bound to loopback. Lemma behaves the same on your own computer as hosted for others; this
+# only decides how it binds (the address and port, live reload, opening the browser), so it is read only by
+# make_server and __main__.main; tests/test_one_behaviour.py fails if it is read anywhere else.
 ON_THIS_COMPUTER = True
 LOCAL_HOSTS = ("localhost", "127.0.0.1", "[::1]")
 ALLOWED_HOSTS: tuple[str, ...] = LOCAL_HOSTS  # Host header names Lemma answers; `--allowed-hosts` adds more
@@ -92,17 +91,11 @@ def provider_from_request(pid: str | None = None):
         raise ApiError(400, "Save this provider on your account page first.")
     if req_pid not in PROVIDERS:  # e.g. one OpenLemma used to offer, still saved in the learner's browser
         raise ApiError(400, "OpenLemma doesn't offer this AI provider. Choose another on your account page.")
-    if req_pid not in providers():
-        raise ApiError(400, "This provider is only available when OpenLemma runs on your own computer.")
+    user = getattr(REQUEST, "user", None)
     try:
-        return make_provider(req_pid, key, model)
+        return make_provider(req_pid, key, model, user["id"] if user else None)  # a subscription builds with this account's sign-in
     except ProviderError as e:
         raise ApiError(400, str(e)) from None
-
-
-def providers() -> dict:
-    """The providers this server offers: all of them, except the ChatGPT subscription when hosted for others."""
-    return {i: p for i, p in PROVIDERS.items() if i != "chatgpt" or ON_THIS_COMPUTER}
 
 
 def load_example() -> tuple[dict, str]:
@@ -160,7 +153,7 @@ def api_status(_body):
     status = {
         "version": __version__,
         "provider": {"id": p.id, "name": p.name, "model": p.model, "label": p.label, "ok": ok, "message": msg},
-        "providers": [{"id": i.id, "name": i.name, "default_model": i.default_model, "key_url": i.key_url, "sign_in": not i.key_url} for i in providers().values()],
+        "providers": [{"id": i.id, "name": i.name, "default_model": i.default_model, "key_url": i.key_url, "sign_in": not i.key_url} for i in PROVIDERS.values()],
         "library_count": len(store.list_lessons(_owner())) if getattr(REQUEST, "user", None) else 0,
         "user": getattr(REQUEST, "user", None),
         "level": store.settings(_owner()).get("level", levels.DEFAULT) if getattr(REQUEST, "user", None) else levels.DEFAULT,
@@ -178,6 +171,9 @@ def api_status(_body):
 def api_models(_body):
     """Models offered by the provider in the request headers, read live with the learner's key. Also checks the key."""
     p = provider_from_request()
+    ok, msg = p.available()
+    if not ok:  # no key, or no sign-in: the learner's to fix, not the provider's
+        raise ApiError(400, msg)
     try:
         models = p.models()
     except ProviderError as e:
@@ -185,29 +181,29 @@ def api_models(_body):
     return {"provider": p.id, "models": models, "current": p.model}
 
 
-def _chatgpt_only():
-    if not ON_THIS_COMPUTER:
-        raise ApiError(404, "Not found.")
+SIGN_INS = {"chatgpt": chatgpt, "claude-subscription": claude}  # providers signed in to with a subscription, per account
 
 
-def api_chatgpt(_body):
-    _chatgpt_only()
-    return chatgpt.status()
+def api_sign_in(pid):
+    return SIGN_INS[pid].status(_owner())
 
 
-def api_chatgpt_login(_body):
-    """Starts a ChatGPT sign-in: the browser opens the returned page, where the learner enters the returned code."""
-    _chatgpt_only()
+def api_sign_in_login(pid):
+    """Starts a subscription sign-in, or finishes one. ChatGPT: the browser opens the returned page, where the learner
+    enters the returned code, and OpenLemma notices. Claude: the browser opens the returned page, which shows the
+    learner a code once they approve, and they send it back here as ``code``."""
+    owner = _owner()
     try:
-        return chatgpt.start_sign_in()
+        if pid == "claude-subscription" and REQUEST.body.get("code"):
+            return claude.finish_sign_in(owner, str(REQUEST.body["code"]))
+        return SIGN_INS[pid].start_sign_in(owner)
     except ProviderError as e:
         raise ApiError(409, str(e)) from None
 
 
-def api_chatgpt_logout(_body):
-    _chatgpt_only()
-    chatgpt.sign_out()
-    return chatgpt.status()
+def api_sign_in_logout(pid):
+    SIGN_INS[pid].sign_out(_owner())
+    return SIGN_INS[pid].status(_owner())
 
 
 @contextmanager
@@ -954,9 +950,9 @@ ROUTES = [
     ("DELETE", r"/api/requests/([a-f0-9]{12})", api_request_delete, True),
     ("GET", r"/api/status", api_status, False),
     ("GET", r"/api/models", api_models, False),
-    ("GET", r"/api/chatgpt", api_chatgpt, False),
-    ("POST", r"/api/chatgpt/login", api_chatgpt_login, False),
-    ("POST", r"/api/chatgpt/logout", api_chatgpt_logout, False),
+    ("GET", r"/api/signin/(chatgpt|claude-subscription)", api_sign_in, True),
+    ("POST", r"/api/signin/(chatgpt|claude-subscription)/login", api_sign_in_login, True),
+    ("POST", r"/api/signin/(chatgpt|claude-subscription)/logout", api_sign_in_logout, True),
     ("POST", r"/api/papers", api_papers, False),
     ("POST", r"/api/search", api_search, False),
     ("GET", r"/api/search/([a-f0-9]{12})", api_search_status, True),
@@ -1317,7 +1313,7 @@ def make_server(port: int = 8765, exact: bool = False, host: str = "127.0.0.1", 
     """`exact` binds the given port or fails; otherwise the next free port is used.
 
     Listening on any address but loopback hosts Lemma for others: it answers only the `allowed_hosts` (the public
-    domain names it is reached by), binds exactly `port`, and doesn't offer the ChatGPT subscription.
+    domain names it is reached by) and binds exactly `port`.
     """
     global ON_THIS_COMPUTER, ALLOWED_HOSTS, DEV
     ON_THIS_COMPUTER = host in ("127.0.0.1", "localhost", "::1")

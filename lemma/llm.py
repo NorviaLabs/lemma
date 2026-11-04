@@ -10,6 +10,10 @@ and replies with text.
 * **OpenAI**, at ``https://api.openai.com/v1``, with an OpenAI API key.
 * **Claude**, through the Anthropic API with a Claude API key (see ``claude.py``).
 * **ChatGPT**, with the learner's ChatGPT subscription instead of a key (see ``chatgpt.py``).
+* **Claude subscription**, with the learner's Claude Pro or Max subscription instead of a key (see ``claude.py``).
+
+The subscriptions are signed in to on the account page; the server keeps each account's tokens in its own
+folder and builds with the account's sign-in, wherever Lemma runs.
 """
 
 from __future__ import annotations
@@ -55,8 +59,9 @@ PROVIDERS = {
         ProviderInfo("opencode-go", "OpenCode Go", "https://opencode.ai/zen/go/v1", "gpt-5.6-luna", "https://opencode.ai/auth", "x-opencode-session"),
         ProviderInfo("openai", "OpenAI", "https://api.openai.com/v1", "gpt-6.1-sol", "https://platform.openai.com/api-keys"),
         ProviderInfo("claude", "Claude", "https://api.anthropic.com", "claude-opus-5-5", "https://platform.claude.com/settings/keys"),
-        # Signs in with a ChatGPT subscription instead of a key; see chatgpt.py. Only for Lemma on the learner's own computer.
+        # Signed in to with a subscription instead of a key: no key_url. See chatgpt.py and claude.py.
         ProviderInfo("chatgpt", "ChatGPT", "https://chatgpt.com/backend-api/codex", "gpt-6.1-sol", ""),
+        ProviderInfo("claude-subscription", "Claude subscription", "https://api.anthropic.com", "claude-opus-5-5", ""),
     )
 }
 DEFAULT_PROVIDER = "opencode-go"
@@ -228,7 +233,8 @@ class HTTPConversation(Conversation):
         return Reply(text=reply, stop_reason="max_tokens" if finish == "length" else "end_turn")
 
 
-def make_provider(provider_id: str | None, key: str = "", model: str = "") -> Provider:
+def make_provider(provider_id: str | None, key: str = "", model: str = "", owner: str | None = None) -> Provider:
+    """`owner` is the account whose subscription sign-in a signed-in provider builds with; None is nobody."""
     info = PROVIDERS.get(provider_id or DEFAULT_PROVIDER)
     if info is None:
         raise ProviderError("Unknown AI provider.")
@@ -236,8 +242,12 @@ def make_provider(provider_id: str | None, key: str = "", model: str = "") -> Pr
         from .claude import ClaudeProvider
 
         return ClaudeProvider(key, model)
+    if info.id == "claude-subscription":
+        from .claude import ClaudeSubscriptionProvider
+
+        return ClaudeSubscriptionProvider(model, owner)
     if info.id == "chatgpt":
         from .chatgpt import ChatGPTProvider
 
-        return ChatGPTProvider(model)
+        return ChatGPTProvider(model, owner)
     return HTTPProvider(info, key, model)
