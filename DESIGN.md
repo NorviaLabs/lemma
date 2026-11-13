@@ -428,6 +428,7 @@ One name for each thing, everywhere: the app, the static pages, error messages a
 | What you bring or OpenLemma finds | **source** (papers, articles and chapters are kinds of source) | "paper" as the generic word, "resource" |
 | The finished thing | **lesson** | "combined lesson" |
 | Making a lesson | **build** ("Building", "Cancel build", "Retry build") | "job", "repairs" |
+| Carrying on a stopped build whose outline was approved | **Continue building** (keeps the outline and the finished concepts) · **Start over** (a new outline; finished concepts are deleted, after asking) | "Resume", "Restart", "Retry" for either one |
 | Unfinished builds in the Library | **In progress** | "Builds" as a heading |
 | Starting a lesson | **New lesson** | "Make a lesson", "Start a lesson" |
 | The proposed list of concepts | **outline** | "path of concepts" |

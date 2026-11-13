@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import shutil
 import tempfile
 from pathlib import Path
 
@@ -167,3 +168,37 @@ def list_requests(owner: str | None = None) -> list[dict]:
         except (OSError, ValueError):
             continue
     return sorted(records, key=lambda r: r.get("created", 0), reverse=True)
+
+
+class BuiltConcepts:
+    """The concepts one build has finished and that passed every check, each saved the moment it does, so a build the
+    server stopped can carry on from them instead of paying for them again (see generate.build_lesson, which decides
+    which of them still fit). One private file per concept, beside the build's request: requests/<id>.concepts/."""
+
+    def __init__(self, rid: str, owner: str | None = None):
+        self.dir = request_path(rid, owner).with_suffix(".concepts")
+
+    def load(self) -> dict[str, dict]:
+        """Every saved concept by its id; a file that can't be read is skipped, so its concept is built again."""
+        saved = {}
+        for path in sorted(self.dir.glob("*.json")) if self.dir.is_dir() else ():
+            try:
+                entry = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                continue
+            if isinstance(entry, dict):
+                saved[path.stem] = entry
+        return saved
+
+    def save(self, cid: str, entry: dict):
+        if not ID_RE.fullmatch(cid or ""):
+            raise KeyError(cid)
+        self.dir.mkdir(mode=0o700, exist_ok=True)
+        write_private(self.dir / f"{cid}.json", json.dumps(entry, ensure_ascii=False))
+
+    def discard(self, cid: str):
+        if ID_RE.fullmatch(cid or ""):
+            (self.dir / f"{cid}.json").unlink(missing_ok=True)
+
+    def clear(self):
+        shutil.rmtree(self.dir, ignore_errors=True)

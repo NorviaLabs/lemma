@@ -250,7 +250,7 @@
     return word ? `${word}: ${m[3]}` : p;
   }
 
-  const STATE_MARK = { waiting: "", active: "", done: "check", failed: "cross", skipped: "dash" };
+  const STATE_MARK = { waiting: "", active: "", done: "check", failed: "cross", skipped: "dash", stopped: "dash" };
   const clock = (sec) => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, "0")}`;
 
   /* A build's progress: how many concepts are ready, then each step with what it's doing now, how long it has
@@ -280,7 +280,8 @@
       }
       return r;
     }
-    function update(steps, now) {
+    // `stopped` is what to say for a build that stopped before it had any concepts to count.
+    function update(steps, now, stopped) {
       offset = now ? Date.now() / 1000 - now : 0;  // the server's clock against this one, for the timers
       const concepts = steps.filter((s) => s.label.startsWith("Concept "));
       const ready = concepts.filter((s) => s.state === "done").length, out = concepts.filter((s) => s.state === "failed").length;
@@ -290,7 +291,7 @@
         bar.value = ready + out;
       } else {
         const active = steps.find((s) => s.state === "active");
-        count.textContent = active ? active.label : "Getting started…";
+        count.textContent = active ? active.label : stopped || "Getting started…";
         bar.removeAttribute("value");  // no count yet: an indeterminate bar
       }
       if (count.textContent !== lastSaid) { said.textContent = lastSaid = count.textContent; }
@@ -1424,6 +1425,67 @@
   }
 
   const STOPPED_TITLES = { error: "This build stopped", interrupted: "This build was interrupted", cancelled: "You cancelled this build" };
+  const STOPPED_STATES = Object.keys(STOPPED_TITLES);
+
+  /* A stopped build with an approved outline (`resume` from the server) carries on only as the learner chooses:
+     continue it, keeping the outline and its finished concepts, or start over from a new outline. */
+  const modelName = (m) => `${m.name}${m.model ? ` (${m.model.replace(/-/g, "\u2011")})` : ""}`;  // non-breaking hyphens: a model's name never splits
+  // Said only when a model other than the learner's current one built the finished concepts; it blocks nothing.
+  function keptByAnotherModel(resume) {
+    const now = status.provider || {};
+    const by = resume.built_with || [];
+    if (!resume.kept || !now.ok || !by.some((m) => m.name !== now.name || m.model !== now.model)) return "";
+    const all = by.length + (by.some((m) => m.name === now.name && m.model === now.model) ? 0 : 1);
+    return `The ${plural(resume.kept, "finished concept")} ${resume.kept === 1 ? "was" : "were"} built with ${new Intl.ListFormat("en").format(by.map(modelName))}. `
+      + `The rest will use ${modelName(now)}, your current model, and the lesson will name ${all === 2 ? "both" : "each of them"}.`;
+  }
+  // Sources that couldn't be read (`resume.excluded`, their titles): Continue builds without them; Start over tries them again.
+  const unread = (titles) => `${plural(titles.length, "source")} couldn't be read: ${new Intl.ListFormat("en").format(titles.map((t) => `“${t}”`))}.`;
+  const theUnread = (titles) => `${titles.length === 1 ? "the source" : `the ${titles.length} sources`} that couldn't be read`;
+  function continueWords(resume) {
+    const n = resume.kept, left = resume.total - n, from = (resume.excluded || []).length ? ", from the sources that were read" : "";
+    if (!n) return `Builds the ${plural(resume.total, "concept")} in the outline you approved${from}, without reviewing it again.`;
+    return `Keeps your approved outline and the ${plural(n, "finished concept")}, then ` + (left ? `builds the ${plural(left, "concept")} that's left${from}.` : "saves your lesson.");
+  }
+  const startOverWords = (n, excluded = []) => (excluded.length
+    ? `Tries ${theUnread(excluded)} once more, then proposes a new outline from your sources for you to review.`
+    : "Proposes a new outline from the same sources for you to review.") + (n ? ` The ${plural(n, "finished concept")} ${n === 1 ? "is" : "are"} deleted.` : "");
+  const startOverQuestion = (n) => `Start over? The ${plural(n, "finished concept")} will be deleted. This can't be undone.`;
+
+  function resumeCard(s, retryWith) {
+    const r = s.resume, n = r.kept;
+    const why = { interrupted: "OpenLemma stopped before your lesson was finished.", error: "The build stopped before your lesson was finished.",
+                  cancelled: "You cancelled the build before your lesson was finished." }[s.status];
+    const other = keptByAnotherModel(r);
+    const cont = h("button", { class: "primary", onclick: () => retryWith("continue", cont) }, "Continue building");
+    const start = h("div", { class: "resume-opt" });
+    const drawStart = (asking) => {
+      start.className = "resume-opt" + (asking ? " is-asking" : "");
+      if (asking) {
+        const yes = h("button", { class: "lib-yes", onclick: () => retryWith("start_over", yes) }, "Delete and start over");
+        const no = h("button", { class: "ghost", onclick: () => { drawStart(false); start.querySelector("button").focus(); } }, "Keep them");
+        start.onkeydown = (e) => { if (e.key === "Escape") { e.preventDefault(); no.click(); } };
+        start.replaceChildren(h("p", { id: `resume-ask-${s.id}` }, startOverQuestion(n)), h("div", { class: "resume-ask-btns" }, yes, no));
+        start.setAttribute("role", "group");
+        start.setAttribute("aria-labelledby", `resume-ask-${s.id}`);
+        no.focus();
+      } else {
+        start.onkeydown = null;
+        start.removeAttribute("role");
+        start.removeAttribute("aria-labelledby");
+        const btn = h("button", { onclick: () => (n ? drawStart(true) : retryWith("start_over", btn)) }, "Start over");
+        start.replaceChildren(btn, h("p", {}, startOverWords(n, r.excluded)));
+      }
+    };
+    drawStart(false);
+    return h("section", { class: "resume", "aria-labelledby": `resume-title-${s.id}` },
+      h("h2", { id: `resume-title-${s.id}` }, "How would you like to carry on?"),
+      h("p", { class: "resume-lead" }, `${why} ` + (n ? `Your approved outline and the ${plural(n, "finished concept")} are kept.` : "Your approved outline is kept. No concepts were finished yet.")
+        + ((r.excluded || []).length ? ` ${unread(r.excluded)}` : "")),
+      h("div", { class: "resume-opt" }, cont, h("p", {}, continueWords(r)),
+        other ? h("p", { class: "resume-model" }, other + " ", h("a", { href: "#/settings" }, "Change model")) : null),
+      start);
+  }
 
   function showRequest(id) {
     session.requestId = id;
@@ -1431,20 +1493,24 @@
     setTitle("Preparing your lesson");
     const title = h("h1", {}, "Preparing your lesson"), progress = buildProgress(), steps = progress.el, warnings = h("div"), errors = h("div");
     const eta = h("p", { class: "muted", role: "status" }, "Estimating time remaining…");
-    const open = h("button", { class: "primary", disabled: true }, "Start the first concept");
+    const open = h("button", { class: "primary", disabled: true }, "Start the first concept"), choice = h("div");
     const cancel = h("button", { class: "ghost", onclick: async () => {
       try { await api(`/api/requests/${id}/cancel`, {}); showRequest(id); } catch (e) { errors.replaceChildren(errorBox(e.message)); }
     } }, "Cancel build");
-    const retry = h("button", { class: "primary", hidden: true, onclick: async () => {
+    // `mode` is the learner's choice for a build with an approved outline ("continue" or "start_over"); null otherwise.
+    const retryWith = async (mode, btn) => {
       const begin = async () => {
-        try { await api(`/api/requests/${id}/retry`, {}); showRequest(id); } catch (e) { errors.replaceChildren(errorBox(e.message)); }
+        if (btn) busy(btn, true);
+        try { await api(`/api/requests/${id}/retry`, mode ? { mode } : {}); showRequest(id); }
+        catch (e) { if (btn) busy(btn, false); errors.replaceChildren(errorBox(e.message)); }
       };
-      if (!(status.provider || {}).ok) return showConnect(begin);
+      if (!(status.provider || {}).ok) return showConnect(begin);  // the choice carries through: no second question
       await begin();
-    } }, "Retry build");
+    };
+    const retry = h("button", { class: "primary", hidden: true, onclick: () => retryWith(null, retry) }, "Retry build");
     view(h("section", { class: "panel" }, title,
       h("p", { class: "muted" }, "You can leave this page and come back with this link or from your Library. Finished lessons are saved automatically."),
-      eta, steps, warnings, errors, h("div", { class: "actions" }, open, cancel, retry, h("a", { href: "#/library", class: "btn ghost" }, "Library"))));
+      eta, errors, choice, steps, warnings, h("div", { class: "actions" }, open, cancel, retry, h("a", { href: "#/library", class: "btn ghost" }, "Library"))));
     const poll = async () => {
       if (location.hash !== `#/request/${id}`) return;
       try {
@@ -1455,18 +1521,23 @@
         }
         title.textContent = s.status === "running" ? "Building your lesson" : s.status === "done" ? "Your lesson is ready" : STOPPED_TITLES[s.status] || "This build stopped";
         setTitle(title.textContent);
-        progress.update(s.steps || [], s.now);
+        const stopped = STOPPED_STATES.includes(s.status), choosing = stopped && !!s.resume;
+        progress.update(s.steps || [], s.now, stopped ? (choosing ? "Stopped before any concept was built" : "Stopped before the outline was ready") : "");
         warnings.replaceChildren(...(s.warnings || []).map((w) => h("p", { class: "note" }, typeof w === "string" ? w : JSON.stringify(w))));
         // A build that stopped with an error can be reported from here, with the build's id.
-        errors.replaceChildren(s.error && s.status !== "cancelled" ? errorBox(s.error, null, s.status === "error" && /^[0-9a-f]{12}$/.test(id)
+        // With a choice to make, the card says why it stopped, unless it was an error, which keeps its box and "Report this".
+        errors.replaceChildren(s.error && s.status !== "cancelled" && !(choosing && s.status === "interrupted") ? errorBox(s.error, null, s.status === "error" && /^[0-9a-f]{12}$/.test(id)
           ? { kind: "build", request_id: id, error_id: (s.error.match(ERROR_ID) || [])[1] } : null) : "");
+        choice.replaceChildren(choosing ? resumeCard(s, retryWith) : "");
+        eta.hidden = choosing;
         eta.textContent = s.status !== "running" ? (s.status === "done" ? "Checked and saved to your library." : "You can retry with the same source selections.")
           : s.eta_seconds ? `About ${Math.max(1, Math.ceil(s.eta_seconds[0] / 60))}–${Math.max(1, Math.ceil(s.eta_seconds[1] / 60))} minutes left. Concepts that need fixing can take longer.` : "Estimating time remaining…";
         open.disabled = !s.lesson?.concepts?.length && s.status !== "done";
         open.textContent = s.status === "done" ? "Open lesson" : "Start the first concept";
+        open.className = choosing ? "" : "primary";  // one primary on the page: with a choice to make, it's Continue building
         open.onclick = () => openLesson(s.status === "done" ? s.result : s.lesson, s.status === "done" ? { saved: true } : { live: id, request: true });
         cancel.hidden = s.status !== "running";
-        retry.hidden = !["error", "cancelled", "interrupted"].includes(s.status);
+        retry.hidden = !stopped || choosing;
         if (s.status === "running") pollTimer = setTimeout(poll, 1500);
       } catch (e) {
         errors.replaceChildren(errorBox(e.message), h("button", { class: "small", onclick: poll }, "Reconnect"));
@@ -1504,7 +1575,10 @@
         else if (s.status === "done") { session.lesson = s.result; player.update(s.result); }
         else if (["error", "cancelled", "interrupted"].includes(s.status)) {
           if (s.lesson) { const l = Object.assign({}, s.lesson); delete l.plan; player.update(l); }
-          alertInline(`${STOPPED_TITLES[s.status] || "This build stopped"}. You can retry it from your Library.${s.status !== "cancelled" && s.error ? ` ${s.error}` : ""}`);
+          const reason = s.status === "error" && s.error ? ` ${s.error}` : "";
+          if (s.resume && s.resume.kept) alertInline(`${STOPPED_TITLES[s.status]}. The concepts it finished are kept. Continue it or start over from the build's page.${reason}`,
+            null, { label: "Continue or start over", run: () => showRequest(jobId) });
+          else alertInline(`${STOPPED_TITLES[s.status] || "This build stopped"}. You can retry it from your Library.${s.status !== "cancelled" && s.error ? ` ${s.error}` : ""}`);
         }
       };
       pollTimer = setTimeout(poll, 1500);
@@ -1521,10 +1595,12 @@
     }
   }
 
-  function alertInline(msg, problems) {
+  // `action` ({label, run}) adds a way to deal with it, beside Dismiss.
+  function alertInline(msg, problems, action) {
     const box = errorBox(msg, problems);
     box.classList.add("floating");
-    box.append(h("button", { class: "small", onclick: () => box.remove() }, "Dismiss"));
+    const dismiss = h("button", { class: "small", onclick: () => box.remove() }, "Dismiss");
+    box.append(action ? h("div", { class: "floating-acts" }, h("button", { class: "small", onclick: () => { box.remove(); action.run(); } }, action.label), dismiss) : dismiss);
     document.body.append(box);
   }
 
@@ -1588,6 +1664,42 @@
       : d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: d.getFullYear() === now.getFullYear() ? undefined : "numeric" });
     const time = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
     return h("time", { datetime: d.toISOString() }, withTime && ago < 2 ? `${date} at ${time}` : date);
+  }
+
+  /* Choose inside a stopped build's row: continue it or start over, in a neutral wash. Starting over with finished
+     concepts asks once more, in red, before deleting them. Escape or "Not now" puts the row back. */
+  function choose(li, opener, r, start) {
+    const acts = li.querySelector(".lib-acts"), n = r.resume.kept;
+    li.querySelector(".lib-msg").hidden = true;
+    const qid = `choose-${li.dataset.key.replace(/\W/g, "")}`;
+    const box = h("div", { class: "lib-choice", role: "group", "aria-labelledby": qid });
+    const close = () => { li.classList.remove("is-choosing", "is-asking"); box.remove(); acts.hidden = false; opener.focus(); };
+    const draw = (confirming) => {
+      li.classList.toggle("is-choosing", !confirming);
+      li.classList.toggle("is-asking", confirming);
+      const other = keptByAnotherModel(r.resume);
+      if (confirming) {
+        const yes = h("button", { type: "button", class: "small lib-yes", onclick: () => start("start_over", yes) }, "Delete and start over");
+        const no = h("button", { type: "button", class: "small ghost", onclick: () => draw(false) }, "Keep them");
+        box.onkeydown = (e) => { if (e.key === "Escape") { e.preventDefault(); draw(false); } };
+        box.replaceChildren(h("p", { id: qid }, startOverQuestion(n)), h("div", { class: "lib-choice-btns" }, yes, no));
+        no.focus();
+      } else {
+        const cont = h("button", { type: "button", class: "small primary", onclick: () => start("continue", cont) }, "Continue building");
+        const over = h("button", { type: "button", class: "small", onclick: () => (n ? draw(true) : start("start_over", over)) }, "Start over");
+        box.onkeydown = (e) => { if (e.key === "Escape") { e.preventDefault(); close(); } };
+        box.replaceChildren(
+          h("p", { id: qid }, (n ? `Continue with your approved outline and the ${plural(n, "finished concept")}, or start over with a new outline?`
+            : "Continue with your approved outline, or start over with a new outline?")
+            + ((r.resume.excluded || []).length ? ` Starting over tries ${theUnread(r.resume.excluded)} once more.` : "")),
+          other ? h("p", { class: "resume-model" }, other) : null,
+          h("div", { class: "lib-choice-btns" }, cont, over, h("button", { type: "button", class: "small ghost", onclick: close }, "Not now")));
+        cont.focus();
+      }
+    };
+    acts.hidden = true;
+    li.append(box);
+    draw(false);
   }
 
   /* Ask inside the row: the question, the action in red and a way out. Escape or "Keep" puts the row back. */
@@ -1659,7 +1771,9 @@
         h("span", { class: "lib-mark", "aria-hidden": "true" }, st.mark === "running" ? null : icon({ outline: "doc", failed: "cross", stopped: "dash" }[st.mark])),
         h("div", { class: "lib-text" },
           h("h3", { class: "lib-title" }, h("a", { class: "lib-open", href: `#/request/${r.id}` }, title)),
-          h("p", { class: "lib-meta" }, h("span", { class: "lib-state" }, st.says), r.created ? h("span", {}, "Started ", when(r.created, true)) : null)),
+          h("p", { class: "lib-meta" }, h("span", { class: "lib-state" }, st.says),
+            r.resume && r.resume.kept ? h("span", {}, `${r.resume.kept} of ${r.resume.total} concepts kept`) : null,
+            r.created ? h("span", {}, "Started ", when(r.created, true)) : null)),
         acts, h("p", { class: "lib-msg", role: "alert", hidden: true }));
       const del = () => h("button", { type: "button", class: "small danger lib-del", "aria-label": `Delete the build “${title}”`, onclick: (e) => ask(li, e.currentTarget, {
         question: "Delete this build? Its sources and progress go with it.", yes: "Delete build", busyText: "Deleting…", no: "Keep it",
@@ -1673,7 +1787,7 @@
       if (r.status === "running") {
         acts.append(h("a", { class: "btn small", href: `#/request/${r.id}` }, "View progress"),
           h("button", { type: "button", class: "small danger lib-del", onclick: (e) => ask(li, e.currentTarget, {
-            question: "Cancel this build? Retrying later starts again from reading the sources.", yes: "Cancel build", busyText: "Cancelling…", no: "Keep building",
+            question: "Cancel this build? The concepts it has finished are kept, so you can continue it later.", yes: "Cancel build", busyText: "Cancelling…", no: "Keep building",
             act: async () => {
               try { await api(`/api/requests/${r.id}/cancel`, {}); } catch (err) { return refuse(key, err.message); }
               await new Promise((ok) => setTimeout(ok, 600));  // the build stops between steps
@@ -1684,16 +1798,19 @@
       } else if (r.status === "awaiting_outline") {
         acts.append(h("a", { class: "btn small", href: `#/request/${r.id}` }, "Review outline"), del());
       } else {
-        const retry = h("button", { type: "button", class: "small", onclick: async () => {
+        // `mode` is the learner's choice for a build with an approved outline; null for one without.
+        const start = async (mode, btn) => {
           const begin = async () => {
-            try { await api(`/api/requests/${r.id}/retry`, {}); showRequest(r.id); }
+            try { await api(`/api/requests/${r.id}/retry`, mode ? { mode } : {}); showRequest(r.id); }
             catch (err) { if (body.isConnected) refuse(key, err.message); else alertInline(err.message); }
           };
           if (!(status.provider || {}).ok) return showConnect(begin);
-          busy(retry, true);
+          busy(btn, true);
           await begin();
-          busy(retry, false);
-        } }, icon("refresh"), "Retry build");
+          busy(btn, false);
+        };
+        const retry = h("button", { type: "button", class: "small", onclick: () => (r.resume ? choose(li, retry, r, start) : start(null, retry)) },
+          icon("refresh"), "Retry build");
         acts.append(retry, del());
         if (r.status === "error" && status.user && /^[0-9a-f]{12}$/.test(r.id)) acts.append(reportRow(li, r.id));
       }
@@ -1787,7 +1904,9 @@
         h("ul", { class: "lib-list" }, rows), noneEl);
     }
 
+    let drawn = "";  // the signature of what the list shows
     function draw() {
+      drawn = signature();
       // Redrawn in place, so focus stays on the same control of the same row wherever it still exists.
       const at = document.activeElement, atRow = at?.closest?.("[data-key]");
       const keep = atRow && body.contains(atRow) ? [atRow.dataset.key, [...atRow.querySelectorAll("a, button")].indexOf(at)] : null;
@@ -1817,14 +1936,14 @@
     }
     const reload = async () => { try { await load(); } catch (e) { /* keep what's shown */ } draw(); };
 
-    // While a build runs, check on it, and redraw only when something changed and no question is open.
+    // While a build runs, check on it, and redraw only when something changed and no question is open. It compares
+    // with what was last drawn, not last loaded, so a change that arrives while a question is open is drawn once it closes.
     const signature = () => builds.map((r) => r.id + r.status).join() + "|" + lessons.map((l) => l.id).join();
     async function poll() {
       if (!body.isConnected) return;
-      const before = signature();
       try { await load(); } catch (e) { pollTimer = setTimeout(poll, 8000); return; }
       if (!body.isConnected) return;
-      if (signature() !== before && !body.querySelector(".is-asking, .is-reporting")) draw();
+      if (signature() !== drawn && !body.querySelector(".is-asking, .is-choosing, .is-reporting")) draw();
       else pollTimer = setTimeout(poll, 4000);
     }
 

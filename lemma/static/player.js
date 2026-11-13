@@ -185,6 +185,15 @@
         })));
     }
 
+    /* Who made the lesson: every model that built one of its concepts, in the order they first did (``made_with``),
+       or, for a lesson from before that was recorded, its one provider. */
+    function madeWith(lesson) {
+      const named = (p) => p && typeof p.name === "string" && p.name ? `${p.name}${p.model ? ` (${p.model})` : ""}` : "";
+      const all = [...new Set((Array.isArray(lesson.made_with) ? lesson.made_with : []).map(named).filter(Boolean))];
+      const who = all.length ? new Intl.ListFormat("en").format(all) : named(lesson.provider);
+      return who ? ` Made with ${who}.` : "";
+    }
+
     function showIntro() {
       S.view = "intro";
       const src = lesson.source || {}, intro = lesson.intro || {};
@@ -206,7 +215,7 @@
             h("p", {}, `${primer().length} short pages: ${primer().map((pg) => pg.heading).join(" · ")}. Then explore each idea through examples and activities.`)) : null,
           slots.actions = introActions(),
           h("p", { class: "muted small" }, concepts().some((c) => c.model) ? "The models are simplified teaching models, not the sources' data. " : "", DISCLAIMER,
-            lesson.provider && lesson.provider.name && !lesson.example ? ` Made with ${lesson.provider.name}${lesson.provider.model ? ` (${lesson.provider.model})` : ""}.` : "")),
+            lesson.example ? "" : madeWith(lesson))),
         slots.hall = hall(`${shownPlan().length} concepts`)));
     }
 

@@ -10,6 +10,7 @@ from unittest.mock import patch
 from types import SimpleNamespace
 
 from lemma import generate, ingest, server, store
+from lemma import lesson as L
 
 
 def _raise(e):
@@ -330,6 +331,158 @@ class RequestTests(unittest.TestCase):
         self.assertEqual(server.api_request(rid)['status'], 'cancelled')
         server.api_request_delete(rid)
         self.assertFalse(store.request_path(rid, TESTER).exists())
+
+    # ------------------------------------------------------------ sources that couldn't be read
+
+    BLOCKED = 'https://blocked.example/b'
+
+    def partly_read(self):
+        """A build of two sources, the second of which couldn't be read, at outline review. Reading it again fails while
+        self.blocked holds and works once it's cleared; every link read is in self.reads."""
+        self.blocked, self.reads = {self.BLOCKED}, []
+
+        def read(urls):
+            self.reads.append(urls[0])
+            if urls[0] in self.blocked:
+                raise ingest.IngestError('The site refused the download.')
+            return SimpleNamespace(title=urls[0].split('/')[2], url=urls[0], text=SOURCE)
+        reader = patch.object(server, '_first_readable', side_effect=read)
+        reader.start()
+        self.addCleanup(reader.stop)
+        rid = server.api_request_create({'sources': [{'url': 'https://ok.example/a', 'title': 'Readable'},
+                                                     {'url': self.BLOCKED, 'title': 'Blocked'}]})['id']
+        record = self.settled(rid)
+        self.assertEqual(record['status'], 'awaiting_outline', record.get('error'))
+        self.assertEqual(record['excluded'], [{'source': 2, 'title': 'Blocked', 'reason': 'The site refused the download.'}])
+        self.assertEqual(record['warnings'], ['Excluded Blocked: The site refused the download.'])
+        return rid, record
+
+    def stopped_with_approved_outline(self, rid, record):
+        server.REQUEST.body = {'outline': record['outline']}
+        server.api_request_outline(rid)
+        self.assertEqual(self.settled(rid)['status'], 'done')
+        with server._requests_lock:  # the job's thread saves once more after it settles: it mustn't land after this edit
+            generate.JOBS.pop(rid, None)
+        disk = store.load_request(rid, TESTER)
+        disk.update(status='error', error='Something went wrong.')
+        store.save_request(disk, TESTER)
+
+    def bundle(self, rid):
+        return [(s['id'], s['title']) for s in json.loads(store.load_request(rid, TESTER)['paper']['text'])['lemma_sources']]
+
+    def retry(self, rid, mode=None):
+        server.REQUEST.body = {'mode': mode} if mode else {}
+        server.api_request_retry(rid)
+        return self.settled(rid)
+
+    def test_the_choice_says_which_sources_couldnt_be_read_and_continuing_builds_without_them(self):
+        rid, record = self.partly_read()
+        self.stopped_with_approved_outline(rid, record)
+        self.assertEqual(server.api_request(rid)['resume']['excluded'], ['Blocked'])
+        self.blocked.clear()  # the site works again, but continuing keeps the sources its concepts were built from
+        self.reads.clear()
+        done = self.retry(rid, 'continue')
+        self.assertEqual(done['status'], 'done', done.get('error'))
+        self.assertEqual(self.reads, [])
+        self.assertEqual(self.bundle(rid), [('s1', 'ok.example')])
+        self.assertEqual(done['warnings'], ['Excluded Blocked: The site refused the download.'])
+
+    def test_starting_over_reads_the_sources_that_couldnt_be_read_again(self):
+        rid, record = self.partly_read()
+        self.stopped_with_approved_outline(rid, record)
+        self.blocked.clear()
+        self.reads.clear()
+        with patch.object(server.search, 'source_subjects', return_value={'subjects': [], 'not_covered': []}) as subjects, \
+                patch.object(server.categorize, 'categorize', wraps=server.categorize.categorize) as categorized:
+            review = self.retry(rid, 'start_over')
+        self.assertEqual(review['status'], 'awaiting_outline', review.get('error'))
+        self.assertEqual(self.reads, [self.BLOCKED])  # only the one that couldn't be read; the others are kept as read
+        self.assertEqual(self.bundle(rid), [('s1', 'ok.example'), ('s2', 'blocked.example')])  # in the order chosen
+        self.assertEqual((review['warnings'], review['excluded']), ([], []))
+        self.assertEqual((subjects.call_count, categorized.call_count), (1, 1))  # worked out again, for the sources now read
+        steps = {s['id']: s for s in review['steps']}
+        self.assertEqual((steps['s2']['label'], steps['s2']['state']), ('Reading source 2 again: Blocked', 'done'))
+
+    def test_a_source_that_still_cant_be_read_stays_a_warning(self):
+        rid, record = self.partly_read()
+        self.stopped_with_approved_outline(rid, record)
+        category = store.load_request(rid, TESTER)['category']
+        self.reads.clear()
+        self.blocked.add(self.BLOCKED)
+        with patch.object(server.search, 'source_subjects') as subjects:
+            review = self.retry(rid, 'start_over')
+        self.assertEqual(review['status'], 'awaiting_outline', review.get('error'))
+        self.assertEqual(self.reads, [self.BLOCKED])
+        self.assertEqual(self.bundle(rid), [('s1', 'ok.example')])
+        self.assertEqual(review['warnings'], ['Excluded Blocked: The site refused the download.'])
+        self.assertEqual(review['excluded'][0]['source'], 2)
+        subjects.assert_not_called()  # the sources didn't change, so neither did what they build on
+        self.assertEqual(store.load_request(rid, TESTER)['category'], category)
+
+    def test_any_retry_that_proposes_an_outline_reads_them_again(self):
+        rid, _ = self.partly_read()
+        server.api_request_cancel(rid)  # cancelled at outline review: no approved outline, so no choice
+        self.blocked.clear()
+        self.reads.clear()
+        self.assertEqual(self.retry(rid)['status'], 'awaiting_outline')
+        self.assertEqual(self.reads, [self.BLOCKED])
+        self.assertEqual(self.bundle(rid), [('s1', 'ok.example'), ('s2', 'blocked.example')])
+
+    def test_a_source_added_at_outline_review_never_takes_an_unread_sources_place(self):
+        rid, _ = self.partly_read()
+        record = store.load_request(rid, TESTER)
+        record['outline']['subjects'] = [{'title': 'Variance', 'url': 'https://en.wikipedia.org/wiki/Variance', 'source': None}]
+        store.save_request(record, TESTER)
+        self.add(rid, 'Variance')
+        self.assertEqual(self.settled(rid)['status'], 'awaiting_outline')
+        self.assertEqual(self.bundle(rid), [('s1', 'ok.example'), ('s3', 'Variance')])  # s2 stays the source that couldn't be read
+        server.api_request_cancel(rid)
+        self.blocked.clear()
+        self.retry(rid)
+        self.assertEqual(self.bundle(rid), [('s1', 'ok.example'), ('s2', 'blocked.example'), ('s3', 'Variance')])
+
+    # ------------------------------------------------------------ a build of one source kept as plain text
+
+    def one_file(self):
+        """A build made from one uploaded file by `paper_id`, which keeps it as plain text, at outline review with a
+        suggested source to add (an assumed subject's article)."""
+        server.PAPERS['single'] = {'text': SOURCE, 'title': 'My chapter', 'url': '', 'kind': 'pdf', 'pages': 3, 'owner': TESTER}
+        self.addCleanup(server.PAPERS.pop, 'single', None)
+        rid = server.api_request_create({'paper_id': 'single'})['id']
+        self.assertEqual(self.settled(rid)['status'], 'awaiting_outline')
+        record = store.load_request(rid, TESTER)
+        self.assertFalse(record['paper']['text'].startswith('{'))  # plain text, not a bundle
+        record['outline']['subjects'] = [{'title': f'Subject {i}', 'url': f'https://en.wikipedia.org/wiki/S{i}', 'source': None} for i in range(1, 11)]
+        store.save_request(record, TESTER)
+        return rid
+
+    def test_a_suggested_source_can_be_added_to_a_build_of_one_file(self):
+        rid = self.one_file()
+        article = lambda urls: SimpleNamespace(title='Wikipedia', url=urls[0], text='An article is ' * 400)
+        with patch.object(server, '_first_readable', side_effect=article):
+            self.add(rid, 'Subject 1')
+            review = self.settled(rid)
+        self.assertEqual(review['status'], 'awaiting_outline', review.get('error'))
+        bundle = json.loads(store.load_request(rid, TESTER)['paper']['text'])['lemma_sources']
+        self.assertEqual([(s['id'], s['title']) for s in bundle], [('s1', 'My chapter'), ('s2', 'Subject 1')])
+        self.assertEqual(bundle[0]['text'], SOURCE)  # the file, unchanged, is now the first of the lesson's sources
+        self.assertIn('never by source', server._provider.return_value.tasks['outline'])  # outlined as a lesson of several sources
+        server.REQUEST.body = {'outline': review['outline']}
+        server.api_request_outline(rid)
+        done = self.settled(rid)
+        self.assertEqual(done['status'], 'done', done.get('error'))
+        lesson, source = store.load_lesson(rid, TESTER)
+        self.assertEqual([s['title'] for s in lesson['sources']], ['My chapter', 'Subject 1'])
+        self.assertEqual(L.check_lesson(lesson, source), [])
+
+    def test_one_file_counts_toward_the_limit_of_ten_sources(self):
+        rid = self.one_file()
+        with self.assertRaises(server.ApiError) as e:
+            self.add(rid, *[f'Subject {i}' for i in range(1, 11)])  # the file and 10 more would be 11
+        self.assertEqual((e.exception.status, e.exception.message), (400, 'A lesson takes at most 10 sources.'))
+        with patch.object(server, '_first_readable', side_effect=lambda urls: SimpleNamespace(title='W', url=urls[0], text='An article is ' * 400)):
+            self.add(rid, *[f'Subject {i}' for i in range(1, 10)])  # the file and 9 more make 10
+            self.assertEqual(self.settled(rid)['status'], 'awaiting_outline')
 
     def test_all_failed_validation_and_isolation(self):
         with patch.object(server, '_first_readable', side_effect=ingest.IngestError('unreadable')):

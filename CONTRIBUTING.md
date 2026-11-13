@@ -13,7 +13,7 @@ set -a; . ./local.env; . ./deploy/lemma.env; set +a   # your keys: copy deploy/l
 uv run lemma --dev
 ```
 
-Install Node.js 22 if you change the expression or simulation engines, so the Python/JavaScript parity tests run instead of skipping.
+Install Node.js 22 if you change the expression or simulation engines, so the Python/JavaScript parity tests run instead of skipping. If you change the app's screens, also run `npm ci` and have Chrome or Chromium installed (or point `LEMMA_TEST_CHROME` at one), so the browser tests in `tests/test_ui.py` run too. OpenLemma itself needs no Node packages; `package.json` is only for these tests.
 
 ## Rules that keep OpenLemma honest
 

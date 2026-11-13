@@ -429,13 +429,62 @@ def _request_record(rid, owner):
         raise ApiError(404, "That lesson build wasn't found.") from None
     job = generate.JOBS.get(rid)
     if record["status"] == "running" and not (job and job.owner == owner):
-        record.update(status="interrupted", error="The server stopped during this build. Retry to start a new attempt.")
+        lesson = _saved_lesson(rid, owner)
+        if lesson:  # saved just before the server stopped: the build had finished, it just hadn't said so yet
+            record.update(status="done", error="", result=lesson)
+            for step in record.get("steps") or []:
+                if step.get("id") == "save":
+                    step.update(state="done", detail="Saved to your library")
+            store.BuiltConcepts(rid, owner).clear()  # the saved lesson has them all
+        else:
+            record.update(status="interrupted", error="The server stopped during this build." + (
+                "" if _approved(record) else " Retry to start a new attempt."))  # with an approved outline, the page offers the choice
+            _stop_steps(record)
         store.save_request(record, owner)
     return record
 
 
-def _public_request(record):
-    return {k: v for k, v in record.items() if k not in ("paper", "request")}
+def _saved_lesson(rid, owner) -> dict | None:
+    """The lesson a build saved, if it got that far. A build saves its lesson under its own id, as its very last step."""
+    try:
+        return store.load_lesson(rid, owner)[0]
+    except (KeyError, OSError, ValueError):
+        return None
+
+
+STOPPED = ("error", "cancelled", "interrupted")
+NOT_BUILT = {"interrupted": "Not built: the server stopped", "error": "Not built: the build stopped", "cancelled": "Not built: you cancelled the build"}
+
+
+def _stop_steps(record):
+    """A stopped build's steps that never finished say so, rather than looking as if they were still running."""
+    if record.get("status") not in STOPPED:
+        return
+    for step in record.get("steps") or []:
+        if step.get("state") in ("active", "waiting"):
+            step.update(state="stopped", detail=NOT_BUILT[record["status"]], problems=[])
+
+
+def _approved(record) -> bool:
+    """Whether the build had its outline approved, unchanged since, so it can continue with it."""
+    return bool(record.get("outline")) and record.get("approved") == generate.fingerprint(record["outline"])
+
+
+def _resume(record, owner) -> dict | None:
+    """For a stopped build with an approved outline, what continuing it would keep, so the learner can choose between
+    continuing and starting over: {"kept", "total", "built_with"}. None when there's no such choice."""
+    if record.get("status") not in STOPPED or not _approved(record) or not (record.get("paper") or {}).get("text"):
+        return None
+    try:
+        stored = store.BuiltConcepts(record["id"], owner).load()
+    except (KeyError, OSError):
+        stored = {}
+    summary = generate.saved_summary(stored, record["outline"], record["paper"]["text"], record["request"].get("level", levels.DEFAULT))
+    return {**summary, "excluded": [x["title"] for x in record.get("excluded") or []]}  # what Start over would try again
+
+
+def _public_request(record, owner):
+    return {**{k: v for k, v in record.items() if k not in ("paper", "request", "approved")}, "resume": _resume(record, owner)}
 
 
 def _categorize(record, paper):
@@ -461,7 +510,19 @@ def _source_context(job, provider, record, paper) -> dict:
     return {"query": None, "about": "; ".join(x.get("title", "") for x in sources)[:400], "field": field or None, **found}
 
 
-def _launch_request(record, provider, owner, build=False):
+def _source_bundle(paper) -> list[dict]:
+    """A build's sources, as a bundle. One source kept as plain text (a build from before bundles, or made from a single
+    `paper_id`) becomes a bundle of that one, s1, so more can be added beside it."""
+    sources = L.source_map(paper["text"])
+    if sources:
+        return list(sources.values())
+    return [{"id": "s1", "title": paper.get("title") or "Source 1", "url": paper.get("url") or "", "authors": "", "year": None,
+             "text": paper["text"]}]
+
+
+def _launch_request(record, provider, owner, build=False, reread=False):
+    """Starts a build. ``build`` builds the approved outline; otherwise an outline is proposed. ``reread`` (a retry that
+    proposes a new outline) first reads again the selected sources that couldn't be read before."""
     credential = _credential()[1]
     job = _new_job("request", record["id"])
     record.update(status="running", error="", result=None, lesson=None, steps=[])
@@ -470,6 +531,7 @@ def _launch_request(record, provider, owner, build=False):
             if generate.JOBS.get(j.id) is not j:
                 return
             record.update(j.snapshot())
+            _stop_steps(record)
             # Provider errors can echo an invalid key. Never persist echoed credentials.
             serialized = json.dumps(record, ensure_ascii=False)
             if credential:
@@ -484,49 +546,84 @@ def _launch_request(record, provider, owner, build=False):
         _forget(job)
         raise
 
+    def read(j, items, again=False):
+        """Reads the selected sources `items` ([(i, source)]) at the same time: {i: Paper or IngestError}."""
+        for i, source in items:
+            j.step(f"s{i}", f"Reading source {i}{' again' if again else ''}: {source['title']}", "waiting")
+
+        def one(item):
+            i, source = item
+            if j.cancelled.is_set():
+                return None
+            j.update(f"s{i}", "active")
+            if source.get("upload"):  # read when it was uploaded, and kept with the request
+                j.update(f"s{i}", "done", "Full text ready")
+                return ingest.Paper(**source["upload"])
+            try:
+                fetched = _first_readable(source["urls"])
+            except ingest.IngestError as e:
+                j.update(f"s{i}", "failed", str(e))
+                return e
+            j.update(f"s{i}", "done", "Full text ready")
+            return fetched
+
+        with ThreadPoolExecutor(max_workers=SOURCE_READERS) as pool:
+            results = dict(zip((i for i, _ in items), pool.map(one, items)))
+        if j.cancelled.is_set():
+            raise generate.GenerationError("Cancelled.")
+        return results
+
+    def bundled(i, source, fetched):
+        return {"id": f"s{i}", "title": fetched.title or source["title"], "url": ingest.reader_link(fetched.url),
+                "authors": source.get("authors", ""), "year": source.get("year"), "text": fetched.text}
+
+    def excluded(i, source, error):
+        return {"source": i, "title": source["title"], "reason": str(error)}
+
     def run(j):
         paper = record.get("paper")
         if not paper:
             requested = record["request"]["sources"]
+            results = read(j, list(enumerate(requested, 1)))
+            sources, record["excluded"] = [], []
             for i, source in enumerate(requested, 1):
-                j.step(f"s{i}", f"Reading source {i}: {source['title']}", "waiting")
-
-            def read(i, source):  # the sources are read at the same time
-                if j.cancelled.is_set():
-                    return None
-                j.update(f"s{i}", "active")
-                if source.get("upload"):  # read when it was uploaded, and kept with the request
-                    j.update(f"s{i}", "done", "Full text ready")
-                    return ingest.Paper(**source["upload"])
-                try:
-                    fetched = _first_readable(source["urls"])
-                except ingest.IngestError as e:
-                    j.update(f"s{i}", "failed", str(e))
-                    return e
-                j.update(f"s{i}", "done", "Full text ready")
-                return fetched
-
-            with ThreadPoolExecutor(max_workers=SOURCE_READERS) as pool:
-                read_all = list(pool.map(read, range(1, len(requested) + 1), requested))
-            if j.cancelled.is_set():
-                raise generate.GenerationError("Cancelled.")
-            sources = []
-            record["warnings"] = []
-            for i, (source, fetched) in enumerate(zip(requested, read_all), 1):
-                if isinstance(fetched, ingest.IngestError):
-                    record["warnings"].append(f"Excluded {source['title']}: {fetched}")
-                    continue
-                sources.append({"id": f"s{i}", "title": fetched.title or source["title"], "url": ingest.reader_link(fetched.url),
-                                "authors": source.get("authors", ""), "year": source.get("year"), "text": fetched.text})
+                if isinstance(results[i], ingest.IngestError):
+                    record["excluded"].append(excluded(i, source, results[i]))
+                else:
+                    sources.append(bundled(i, source, results[i]))
+            record["warnings"] = [f"Excluded {x['title']}: {x['reason']}" for x in record["excluded"]]
             if not sources:
                 raise generate.GenerationError("None of the selected sources could be read. Choose other sources.")
             paper = {"text": json.dumps({"lemma_sources": sources}, ensure_ascii=False),
                      "title": record["title"], "url": ""}
             record["paper"] = paper
+            j.changed()  # saved now, so a restart before the next step doesn't read them all again
+        elif reread and record.get("excluded"):  # a new outline: the sources that couldn't be read get another try
+            requested = record["request"]["sources"]
+            results = read(j, [(x["source"], requested[x["source"] - 1]) for x in record["excluded"]], again=True)
+            bundle = _source_bundle(paper)
+            still = []
+            for x in record["excluded"]:
+                i, source = x["source"], requested[x["source"] - 1]
+                if isinstance(results[i], ingest.IngestError):
+                    still.append(excluded(i, source, results[i]))
+                else:
+                    bundle.append(bundled(i, source, results[i]))
+            if len(still) < len(record["excluded"]):  # the sources changed: so may their subject, and what they build on
+                bundle.sort(key=lambda x: int(x["id"][1:]))  # in the order the learner chose them
+                paper["text"] = json.dumps({"lemma_sources": bundle}, ensure_ascii=False)
+                record.pop("category", None)
+                if (record["request"].get("search") or {}).get("query") is None:
+                    record["request"].pop("search", None)
+            record["warnings"] = [f"Excluded {x['title']}: {x['reason']}" for x in still] + \
+                [w for w in record["warnings"] if not w.startswith("Excluded ")]
+            record["excluded"] = still
+            j.changed()
         if record.get("pending"):  # suggested sources the learner added at outline review
-            bundle = json.loads(paper["text"])["lemma_sources"]
+            bundle = _source_bundle(paper)
+            chosen = len((record["request"] or {}).get("sources") or [])  # ids s1…sN stay the selected sources', read or not
             for source in record["pending"]:
-                sid = f"s{max(int(s['id'][1:]) for s in bundle) + 1}"
+                sid = f"s{max([int(s['id'][1:]) for s in bundle] + [chosen]) + 1}"
                 j.step(sid, f"Reading {source['title']}", "active")
                 try:
                     fetched = _first_readable(source["urls"])
@@ -538,6 +635,7 @@ def _launch_request(record, provider, owner, build=False):
                 bundle.append({"id": sid, "title": source["title"], "url": ingest.reader_link(fetched.url), "authors": "", "year": None, "text": fetched.text})
             paper["text"] = json.dumps({"lemma_sources": bundle}, ensure_ascii=False)
             record["pending"] = []
+            j.changed()
         # The category comes from the sources themselves, sorted out before anything is paid for.
         if not record.get("category"):
             _categorize(record, paper)
@@ -551,7 +649,8 @@ def _launch_request(record, provider, owner, build=False):
                     record["outline"] = outline
                     j.status = "awaiting_outline"
             return outline
-        result = generate.build_lesson(j, provider, paper, record["outline"], record["request"].get("level", levels.DEFAULT), j.id)
+        result = generate.build_lesson(j, provider, paper, record["outline"], record["request"].get("level", levels.DEFAULT), j.id,
+                                       saved=store.BuiltConcepts(j.id, owner))
         result["category"] = record["category"]
         j.step("save", "Saving your lesson", "active")
         with _requests_lock:
@@ -559,6 +658,7 @@ def _launch_request(record, provider, owner, build=False):
                 raise generate.GenerationError("Cancelled.")
             require_valid(result, paper["text"])
             store.save_lesson(result, paper["text"], owner)
+            store.BuiltConcepts(j.id, owner).clear()  # the saved lesson has them all now
             j.result = result
             with j.lock:
                 j.status = "done"
@@ -644,8 +744,8 @@ def api_request_create(body):
 def api_requests(_body):
     owner = _owner()
     with _requests_lock:
-        return [{k: r.get(k) for k in ("id", "title", "status", "created")} for saved in store.list_requests(owner)
-                for r in [_request_record(saved["id"], owner)]]
+        return [{**{k: r.get(k) for k in ("id", "title", "status", "created")}, "resume": _resume(r, owner)}
+                for saved in store.list_requests(owner) for r in [_request_record(saved["id"], owner)]]
 
 
 def api_request(rid):
@@ -657,7 +757,7 @@ def api_request(rid):
             # Progress ticks while a reply streams live only in memory; they aren't worth a disk write each.
             snap = job.snapshot()
             record = {**record, **{k: snap[k] for k in ("steps", "lesson", "eta_seconds")}}
-        return {**_public_request(record), "now": time.time()}
+        return {**_public_request(record, owner), "now": time.time()}
 
 
 def api_request_cancel(rid):
@@ -680,14 +780,36 @@ def api_request_cancel(rid):
         return {"ok": True}
 
 
+CHOOSE = "Choose whether to continue this build or start over."
+
+
 def api_request_retry(rid):
+    """Retries a stopped build. One with an approved outline needs the learner's choice, ``mode``: "continue" builds
+    that outline, reusing the concepts already finished; "start_over" deletes them and proposes a new outline from
+    the same sources. Any other stopped build proposes a new outline, as a start over does."""
+    mode = (getattr(REQUEST, "body", None) or {}).get("mode")
     with _requests_lock:
         owner = _owner()
         record = _request_record(rid, owner)
-        if record["status"] not in ("error", "cancelled", "interrupted"):
+        if record["status"] not in STOPPED:
             raise ApiError(409, "Only a stopped build can be retried.")
+        if mode not in (None, "continue", "start_over"):
+            raise ApiError(400, CHOOSE)
+        choice = _approved(record)
+        if choice and mode is None:
+            raise ApiError(400, CHOOSE)
+        provider = _provider()  # before anything is deleted: a retry that can't start loses nothing
+        if mode == "continue":
+            if not choice:
+                raise ApiError(409, "This build has no approved outline to continue. Start over instead.")
+            return _launch_request(record, provider, owner, build=True)
         record.pop("outline", None)
-        return _launch_request(record, _provider(), owner)
+        record.pop("approved", None)
+        started = _launch_request(record, provider, owner, reread=True)
+        # Only once the new attempt has started. Deleted now, not left for the versions to tell apart: a new outline
+        # could be the same as the old one, and starting over means nothing is reused.
+        store.BuiltConcepts(rid, owner).clear()
+        return started
 
 
 def api_request_outline(rid):
@@ -703,6 +825,7 @@ def api_request_outline(rid):
         if problems:
             raise ApiError(400, "The outline isn't valid: " + "; ".join(problems[:3]))
         record["outline"] = outline
+        record["approved"] = generate.fingerprint(outline)  # the version its concepts are built from
         return _launch_request(record, _provider(), owner, build=True)
 
 
@@ -722,7 +845,7 @@ def api_request_add(rid):
         suggested = {s["title"]: s for s in (record.get("outline") or {}).get("subjects") or [] if s.get("url") and not s.get("source")}
         if any(t not in suggested for t in titles):
             raise ApiError(400, "That isn't one of the suggested sources.")
-        if len(L.source_map(record["paper"]["text"])) + len(titles) > 10:
+        if max(len(L.source_map(record["paper"]["text"])), 1) + len(titles) > 10:  # one source kept as plain text counts too
             raise ApiError(400, "A lesson takes at most 10 sources.")
         record["pending"] = [{"urls": [suggested[t]["url"]], "title": t} for t in titles]
         record.pop("outline", None)
@@ -736,6 +859,7 @@ def api_request_delete(rid):
         if record["status"] == "running":
             raise ApiError(409, "Cancel the build before deleting it.")
         store.request_path(rid, owner).unlink(missing_ok=True)
+        store.BuiltConcepts(rid, owner).clear()
         generate.JOBS.pop(rid, None)
         return {"ok": True}
 
@@ -914,6 +1038,7 @@ def api_lesson_delete(lesson_id):
             store.delete_lesson(lesson_id, _owner())
             generate.JOBS.pop(lesson_id, None)
             store.request_path(lesson_id, _owner()).unlink(missing_ok=True)
+            store.BuiltConcepts(lesson_id, _owner()).clear()
     except KeyError:
         raise ApiError(404, "That lesson isn't in your library.") from None
     return {"ok": True}

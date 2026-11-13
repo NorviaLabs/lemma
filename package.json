@@ -1,0 +1,8 @@
+{
+  "name": "lemma-tests",
+  "private": true,
+  "description": "Only for the tests: the browser tests (tests/test_ui.py) drive Chrome or Chromium with puppeteer-core. OpenLemma itself needs no Node packages.",
+  "devDependencies": {
+    "puppeteer-core": "25.16.0"
+  }
+}

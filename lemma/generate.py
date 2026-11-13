@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import threading
@@ -255,10 +256,11 @@ def plan_rule(choice: dict | None) -> str:
     return "choose the blocks that best fit the reasoning this concept involves, teaching before asking."
 
 
-def choose_plans(job: Job, outline: dict, concepts: list[dict], level: str) -> dict:
+def choose_plans(job: Job, outline: dict, concepts: list[dict], level: str, only: set[str] | None = None) -> dict:
     """Jev chooses, for each concept with candidate plans, the one that would best teach it, or none of them.
+    ``only`` limits the choosing to those concepts (the rest were built already); all of them are still context.
     Raises GenerationError when Jev can't, before any concept is drafted."""
-    asking = [c for c in concepts if c.get("plans")]
+    asking = [c for c in concepts if c.get("plans") and (only is None or c["id"] in only)]
     if not asking:
         return {}
     job.step("plans", "Choosing how to teach each concept", "active")
@@ -718,8 +720,146 @@ def _outline_text(concepts: list[dict], current: str) -> str:
     return "\n".join(lines)
 
 
-def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, level: str, lesson_id: str | None = None) -> dict:
-    """Builds concepts in parallel; each one is published to ``job.lesson`` as soon as it passes the checks."""
+SAVED_FORMAT = 2  # raise it when concepts saved by an older Lemma must no longer be reused (2: each records its model)
+
+
+def fingerprint(value) -> str:
+    """A digest of JSON data that changes whenever its content does, and never with the order of its keys."""
+    text = json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def build_version(outline: dict, paper_text: str, level: str) -> dict:
+    """What a finished concept was built from: this version of the outline, these sources and this level. A concept
+    saved by an earlier attempt is reused only when all of them are the same."""
+    return {"format": SAVED_FORMAT, "outline": fingerprint(outline), "sources": fingerprint(paper_text), "level": level}
+
+
+def _base_id(c: dict, todo_ids: list[str]) -> str | None:
+    """The concept whose finished model ``c`` reuses, when that one is built in this lesson before it."""
+    b = c.get("builds_on")
+    return b if b in todo_ids and todo_ids.index(b) < todo_ids.index(c["id"]) else None
+
+
+def _concept_rules(c: dict, obj, base: dict | None, norm: str, sources: dict) -> list[str]:
+    """Tidies a drafted concept to fit its place in the outline, then returns what Lemma's own rules find wrong with
+    it. Jev's judgement comes after, only for a draft these rules pass."""
+    if isinstance(obj, dict):
+        obj["id"] = c["id"]
+        if not c.get("hard"):
+            obj.pop("check", None)  # quizzes are only for hard concepts
+            if isinstance(obj.get("activities"), list):
+                obj["activities"] = [a for a in obj["activities"] if not (isinstance(a, dict) and a.get("kind") == "check")]
+        obj.pop("builds_on", None)
+        if base:
+            obj["builds_on"] = base["id"]
+    problems = list(L.check_concept(obj, norm, "concept"))
+    if isinstance(obj, dict) and not obj.get("activities"):
+        problems.append("concept: needs 'activities', the learner's screens in order (see ACTIVITIES)")
+    if c.get("visual") == "none" and isinstance(obj, dict) and "model" in obj:
+        problems.append("concept: this concept is taught without a model; remove 'model' and every model block")
+    if sources and isinstance(obj, dict) and isinstance(obj.get("understand"), dict):
+        problems += L.check_attribution(obj["understand"], sources, "concept.understand")
+    if sources and isinstance(obj, dict):
+        problems += L.check_activity_attribution(obj, sources, "concept")
+    if base and isinstance(obj, dict) and not problems:
+        problems = list(L.check_builds_on(obj, base, "concept"))
+    return problems
+
+
+def _made_by(entry: dict) -> dict | None:
+    """The model a saved concept records it was built with, as {"name", "model"}."""
+    m = entry.get("made_with")
+    if isinstance(m, dict) and isinstance(m.get("name"), str) and m["name"] and isinstance(m.get("model"), str):
+        return {"name": m["name"], "model": m["model"]}
+    return None
+
+
+def _fitting(stored: dict, version: dict, todo: list[dict], rules=None) -> dict[str, dict]:
+    """The saved concepts that fit this build: built from the same outline version, sources and level, with the model
+    that built them, and, for a concept that reuses another's model, built on the very concept kept here. ``rules``
+    (concept, saved concept, base) -> problems, when given, must find nothing too. In outline order, so a concept's
+    base is decided before the concept."""
+    todo_ids = [c["id"] for c in todo]
+    kept: dict[str, dict] = {}
+    for c in todo:
+        entry = stored.get(c["id"])
+        if not isinstance(entry, dict) or any(entry.get(k) != v for k, v in version.items()):
+            continue
+        if not isinstance(entry.get("concept"), dict) or not _made_by(entry):
+            continue
+        base_id = _base_id(c, todo_ids)
+        base = kept[base_id]["concept"] if base_id in kept else None
+        if base_id is None:
+            same_base = entry.get("base") is None
+        else:  # built on a base that is rebuilt now, or on another version of it: its model must be built on again
+            same_base = base is not None and entry.get("base") == fingerprint(base)
+        if not same_base:
+            continue
+        if rules:
+            try:
+                if rules(c, entry["concept"], base):
+                    continue
+            except Exception as e:  # a saved file the rules trip over is built again, not trusted
+                logs.report(f"saved concept {c['id']}", e)
+                continue
+        kept[c["id"]] = entry
+    return kept
+
+
+def _reusable(saved, version: dict, todo: list[dict], norm: str, sources: dict) -> dict[str, dict]:
+    """The concepts an earlier attempt at this build finished, that passed every check, and still fit it (see
+    _fitting), checked again against Lemma's rules. Every other saved concept is discarded, to be built again."""
+    if saved is None:
+        return {}
+    try:
+        stored = saved.load()
+    except OSError:
+        return {}
+    kept = _fitting(stored, version, todo, lambda c, obj, base: _concept_rules(c, obj, base, norm, sources))
+    for cid in stored.keys() - kept.keys():
+        try:
+            saved.discard(cid)
+        except OSError:
+            pass  # it's never reused anyway: it doesn't fit this build
+    return kept
+
+
+def saved_summary(stored: dict, outline: dict, paper_text: str, level: str) -> dict:
+    """What continuing a build would keep, counted cheaply for the build's page and the Library: how many of its
+    concepts are saved and fit it, of how many, and which models built them. The rules are checked again only when
+    the build continues, so very rarely one of these is built again after all."""
+    todo = [c for c in outline.get("concepts") or [] if isinstance(c, dict) and not c.get("known") and isinstance(c.get("id"), str)]
+    kept = _fitting(stored, build_version(outline, paper_text, level), todo)
+    return {"kept": len(kept), "total": len(todo), "built_with": _credits([(cid, _made_by(e)) for cid, e in kept.items()], counts=True)}
+
+
+def _credits(made: list[tuple[str, dict]], counts: bool = False) -> list[dict]:
+    """Each model that built a concept, in the order of the first concept it built, with those concepts (or their
+    number, with ``counts``)."""
+    out: list[dict] = []
+    for cid, m in made:
+        entry = next((x for x in out if x["name"] == m["name"] and x["model"] == m["model"]), None)
+        if entry is None:
+            out.append(entry := {"name": m["name"], "model": m["model"], "concepts": []})
+        entry["concepts"].append(cid)
+    if counts:
+        for entry in out:
+            entry["concepts"] = len(entry["concepts"])
+    return out
+
+
+def _flagged_note(n: int) -> str:
+    return (f". The checker flagged {n} possible problem{'s' * (n != 1)} it couldn't confirm,"
+            " so read this concept against its source." if n else "")
+
+
+def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, level: str, lesson_id: str | None = None,
+                 saved=None) -> dict:
+    """Builds concepts in parallel; each one is published to ``job.lesson`` as soon as it passes the checks.
+
+    ``saved`` (such as store.BuiltConcepts) keeps each concept that passes, the moment it does. A concept an earlier
+    attempt saved is reused instead of built again when it fits this build (see _reusable)."""
     require_jev()
     concepts = [c for c in outline["concepts"] if isinstance(c, dict)]
     todo = [c for c in concepts if not c.get("known")]
@@ -757,18 +897,30 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, level
     sources = L.source_map(paper["text"])
     if sources:
         lesson["sources"] = [{k: v for k, v in s.items() if k != "text"} for s in sources.values()]
-    choices = choose_plans(job, outline, todo, level)
-    if choices:  # what Jev chose and from what, tied to this outline
-        options = {c["id"]: c["plans"] for c in todo if c.get("plans")}
-        lesson["activity_plans"] = [dict(x, options=options[cid]) for cid, x in choices.items()]
-    job.lesson = lesson
     norm = L.normalize_for_match(L.source_document(paper["text"]))
+    todo_ids = [c["id"] for c in todo]
+    version = build_version(outline, paper["text"], level)
+    kept = _reusable(saved, version, todo, norm, sources)  # finished and checked by an earlier attempt
+    rest = [c for c in todo if c["id"] not in kept]
+    choices = choose_plans(job, outline, todo, level, only={c["id"] for c in rest})
+    choices.update({cid: e["choice"] for cid, e in kept.items() if isinstance(e.get("choice"), dict)})  # what they were built with
+    options = {c["id"]: c["plans"] for c in todo if c.get("plans")}
+    if choices:  # what Jev chose and from what, tied to this outline
+        lesson["activity_plans"] = [dict(choices[c["id"]], options=options[c["id"]]) for c in todo if c["id"] in choices and c["id"] in options]
+    job.lesson = lesson
     document = paper_document(L.source_document(paper["text"]))
     ready: dict[str, dict] = {}
+    this_model = {"name": provider.name, "model": provider.model}
+    made_by: dict[str, dict] = {}  # concept id -> the model that built it: this one, or the one a kept concept records
 
     def publish():
         with job.lock:
             lesson["concepts"] = [ready[c["id"]] for c in todo if c["id"] in ready]
+            credits = _credits([(c["id"], made_by[c["id"]]) for c in todo if c["id"] in ready])
+            lesson["made_with"] = credits
+            # The model that built the most concepts (ties: the one that built the earliest), or this one before any is ready.
+            top = max(credits, key=lambda x: len(x["concepts"])) if credits else this_model
+            lesson["provider"] = {"name": top["name"], "model": top["model"]}
 
     def set_plan(cid, state):
         with job.lock:
@@ -776,17 +928,39 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, level
                 if p["id"] == cid:
                     p["state"] = state
 
-    if len(todo) > 1:  # the concepts start together: cache the paper once first, or each writes its own copy
+    def keep(c, obj, base, flags):
+        """Save a concept that passed every check, so an attempt after a server restart can reuse it."""
+        if saved is None:
+            return
+        try:
+            saved.save(c["id"], {**version, "concept": obj, "base": fingerprint(base) if base else None,
+                                 "choice": choices.get(c["id"]), "flags": flags, "made_with": this_model})
+        except Exception as e:  # only a saving: the concept is still in this lesson
+            logs.report(f"saving concept {c['id']}", e)
+
+    if len(rest) > 1:  # the concepts start together: cache the paper once first, or each writes its own copy
         try:
             provider.warm(system_prompt(), document)
         except ProviderError:
             pass  # only a saving; the concepts still build without it
-    for i, c in enumerate(todo, 1):
-        job.step(c["id"], f"Concept {i}: {c['title']}", "waiting", "Waiting to start")
     # A concept that builds on another waits for it, so it can reuse its finished model. Bases always come
     # earlier in the list and the pool runs tasks in order, so a waiting task never blocks its own base.
     finished = {c["id"]: threading.Event() for c in todo}
-    todo_ids = [c["id"] for c in todo]
+    for i, c in enumerate(todo, 1):
+        if c["id"] not in kept:
+            job.step(c["id"], f"Concept {i}: {c['title']}", "waiting", "Waiting to start")
+            continue
+        flags = [f for f in kept[c["id"]].get("flags") or [] if isinstance(f, dict)]
+        ready[c["id"]] = kept[c["id"]]["concept"]
+        made_by[c["id"]] = _made_by(kept[c["id"]])
+        if flags:
+            with job.lock:
+                lesson.setdefault("flags", []).extend(flags)
+        set_plan(c["id"], "ready")
+        finished[c["id"]].set()
+        job.step(c["id"], f"Concept {i}: {c['title']}", "done", "Ready, kept from the earlier attempt" + _flagged_note(len(flags)))
+    if kept:
+        publish()
 
     def build_one(c):
         try:
@@ -798,8 +972,8 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, level
         if job.cancelled.is_set():
             return
         base = None
-        b = c.get("builds_on")
-        if b in finished and todo_ids.index(b) < todo_ids.index(c["id"]):
+        b = _base_id(c, todo_ids)
+        if b:
             job.update(c["id"], "waiting", "Waiting for the concept it builds on")
             finished[b].wait()
             base = ready.get(b)
@@ -843,26 +1017,7 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, level
             task += MULTI_SOURCE_TASK
 
         def check(obj):
-            if isinstance(obj, dict):
-                obj["id"] = c["id"]
-                if not c.get("hard"):
-                    obj.pop("check", None)  # quizzes are only for hard concepts
-                    if isinstance(obj.get("activities"), list):
-                        obj["activities"] = [a for a in obj["activities"] if not (isinstance(a, dict) and a.get("kind") == "check")]
-                obj.pop("builds_on", None)
-                if base:
-                    obj["builds_on"] = base["id"]
-            problems = list(L.check_concept(obj, norm, "concept"))
-            if isinstance(obj, dict) and not obj.get("activities"):
-                problems.append("concept: needs 'activities', the learner's screens in order (see ACTIVITIES)")
-            if no_model and isinstance(obj, dict) and "model" in obj:
-                problems.append("concept: this concept is taught without a model; remove 'model' and every model block")
-            if sources and isinstance(obj, dict) and isinstance(obj.get("understand"), dict):
-                problems += L.check_attribution(obj["understand"], sources, "concept.understand")
-            if sources and isinstance(obj, dict):
-                problems += L.check_activity_attribution(obj, sources, "concept")
-            if base and isinstance(obj, dict) and not problems:
-                problems = list(L.check_builds_on(obj, base, "concept"))
+            problems = _concept_rules(c, obj, base, norm, sources)
             if not problems:  # only a draft that passes the rules is worth Jev's judgement
                 link = field_names(outline) if c.get("bridge") is True and len(outline.get("field") or []) == 2 else None
                 problems = factcheck.check_concept(obj, paper["text"], todo_ids.index(c["id"]) + 1, link)
@@ -884,26 +1039,29 @@ def build_lesson(job: Job, provider: Provider, paper: dict, outline: dict, level
             obj, problems = passed_rules[0]
         unresolved = [p for p in problems if isinstance(p, factcheck.Flag)]
         problems = [p for p in problems if not isinstance(p, factcheck.Flag)]
+        if problems and job.cancelled.is_set():  # stopped, not failed: it isn't left out, it just wasn't built
+            return
         if problems:
             set_plan(c["id"], "omitted")
             with job.lock:
                 lesson["omitted"].append({"title": c["title"], "reason": problems[0]})
             job.update(c["id"], "failed", "Left out: it didn't pass the quality checks (" + problems[0][:160] + ")")
             return
+        flags = [{"concept": c["id"], "kind": f.kind, "certainty": f.certainty} for f in unresolved]
+        keep(c, obj, base, flags)
+        made_by[c["id"]] = this_model
         ready[c["id"]] = obj
-        if unresolved:  # kept for whoever reviews the lesson; a learner isn't shown them
+        if flags:  # kept for whoever reviews the lesson; a learner isn't shown them
             with job.lock:
-                lesson.setdefault("flags", []).extend({"concept": c["id"], "kind": f.kind, "certainty": f.certainty} for f in unresolved)
+                lesson.setdefault("flags", []).extend(flags)
         set_plan(c["id"], "ready")
         publish()
         fixes = getattr(job, "repairs", {}).get(c["id"], len(unresolved) and MAX_REPAIRS)
-        flagged = (f" The checker flagged {len(unresolved)} possible problem{'s' * (len(unresolved) != 1)} it couldn't confirm,"
-                   " so read this concept against its source." if unresolved else "")
         ready_text = "Ready" + (f", after {fixes} round{'s' * (fixes != 1)} of fixes" if fixes else "")
-        job.update(c["id"], "done", ready_text + ("." + flagged if flagged else ""), problems=[])
+        job.update(c["id"], "done", ready_text + _flagged_note(len(unresolved)), problems=[])
 
     with ThreadPoolExecutor(max_workers=WORKERS) as pool:
-        list(pool.map(build_one, todo))
+        list(pool.map(build_one, rest))
 
     if job.cancelled.is_set():
         raise GenerationError("Cancelled.")

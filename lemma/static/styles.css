@@ -528,6 +528,8 @@ button.hall-replay:hover:not(:disabled) { color: var(--ink); }
 .build-step.done .bs-icon { background: var(--good); box-shadow: none; color: #fff; }
 .build-step.failed .bs-icon { background: var(--bad); box-shadow: none; color: #fff; }
 .build-step.skipped .bs-icon { color: var(--faint); }
+.build-step.stopped .bs-icon { color: var(--faint); }  /* never finished: the build stopped, and its clock with it */
+.build-step.stopped .bs-label { color: var(--body); }
 .bs-label { font: 600 17px/1.3 var(--sans); color: var(--ink); align-self: center; }
 .build-step.waiting .bs-label { color: var(--mute); font-weight: 400; }
 .bs-detail { grid-column: 2; color: var(--mute); font-size: 15px; }
@@ -546,6 +548,30 @@ button.hall-replay:hover:not(:disabled) { color: var(--ink); }
 .bp-bar::-webkit-progress-value { background: var(--green); transition: width .3s ease; }
 .bp-bar::-moz-progress-bar { background: var(--green); }
 .build-progress .build-steps { margin-top: 12px; }
+
+/* A stopped build with an approved outline: continue it, or start over. The primary is Continue; Start over asks in
+   the red wash before it deletes finished concepts. A model other than the current one is said in lemon. */
+.resume { max-width: 720px; margin: 26px 0 30px; padding: 22px 24px 8px; background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--lift); }
+.resume h2 { margin: 0 0 6px; font: 700 19px/1.25 var(--sans); letter-spacing: -.01em; }
+.resume-lead { margin: 0 0 14px; color: var(--body); }
+.resume-opt { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 10px 18px; align-items: start; padding: 16px 0; border-top: 1px solid var(--rule); }
+.resume-opt > button { width: 100%; }
+.resume-opt > p { margin: 0; padding-top: 12px; color: var(--body); font-size: 16px; line-height: 1.45; }
+.resume-model { grid-column: 2; margin: 0; padding: 10px 14px; border-radius: var(--r); background: var(--ochre-soft); color: var(--ink); font-size: 15px; line-height: 1.45; }
+.resume-opt > .resume-model { padding-top: 10px; }
+.resume-model a { color: var(--link); font-weight: 600; }
+.resume-opt.is-asking { grid-template-columns: minmax(0, 1fr); margin: 0 -14px 8px; padding: 16px 14px; border-radius: 16px; border-top-color: transparent; background: var(--bad-bg); }
+.resume-opt.is-asking > p { padding-top: 0; font-weight: 600; color: var(--ink); }
+.resume-ask-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.resume-ask-btns .ghost:hover:not(:disabled) { background: color-mix(in srgb, var(--bad) 10%, var(--bad-bg)); }
+@media (max-width: 640px) {
+  .resume { padding: 18px 18px 6px; }
+  .resume-opt { grid-template-columns: minmax(0, 1fr); }
+  .resume-opt > p { padding-top: 0; }
+  .resume-model { grid-column: 1; }
+}
+.error.floating .floating-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.error.floating .floating-acts button { margin-top: 0; }
 @keyframes pulse { 50% { box-shadow: inset 0 0 0 2px var(--green), 0 0 0 5px color-mix(in srgb, var(--green) 18%, transparent); } }
 fieldset { border: 0; border-top: 1px solid var(--rule); padding: 8px 0 22px; margin: 0 0 12px; }
 legend { padding: 18px 0 0; font: 700 20px var(--sans); color: var(--ink); }
@@ -1545,6 +1571,15 @@ main.doc { max-width: 808px; padding-top: clamp(24px, 5vw, 56px); }
 .lib-ask p { margin: 0; font: 600 15px/1.4 var(--sans); color: var(--ink); }
 .lib-ask-btns { display: flex; gap: 6px; }
 .lib-ask-btns .ghost:hover:not(:disabled) { background: color-mix(in srgb, var(--bad) 10%, var(--bad-bg)); }
+/* A stopped build's choice in its row: a neutral wash, not the red of a delete, until Start over asks to delete. */
+.lib-row.is-choosing { background: var(--plate); }
+.lib-row.is-choosing .lib-open::after { display: none; }
+.lib-row.is-choosing + .lib-row::before { border-color: transparent; }
+.lib-build .lib-choice { grid-column: 2; position: relative; z-index: 1; }
+.lib-choice p { margin: 0 0 10px; font: 600 15px/1.4 var(--sans); color: var(--ink); }
+.lib-choice .resume-model { margin: 0 0 10px; font: 500 14px/1.45 var(--sans); }
+.lib-choice-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.lib-row.is-asking .lib-choice-btns .ghost:hover:not(:disabled) { background: color-mix(in srgb, var(--bad) 10%, var(--bad-bg)); }
 .lib-yes { background: var(--bad); color: #fff; }
 .lib-yes:hover:not(:disabled) { background: #a82c22; }
 .lib-yes[aria-busy="true"]:disabled { background: var(--bad); color: #fff; opacity: .78; }

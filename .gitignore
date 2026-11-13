@@ -19,3 +19,6 @@ deploy/cloudflared/*.json
 # Evaluation runs: full paper texts and model output, shared as a folder rather than committed
 eval/results/
 backups/
+
+# The browser tests' Node packages (npm ci)
+node_modules/

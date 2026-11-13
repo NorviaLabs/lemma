@@ -12,4 +12,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: npm ci  # puppeteer-core, for the browser tests; they use the runner's Google Chrome
       - run: uv run python -m unittest discover tests
