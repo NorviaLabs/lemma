@@ -1173,6 +1173,24 @@
      "kind": "explain"
     },
     {
+     "id": "trace_loop",
+     "kind": "trace",
+     "on": "model",
+     "prompt": "Trace the loop on the model. Start at the planet warming and pick each step in order, stopping just before the loop comes back to warming.",
+     "answer": [
+      "temp",
+      "ice",
+      "reflect",
+      "absorb"
+     ],
+     "path": true,
+     "hints": [
+      "Warming acts on the ice first.",
+      "After the ice comes the sunlight: first what is bounced away, then what is soaked up."
+     ],
+     "explanation": "Warming means less ice cover; less ice means less sunlight bounced away; less bounced away means more sunlight soaked up. The next link leads back to warming, which is why it is a loop: each round adds to the last, until the ice is gone."
+    },
+    {
      "id": "goal_1",
      "kind": "goal",
      "i": 0

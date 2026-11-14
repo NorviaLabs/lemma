@@ -885,6 +885,16 @@
               h("div", { class: "out", style: `--k:var(--model-${this.colors[o.id] % 8})` },
                 h("dt", {}, h("span", { class: "key", "aria-hidden": "true" }), o.label), h("dd", {}, M.fmt(env[o.id], o.decimals ?? 2, o.scale ?? 1, o.unit || ""))))));
           },
+          // A trace on the model picks nodes on a still copy of the concept's causal picture, in the block's state.
+          renderDiagram: (box, values) => {
+            if (!this.c.model) return null;
+            const pic = h("div", { class: "viz-box trace-copy" });
+            box.append(pic);
+            const drawn = M.diagram(pic, this.model, Object.assign(M.defaults(this.model), values), a.prompt);
+            // On a narrow screen the copy keeps a readable size and scrolls sideways, which a phone doesn't show.
+            if (drawn) pic.prepend(h("p", { class: "trace-scroll-note" }, "Swipe sideways to see the whole model."));
+            return drawn;
+          },
           sourceTitle: (id) => ((lesson.sources || []).find((s) => s.id === id) || {}).title || "",
         });
         update();

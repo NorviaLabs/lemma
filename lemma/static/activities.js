@@ -27,7 +27,9 @@
     return out.map(([x]) => x);
   }
   // mount(container, activity, state, onComplete, env): env.renderModel(box, values) draws the concept's model in a
-  // given state; env.sourceTitle(id) names a source. Both are optional.
+  // given state; env.renderDiagram(box, values) draws a still copy of its causal picture for a trace to pick on and
+  // returns { nodes: { id: { el, label, x, y } }, edges: [{ from, to, el }] }; env.sourceTitle(id) names a source.
+  // All are optional; a trace on the model without a picture shows an error.
   function mount(container, activity, state = {}, onComplete = () => {}, env = {}) {
     if (!KINDS.includes(activity.kind)) throw new Error(`Unsupported teaching activity: ${activity.kind}`);
     const box = el("section", { class: "activity-lab", "aria-label": activity.title || activity.prompt || activity.question || "Activity" });
@@ -211,27 +213,82 @@
       box.append(list, hintList, el("div", { class: "actions" }, el("button", { type: "button", onclick: check }, "Check order"), hintButton(),
         el("button", { type: "button", class: "ghost", onclick: () => { order.splice(0, order.length, ...activity.items); draw(); check(); } }, "Show me")));
     } else if (activity.kind === "trace") {
+      // Pick nodes, as a set or as a path in order, on the block's own diagram or, with "on": "model", on a copy of
+      // the concept's causal model that the player draws. Both are picked, checked and shown the same way.
       const picked = (state.picked ||= []);
-      const pos = Object.fromEntries(activity.nodes.map((n) => [n.id, n]));
-      const picture = svg("svg", { viewBox: "-8 -8 116 116", class: "trace-diagram", role: "group", "aria-label": activity.prompt });
-      const draw = () => {
-        picture.replaceChildren();
-        for (const e of activity.edges || []) {
+      let draw = () => {};
+      const toggle = (id) => { const at = picked.indexOf(id); at >= 0 ? picked.splice(at, 1) : picked.push(id); state.done = false; draw(); };
+      // Enter and Space pick, and the key goes no further, so the lesson's own Enter doesn't move on.
+      const onKey = (id) => (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault?.(); toggle(id); } };
+      const nameOf = (label, at) => label + (at >= 0 ? `, selected ${at + 1}` : "");
+      if (activity.on === "model") {
+        const holder = el("div", { class: "trace-model" });
+        box.append(holder);
+        let drawn = null;
+        try { drawn = env.renderDiagram ? env.renderDiagram(holder, activity.values || {}) : null; } catch (e) { drawn = null; }
+        if (!drawn || !drawn.nodes) {
+          holder.replaceChildren(el("p", { class: "activity-error", role: "alert" }, "This trace can't be shown, because the model's picture couldn't be drawn."));
+          box.append(status); container.append(box);
+          return box;
+        }
+        const marks = Object.entries(drawn.nodes).map(([id, n]) => {
+          const base = n.el.getAttribute("class") || "";
+          n.el.setAttribute("role", "button");
+          n.el.setAttribute("tabindex", "0");
+          n.el.addEventListener("click", () => toggle(id));
+          n.el.addEventListener("keydown", onKey(id));
+          let badge = null, number = null;
+          if (activity.path) {  // the node's place in the path, on its corner
+            badge = svg("g", { class: "trace-badge", "aria-hidden": "true" });
+            number = svg("text", { x: n.x, y: n.y + 5, "text-anchor": "middle", class: "trace-order" });
+            badge.append(svg("circle", { cx: n.x, cy: n.y, r: 13 }), number);
+            n.el.append(badge);
+          }
+          return { id, n, base, badge, number };
+        });
+        const links = (drawn.edges || []).map((e) => ({ ...e, base: e.el.getAttribute("class") || "" }));
+        draw = () => {
+          for (const { id, n, base, badge, number } of marks) {
+            const at = picked.indexOf(id);
+            n.el.setAttribute("class", base + (at >= 0 ? " picked" : ""));
+            n.el.setAttribute("aria-pressed", String(at >= 0));
+            n.el.setAttribute("aria-label", nameOf(n.label, at));
+            if (badge) { number.textContent = at >= 0 ? String(at + 1) : ""; badge.setAttribute("display", at >= 0 ? "inline" : "none"); }
+          }
+          for (const e of links) e.el.setAttribute("class", e.base + (picked.includes(e.from) && picked.includes(e.to) ? " picked" : ""));
+        };
+      } else {
+        // The diagram is drawn once; a pick updates its nodes in place, so the node just picked keeps keyboard focus.
+        const pos = Object.fromEntries(activity.nodes.map((n) => [n.id, n]));
+        const picture = svg("svg", { viewBox: "-8 -8 116 116", class: "trace-diagram", role: "group", "aria-label": activity.prompt });
+        const lines = (activity.edges || []).map((e) => {
           const a = pos[e.from], b = pos[e.to];
-          picture.append(svg("line", { x1: a.x, y1: a.y, x2: b.x, y2: b.y, class: "trace-edge" + (picked.includes(e.from) && picked.includes(e.to) ? " on" : "") }));
-        }
-        for (const n of activity.nodes) {
-          const at = picked.indexOf(n.id);
-          const node = svg("g", { class: "trace-node" + (at >= 0 ? " on" : ""), role: "button", tabindex: "0", "aria-pressed": String(at >= 0), "aria-label": n.label + (at >= 0 ? `, selected ${at + 1}` : "") });
-          const toggle = () => { at >= 0 ? picked.splice(at, 1) : picked.push(n.id); state.done = false; draw(); };
-          node.addEventListener("click", toggle);
-          node.addEventListener("keydown", (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault?.(); toggle(); } });
+          const line = svg("line", { x1: a.x, y1: a.y, x2: b.x, y2: b.y, class: "trace-edge" });
+          picture.append(line);
+          return { e, line };
+        });
+        const nodes = activity.nodes.map((n) => {
+          const node = svg("g", { class: "trace-node", role: "button", tabindex: "0" });
+          node.addEventListener("click", () => toggle(n.id));
+          node.addEventListener("keydown", onKey(n.id));
           const label = svg("text", { x: n.x, y: n.y + 10, "text-anchor": "middle" }); label.textContent = n.label;
-          node.append(svg("circle", { cx: n.x, cy: n.y, r: 4.5 }), label);
-          if (at >= 0 && activity.path) { const k = svg("text", { x: n.x, y: n.y + 1.4, "text-anchor": "middle", class: "trace-order" }); k.textContent = String(at + 1); node.append(k); }
+          const order = svg("text", { x: n.x, y: n.y + 1.4, "text-anchor": "middle", class: "trace-order" });
+          node.append(svg("circle", { cx: n.x, cy: n.y, r: 4.5 }), label, order, svg("circle", { cx: n.x, cy: n.y, r: 6, class: "trace-focus-ring" }));
           picture.append(node);
-        }
-      };
+          return { n, node, order };
+        });
+        draw = () => {
+          for (const { e, line } of lines) line.setAttribute("class", "trace-edge" + (picked.includes(e.from) && picked.includes(e.to) ? " on" : ""));
+          for (const { n, node, order } of nodes) {
+            const at = picked.indexOf(n.id);
+            node.setAttribute("class", "trace-node" + (at >= 0 ? " on" : ""));
+            node.setAttribute("aria-pressed", String(at >= 0));
+            node.setAttribute("aria-label", nameOf(n.label, at));
+            order.textContent = at >= 0 && activity.path ? String(at + 1) : "";
+          }
+        };
+        box.append(picture);
+      }
       const check = () => {
         const ok = activity.path ? picked.length === activity.answer.length && picked.every((x, i) => x === activity.answer[i])
           : picked.length === activity.answer.length && activity.answer.every((x) => picked.includes(x));
@@ -239,7 +296,7 @@
         else status.textContent = activity.path ? "Not yet. Follow the links from the start, one step at a time." : "Not yet. Check each one you picked, and any you left out.";
       };
       draw();
-      box.append(picture, hintList, el("div", { class: "actions" }, el("button", { type: "button", onclick: check }, "Check"), hintButton(),
+      box.append(hintList, el("div", { class: "actions" }, el("button", { type: "button", onclick: check }, "Check"), hintButton(),
         el("button", { type: "button", class: "ghost", onclick: () => { picked.splice(0, picked.length, ...activity.answer); draw(); check(); } }, "Show me"),
         el("button", { type: "button", class: "ghost", onclick: () => { picked.splice(0); state.done = false; draw(); status.textContent = ""; } }, "Clear")));
     } else if (activity.kind === "passage") {

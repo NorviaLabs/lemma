@@ -12,6 +12,8 @@ import copy
 import random
 import re
 
+from lemma import lesson as L
+
 KINDS = ("reversed_model", "misleading_quote", "wrong_answer", "fabricated_finding", "wrong_claim", "wrong_task_answer")
 FABRICATED = " The paper reports that this effect was 47% stronger in its largest sample than in its smallest."
 WRONG_CLAIM = " The paper concludes that this effect disappears entirely once the sample is large enough."
@@ -87,8 +89,12 @@ def _wrong_task(c: dict) -> str | None:
             a["answer"] = a["answer"] * 3 + 10
             return f"estimate {name} now expects {a['answer']}"
         elif kind == "trace" and len(a.get("answer") or []) >= 2 and not a.get("path"):
-            a["answer"] = [n["id"] for n in a.get("nodes") or [] if n["id"] not in a["answer"]][:len(a["answer"])] or a["answer"]
-            return f"trace {name} now expects the nodes it should exclude"
+            diagram = L.model_diagram(c) if a.get("on") == "model" else (a.get("nodes") or [], [])
+            nodes = diagram[0] if isinstance(diagram, tuple) else []
+            wrong = [n["id"] for n in nodes if n["id"] not in a["answer"]][:len(a["answer"])]
+            if wrong:  # only when there are nodes to swap in, so a planted error is never claimed but absent
+                a["answer"] = wrong
+                return f"trace {name} now expects the nodes it should exclude"
     return None
 
 

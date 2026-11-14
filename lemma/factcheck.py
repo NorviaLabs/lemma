@@ -96,13 +96,21 @@ def concept_text(c: dict, n: int, conditions: bool = True) -> str:
     if conn.get("equation"):
         out.append("EQUATION: " + " ".join(str(p.get("text", "")) for p in conn["equation"]) + (f" ({conn.get('caption', '')})" if conn.get("caption") else ""))
     for activity in c.get("activities") or []:
-        out += _activity(activity)
+        out += _activity(activity, c)
     if c.get("recap"):
         out.append(f"RECAP: {c['recap']}")
     return "\n".join(out)
 
 
-def _activity(a: dict) -> list[str]:
+def _trace_diagram(a: dict, c: dict | None) -> tuple[list, list]:
+    """The nodes and links a trace is picked on: its own, or, for a trace on the model, the concept's causal model's."""
+    if a.get("on") == "model":
+        diagram = L.model_diagram(c or {})
+        return diagram if isinstance(diagram, tuple) else ([], [])
+    return a.get("nodes") or [], a.get("edges") or []
+
+
+def _activity(a: dict, c: dict | None = None) -> list[str]:
     """A teaching or response block as the learner meets it, with its marked answers, so Jev can judge it."""
     kind = a.get("kind")
     tag = " (a labelled hypothetical case)" if a.get("hypothetical") else ""
@@ -128,8 +136,9 @@ def _activity(a: dict) -> list[str]:
     if kind == "order":
         return [f"ORDERING{tag}: {a.get('prompt', '')}", "  correct order: " + " -> ".join(a.get("items") or []), f"  why: {a.get('explanation', '')}"]
     if kind == "trace":
-        names = {n.get("id"): n.get("label", "") for n in a.get("nodes") or []}
-        return [f"TRACING{tag}: {a.get('prompt', '')}", "  links: " + "; ".join(f"{names.get(e.get('from'))} -> {names.get(e.get('to'))}" for e in a.get("edges") or []),
+        nodes, links = _trace_diagram(a, c)
+        names = {n.get("id"): n.get("label", "") for n in nodes if isinstance(n, dict)}
+        return [f"TRACING{tag}: {a.get('prompt', '')}", "  links: " + "; ".join(f"{names.get(e.get('from'))} -> {names.get(e.get('to'))}" for e in links if isinstance(e, dict)),
                 "  marked answer: " + " -> ".join(names.get(x, x) for x in a.get("answer") or []), f"  why: {a.get('explanation', '')}"]
     if kind == "passage":
         return [f"SUPPORTING PASSAGE: {a.get('question', '')}"] + [f"  {i + 1}. \"{o.get('quote', '')}\"" + (" [answer]" if a.get("answer") == i else "") + f": {o.get('feedback', '')}"

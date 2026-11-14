@@ -216,8 +216,8 @@ def _num_fields(visual: dict) -> list[tuple[str, object, bool]]:
             out.append((path, v, uses_x))
 
     def each(key):
-        items = visual.get(key) or []
-        return [(i, it) for i, it in enumerate(items) if isinstance(it, dict)]
+        items = visual.get(key)
+        return [(i, it) for i, it in enumerate(items) if isinstance(it, dict)] if isinstance(items, list) else []
 
     if t == "curves":
         for axis in ("x", "y"):
@@ -322,11 +322,17 @@ def _check_visual_shape(vis, where, P: Problems):
             if len(row.get("cells") or []) != ncol:
                 P.add(f"{where}.rows[{r}]", f"needs {ncol} cells, one per column")
     if t == "causal":
-        ids = {n.get("id") for n in vis.get("nodes") or [] if isinstance(n, dict)}
-        for i, e in enumerate(vis.get("edges") or []):
+        nodes, edges = vis.get("nodes") or [], vis.get("edges") or []
+        for key, items in (("nodes", nodes), ("edges", edges)):
+            if not isinstance(items, list) or not all(isinstance(x, dict) for x in items):
+                P.add(where, f"{key} must be a list of objects")
+        nodes = [n for n in nodes if isinstance(n, dict)] if isinstance(nodes, list) else []
+        edges = [e for e in edges if isinstance(e, dict)] if isinstance(edges, list) else []
+        ids = {n.get("id") for n in nodes if isinstance(n.get("id"), str)}
+        for i, e in enumerate(edges):
             if e.get("from") not in ids or e.get("to") not in ids:
                 P.add(f"{where}.edges[{i}]", "from and to must be node ids")
-        for i, n in enumerate(vis.get("nodes") or []):
+        for i, n in enumerate(nodes):
             if not all(_finite(n.get(k)) and 0 <= n.get(k) <= 100 for k in ("x", "y")):
                 P.add(f"{where}.nodes[{i}]", "x and y must be numbers from 0 to 100")
 
@@ -586,7 +592,8 @@ def _mark_ids(vis) -> set:
     """Parts of the picture a narration step can point at: any series, point, marker, line, bar or node with an id."""
     if not isinstance(vis, dict):
         return set()
-    return {m["id"] for key in MARKABLE for m in vis.get(key) or [] if isinstance(m, dict) and isinstance(m.get("id"), str) and m["id"]}
+    parts = [m for key in MARKABLE if isinstance(vis.get(key), list) for m in vis[key]]
+    return {m["id"] for m in parts if isinstance(m, dict) and isinstance(m.get("id"), str) and m["id"]}
 
 
 def _check_narration(block, where, model, focusable, P: Problems, purpose: str):
@@ -680,6 +687,55 @@ def _in_range(model, values, w, P: Problems):
             P.add(w, f"{k!r} must be a number within its control's range")
 
 
+def model_diagram(c: dict) -> tuple[list[dict], list[dict]] | str:
+    """The concept's causal model as a diagram a trace can be drawn on: (nodes, edges), or why it can't be.
+
+    Only a causal visual has nodes with ids an answer can name (a network's nodes come from its simulation), and,
+    like an authored diagram, it must have 3–10 of them."""
+    model = c.get("model") if isinstance(c, dict) else None
+    if not isinstance(model, dict):
+        return "a trace on the model needs the concept's model"
+    vis = model.get("visual")
+    t = vis.get("type") if isinstance(vis, dict) else None
+    if t != "causal":
+        return f"a trace on the model needs a causal visual, and this model's visual is {t!r}"
+    nodes, edges = vis.get("nodes"), vis.get("edges")
+    if not isinstance(nodes, list) or not all(isinstance(n, dict) for n in nodes):
+        return "a trace on the model needs a causal model with 3–10 nodes, each an object with an id"
+    if not 3 <= len(nodes) <= 10:
+        return f"a trace on the model needs a causal model with 3–10 nodes, and this one has {len(nodes)}"
+    ids = [n.get("id") for n in nodes]
+    if not all(isinstance(x, str) for x in ids) or len(set(ids)) != len(ids):
+        return "a trace on the model needs the model's nodes to have unique ids"
+    return nodes, [e for e in edges if isinstance(e, dict)] if isinstance(edges, list) else []
+
+
+def _check_model_trace(a, w, c, P: Problems):
+    """A trace on the concept's own causal model ("on": "model"): the answer names the model's nodes, and a path
+    follows the model's edges in order. The model's own checks (drawable, finite values) run separately."""
+    if a.get("on") != "model":
+        P.add(w, 'on must be "model", or left out for a trace with its own diagram')
+        return
+    if "nodes" in a or "edges" in a:
+        P.add(w, "a trace on the model takes its nodes and edges from the model, so it can't have its own")
+    diagram = model_diagram(c)
+    if isinstance(diagram, str):
+        P.add(w, diagram)
+        return
+    nodes, edges = diagram
+    ids = {n["id"] for n in nodes}
+    links = {(e.get("from"), e.get("to")) for e in edges}
+    answer = a.get("answer")
+    missing = next(((x, y) for x, y in zip(answer, answer[1:]) if (x, y) not in links), None) if isinstance(answer, list) else None
+    # The ids and links live in the model's visual, not in the trace, so the messages say what they are.
+    if not isinstance(answer, list) or not answer or not all(isinstance(x, str) and x in ids for x in answer) or len(set(answer)) != len(answer):
+        P.add(w, f"answer must list distinct node ids of the model (its nodes are {', '.join(n['id'] for n in nodes)})")
+    elif a.get("path") and missing:
+        P.add(w, f"a path answer must follow the model's edges, in order; there is no edge from {missing[0]} to {missing[1]}")
+    if "values" in a:  # the state the copy of the model is drawn in; the model's defaults without it
+        _in_range(c["model"], a["values"], w, P)
+
+
 def _check_block(a, kind, w, c, P: Problems, source_norm):
     if kind == "explain":
         if "text" in a:
@@ -771,6 +827,10 @@ def _check_block(a, kind, w, c, P: Problems, source_norm):
             P.add(w, "items must be text of at most 300 characters")
         elif len(set(items)) != len(items):
             P.add(w, "items must be distinct")
+        _text(a, "explanation", w, P, 1000)
+    elif kind == "trace" and "on" in a:
+        _text(a, "prompt", w, P, 1000)
+        _check_model_trace(a, w, c, P)
         _text(a, "explanation", w, P, 1000)
     elif kind == "trace":
         _text(a, "prompt", w, P, 1000)
@@ -1329,6 +1389,10 @@ present made-up material as evidence. Response blocks may add "hints": 1–3 lin
   {"id": "t", "kind": "trace", "prompt": "...", "nodes": [{"id": "a", "label": "≤ 40 chars", "x": 10, "y": 50}],
    "edges": [{"from": "a", "to": "b"}], "answer": ["a", "b"], "path": true, "explanation": "..."}
       — 3–10 nodes at x, y in 0–100; "path": true means the answer is a route along the edges, in order; otherwise a set
+  {"id": "t2", "kind": "trace", "on": "model", "prompt": "...", "answer": ["z", "t"], "path": true, "values": {"control_id": 1}, "explanation": "..."}
+      — the same, traced on a copy of the concept's own causal model, so it has no "nodes" or "edges": the answer names
+        the causal visual's node ids, and a path follows its edges, in order. Only for a causal model with 3–10 nodes
+        (not a network). "values" is optional: the state the copy is drawn in (the model's defaults without it)
   {"id": "p", "kind": "passage", "question": "Which passage supports ...?", "options": [{"quote": "exact passage", "feedback": "..."}], "answer": 0}
       — 2–4 passages, each copied word for word from the paper (with "source_id" when there are several sources)
   {"id": "e", "kind": "estimate", "question": "...", "answer": 45, "tolerance": 5, "unit": "", "explanation": "..."}

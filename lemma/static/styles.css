@@ -312,9 +312,30 @@ button.hall-replay:hover:not(:disabled) { color: var(--ink); }
 .trace-node { cursor: pointer; outline: none; }
 .trace-node circle { fill: var(--surface); stroke: var(--ink); stroke-width: 1; }
 .trace-node.on circle { fill: var(--green-soft); stroke: var(--green); stroke-width: 2; }
-.trace-node:focus-visible circle { stroke: var(--green); stroke-width: 2.5; }
+.trace-node, .trace-copy .cnode-g { -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+/* Keyboard focus: a dashed ink ring outside the node, so it reads apart from a picked node's green, picked or not. */
+.trace-diagram .trace-node .trace-focus-ring, .trace-copy .viz .trace-focus-ring { fill: none; stroke: var(--ink); visibility: hidden; pointer-events: none; }
+.trace-diagram .trace-node .trace-focus-ring { stroke-width: .8; stroke-dasharray: 1.8 1.2; }
+.trace-copy .viz .trace-focus-ring { stroke-width: 3; stroke-dasharray: 8 5; }
+.trace-node:focus-visible .trace-focus-ring, .trace-copy .cnode-g:focus-visible .trace-focus-ring { visibility: visible; }
 .trace-node text { font: 600 4.2px var(--sans); fill: var(--ink); pointer-events: none; }
 .trace-node .trace-order { font-size: 4px; fill: var(--green); }
+/* A trace on the model: the concept's causal picture, with its nodes to pick. */
+.trace-model { margin-top: 12px; }
+.trace-copy .cnode-g[role="button"] { cursor: pointer; outline: none; }
+.trace-copy .viz .cnode-g.picked .cnode { fill: var(--green-soft); stroke: var(--green); stroke-width: 3; }
+.trace-copy .cnode-g text { pointer-events: none; }
+.trace-copy .viz .trace-hit { fill: transparent; stroke: none; pointer-events: all; }  /* a click anywhere on the label picks */
+/* On a narrow screen the copy keeps a readable size (labels about 11 px, nodes well over 24 px) and scrolls sideways
+   in its own frame, rather than shrinking to fit; the page itself doesn't scroll. */
+.trace-copy .viz-wrap { overflow-x: auto; }
+.trace-copy .viz { min-width: 520px; }
+.trace-scroll-note { display: none; margin: 0 0 6px; font-size: 14px; color: var(--mute); }
+@media (max-width: 600px) { .trace-scroll-note { display: block; } }
+.trace-copy .viz .cedge.picked { stroke: var(--green); }
+.trace-copy .trace-badge circle { fill: var(--green); }
+.trace-copy .trace-badge .trace-order { font: 700 15px var(--sans); fill: var(--surface); }
+.activity-error { margin: 12px 0 0; color: var(--ink); font-weight: 600; }
 .passage-option blockquote { margin: 0; font-size: 16px; line-height: 1.5; }
 .passage-option cite { display: block; margin-top: 6px; font-size: 13px; font-style: normal; color: var(--mute); }
 .construction-picture text { font: 600 5px var(--sans); fill: var(--ink); }

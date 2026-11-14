@@ -396,14 +396,15 @@
       const off = 46;
       const sx = x1 + (dx / len) * off, sy = y1 + (dy / len) * 26, ex = x2 - (dx / len) * off, ey = y2 - (dy / len) * 26;
       const kind = Math.abs(s) < 1e-9 ? "zero" : s > 0 ? "pos" : "neg";
-      el("line", { x1: sx, y1: sy, x2: ex, y2: ey, class: "cedge " + kind, "stroke-width": 1.5 + Math.min(1, Math.abs(s)) * 7, "marker-end": `url(#arr-${kind}${id})` }, svg);
+      el("line", { x1: sx, y1: sy, x2: ex, y2: ey, class: "cedge " + kind, "stroke-width": 1.5 + Math.min(1, Math.abs(s)) * 7, "marker-end": `url(#arr-${kind}${id})`, "data-from": e.from, "data-to": e.to }, svg);
       el("text", { x: (sx + ex) / 2 + (dy / len) * 14, y: (sy + ey) / 2 - (dx / len) * 14 + 4, "text-anchor": "middle", class: "edge-label", text: `${e.label ? e.label + " = " : ""}${fmt(s, 2)}` }, svg);
     }
     for (const n of vis.nodes || []) {
       const [x, y] = P(n);
-      el("rect", { x: x - 60, y: y - 24, width: 120, height: 48, rx: 10, class: "cnode" }, svg);
-      el("text", { x, y: n.value !== undefined ? y - 3 : y + 5, "text-anchor": "middle", class: "cnode-label", text: n.label }, svg);
-      if (n.value !== undefined) el("text", { x, y: y + 15, "text-anchor": "middle", class: "cnode-value", text: fmt(evalNum(n.value, env), 2) }, svg);
+      const g = el("g", { class: "cnode-g", "data-node": n.id }, svg);  // one group per node, so a trace can pick it
+      el("rect", { x: x - 60, y: y - 24, width: 120, height: 48, rx: 10, class: "cnode" }, g);
+      el("text", { x, y: n.value !== undefined ? y - 3 : y + 5, "text-anchor": "middle", class: "cnode-label", text: n.label }, g);
+      if (n.value !== undefined) el("text", { x, y: y + 15, "text-anchor": "middle", class: "cnode-value", text: fmt(evalNum(n.value, env), 2) }, g);
       if (n.id) ctx.anchor(n.id, x + 60, y - 24);
     }
     ctx.legend([{ label: "Positive effect", swatch: "--model-0", shape: "line" }, { label: "Negative effect (dashed)", swatch: "--model-1", shape: "dash" }]);
@@ -518,6 +519,62 @@
       if (p.label) el("text", { x: xs(evalNum(p.x, env)) + 8, y: ys(evalNum(p.y, env)) - 8, class: "point-label", text: p.label }, svg);
     }
   };
+
+  function drawLegend(legendEl, items) {
+    legendEl.replaceChildren(...items.filter((i) => i.label).map((i) => {
+      const s = document.createElement("span");
+      s.className = "legend-item";
+      const sw = document.createElement("span");
+      sw.className = "swatch " + (i.shape || (i.dashed ? "dash" : i.area ? "area" : "line"));
+      sw.style.setProperty("--sw", i.swatch ? `var(${i.swatch})` : col(i.color));
+      s.append(sw, document.createTextNode(i.label));
+      return s;
+    }));
+  }
+
+  /* ------------------------------------------------------------ a diagram to pick on */
+
+  // A still copy of a causal model's picture, drawn once in the given state, for a trace to pick nodes on. It isn't
+  // redrawn (a live view redraws as its box resizes, which would drop the picks), and has no controls. Returns the
+  // nodes and links it drew, { nodes: { id: { el, label, x, y } }, edges: [{ from, to, el }] }, with x, y the
+  // node's top-right corner; null when the model has no causal picture.
+  function diagram(container, model, values, label) {
+    const vis = (model && model.visual) || {};
+    if (vis.type !== "causal") return null;
+    const { env } = compute(model, values);
+    const wrap = document.createElement("div"), legendEl = document.createElement("div");
+    wrap.className = "viz-wrap";
+    legendEl.className = "legend";
+    container.classList.add("model-view");
+    container.append(wrap, legendEl);
+    const legend = [], corners = {};
+    R.causal({
+      vis, env, sim: null, container: wrap, transient: false, W: 640,
+      svgIn: (w, h) => svgRoot(wrap, w, h, label),
+      legend: (items) => legend.push(...items),
+      anchor: (id, x, y) => { corners[id] = [x, y]; },
+      status: () => {},
+      frames: (total, draw) => draw(total - 1),
+    });
+    drawLegend(legendEl, legend);
+    const svg = wrap.querySelector("svg");
+    svg.setAttribute("role", "group");  // it holds the nodes to pick, so it's no longer one image
+    const byId = new Map((vis.nodes || []).map((n) => [n.id, n]));
+    const nodes = {};
+    svg.querySelectorAll("g.cnode-g[data-node]").forEach((g) => {
+      const id = g.getAttribute("data-node"), at = corners[id] || [0, 0], label = (byId.get(id) || {}).label || id;
+      const box = g.querySelector("rect.cnode"), bx = +box.getAttribute("x"), by = +box.getAttribute("y"), bw = +box.getAttribute("width"), bh = +box.getAttribute("height");
+      // Under the box, a hit area as wide as the label, which can run past the box. The copy isn't on the page yet,
+      // so the label is measured from its length, generously (as placeLabels estimates before measuring).
+      const hw = Math.max(bw, String(label).length * 14 * 0.62 + 8);
+      g.insertBefore(el("rect", { x: bx + bw / 2 - hw / 2, y: by, width: hw, height: bh, class: "trace-hit" }), g.firstChild);
+      // Over it, a ring that shows only with keyboard focus: dashed ink, so it reads apart from a picked node's green.
+      el("rect", { x: bx - 7, y: by - 7, width: bw + 14, height: bh + 14, rx: 15, class: "trace-focus-ring" }, g);
+      nodes[id] = { el: g, label, x: at[0], y: at[1] };
+    });
+    const edges = [...svg.querySelectorAll(".cedge[data-from]")].map((line) => ({ from: line.getAttribute("data-from"), to: line.getAttribute("data-to"), el: line }));
+    return { svg, nodes, edges };
+  }
 
   /* ------------------------------------------------------------ view */
 
@@ -685,21 +742,11 @@
       this.resizeObs.observe(this.vizEl);
     }
 
-    renderLegend(items) {
-      this.legendEl.replaceChildren(...items.filter((i) => i.label).map((i) => {
-        const s = document.createElement("span");
-        s.className = "legend-item";
-        const sw = document.createElement("span");
-        sw.className = "swatch " + (i.shape || (i.dashed ? "dash" : i.area ? "area" : "line"));
-        sw.style.setProperty("--sw", i.swatch ? `var(${i.swatch})` : col(i.color));
-        s.append(sw, document.createTextNode(i.label));
-        return s;
-      }));
-    }
+    renderLegend(items) { drawLegend(this.legendEl, items); }
 
     get busy() { return !!this.settling; }
     destroy() { clearInterval(this.frameTimer); if (this.resizeObs) this.resizeObs.disconnect(); }
   }
 
-  root.LemmaModel = { compute, holds, defaults, fmt, ModelView, evalNum, reduceMotion, TRAIL_TYPES };
+  root.LemmaModel = { compute, holds, defaults, fmt, ModelView, diagram, evalNum, reduceMotion, TRAIL_TYPES };
 })(typeof window !== "undefined" ? window : globalThis);
