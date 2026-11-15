@@ -23,7 +23,7 @@ def main(argv=None):
     args = ap.parse_args(argv)
     if args.dev and not dev.is_child():
         return dev.supervise(args.port, open_browser=not args.no_browser)
-    server.DEV = args.dev
+    server.http.DEV = args.dev
     allowed = tuple(h for h in args.allowed_hosts.split(",") if h.strip())
     try:
         httpd = make_server(args.port, exact=args.dev, host=args.host, allowed_hosts=allowed)
@@ -32,13 +32,13 @@ def main(argv=None):
     # Treat `kill` like Ctrl+C.
     signal.signal(signal.SIGTERM, lambda *_: (_ for _ in ()).throw(KeyboardInterrupt()))
     url = f"http://localhost:{httpd.server_address[1]}/"
-    if not server.ON_THIS_COMPUTER:
+    if not server.http.ON_THIS_COMPUTER:
         print(f"Lemma is hosted on {args.host}:{httpd.server_address[1]} for {', '.join(allowed)}  (press Ctrl+C to stop)", flush=True)
     elif not args.dev:  # in dev mode the supervisor prints the address
         print(f"Lemma is running at {url}  (only reachable from this computer; press Ctrl+C to stop)")
     if not jev.available():
         print(f"Search and lesson building are off: {jev.MISSING}", flush=True)
-    if not args.no_browser and server.ON_THIS_COMPUTER:
+    if not args.no_browser and server.http.ON_THIS_COMPUTER:
         threading.Timer(0.5, webbrowser.open, args=(url,)).start()
     try:
         httpd.serve_forever()

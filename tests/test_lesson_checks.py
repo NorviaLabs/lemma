@@ -8,7 +8,7 @@ import copy
 import json
 import unittest
 
-from test_lemma import EXAMPLE, NORM, SOURCE
+from support import EXAMPLE, NORM, SOURCE
 from lemma import lesson as L
 
 

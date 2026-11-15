@@ -22,42 +22,11 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import patch
 
-ROOT = Path(__file__).resolve().parent.parent
-TMP_HOME = tempfile.mkdtemp(prefix="lemma-test-")
-os.environ["LEMMA_HOME"] = TMP_HOME
+from support import EXAMPLE, NORM, ROOT, SOURCE, TESTER, TMP_HOME, Site, act_as, call, request, reset_server, session_cookie, sign_out  # noqa: E402  sets LEMMA_HOME first
 
 from lemma import auth, categorize, chatgpt, jev, claude, dev, expr, export, generate, ingest, kernels, lesson as L, llm, metrics, search, server, store  # noqa: E402
 from lemma.llm import Provider, Reply  # noqa: E402
-import fakejev  # noqa: E402,F401  Jev is essential, so every search and build asks this stand-in
-
-
-# Every person signs in, on their own computer as when hosted, so tests act as a signed-in account too. TESTER is
-# the Google account "tester": API calls made straight from a test and HTTP requests that carry session_cookie()
-# act as the same account.
-TESTER = hashlib.sha256(b"google:tester").hexdigest()[:16]
-
-
-def sign_in(uid: str = TESTER) -> dict:
-    """Signs `uid` in for API functions called straight from a test, as a browser session would."""
-    server.REQUEST.user = {"id": uid, "provider": "google", "name": "Tester", "email": f"{uid}@example.com", "avatar": "", "created": 0}
-    return server.REQUEST.user
-
-
-def reset_server():
-    """Puts back what server.make_server sets, as for a server on this computer, and signs nobody in."""
-    server.ON_THIS_COMPUTER, server.ALLOWED_HOSTS = True, server.LOCAL_HOSTS
-    auth.LOCAL_URL = ""
-    server.REQUEST.user = None
-
-
-def session_cookie(name: str = "tester") -> str:
-    """A Cookie header for HTTP requests, from a real session of the Google account `name`."""
-    user = auth.upsert_user("google", name, name, f"{name}@example.com", "")
-    return f"{auth.SESSION_COOKIE}={auth.new_session(user['id'])}"
-
-EXAMPLE = json.loads((ROOT / "lemma/examples/gallery/galton-1886.json").read_text())
-SOURCE = (ROOT / "lemma/examples/galton-1886.txt").read_text()
-NORM = L.normalize_for_match(SOURCE)
+import fakejev  # noqa: E402  the Jev stand-in, which some tests drive directly
 
 
 def concept(i=1):
@@ -1133,7 +1102,7 @@ class SearchTests(unittest.TestCase):
 
         with patch.object(ingest, "from_url", side_effect=slow):
             with self.assertRaisesRegex(ingest.IngestError, "too slow"):
-                server._first_readable(["https://a/x", "https://b/y", "https://c/z"], timeout=5, budget=1.5)
+                server.builds._first_readable(["https://a/x", "https://b/y", "https://c/z"], timeout=5, budget=1.5)
         self.assertEqual([u for u, _ in tried], ["https://a/x"])  # under a second left, so b and c were skipped
         self.assertLessEqual(tried[0][1], 1.5)
 
@@ -1148,11 +1117,11 @@ class SearchTests(unittest.TestCase):
 
         ingest.from_url = fake
         try:
-            self.assertEqual(server._first_readable(list(pages)).url, "https://c/full")
+            self.assertEqual(server.builds._first_readable(list(pages)).url, "https://c/full")
             with self.assertRaisesRegex(ingest.IngestError, "403"):
-                server._first_readable(["https://a/blocked.pdf"])
+                server.builds._first_readable(["https://a/blocked.pdf"])
             with self.assertRaisesRegex(ingest.IngestError, "short summary"):
-                server._first_readable(["https://a/blocked.pdf", "https://b/abstract"])
+                server.builds._first_readable(["https://a/blocked.pdf", "https://b/abstract"])
         finally:
             ingest.from_url = orig
 
@@ -1738,29 +1707,17 @@ class ClaudeSubscriptionTests(unittest.TestCase):
 class ServerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.httpd = server.make_server(18765)
-        cls.port = cls.httpd.server_address[1]
-        threading.Thread(target=cls.httpd.serve_forever, daemon=True).start()
-        cls.cookie = session_cookie()
+        cls.site = Site(cookie=session_cookie()).__enter__()
+        cls.port = cls.site.port
 
     @classmethod
     def tearDownClass(cls):
-        cls.httpd.shutdown()
-        cls.httpd.server_close()
+        cls.site.__exit__(None, None, None)
 
     def req(self, method, path, body=None, headers=None):
-        c = http.client.HTTPConnection("127.0.0.1", self.port, timeout=10)
-        h = {"Host": f"localhost:{self.port}", "Cookie": self.cookie}
-        h.update(headers or {})
-        data = None
-        if body is not None:
-            data = json.dumps(body).encode()
-            h["Content-Type"] = "application/json"
-        c.request(method, path, data, h)
-        r = c.getresponse()
-        raw = r.read()
-        c.close()
-        return r.status, raw
+        """(status, raw body): these tests read the bytes themselves."""
+        r = self.site.req(method, path, body, headers=headers, origin=False)
+        return r.status, r.raw
 
     def test_index_and_static(self):
         s, raw = self.req("GET", "/")
@@ -1825,7 +1782,7 @@ class ServerTests(unittest.TestCase):
         self.assertIn("abc123", [x["id"] for x in listing])
         self.assertEqual(next(x for x in listing if x["id"] == "abc123")["category"], "")  # saved before categories
         sorted_lesson = dict(built, id="abc124", category={"primary": {"id": "statistics", "name": "Statistics"}})
-        server.store.save_lesson(sorted_lesson, SOURCE, TESTER)
+        store.save_lesson(sorted_lesson, SOURCE, TESTER)
         listing = json.loads(self.req("GET", "/api/lessons")[1])
         self.assertEqual(next(x for x in listing if x["id"] == "abc124")["category"], "Statistics")  # the library shows its subject
         self.assertEqual(self.req("DELETE", "/api/lessons/abc124")[0], 200)
@@ -1875,7 +1832,7 @@ class ServerTests(unittest.TestCase):
         import io
 
         err = io.StringIO()
-        with patch.object(server.store, "list_lessons", side_effect=RuntimeError("paper text sk-secret-123")), contextlib.redirect_stderr(err):
+        with patch.object(store, "list_lessons", side_effect=RuntimeError("paper text sk-secret-123")), contextlib.redirect_stderr(err):
             s, raw = self.req("GET", "/api/lessons")
         self.assertEqual(s, 500)
         message = json.loads(raw)["error"]
@@ -1884,11 +1841,11 @@ class ServerTests(unittest.TestCase):
                                   f"email contact@openlemma.org with error id {eid}.")
         self.assertNotIn(b"sk-secret-123", raw)
         self.assertIn(f"error {eid} in GET /api/lessons: RuntimeError", err.getvalue())
-        self.assertIn("server.py", err.getvalue())  # where it broke
+        self.assertIn(os.path.join("server", "library.py"), err.getvalue())  # where it broke
         self.assertNotIn("sk-secret-123", err.getvalue())
 
     def test_connections_beyond_the_limit_wait_their_turn(self):
-        with patch.object(server, "MAX_CONNECTIONS", 1):
+        with patch.object(server.http, "MAX_CONNECTIONS", 1):
             httpd = server.make_server(0, exact=True)
         threading.Thread(target=httpd.serve_forever, daemon=True).start()
         try:
@@ -1904,6 +1861,36 @@ class ServerTests(unittest.TestCase):
         finally:
             httpd.shutdown()
             httpd.server_close()
+
+    def test_a_stop_that_lands_while_a_request_starts_still_stops_it(self):
+        # Ctrl+C or `kill` (a KeyboardInterrupt in the main thread) can arrive while a request's thread is being
+        # started, after that thread already runs and will free its slot. The stop must end serve_forever, not be
+        # lost in a second release of the same slot (socketserver swallows ordinary errors from a request).
+        import socketserver
+        real = socketserver.ThreadingMixIn.process_request
+
+        def interrupted(self, request, client_address):
+            real(self, request, client_address)
+            deadline = time.time() + 5
+            while time.time() < deadline and self._slots._value != server.http.MAX_CONNECTIONS:
+                time.sleep(0.01)  # the request's thread has run and given its slot back
+            raise KeyboardInterrupt
+
+        httpd = server.make_server(0, exact=True)
+        port = httpd.server_address[1]
+        guard = threading.Timer(5, httpd.shutdown)  # if the stop is lost, end the loop anyway so the test fails, not hangs
+        guard.start()
+        threading.Thread(target=lambda: socket.create_connection(("127.0.0.1", port)).close(), daemon=True).start()
+        try:
+            with patch.object(socketserver.ThreadingMixIn, "process_request", interrupted), self.assertRaises(KeyboardInterrupt):
+                httpd.serve_forever(poll_interval=0.05)
+        finally:
+            guard.cancel()
+            httpd.server_close()
+        deadline = time.time() + 5
+        while time.time() < deadline and httpd._slots._value != server.http.MAX_CONNECTIONS:
+            time.sleep(0.01)
+        self.assertEqual(httpd._slots._value, server.http.MAX_CONNECTIONS, "the request's thread gave its slot back, once")
 
 
 class HostedServerTests(unittest.TestCase):
@@ -2051,7 +2038,7 @@ class HostedServerTests(unittest.TestCase):
             self.assertTrue(metrics.take(bob["id"], "search"))
             self.assertFalse(metrics.take(bob["id"], "search"))
             self.assertTrue(metrics.take(ada["id"], "search"))
-            with patch.object(server, "_provider", return_value=FakeProvider()):
+            with patch.object(server.core, "_provider", return_value=FakeProvider()):
                 s, raw, _ = req("POST", "/api/search", {"query": "loss aversion"}, tb)
             self.assertEqual(s, 429)
             self.assertIn("today's 1 searches", json.loads(raw)["error"])
@@ -2079,40 +2066,39 @@ class ServerLimitTests(unittest.TestCase):
     """What one account can make a hosted server do at once, and what needs an account at all."""
 
     def setUp(self):
-        self.was = server.DEV
+        self.was = server.http.DEV
 
     def tearDown(self):
-        server.DEV = self.was
+        server.http.DEV = self.was
         reset_server()
-        server.REQUEST.user = None
         generate.JOBS.clear()
 
     @staticmethod
     def as_user(uid):
-        server.REQUEST.user = {"id": uid, "email": f"{uid}@example.com"}
+        act_as({"id": uid, "email": f"{uid}@example.com"})
 
     def test_exporting_your_own_lesson_needs_an_account_when_hosted(self):
         lesson, _ = server.load_example()
-        server.REQUEST.user = None
+        sign_out()
         with self.assertRaises(server.ApiError) as e:
-            server.api_export({"lesson": dict(lesson, id="mine", example=False)})
+            call(server.api_export, body={"lesson": dict(lesson, id="mine", example=False)})
         self.assertEqual(e.exception.status, 401)
 
     def test_anyone_can_download_the_example_and_gallery_as_shipped(self):
-        server.REQUEST.user = None
+        sign_out()
         lesson, _ = server.load_example()
         tampered = dict(lesson, example=True, title="Not the real title")
-        html = server.api_export({"lesson": tampered})
+        html = call(server.api_export, body={"lesson": tampered})
         self.assertIn(lesson["title"], html)
         self.assertNotIn("Not the real title", html)  # the shipped lesson, not the one sent
-        slug = server.api_gallery({})[0]["slug"]
-        self.assertIn("<!doctype html>", server.api_export({"lesson": {"gallery": {"slug": slug}}}))
+        slug = call(server.api_gallery)[0]["slug"]
+        self.assertIn("<!doctype html>", call(server.api_export, body={"lesson": {"gallery": {"slug": slug}}}))
 
     def test_exporting_an_unknown_lesson_refuses_rather_than_skipping_the_quote_check(self):
         lesson, _ = server.load_example()
         self.as_user("exp1")
         with self.assertRaises(server.ApiError) as e:
-            server.api_export({"lesson": dict(lesson, id="nosuchlesson", example=False)})
+            call(server.api_export, body={"lesson": dict(lesson, id="nosuchlesson", example=False)})
         self.assertEqual(e.exception.status, 409)
 
     def test_parallel_requests_cannot_overspend_the_daily_allowance(self):
@@ -2135,20 +2121,20 @@ class ServerLimitTests(unittest.TestCase):
             self.as_user("race2")
             go.wait()
             try:
-                server._new_job("build"); results.append("ok")
+                server.builds._new_job("race2", "build"); results.append("ok")
             except server.ApiError as e:
                 results.append(e.status)
         threads = [threading.Thread(target=start) for _ in range(6)]
         for t in threads: t.start()
         for t in threads: t.join()
-        self.assertEqual(results.count("ok"), server.MAX_RUNNING_EACH)
+        self.assertEqual(results.count("ok"), server.builds.MAX_RUNNING_EACH)
 
     def test_a_running_build_cannot_be_deleted_out_of_the_running_count(self):
         self.as_user("del1")
-        job = server._new_job("request")
+        job = server.builds._new_job("del1", "request")
         generate.JOBS[job.id] = job
         with self.assertRaises(server.ApiError) as e:
-            server.api_lesson_delete(job.id)
+            call(server.api_lesson_delete, job.id)
         self.assertEqual(e.exception.status, 409)
         self.assertIn(job.id, generate.JOBS)
 
@@ -2160,7 +2146,7 @@ class ServerLimitTests(unittest.TestCase):
         def read():
             self.as_user("papers1")
             try:
-                server.api_papers({"url": "https://example.org/a"}); results.append("ok")
+                call(server.api_papers, body={"url": "https://example.org/a"}); results.append("ok")
             except server.ApiError as e:
                 results.append(e.status)
         with patch.object(ingest, "from_url", slow):
@@ -2174,19 +2160,18 @@ class ServerLimitTests(unittest.TestCase):
 
     def test_a_build_that_fails_to_start_does_not_stay_running(self):
         self.as_user("ph1")
-        server.REQUEST.headers = {}
         record = {"id": "abcdef123456", "title": "T", "request": {"audience": ""}, "paper": {"text": "x"}, "status": "queued"}
-        with patch.object(server.store, "save_request", side_effect=OSError("disk full")):
+        with patch.object(store, "save_request", side_effect=OSError("disk full")):
             with self.assertRaises(OSError):
-                server._launch_request(record, None, "ph1")
+                server.builds._launch_request(request(), record, None)
         self.assertNotIn("abcdef123456", generate.JOBS)
-        server._new_job("build")  # the account can still build
+        server.builds._new_job("ph1", "build")  # the account can still build
 
     def test_a_bad_content_length_is_refused_before_any_body_is_read(self):
         httpd = server.make_server(0)
         threading.Thread(target=httpd.serve_forever, daemon=True).start()
         try:
-            for length, status in (("-1", 400), ("abc", 400), (str(server.MAX_BODY + 1), 413)):
+            for length, status in (("-1", 400), ("abc", 400), (str(server.http.MAX_BODY + 1), 413)):
                 with socket.create_connection(httpd.server_address, timeout=5) as sock:
                     sock.sendall(f"POST /api/event HTTP/1.1\r\nHost: localhost\r\nContent-Type: application/json\r\nContent-Length: {length}\r\n\r\n{{}}".encode())
                     reply = sock.recv(200).decode()
@@ -2221,16 +2206,16 @@ class ServerLimitTests(unittest.TestCase):
             httpd.server_close()
 
     def test_dev_mode_is_off_on_a_hosted_server(self):
-        server.DEV = True
+        server.http.DEV = True
         httpd = server.make_server(0, host="0.0.0.0", allowed_hosts=("tools.example.com",))
         httpd.server_close()
-        self.assertFalse(server.DEV)
+        self.assertFalse(server.http.DEV)
 
     def test_a_large_upload_that_isnt_a_pdf_is_refused(self):
         self.as_user("up1")
         data = base64.b64encode(b"<html>" + b"x" * (ingest.MAX_PAGE_BYTES + 10)).decode()
         with self.assertRaises(server.ApiError) as e:
-            server.api_papers({"data": data, "filename": "big.html", "content_type": "text/html"})
+            call(server.api_papers, body={"data": data, "filename": "big.html", "content_type": "text/html"})
         self.assertEqual(e.exception.status, 413)
 
 
@@ -2259,16 +2244,16 @@ class DevModeTests(unittest.TestCase):
                 c.close()
                 return r.status, body
 
-            server.DEV = False
+            server.http.DEV = False
             self.assertNotIn(b"dev-reload.js", get("/")[1])
             self.assertEqual(get("/api/dev/events")[0], 404)
-            server.DEV = True
+            server.http.DEV = True
             self.assertIn(b'<script src="static/dev-reload.js"></script>', get("/")[1])
             status, first = get("/api/dev/events", read=3)  # three lines: retry, event, data
             self.assertEqual(status, 200)
             self.assertIn(f"event: hello\ndata: {dev.BOOT_ID}".encode(), first)
         finally:
-            server.DEV = False
+            server.http.DEV = False
             httpd.shutdown()
             httpd.server_close()
 
@@ -2276,7 +2261,7 @@ class DevModeTests(unittest.TestCase):
         self.assertNotIn("dev-reload", export.lesson_html(EXAMPLE))
 
     def test_export_has_no_feedback_prompt_and_sends_nothing(self):
-        # The end-of-lesson feedback prompt is made by app.js and handed to the player only for signed-in accounts;
+        # The end-of-lesson feedback prompt is made by the app (app/feedback.js) and handed to the player only for signed-in accounts;
         # the offline file mounts the player with no hooks, so it has no prompt and nothing that could send one.
         html = export.lesson_html(EXAMPLE)
         self.assertIn('LemmaPlayer.mount(document.getElementById("main"), JSON.parse(document.getElementById("lesson-data").textContent), {});', html)
@@ -2378,11 +2363,11 @@ class CategorizeTests(unittest.TestCase):
         with patch.dict(os.environ, {"TYPESAFE_API_KEY": ""}):
             self.assertFalse(jev.available())
             with self.assertRaisesRegex(generate.GenerationError, "TYPESAFE_API_KEY"):
-                server._categorize({}, {"title": "t", "text": "x"})
+                server.builds._categorize({}, {"title": "t", "text": "x"})
         self.assertEqual(FakeJev.seen, [])
         FakeJev.status = 401
         with self.assertRaisesRegex(generate.GenerationError, "401"):
-            server._categorize({}, {"title": "t", "text": "x"})
+            server.builds._categorize({}, {"title": "t", "text": "x"})
 
     def test_a_brief_outage_is_retried_and_a_refusal_is_not(self):
         FakeJev.status = 503

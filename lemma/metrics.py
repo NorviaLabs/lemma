@@ -13,11 +13,9 @@ from __future__ import annotations
 
 import os
 import sqlite3
-import threading
 import time
-from contextlib import contextmanager
 
-from . import store
+from . import db
 
 # Events the browser may report; the server counts its own (searches, signups, job outcomes) directly.
 BROWSER_EVENTS = frozenset({"lesson_open", "concept_finish", "goal_self", "goal_shown", "check_first_try", "check_retry", "lesson_finish"})
@@ -26,6 +24,7 @@ QUOTAS = {  # kind -> (environment variable, cap per account per day when it isn
     "job": ("LEMMA_DAILY_BUILDS", 20),  # outlines and builds both count: a new lesson is usually one of each
     "read": ("LEMMA_DAILY_READS", 100),  # links and files read on their own, before a lesson is requested
     "feedback": ("LEMMA_DAILY_FEEDBACK", 10),  # messages to whoever runs Lemma, so one account can't flood them
+    "check": ("LEMMA_DAILY_CHECKS", 200),  # new versions of lessons a person wrote, checked on the server
 }
 SITE_QUOTAS = {  # kind -> (environment variable, cap for all accounts together per day, what the learner is told ran out)
     "search": ("LEMMA_SITE_DAILY_SEARCHES", 400, "searches"),
@@ -37,34 +36,18 @@ SITE = "*site*"  # the usage row shared by every account; no account id has this
 class SiteSpent(Exception):
     """Today's allowance for the whole site is used up; the message says so in plain words."""
 
-_lock = threading.Lock()
-_ready: set[str] = set()
+# Version 1 is the schema as first released; add to the end, never edit (see db.py).
+DB = db.Database("metrics.db", [
+    """CREATE TABLE IF NOT EXISTS usage (user_id TEXT NOT NULL, day TEXT NOT NULL, kind TEXT NOT NULL,
+           n INTEGER NOT NULL, PRIMARY KEY (user_id, day, kind));
+       CREATE TABLE IF NOT EXISTS counts (day TEXT NOT NULL, name TEXT NOT NULL,
+           n INTEGER NOT NULL, PRIMARY KEY (day, name));""",
+])
+_tx = DB.tx
 
 
 def _day() -> str:
     return time.strftime("%Y-%m-%d", time.gmtime())
-
-
-@contextmanager
-def _tx():
-    path = str(store.home() / "metrics.db")
-    con = sqlite3.connect(path, timeout=10)
-    try:
-        if path not in _ready:
-            with _lock:
-                con.executescript("""
-                    PRAGMA journal_mode = WAL;
-                    CREATE TABLE IF NOT EXISTS usage (user_id TEXT NOT NULL, day TEXT NOT NULL, kind TEXT NOT NULL,
-                        n INTEGER NOT NULL, PRIMARY KEY (user_id, day, kind));
-                    CREATE TABLE IF NOT EXISTS counts (day TEXT NOT NULL, name TEXT NOT NULL,
-                        n INTEGER NOT NULL, PRIMARY KEY (day, name));
-                """)
-                os.chmod(path, 0o600)
-                _ready.add(path)
-        with con:
-            yield con
-    finally:
-        con.close()
 
 
 def limit(kind: str, site: bool = False) -> int | None:

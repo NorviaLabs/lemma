@@ -3,15 +3,21 @@
 from __future__ import annotations
 
 import base64
+import hashlib
 import html
 import json
 import re
 from importlib import resources
 
-SCRIPTS = ("expr.js", "kernels.js", "visuals.js", "activities.js", "player.js")
+SCRIPTS = ("expr.js", "kernels.js", "visuals.js", "activities.js", "ui.js", "player.js")
 
-# connect-src 'none' and form-action 'none': the page cannot send the learner's answers anywhere.
-CSP = "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'"
+# connect-src 'none' and form-action 'none': the page cannot send the learner's answers anywhere. Scripts: only the
+# file's own, each allowed by its hash (lesson_html adds them), so nothing else runs, not even a javascript: link.
+CSP = "default-src 'none'; script-src {scripts}; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'"
+
+
+def _hash(script: str) -> str:
+    return "'sha256-" + base64.b64encode(hashlib.sha256(script.encode("utf-8")).digest()).decode() + "'"
 
 # Every face the lesson uses is embedded, so the offline file looks the same without a network.
 EMBEDDED_FONTS = ("archivo-latin-normal.woff2", "spline-sans-mono-latin-normal.woff2")
@@ -56,7 +62,9 @@ def _script_safe(text: str) -> str:
 def lesson_html(lesson: dict) -> str:
     data = {k: v for k, v in lesson.items() if k not in ("plan",)}
     payload = json.dumps(data, ensure_ascii=False).replace("<", "\\u003c")  # "<" only occurs inside JSON strings
-    scripts = "\n".join(f"<script>\n{_script_safe(_static(n))}\n</script>" for n in SCRIPTS)
+    bodies = [f"\n{_script_safe(_static(n))}\n" for n in SCRIPTS]
+    scripts = "\n".join(f"<script>{body}</script>" for body in bodies)
+    csp = CSP.format(scripts=" ".join(_hash(b) for b in [*bodies, BOOT]))
     title = html.escape(lesson.get("title") or "OpenLemma lesson")
     return f"""<!doctype html>
 <html lang="en">
@@ -64,7 +72,7 @@ def lesson_html(lesson: dict) -> str:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light">
-<meta http-equiv="Content-Security-Policy" content="{CSP}">
+<meta http-equiv="Content-Security-Policy" content="{csp}">
 <meta name="generator" content="OpenLemma">
 <link rel="icon" href="{_favicon()}">
 <title>{title}</title>

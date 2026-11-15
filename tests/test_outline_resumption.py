@@ -25,7 +25,8 @@ from unittest.mock import patch
 import fakejev  # noqa: F401  Jev is essential, so every search and build asks this stand-in
 from lemma import generate, server, store
 from lemma.llm import ProviderError, Reply
-from test_lemma import SOURCE, TESTER, reset_server, sign_in, wait
+from support import SOURCE, TESTER, call, reset_server, sign_in
+from test_lemma import wait
 from test_multisource import MultiSourceProvider
 from test_saved_concepts import drafted, settle_threads
 
@@ -86,7 +87,7 @@ class OutlineResumptionTests(unittest.TestCase):
         def read(urls):
             self.reads.append(urls[0])
             return SimpleNamespace(title="Galton", url=urls[0], text=SOURCE)
-        self.patches = [patch.object(server, "_first_readable", side_effect=read)]
+        self.patches = [patch.object(server.builds, "_first_readable", side_effect=read)]
         for p in self.patches:
             p.start()
 
@@ -96,7 +97,6 @@ class OutlineResumptionTests(unittest.TestCase):
         settle_threads()
         for p in self.patches:
             p.stop()
-        server.REQUEST.body = {}
         reset_server()
         self.env.stop()
         self.tmp.cleanup()
@@ -105,15 +105,15 @@ class OutlineResumptionTests(unittest.TestCase):
 
     def settled(self, rid):
         for _ in range(1500):
-            record = server.api_request(rid)
+            record = call(server.api_request, rid)
             if record["status"] != "running":
                 return record
             time.sleep(.01)
         self.fail("the build did not settle")
 
     def create(self, provider=None):
-        with patch.object(server, "_provider", return_value=provider or Model()):
-            return server.api_request_create({"sources": [{"url": "https://example.org/galton", "title": "Galton"}]})["id"]
+        with patch.object(server.core, "_provider", return_value=provider or Model()):
+            return call(server.api_request_create, body={"sources": [{"url": "https://example.org/galton", "title": "Galton"}]})["id"]
 
     def outlined(self):
         rid = self.create()
@@ -122,28 +122,26 @@ class OutlineResumptionTests(unittest.TestCase):
         return rid, record
 
     def approve(self, rid, outline, provider=None):
-        with patch.object(server, "_provider", return_value=provider or Model()):
-            server.REQUEST.body = {"outline": outline}
-            server.api_request_outline(rid)
+        with patch.object(server.core, "_provider", return_value=provider or Model()):
+            call(server.api_request_outline, rid, body={"outline": outline})
 
     def retry(self, rid, mode=None, provider=None):
-        with patch.object(server, "_provider", return_value=provider or Model()):
-            server.REQUEST.body = {"mode": mode} if mode else {}
-            server.api_request_retry(rid)
+        with patch.object(server.core, "_provider", return_value=provider or Model()):
+            call(server.api_request_retry, rid, body={"mode": mode} if mode else {})
         return self.settled(rid)
 
     def stop(self, rid, release, locked=True):
         """The server stops: its memory of the build is gone, and the thread left running never writes again."""
         time.sleep(.1)  # the step the build reached is saved
         if locked:
-            with server._requests_lock:
+            with server.builds._requests_lock:
                 job = generate.JOBS.pop(rid)
         else:  # the build holds the lock where it was stopped
             job = generate.JOBS.pop(rid)
         job.cancelled.set()
         release()
         wait(job)
-        record = server.api_request(rid)
+        record = call(server.api_request, rid)
         self.assertEqual(record["status"], "interrupted")
         return record
 
@@ -182,7 +180,7 @@ class OutlineResumptionTests(unittest.TestCase):
     # ------------------------------------------------------------ A. no outline yet
 
     def test_A1_stopped_while_reading_sources_reads_them_again(self):
-        with self.paused(server, "_first_readable") as (reached, release):
+        with self.paused(server.builds, "_first_readable") as (reached, release):
             rid = self.create()
             self.assertTrue(reached.wait(10))
             stopped = self.stop(rid, release)
@@ -193,26 +191,26 @@ class OutlineResumptionTests(unittest.TestCase):
         self.assertEqual(self.reads, ["https://example.org/galton"])
 
     def test_A2_stopped_while_sorting_the_subject_keeps_the_sources_read(self):
-        with self.paused(server.categorize, "categorize") as (reached, release):
+        with self.paused(server.builds.categorize, "categorize") as (reached, release):
             rid = self.create()
             self.assertTrue(reached.wait(10))
             stopped = self.stop(rid, release)
         self.assertIsNone(stopped["resume"])
         self.reads.clear()
-        with patch.object(server.categorize, "categorize", wraps=server.categorize.categorize) as categorize:
+        with patch.object(server.builds.categorize, "categorize", wraps=server.builds.categorize.categorize) as categorize:
             self.assertEqual(self.retry(rid)["status"], "awaiting_outline")
         self.assertEqual(self.reads, [])  # saved as soon as they were read
         self.assertEqual(categorize.call_count, 1)  # the subject it hadn't finished is sorted now
 
     def test_A3_stopped_while_working_out_what_the_sources_build_on_keeps_the_sources_and_subject(self):
-        with self.paused(server.search, "source_subjects") as (reached, release):
+        with self.paused(server.builds.search, "source_subjects") as (reached, release):
             rid = self.create()
             self.assertTrue(reached.wait(10))
             stopped = self.stop(rid, release)
         self.assertIsNone(stopped["resume"])
         category = store.load_request(rid, TESTER)["category"]
         self.reads.clear()
-        with patch.object(server.categorize, "categorize") as categorize:
+        with patch.object(server.builds.categorize, "categorize") as categorize:
             self.assertEqual(self.retry(rid)["status"], "awaiting_outline")
         self.assertEqual(self.reads, [])  # kept
         categorize.assert_not_called()
@@ -226,7 +224,7 @@ class OutlineResumptionTests(unittest.TestCase):
         self.assertIsNone(stopped["resume"])
         self.assertEqual({s["id"]: s["state"] for s in stopped["steps"]}["outline"], "stopped")
         self.reads.clear()
-        with patch.object(server.search, "source_subjects") as subjects:
+        with patch.object(server.builds.search, "source_subjects") as subjects:
             self.assertEqual(self.retry(rid)["status"], "awaiting_outline")
         self.assertEqual(self.reads, [])
         subjects.assert_not_called()  # kept with the request: a retry doesn't pay for it again
@@ -243,7 +241,7 @@ class OutlineResumptionTests(unittest.TestCase):
         hangs = Hangs("outline")
         rid = self.create(hangs)
         self.assertTrue(hangs.hanging.wait(10))
-        server.api_request_cancel(rid)
+        call(server.api_request_cancel, rid)
         cancelled = self.settled(rid)
         self.assertEqual((cancelled["status"], cancelled["resume"]), ("cancelled", None))
         self.assertEqual({s["id"]: s for s in cancelled["steps"]}["outline"]["detail"], "Not built: you cancelled the build")
@@ -254,7 +252,7 @@ class OutlineResumptionTests(unittest.TestCase):
     def test_B1_a_restart_at_review_changes_nothing_and_it_can_still_be_approved(self):
         rid, record = self.outlined()
         generate.JOBS.pop(rid)  # the server restarts while the outline waits
-        after = server.api_request(rid)
+        after = call(server.api_request, rid)
         self.assertEqual((after["status"], after["resume"], after["outline"]), ("awaiting_outline", None, record["outline"]))
         self.approve(rid, after["outline"])
         self.assertEqual(self.settled(rid)["status"], "done")
@@ -265,16 +263,15 @@ class OutlineResumptionTests(unittest.TestCase):
         record = store.load_request(rid, TESTER)
         record["outline"]["subjects"] = [{"title": "Variance", "url": "https://en.wikipedia.org/wiki/Variance", "source": None}]
         store.save_request(record, TESTER)
-        with patch.object(server, "_provider", return_value=Model()):
-            server.REQUEST.body = {"titles": ["Variance"]}
-            server.api_request_add(rid)
+        with patch.object(server.core, "_provider", return_value=Model()):
+            call(server.api_request_add, rid, body={"titles": ["Variance"]})
         self.assertEqual(self.settled(rid)["status"], "awaiting_outline")
         self.assertEqual(len(json.loads(store.load_request(rid, TESTER)["paper"]["text"])["lemma_sources"]), 2)
 
     def test_B3_cancelled_at_review_then_retried_proposes_a_new_outline_without_asking(self):
         rid, _ = self.outlined()
-        server.api_request_cancel(rid)
-        cancelled = server.api_request(rid)
+        call(server.api_request_cancel, rid)
+        cancelled = call(server.api_request, rid)
         self.assertEqual((cancelled["status"], cancelled["resume"]), ("cancelled", None))  # never approved: no choice
         again = Model()
         self.assertEqual(self.retry(rid, provider=again)["status"], "awaiting_outline")
@@ -292,10 +289,9 @@ class OutlineResumptionTests(unittest.TestCase):
         record = store.load_request(rid, TESTER)
         record["outline"]["subjects"] = [{"title": "Variance", "url": "https://en.wikipedia.org/wiki/Variance", "source": None}]
         store.save_request(record, TESTER)
-        with self.paused(server, "_first_readable") as (reached, release):
-            with patch.object(server, "_provider", return_value=Model()):
-                server.REQUEST.body = {"titles": ["Variance"]}
-                server.api_request_add(rid)
+        with self.paused(server.builds, "_first_readable") as (reached, release):
+            with patch.object(server.core, "_provider", return_value=Model()):
+                call(server.api_request_add, rid, body={"titles": ["Variance"]})
             self.assertTrue(reached.wait(10))
             stopped = self.stop(rid, release)
         self.assertIsNone(stopped["resume"])  # the outline was being remade: there's none to continue
@@ -349,7 +345,7 @@ class OutlineResumptionTests(unittest.TestCase):
         record = store.load_request(rid, TESTER)
         record["outline"]["title"] += " (edited)"  # it no longer matches what was approved
         store.save_request(record, TESTER)
-        self.assertIsNone(server.api_request(rid)["resume"])
+        self.assertIsNone(call(server.api_request, rid)["resume"])
         with self.assertRaises(server.ApiError) as e:
             self.retry(rid, "continue")
         self.assertEqual(e.exception.status, 409)
@@ -361,7 +357,7 @@ class OutlineResumptionTests(unittest.TestCase):
         record = store.load_request(rid, TESTER)
         del record["approved"]
         store.save_request(record, TESTER)
-        self.assertIsNone(server.api_request(rid)["resume"])
+        self.assertIsNone(call(server.api_request, rid)["resume"])
         self.assertEqual(self.retry(rid)["status"], "awaiting_outline")
 
     def test_C7_continuing_twice_with_three_models_keeps_everything_and_credits_all_three(self):
@@ -370,9 +366,8 @@ class OutlineResumptionTests(unittest.TestCase):
         rid, stopped = self.stopped_mid_build(finished=("mid_parent",), provider=first)
         self.assertEqual(stopped["resume"]["kept"], 1)
         second = type("HangsB", (Hangs, B), {})(["why_regression"])
-        with patch.object(server, "_provider", return_value=second):
-            server.REQUEST.body = {"mode": "continue"}
-            server.api_request_retry(rid)
+        with patch.object(server.core, "_provider", return_value=second):
+            call(server.api_request_retry, rid, body={"mode": "continue"})
         self.assertTrue(second.hanging.wait(10))
         for _ in range(500):
             if "regression_line" in store.BuiltConcepts(rid, TESTER).load():
@@ -390,9 +385,8 @@ class OutlineResumptionTests(unittest.TestCase):
     def test_C8_started_over_then_stopped_while_proposing_the_new_outline(self):
         rid, _ = self.stopped_mid_build()
         hangs = Hangs("outline")
-        with patch.object(server, "_provider", return_value=hangs):
-            server.REQUEST.body = {"mode": "start_over"}
-            server.api_request_retry(rid)
+        with patch.object(server.core, "_provider", return_value=hangs):
+            call(server.api_request_retry, rid, body={"mode": "start_over"})
         self.assertTrue(hangs.hanging.wait(10))
         stopped = self.stop(rid, hangs.stopped.set)
         self.assertIsNone(stopped["resume"])  # the approved outline is gone: nothing to continue
@@ -433,7 +427,7 @@ class OutlineResumptionTests(unittest.TestCase):
             release()
             wait(job)
         on_disk()
-        record = server.api_request(rid)  # the restarted server reads it
+        record = call(server.api_request, rid)  # the restarted server reads it
         self.assertEqual(record["status"], "done")
         return record
 
@@ -443,7 +437,7 @@ class OutlineResumptionTests(unittest.TestCase):
         self.assertEqual({s["id"]: (s["state"], s["detail"]) for s in record["steps"]}["save"], ("done", "Saved to your library"))
         self.assertFalse(store.BuiltConcepts(rid, TESTER).dir.exists())
         self.assertEqual(store.load_request(rid, TESTER)["status"], "done")  # settled once, on disk
-        self.assertEqual([r["status"] for r in server.api_requests({}) if r["id"] == rid], ["done"])  # not "In progress"
+        self.assertEqual([r["status"] for r in call(server.api_requests) if r["id"] == rid], ["done"])  # not "In progress"
         with self.assertRaises(server.ApiError) as e:
             self.retry(rid, "continue")
         self.assertEqual(e.exception.status, 409)
@@ -459,12 +453,11 @@ class OutlineResumptionTests(unittest.TestCase):
     def test_D1_a_second_retry_while_the_first_runs_is_refused(self):
         rid, _ = self.stopped_mid_build()
         hangs = Hangs(["why_regression"])
-        with patch.object(server, "_provider", return_value=hangs):
-            server.REQUEST.body = {"mode": "continue"}
-            server.api_request_retry(rid)
+        with patch.object(server.core, "_provider", return_value=hangs):
+            call(server.api_request_retry, rid, body={"mode": "continue"})
             self.assertTrue(hangs.hanging.wait(10))
             with self.assertRaises(server.ApiError) as e:
-                server.api_request_retry(rid)  # a double click
+                call(server.api_request_retry, rid, body={"mode": "continue"})  # a double click
         self.assertEqual((e.exception.status, e.exception.message), (409, "Only a stopped build can be retried."))
         hangs.stopped.set()
 
@@ -478,7 +471,7 @@ class OutlineResumptionTests(unittest.TestCase):
 
     def test_D3_start_over_is_accepted_where_there_is_no_choice(self):
         rid, _ = self.outlined()
-        server.api_request_cancel(rid)
+        call(server.api_request_cancel, rid)
         self.assertEqual(self.retry(rid, "start_over")["status"], "awaiting_outline")
 
 

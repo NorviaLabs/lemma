@@ -50,7 +50,7 @@ class Quotas(unittest.TestCase):
     none, so a forgotten line in production can't run up the server's bills. Lifting a cap takes an explicit
     `unlimited`, as local.env does for development. The code never asks where it runs."""
 
-    UNSET = {"LEMMA_DAILY_SEARCHES": "", "LEMMA_DAILY_BUILDS": "", "LEMMA_DAILY_READS": "", "LEMMA_DAILY_FEEDBACK": "",
+    UNSET = {"LEMMA_DAILY_SEARCHES": "", "LEMMA_DAILY_BUILDS": "", "LEMMA_DAILY_READS": "", "LEMMA_DAILY_FEEDBACK": "", "LEMMA_DAILY_CHECKS": "",
              "LEMMA_SITE_DAILY_SEARCHES": "", "LEMMA_SITE_DAILY_BUILDS": ""}
 
     def setUp(self):  # the site's allowance is shared, so each test starts from an empty count
@@ -60,14 +60,14 @@ class Quotas(unittest.TestCase):
 
     def test_a_missing_cap_falls_back_to_the_safe_default(self):
         with patch.dict(os.environ, self.UNSET):
-            self.assertEqual({k: metrics.limit(k) for k in metrics.QUOTAS}, {"search": 40, "job": 20, "read": 100, "feedback": 10})
+            self.assertEqual({k: metrics.limit(k) for k in metrics.QUOTAS}, {"search": 40, "job": 20, "read": 100, "feedback": 10, "check": 200})
             self.assertEqual({k: metrics.limit(k, site=True) for k in metrics.SITE_QUOTAS}, {"search": 400, "job": 200})
             with patch.dict(metrics.QUOTAS, {"job": ("LEMMA_DAILY_BUILDS", 2)}):
                 self.assertEqual([metrics.take("quota-default", "job") for _ in range(3)], [True, True, False])
 
     def test_only_an_explicit_unlimited_lifts_a_cap(self):
         with patch.dict(os.environ, {"LEMMA_DAILY_SEARCHES": "unlimited", "LEMMA_DAILY_BUILDS": " Unlimited ", "LEMMA_DAILY_READS": "unlimited",
-                                     "LEMMA_DAILY_FEEDBACK": "unlimited", "LEMMA_SITE_DAILY_SEARCHES": "unlimited",
+                                     "LEMMA_DAILY_FEEDBACK": "unlimited", "LEMMA_DAILY_CHECKS": "unlimited", "LEMMA_SITE_DAILY_SEARCHES": "unlimited",
                                      "LEMMA_SITE_DAILY_BUILDS": "unlimited"}):
             for kind in metrics.QUOTAS:
                 self.assertIsNone(metrics.limit(kind))

@@ -11,7 +11,8 @@ import time
 import unittest
 from unittest.mock import patch
 
-from test_lemma import EXAMPLE, SOURCE, FakeConversation, FakeProvider, wait
+from support import EXAMPLE, SOURCE
+from test_lemma import FakeConversation, FakeProvider, wait
 from lemma import generate, jev
 from lemma.llm import ProviderError, Reply
 

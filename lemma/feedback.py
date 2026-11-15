@@ -6,15 +6,11 @@ lesson, error or build id) so the report can be followed up. It is deleted with 
 
 from __future__ import annotations
 
-import os
 import re
-import sqlite3
-import threading
 import time
 import uuid
-from contextlib import contextmanager
 
-from . import store
+from . import db, store
 
 RATINGS = ("helpful", "not_helpful")
 KINDS = ("general", "lesson", "error", "build")
@@ -30,32 +26,15 @@ FIELDS = {
 }
 COLUMNS = ("id", "user_id", "email", "name", "created", "rating", "message", "kind", *FIELDS, "status")
 
-_lock = threading.Lock()
-_ready: set[str] = set()
-
-
-@contextmanager
-def _tx():
-    path = str(store.home() / "feedback.db")
-    con = sqlite3.connect(path, timeout=10)
-    con.row_factory = sqlite3.Row
-    try:
-        if path not in _ready:
-            with _lock:
-                con.executescript("""
-                    PRAGMA journal_mode = WAL;
-                    CREATE TABLE IF NOT EXISTS feedback (id TEXT PRIMARY KEY, user_id TEXT NOT NULL, email TEXT NOT NULL,
-                        name TEXT NOT NULL, created REAL NOT NULL, rating TEXT, message TEXT NOT NULL, kind TEXT NOT NULL,
-                        page TEXT NOT NULL, lesson_id TEXT NOT NULL, lesson_title TEXT NOT NULL, error_id TEXT NOT NULL,
-                        request_id TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'new');
-                    CREATE INDEX IF NOT EXISTS feedback_user ON feedback (user_id);
-                """)
-                os.chmod(path, 0o600)
-                _ready.add(path)
-        with con:
-            yield con
-    finally:
-        con.close()
+# Version 1 is the schema as first released; add to the end, never edit (see db.py).
+DB = db.Database("feedback.db", [
+    """CREATE TABLE IF NOT EXISTS feedback (id TEXT PRIMARY KEY, user_id TEXT NOT NULL, email TEXT NOT NULL,
+           name TEXT NOT NULL, created REAL NOT NULL, rating TEXT, message TEXT NOT NULL, kind TEXT NOT NULL,
+           page TEXT NOT NULL, lesson_id TEXT NOT NULL, lesson_title TEXT NOT NULL, error_id TEXT NOT NULL,
+           request_id TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'new');
+       CREATE INDEX IF NOT EXISTS feedback_user ON feedback (user_id);""",
+], rows=True)
+_tx = DB.tx
 
 
 def _text(body: dict, key: str) -> str:

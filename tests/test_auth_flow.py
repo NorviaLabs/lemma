@@ -14,7 +14,7 @@ import urllib.error
 import urllib.parse
 from unittest.mock import patch
 
-from hosting import HostedServer, set_cookies
+from support import Site, set_cookies
 from lemma import auth, metrics
 
 GOOGLE_TOKEN = "https://oauth2.googleapis.com/token"
@@ -55,11 +55,11 @@ class FakeProviders:
 class SignInFlow(unittest.TestCase):
     def sign_in(self, site, pid, code="c0de"):
         """Starts at /auth/<pid>/start and returns the callback's (status, Location, cookies set)."""
-        s, r, _ = site.req("GET", f"/auth/{pid}/start")
+        s, _, r = site.req("GET", f"/auth/{pid}/start")
         self.assertEqual(s, 302)
         state = set_cookies(r)[auth.STATE_COOKIE][0]
         self.assertEqual(urllib.parse.parse_qs(urllib.parse.urlsplit(r.getheader("Location")).query)["state"], [state])
-        s, r, _ = site.req("GET", f"/auth/{pid}/callback?code={code}&state={state}", cookies={auth.STATE_COOKIE: state})
+        s, _, r = site.req("GET", f"/auth/{pid}/callback?code={code}&state={state}", cookies={auth.STATE_COOKIE: state})
         return s, r.getheader("Location"), set_cookies(r)
 
     def error_shown(self, location):
@@ -71,7 +71,7 @@ class SignInFlow(unittest.TestCase):
         routes = {GOOGLE_TOKEN: {"access_token": "at-123"},
                   GOOGLE_INFO: {"sub": "g-77", "email_verified": True, "name": "Ada Lovelace", "email": "ada@example.com", "picture": "https://lh3.googleusercontent.com/a"}}
         before = sum(day.get("sign_in", 0) for day in metrics.report().values())
-        with HostedServer(GOOGLE_ENV) as site, FakeProviders(routes) as fake:
+        with Site(hosted=True, env=GOOGLE_ENV) as site, FakeProviders(routes) as fake:
             s, location, cookies = self.sign_in(site, "google")
             self.assertEqual((s, location), (302, "https://tools.example.com/#/"))
             token, attrs = cookies[auth.SESSION_COOKIE]
@@ -86,7 +86,7 @@ class SignInFlow(unittest.TestCase):
                               "redirect_uri": "https://tools.example.com/auth/google/callback"})
             self.assertEqual((info["url"], info["auth"]), (GOOGLE_INFO, "Bearer at-123"))
 
-            user = json.loads(site.req("GET", "/api/status", cookies={auth.SESSION_COOKIE: token})[2])["user"]
+            user = json.loads(site.req("GET", "/api/status", cookies={auth.SESSION_COOKIE: token}).raw)["user"]
             self.assertEqual((user["provider"], user["name"], user["email"], user["avatar"]),
                              ("google", "Ada Lovelace", "ada@example.com", "https://lh3.googleusercontent.com/a"))
             self.assertEqual(sum(day.get("sign_in", 0) for day in metrics.report().values()), before + 1)
@@ -94,25 +94,25 @@ class SignInFlow(unittest.TestCase):
             # Signing in again updates the same account rather than making a second one.
             routes[GOOGLE_INFO] = dict(routes[GOOGLE_INFO], name="Ada King")
             token2 = self.sign_in(site, "google")[2][auth.SESSION_COOKIE][0]
-            again = json.loads(site.req("GET", "/api/status", cookies={auth.SESSION_COOKIE: token2})[2])["user"]
+            again = json.loads(site.req("GET", "/api/status", cookies={auth.SESSION_COOKIE: token2}).raw)["user"]
             self.assertEqual((again["id"], again["name"]), (user["id"], "Ada King"))
 
     def test_cancelling_at_the_provider_returns_to_sign_in_without_a_session(self):
-        with HostedServer(GOOGLE_ENV) as site, FakeProviders({}) as fake:
-            s, r, _ = site.req("GET", "/auth/google/callback?error=access_denied&state=x", cookies={auth.STATE_COOKIE: "x"})
+        with Site(hosted=True, env=GOOGLE_ENV) as site, FakeProviders({}) as fake:
+            s, _, r = site.req("GET", "/auth/google/callback?error=access_denied&state=x", cookies={auth.STATE_COOKIE: "x"})
             self.assertEqual((s, r.getheader("Location")), (302, "https://tools.example.com/#/signin"))
             self.assertNotIn(auth.SESSION_COOKIE, set_cookies(r))
             self.assertEqual(fake.calls, [])
 
     def test_google_accounts_need_a_verified_email(self):
         routes = {GOOGLE_TOKEN: {"access_token": "at"}, GOOGLE_INFO: {"sub": "g-1", "email": "x@example.com", "email_verified": False}}
-        with HostedServer(GOOGLE_ENV) as site, FakeProviders(routes):
+        with Site(hosted=True, env=GOOGLE_ENV) as site, FakeProviders(routes):
             s, location, cookies = self.sign_in(site, "google")
             self.assertIn("verified email address", self.error_shown(location))
             self.assertNotIn(auth.SESSION_COOKIE, cookies)
 
     def test_a_token_reply_without_an_access_token_does_not_sign_in(self):
-        with HostedServer(GOOGLE_ENV) as site, FakeProviders({GOOGLE_TOKEN: {"error": "invalid_grant"}}) as fake:
+        with Site(hosted=True, env=GOOGLE_ENV) as site, FakeProviders({GOOGLE_TOKEN: {"error": "invalid_grant"}}) as fake:
             s, location, cookies = self.sign_in(site, "google")
             self.assertEqual(self.error_shown(location), "Signing in didn't finish. Please try again.")
             self.assertNotIn(auth.SESSION_COOKIE, cookies)
@@ -120,21 +120,21 @@ class SignInFlow(unittest.TestCase):
 
     def test_an_unreachable_or_garbled_provider_reads_as_a_retryable_error(self):
         for answer, reason in ((urllib.error.URLError("timed out"), "timed out"), (TimeoutError("slow"), "slow"), (b"<html>busy</html>", "Expecting value")):
-            with self.subTest(reason=reason), HostedServer(GOOGLE_ENV) as site, FakeProviders({GOOGLE_TOKEN: answer}):
+            with self.subTest(reason=reason), Site(hosted=True, env=GOOGLE_ENV) as site, FakeProviders({GOOGLE_TOKEN: answer}):
                 s, location, cookies = self.sign_in(site, "google")
                 message = self.error_shown(location)
                 self.assertTrue(message.startswith(f"Signing in didn't work ({reason}"), message)
                 self.assertNotIn(auth.SESSION_COOKIE, cookies)
 
     def test_a_callback_without_a_code_never_calls_the_provider(self):
-        with HostedServer(GOOGLE_ENV) as site, FakeProviders({}) as fake:
+        with Site(hosted=True, env=GOOGLE_ENV) as site, FakeProviders({}) as fake:
             s, location, cookies = self.sign_in(site, "google", code="")
             self.assertEqual(self.error_shown(location), "Signing in didn't finish. Please try again.")
             self.assertEqual(fake.calls, [])
 
     def test_an_unconfigured_provider_is_not_offered(self):
-        with HostedServer(GOOGLE_ENV) as site:
-            s, r, _ = site.req("GET", "/auth/github/start")
+        with Site(hosted=True, env=GOOGLE_ENV) as site:
+            s, _, r = site.req("GET", "/auth/github/start")
             self.assertEqual(s, 302)
             self.assertEqual(self.error_shown(r.getheader("Location")), "That sign-in option isn't available.")
             self.assertEqual(set_cookies(r)[auth.STATE_COOKIE][0], "")  # no sign-in was started
@@ -145,10 +145,10 @@ class SignInFlow(unittest.TestCase):
                   GITHUB_EMAILS: [{"email": "old@example.com", "primary": False, "verified": True},
                                   {"email": "unverified@example.com", "primary": True, "verified": False},
                                   {"email": "octo@example.com", "primary": True, "verified": True}]}
-        with HostedServer(GITHUB_ENV) as site, FakeProviders(routes) as fake:
+        with Site(hosted=True, env=GITHUB_ENV) as site, FakeProviders(routes) as fake:
             s, location, cookies = self.sign_in(site, "github")
             self.assertEqual(location, "https://tools.example.com/#/")
-            user = json.loads(site.req("GET", "/api/status", cookies={auth.SESSION_COOKIE: cookies[auth.SESSION_COOKIE][0]})[2])["user"]
+            user = json.loads(site.req("GET", "/api/status", cookies={auth.SESSION_COOKIE: cookies[auth.SESSION_COOKIE][0]}).raw)["user"]
             self.assertEqual((user["provider"], user["name"], user["email"]), ("github", "octocat", "octo@example.com"))
             self.assertEqual([c["auth"] for c in fake.calls[1:]], ["Bearer gh-1", "Bearer gh-1"])
 
@@ -161,7 +161,7 @@ class SignInFlow(unittest.TestCase):
 
     def test_github_without_an_account_id_or_email_list(self):
         no_id = {GITHUB_TOKEN: {"access_token": "t"}, GITHUB_USER: {"login": "ghost", "email": "g@example.com"}}
-        with HostedServer(GITHUB_ENV) as site, FakeProviders(no_id):
+        with Site(hosted=True, env=GITHUB_ENV) as site, FakeProviders(no_id):
             s, location, cookies = self.sign_in(site, "github")
             self.assertEqual(self.error_shown(location), "Signing in didn't finish. Please try again.")
             self.assertNotIn(auth.SESSION_COOKIE, cookies)
@@ -174,7 +174,7 @@ class SignInFlow(unittest.TestCase):
         # Searches and builds spend OpenLemma's own keys, so an account must be a verified person, as with Google.
         routes = {GITHUB_TOKEN: {"access_token": "gh-3"}, GITHUB_USER: {"id": 45, "login": "nomail", "email": None},
                   GITHUB_EMAILS: [{"email": "nomail@example.com", "primary": True, "verified": False}]}
-        with HostedServer(GITHUB_ENV) as site, FakeProviders(routes):
+        with Site(hosted=True, env=GITHUB_ENV) as site, FakeProviders(routes):
             s, location, cookies = self.sign_in(site, "github")
             self.assertIn("verified email address", self.error_shown(location))
             self.assertNotIn(auth.SESSION_COOKIE, cookies)

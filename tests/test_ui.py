@@ -6,7 +6,7 @@ provider and Jev are stand-ins, as everywhere in the tests.
 
 It needs Node.js, the test packages (`npm ci`) and Chrome or Chromium, found on the PATH or named by
 LEMMA_TEST_CHROME; without any of them, it's skipped. LEMMA_UI_COVERAGE=<folder> also saves the browser's coverage of
-app.js and player.js there, for c8.
+the app's modules, player.js and ui.js there, for c8.
 """
 import json
 import os
@@ -22,9 +22,10 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 import fakejev  # noqa: F401  Jev is essential, so every search and build asks this stand-in
-from lemma import generate, llm, server, store
+from lemma import generate, ingest, llm, server, store
 from lemma.llm import ProviderError
-from test_lemma import SOURCE, TESTER, reset_server, session_cookie, sign_in, wait
+from support import SOURCE, TESTER, call, reset_server, session_cookie, sign_in
+from test_lemma import wait
 from test_multisource import MultiSourceProvider
 from test_saved_concepts import Stops, settle_threads
 
@@ -96,8 +97,8 @@ class Gate(OpenAI):
         return conv
 
 
-def current_provider():
-    headers = getattr(server.REQUEST, "headers", None) or {}
+def current_provider(req):
+    headers = req.headers
     return Gate() if headers.get("X-Test-Gate") else OpenAI()
 
 
@@ -112,8 +113,8 @@ class BrowserTests(unittest.TestCase):
         self.env.start()
         sign_in()
         self.patches = [
-            patch.object(server, "_first_readable", return_value=SimpleNamespace(title="Galton", url="https://example.org/galton", text=SOURCE)),
-            patch.object(server, "_provider", side_effect=current_provider),
+            patch.object(server.builds, "_first_readable", return_value=SimpleNamespace(title="Galton", url="https://example.org/galton", text=SOURCE)),
+            patch.object(server.core, "_provider", side_effect=current_provider),
             # The connect step checks a key by listing its models, which would ask the real service.
             patch.object(llm.HTTPProvider, "models", return_value=[{"id": "gpt-6.1-sol", "name": "gpt-6.1-sol", "context": 400000}]),
         ]
@@ -139,7 +140,6 @@ class BrowserTests(unittest.TestCase):
         settle_threads()
         for p in self.patches:
             p.stop()
-        server.REQUEST.body = {}
         reset_server()
         self.env.stop()
         self.tmp.cleanup()
@@ -148,7 +148,7 @@ class BrowserTests(unittest.TestCase):
 
     def settled(self, rid):
         for _ in range(1000):
-            record = server.api_request(rid)
+            record = call(server.api_request, rid)
             if record["status"] != "running":
                 return record
             time.sleep(.01)
@@ -156,9 +156,9 @@ class BrowserTests(unittest.TestCase):
 
     def outlined(self, provider=Claude, sources=None):
         """A build at outline review."""
-        with patch.object(server, "_provider", return_value=provider()):
-            rid = server.api_request_create({"sources": sources or [{"url": "https://example.org/galton", "title": "Galton"}],
-                                             "topic": "Why do tall parents have shorter children?"})["id"]
+        with patch.object(server.core, "_provider", return_value=provider()):
+            rid = call(server.api_request_create, body={"sources": sources or [{"url": "https://example.org/galton", "title": "Galton"}],
+                                                        "topic": "Why do tall parents have shorter children?"})["id"]
             record = self.settled(rid)
         self.assertEqual(record["status"], "awaiting_outline", record.get("error"))
         return rid, record["outline"]
@@ -167,9 +167,8 @@ class BrowserTests(unittest.TestCase):
         """A build whose outline was approved, stopped by a server restart after `finished` concepts."""
         rid, outline = self.outlined(sources=sources)
         provider = built_by("why_regression")
-        with patch.object(server, "_provider", return_value=provider):
-            server.REQUEST.body = {"outline": outline}
-            server.api_request_outline(rid)
+        with patch.object(server.core, "_provider", return_value=provider):
+            call(server.api_request_outline, rid, body={"outline": outline})
         job = generate.JOBS[rid]
         self.assertTrue(provider.hanging.wait(10))
         for _ in range(1000):
@@ -177,7 +176,7 @@ class BrowserTests(unittest.TestCase):
                 break
             time.sleep(.01)
         time.sleep(.2)  # the last finished concept's step is saved just after the concept
-        with server._requests_lock:  # the server stops: its memory is gone, and its threads never write again
+        with server.builds._requests_lock:  # the server stops: its memory is gone, and its threads never write again
             generate.JOBS.pop(rid)
         job.cancelled.set()
         provider.stopped.set()
@@ -204,13 +203,13 @@ class BrowserTests(unittest.TestCase):
         rid = self.stopped(built_by=OpenAIStops)
         self.run_flow("library-start-over", {"build": rid})
         self.assertFalse(store.BuiltConcepts(rid, TESTER).dir.exists())
-        self.assertEqual(server.api_request(rid)["status"], "awaiting_outline")
+        self.assertEqual(call(server.api_request, rid)["status"], "awaiting_outline")
 
     def test_build_page_of_an_errored_build_keeps_its_error_and_offers_the_choice(self):
         rid = self.stopped()
         record = store.load_request(rid, TESTER)
         record.update(status="error", error="The checks couldn't run just now, so the build stopped. Retry in a moment. (error 3f9a1c2e)")
-        server._stop_steps(record)
+        server.builds._stop_steps(record)
         store.save_request(record, TESTER)
         self.run_flow("build-page-start-over", {"build": rid})
         self.assertFalse(store.BuiltConcepts(rid, TESTER).dir.exists())
@@ -231,12 +230,12 @@ class BrowserTests(unittest.TestCase):
     def test_without_a_provider_continue_goes_through_connecting_and_carries_on(self):
         rid = self.stopped()
         self.run_flow("connect-carries-the-choice", {"build": rid}, cred=None)
-        self.assertEqual(server.api_request(rid)["status"], "done")
+        self.assertEqual(call(server.api_request, rid)["status"], "done")
 
     def test_cancelling_while_learning_leads_to_the_choice(self):
         rid, _ = self.outlined(OpenAI)
         self.run_flow("cancel-while-learning", {"build": rid})
-        self.assertEqual(server.api_request(rid)["resume"]["kept"], 2)
+        self.assertEqual(call(server.api_request, rid)["resume"]["kept"], 2)
 
     def test_the_library_never_redraws_under_an_open_choice_but_catches_up_after(self):
         rid = self.stopped()
@@ -246,7 +245,7 @@ class BrowserTests(unittest.TestCase):
     def test_a_retry_the_server_refuses_says_why_in_place(self):
         rid = self.stopped()
         refusal = "You already have lessons building. Wait for one to finish, or cancel it."
-        with patch.object(server, "_new_job", side_effect=server.ApiError(429, refusal)):
+        with patch.object(server.builds, "_new_job", side_effect=server.ApiError(429, refusal)):
             self.run_flow("retry-refused", {"build": rid}, extra={"refusal": refusal, "expectErrors": ["status of 429 (Too Many Requests)"]})
         self.assertEqual(len(store.BuiltConcepts(rid, TESTER).load()), 2)  # nothing lost
 
@@ -282,9 +281,9 @@ class BrowserTests(unittest.TestCase):
 
         def read(urls):
             if urls[0] in blocked:
-                raise server.ingest.IngestError("The site refused the download.")
+                raise ingest.IngestError("The site refused the download.")
             return SimpleNamespace(title=urls[0].split("/")[2], url=urls[0], text=SOURCE)
-        with patch.object(server, "_first_readable", side_effect=read):
+        with patch.object(server.builds, "_first_readable", side_effect=read):
             rid = self.stopped(sources=[{"url": "https://ok.example/a", "title": "Readable"}, {"url": "https://blocked.example/b", "title": "Blocked"}])
             blocked.clear()  # the site works again
             self.run_flow("unread-source", {"build": rid})

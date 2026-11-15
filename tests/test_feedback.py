@@ -2,16 +2,13 @@
 
 from __future__ import annotations
 
-import http.client
-import json
 import os
 import stat
 import tempfile
-import threading
 import unittest
 from unittest.mock import patch
 
-from test_lemma import TESTER, reset_server, session_cookie, sign_in
+from support import TESTER, Site, call, reset_server, session_cookie, sign_in, sign_out, temp_home
 from lemma import auth, feedback, server, store
 
 OTHER = "0123456789abcdef"
@@ -25,42 +22,39 @@ class Feedback(unittest.TestCase):
         env.start()
         self.addCleanup(env.stop)
         self.addCleanup(reset_server)
-        server.REQUEST.headers, server.REQUEST.query, server.REQUEST.body = {}, {}, {}
         sign_in()
 
     def send(self, body, uid=TESTER):
         sign_in(uid)
-        return server.api_feedback_create(body)
+        return call(server.api_feedback_create, body=body)
 
-    def refused(self, status, call):
+    def refused(self, status, attempt):
         with self.assertRaises(server.ApiError) as e:
-            call()
+            attempt()
         self.assertEqual(e.exception.status, status)
         return e.exception.message
 
-    def as_admin(self, call, status=None, body=None):
+    def as_admin(self, fn, *args, status=None, body=None):
         sign_in(ADMIN)
-        server.REQUEST.query = {"status": [status]} if status else {}
-        server.REQUEST.body = body or {}
-        return call()
+        return call(fn, *args, query={"status": [status]} if status else {}, body=body)
 
     def test_a_signed_in_account_sends_feedback_with_its_reply_address(self):
         out = self.send({"rating": "helpful", "message": "  Loved the slider.  ", "kind": "lesson", "page": "#/lesson/abc",
                          "lesson_id": "abc", "lesson_title": "Regression", "error_id": "0a1b2c3d", "request_id": "0123456789ab",
                          "unknown": "ignored"})
         self.assertEqual(out["reply_to"], f"{TESTER}@example.com")
-        [item] = self.as_admin(lambda: server.api_feedback_list({}))
+        [item] = self.as_admin(server.api_feedback_list)
         self.assertEqual(item, {"id": out["id"], "user_id": TESTER, "email": f"{TESTER}@example.com", "name": "Tester",
                                 "created": item["created"], "rating": "helpful", "message": "Loved the slider.", "kind": "lesson",
                                 "page": "#/lesson/abc", "lesson_id": "abc", "lesson_title": "Regression", "error_id": "0a1b2c3d",
                                 "request_id": "0123456789ab", "status": "new"})
         self.assertNotEqual(self.send({"message": "Just words."})["id"], out["id"])
-        newest = self.as_admin(lambda: server.api_feedback_list({}))[0]
+        newest = self.as_admin(server.api_feedback_list)[0]
         self.assertEqual((newest["rating"], newest["kind"], newest["page"]), (None, "general", ""))
 
     def test_signed_out_is_refused(self):
-        server.REQUEST.user = None
-        self.assertIn("Sign in", self.refused(401, lambda: server.api_feedback_create({"rating": "helpful"})))
+        sign_out()
+        self.assertIn("Sign in", self.refused(401, lambda: call(server.api_feedback_create, body={"rating": "helpful"})))
 
     def test_every_field_is_checked(self):
         bad = [
@@ -81,7 +75,7 @@ class Feedback(unittest.TestCase):
         self.assertIn("rating or write a message", self.refused(400, lambda: self.send({})))
         self.send({"message": " " + "x" * 2000 + "\n"})  # the limit counts what is left after trimming
         self.send({"rating": "not_helpful", "page": "#" * 300, "lesson_id": "a" * 64, "lesson_title": "t" * 300})
-        self.assertEqual(len(self.as_admin(lambda: server.api_feedback_list({}))), 2)
+        self.assertEqual(len(self.as_admin(server.api_feedback_list)), 2)
 
     def test_the_daily_cap(self):
         with patch.dict(os.environ, {"LEMMA_DAILY_FEEDBACK": "2"}):
@@ -99,35 +93,35 @@ class Feedback(unittest.TestCase):
     def test_only_admins_read_change_and_delete_feedback(self):
         fid = self.send({"message": "first"})["id"]
         sign_in(OTHER)
-        server.REQUEST.body = {"status": "done"}
-        for call in (lambda: server.api_feedback_list({}), lambda: server.api_feedback_status(fid), lambda: server.api_feedback_delete(fid)):
-            self.assertEqual(self.refused(404, call), "Not found.")
-        server.REQUEST.user = None
-        self.refused(404, lambda: server.api_feedback_list({}))
+        for attempt in (lambda: call(server.api_feedback_list), lambda: call(server.api_feedback_status, fid, body={"status": "done"}),
+                        lambda: call(server.api_feedback_delete, fid)):
+            self.assertEqual(self.refused(404, attempt), "Not found.")
+        sign_out()
+        self.refused(404, lambda: call(server.api_feedback_list))
 
         second = self.send({"message": "second"}, OTHER)["id"]
-        self.assertEqual([i["id"] for i in self.as_admin(lambda: server.api_feedback_list({}))], [second, fid])  # newest first
-        self.assertEqual(self.as_admin(lambda: server.api_feedback_status(fid), body={"status": "done"}), {"id": fid, "status": "done"})
-        self.assertEqual([i["id"] for i in self.as_admin(lambda: server.api_feedback_list({}), "done")], [fid])
-        self.assertEqual([i["id"] for i in self.as_admin(lambda: server.api_feedback_list({}), "new")], [second])
-        self.refused(400, lambda: self.as_admin(lambda: server.api_feedback_list({}), "open"))
-        self.refused(400, lambda: self.as_admin(lambda: server.api_feedback_status(fid), body={"status": "closed"}))
-        self.refused(404, lambda: self.as_admin(lambda: server.api_feedback_status("ffffffffffff"), body={"status": "done"}))
+        self.assertEqual([i["id"] for i in self.as_admin(server.api_feedback_list)], [second, fid])  # newest first
+        self.assertEqual(self.as_admin(server.api_feedback_status, fid, body={"status": "done"}), {"id": fid, "status": "done"})
+        self.assertEqual([i["id"] for i in self.as_admin(server.api_feedback_list, status="done")], [fid])
+        self.assertEqual([i["id"] for i in self.as_admin(server.api_feedback_list, status="new")], [second])
+        self.refused(400, lambda: self.as_admin(server.api_feedback_list, status="open"))
+        self.refused(400, lambda: self.as_admin(server.api_feedback_status, fid, body={"status": "closed"}))
+        self.refused(404, lambda: self.as_admin(server.api_feedback_status, "ffffffffffff", body={"status": "done"}))
 
-        self.assertEqual(self.as_admin(lambda: server.api_feedback_delete(fid)), {"ok": True})
-        self.refused(404, lambda: self.as_admin(lambda: server.api_feedback_delete(fid)))
-        self.assertEqual([i["id"] for i in self.as_admin(lambda: server.api_feedback_list({}))], [second])
+        self.assertEqual(self.as_admin(server.api_feedback_delete, fid), {"ok": True})
+        self.refused(404, lambda: self.as_admin(server.api_feedback_delete, fid))
+        self.assertEqual([i["id"] for i in self.as_admin(server.api_feedback_list)], [second])
 
     def test_admins_alone_see_how_much_is_new(self):
         self.send({"message": "one"})
         self.send({"message": "two"}, OTHER)
         sign_in(TESTER)
-        self.assertNotIn("feedback_new", server.api_status({}))
-        server.REQUEST.user = None
-        self.assertNotIn("feedback_new", server.api_status({}))
-        self.assertEqual(self.as_admin(lambda: server.api_status({}))["feedback_new"], 2)
-        self.as_admin(lambda: server.api_feedback_status(feedback.items()[0]["id"]), body={"status": "done"})
-        self.assertEqual(self.as_admin(lambda: server.api_status({}))["feedback_new"], 1)
+        self.assertNotIn("feedback_new", call(server.api_status))
+        sign_out()
+        self.assertNotIn("feedback_new", call(server.api_status))
+        self.assertEqual(self.as_admin(server.api_status)["feedback_new"], 2)
+        self.as_admin(server.api_feedback_status, feedback.items()[0]["id"], body={"status": "done"})
+        self.assertEqual(self.as_admin(server.api_status)["feedback_new"], 1)
 
     def test_deleting_an_account_removes_only_its_feedback(self):
         self.send({"message": "mine"})
@@ -151,23 +145,16 @@ class Feedback(unittest.TestCase):
 
 class FeedbackOverHTTP(unittest.TestCase):
     def test_send_feedback_from_the_browser(self):
-        env = patch.dict(os.environ, {"LEMMA_HOME": tempfile.mkdtemp(prefix="lemma-feedback-"), "LEMMA_ADMINS": "tester@example.com"})
+        temp_home(self, "lemma-feedback-")
+        env = patch.dict(os.environ, {"LEMMA_ADMINS": "tester@example.com"})
         env.start()
         self.addCleanup(env.stop)
-        httpd = server.make_server(0)
-        port = httpd.server_address[1]
-        threading.Thread(target=httpd.serve_forever, kwargs={"poll_interval": 0.05}, daemon=True).start()
-        self.addCleanup(lambda: (httpd.shutdown(), httpd.server_close(), reset_server()))
-        cookie = session_cookie()
+        site = Site(cookie=session_cookie()).__enter__()
+        self.addCleanup(site.__exit__, None, None, None)
 
-        def req(method, path, body=None, cookie=cookie):
-            c = http.client.HTTPConnection("127.0.0.1", port, timeout=10)
-            h = {"Host": f"localhost:{port}", "Origin": f"http://localhost:{port}", "Content-Type": "application/json", **({"Cookie": cookie} if cookie else {})}
-            c.request(method, path, json.dumps(body) if body is not None else None, h)
-            r = c.getresponse()
-            data = json.loads(r.read())
-            c.close()
-            return r.status, data
+        def req(method, path, body=None, cookie=None):
+            r = site.req(method, path, body, cookie=cookie)
+            return r.status, r.json
 
         self.assertEqual(req("POST", "/api/feedback", {"rating": "helpful"}, cookie="")[0], 401)
         s, out = req("POST", "/api/feedback", {"rating": "not_helpful", "message": "The goal was unclear.", "kind": "lesson", "page": "#/lesson/x"})

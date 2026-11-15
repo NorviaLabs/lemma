@@ -22,7 +22,7 @@
 <main id="main" class="doc">
 <header class="doc-head">
   <h1>Privacy</h1>
-  <p class="doc-meta">Last updated 20 October 2026 · OpenLemma at openlemma.org is run by Mohit Ranka · <a href="terms">Terms of use</a></p>
+  <p class="doc-meta">Last updated 15 November 2026 · OpenLemma at openlemma.org is run by Mohit Ranka · <a href="terms">Terms of use</a></p>
 </header>
 
 <section class="doc-short" aria-labelledby="short">
@@ -32,6 +32,7 @@
     <li>Your AI provider key is never stored. It stays in your browser, which sends it only with each request that needs it. If you sign in with a ChatGPT or Claude subscription instead, OpenLemma keeps that sign-in with your account until you sign out.</li>
     <li>No advertising, no tracking cookies and no request logs. Nothing is sold.</li>
     <li>OpenLemma's code is public, so you can <a href="https://github.com/NorviaLabs/lemma" rel="noopener">read exactly what it does with your data</a>.</li>
+    <li>Lessons you don't share are private to your account. If you share one, readers see it, and you see how far they get in it; your place in any lesson otherwise stays in your browser.</li>
     <li>Delete lessons from your library at any time; email contact@openlemma.org to delete your whole account.</li>
   </ul>
 </section>
@@ -44,7 +45,13 @@
     <dt>A session</dt>
     <dd>A cookie keeps you signed in for up to 30 days. The server stores only a fingerprint (hash) of it.</dd>
     <dt>Lessons and builds</dt>
-    <dd>Lesson requests, the text of the sources you choose, and build progress are saved so you can leave and come back. Finished lessons are saved to your library automatically, and an interrupted build can be retried. Only your account can open them. Delete stopped builds and lessons from your library to remove them.</dd>
+    <dd>Lesson requests, the text of the sources you choose, and build progress are saved so you can leave and come back. Finished lessons are saved to your library automatically, and an interrupted build can be retried. Only your account can open them, unless you share a lesson (below). Delete stopped builds and lessons from your library to remove them.</dd>
+    <dt>Lessons you share</dt>
+    <dd>When you share a lesson, OpenLemma keeps its link and your choices: whether your name is shown, whether readers may download it, and whether you asked for it to be listed in the gallery. Anyone with the link who signs in can read the lesson as you last saved it, but never your sources' text. For each person who starts reading it (opening the link alone records nothing), OpenLemma keeps who they are, when they last read it, and how far they got: the furthest concept reached, the concepts finished and whether they finished. Never their answers. You see readers by name, and they are told so before they start; while the lesson is listed in the gallery you see totals only, and someone who found it there is never named to you. If you ask for a listing, the people who run OpenLemma see the lesson, your name and your email address to review it. Stopping sharing turns the link off at once; deleting the lesson, or your account, deletes all of this.</dd>
+    <dt>Lessons shared with you</dt>
+    <dd>When you open a lesson someone shared, its author sees your name and how far you got, as above, or, if you found it in the gallery, only that one more reader reached each concept. Your answers are never sent.</dd>
+    <dt>Where you are in a lesson</dt>
+    <dd>Your place in each lesson, and which concepts you finished, stays in your browser, so you can continue where you left off. It isn't sent to OpenLemma, except the summary of how far you got in a lesson someone shared with you, described above.</dd>
     <dt>A subscription sign-in</dt>
     <dd>If you sign in with your ChatGPT or Claude subscription instead of a key, OpenLemma keeps the sign-in tokens OpenAI or Anthropic issue, with your account, in a file only the server can read, and uses them only to build your lessons. It renews them when they expire. <strong>Sign out</strong> on your account page deletes them; a key is never kept this way.</dd>
     <dt>Daily usage</dt>

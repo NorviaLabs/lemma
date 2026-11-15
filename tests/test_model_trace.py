@@ -17,6 +17,7 @@ import unittest
 from pathlib import Path
 
 import fakejev  # noqa: F401  Jev is essential, so every search and build asks this stand-in
+from support import call
 from lemma import export, factcheck, lesson as L, server
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -311,14 +312,14 @@ class RejectedTraces(unittest.TestCase):
         self.assertEqual(problems(c), ["concept.activities[0]: teach before practice"])
 
     def test_26_an_edited_lesson_with_a_bad_model_trace_is_not_saved(self):
-        # Saving an edit (and downloading) runs server.require_valid, which refuses a lesson that fails its checks.
+        # Saving an edit (and downloading) runs server.core.require_valid, which refuses a lesson that fails its checks.
         lesson = gallery_json("ice-albedo-feedback")
         at = [c["id"] for c in lesson["concepts"]].index("ice_albedo_loop")
         lesson["concepts"][at] = loop_concept()
-        server.require_valid(lesson, None)  # a good edit is accepted
+        server.core.require_valid(lesson, None)  # a good edit is accepted
         lesson["concepts"][at] = loop_concept(model_trace(answer=["temp", "reflect"]))
         with self.assertRaises(server.ApiError) as refused:
-            server.require_valid(lesson, None)
+            server.core.require_valid(lesson, None)
         self.assertEqual(refused.exception.status, 422)
         self.assertTrue(any(p.split(": ", 1)[1].startswith(OFF_EDGES) for p in refused.exception.problems), refused.exception.problems)
 
@@ -334,7 +335,7 @@ class AroundTheTrace(unittest.TestCase):
 
     def test_45_the_download_carries_the_trace_and_sends_nothing(self):
         lesson = self.lesson_with_trace()
-        server.require_valid(lesson, None)  # only a lesson that passes its checks is downloaded
+        server.core.require_valid(lesson, None)  # only a lesson that passes its checks is downloaded
         html = export.lesson_html(lesson)
         self.assertIn("connect-src 'none'", html)
         payload = json.loads(html.split('<script type="application/json" id="lesson-data">')[1].split("</script>")[0])
@@ -344,7 +345,7 @@ class AroundTheTrace(unittest.TestCase):
             self.assertIn(export._script_safe(export._static(script)).strip()[:200], html)
         self.assertNotRegex(html, r"\bfetch\(|XMLHttpRequest|<script[^>]+src=|<link[^>]+stylesheet")
         # A gallery lesson downloads as shipped, with its model trace.
-        shipped = server.api_export({"lesson": {"gallery": {"slug": "ice-albedo-feedback"}}})
+        shipped = call(server.api_export, body={"lesson": {"gallery": {"slug": "ice-albedo-feedback"}}})
         self.assertIn('"on": "model"', shipped)
 
     def test_47_fact_check_reads_the_models_labels(self):

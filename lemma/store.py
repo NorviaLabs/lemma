@@ -7,6 +7,8 @@ import os
 import re
 import shutil
 import tempfile
+import threading
+from collections import OrderedDict
 from pathlib import Path
 
 ID_RE = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
@@ -104,22 +106,89 @@ def _category_name(lesson: dict) -> str:
     return name if isinstance(name, str) else ""
 
 
-def list_lessons(owner: str | None = None) -> list[dict]:
-    out = []
-    for p in sorted(library(owner).glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True):
-        try:
-            l = json.loads(p.read_text(encoding="utf-8"))
-        except (OSError, ValueError):
-            continue
-        out.append({
+# What each library file said, by path, with the size and time it had then: a file is read again only once it changes.
+_summaries: dict[str, tuple[tuple[int, int], dict | None]] = {}
+_summaries_lock = threading.Lock()
+
+
+def _summary(p: Path, st) -> dict | None:
+    stamp = (st.st_mtime_ns, st.st_size)
+    with _summaries_lock:
+        hit = _summaries.get(str(p))
+    if hit and hit[0] == stamp:
+        return hit[1]
+    try:
+        l = json.loads(p.read_text(encoding="utf-8"))
+        summary = {
             "id": l.get("id", p.stem),
             "title": l.get("title", ""),
             "source": (l.get("source") or {}).get("title", ""),
             "concepts": len(l.get("concepts") or []),
             "category": _category_name(l),
-            "saved": p.stat().st_mtime,
-        })
-    return out
+            "saved": st.st_mtime,
+        } if isinstance(l, dict) else None
+    except (OSError, ValueError):
+        summary = None  # unreadable: skipped, and read again once it changes
+    with _summaries_lock:
+        _summaries[str(p)] = (stamp, summary)
+    return summary
+
+
+def list_lessons(owner: str | None = None) -> list[dict]:
+    """The library, newest first. Each file is read once, then again only when it changes (its size or time)."""
+    found = []
+    for p in library(owner).glob("*.json"):
+        try:
+            st = p.stat()
+        except OSError:
+            continue  # deleted meanwhile
+        summary = _summary(p, st)
+        if summary is not None:
+            found.append((st.st_mtime, dict(summary)))
+    return [summary for _, summary in sorted(found, key=lambda x: x[0], reverse=True)]
+
+
+def lesson_files(lesson_id: str, owner: str | None = None) -> tuple | None:
+    """What a saved lesson is known by: its files with their sizes and times, or None if it isn't there. Any change to
+    the lesson or its source changes this."""
+    jp, sp = _paths(lesson_id, owner)
+    try:
+        js = jp.stat()
+    except OSError:
+        return None
+    try:
+        ss = sp.stat()
+        src = (ss.st_mtime_ns, ss.st_size)
+    except OSError:
+        src = None
+    return (str(jp), js.st_mtime_ns, js.st_size, src)
+
+
+_READ_MOST = 256  # lessons kept parsed, most recently read first
+_read: OrderedDict[tuple, dict] = OrderedDict()
+
+
+def read_lesson(lesson_id: str, owner: str | None = None) -> dict:
+    """A saved lesson, parsed once per version of its file and shared: callers must not change what they get."""
+    key = lesson_files(lesson_id, owner)
+    if key is None:
+        raise KeyError(lesson_id)
+    with _summaries_lock:
+        hit = _read.get(key)
+        if hit is not None:
+            _read.move_to_end(key)
+            return hit
+    lesson = json.loads(_paths(lesson_id, owner)[0].read_text(encoding="utf-8"))
+    with _summaries_lock:
+        _read[key] = lesson
+        while len(_read) > _READ_MOST:
+            _read.popitem(last=False)
+    return lesson
+
+
+def read_source(lesson_id: str, owner: str | None = None) -> str | None:
+    sp = _paths(lesson_id, owner)[1]
+    return sp.read_text(encoding="utf-8") if sp.exists() else None
 
 
 def adopt_unowned(owner: str):

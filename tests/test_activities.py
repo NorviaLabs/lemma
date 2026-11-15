@@ -7,6 +7,7 @@ import subprocess
 from pathlib import Path
 import unittest
 
+from support import call
 from lemma import export, factcheck, lesson as L, server
 import fakejev  # noqa: E402,F401  Jev is essential, so every search and build asks this stand-in
 
@@ -36,14 +37,14 @@ class GalleryActivitiesTests(unittest.TestCase):
         self.assertEqual(len({e["slug"] for e in entries}), 19)
         files = {p.stem for p in (ROOT / "lemma/examples/gallery").glob("*.json") if p.stem != "index"}
         self.assertEqual(files, {e["slug"] for e in entries})
-        cards = server.api_gallery({})
+        cards = call(server.api_gallery)
         self.assertEqual([c["slug"] for c in cards], [e["slug"] for e in entries])
         for entry in entries:
             with self.subTest(slug=entry["slug"]):
                 lesson, source = server.load_gallery(entry["slug"])
                 self.assertEqual(list(L.check_lesson(lesson, source)), [])
                 self.assertTrue(all(c.get("activities") for c in lesson["concepts"]))
-                self.assertEqual(server.api_gallery_lesson(entry["slug"])["id"], lesson["id"])
+                self.assertEqual(call(server.api_gallery_lesson, entry["slug"])["id"], lesson["id"])
                 html = export.lesson_html(lesson)
                 self.assertIn("connect-src 'none'", html)
                 self.assertIn("LemmaPlayer.mount", html)
@@ -247,7 +248,7 @@ class GalleryActivitiesTests(unittest.TestCase):
         self.assertTrue(server.card_quote(" ".join(["word"] * 50) + ".").endswith("…"))
 
     def test_new_gallery_previews_reuse_the_lessons_interactions(self):
-        for card in server.api_gallery({}):
+        for card in call(server.api_gallery):
             lesson, _ = server.load_gallery(card["slug"])
             entry = next(e for e in server.gallery_index() if e["slug"] == card["slug"])
             cover = next(c for c in lesson["concepts"] if c["id"] == entry["cover"])

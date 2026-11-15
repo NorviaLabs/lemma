@@ -6,7 +6,7 @@ import http.client
 import unittest
 from unittest.mock import patch
 
-from hosting import SITE, HostedServer
+from support import SITE, Site
 from lemma import server
 
 HTTPS = {"LEMMA_PUBLIC_URL": f"https://{SITE}"}
@@ -14,22 +14,22 @@ HTTPS = {"LEMMA_PUBLIC_URL": f"https://{SITE}"}
 
 class HostedTransport(unittest.TestCase):
     def test_every_response_tells_browsers_to_stay_on_https(self):
-        with HostedServer(HTTPS) as site:
-            for method, path in (("GET", "/"), ("GET", "/api/status"), ("GET", "/static/app.js"), ("GET", "/nope"), ("POST", "/api/lessons")):
+        with Site(hosted=True, env=HTTPS) as site:
+            for method, path in (("GET", "/"), ("GET", "/api/status"), ("GET", "/static/app/main.js"), ("GET", "/nope"), ("POST", "/api/lessons")):
                 with self.subTest(path=path):
-                    s, r, _ = site.req(method, path, body={} if method == "POST" else None)
+                    s, _, r = site.req(method, path, body={} if method == "POST" else None)
                     self.assertEqual(r.getheader("Strict-Transport-Security"), "max-age=31536000", (s, path))
 
     def test_a_plain_http_visit_moves_to_https(self):
         # Cloudflare's tunnel is the only way in, and it says which scheme the visitor used.
-        with HostedServer(HTTPS) as site:
-            s, r, _ = site.req("GET", "/privacy?x=1", headers={"X-Forwarded-Proto": "http"})
+        with Site(hosted=True, env=HTTPS) as site:
+            s, _, r = site.req("GET", "/privacy?x=1", headers={"X-Forwarded-Proto": "http"})
             self.assertEqual((s, r.getheader("Location")), (301, f"https://{SITE}/privacy?x=1"))
-            s, r, _ = site.req("GET", "/privacy", headers={"X-Forwarded-Proto": "https"})
+            s, _, r = site.req("GET", "/privacy", headers={"X-Forwarded-Proto": "https"})
             self.assertEqual(s, 200)
 
     def test_redirects_never_take_a_host_from_the_request_line(self):
-        with HostedServer(HTTPS, hosts=(SITE, f"www.{SITE}")) as site:
+        with Site(hosted=True, env=HTTPS, hosts=(SITE, f"www.{SITE}")) as site:
             c = http.client.HTTPConnection("127.0.0.1", site.port, timeout=10)
             c.putrequest("GET", "@evil.test/", skip_host=True)
             c.putheader("Host", f"www.{SITE}")
@@ -41,12 +41,13 @@ class HostedTransport(unittest.TestCase):
 
     def test_api_writes_are_limited_per_visitor_address(self):
         # Cloudflare names the visitor's address; reads such as progress polling are never limited.
-        with HostedServer(HTTPS) as site, patch.object(server, "RATE_LIMIT", 3):
+        with Site(hosted=True, env=HTTPS) as site, patch.object(server.http, "RATE_LIMIT", 3):
             ann, bob = {"CF-Connecting-IP": "203.0.113.7"}, {"CF-Connecting-IP": "198.51.100.9"}
             sent = [site.req("POST", "/api/event", {"name": "lesson_open"}, headers=ann)[0] for _ in range(4)]
             self.assertEqual(sent, [200, 200, 200, 429])
-            s, r, raw = site.req("POST", "/api/event", {"name": "lesson_open"}, headers=ann)
-            self.assertEqual((s, r.getheader("Retry-After")), (429, str(server.RATE_WINDOW)))
+            reply = site.req("POST", "/api/event", {"name": "lesson_open"}, headers=ann)
+            s, r, raw = reply.status, reply.response, reply.raw
+            self.assertEqual((s, r.getheader("Retry-After")), (429, str(server.http.RATE_WINDOW)))
             self.assertIn(b"Too many requests", raw)
             self.assertEqual(site.req("GET", "/api/status", headers=ann)[0], 200)
             self.assertEqual(site.req("POST", "/api/event", {"name": "lesson_open"}, headers=bob)[0], 200)

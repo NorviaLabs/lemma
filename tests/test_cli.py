@@ -88,10 +88,10 @@ class InProcess(unittest.TestCase):
     """main() with the listening part replaced, to see what it tells people and what it opens."""
 
     def setUp(self):
-        self.was = (server.DEV, signal.getsignal(signal.SIGTERM))
+        self.was = (server.http.DEV, signal.getsignal(signal.SIGTERM))
 
     def tearDown(self):
-        server.DEV, sigterm = self.was
+        server.http.DEV, sigterm = self.was
         signal.signal(signal.SIGTERM, sigterm)
         test_lemma.reset_server()
 
@@ -101,7 +101,7 @@ class InProcess(unittest.TestCase):
         urls = []
 
         def fake_make_server(port, exact, host, allowed_hosts):
-            server.ON_THIS_COMPUTER = not hosted
+            server.http.ON_THIS_COMPUTER = not hosted
             self.made = (port, exact, host, allowed_hosts)
             return httpd
 
@@ -139,7 +139,7 @@ class InProcess(unittest.TestCase):
                     contextlib.redirect_stdout(out):
                 cli.main(["--dev", "--no-browser", "--port", "9100"])
         self.assertTrue(self.exact)
-        self.assertTrue(server.DEV)
+        self.assertTrue(server.http.DEV)
         self.assertNotIn("Lemma is running", out.getvalue())
         self.assertNotIn("Stopped.", out.getvalue())
 

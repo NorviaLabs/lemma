@@ -1172,6 +1172,24 @@ def check_attribution(block: dict, sources: dict, where: str) -> list[str]:
 MAX_MODELS_CHARS = 60_000
 
 
+# A source's link, as readers get it: a web address, or nothing. Anything else (javascript:, data:, file:, a link with
+# control characters or spaces hidden in it) is refused, so no lesson can carry a link that isn't one.
+WEB_LINK = re.compile(r"https?://[^\s\x00-\x1f\x7f]+", re.I)
+
+
+def check_links(lesson: dict) -> Problems:
+    P = Problems()
+    found = [("lesson.source.url", (lesson.get("source") or {}).get("url") if isinstance(lesson.get("source"), dict) else None)]
+    for i, s in enumerate(lesson.get("sources") or []):
+        found.append((f"lesson.sources[{i}].url", s.get("url") if isinstance(s, dict) else None))
+    for where, url in found:
+        if url in (None, ""):
+            continue
+        if not isinstance(url, str) or not WEB_LINK.fullmatch(url):
+            P.add(where, "the link must be a web address (http:// or https://), or left empty")
+    return P
+
+
 def check_lesson(lesson: dict, source_text: str | None) -> Problems:
     """All quality checks. ``source_text=None`` skips grounding (e.g. for an offline copy)."""
     P = Problems()
@@ -1184,6 +1202,7 @@ def check_lesson(lesson: dict, source_text: str | None) -> Problems:
         P.add("lesson.concepts", f"models are too large ({size:,} characters; at most {MAX_MODELS_CHARS:,}). Simplify them")
         return P
     _text(lesson, "title", "lesson", P, 200)
+    P.extend(check_links(lesson))
     src = lesson.get("source") or {}
     _text(src, "title", "lesson.source", P, 400)
     intro = lesson.get("intro") or {}

@@ -22,11 +22,12 @@ Install Node.js 22 if you change the expression or simulation engines, so the Py
 - **Quality gates stay.** A lesson that fails `lemma/lesson.py`'s checks (word-for-word quotes, finite models, reachable goals, complete structure, labelled teaching models) is never shown. Don't loosen a check to make a lesson pass.
 - **Two engines, one behaviour.** Keep `lemma/expr.py` with `lemma/static/expr.js`, and `lemma/kernels.py` with `lemma/static/kernels.js`, in step.
 - **No new frameworks.** The backend is the Python standard library and the frontend is plain JavaScript, HTML and CSS with no build step.
+- **Schemas only grow.** The databases in `$LEMMA_HOME` are opened through `lemma/db.py`: to change one, add a migration to the end of its list and never edit one already released, so existing files are brought up to date in place.
 - **No real services in tests.** Use the fake providers and local fixtures. Never commit keys, tokens or anyone's lesson data.
 
 ## Making a change
 
-Keep each change focused and follow the code around it. Add or update tests for behaviour you change, run the full suite, and for interface changes try the flow in a browser at phone and desktop widths. In the pull request, say what you checked.
+Keep each change focused and follow the code around it. The server is the package `lemma/server/` (its `__init__.py` says what each module holds): an API handler goes in the module for its area, declared with `@route(method, pattern)`, and takes the request as its first argument. Add or update tests for behaviour you change, run the full suite, and for interface changes try the flow in a browser at phone and desktop widths. In the pull request, say what you checked.
 
 `eval/run.py` calls paid models; don't run it as part of a contribution.
 

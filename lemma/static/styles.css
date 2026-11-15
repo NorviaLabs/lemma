@@ -1762,3 +1762,133 @@ main.doc { max-width: 808px; padding-top: clamp(24px, 5vw, 56px); }
   .fbx-row .lib-acts { margin: 8px 0 0 -12px; flex-wrap: wrap; }
 }
 @media (prefers-reduced-motion: reduce) { .fb-thanks, .fb-lesson .fb-more:not([hidden]) { animation: none; } .fb-rate .seg .icon { transition: none; } }
+
+/* ---------- continue where you left off: the lesson intro's card, and progress lines elsewhere. Kept in this browser
+   only (progress.js). One segment per concept: light ultramarine done, ultramarine current, fill grey to come. */
+.pickup { margin: 22px 0 26px; padding: 22px 24px; background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--lift); }
+.pickup h3 { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; font-size: 19px; }
+.pickup-bar, .prog-bar { display: flex; gap: 4px; }
+.pickup-bar { margin-bottom: 14px; }
+.pickup-bar > i, .prog-bar > i { flex: 1; height: 8px; border-radius: 9999px; background: var(--plate-2); }
+.pickup-bar > i.done, .prog-bar > i.done, .pickup-bar.all > i { background: color-mix(in srgb, var(--green) 45%, var(--surface)); }
+.pickup-bar > i.cur, .prog-bar > i.cur { background: var(--green); }
+.pickup-where { margin: 0; font: 600 17px/1.4 var(--sans); color: var(--ink); }
+.pickup-sub { margin: 4px 0 0; font-size: 15px; color: var(--mute); font-variant-numeric: tabular-nums; }
+.pickup .actions { margin-top: 18px; }
+.pickup-done { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--good); color: #fff; }
+.pickup-done .icon { width: 15px; height: 15px; stroke-width: 2.4; }
+.pickup-changed { margin: 14px 0 0; padding: 10px 14px; border-radius: var(--r); background: var(--ochre-soft); color: var(--ochre-ink); font-size: 15px; line-height: 1.45; }
+.pickup-ask { margin: 18px -10px -8px; padding: 16px 14px; border-radius: 16px; background: var(--bad-bg); }
+.pickup-ask p { margin: 0 0 12px; font: 600 15.5px/1.45 var(--sans); color: var(--ink); }
+.pickup-ask-btns, .share-ask-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.pickup-yes, .share-yes { background: var(--bad); color: #fff; }
+.pickup-yes:hover:not(:disabled), .share-yes:hover:not(:disabled) { background: #a82c22; }
+.pickup-ask .ghost:hover:not(:disabled), .share-ask .ghost:hover:not(:disabled) { background: color-mix(in srgb, var(--bad) 10%, var(--bad-bg)); }
+.hall .h-state.here { color: var(--green-press); font-weight: 600; }
+.prog-bar { width: 84px; gap: 3px; }
+.prog-bar > i { height: 6px; }
+.lib-progress { display: flex; align-items: center; gap: 10px; margin: 8px 0 0; font: 600 14px/1.3 var(--sans); color: var(--green-press); font-variant-numeric: tabular-nums; }
+.lib-progress.is-done { gap: 6px; color: var(--good); }
+.lib-progress.is-fresh { color: var(--mute); }
+.lib-progress .icon { width: 15px; height: 15px; }
+.lib-meta .lib-share-tag { display: inline-flex; align-items: center; gap: 5px; color: var(--ink); }
+.lib-meta .lib-share-tag .icon { width: 14px; height: 14px; }
+.lib-meta .lib-share-tag.is-waiting { color: var(--ochre-ink); }
+.lib-shared { margin-top: 44px; }
+.lib-empty + .lib-shared { margin-top: 40px; }
+
+/* ---------- a shared lesson: who shared it, and what its author sees */
+.avatar[data-initial]::before { content: attr(data-initial); }
+.sharedby { display: flex; align-items: center; gap: 8px; margin: -4px 0 14px; font: 600 15px/1.3 var(--sans); color: var(--ink); }
+.sharedby .avatar { --size: 24px; }
+.seen, .preview-note { display: flex; align-items: flex-start; gap: 10px; margin: 22px 0 0; padding: 12px 16px; max-width: 62ch; border-radius: 16px; background: var(--plate-2); color: var(--body); font-size: 15px; line-height: 1.45; }
+.seen .icon, .preview-note .icon { margin-top: 2px; color: var(--mute); }
+.shared-loading { display: flex; align-items: center; justify-content: center; gap: 14px; min-height: 40vh; color: var(--body); }
+.shared-loading p { margin: 0; font-size: 17px; }
+.shared-loading .spinner { margin: 0; }
+.signin-lesson { margin: 14px 0 0; padding: 14px 18px; border-radius: 16px; background: var(--plate); }
+.signin-lesson p { margin: 0; }
+.signin-lesson .t { font: 700 17px/1.35 var(--sans); color: var(--ink); }
+.signin-lesson .m { margin-top: 4px; font: 600 14px/1.3 var(--sans); color: var(--mute); }
+.shared-gone { margin: clamp(8px, 4vh, 48px) auto 0; }
+.shared-gone h1 { margin: 0 0 10px; font-size: clamp(24px, 2.4vw, 28px); }
+
+/* ---------- the author's share page (#/share/<lesson>): the account page's column of cards */
+.share-back { margin: 0 0 -6px -12px; justify-self: start; }
+.share-head h1 { margin: 0 0 8px; }
+.share-head .lead { margin: 0; font-size: 18px; color: var(--body); }
+.share-head .lead strong { color: var(--ink); font-weight: 600; }
+.share-count { white-space: nowrap; }
+.share-card h2, .share-readers h2 { margin: 0 0 10px; font-size: clamp(22px, 2vw, 26px); }
+.share-readers h2 .lib-count { margin-left: 8px; vertical-align: 3px; }
+.share-lead { margin: 0 0 6px; color: var(--body); }
+.share-opts { display: grid; margin: 18px 0 0; border-radius: 16px; box-shadow: inset 0 0 0 1.5px var(--rule); }
+.share-opt { display: flex; align-items: flex-start; gap: 12px; margin: 0; padding: 14px 16px; border-top: 1px solid var(--rule); cursor: pointer; font: 400 16px var(--sans); }
+.share-opt:first-child { border-top: 0; }
+.share-opt input { margin-top: 3px; width: 18px; height: 18px; flex-shrink: 0; }
+.share-opt .po-body { gap: 3px; }
+.share-status { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 9999px; font: 600 13px/1 var(--sans); white-space: nowrap; }
+.share-status .icon { width: 13px; height: 13px; }
+.share-status.listed { background: var(--good-bg); color: var(--good); }
+.share-status.wait { background: var(--ochre-soft); color: var(--ochre-ink); }
+.share-status.no { background: var(--bad-bg); color: var(--bad); }
+.share-fine { margin: 14px 0 0; font-size: 14.5px; line-height: 1.45; color: var(--mute); }
+.share-link { display: flex; gap: 8px; margin: 18px 0 0; }
+.share-link input[type=text] { flex: 1; min-width: 0; font-size: 16px; }
+.share-saved { min-height: 1.3em; margin: 12px 0 0; font: 600 14px/1.3 var(--sans); color: var(--mute); }
+.share-foot { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--rule); }
+.share-foot > .danger { margin-left: -14px; }
+.share-ask { margin: 0 -14px -10px; padding: 16px 14px; border-radius: 16px; background: var(--bad-bg); }
+.share-ask p { margin: 0 0 12px; font: 600 15.5px/1.45 var(--sans); color: var(--ink); }
+.share-none { margin: 4px 0 0; color: var(--body); }
+.share-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 16px 0 0; }
+.share-tile { padding: 12px 14px; border-radius: 16px; background: var(--plate); }
+.share-tile dt { font: 500 14px/1.3 var(--sans); color: var(--mute); }
+.share-tile dd { margin: 6px 0 0; font: 800 27px/1 var(--sans); letter-spacing: -.03em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.share-people { list-style: none; margin: 18px 0 0; padding: 0; border-radius: 16px; box-shadow: inset 0 0 0 1.5px var(--rule); }
+.share-reader { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; align-items: center; gap: 4px 12px; padding: 12px 16px; border-top: 1px solid var(--rule); }
+.share-reader:first-child { border-top: 0; }
+.share-reader .avatar { --size: 32px; }
+.share-reader .lib-progress { margin: 0; }
+.share-reader-name { margin: 0; font: 600 16px/1.3 var(--sans); color: var(--ink); }
+.share-reader-when { margin: 2px 0 0; font-size: 14px; color: var(--mute); }
+.share-readers h3 { margin: 24px 0 0; font-size: 17px; }
+.share-funnel { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 12px; }
+.share-funnel li { display: grid; grid-template-columns: minmax(0, 1fr) 44px; gap: 6px 12px; align-items: center; }
+.share-funnel .sf-title { font: 600 15px/1.3 var(--sans); color: var(--ink); }
+.share-funnel .sf-n { grid-row: span 2; text-align: right; font: 800 19px/1 var(--sans); color: var(--ink); font-variant-numeric: tabular-nums; }
+.share-funnel .sf-bar { height: 8px; border-radius: 9999px; background: var(--plate-2); overflow: hidden; }
+.share-funnel .sf-bar > i { display: block; height: 100%; border-radius: 9999px; background: color-mix(in srgb, var(--green) 70%, var(--surface)); }
+
+/* ---------- the gallery's two sections, and who shared a community lesson */
+.gal-sec-head { margin-bottom: 22px; }
+.gal-sec-head h2 { margin: 0 0 8px; font-size: clamp(24px, 2.4vw, 30px); }
+.gal-sec-head p { margin: 0; font-size: 17px; color: var(--body); max-width: 66ch; }
+.gal-sec-head[hidden], .gal-sec[hidden] { display: none; }
+.gal-sec-community { margin-top: 64px; }
+.gal-by { display: flex; align-items: center; gap: 6px; margin: -6px 0 12px; font: 600 14px/1.3 var(--sans); color: var(--ink); }
+.gal-by .avatar { --size: 20px; }
+
+/* ---------- admins: the gallery review list, in the feedback inbox's language */
+.rv-title { margin: 0 0 6px; font: 700 18px/1.3 var(--sans); color: var(--ink); }
+.rv-acts { display: flex; flex-wrap: wrap; gap: 6px; align-self: center; }
+
+@media (max-width: 720px) {
+  /* a lesson's four actions on one line: tighter buttons, and the words carry them without their icons */
+  .lib-lesson .lib-acts { flex-wrap: nowrap; gap: 0; }
+  .lib-lesson .lib-acts .small { padding: 0 10px; }
+  .lib-lesson .lib-acts .small .icon { display: none; }
+  .share-reader { grid-template-columns: 32px minmax(0, 1fr); }
+  .share-reader > .lib-progress { grid-column: 2; }
+  .share-tiles { gap: 8px; }
+  .share-tile dd { font-size: 21px; }
+  .share-link { flex-direction: column; }
+  .share-opt { padding: 14px; }
+  .pickup { padding: 18px; }
+  .rv-acts { margin-left: -12px; }
+}
+
+/* Titles and names come from lesson authors and are shown to others: a very long word breaks inside its column
+   rather than running out of it. Only where such text is shown, and break-word rather than anywhere, which would
+   make every grid and flex layout on the page measure itself again (4 times the layout work on the home page). */
+.overview h1, .lib-title, .gal-title, .share-head .lead, .signin-lesson .t, .rv-title, .pickup-where, .sharedby, .gal-by, .share-reader-name { overflow-wrap: break-word; }

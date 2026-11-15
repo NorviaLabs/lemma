@@ -18,16 +18,13 @@ import hashlib
 import json
 import os
 import secrets
-import sqlite3
-import threading
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from contextlib import contextmanager
 from dataclasses import dataclass
 
-from . import store
+from . import db
 
 SESSION_COOKIE = "lemma_session"
 STATE_COOKIE = "lemma_oauth"
@@ -81,40 +78,17 @@ def providers() -> list[dict]:
 
 # ---------------------------------------------------------------- database
 
-_db_lock = threading.Lock()
-_ready: set[str] = set()
-
-
-def _db() -> sqlite3.Connection:
-    path = str(store.home() / "accounts.db")
-    con = sqlite3.connect(path, timeout=10)
-    con.row_factory = sqlite3.Row
-    if path not in _ready:
-        with _db_lock:
-            con.executescript("""
-                PRAGMA journal_mode = WAL;
-                CREATE TABLE IF NOT EXISTS users (
-                    id TEXT PRIMARY KEY, provider TEXT NOT NULL, subject TEXT NOT NULL,
-                    name TEXT NOT NULL DEFAULT '', email TEXT NOT NULL DEFAULT '', avatar TEXT NOT NULL DEFAULT '',
-                    created REAL NOT NULL, last_seen REAL NOT NULL, UNIQUE (provider, subject));
-                CREATE TABLE IF NOT EXISTS sessions (
-                    token_hash TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-                    created REAL NOT NULL, expires REAL NOT NULL);
-            """)
-            os.chmod(path, 0o600)
-            _ready.add(path)
-    return con
-
-
-@contextmanager
-def _tx():
-    """One transaction on a fresh connection, committed and closed afterwards."""
-    con = _db()
-    try:
-        with con:
-            yield con
-    finally:
-        con.close()
+# Version 1 is the schema as first released; add to the end, never edit (see db.py).
+DB = db.Database("accounts.db", [
+    """CREATE TABLE IF NOT EXISTS users (
+           id TEXT PRIMARY KEY, provider TEXT NOT NULL, subject TEXT NOT NULL,
+           name TEXT NOT NULL DEFAULT '', email TEXT NOT NULL DEFAULT '', avatar TEXT NOT NULL DEFAULT '',
+           created REAL NOT NULL, last_seen REAL NOT NULL, UNIQUE (provider, subject));
+       CREATE TABLE IF NOT EXISTS sessions (
+           token_hash TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+           created REAL NOT NULL, expires REAL NOT NULL);""",
+], rows=True)
+_tx = DB.tx  # one transaction on a fresh connection, committed and closed afterwards
 
 
 def _hash(token: str) -> str:
@@ -151,6 +125,27 @@ def user_for(token: str | None) -> dict | None:
         row = con.execute("SELECT users.* FROM sessions JOIN users ON users.id = sessions.user_id WHERE token_hash = ? AND expires > ?",
                           (_hash(token), time.time())).fetchone()
     return _profile(row) if row else None
+
+
+def user(user_id: str) -> dict | None:
+    """An account's profile by its id, or None if there is no such account (any more)."""
+    with _tx() as con:
+        row = con.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
+    return _profile(row) if row else None
+
+
+def users(user_ids) -> dict[str, dict]:
+    """Many accounts' profiles at once, by id, in one query (a page of readers, a list of authors)."""
+    ids = sorted({i for i in user_ids if i})
+    out: dict[str, dict] = {}
+    if not ids:
+        return out
+    with _tx() as con:
+        for start in range(0, len(ids), 500):  # SQLite takes a limited number of parameters at a time
+            chunk = ids[start:start + 500]
+            for row in con.execute(f"SELECT * FROM users WHERE id IN ({','.join('?' * len(chunk))})", chunk):
+                out[row["id"]] = _profile(row)
+    return out
 
 
 def end_session(token: str | None):
